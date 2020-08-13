@@ -2,96 +2,114 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5228322B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16754206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:32:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="wdDEWxTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgHMVWm (ORCPT
+        id S1726609AbgHMVb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgHMVWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:22:42 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 360B820791;
-        Thu, 13 Aug 2020 21:22:41 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 17:22:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peiyong Lin <lpy@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        prahladk@google.com, android-kernel@google.com
-Subject: Re: [PATCH] Add power/gpu_frequency tracepoint.
-Message-ID: <20200813172239.18ccc4f4@oasis.local.home>
-In-Reply-To: <20200813210357.146936-1-lpy@google.com>
-References: <20200813210357.146936-1-lpy@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 13 Aug 2020 17:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgHMVb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 17:31:57 -0400
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B431C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:31:57 -0700 (PDT)
+Received: by mail-qv1-xf2d.google.com with SMTP id b2so3364426qvp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A0O34qikXns/ytpRF66igHLNzjuKUB2GXbD8H3lK9Cw=;
+        b=wdDEWxTKceXP4HFWkn5yqXxqTabNCYq3NagIUeqh7V54xWCyhnM12KnaT8TFARdxoZ
+         64m7DXucAflzdtOUJMjgrOngoGqb44Vq/t6L8rwrgAzV0F3kfbC6ZKihH+qVMARSfX2E
+         AboiW0bCtznAPQH4PIdH7U/uL3W0n8tW8KH2nfK/F4C9UCJlBwAj1oiOMZo7Hq1zybIP
+         hxXS+pkkTtCPFrE+CqidsGVnbfv4uh0M02k9pFy2dr/cpLPoI7xEE88H5MmveghRVnqu
+         0KhBGumVj4x/AOCHRfOypzB4y15VLmUDhbRS0tMB6s9rBGKG8NPr6I4v052d2dh6ZhlU
+         i/hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A0O34qikXns/ytpRF66igHLNzjuKUB2GXbD8H3lK9Cw=;
+        b=ZvEa2yvY47pwX7+7bPTKiLpfg/eQrgiWYZ25svp1eLFAO6KXTUqq3SF/vcbwvftl/D
+         twihfbndvyJjw8Iu5Ig2OH53SDcp9v+dluEKYhSYxNF0LuMny1NYQ9GKbx1z6B7lSAM5
+         Ze0CKXBXWwvxWKmkJ8QZA5vaf5e7ZOZXlcO/rp6JJtFMbXbrqgIq/DB9Ay1jiqkGLq9A
+         6lAqWlnt2n9+8KrVi9vXGDwKhbaHMrOyM9IQAh91vPth13vzE14j+krIUbLJyejYEWDb
+         DYTKz7BYqttx5n03Rbi/m8NO2tS0WenhLUdlot7B6RA+nRBXloOSmFZr/jnB0dmC4NHb
+         ZgDQ==
+X-Gm-Message-State: AOAM532GKyuEBQ6vgKXa69B0USE7okksr/xMkI6d6prda7QKK0wHxvix
+        9AU+HDdbsEVQ3V4mq5OsOP9kXw==
+X-Google-Smtp-Source: ABdhPJw1739/fps5sGg94EWIzpqBNse+OfMx9SH2Fwv3YnMBXDckZmA8TU/hJN9RPgxR4hPxf11hKg==
+X-Received: by 2002:ad4:54b2:: with SMTP id r18mr6617359qvy.92.1597354315991;
+        Thu, 13 Aug 2020 14:31:55 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:fe9c])
+        by smtp.gmail.com with ESMTPSA id i75sm6829279qke.70.2020.08.13.14.31.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 14:31:55 -0700 (PDT)
+Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "kernel-team@fb.com" <kernel-team@fb.com>,
+        "willy@infradead.org" <willy@infradead.org>
+References: <20200813145305.805730-1-josef@toxicpanda.com>
+ <20200813153356.857625-1-josef@toxicpanda.com>
+ <20200813153722.GA13844@lst.de>
+ <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
+ <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
+ <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
+ <3612878ce143427b89a70de3abfb657d@AcuMS.aculab.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <cd5ecedc-cef1-4325-36aa-e7b06485f3a1@toxicpanda.com>
+Date:   Thu, 13 Aug 2020 17:31:54 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <3612878ce143427b89a70de3abfb657d@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 14:03:57 -0700
-Peiyong Lin <lpy@google.com> wrote:
+On 8/13/20 5:10 PM, David Laight wrote:
+> From: Josef Bacik
+>> Sent: 13 August 2020 18:19
+> ...
+>> We wouldn't even need the extra +1 part, since we're only copying in how much
+>> the user wants anyway, we could just go ahead and convert this to
+>>
+>> left -= snprintf(buffer, left, "0x%04x\n", *(unsigned int *) table->data);
+>>
+>> and be fine, right?  Or am I misunderstanding what you're looking for?  Thanks,
+> 
+> Doesn't that need to be scnprintf()?
+> IIRC snprintf() returns the number of bytes that would have been
+> written were the buffer infinite size?
+> (I suspect this is an 'accidental' return value from the original
+> SYSV? userspace implementation that just dumped characters that
+> wouldn't fit in the buffer somewhere.)
+> 
 
-> +/**
-> + * gpu_frequency - Reports frequency changes in GPU clock domains
-> + * @state:  New frequency (in KHz)
-> + * @gpu_id: GPU clock domain
-> + */
-> +TRACE_EVENT(gpu_frequency,
-> +
-> +	TP_PROTO(unsigned int state, unsigned int gpu_id),
-> +
-> +	TP_ARGS(state, gpu_id),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned int, state)
-> +		__field(unsigned int, gpu_id)
+Yeah, if you look at the patches I just sent you'll notice I used scnprintf() 
+everywhere.  Thanks,
 
-Both of the above entries are unsigned int.
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->state = state;
-> +		__entry->gpu_id = gpu_id;
-> +	),
-> +
-> +	TP_printk("state=%lu gpu_id=%lu",
-> +		(unsigned long)__entry->state,
-> +		(unsigned long)__entry->gpu_id)
-
-Why typecast to (unsigned long) to use it in %lu? Why not just have:
-
-	TP_printk("state=%u gpu_id=%u",
-		__entry->state, __entry->gpu_id)
-
-?
-
--- Steve
-
-
-> +);
->  #endif /* _TRACE_POWER_H */
->  
->  /* This part must be outside protection */
-
+Josef
