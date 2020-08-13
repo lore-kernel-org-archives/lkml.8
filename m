@@ -2,121 +2,64 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5952BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9812074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2383C2074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HbQYefQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgHMJF3 (ORCPT
+        id S1726567AbgHMJHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:05:29 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:44821 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgHMJF2 (ORCPT
+        Thu, 13 Aug 2020 05:07:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36026 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726048AbgHMJHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:05:28 -0400
-Received: by mail-oo1-f65.google.com with SMTP id g1so1065809oop.11;
-        Thu, 13 Aug 2020 02:05:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2AvIhR4VMBCPleNB4MD/t7+rUWOqAWwlH0ujr1BxGlw=;
-        b=ARde/XfI66VeOmJdsynQQ/WH4TLxMDPByoINkPLaJVOhIuy/fLUcv2GYe/Vso3zGZT
-         KY3BtooINHlOXZ6JF+5wPIKq/hgMuZiWvAgxDsCjQjJVnZ5bmxe40TRTwE20e5bmaiUK
-         lalU0G+mI9nv+VgdThATprdSF1VkhYjB41IdHJqFrlEDc0OuBWBWRjShad9cDhTDke0w
-         /E9as2FbDbv7/qbIqOwUPj8S2RMMxhTktdSc5JhIGJOefnEtNspb2G1XkwvUo1Ayi6yt
-         YHZwS44PgnDypE+6akbvdgru5qGGZjSPXiKRDcOPgRi5/17ni9LGiya04NxFLfsYejnl
-         yI9g==
-X-Gm-Message-State: AOAM532gyL3ElfAzS0bdPiIMafdx24lByKofjNvH8eauj5vk3zcCJWOg
-        C+d2bPHaKgnZmzr1FubIxHB4GTBsSzbiMlEHiJk=
-X-Google-Smtp-Source: ABdhPJyUVskr8e/cEyjDxvkGzZdvsxqJxwiGe6jUX0tZXjbkklpncAUVA0TsyDuRFcZ55z9cv4D0LKrgJqG/ccdMfWs=
-X-Received: by 2002:a4a:6c13:: with SMTP id q19mr3744544ooc.11.1597309527049;
- Thu, 13 Aug 2020 02:05:27 -0700 (PDT)
+        Thu, 13 Aug 2020 05:07:22 -0400
+X-UUID: a4cf335fea674575ba5035840ca2ff7c-20200813
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=xVTG3i3NZ+1cOXWR7yCUvveG4pS/BEjPy1kRWzM1V+Y=;
+        b=HbQYefQ5NBkj3GDSJjtA/+x89HH/uN9Yv9L3ly/W4/gvuarutfb2vNlrPZLg+hUXhePRF+S3577BM3GK8xakxrDrAmCASUihsnYgb/8nVg/tnMeGVY4wr4BPBNvqDlhrg4rvVN+VxiEENfCa7iD9847kXX8JxJ9R0nVHnWgvllA=;
+X-UUID: a4cf335fea674575ba5035840ca2ff7c-20200813
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <wenbin.mei@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 259483423; Thu, 13 Aug 2020 17:07:19 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 13 Aug 2020 17:07:17 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 13 Aug 2020 17:07:16 +0800
+From:   Wenbin Mei <wenbin.mei@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [v4,0/3] mmc: mediatek: add optional reset property  mmc: mediatek: add optional module reset property  arm64: dts: mt7622: add reset node for mmc device Documentation/devicetree/bindings/mmc/mtk-sd.txt |  2 ++ arch/arm64/boot/dts/mediatek/mt7622.dtsi         |  2 ++ drivers/mmc/host/mtk-sd.c                        | 13 +++++++++++++ 3 files changed, 17 insertions(+)
+Date:   Thu, 13 Aug 2020 17:06:15 +0800
+Message-ID: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 13 Aug 2020 11:05:14 +0200
-Message-ID: <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar, Laurent, Kieran,
+LS0NCjIuMTguMA0K
 
-On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> index 51cd4d162770..67cded5ad827 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> @@ -10,6 +10,7 @@ Required Properties:
->      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
->      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
->      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
-> +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
->      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
->      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
->      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
-> @@ -75,6 +76,7 @@ corresponding to each DU output.
->   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
->   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
->   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
-> + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
-
-As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
-instead of port 2?
-
-I know we did it the same for R-Car M3-N and RZ/G2N.
-But my main worry is adding support for R-Car H3-N later.
-
->   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
->   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
->   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
-
-Apart from that:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
