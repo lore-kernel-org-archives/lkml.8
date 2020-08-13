@@ -2,135 +2,97 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C50FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA65C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBD720715
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFA020781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b7SDv7iJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgHMFaD convert rfc822-to-8bit (ORCPT
+        id S1726107AbgHMFhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:30:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52968 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgHMFaD (ORCPT
+        Thu, 13 Aug 2020 01:37:25 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:30630 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725949AbgHMFhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:30:03 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1k65oL-00043S-Tt; Thu, 13 Aug 2020 05:29:58 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id 3D5635FDD5; Wed, 12 Aug 2020 22:29:56 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id 3758B9FB5C;
-        Wed, 12 Aug 2020 22:29:56 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     Jarod Wilson <jarod@redhat.com>
-cc:     linux-kernel@vger.kernel.org, Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH net] bonding: show saner speed for broadcast mode
-In-reply-to: <20200813035509.739-1-jarod@redhat.com>
-References: <20200813035509.739-1-jarod@redhat.com>
-Comments: In-reply-to Jarod Wilson <jarod@redhat.com>
-   message dated "Wed, 12 Aug 2020 23:55:09 -0400."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Thu, 13 Aug 2020 01:37:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597297044; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=FWAfiwn/2LtjfC+jVU8NoR3c1nS9gxFfZo5aGupJqbI=; b=b7SDv7iJCkO6Ozh49tuDhhKmkehIZIXT2eDvUCN42hex/JrNgrGHfSGrVRcYmdHglKnWQbmM
+ CcW+Aq+Zd4oB/Hfgc5/hT3P4Bj1hUeHCKXUfOf0wiWc4BN7wdHdEfzOCvFTJGp8HT3hAVUop
+ zY07jXicwuxb0+mA3UEenh5l2Ys=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f34d1932f4952907d9ad366 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 05:37:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1914CC433C9; Thu, 13 Aug 2020 05:37:23 +0000 (UTC)
+Received: from [192.168.43.216] (unknown [157.48.144.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6075CC433C6;
+        Thu, 13 Aug 2020 05:37:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6075CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+Subject: Re: [PATCH 2/2] iommu/iova: Free global iova rcache on iova alloc
+ failure
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        vinmenon@codeaurora.org, kernel-team@android.com
+References: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
+ <1593785835-27250-2-git-send-email-vjitta@codeaurora.org>
+ <29f44540-44f8-570d-886f-2090596a3b8e@codeaurora.org>
+ <20200812151608.GG3721@8bytes.org>
+From:   Vijayanand Jitta <vjitta@codeaurora.org>
+Message-ID: <b6c7eb2b-d1f5-058f-943c-1b7c14fe1f7c@codeaurora.org>
+Date:   Thu, 13 Aug 2020 11:06:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27388.1597296596.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 12 Aug 2020 22:29:56 -0700
-Message-ID: <27389.1597296596@famine>
+In-Reply-To: <20200812151608.GG3721@8bytes.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jarod Wilson <jarod@redhat.com> wrote:
-
->Broadcast mode bonds transmit a copy of all traffic simultaneously out of
->all interfaces, so the "speed" of the bond isn't really the aggregate of
->all interfaces, but rather, the speed of the lowest active interface.
-
-	Did you mean "slowest" here?
-
->Also, the type of the speed field is u32, not unsigned long, so adjust
->that accordingly, as required to make min() function here without
->complaining about mismatching types.
->
->Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
->CC: Jay Vosburgh <j.vosburgh@gmail.com>
->CC: Veaceslav Falico <vfalico@gmail.com>
->CC: Andy Gospodarek <andy@greyhouse.net>
->CC: "David S. Miller" <davem@davemloft.net>
->CC: netdev@vger.kernel.org
->Signed-off-by: Jarod Wilson <jarod@redhat.com>
-
-	Did you notice this by inspection, or did it come up in use
-somewhere?  I can't recall ever hearing of anyone using broadcast mode,
-so I'm curious if there is a use for it, but this change seems
-reasonable enough regardless.
-
-	-J
-
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
 
 
->---
-> drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
-> 1 file changed, 18 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
->index 5ad43aaf76e5..c853ca67058c 100644
->--- a/drivers/net/bonding/bond_main.c
->+++ b/drivers/net/bonding/bond_main.c
->@@ -4552,13 +4552,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
-> 	return ret;
-> }
+On 8/12/2020 8:46 PM, Joerg Roedel wrote:
+> On Mon, Aug 03, 2020 at 03:30:48PM +0530, Vijayanand Jitta wrote:
+>> ping?
 > 
->+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
->+{
->+	if (speed == 0 || speed == SPEED_UNKNOWN)
->+		speed = slave->speed;
->+	else
->+		speed = min(speed, slave->speed);
->+
->+	return speed;
->+}
->+
-> static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
-> 					   struct ethtool_link_ksettings *cmd)
-> {
-> 	struct bonding *bond = netdev_priv(bond_dev);
->-	unsigned long speed = 0;
-> 	struct list_head *iter;
-> 	struct slave *slave;
->+	u32 speed = 0;
+> Please repost when v5.9-rc1 is released and add
 > 
-> 	cmd->base.duplex = DUPLEX_UNKNOWN;
-> 	cmd->base.port = PORT_OTHER;
->@@ -4570,8 +4580,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
-> 	 */
-> 	bond_for_each_slave(bond, slave, iter) {
-> 		if (bond_slave_can_tx(slave)) {
->-			if (slave->speed != SPEED_UNKNOWN)
->-				speed += slave->speed;
->+			if (slave->speed != SPEED_UNKNOWN) {
->+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
->+					speed = bond_mode_bcast_speed(slave,
->+								      speed);
->+				else
->+					speed += slave->speed;
->+			}
-> 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
-> 			    slave->duplex != DUPLEX_UNKNOWN)
-> 				cmd->base.duplex = slave->duplex;
->-- 
->2.20.1
->
+> 	Robin Murphy <robin.murphy@arm.com>
+> 
+> on your Cc list.
+> 
+> Thanks,
+> 
+> 	Joerg
+> 
+
+Sure, will do.
+
+Thanks,
+Vijay
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of Code Aurora Forum, hosted by The Linux Foundation
