@@ -2,184 +2,157 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70434C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A498CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226E420791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UXxGSZzb";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="x+VnzAVj"
+	by mail.kernel.org (Postfix) with ESMTP id 8723620791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHMPKX (ORCPT
+        id S1726819AbgHMPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:10:23 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:40852 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726334AbgHMPKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:10:20 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 31D6D8EE1E5;
-        Thu, 13 Aug 2020 08:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597331419;
-        bh=3o0Gk5U5c/tgboU6is0RXdqjpM4d/4IJwBiUFG8jMuA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UXxGSZzb46QTJOqy/JWeOyqw626U8bbIwuEYbPim6fbMyyL04cdp0qwwJKvmyfbNr
-         UEM7+n2fjQro3OPR+d/0IwaOPThCF0S2IiZVh8i0RvltCmlgynmf81fQxVjRPrZJrD
-         VwN5qGlaATNYTzytjZ828B9lKPRGjJv7sHKFKj4I=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jxbPeuibIPjQ; Thu, 13 Aug 2020 08:10:19 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B99EB8EE0F8;
-        Thu, 13 Aug 2020 08:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597331418;
-        bh=3o0Gk5U5c/tgboU6is0RXdqjpM4d/4IJwBiUFG8jMuA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=x+VnzAVj+2h2xN4tfyE/FLRLHz0e4JjMHIuRNpMRmGGydOuuD3MXZ92u9QxCCpuy8
-         /P6QJ618zgdYz9/h9V2XOl+QoySrm5cdkOm6q1yiNBqMdfPyKCaoZZignH3VT/LZKu
-         KlGKtuSb51ELidAyvRI6WiT5Zd7nq6+fKNWHN0PQ=
-Message-ID: <1597331416.3708.26.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Chuck Lever <chucklever@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Thu, 13 Aug 2020 08:10:16 -0700
-In-Reply-To: <D470BA4B-EF1A-49CA-AFB9-0F7FFC4C6001@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-         <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
-         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
-         <1597073737.3966.12.camel@HansenPartnership.com>
-         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
-         <1597124623.30793.14.camel@HansenPartnership.com>
-         <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-         <1597161218.4325.38.camel@HansenPartnership.com>
-         <02D551EF-C975-4B91-86CA-356FA0FF515C@gmail.com>
-         <1597247482.7293.18.camel@HansenPartnership.com>
-         <D470BA4B-EF1A-49CA-AFB9-0F7FFC4C6001@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Thu, 13 Aug 2020 11:10:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:55316 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbgHMPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:10:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3685631B;
+        Thu, 13 Aug 2020 08:10:27 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AADE3F6CF;
+        Thu, 13 Aug 2020 08:10:26 -0700 (PDT)
+Subject: Re: [PATCH] coresight: fix offset by one error in counting ports
+To:     Mian Yousaf Kaukab <ykaukab@suse.de>,
+        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        mike.leach@linaro.org, gregkh@linuxfoundation.org,
+        tingwei@codeaurora.org, Ruediger Oertel <ro@suse.com>
+References: <20200813100456.11803-1-ykaukab@suse.de>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <444a23b2-70d6-6be7-48e9-61f36dd203ee@arm.com>
+Date:   Thu, 13 Aug 2020 10:10:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200813100456.11803-1-ykaukab@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-13 at 10:42 -0400, Chuck Lever wrote:
-> > On Aug 12, 2020, at 11:51 AM, James Bottomley <James.Bottomley@Hans
-> > enPartnership.com> wrote:
-> > On Wed, 2020-08-12 at 10:15 -0400, Chuck Lever wrote:
-> > > > On Aug 11, 2020, at 11:53 AM, James Bottomley
-> > > > <James.Bottomley@HansenPartnership.com> wrote:
-> > > > On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
-[...]
-> > > > > > > The client would have to reconstruct that tree again if
-> > > > > > > memory pressure caused some or all of the tree to be
-> > > > > > > evicted, so perhaps an on-demand mechanism is preferable.
-> > > > > > 
-> > > > > > Right, but I think that's implementation detail.  Probably
-> > > > > > what we need is a way to get the log(N) verification hashes
-> > > > > > from the server and it's up to the client whether it caches
-> > > > > > them or not.
-> > > > > 
-> > > > > Agreed, these are implementation details. But see above about
-> > > > > the trustworthiness of the intermediate hashes. If they are
-> > > > > conveyed on an untrusted network, then they can't be trusted
-> > > > > either.
-> > > > 
-> > > > Yes, they can, provided enough of them are asked for to
-> > > > verify.  If you look at the simple example above, suppose I
-> > > > have cached H11 and H12, but I've lost the entire H2X layer.  I
-> > > > want to verify B3 so I also ask you for your copy of H24.  Then
-> > > > I generate H23 from B3 and Hash H23 and H24.  If this doesn't
-> > > > hash to H12 I know either you supplied me the wrong block or
-> > > > lied about H24.  However, if it all hashes correctly I know you
-> > > > supplied me with both the correct B3 and the correct H24.
-> > > 
-> > > My point is there is a difference between a trusted cache and an
-> > > untrusted cache. I argue there is not much value in a cache where
-> > > the hashes have to be verified again.
-> > 
-> > And my point isn't about caching, it's about where the tree comes
-> > from. I claim and you agree the client can get the tree from the
-> > server a piece at a time (because it can path verify it) and
-> > doesn't have to generate it itself.
+Hi,
+
+As Suzuki mentioned, I hit this on the N1SDP, and as of yesterday 
+afternoon was running a patch that is identical to what you posted here.
+
+This fixes the boot failure and WARN_ON's I was seeing, and appears to 
+return the N1SDP to basic functionality. I think there is at least one 
+further issue, but its unrelated to this.
+
+So,
+
+Tested-by: Jeremy Linton <jeremy.linton@arm.com>
+
+also, might as well:
+
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+
+
+On 8/13/20 5:04 AM, Mian Yousaf Kaukab wrote:
+> Since port-numbers start from 0, add 1 to port-number to get the port
+> count.
 > 
-> OK, let's focus on where the tree comes from. It is certainly
-> possible to build protocol to exchange parts of a Merkle tree.
-
-Which is what I think we need to extend IMA to do.
-
->  The question is how it might be stored on the server.
-
-I think the only thing the server has to guarantee to store is the head
-hash, possibly signed.
-
->  There are some underlying assumptions about the metadata storage
-> mechanism that should be stated up front.
+> Fix following crash when Coresight is enabled on ACPI based systems:
 > 
-> Current forms of IMA metadata are limited in size and stored in a
-> container that is read and written in a single operation. If we stick
-> with that container format, I don't see a way to store a Merkle tree
-> in there for all file sizes.
+> [   61.061736] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+> ...
+> [   61.135494] pc : acpi_coresight_parse_graph+0x1c4/0x37c
+> [   61.140705] lr : acpi_coresight_parse_graph+0x160/0x37c
+> [   61.145915] sp : ffff800012f4ba40
+> [   61.145917] x29: ffff800012f4ba40 x28: ffff00becce62f98
+> [   61.159896] x27: 0000000000000005 x26: ffff00becd8a7c88
+> [   61.165195] x25: ffff00becd8a7d88 x24: ffff00becce62f80
+> [   61.170492] x23: ffff800011ef99c0 x22: ffff009efb8bc010
+> [   61.175790] x21: 0000000000000018 x20: 0000000000000005
+> [   61.181087] x19: ffff00becce62e80 x18: 0000000000000020
+> [   61.186385] x17: 0000000000000001 x16: 00000000000002a8
+> [   61.191682] x15: ffff000838648550 x14: ffffffffffffffff
+> [   61.196980] x13: 0000000000000000 x12: ffff00becce62d87
+> [   61.202277] x11: 00000000ffffff76 x10: 000000000000002e
+> [   61.207575] x9 : ffff8000107e1a68 x8 : ffff00becce63000
+> [   61.212873] x7 : 0000000000000018 x6 : 000000000000003f
+> [   61.218170] x5 : 0000000000000000 x4 : 0000000000000000
+> [   61.223467] x3 : 0000000000000000 x2 : 0000000000000000
+> [   61.228764] x1 : ffff00becce62f80 x0 : 0000000000000000
+> [   61.234062] Call trace:
+> [   61.236497]  acpi_coresight_parse_graph+0x1c4/0x37c
+> [   61.241361]  coresight_get_platform_data+0xdc/0x130
+> [   61.246225]  tmc_probe+0x138/0x2dc
+> [   61.246227]  amba_probe+0xdc/0x220
+> [   61.255779]  really_probe+0xe8/0x49c
+> [   61.255781]  driver_probe_device+0xec/0x140
+> [   61.255782]  device_driver_attach+0xc8/0xd0
+> [   61.255785]  __driver_attach+0xac/0x180
+> [   61.265857]  bus_for_each_dev+0x78/0xcc
+> [   61.265859]  driver_attach+0x2c/0x40
+> [   61.265861]  bus_add_driver+0x150/0x244
+> [   61.265863]  driver_register+0x80/0x13c
+> [   61.273591]  amba_driver_register+0x60/0x70
+> [   61.273594]  tmc_driver_init+0x20/0x2c
+> [   61.281582]  do_one_initcall+0x50/0x230
+> [   61.281585]  do_initcalls+0x104/0x144
+> [   61.291831]  kernel_init_freeable+0x168/0x1dc
+> [   61.291834]  kernel_init+0x1c/0x120
+> [   61.299215]  ret_from_fork+0x10/0x18
+> [   61.299219] Code: b9400022 f9400660 9b277c42 8b020000 (f9400404)
+> [   61.307381] ---[ end trace 63c6c3d7ec6a9b7c ]---
+> [   61.315225] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> 
+> Fixes: d375b356e687 ("coresight: Fix support for sparsely populated ports")
+> Reported-by: Ruediger Oertel <ro@suse.com>
+> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> ---
+>   drivers/hwtracing/coresight/coresight-platform.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index bfd44231d7ad..227e234a2470 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -711,11 +711,11 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+>   			return dir;
+>   
+>   		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
+> -			if (ptr->outport > pdata->nr_outport)
+> -				pdata->nr_outport = ptr->outport;
+> +			if (ptr->outport >= pdata->nr_outport)
+> +				pdata->nr_outport = ptr->outport + 1;
+>   			ptr++;
+>   		} else {
+> -			WARN_ON(pdata->nr_inport == ptr->child_port);
+> +			WARN_ON(pdata->nr_inport == ptr->child_port + 1);
+>   			/*
+>   			 * We do not track input port connections for a device.
+>   			 * However we need the highest port number described,
+> @@ -723,8 +723,8 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+>   			 * record for an output connection. Hence, do not move
+>   			 * the ptr for input connections
+>   			 */
+> -			if (ptr->child_port > pdata->nr_inport)
+> -				pdata->nr_inport = ptr->child_port;
+> +			if (ptr->child_port >= pdata->nr_inport)
+> +				pdata->nr_inport = ptr->child_port + 1;
+>   		}
+>   	}
+>   
+> 
 
-Well, I don't think you need to.  The only thing that needs to be
-stored is the head hash.  Everything else can be reconstructed.  If you
-asked me to implement it locally, I'd probably put the head hash in an
-xattr but use a CAM based cache for the merkel trees and construct the
-tree on first access if it weren't already in the cache.
-
-However, the above isn't what fs-verity does: it stores the tree in a
-hidden section of the file.  That's why I don't think we'd mandate
-anything about tree storage.  Just describe the partial retrieval
-properties we'd like and leave the rest as an implementation detail.
-
-> Thus it seems to me that we cannot begin to consider the tree-on-the-
-> server model unless there is a proposed storage mechanism for that
-> whole tree. Otherwise, the client must have the primary role in
-> unpacking and verifying the tree.
-
-Well, as I said,  I don't think you need to store the tree.  You
-certainly could decide to store the entire tree (as fs-verity does) if
-it fitted your use case, but it's not required.  Perhaps even in my
-case I'd make the CAM based cache persistent, like android's dalvik
-cache.
-
-James
-
-
-> Storing only the tree root in the metadata means the metadata format
-> is nicely bounded in size.
