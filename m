@@ -2,107 +2,196 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF855C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB56420791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEh9dMaq"
+	by mail.kernel.org (Postfix) with ESMTP id 349EA20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgHMTmJ (ORCPT
+        id S1726606AbgHMTmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgHMTmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:42:08 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE062C061757;
-        Thu, 13 Aug 2020 12:42:07 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so3345273pff.4;
-        Thu, 13 Aug 2020 12:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dO4AJdg17GHiRVidFllXm247GrBnT3UM2a7xcTgo2Uo=;
-        b=hEh9dMaqUZ7ggD36PCGiORMzFnBZH2DvakIvVc+1/63tPACTdK6ahZ1Vwsko29o/or
-         /APxbeZTkO8sdlnJkxYf7qFdo2gJzpjE9DVq0FgsVyOXPLiFMTlZB1bgsoVovyaCoHG7
-         bp33hwPdCpLt/K1YmzazB0gDolBdqM9bUQMBJF4I+Uejt/ekfY3nV7j3rOI+lwVuk3s7
-         j89sNqD4FkW6BguvpAYwStw7tJh9O1K7ltDgR2BgkA6OqPMj1B0ukuIMrkLhyexfyUxT
-         hBcuJPvyN81glma5JtllcxeDOUa4XF3fHW7JJHxeQE2VIbnTa6ws0UH9lfoxmcQovb0d
-         pTRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dO4AJdg17GHiRVidFllXm247GrBnT3UM2a7xcTgo2Uo=;
-        b=tClOWha8tDsoeB53VugXcaWF0nQak+06MCtp8q0fNCmOI2PPb4Iy9Sp1DcKLKr3PEM
-         bO1IQ0idXrTKiogBgCbOr1tJSMLIMHH2jq5tIymwz/pbGrCw0B01FLTabd0JIG19Yqln
-         ZIDL0qh03bB6Ydq3ObNb0t5zuGBbsQa/gPqmFzxiwlRWEWHskm8aQcwrcU0yrePKN8Ts
-         XUIrdzAxZEhy3/l05Us71HsXoktyKz8MLcCmalLvE0x2emgNb7RdoLjcDiWrvn7X0fRA
-         OWYKD8vP+tnldTcM8r1TVh18dFX8HKw63+W8fYWXb1FZoeBgkLZqGRHduSEaIMk7P1nk
-         ZVKg==
-X-Gm-Message-State: AOAM531K8C1skqDF41VKV7zqdP6Ezrw6QXT14vPXFbVaz0rGIqw0RFtr
-        hxSEYtdFHQtPUJC9FmpkkkJUHYXSscB0bkVQzrKfH03jYT0=
-X-Google-Smtp-Source: ABdhPJwVdBv2nl3oMn2yL12xHkuYm1bhj+6iSeQ5lS0quXBvgO/1jJcNQ6BVCS8+SG3kLsw7CRDQDfIx+heiQ+lRNdA=
-X-Received: by 2002:a62:158e:: with SMTP id 136mr5920565pfv.36.1597347727174;
- Thu, 13 Aug 2020 12:42:07 -0700 (PDT)
+        Thu, 13 Aug 2020 15:42:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27188 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbgHMTmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 15:42:45 -0400
+IronPort-SDR: JB/uoo35apGL+7loUSkZV9vJs8FoW0Ol6TBHy0Y/z9Zfx/pF+DcmiIkL4CEI2WVnBDgX85i4h7
+ 6Kk4+BNsMMsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="155428381"
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="155428381"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:42:44 -0700
+IronPort-SDR: 7/qZih2+X1s8a6fCKgSt3GdR4AzfyKeecrijkRqa63DeEPPQPDhqLFPiyUAlgj+83hKKyCmEJY
+ qaXE1tV364ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="470336804"
+Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 13 Aug 2020 12:42:43 -0700
+Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k6J7a-0000m7-DB; Thu, 13 Aug 2020 19:42:42 +0000
+Date:   Fri, 14 Aug 2020 03:41:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ f107cee94ba4d2c7357fde59a1d84346c73d4958
+Message-ID: <5f359780.t9GJyTDqT63NoWsH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-6-cmo@melexis.com>
- <CAHp75Vd0D_jq7S=ANLJ-JSTb6iD1vHVRs2cN25Y3sNWCC9L2Xw@mail.gmail.com> <CAKv63uvrrc6Qfr2FjzgnNsHC0maZWT1Zpo=WQZvMmGgtYL6-tw@mail.gmail.com>
-In-Reply-To: <CAKv63uvrrc6Qfr2FjzgnNsHC0maZWT1Zpo=WQZvMmGgtYL6-tw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 13 Aug 2020 22:41:51 +0300
-Message-ID: <CAHp75VecZuvF3fyQV=uGK8NBpTStbASqdR_1kxb0g6_nHdfvQQ@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] iio:temperature:mlx90632: Some stylefixing leftovers
-To:     Crt Mori <cmo@melexis.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 4:12 PM Crt Mori <cmo@melexis.com> wrote:
-> On Thu, 13 Aug 2020 at 13:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
+branch HEAD: f107cee94ba4d2c7357fde59a1d84346c73d4958  genirq: Unlock irq descriptor after errors
 
-...
+elapsed time: 723m
 
-> > > -#define MLX90632_REF_12                12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
-> > > -#define MLX90632_REF_3         12LL /**< ResCtrlRef value of Channel 3 */
-> > > -#define MLX90632_MAX_MEAS_NUM  31 /**< Maximum measurements in list */
-> > > -#define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
+configs tested: 126
+configs skipped: 5
 
-> > > +#define MLX90632_REF_12        12LL /* ResCtrlRef value of Ch 1 or Ch 2 */
-> > > +#define MLX90632_REF_3         12LL /* ResCtrlRef value of Channel 3 */
-> > > +#define MLX90632_MAX_MEAS_NUM  31 /* Maximum measurements in list */
-> > > +#define MLX90632_SLEEP_DELAY_MS 3000 /* Autosleep delay */
-> > >  #define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
-> >
-> > This was actually in doxy (perhaps kernel doc also understands this)
-> > format of description.
-> > Can you double check that the kernel doc is okay / not okay with it?
-> >
-> > If it is okay, perhaps it's better to convert others to that format
-> > rather than dropping it.
-> >
-> It is indeed from doxygen and looking at other drivers it should not
-> be OK. I checked the docs and it does not say in fact. Maybe Jonathan
-> knows, but he was already OK with these changes in v1.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I'm fine with either choice.
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                           corgi_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                            dove_defconfig
+openrisc                    or1ksim_defconfig
+powerpc                           allnoconfig
+sh                           se7750_defconfig
+xtensa                    xip_kc705_defconfig
+csky                             alldefconfig
+m68k                       bvme6000_defconfig
+arm                            lart_defconfig
+sh                            migor_defconfig
+sh                        sh7785lcr_defconfig
+powerpc64                           defconfig
+sh                          sdk7780_defconfig
+sh                          sdk7786_defconfig
+powerpc                          g5_defconfig
+microblaze                      mmu_defconfig
+mips                        vocore2_defconfig
+nds32                            alldefconfig
+sh                                  defconfig
+mips                      fuloong2e_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                            e55_defconfig
+arm                           stm32_defconfig
+arm                            xcep_defconfig
+arc                             nps_defconfig
+arm                     am200epdkit_defconfig
+arm                          collie_defconfig
+arm                     eseries_pxa_defconfig
+arc                    vdk_hs38_smp_defconfig
+arm                            hisi_defconfig
+xtensa                          iss_defconfig
+h8300                     edosk2674_defconfig
+mips                     decstation_defconfig
+sh                             sh03_defconfig
+powerpc                     mpc512x_defconfig
+sh                          lboxre2_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a006-20200811
+x86_64               randconfig-a001-20200811
+x86_64               randconfig-a003-20200811
+x86_64               randconfig-a005-20200811
+x86_64               randconfig-a004-20200811
+x86_64               randconfig-a002-20200811
+i386                 randconfig-a005-20200813
+i386                 randconfig-a001-20200813
+i386                 randconfig-a002-20200813
+i386                 randconfig-a003-20200813
+i386                 randconfig-a006-20200813
+i386                 randconfig-a004-20200813
+i386                 randconfig-a005-20200812
+i386                 randconfig-a001-20200812
+i386                 randconfig-a002-20200812
+i386                 randconfig-a003-20200812
+i386                 randconfig-a006-20200812
+i386                 randconfig-a004-20200812
+i386                 randconfig-a005-20200811
+i386                 randconfig-a001-20200811
+i386                 randconfig-a002-20200811
+i386                 randconfig-a003-20200811
+i386                 randconfig-a006-20200811
+i386                 randconfig-a004-20200811
+i386                 randconfig-a016-20200812
+i386                 randconfig-a011-20200812
+i386                 randconfig-a013-20200812
+i386                 randconfig-a015-20200812
+i386                 randconfig-a012-20200812
+i386                 randconfig-a014-20200812
+i386                 randconfig-a016-20200813
+i386                 randconfig-a011-20200813
+i386                 randconfig-a013-20200813
+i386                 randconfig-a015-20200813
+i386                 randconfig-a012-20200813
+i386                 randconfig-a014-20200813
+x86_64               randconfig-a006-20200813
+x86_64               randconfig-a001-20200813
+x86_64               randconfig-a005-20200813
+x86_64               randconfig-a003-20200813
+x86_64               randconfig-a004-20200813
+x86_64               randconfig-a002-20200813
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
--- 
-With Best Regards,
-Andy Shevchenko
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
