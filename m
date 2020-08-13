@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA23FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5737720781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C4020791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHMKFE (ORCPT
+        id S1726578AbgHMKFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 13 Aug 2020 06:05:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54990 "EHLO mx2.suse.de"
+Received: from mx2.suse.de ([195.135.220.15]:54964 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgHMKFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:05:04 -0400
+        id S1726048AbgHMKFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:05:03 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 40D7AB647;
-        Thu, 13 Aug 2020 10:05:24 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id DA8B0B640;
+        Thu, 13 Aug 2020 10:05:23 +0000 (UTC)
 From:   Mian Yousaf Kaukab <ykaukab@suse.de>
 To:     linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
         suzuki.poulose@arm.com
@@ -32,11 +32,9 @@ Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
         tingwei@codeaurora.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
         Ruediger Oertel <ro@suse.com>
 Subject: [PATCH] coresight: fix offset by one error in counting ports
-Date:   Thu, 13 Aug 2020 12:04:56 +0200
-Message-Id: <20200813100456.11803-2-ykaukab@suse.de>
+Date:   Thu, 13 Aug 2020 12:04:55 +0200
+Message-Id: <20200813100456.11803-1-ykaukab@suse.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200813100456.11803-1-ykaukab@suse.de>
-References: <20200813100456.11803-1-ykaukab@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
