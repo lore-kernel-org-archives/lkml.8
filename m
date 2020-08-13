@@ -2,157 +2,125 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A498CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA76C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8723620791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A974420791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="t6MCFvMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHMPKe (ORCPT
+        id S1726826AbgHMPLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:10:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:55316 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbgHMPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:10:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3685631B;
-        Thu, 13 Aug 2020 08:10:27 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AADE3F6CF;
-        Thu, 13 Aug 2020 08:10:26 -0700 (PDT)
-Subject: Re: [PATCH] coresight: fix offset by one error in counting ports
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>,
-        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com
-Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        mike.leach@linaro.org, gregkh@linuxfoundation.org,
-        tingwei@codeaurora.org, Ruediger Oertel <ro@suse.com>
-References: <20200813100456.11803-1-ykaukab@suse.de>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <444a23b2-70d6-6be7-48e9-61f36dd203ee@arm.com>
-Date:   Thu, 13 Aug 2020 10:10:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200813100456.11803-1-ykaukab@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 13 Aug 2020 11:11:16 -0400
+Received: from mx0a-0039f301.pphosted.com ([148.163.133.242]:45244 "EHLO
+        mx0a-0039f301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726334AbgHMPLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:11:14 -0400
+Received: from pps.filterd (m0174679.ppops.net [127.0.0.1])
+        by mx0a-0039f301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DF5DcT026990;
+        Thu, 13 Aug 2020 15:11:01 GMT
+Received: from eur03-db5-obe.outbound.protection.outlook.com (mail-db5eur03lp2059.outbound.protection.outlook.com [104.47.10.59])
+        by mx0a-0039f301.pphosted.com with ESMTP id 32vh5jksw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 15:11:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L2tpb5Q/ufwkpfOQdAJhsdxj4z0zFcKvYHyw0ceL9yLBpdmjPQL5xD+5XTIwZt80prgxt44M0RRBZiXj++H7lmqu894SvqQEKWU+63QjPwc/dWAjtcj+S/OQ4E/+hlU0KKyYrnk41ULswv7HjR25OTwQLTfbGK34CGK9LTWNILKtSCNKaG44/t1TvnanfPM8Rb8rZUETQghzr4msGxqKVOmS8CIR621yV7lPdkcIIhZKsxAgyan6SMzmvOOftFbBikYBgnV3e5TfEq2ZirfbBWs/myR1vwA1YXR8//iGAXnrM7dzDj2nTIbJaGLEIubo2/hf0V6WKaTX2XMSFNK+8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VbT7E3FnZGjpsellB1VJc0QjmMvxVvvNsgmOtXFlCtQ=;
+ b=BW2OA4dtdpW9vYidmO6VPyr6E0yU1pp5kAtgQKkeFMShBcQ6AgklmXRv7WpEGQqk2HGGp5zsAlXC8zYauz4MVvfxklOsatNvDJ4Gh5XHWbrHGa+uh1tCRQXTqad/CEEKukj9lTrG5dqC2HngnEmm0tYhQyy3Pfh9ShC3oPcM+MbNaqwgx73wb/TMDkUIkxI4g2WCJQydafGn8+f+7mHRdioRB01jI/lVjJPeW9VbRLIz/LDe0JHBlxkw2arEqCYQEV0OTwUh6Q26Nxw+OrmPlaIoNNEcf0NTiTtd+OOGTQrHs4FkBDFsD93JzkDSzcUfLreVpSSvUJ/YWARoFwg2tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VbT7E3FnZGjpsellB1VJc0QjmMvxVvvNsgmOtXFlCtQ=;
+ b=t6MCFvMTEsK8ApQ2twcRHGAUlcTPwJVfF7TcP/9ttKtzeAzSuidsCaH9r60FU0RokiPloYpDKMWtjLYn0BOQhi1/3LEOBhzqp3qAEPrqfC/L+ubAC3gxWuiJGrLZG4SGrE5W8+vElcWKEhTqyvtmtdKY8upBOaP02FGiXCqm7aeQ1rvpPNTKPuzJGMkfGhwbCOo3w90MsB8x28Cv1fnn5gKR/7N0/hZLOLLwIjuTyuzHt2ubSiE7wVLyujMPRlYeez3MiQ/fopzuYu1i98ngeptSU1Q5qPjFTmQaVk0A4vDGl3R11Y5uP1/c3xNkgwXQFuHkwCE6HYTXnY2lme7CPw==
+Received: from AM7PR03MB6325.eurprd03.prod.outlook.com (2603:10a6:20b:13c::18)
+ by AM6PR0302MB3239.eurprd03.prod.outlook.com (2603:10a6:209:1c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 13 Aug
+ 2020 15:10:58 +0000
+Received: from AM7PR03MB6325.eurprd03.prod.outlook.com
+ ([fe80::1c2:462c:58b8:7ee9]) by AM7PR03MB6325.eurprd03.prod.outlook.com
+ ([fe80::1c2:462c:58b8:7ee9%7]) with mapi id 15.20.3283.018; Thu, 13 Aug 2020
+ 15:10:58 +0000
+From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Oleksandr Andrushchenko <andr2000@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v2 0/5] Fixes and improvements for Xen pvdrm
+Thread-Topic: [PATCH v2 0/5] Fixes and improvements for Xen pvdrm
+Thread-Index: AQHWcTn137mCP9TL7kicuRLSt2qi/qk2IyIAgAACToA=
+Date:   Thu, 13 Aug 2020 15:10:58 +0000
+Message-ID: <5a71bca8-df90-a239-6a5e-cbc9af30771e@epam.com>
+References: <20200813062113.11030-1-andr2000@gmail.com>
+ <366f5998-4346-6140-b133-23c9abef6589@suse.com>
+In-Reply-To: <366f5998-4346-6140-b133-23c9abef6589@suse.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=epam.com;
+x-originating-ip: [185.199.97.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3f6f3d8c-cff3-4472-e294-08d83f9b159e
+x-ms-traffictypediagnostic: AM6PR0302MB3239:
+x-microsoft-antispam-prvs: <AM6PR0302MB3239E7AA5C98D2E1D0F6F988E7430@AM6PR0302MB3239.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s/7GZrRMyRp3x1pOd/nbYaE3oW11IM/7BmLXFYIPZPoH3o+X1KeIhi72CLJSK240actFF5fD0Y5rbc+xS3Fl6SdcppWYVihuUMQf5xT4QYOpGpk1uNvSZxB9i2UHfE15J8rHzh8A/osNCdTZ9Lug7x1k4PS+yyHX3Pni5VW0Vb/LRicqsto31papkzWhrFFzm900dQTWuuWLrf55aFfo1K954xY888ptDKhdWUgXPEb3HScAJERsgRwaXfTAVTC+HWrInRkvJZD0yru8HIY+QmOvvtsVyF4iYcSK7yeXy8rLK1ViAFtGadVPVbLCmvIMj6HSGyK5EnWef37TzGOoQuozFYsGXc6aSznlNWjpFjS9G+ngNtu4EwWp2awFMtJK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR03MB6325.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(316002)(54906003)(110136005)(4326008)(8936002)(6512007)(31686004)(71200400001)(8676002)(7416002)(478600001)(64756008)(26005)(31696002)(186003)(4744005)(86362001)(6486002)(2906002)(2616005)(66946007)(36756003)(76116006)(66556008)(6506007)(53546011)(66446008)(66476007)(5660300002)(17423001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vcvXPYC0pdIEErRqfvgFP4YjLHF0ehENmsA4/+0lbZnRNiKY2IxSkx0zG0VPiXwt17EakE8aJgmVrY0wOUhj5DEpWiTm2r9z1ToPMEOtiAcix0kMzPyh1kADstq1Hur//e89W1VX92H+UUmvUMdEq/Fv2lMX/+DkLG5zoC9/V/kNzh1Pigs9ogrYHjH3r/amXarM4sWpB8KI7yicuK0imZsPJIDpVzeiNlI6qioGzDX/FnFrzUeP0sUBEuLzcwPqJgCjiZL9gGNIusZkjIosidib7q3yxZZu31udysPOBgSkLJZVM7l9/mcg4GVBhko15YZAvpUDlE3V4TvzVXJ6aK9I07sO8gzU19L7wdSTNIIMkRtIWc8LBQx+ZqORtiGUHFmRyrNOpoTm9FZJacqXzj1cLECQyoWolWhhkpUuh1odoeU4fL0TVqdxbMRWcYun8Uur+BYvvdM9eWEr8fppzBu0mpCuUKla/QRANfGjgv5Vs2wRsG3altz7fGgo/phQPJT8f0DjTyvUPIyxYOzFsjXUzRFV9StKvjchR49aIId4G0IrpvJpYqv1F+izz3wPbO2+dXXK9IWPeKComZ8gKX6R9DFgZeaZqYnTtvCxqEr8AoW3HIruUwo18xba0BeyXoKozXFtslwk59WCyD5UVQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <67608A17853B3D4E8758991A02FB6D54@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR03MB6325.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f6f3d8c-cff3-4472-e294-08d83f9b159e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 15:10:58.6815
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sW7sNcl4A0S5smUsAfoJB+gTZiYSs0BOwv0FArFl7quZC8r7lJyiAhIF/bL1qX2GkMUmv5tJgslFaTB2p5IqgR/C//QkSTIic44M5b6NThiUmZ+rbfcxckWglQzrBwyg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0302MB3239
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_14:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=933
+ adultscore=0 priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-As Suzuki mentioned, I hit this on the N1SDP, and as of yesterday 
-afternoon was running a patch that is identical to what you posted here.
-
-This fixes the boot failure and WARN_ON's I was seeing, and appears to 
-return the N1SDP to basic functionality. I think there is at least one 
-further issue, but its unrelated to this.
-
-So,
-
-Tested-by: Jeremy Linton <jeremy.linton@arm.com>
-
-also, might as well:
-
-Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-
-
-On 8/13/20 5:04 AM, Mian Yousaf Kaukab wrote:
-> Since port-numbers start from 0, add 1 to port-number to get the port
-> count.
-> 
-> Fix following crash when Coresight is enabled on ACPI based systems:
-> 
-> [   61.061736] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-> ...
-> [   61.135494] pc : acpi_coresight_parse_graph+0x1c4/0x37c
-> [   61.140705] lr : acpi_coresight_parse_graph+0x160/0x37c
-> [   61.145915] sp : ffff800012f4ba40
-> [   61.145917] x29: ffff800012f4ba40 x28: ffff00becce62f98
-> [   61.159896] x27: 0000000000000005 x26: ffff00becd8a7c88
-> [   61.165195] x25: ffff00becd8a7d88 x24: ffff00becce62f80
-> [   61.170492] x23: ffff800011ef99c0 x22: ffff009efb8bc010
-> [   61.175790] x21: 0000000000000018 x20: 0000000000000005
-> [   61.181087] x19: ffff00becce62e80 x18: 0000000000000020
-> [   61.186385] x17: 0000000000000001 x16: 00000000000002a8
-> [   61.191682] x15: ffff000838648550 x14: ffffffffffffffff
-> [   61.196980] x13: 0000000000000000 x12: ffff00becce62d87
-> [   61.202277] x11: 00000000ffffff76 x10: 000000000000002e
-> [   61.207575] x9 : ffff8000107e1a68 x8 : ffff00becce63000
-> [   61.212873] x7 : 0000000000000018 x6 : 000000000000003f
-> [   61.218170] x5 : 0000000000000000 x4 : 0000000000000000
-> [   61.223467] x3 : 0000000000000000 x2 : 0000000000000000
-> [   61.228764] x1 : ffff00becce62f80 x0 : 0000000000000000
-> [   61.234062] Call trace:
-> [   61.236497]  acpi_coresight_parse_graph+0x1c4/0x37c
-> [   61.241361]  coresight_get_platform_data+0xdc/0x130
-> [   61.246225]  tmc_probe+0x138/0x2dc
-> [   61.246227]  amba_probe+0xdc/0x220
-> [   61.255779]  really_probe+0xe8/0x49c
-> [   61.255781]  driver_probe_device+0xec/0x140
-> [   61.255782]  device_driver_attach+0xc8/0xd0
-> [   61.255785]  __driver_attach+0xac/0x180
-> [   61.265857]  bus_for_each_dev+0x78/0xcc
-> [   61.265859]  driver_attach+0x2c/0x40
-> [   61.265861]  bus_add_driver+0x150/0x244
-> [   61.265863]  driver_register+0x80/0x13c
-> [   61.273591]  amba_driver_register+0x60/0x70
-> [   61.273594]  tmc_driver_init+0x20/0x2c
-> [   61.281582]  do_one_initcall+0x50/0x230
-> [   61.281585]  do_initcalls+0x104/0x144
-> [   61.291831]  kernel_init_freeable+0x168/0x1dc
-> [   61.291834]  kernel_init+0x1c/0x120
-> [   61.299215]  ret_from_fork+0x10/0x18
-> [   61.299219] Code: b9400022 f9400660 9b277c42 8b020000 (f9400404)
-> [   61.307381] ---[ end trace 63c6c3d7ec6a9b7c ]---
-> [   61.315225] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-> 
-> Fixes: d375b356e687 ("coresight: Fix support for sparsely populated ports")
-> Reported-by: Ruediger Oertel <ro@suse.com>
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-> ---
->   drivers/hwtracing/coresight/coresight-platform.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index bfd44231d7ad..227e234a2470 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -711,11 +711,11 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
->   			return dir;
->   
->   		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
-> -			if (ptr->outport > pdata->nr_outport)
-> -				pdata->nr_outport = ptr->outport;
-> +			if (ptr->outport >= pdata->nr_outport)
-> +				pdata->nr_outport = ptr->outport + 1;
->   			ptr++;
->   		} else {
-> -			WARN_ON(pdata->nr_inport == ptr->child_port);
-> +			WARN_ON(pdata->nr_inport == ptr->child_port + 1);
->   			/*
->   			 * We do not track input port connections for a device.
->   			 * However we need the highest port number described,
-> @@ -723,8 +723,8 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
->   			 * record for an output connection. Hence, do not move
->   			 * the ptr for input connections
->   			 */
-> -			if (ptr->child_port > pdata->nr_inport)
-> -				pdata->nr_inport = ptr->child_port;
-> +			if (ptr->child_port >= pdata->nr_inport)
-> +				pdata->nr_inport = ptr->child_port + 1;
->   		}
->   	}
->   
-> 
-
+DQpPbiA4LzEzLzIwIDY6MDIgUE0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+IE9uIDEzLjA4LjIw
+IDA4OjIxLCBPbGVrc2FuZHIgQW5kcnVzaGNoZW5rbyB3cm90ZToNCj4+IEZyb206IE9sZWtzYW5k
+ciBBbmRydXNoY2hlbmtvIDxvbGVrc2FuZHJfYW5kcnVzaGNoZW5rb0BlcGFtLmNvbT4NCj4NCj4g
+U2VyaWVzIHB1c2hlZCB0bzoNCj4NCj4geGVuL3RpcC5naXQgZm9yLWxpbnVzLTUuOQ0KPg0KVGhl
+IHRvcCBwYXRjaCBoYXMgc3RyYW5nZSB0aXRsZSB0aG91Z2g6DQoNCiJTdWJqZWN0OiBbUEFUQ0gg
+djIgNS81XSBkcm0veGVuLWZyb250OiBQYXNzIGR1bWIgYnVmZmVyIGRhdGEgb2Zmc2V0IHRvIHRo
+ZSBiYWNrZW5kIg0KDQo+DQo+IEp1ZXJnZW4NCg0KVGhhbmsgeW91LA0KDQpPbGVrc2FuZHINCg==
