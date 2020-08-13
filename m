@@ -2,114 +2,157 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE74AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45613C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC28920715
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165E720715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BY/RaFL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHMUwK (ORCPT
+        id S1726673AbgHMUxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 16:52:10 -0400
-Received: from ms.lwn.net ([45.79.88.28]:49068 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgHMUwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 16:52:09 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9E85D559;
-        Thu, 13 Aug 2020 20:52:08 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 14:52:07 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Subject: [GIT PULL] Documentation fixes for 5.9
-Message-ID: <20200813145207.0a4a3078@lwn.net>
-Organization: LWN.net
+        Thu, 13 Aug 2020 16:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726499AbgHMUxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 16:53:08 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB549C061757;
+        Thu, 13 Aug 2020 13:53:08 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so3163190plr.7;
+        Thu, 13 Aug 2020 13:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KMEdmNBQWTzUTOzp1bnF8SX2rCsME0fqtsH4k5tjFgk=;
+        b=BY/RaFL1BVNPFlGHJzyLzey4vsiBfNtRMsw3MUihtFPevNI6wBAodIqL8l9LyiC8Oq
+         Eo21w0GU1xVIaAU2FMgX28MU4LpFfWXG7LZOiSCe0R/mxr8L/6WKNnWW/OPaTZa0B53o
+         auaWm/ULLH4BluQuWM3Ptb6CmqOTrQ3wf7Xp/8XN/Tn5603OECm26w+DcCTMJtNaXmdp
+         5P4+FVUNcAC7KebDKPDI9F01gUfj1ezszF/xQ4G1kPSHW2W3DFX2M7WfibPvOkoiAQnl
+         +w3p5mbG0qTjS+NjvbNWIeaVGsRmDPPrP1xx/Yl/fB3LWVgi4GjTn4XyHDbY7oQiXx+I
+         3eEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KMEdmNBQWTzUTOzp1bnF8SX2rCsME0fqtsH4k5tjFgk=;
+        b=Vn5LSwrtCbvUnH3DNMnd7cHbNPNKTFXcs8VMTsBo56E7PVmMZ/c9x9KRUKnEngJ/LD
+         HoA9l61jJ7MYOzk8PHFBWnh+Rwt1TfoZG11spTjdPs7PXVVnpdH9tpcXWobby/KjS4l4
+         z1PvdzJSY+lnlikb3wmhYF/RDQKBcoF6LKE4tWIAZFk9PnYjlgReSw8STbc6ACCueL68
+         jgu36wXjUjXJ87qYEukCQaJudPmT1FqJ0y+EJZUavBRu8ChBuEpdCp198dDPUrrChq0j
+         XXf4BA+eNPAew4irM/9jC/KSPlwkHkN+oU8+y3UC1QzRRqe7oHMmE5e0ypb5YItgUkZ/
+         uuAQ==
+X-Gm-Message-State: AOAM531Bpxw9roDExDN4wEGR8yyNVYiVk5ntXQk7q25ZFKbIg6nrpX15
+        hVXuN0uTltSu2Hs0rO/o2z0=
+X-Google-Smtp-Source: ABdhPJwJ7SDcRA3ZGymFvn6xsKEpJWj4sIm+NKcGlAI2M7tYtar9FKkQpMc6BjAOeT2ZGaSmFR8MVw==
+X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr6329006pjn.7.1597351988125;
+        Thu, 13 Aug 2020 13:53:08 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z25sm6975261pfg.150.2020.08.13.13.52.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 13:53:07 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
+ following an ERET instruction
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
+        <kvmarm@lists.cs.columbia.edu>
+References: <20200709195034.15185-1-f.fainelli@gmail.com>
+ <20200720130411.GB494210@kroah.com>
+ <df1de420-ac59-3647-3b81-a0c163783225@gmail.com>
+ <9c29080e-8b3a-571c-3296-e0487fa473fa@gmail.com>
+ <20200807131429.GB664450@kroah.com>
+ <fb3be972-106e-e171-1c2f-6df20ce186d6@gmail.com>
+Message-ID: <647d771d-441b-39f9-809a-19335ef16036@gmail.com>
+Date:   Thu, 13 Aug 2020 13:52:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb3be972-106e-e171-1c2f-6df20ce186d6@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit
-2c12c8103d8f15790cf880f1545dafa36acb004a:
 
-  scripts/kernel-doc: optionally treat warnings as errors (2020-07-31 11:11:17 -0600)
 
-are available in the Git repository at:
+On 8/7/2020 11:17 AM, Florian Fainelli wrote:
+> 
+> 
+> On 8/7/2020 6:14 AM, Greg KH wrote:
+>> On Thu, Aug 06, 2020 at 01:00:54PM -0700, Florian Fainelli wrote:
+>>>
+>>>
+>>> On 7/20/2020 11:26 AM, Florian Fainelli wrote:
+>>>> On 7/20/20 6:04 AM, Greg KH wrote:
+>>>>> On Thu, Jul 09, 2020 at 12:50:23PM -0700, Florian Fainelli wrote:
+>>>>>> From: Will Deacon <will.deacon@arm.com>
+>>>>>>
+>>>>>> commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
+>>>>>>
+>>>>>> Some CPUs can speculate past an ERET instruction and potentially perform
+>>>>>> speculative accesses to memory before processing the exception return.
+>>>>>> Since the register state is often controlled by a lower privilege level
+>>>>>> at the point of an ERET, this could potentially be used as part of a
+>>>>>> side-channel attack.
+>>>>>>
+>>>>>> This patch emits an SB sequence after each ERET so that speculation is
+>>>>>> held up on exception return.
+>>>>>>
+>>>>>> Signed-off-by: Will Deacon <will.deacon@arm.com>
+>>>>>> [florian: Adjust hyp-entry.S to account for the label
+>>>>>>   added change to hyp/entry.S]
+>>>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>>>> ---
+>>>>>> Changes in v2:
+>>>>>>
+>>>>>> - added missing hunk in hyp/entry.S per Will's feedback
+>>>>>
+>>>>> What about 4.19.y and 4.14.y trees?  I can't take something for 4.9.y
+>>>>> and then have a regression if someone moves to a newer release, right?
+>>>>
+>>>> Sure, send you candidates for 4.14 and 4.19.
+>>>
+>>> Greg, did you have a chance to queue those changes for 4.9, 4.14 and 4.19?
+>>>
+>>> https://lore.kernel.org/linux-arm-kernel/20200720182538.13304-1-f.fainelli@gmail.com/
+>>> https://lore.kernel.org/linux-arm-kernel/20200720182937.14099-1-f.fainelli@gmail.com/
+>>> https://lore.kernel.org/linux-arm-kernel/20200709195034.15185-1-f.fainelli@gmail.com/
+>>
+>> Nope, I was waiting for Will's "ack" for these.
+> 
+> OK, Will, can you review those? Thanks
 
-  git://git.lwn.net/linux.git tags/docs-5.9-2
-
-for you to fetch changes up to 1edcd4675e44dc0e6e3b34e8e29000d8a05f998c:
-
-  Documentation/locking/locktypes: fix the typo (2020-08-13 14:47:38 -0600)
-
-----------------------------------------------------------------
-A handful of obvious fixes that wandered in during the merge window.
-
-----------------------------------------------------------------
-Billy Wilson (1):
-      docs: Correct the release date of 5.2 stable
-
-Bryan Brattlof (1):
-      docs: trace: fix a typo
-
-Huang Shijie (1):
-      Documentation/locking/locktypes: fix the typo
-
-Kees Cook (1):
-      mailmap: Update comments for with format and more detalis
-
-Lukas Bulwahn (2):
-      doc/zh_CN: fix title heading markup in admin-guide cpu-load
-      doc/zh_CN: resolve undefined label warning in admin-guide index
-
-Puranjay Mohan (3):
-      Filesystems: Documentation: Replace deprecated :c:func: Usage
-      Dev-tools: Documentation: Replace deprecated :c:func: Usage
-      Core-api: Documentation: Replace deprecated :c:func: Usage
-
-Randy Dunlap (1):
-      Doc: admin-guide: use correct legends in kernel-parameters.txt
-
-Remi Andruccioli (1):
-      docs: cdrom: Fix a typo and rst markup
-
-Stephen Kitt (1):
-      docs: remove the 2.6 "Upgrading I2C Drivers" guide
-
-Sumera Priyadarsini (1):
-      documentation: coccinelle: Improve command example for make C={1,2}
-
-Tobias Klauser (1):
-      Documentation/features: refresh RISC-V arch support files
-
- .mailmap                                           |   9 +-
- Documentation/admin-guide/kernel-parameters.txt    |  36 +--
- Documentation/cdrom/cdrom-standard.rst             |   4 +-
- Documentation/core-api/idr.rst                     |  32 +--
- Documentation/dev-tools/coccinelle.rst             |  15 +-
- Documentation/dev-tools/kgdb.rst                   |  16 +-
- .../features/debug/kmemleak/arch-support.txt       |   2 +-
- .../features/debug/stackprotector/arch-support.txt |   2 +-
- .../features/locking/lockdep/arch-support.txt      |   2 +-
- .../time/context-tracking/arch-support.txt         |   2 +-
- Documentation/filesystems/journalling.rst          |  66 ++---
- Documentation/i2c/index.rst                        |   1 -
- Documentation/i2c/upgrading-clients.rst            | 285 ---------------------
- Documentation/locking/locktypes.rst                |   2 +-
- Documentation/process/2.Process.rst                |   2 +-
- Documentation/trace/intel_th.rst                   |   2 +-
- .../translations/zh_CN/admin-guide/cpu-load.rst    |   4 +-
- .../translations/zh_CN/admin-guide/index.rst       |   2 +-
- 18 files changed, 105 insertions(+), 379 deletions(-)
- delete mode 100644 Documentation/i2c/upgrading-clients.rst
+Will, can you please review those patches?
+-- 
+Florian
