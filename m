@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43568C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2089220658
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A8320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHMQ0O (ORCPT
+        id S1726640AbgHMQ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:26:14 -0400
-Received: from 17.mo5.mail-out.ovh.net ([46.105.56.132]:39152 "EHLO
-        17.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgHMQ0N (ORCPT
+        Thu, 13 Aug 2020 12:27:16 -0400
+Received: from 6.mo179.mail-out.ovh.net ([46.105.56.76]:32778 "EHLO
+        6.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbgHMQ1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:26:13 -0400
-X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 12:26:13 EDT
-Received: from player737.ha.ovh.net (unknown [10.108.35.124])
-        by mo5.mail-out.ovh.net (Postfix) with ESMTP id 7575E28EB84
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:20:36 +0200 (CEST)
+        Thu, 13 Aug 2020 12:27:14 -0400
+Received: from player716.ha.ovh.net (unknown [10.110.171.50])
+        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 9B2CC173E81
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:27:12 +0200 (CEST)
 Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
         (Authenticated sender: steve@sk2.org)
-        by player737.ha.ovh.net (Postfix) with ESMTPSA id 21D02BC5348D;
-        Thu, 13 Aug 2020 16:20:31 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-106R006f1c74461-ce2b-407c-839a-3d80edbb9b02,
+        by player716.ha.ovh.net (Postfix) with ESMTPSA id 41802152A09F7;
+        Thu, 13 Aug 2020 16:27:07 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-105G006859e978a-6936-4e1d-aa48-8a114369f44c,
                     E10370F5499BCD549250CF93A1A6372B2A4BB833) smtp.auth=steve@sk2.org
 From:   Stephen Kitt <steve@sk2.org>
-To:     Marc Hulsman <m.hulsman@tudelft.nl>,
+To:     Steve Glendinning <steve.glendinning@shawell.net>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] drivers/hwmon/w83791d.c: use simple i2c probe
-Date:   Thu, 13 Aug 2020 18:20:26 +0200
-Message-Id: <20200813162026.1512242-1-steve@sk2.org>
+Subject: [PATCH] drivers/hwmon/emc2103.c: use simple i2c probe
+Date:   Thu, 13 Aug 2020 18:27:04 +0200
+Message-Id: <20200813162704.1517951-1-steve@sk2.org>
 X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7517633679366245843
+X-Ovh-Tracer-Id: 7629097772879269159
 X-VR-SPAMSTATE: OK
 X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejfeejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejudeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,42 +56,31 @@ probe function, so it can trivially be converted to the simple
 
 Signed-off-by: Stephen Kitt <steve@sk2.org>
 ---
- drivers/hwmon/w83791d.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/hwmon/emc2103.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/w83791d.c b/drivers/hwmon/w83791d.c
-index aad8d4da5802..37b25a1474c4 100644
---- a/drivers/hwmon/w83791d.c
-+++ b/drivers/hwmon/w83791d.c
-@@ -315,8 +315,7 @@ struct w83791d_data {
- 	u8 vrm;			/* hwmon-vid */
+diff --git a/drivers/hwmon/emc2103.c b/drivers/hwmon/emc2103.c
+index 924c02c1631d..e4c95ca9e19f 100644
+--- a/drivers/hwmon/emc2103.c
++++ b/drivers/hwmon/emc2103.c
+@@ -551,7 +551,7 @@ static const struct attribute_group emc2103_temp4_group = {
  };
  
--static int w83791d_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id);
-+static int w83791d_probe(struct i2c_client *client);
- static int w83791d_detect(struct i2c_client *client,
- 			  struct i2c_board_info *info);
- static int w83791d_remove(struct i2c_client *client);
-@@ -342,7 +341,7 @@ static struct i2c_driver w83791d_driver = {
- 	.driver = {
- 		.name = "w83791d",
- 	},
--	.probe		= w83791d_probe,
-+	.probe_new	= w83791d_probe,
- 	.remove		= w83791d_remove,
- 	.id_table	= w83791d_id,
- 	.detect		= w83791d_detect,
-@@ -1346,8 +1345,7 @@ static int w83791d_detect(struct i2c_client *client,
- 	return 0;
- }
- 
--static int w83791d_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int w83791d_probe(struct i2c_client *client)
+ static int
+-emc2103_probe(struct i2c_client *client, const struct i2c_device_id *id)
++emc2103_probe(struct i2c_client *client)
  {
- 	struct w83791d_data *data;
- 	struct device *dev = &client->dev;
+ 	struct emc2103_data *data;
+ 	struct device *hwmon_dev;
+@@ -653,7 +653,7 @@ static struct i2c_driver emc2103_driver = {
+ 	.driver = {
+ 		.name	= "emc2103",
+ 	},
+-	.probe		= emc2103_probe,
++	.probe_new	= emc2103_probe,
+ 	.id_table	= emc2103_ids,
+ 	.detect		= emc2103_detect,
+ 	.address_list	= normal_i2c,
 -- 
 2.25.4
 
