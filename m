@@ -2,85 +2,103 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A9AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0057B20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F6920866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rkx03hQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgHMLBU (ORCPT
+        id S1726679AbgHMLBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:01:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51836 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgHMLBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:01:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9A84FB6A3;
-        Thu, 13 Aug 2020 11:01:25 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 13:01:02 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
- page->mem_cgroup
-Message-ID: <20200813110102.GF9477@dhcp22.suse.cz>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
- <20200811113008.GK4793@dhcp22.suse.cz>
- <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
- <20200811135626.GL4793@dhcp22.suse.cz>
- <0b5e1ac3-c9c7-35e9-2661-b58430314d0a@linux.alibaba.com>
- <20200813062049.GA9477@dhcp22.suse.cz>
- <abd9276b-31f8-a51d-43d6-6c8ae93237dc@linux.alibaba.com>
+        Thu, 13 Aug 2020 07:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMLBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:01:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A968C061757;
+        Thu, 13 Aug 2020 04:01:25 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so2458666plb.12;
+        Thu, 13 Aug 2020 04:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cqj1cyRcMo22JPCsUQj97oV6g8Vp6ijb+6eawSfLamM=;
+        b=Rkx03hQ2ZuuoURjUOvIRaDuBT+77sPFb9qC91/eTlqfmIi0oDpxdD59Zcbwx4ysNwk
+         SBfZqOCOd7w8ULkwbX7vn0XmmRd8RbXcYwodovSWjmBN7YdQWOBHvsIr6EPbQ/+mKrJW
+         Yj/25zQtKRoB/2oZvy0Fnn5SAuEnssv2XwHpvl1vnE9mmsaTOzv9/K6D+6mRC5kDDD8r
+         o7DJDmQgyHvbyEV/GnOnnE/F0b7rtKQCB8KubLjbu33fba+O6m+aoh7Cr+/k89JquCCt
+         eb13QzlWUrGZS8owZzo0RtyiNO3y6IrQTeEvjSWiSdzBWKaxg9bPoo+Hol2iM26uWym/
+         mMuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cqj1cyRcMo22JPCsUQj97oV6g8Vp6ijb+6eawSfLamM=;
+        b=RuDLWJB+yqQ6rgGbuQRRsmzlhg3aot3fojbbR1PGU/PRAXYhaaXgQBmhhN9oIgsvjF
+         MHxDwG2vQ1rpMJRyEIXPOQ1TGgmiQF57eHOMbK+dGlGoN6Un7Q4flp4BZUhWG6THWsmj
+         vrUOQL1VSRtPHSRB2+DJOPzoTtXcXyY0ScLXKCdLR7oEJ/TEh34nIQ1b2huE6mn22VoP
+         dZqX1Oq6rtuhyavJnV6PgK7DIC92rlMG5z1iaRTVm4iwaPrfV+wEGS/GmTYsumnPCyV+
+         lIZ0CScVd5/cAdHmLL6/liGuag+OKvxrZ5i/FyKHGqHL4XwrVxroyIxCDtNXadGhHdA4
+         BOBw==
+X-Gm-Message-State: AOAM5313Dvhsq9CNmhRdREFUdU2t23mEnRLmeEVDZWUEOSOk6FA2phgW
+        +nijGlf9JleI+zaiXlLclzsrnMUwh60yoBtJMqI=
+X-Google-Smtp-Source: ABdhPJwyApNXW/87fQApRn/D5Mnf98NGzasaZ52NibTo/sH1ILmA4p4dJMx767agadys9L2kiADK4v+fuR1ECpvP3ag=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr3503017pla.18.1597316484554;
+ Thu, 13 Aug 2020 04:01:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <abd9276b-31f8-a51d-43d6-6c8ae93237dc@linux.alibaba.com>
+References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-6-cmo@melexis.com>
+In-Reply-To: <20200813075125.4949-6-cmo@melexis.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Aug 2020 14:01:08 +0300
+Message-ID: <CAHp75Vd0D_jq7S=ANLJ-JSTb6iD1vHVRs2cN25Y3sNWCC9L2Xw@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] iio:temperature:mlx90632: Some stylefixing leftovers
+To:     Crt Mori <cmo@melexis.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 17:45:19, Alex Shi wrote:
-> 
-> 
-> 在 2020/8/13 下午2:20, Michal Hocko 写道:
-> > On Wed 12-08-20 11:25:53, Alex Shi wrote:
-> >> >From 999b0fe5fc65865c3b59ff28500d45572a4a9570 Mon Sep 17 00:00:00 2001
-> >> From: Alex Shi <alex.shi@linux.alibaba.com>
-> >> Date: Wed, 5 Aug 2020 21:02:30 +0800
-> >> Subject: [PATCH 2/6] mm/memcg: bail out early from swap accounting when memcg
-> >>  is disabled
-> >>
-> >> If we disabled memcg by cgroup_disable=memory, page->memcg will be NULL
-> >> and so the charge is skipped and that will trigger a warning like below.
-> >> Let's return from the funcs earlier.
-> >>
-> >>  ---[ end trace f1f34bfc3b32ed2f ]---
-> >>  anon flags:0x5005b48008000d(locked|uptodate|dirty|swapbacked)
-> >>  raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
-> >>  raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
-> >>  page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
-> > 
-> > Yes this is better. It would be even more informative if you added the
-> > backtrace.
-> 
-> The stack is a bit long.
+On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
+>
+> There is some inconsistency and whitespace cleanup performed in this
+> patch. It was done on top of my other patches, but I can rebase to head
+> of the togreg branch if it would go in sooner.
 
-This doesn't matter. It is informative and potentially useful for future
-reference.
+...
 
-Thanks!
+> -#define MLX90632_REF_12                12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
+> -#define MLX90632_REF_3         12LL /**< ResCtrlRef value of Channel 3 */
+> -#define MLX90632_MAX_MEAS_NUM  31 /**< Maximum measurements in list */
+> -#define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
+
+
+> +#define MLX90632_REF_12        12LL /* ResCtrlRef value of Ch 1 or Ch 2 */
+> +#define MLX90632_REF_3         12LL /* ResCtrlRef value of Channel 3 */
+> +#define MLX90632_MAX_MEAS_NUM  31 /* Maximum measurements in list */
+> +#define MLX90632_SLEEP_DELAY_MS 3000 /* Autosleep delay */
+>  #define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
+
+This was actually in doxy (perhaps kernel doc also understands this)
+format of description.
+Can you double check that the kernel doc is okay / not okay with it?
+
+If it is okay, perhaps it's better to convert others to that format
+rather than dropping it.
+
 -- 
-Michal Hocko
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
