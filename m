@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67710C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA299C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3E320885
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51362087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="cT3EKhb5"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="ejNsa+jp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHMVEd (ORCPT
+        id S1726526AbgHMVEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 13 Aug 2020 17:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgHMVE3 (ORCPT
+        with ESMTP id S1726699AbgHMVE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:04:29 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD67FC061384
+        Thu, 13 Aug 2020 17:04:28 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E81C061757
         for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:04:28 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v22so5491071qtq.8
+Received: by mail-qk1-x744.google.com with SMTP id x69so6557670qkb.1
         for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=fP9lP5J3iDMYf8rHzghnKH6TXtdMcDE1b3S5bi4nUEU=;
-        b=cT3EKhb5eeN0mTmMlyXvcbBoen4kpRz9MkJyXeAirYXUWdz02tUwkvQXECmNg+TkaD
-         jzU6fsqB4ZGIum35WEjTvUUcDvDvHZIzBBiA99mcqr3/lGUWb2X0BA2O0/fnivLH8p2V
-         NzV95903xJU32+dWivod7qGlYAgyNtu3GJhgERYcqyCXiXKYZQsrbP0PPc8qL1MXoJ+u
-         HmPvz2cLV+Jol1enJaQVaj/DEeEDovYu6GxmNm14KpsdFmjGuYlWtj9gct9fAIvvLBOs
-         yY/WxWHzhr/G+ajuBOVOkYtBmLjs56+vL2Y0V/ycCP5A3KUIjBdJt5NhbmLkAZaIc7H2
-         C5Hg==
+        bh=B2hh6MpQwu6Rqj6uOiklAGWqGW54Mh8HhVSMxBFaJos=;
+        b=ejNsa+jphEK3859SCEU0roKfiKmiiVa2ALt77VinrUqepgftjIRozCHn5PCiDJA+G+
+         sM9Cr1E3IVkgOtNWe4JkL03D6EnuXxN5yH41MS0Gksym+5Z3jmh1e2JPffSnVfswMRAd
+         98iMI1p72ITKNH2G324zgWTmP4IgYYRs5wQBvxNEe4v2V0hiVz51M+pj8/J4miX2puC9
+         7VSQfvyMpYDBA21Z6skpxhPp8gOGtYg/5Ypq1eq+AtD2iT3foLq3VdKZk9nwuWDZ9kmH
+         Cq5o0knbL5g075H/aSxfGDHHpOKOGIc8qg+HBNwx1NZKvSZvY84c6r6OCtyNJqNPcQJ5
+         FuZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fP9lP5J3iDMYf8rHzghnKH6TXtdMcDE1b3S5bi4nUEU=;
-        b=JhW8hlyDGZAr6P0UVkxC0SElfO2IfVDLu1i8LPBuv1zeuN0YnQZOc447TH0AecSJ5Y
-         1XnYTajyIHZ2lcFPNEPnoilxauinrahGFqYJ2hQe3P2J3NafAjZJSAOEuRA5qCeQQDzR
-         lcL1D1Yxv+Qy+6RzFC+ZoHkJrB5ywShcIuwWtuInd6mftKKt/dcH8WPnPYAxmS6c1c8T
-         nv/XCDnavdn0RCs0o5NNsT8vpMxxgBrRRSFvV766vsmhCjS78B6hUPvba9/BJWhEFfKp
-         dXbR/VacyltJYUdB9bdu1GIRMzEKF64GiLIoRlx7Ly7vq39mM0EsRa6nTho4uiFHwX9a
-         FNUg==
-X-Gm-Message-State: AOAM530NACEL+ohayxcLMLjbWiK424ESi2lnrUsU4jWSK7xMAkxvdxYf
-        Je1HKfIw2A+TS8EoKN03ndwHZw==
-X-Google-Smtp-Source: ABdhPJzswgyzPU1h7n0HxzeOaC1WtFB0NHM2erdCX+zd7HARBrYyuExecLpPjtSgwW9qEwus5zGumw==
-X-Received: by 2002:ac8:748b:: with SMTP id v11mr7121989qtq.293.1597352667526;
-        Thu, 13 Aug 2020 14:04:27 -0700 (PDT)
+        bh=B2hh6MpQwu6Rqj6uOiklAGWqGW54Mh8HhVSMxBFaJos=;
+        b=hnzt+YOrG9Sg0aFldyEV1+4gdpJs/FcYjmL6TVtchioLQpkOM1fOGm0FIfRny06FoE
+         OuWZgWTBCsYMUHP5QBBlPFVWDgnxEmjnlteXcpN/w5ju2u3duKcwSIVuiDMPkQiASmRw
+         0QAXfEeO+EE305CIGKYSr1wyCyawfglZN7ZCOWL7cjTgLMYNv+zQR3D6yKO72BgGkdVJ
+         MWfsGDThhInh2FoYUssJHPPMpEiubY2kuVeEfz5q0XBP/Ek2+5MeO0ruFq32cqq5pcCV
+         woMZTuMGMLFMWcUXoztkuyEmq8UBxiR3inRIF97gVgtkbkrW5heQjInEN1CQB8ettAeq
+         02Lw==
+X-Gm-Message-State: AOAM532CGNsYuFNKqrsarBtwWxr7POAegatRGJgqAe/jAAWMSAfyLvDs
+        uXXqntw4UqymLSZZuX35weFbJA==
+X-Google-Smtp-Source: ABdhPJykx6IW8mEtdDEkJz+B1eYT2YTUFbfFsDCkybScvXjr8caKjUwYhlC5o1X3Vm0IZh17dtYxgQ==
+X-Received: by 2002:a37:5d01:: with SMTP id r1mr6634316qkb.18.1597352665792;
+        Thu, 13 Aug 2020 14:04:25 -0700 (PDT)
 Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id s30sm8077804qtc.87.2020.08.13.14.04.26
+        by smtp.gmail.com with ESMTPSA id j15sm6397355qkl.63.2020.08.13.14.04.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:04:26 -0700 (PDT)
+        Thu, 13 Aug 2020 14:04:25 -0700 (PDT)
 From:   Josef Bacik <josef@toxicpanda.com>
 To:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, willy@infradead.org,
         kernel-team@fb.com
-Subject: [PATCH 6/6] sunrpc: rework proc handlers to take advantage of the new buffer
-Date:   Thu, 13 Aug 2020 17:04:11 -0400
-Message-Id: <20200813210411.905010-7-josef@toxicpanda.com>
+Subject: [PATCH 5/6] parport: rework procfs handlers to take advantage of the new buffer
+Date:   Thu, 13 Aug 2020 17:04:10 -0400
+Message-Id: <20200813210411.905010-6-josef@toxicpanda.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200813210411.905010-1-josef@toxicpanda.com>
 References: <20200813210411.905010-1-josef@toxicpanda.com>
@@ -76,63 +76,239 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we're allocating an extra slot for the NULL terminated string,
-use scnprintf() and write directly into the buffer.
+The buffer coming from higher up the stack has an extra byte to handle
+the NULL terminator in the string.  Instead of using a temporary buffer
+to sprintf into and then copying into the buffer, just scnprintf
+directly into the buffer and update lenp as appropriate.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- net/sunrpc/sysctl.c            | 10 ++--------
- net/sunrpc/xprtrdma/svc_rdma.c | 16 ++--------------
- 2 files changed, 4 insertions(+), 22 deletions(-)
+ drivers/parport/procfs.c | 108 +++++++++++++--------------------------
+ 1 file changed, 36 insertions(+), 72 deletions(-)
 
-diff --git a/net/sunrpc/sysctl.c b/net/sunrpc/sysctl.c
-index 999eee1ed61c..31ed530d9846 100644
---- a/net/sunrpc/sysctl.c
-+++ b/net/sunrpc/sysctl.c
-@@ -117,14 +117,8 @@ proc_dodebug(struct ctl_table *table, int write, void *buffer, size_t *lenp,
- 		if (strcmp(table->procname, "rpc_debug") == 0)
- 			rpc_show_tasks(&init_net);
- 	} else {
--		len = sprintf(tmpbuf, "0x%04x", *(unsigned int *) table->data);
--		if (len > left)
--			len = left;
--		memcpy(buffer, tmpbuf, len);
--		if ((left -= len) > 0) {
--			*((char *)buffer + len) = '\n';
--			left--;
--		}
-+		len = scnprintf(buffer, *lenp, "0x%04x\n", *(unsigned int *) table->data);
-+		left -= len;
+diff --git a/drivers/parport/procfs.c b/drivers/parport/procfs.c
+index d740eba3c099..453d035ad5f6 100644
+--- a/drivers/parport/procfs.c
++++ b/drivers/parport/procfs.c
+@@ -37,9 +37,8 @@ static int do_active_device(struct ctl_table *table, int write,
+ 		      void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[256];
+ 	struct pardevice *dev;
+-	int len = 0;
++	size_t ret = 0;
+ 
+ 	if (write)		/* can't happen anyway */
+ 		return -EACCES;
+@@ -48,24 +47,19 @@ static int do_active_device(struct ctl_table *table, int write,
+ 		*lenp = 0;
+ 		return 0;
+ 	}
+-	
++
+ 	for (dev = port->devices; dev ; dev = dev->next) {
+ 		if(dev == port->cad) {
+-			len += sprintf(buffer, "%s\n", dev->name);
++			ret += scnprintf(result + ret, *lenp - ret, "%s\n",
++					 dev->name);
+ 		}
  	}
  
- done:
-diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
-index 526da5d4710b..9b3a113598af 100644
---- a/net/sunrpc/xprtrdma/svc_rdma.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma.c
-@@ -90,20 +90,8 @@ static int read_reset_stat(struct ctl_table *table, int write,
- 	if (write)
- 		atomic_set(stat, 0);
- 	else {
--		char str_buf[32];
--		int len = snprintf(str_buf, 32, "%d\n", atomic_read(stat));
--		if (len >= 32)
--			return -EFAULT;
--		len = strlen(str_buf);
--		if (*ppos > len) {
--			*lenp = 0;
--			return 0;
--		}
--		len -= *ppos;
--		if (len > *lenp)
--			len = *lenp;
--		if (len)
--			memcpy(buffer, str_buf, len);
-+		size_t len = scnprintf(buffer, *lenp, "%d\n",
-+				       atomic_read(stat));
- 		*lenp = len;
- 		*ppos += len;
+-	if(!len) {
+-		len += sprintf(buffer, "%s\n", "none");
+-	}
+-
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
++	if (!ret)
++		ret = scnprintf(result, *lenp, "%s\n", "none");
+ 
+-	*ppos += len;
+-	memcpy(result, buffer, len);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ 
+@@ -75,8 +69,7 @@ static int do_autoprobe(struct ctl_table *table, int write,
+ {
+ 	struct parport_device_info *info = table->extra2;
+ 	const char *str;
+-	char buffer[256];
+-	int len = 0;
++	size_t ret = 0;
+ 
+ 	if (write) /* permissions stop this */
+ 		return -EACCES;
+@@ -85,30 +78,24 @@ static int do_autoprobe(struct ctl_table *table, int write,
+ 		*lenp = 0;
+ 		return 0;
  	}
+-	
++
+ 	if ((str = info->class_name) != NULL)
+-		len += sprintf (buffer + len, "CLASS:%s;\n", str);
++		ret += scnprintf(result + ret, *lenp - ret, "CLASS:%s;\n", str);
+ 
+ 	if ((str = info->model) != NULL)
+-		len += sprintf (buffer + len, "MODEL:%s;\n", str);
++		ret += scnprintf(result + ret, *lenp - ret, "MODEL:%s;\n", str);
+ 
+ 	if ((str = info->mfr) != NULL)
+-		len += sprintf (buffer + len, "MANUFACTURER:%s;\n", str);
++		ret += scnprintf(result + ret, *lenp - ret, "MANUFACTURER:%s;\n", str);
+ 
+ 	if ((str = info->description) != NULL)
+-		len += sprintf (buffer + len, "DESCRIPTION:%s;\n", str);
++		ret += scnprintf(result + ret, *lenp - ret, "DESCRIPTION:%s;\n", str);
+ 
+ 	if ((str = info->cmdset) != NULL)
+-		len += sprintf (buffer + len, "COMMAND SET:%s;\n", str);
+-
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
++		ret += scnprintf(result + ret, *lenp - ret, "COMMAND SET:%s;\n", str);
+ 
+-	*ppos += len;
+-
+-	memcpy(result, buffer, len);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ #endif /* IEEE1284.3 support. */
+@@ -117,8 +104,7 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
+ 				 void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[20];
+-	int len = 0;
++	size_t ret;
+ 
+ 	if (*ppos) {
+ 		*lenp = 0;
+@@ -128,15 +114,10 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
+ 	if (write) /* permissions prevent this anyway */
+ 		return -EACCES;
+ 
+-	len += sprintf (buffer, "%lu\t%lu\n", port->base, port->base_hi);
+-
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
+-
+-	*ppos += len;
+-	memcpy(result, buffer, len);
++	ret = scnprintf(result, *lenp, "%lu\t%lu\n", port->base,
++			port->base_hi);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ 
+@@ -144,8 +125,7 @@ static int do_hardware_irq(struct ctl_table *table, int write,
+ 			   void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[20];
+-	int len = 0;
++	size_t ret;
+ 
+ 	if (*ppos) {
+ 		*lenp = 0;
+@@ -155,15 +135,10 @@ static int do_hardware_irq(struct ctl_table *table, int write,
+ 	if (write) /* permissions prevent this anyway */
+ 		return -EACCES;
+ 
+-	len += sprintf (buffer, "%d\n", port->irq);
++	ret = scnprintf(result, *lenp, "%d\n", port->irq);
+ 
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
+-
+-	*ppos += len;
+-	memcpy(result, buffer, len);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ 
+@@ -171,8 +146,7 @@ static int do_hardware_dma(struct ctl_table *table, int write,
+ 			   void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[20];
+-	int len = 0;
++	size_t ret;
+ 
+ 	if (*ppos) {
+ 		*lenp = 0;
+@@ -182,15 +156,10 @@ static int do_hardware_dma(struct ctl_table *table, int write,
+ 	if (write) /* permissions prevent this anyway */
+ 		return -EACCES;
+ 
+-	len += sprintf (buffer, "%d\n", port->dma);
+-
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
++	ret = scnprintf(result, *lenp, "%d\n", port->dma);
+ 
+-	*ppos += len;
+-	memcpy(result, buffer, len);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ 
+@@ -198,8 +167,7 @@ static int do_hardware_modes(struct ctl_table *table, int write,
+ 			     void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[40];
+-	int len = 0;
++	size_t ret = 0;
+ 
+ 	if (*ppos) {
+ 		*lenp = 0;
+@@ -213,7 +181,8 @@ static int do_hardware_modes(struct ctl_table *table, int write,
+ #define printmode(x)							\
+ do {									\
+ 	if (port->modes & PARPORT_MODE_##x)				\
+-		len += sprintf(buffer + len, "%s%s", f++ ? "," : "", #x); \
++		ret += scnprintf(result + ret, *lenp - ret,		\
++				 "%s%s", f++ ? "," : "", #x);		\
+ } while (0)
+ 		int f = 0;
+ 		printmode(PCSPP);
+@@ -224,15 +193,10 @@ do {									\
+ 		printmode(DMA);
+ #undef printmode
+ 	}
+-	buffer[len++] = '\n';
+-
+-	if (len > *lenp)
+-		len = *lenp;
+-	else
+-		*lenp = len;
++	ret += scnprintf(result + ret, *lenp - ret, "\n");
+ 
+-	*ppos += len;
+-	memcpy(result, buffer, len);
++	*lenp = ret;
++	*ppos += ret;
+ 	return 0;
+ }
+ 
 -- 
 2.24.1
 
