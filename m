@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E55AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD87C433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC98206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280B8206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoBDyM+t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddXLjfWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgHMVfL (ORCPT
+        id S1726943AbgHMVfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
+        Thu, 13 Aug 2020 17:35:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHMVeo (ORCPT
+        with ESMTP id S1726698AbgHMVef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:34:44 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31599C061757;
-        Thu, 13 Aug 2020 14:34:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m15so3794365lfp.7;
-        Thu, 13 Aug 2020 14:34:44 -0700 (PDT)
+        Thu, 13 Aug 2020 17:34:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F22C061757;
+        Thu, 13 Aug 2020 14:34:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w25so7768217ljo.12;
+        Thu, 13 Aug 2020 14:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YV+mrC5kiC7QQYV/FBFX4qMy1dVded4Mn/XHB6H0W0I=;
-        b=VoBDyM+tte4MJ8a9yQorB2SaOnVDp2m49O31ggdeuUOxgsZx/NdLhq0Lqoaza/aDu2
-         wG8TmQIstDiqk4lLJajdCpj/ybwYDk3jrTLNqAHricGuQR0o/oByfcj9Yd41TH/oSmap
-         +oxIDH2XqJptS6rFqsY+gUp8ePI5Q2uZg6sjDTbgGYxN9fkBU1XaFHdjLGeShR6F3pn+
-         fTDl2QL2bkosXZrtZMUpaByw39DtX7+wv4AwWdxVfssNHPUiq9+hvFd++KOFL8xFkS1a
-         1zv7MOcU4SBPk7RdhyN1k0e+7k2OwVXzKppK9kH6YOYUSjk9fXfNLuUzQ08QIP4G0DbH
-         BLeA==
+        bh=O0yugzvKqUofOFg3gQRSvSu6LWWdYaLpdIpz8+ZfmFw=;
+        b=ddXLjfWdJqtVi9h0B0q10kZwaUeFC21Cmph08cYVhcYpcRipvwLkeLriefbwYCcpfX
+         rTbmC4KnsQCFYU1rdDlTWecPjwDSsDLO0G9zds2gZZnxBSQJhpBB8eZyzGKKcrfUsMP5
+         Wgjm8jGtpOif/83zPKkw4ljD/qMIMU83AwkYSQHDVKGr3Bq4R65FeRZtz6yKlyBPyrlM
+         UqtZt738ZsXQNjSx4hnPkugPw2chvbDcI55NsFClym66wv7t5DhKasIYMvBFadijib66
+         0/TKzIYHWVHIZ0T6/IJWuQIIFqb/5/pdyLklEFcHBXmO4h1/5+WakWOaLYVwEnp62K2/
+         ctrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YV+mrC5kiC7QQYV/FBFX4qMy1dVded4Mn/XHB6H0W0I=;
-        b=mex+ij+MbQJA7twT+a/OYgVEkKOWiNiAYMNysEiMFc62PMrPtDYqXAl+7I1j8ql7LM
-         OeLjOaBF1CuuAzIdl9uvlEYTiKMY7ZCakMZbh+9s/xTXu/GouM5+9jyX34C69ZQ2I06Y
-         lkq/4axaYdQKYb7wFhiezgdKGw/bgk0+0GxgpJssDiFfczy+PDwgzhnA3zvKek0zGn5P
-         FNcNziSl1c16wJ1vMWMDsw+6HUhu/komppWVB7zhOC2AXTFJsBmuLwYvwxBk3a2bWtOv
-         vtWLkNX2zwzu54yrw/jmuGBUFa3jg3anmeG8m66jX8VAn7O3Z+af349YoXUFGgdlix7M
-         /kHA==
-X-Gm-Message-State: AOAM532NmcbQgbxhiQbpObTgAT8oaFb2nxoJSxTRCs2g39OkloOm49sy
-        lDeYuNzGzjOjqXD2M0LLWJQ7jacm
-X-Google-Smtp-Source: ABdhPJwXiz7uILUNUhDvRcL8o6/prwxG95Ifu0ZfXuChgZ6XNpf2ZV/Dw7EJODy4vNJYOdKNnPjysg==
-X-Received: by 2002:a19:8452:: with SMTP id g79mr3227883lfd.29.1597354482652;
-        Thu, 13 Aug 2020 14:34:42 -0700 (PDT)
+        bh=O0yugzvKqUofOFg3gQRSvSu6LWWdYaLpdIpz8+ZfmFw=;
+        b=AaFxAwx3nuyXBGW7x+TZQ6dRu87S/cERD+71sfmvaJ+vkysbU65q1B6eMXPXAD/DRf
+         HANBl7yKd0Lzzd2npDcr3rDHG/69zCWrACU1puwG0ewKUajyzp1z4okPhh9x9ZGaTKZA
+         5eLsIKEw8PNOwhg6Lw4p6J0I9T6gPbKE4nHEIMZ1X+aUs1SfFwvjqwtx3BEyA1REfZIk
+         TogQPEeQXxYuIHmGWY6fBM4Vyn1PjQuJGEdMbOwritLLrIMhqmAW+LQn1x6T4ZcJ/SwS
+         Z7dc43Exw2Sx92bb6zV30GrQSEZSfDssR1GXC49baCZrl2h/C7/53E6wXMRxqmhQ9cyh
+         mPng==
+X-Gm-Message-State: AOAM532m+TRPHsz4q51w3Wx4zukBgqae9llOy2ZqlGrictq6FSyxliyZ
+        Hc7rwyMCybe0uj/uFctADXU=
+X-Google-Smtp-Source: ABdhPJznWI2df852Z9LPq9Z2Nw9rDffTl31+GknxyxBxb5ZTU/I2CWkvoOOdoGCj8Zd191VQqU6etw==
+X-Received: by 2002:a2e:9449:: with SMTP id o9mr3142556ljh.403.1597354473868;
+        Thu, 13 Aug 2020 14:34:33 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.41
+        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:34:41 -0700 (PDT)
+        Thu, 13 Aug 2020 14:34:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -76,9 +76,9 @@ Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         John Stultz <john.stultz@linaro.org>,
         Vinay Simha BN <simhavcs@gmail.com>,
         linux-tegra@vger.kernel.org
-Subject: [PATCH v3 10/10] ARM: tegra: nexus7: Add SMB347 battery charger
-Date:   Fri, 14 Aug 2020 00:34:09 +0300
-Message-Id: <20200813213409.24222-11-digetx@gmail.com>
+Subject: [PATCH v3 03/10] power: supply: Support battery temperature device-tree properties
+Date:   Fri, 14 Aug 2020 00:34:02 +0300
+Message-Id: <20200813213409.24222-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200813213409.24222-1-digetx@gmail.com>
 References: <20200813213409.24222-1-digetx@gmail.com>
@@ -89,68 +89,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Heidelberg <david@ixit.cz>
+The generic battery temperature properties are already supported by the
+power-supply core. Let's support parsing of the common battery temperature
+properties from a device-tree.
 
-SMB347 is a battery charger controller which is found on the Nexus 7
-device.
-
-Signed-off-by: David Heidelberg <david@ixit.cz>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../tegra30-asus-nexus7-grouper-common.dtsi   | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/power/supply/power_supply_core.c | 19 +++++++++++++++++++
+ include/linux/power_supply.h             |  6 ++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
-index e2d5fbacf9b4..903457292c04 100644
---- a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
-+++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
-@@ -2,6 +2,7 @@
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index ccbad435ed12..38e3aa642131 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -579,6 +579,12 @@ int power_supply_get_battery_info(struct power_supply *psy,
+ 	info->charge_term_current_ua         = -EINVAL;
+ 	info->constant_charge_current_max_ua = -EINVAL;
+ 	info->constant_charge_voltage_max_uv = -EINVAL;
++	info->temp_ambient_alert_min         = INT_MIN;
++	info->temp_ambient_alert_max         = INT_MAX;
++	info->temp_alert_min                 = INT_MIN;
++	info->temp_alert_max                 = INT_MAX;
++	info->temp_min                       = INT_MIN;
++	info->temp_max                       = INT_MAX;
+ 	info->factory_internal_resistance_uohm  = -EINVAL;
+ 	info->resist_table = NULL;
  
- #include <dt-bindings/input/gpio-keys.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/power/summit,smb347-charger.h>
- #include <dt-bindings/thermal/thermal.h>
+@@ -639,6 +645,19 @@ int power_supply_get_battery_info(struct power_supply *psy,
+ 	of_property_read_u32(battery_np, "factory-internal-resistance-micro-ohms",
+ 			     &info->factory_internal_resistance_uohm);
  
- #include "tegra30.dtsi"
-@@ -919,9 +920,24 @@ nct72: temperature-sensor@4c {
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--		battery@55 {
-+		fuel-gauge@55 {
- 			compatible = "ti,bq27541";
- 			reg = <0x55>;
-+			power-supplies = <&power_supply>;
-+			monitored-battery = <&battery_cell>;
-+		};
++	of_property_read_u32_index(battery_np, "ambient-celsius",
++				   0, &info->temp_ambient_alert_min);
++	of_property_read_u32_index(battery_np, "ambient-celsius",
++				   1, &info->temp_ambient_alert_max);
++	of_property_read_u32_index(battery_np, "alert-celsius",
++				   0, &info->temp_alert_min);
++	of_property_read_u32_index(battery_np, "alert-celsius",
++				   1, &info->temp_alert_max);
++	of_property_read_u32_index(battery_np, "operating-range-celsius",
++				   0, &info->temp_min);
++	of_property_read_u32_index(battery_np, "operating-range-celsius",
++				   1, &info->temp_max);
 +
-+		power_supply: charger@6a {
-+			compatible = "summit,smb347";
-+			reg = <0x6a>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(V, 1) IRQ_TYPE_EDGE_BOTH>;
-+
-+			summit,enable-charge-control = <SMB3XX_CHG_ENABLE_PIN_ACTIVE_LOW>;
-+			summit,enable-usb-charging;
-+
-+			monitored-battery = <&battery_cell>;
- 		};
- 	};
- 
-@@ -1011,6 +1027,12 @@ backlight: backlight {
- 		default-brightness-level = <15>;
- 	};
- 
-+	battery_cell: battery-cell {
-+		compatible = "simple-battery";
-+		constant-charge-current-max-microamp = <1800000>;
-+		operating-range-celsius = <0 45>;
-+	};
-+
- 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
- 	clk32k_in: clock@0 {
- 		compatible = "fixed-clock";
+ 	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
+ 	if (len < 0 && len != -EINVAL) {
+ 		err = len;
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 97cc4b85bf61..d0684362a392 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -365,6 +365,12 @@ struct power_supply_battery_info {
+ 	int constant_charge_voltage_max_uv; /* microVolts */
+ 	int factory_internal_resistance_uohm;   /* microOhms */
+ 	int ocv_temp[POWER_SUPPLY_OCV_TEMP_MAX];/* celsius */
++	int temp_ambient_alert_min;             /* celsius */
++	int temp_ambient_alert_max;             /* celsius */
++	int temp_alert_min;                     /* celsius */
++	int temp_alert_max;                     /* celsius */
++	int temp_min;                           /* celsius */
++	int temp_max;                           /* celsius */
+ 	struct power_supply_battery_ocv_table *ocv_table[POWER_SUPPLY_OCV_TEMP_MAX];
+ 	int ocv_table_size[POWER_SUPPLY_OCV_TEMP_MAX];
+ 	struct power_supply_resistance_temp_table *resist_table;
 -- 
 2.27.0
 
