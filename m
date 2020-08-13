@@ -2,104 +2,86 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F59C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F6920774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597353410;
-	bh=2Ooihe4KSVD79vIEoof3mvIQPzL5hsPzGEIKiY4N0hY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xt1s7DWPhFiPasMf3kpLkl3+8MV/OKr8lrolzfoqC6iaPFSblPq8crlTkBgCD0l0b
-	 EI0K1BWOeBS/PnTsNASeOettDvqIXNIiPaftAH4cibVFa9JdHw70JSfy6cZIdWw5F/
-	 bLHmdWPqL/hum4B/f2ZTBpZW0Rl+wELpJ6RW+KR8=
+	by mail.kernel.org (Postfix) with ESMTP id A2D0A20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHMVQu (ORCPT
+        id S1726604AbgHMVRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:16:50 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:46942 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgHMVQs (ORCPT
+        Thu, 13 Aug 2020 17:17:46 -0400
+Received: from 13.mo4.mail-out.ovh.net ([178.33.251.8]:35529 "EHLO
+        13.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgHMVRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:16:48 -0400
-Received: by mail-ej1-f66.google.com with SMTP id p24so7684140ejf.13;
-        Thu, 13 Aug 2020 14:16:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NqgP8/kqqaBWz0T8s13lcZ2MzqpMIhm25KCZWBaRfQQ=;
-        b=O4BrTjnCxNHmbaIlJbV3CNZU6Ku0En9//7EOiQBlZhjrZtRjYe5Etv2ynovBTsI5Wx
-         smObhat0BS5Ydo3RSbDBoYDA6SJRp5rKL9+E7yRVUpmRWQXLPqBRNwDo3I33hpTeIW3J
-         Jp9Tzzk/ftCKj3lNozxk8U8ySTV5Dr0KQiQ6TAehFdDGdulM14OH76dmddea4o0Jkxo1
-         L7ybM8CTy2IwPRA3rxPx2IV9B7RhybTGVIv3U37z0srzsXN7Y5v1Dx6t3mslzH1bi2rF
-         lr1M7A0Q0k6WRXrlIjZEdJokuNMPX7M4Q3HhMj+99Na5nT0OR47TqLzuFHUUXNWDFcbU
-         NZrw==
-X-Gm-Message-State: AOAM530pJrS6Doi3uGP0V1bot1zw9r99BSeZB9UuNx2Qt3vCAQfLyORL
-        /M1KeXwOKZVeULij1MeZ6kCosFrjWcHslWriG90=
-X-Google-Smtp-Source: ABdhPJyjpf8YQQq9CUV59pcQHNLsIPVil2cwEyvmjMXjDvOvyLLSsyOWGLrV0/6ONfvQrzwLqKyf9ZrgfMmtA9Ofub4=
-X-Received: by 2002:a17:907:2082:: with SMTP id pv2mr1374764ejb.188.1597353406609;
- Thu, 13 Aug 2020 14:16:46 -0700 (PDT)
+        Thu, 13 Aug 2020 17:17:46 -0400
+Received: from player698.ha.ovh.net (unknown [10.108.57.245])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 981B0243ED5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:29:03 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player698.ha.ovh.net (Postfix) with ESMTPSA id 19515153540A9;
+        Thu, 13 Aug 2020 16:28:57 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-104R00580418864-beec-4c1f-899a-8232179470aa,
+                    E10370F5499BCD549250CF93A1A6372B2A4BB833) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] drivers/hwmon/ltc2947-i2c.c: use simple i2c probe
+Date:   Thu, 13 Aug 2020 18:28:51 +0200
+Message-Id: <20200813162851.1519546-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200326203637.1892-1-dsmythies@telus.net>
-In-Reply-To: <20200326203637.1892-1-dsmythies@telus.net>
-From:   Len Brown <lenb@kernel.org>
-Date:   Thu, 13 Aug 2020 17:16:35 -0400
-Message-ID: <CAJvTdKnyeTvJ_iP=XTet0ggs7FqswWQsfYQr5crnPPwOTfBMRg@mail.gmail.com>
-Subject: Re: [PATCH] tools/power/x86/turbostat: Always print idle in the
- system configuration header
-To:     Doug Smythies <doug.smythies@gmail.com>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 7660341492141739393
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheileekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.
+This driver doesn't use the id information provided by the old i2c
+probe function, so it can trivially be converted to the simple
+("probe_new") form.
 
-thanks!
--Len
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ drivers/hwmon/ltc2947-i2c.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-On Thu, Mar 26, 2020 at 4:36 PM Doug Smythies <doug.smythies@gmail.com> wrote:
->
-> If the --quiet option is not used, turbostat prints a useful system
-> configuration header during startup. Inclusion of idle system configuration
-> information is a function of inclusion in the columns choosen to be displayed.
->
-> Always list the idle system configuration.
->
-> Signed-off-by: Doug Smythies <dsmythies@telus.net>
-> ---
->  tools/power/x86/turbostat/turbostat.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-> index 33b370865d16..834b86676d00 100644
-> --- a/tools/power/x86/turbostat/turbostat.c
-> +++ b/tools/power/x86/turbostat/turbostat.c
-> @@ -3530,9 +3530,6 @@ dump_sysfs_cstate_config(void)
->         int state;
->         char *sp;
->
-> -       if (!DO_BIC(BIC_sysfs))
-> -               return;
-> -
->         if (access("/sys/devices/system/cpu/cpuidle", R_OK)) {
->                 fprintf(outf, "cpuidle not loaded\n");
->                 return;
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/hwmon/ltc2947-i2c.c b/drivers/hwmon/ltc2947-i2c.c
+index cf6074b110ae..ad0dfd3efbf8 100644
+--- a/drivers/hwmon/ltc2947-i2c.c
++++ b/drivers/hwmon/ltc2947-i2c.c
+@@ -15,8 +15,7 @@ static const struct regmap_config ltc2947_regmap_config = {
+ 	.val_bits = 8,
+ };
+ 
+-static int ltc2947_probe(struct i2c_client *i2c,
+-			 const struct i2c_device_id *id)
++static int ltc2947_probe(struct i2c_client *i2c)
+ {
+ 	struct regmap *map;
+ 
+@@ -39,7 +38,7 @@ static struct i2c_driver ltc2947_driver = {
+ 		.of_match_table = ltc2947_of_match,
+ 		.pm = &ltc2947_pm_ops,
+ 	},
+-	.probe = ltc2947_probe,
++	.probe_new = ltc2947_probe,
+ 	.id_table = ltc2947_id,
+ };
+ module_i2c_driver(ltc2947_driver);
 -- 
-Len Brown, Intel Open Source Technology Center
+2.25.4
+
