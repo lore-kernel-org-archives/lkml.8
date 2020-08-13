@@ -2,120 +2,216 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF09C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E906BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA64320675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:10:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SxESRVCU"
+	by mail.kernel.org (Postfix) with ESMTP id BBC4520771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597328011;
+	bh=niY7dCftLGTSbVYLgzF6IzI/6CkO2mglJBYFB9MOt4s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=F77TGoijqEJLFafzlOOpOaMIr49QAVvlZgandtRwkCXoY2soJak6XvS0viqlZKaDd
+	 6oV0JMcR8gJQI8r/Du05vcrie/DBf3UNvBKD47VcRD+9Ppo2ZGr+OHtksrDtsIOwj4
+	 TSDCZJBEe1WDqjqykwVPjAJyIHeqbmcVUM/Qtgdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgHMOKh (ORCPT
+        id S1726533AbgHMONa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:10:37 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27331 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726142AbgHMOKb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597327829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rUbuth9YsAKh0CAOKDQ5MQczPX5161xmlduVV3vT8TM=;
-        b=SxESRVCU3YHs3aVZ1Iu32VmWG4k+OAXQRUwmop3bZEd9nniv5W0UAAuF7z6konKdheJzI/
-        FB14lwiCfz5ibr1BKpzAsQPU8OfmEgjJkvF+gfJo8pPdv3OoPuAKX68Y20cjRCSWfwKhiy
-        9dvQwpSpo5fEJv4XpY43iSJMbnHbdkA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-EeizELszNKiuq4rU9BHj5w-1; Thu, 13 Aug 2020 10:10:28 -0400
-X-MC-Unique: EeizELszNKiuq4rU9BHj5w-1
-Received: by mail-wr1-f72.google.com with SMTP id w7so2124564wre.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:10:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rUbuth9YsAKh0CAOKDQ5MQczPX5161xmlduVV3vT8TM=;
-        b=n7D9s8lBoCf4bmAcOTG9CJ/i4nOheHmyGLmMRxoPuu3p9yuI2PjM59ZcGbUNpjF7Ax
-         VHp1m9d4r5R54jFQunb/G37kXbpgqyErvptp7OU0V0dfXCR6B1/RD2Jz3SNAx+ryUQVM
-         F2sYBDy8HDy7Cc8fnadpiyCiE46eILKapcYMFybtp2i4u7zNI8OIdWYSLZdv01Yqvlq5
-         GQBoKqxSd28YQOeMfDiBCkyYKn+N2zMp42ncuaqvRIKxWwyS2TqOx/lBHa6G/o01H6gL
-         3/4f/NSWPR4q5scn5BFEF8pi/t61AKQ2AhrtRp3UKjKXpwyHkmpidl5tCUcCP6PhpYAn
-         EVWA==
-X-Gm-Message-State: AOAM532w4eG4WCKLvlkK4w1wVY5mHfDBl3iOqD6H4do+RzZl68uonisy
-        h22PKL0cNTf5XaRgc1g2OuW12ECYAJJqAukz6fD4OKvB3FnV8to+Dyl93LB8HkyHAJq8XBEFZiG
-        LisDWzkaLZY8pS6+V06ipd3os
-X-Received: by 2002:a1c:3c87:: with SMTP id j129mr4485462wma.176.1597327827023;
-        Thu, 13 Aug 2020 07:10:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfcHDY8aqtPDjUrHw9QpQSceS/wlBCck79TPwzjfMd/JIYRTJ5uKRTxFiNJ91HMcVXAf4w7w==
-X-Received: by 2002:a1c:3c87:: with SMTP id j129mr4485434wma.176.1597327826767;
-        Thu, 13 Aug 2020 07:10:26 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:51ad:9349:1ff0:923e? ([2001:b07:6468:f312:51ad:9349:1ff0:923e])
-        by smtp.gmail.com with ESMTPSA id 32sm11176734wrh.18.2020.08.13.07.10.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 07:10:26 -0700 (PDT)
-Subject: Re: [RFC PATCH 6/7] core/metricfs: expose x86-specific irq
- information through metricfs
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Adams <jwadams@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jim Mattson <jmattson@google.com>,
-        David Rientjes <rientjes@google.com>
-References: <20200807212916.2883031-1-jwadams@google.com>
- <20200807212916.2883031-7-jwadams@google.com>
- <87mu2yluso.fsf@nanos.tec.linutronix.de>
- <2500b04e-a890-2621-2f19-be08dfe2e862@redhat.com>
- <87a6yylp4x.fsf@nanos.tec.linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ffeac3eb-fbd5-a605-c6a5-0456813bd918@redhat.com>
-Date:   Thu, 13 Aug 2020 16:10:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 13 Aug 2020 10:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgHMON3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:13:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F78120675;
+        Thu, 13 Aug 2020 14:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597328008;
+        bh=niY7dCftLGTSbVYLgzF6IzI/6CkO2mglJBYFB9MOt4s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gbSP/S3DP2XVeODGKh+Cl/q3w1ZznI5PHlSNRDrNhDCaLnnmeu+FL8AKGQ9Ux+a17
+         A/LWDalmR73MCT4sZIHwEmdHe6vqT8d2KPKLH3Ic2Cq+1z0EF61GHgu77Y+GdncDhi
+         cRgPF57XsBS7lW2TnrV9cDYfIfpkwoLtAcpcSjnw=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k6Dyw-001wXd-I7; Thu, 13 Aug 2020 15:13:26 +0100
+Date:   Thu, 13 Aug 2020 15:13:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 2/3] exec: Move S_ISREG() check earlier
+Message-ID: <20200813151305.6191993b@why>
+In-Reply-To: <20200605160013.3954297-3-keescook@chromium.org>
+References: <20200605160013.3954297-1-keescook@chromium.org>
+        <20200605160013.3954297-3-keescook@chromium.org>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <87a6yylp4x.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: keescook@chromium.org, akpm@linux-foundation.org, viro@zeniv.linux.org.uk, cyphar@cyphar.com, christian.brauner@ubuntu.com, dvyukov@google.com, ebiggers3@gmail.com, penguin-kernel@I-love.SAKURA.ne.jp, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/08/20 14:13, Thomas Gleixner wrote:
->>>> Add metricfs support for displaying percpu irq counters for x86.
->>>> The top directory is /sys/kernel/debug/metricfs/irq_x86.
->>>> Then there is a subdirectory for each x86-specific irq counter.
->>>> For example:
->>>>
->>>>    cat /sys/kernel/debug/metricfs/irq_x86/TLB/values
->>> What is 'TLB'? I'm not aware of any vector which is named TLB.
->> There's a "TLB" entry in /proc/interrupts.
-> It's TLB shootdowns and not TLB.
+On Fri,  5 Jun 2020 09:00:12 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Yes but it's using the shortcut name on the left of the table.
+Hi Kees,
 
-> +METRICFS_ITEM(LOC, apic_timer_irqs, "Local timer interrupts");
-> +METRICFS_ITEM(SPU, irq_spurious_count, "Spurious interrupts");
-> +METRICFS_ITEM(PMI, apic_perf_irqs, "Performance monitoring interrupts");
-> +METRICFS_ITEM(IWI, apic_irq_work_irqs, "IRQ work interrupts");
-> +METRICFS_ITEM(RTR, icr_read_retry_count, "APIC ICR read retries");
-> +#endif
-> +METRICFS_ITEM(PLT, x86_platform_ipis, "Platform interrupts");
-> +#ifdef CONFIG_SMP
-> +METRICFS_ITEM(RES, irq_resched_count, "Rescheduling interrupts");
-> +METRICFS_ITEM(CAL, irq_call_count, "Function call interrupts");
-> +METRICFS_ITEM(TLB, irq_tlb_count, "TLB shootdowns");
+> The execve(2)/uselib(2) syscalls have always rejected non-regular
+> files. Recently, it was noticed that a deadlock was introduced when trying
+> to execute pipes, as the S_ISREG() test was happening too late. This was
+> fixed in commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
+> during execve()"), but it was added after inode_permission() had already
+> run, which meant LSMs could see bogus attempts to execute non-regular
+> files.
+> 
+> Move the test into the other inode type checks (which already look
+> for other pathological conditions[1]). Since there is no need to use
+> FMODE_EXEC while we still have access to "acc_mode", also switch the
+> test to MAY_EXEC.
+> 
+> Also include a comment with the redundant S_ISREG() checks at the end of
+> execve(2)/uselib(2) to note that they are present to avoid any mistakes.
+> 
+> My notes on the call path, and related arguments, checks, etc:
+> 
+> do_open_execat()
+>     struct open_flags open_exec_flags = {
+>         .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+>         .acc_mode = MAY_EXEC,
+>         ...
+>     do_filp_open(dfd, filename, open_flags)
+>         path_openat(nameidata, open_flags, flags)
+>             file = alloc_empty_file(open_flags, current_cred());
+>             do_open(nameidata, file, open_flags)
+>                 may_open(path, acc_mode, open_flag)
+> 		    /* new location of MAY_EXEC vs S_ISREG() test */
+>                     inode_permission(inode, MAY_OPEN | acc_mode)
+>                         security_inode_permission(inode, acc_mode)
+>                 vfs_open(path, file)
+>                     do_dentry_open(file, path->dentry->d_inode, open)
+>                         /* old location of FMODE_EXEC vs S_ISREG() test */
+>                         security_file_open(f)
+>                         open()
+> 
+> [1] https://lore.kernel.org/lkml/202006041910.9EF0C602@keescook/
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/exec.c  | 14 ++++++++++++--
+>  fs/namei.c |  6 ++++--
+>  fs/open.c  |  6 ------
+>  3 files changed, 16 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 30735ce1dc0e..2b708629dcd6 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -139,8 +139,13 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+>  	if (IS_ERR(file))
+>  		goto out;
+>  
+> +	/*
+> +	 * may_open() has already checked for this, so it should be
+> +	 * impossible to trip now. But we need to be extra cautious
+> +	 * and check again at the very end too.
+> +	 */
+>  	error = -EACCES;
+> -	if (!S_ISREG(file_inode(file)->i_mode))
+> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+>  		goto exit;
+>  
+>  	if (path_noexec(&file->f_path))
+> @@ -860,8 +865,13 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+>  	if (IS_ERR(file))
+>  		goto out;
+>  
+> +	/*
+> +	 * may_open() has already checked for this, so it should be
+> +	 * impossible to trip now. But we need to be extra cautious
+> +	 * and check again at the very end too.
+> +	 */
+>  	err = -EACCES;
+> -	if (!S_ISREG(file_inode(file)->i_mode))
+> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+>  		goto exit;
+>  
+>  	if (path_noexec(&file->f_path))
+> diff --git a/fs/namei.c b/fs/namei.c
+> index a320371899cf..0a759b68d66e 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2835,16 +2835,18 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>  	case S_IFLNK:
+>  		return -ELOOP;
+>  	case S_IFDIR:
+> -		if (acc_mode & MAY_WRITE)
+> +		if (acc_mode & (MAY_WRITE | MAY_EXEC))
+>  			return -EISDIR;
 
-Paolo
+This seems to change (break?) the behaviour of syscalls such as execv,
+which can now return -EISDIR, whereas the existing behaviour was to
+return -EACCES. The man page never hints at the possibility of -EISDIR
+being returned, making it feel like a regression.
 
+POSIX (FWIW) also says:
+
+<quote>
+[EACCES]
+    The new process image file is not a regular file and the
+    implementation does not support execution of files of its type.
+</quote>
+
+This has been picked up by the Bionic test suite[1], but can just as
+easily be reproduced with the following snippet:
+
+$ cat x.c
+#include <unistd.h>
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+	execv("/", NULL);
+	perror("execv");
+	return 0;
+}
+
+Before this patch:
+$ ./x
+execv: Permission denied
+
+After this patch:
+$ ./x
+execv: Is a directory
+
+
+Thanks,
+
+	M.
+
+[1] https://android.googlesource.com/platform/bionic/+/master/tests/unistd_test.cpp#1346
+-- 
+Jazz is not dead. It just smells funny...
