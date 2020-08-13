@@ -2,486 +2,332 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA092C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E997C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B34320716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597355473;
-	bh=eJxZS8IGPwZu22Eule01aN9c08pTTONqj5NoGTmZ7Ok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gVEhgnqDFH8fZ2UJH7b3JtLdvtJAPJTtGNfhsQec6VUXUC9bbMlUI0tJ/Rv5hSWFC
-	 2ueKaeu/76wNf0FbYZx2e2EM1XQNol0lcHJ5NSIXao00LJeqNHJloOXm9lnD4cvlGB
-	 T+RXceI9jn9J1O92rGQ3JXX1/RWD4XWFl5XlEWss=
+	by mail.kernel.org (Postfix) with ESMTP id 1FF8620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHMVvK (ORCPT
+        id S1726623AbgHMVvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:51:10 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39372 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgHMVvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:51:09 -0400
-Received: by mail-ed1-f65.google.com with SMTP id c10so5335525edk.6;
-        Thu, 13 Aug 2020 14:51:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rlKBssEa0bmTLA+VjgLygPbCZV63UfRXUbB5Y2+a2Dc=;
-        b=MVF4t8mf1RGHStS8aDhP7NhNv6bCJsNCrlfv1m0SS2SELWQATMYNL8LMto+Y4VAIpe
-         d9MO2USG7LNAfUft2ZHsGaT32wMtto+Nujf8wxrGVoiFPuSy2HmdnBlW5ixpqQ9LCHVK
-         6Li+bXnq7iwcnutYyREGhrUqRdMDrNRuEy/TSNymhFUlTKsizLoNbFRhR+EIWoekTrru
-         avrZl0Vn7DrLHd8zb09qq0u16CwdSQydmW1H/TawC4bRb+tilqwKo5jzCJcUfPXluu4o
-         zR3kqQmYMJFRK9v00WBbh6m/vhX1kLqSMs5lXy7uacF1oVCdRtSfzOBTK3PIfztQ6b/9
-         9pQA==
-X-Gm-Message-State: AOAM532lN0sZ6jxg7YqQA0wfF3MsXK9HJv+sJcAGI24XvaTVNMI0hUO4
-        JwuBjztt9R1jzxSQOo+Nh70EZib2OW8RBT0ID2M=
-X-Google-Smtp-Source: ABdhPJxc2H57t3Nx8jFMxgYa8F+bEwz7yJ+lTqb61yTiO7lviYVDpFc2oct3694foseNB9/AQJW/dYdW/3DV/xslP0k=
-X-Received: by 2002:a05:6402:1d25:: with SMTP id dh5mr6501128edb.266.1597355465471;
- Thu, 13 Aug 2020 14:51:05 -0700 (PDT)
+        Thu, 13 Aug 2020 17:51:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13808 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgHMVvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 17:51:52 -0400
+IronPort-SDR: PrCdGF8eZiwnwjhu74zgspZ8TxEmf1ZU9eLgYNY5onCjFwbejv3cagDcL6Pb6M5bgsntFv8Ja2
+ Y+guZEYGyHkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="153553388"
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="153553388"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 14:51:44 -0700
+IronPort-SDR: WHiAJcC6V5/1UKgPBNm0v5NhI153Z8EbLUzGeX58DO/Ia0vOUPNtJ7oJvft4+6j9L4kYxr4jmQ
+ JCZASHaczk1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="327699273"
+Received: from chenghao-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.42.17])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Aug 2020 14:51:42 -0700
+Date:   Fri, 14 Aug 2020 00:51:41 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v5 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
+Message-ID: <20200813215141.GB5941@linux.intel.com>
+References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
+ <20200728031433.3370-2-masahisa.kojima@linaro.org>
 MIME-Version: 1.0
-References: <cover.1585679838.git.yu.c.chen@intel.com> <3e5aa6e7b34827c0245e10c14ca9457512ae8586.1585679838.git.yu.c.chen@intel.com>
-In-Reply-To: <3e5aa6e7b34827c0245e10c14ca9457512ae8586.1585679838.git.yu.c.chen@intel.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Thu, 13 Aug 2020 17:50:54 -0400
-Message-ID: <CAJvTdK=niWaTjwPwXaxr6EGfH8vxzJS01e+k5TgknEMPSDYLvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2][RFC] tools/power turbostat: Introduce reliable RAPL display
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728031433.3370-2-masahisa.kojima@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-why not simply use nanosleep(2)
-
-
-On Tue, Mar 31, 2020 at 2:45 PM Chen Yu <yu.c.chen@intel.com> wrote:
->
-> Since the RAPL Joule Counter is 32 bit, turbostat would
-> only print a *star* instead of printing the actual energy
-> consumed to indicate the overflow due to long duration.
-> This does not meet the requirement on servers as the
-> sampling time of turbostat is usually very long on servers.
->
-> So maintain a set of MSR buffer, and updates them
-> periodically before the 32bit msr register wrapped round.
->
-> The idea is similar to the implementation of ktime_get():
-> get_msr_sum() is used rather than get_msr() to get the
-> accumulated MSR.
->
-> This can be illustrated below:
->
-> MSR timer:
-> total_rapl_msr += (current_rapl_msr - last_rapl_msr);
->
-> get_msr_sum():
-> return (current_rapl_msr - last_rapl_msr) + total_rapl_msr;
->
-> Originally-by: Aaron Lu <aaron.lwe@gmail.com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+On Tue, Jul 28, 2020 at 12:14:31PM +0900, Masahisa Kojima wrote:
+> When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+> window that is backed by the SPI command sequencer in the SPI bus
+> controller. This arrangement has the limitation that only byte size
+> accesses are supported, and so we'll need to provide a separate module
+> that take this into account.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
 > ---
->  tools/power/x86/turbostat/Makefile    |   2 +-
->  tools/power/x86/turbostat/turbostat.c | 292 ++++++++++++++++++++++++--
->  2 files changed, 274 insertions(+), 20 deletions(-)
->
-> diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
-> index 2b6551269e43..d08765531bcb 100644
-> --- a/tools/power/x86/turbostat/Makefile
-> +++ b/tools/power/x86/turbostat/Makefile
-> @@ -16,7 +16,7 @@ override CFLAGS +=    -D_FORTIFY_SOURCE=2
->
->  %: %.c
->         @mkdir -p $(BUILD_OUTPUT)
-> -       $(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap
-> +       $(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap -lrt
->
->  .PHONY : clean
->  clean :
-> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-> index 95f3047e94ae..a8979bec97e4 100644
-> --- a/tools/power/x86/turbostat/turbostat.c
-> +++ b/tools/power/x86/turbostat/turbostat.c
-> @@ -47,6 +47,7 @@ unsigned int sums_need_wide_columns;
->  unsigned int rapl_joules;
->  unsigned int summary_only;
->  unsigned int list_header_only;
-> +unsigned int longtime;
->  unsigned int dump_only;
->  unsigned int do_snb_cstates;
->  unsigned int do_knl_cstates;
-> @@ -259,6 +260,113 @@ struct msr_counter {
->  #define        SYSFS_PERCPU    (1 << 1)
->  };
->
+>  drivers/char/tpm/Kconfig             |  12 ++
+>  drivers/char/tpm/Makefile            |   1 +
+>  drivers/char/tpm/tpm_tis_synquacer.c | 208 +++++++++++++++++++++++++++
+>  3 files changed, 221 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> 
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 58b4c573d176..a18c314da211 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>  	  If you have a H1 secure module running Cr50 firmware on SPI bus,
+>  	  say Yes and it will be accessible from within Linux.
+>  
+> +config TCG_TIS_SYNQUACER
+> +	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
+> +	depends on ARCH_SYNQUACER
+> +	select TCG_TIS_CORE
+> +	help
+> +	  If you have a TPM security chip that is compliant with the
+> +	  TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
+> +	  specification (TPM2.0) say Yes and it will be accessible from
+> +	  within Linux on Socionext SynQuacer platform.
+> +	  To compile this driver as a module, choose  M here;
+> +	  the module will be called tpm_tis_synquacer.
+> +
+>  config TCG_TIS_I2C_ATMEL
+>  	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+>  	depends on I2C
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9567e5197f74..84db4fb3a9c9 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+>  tpm-$(CONFIG_OF) += eventlog/of.o
+>  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+>  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
+>  
+>  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+>  tpm_tis_spi-y := tpm_tis_spi_main.o
+> diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
+> new file mode 100644
+> index 000000000000..e47bdd272704
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_tis_synquacer.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * The accumulated sum of MSR is defined as a monotonic
-> + * increasing MSR, it will be accumulated periodically,
-> + * despite its register's bit width.
+> + * Copyright (C) 2020 Linaro Ltd.
+> + *
+> + * This device driver implements MMIO TPM on SynQuacer Platform.
 > + */
-> +enum {
-> +       IDX_PKG_ENERGY,
-> +       IDX_DRAM_ENERGY,
-> +       IDX_PP0_ENERGY,
-> +       IDX_PP1_ENERGY,
-> +       IDX_PKG_PERF,
-> +       IDX_DRAM_PERF,
-> +       IDX_COUNT,
+> +#include <linux/acpi.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/kernel.h>
+> +#include "tpm.h"
+> +#include "tpm_tis_core.h"
+> +
+> +/*
+> + * irq > 0 means: use irq $irq;
+> + * irq = 0 means: autoprobe for an irq;
+> + * irq = -1 means: no irq support
+> + */
+> +struct tpm_tis_synquacer_info {
+> +	struct resource res;
+> +	int irq;
 > +};
 > +
-> +int get_msr_sum(int cpu, off_t offset, unsigned long long *msr);
-> +
-> +struct msr_sum_array {
-> +       /* get_msr_sum() = sum + (get_msr() - last) */
-> +       struct {
-> +               /*The accumulated MSR value is updated by the timer*/
-> +               unsigned long long sum;
-> +               /*The MSR footprint recorded in last timer*/
-> +               unsigned long long last;
-> +       } entries[IDX_COUNT];
+> +struct tpm_tis_synquacer_phy {
+> +	struct tpm_tis_data priv;
+> +	void __iomem *iobase;
 > +};
 > +
-> +/* The percpu MSR sum array.*/
-> +struct msr_sum_array *per_cpu_msr_sum;
-> +
-> +int idx_to_offset(int idx)
+> +static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
 > +{
-> +       int offset;
-> +
-> +       switch (idx) {
-> +       case IDX_PKG_ENERGY:
-> +               offset = MSR_PKG_ENERGY_STATUS;
-> +               break;
-> +       case IDX_DRAM_ENERGY:
-> +               offset = MSR_DRAM_ENERGY_STATUS;
-> +               break;
-> +       case IDX_PP0_ENERGY:
-> +               offset = MSR_PP0_ENERGY_STATUS;
-> +               break;
-> +       case IDX_PP1_ENERGY:
-> +               offset = MSR_PP1_ENERGY_STATUS;
-> +               break;
-> +       case IDX_PKG_PERF:
-> +               offset = MSR_PKG_PERF_STATUS;
-> +               break;
-> +       case IDX_DRAM_PERF:
-> +               offset = MSR_DRAM_PERF_STATUS;
-> +               break;
-> +       default:
-> +               offset = -1;
-> +       }
-> +       return offset;
+> +	return container_of(data, struct tpm_tis_synquacer_phy, priv);
 > +}
 > +
-> +int offset_to_idx(int offset)
+> +static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
+> +					u16 len, u8 *result)
 > +{
-> +       int idx;
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
 > +
-> +       switch (offset) {
-> +       case MSR_PKG_ENERGY_STATUS:
-> +               idx = IDX_PKG_ENERGY;
-> +               break;
-> +       case MSR_DRAM_ENERGY_STATUS:
-> +               idx = IDX_DRAM_ENERGY;
-> +               break;
-> +       case MSR_PP0_ENERGY_STATUS:
-> +               idx = IDX_PP0_ENERGY;
-> +               break;
-> +       case MSR_PP1_ENERGY_STATUS:
-> +               idx = IDX_PP1_ENERGY;
-> +               break;
-> +       case MSR_PKG_PERF_STATUS:
-> +               idx = IDX_PKG_PERF;
-> +               break;
-> +       case MSR_DRAM_PERF_STATUS:
-> +               idx = IDX_DRAM_PERF;
-> +               break;
-> +       default:
-> +               idx = -1;
-> +       }
-> +       return idx;
+> +	while (len--)
+> +		*result++ = ioread8(phy->iobase + addr);
+> +
+> +	return 0;
 > +}
 > +
-> +int idx_valid(int idx)
+> +static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
+> +					 u16 len, const u8 *value)
 > +{
-> +       switch (idx) {
-> +       case IDX_PKG_ENERGY:
-> +               return do_rapl & RAPL_PKG;
-> +       case IDX_DRAM_ENERGY:
-> +               return do_rapl & RAPL_DRAM;
-> +       case IDX_PP0_ENERGY:
-> +               return do_rapl & RAPL_CORES_ENERGY_STATUS;
-> +       case IDX_PP1_ENERGY:
-> +               return do_rapl & RAPL_GFX;
-> +       case IDX_PKG_PERF:
-> +               return do_rapl & RAPL_PKG_PERF_STATUS;
-> +       case IDX_DRAM_PERF:
-> +               return do_rapl & RAPL_DRAM_PERF_STATUS;
-> +       default:
-> +               return 0;
-> +       }
-> +}
->  struct sys_counters {
->         unsigned int added_thread_counters;
->         unsigned int added_core_counters;
-> @@ -551,6 +659,7 @@ void help(void)
->         "               Override default 5-second measurement interval\n"
->         "  -J, --Joules displays energy in Joules instead of Watts\n"
->         "  -l, --list   list column headers only\n"
-> +       "  -L, --Longtime       long time duration support\n"
->         "  -n, --num_iterations num\n"
->         "               number of the measurement iterations\n"
->         "  -o, --out file\n"
-> @@ -1962,34 +2071,70 @@ int get_counters(struct thread_data *t, struct core_data *c, struct pkg_data *p)
->                 p->sys_lpi = cpuidle_cur_sys_lpi_us;
->
->         if (do_rapl & RAPL_PKG) {
-> -               if (get_msr(cpu, MSR_PKG_ENERGY_STATUS, &msr))
-> -                       return -13;
-> -               p->energy_pkg = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_PKG_ENERGY_STATUS, &msr))
-> +                               return -13;
-> +                       p->energy_pkg = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_PKG_ENERGY_STATUS, &msr))
-> +                               return -13;
-> +                       p->energy_pkg = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_CORES_ENERGY_STATUS) {
-> -               if (get_msr(cpu, MSR_PP0_ENERGY_STATUS, &msr))
-> -                       return -14;
-> -               p->energy_cores = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_PP0_ENERGY_STATUS, &msr))
-> +                               return -14;
-> +                       p->energy_cores = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_PP0_ENERGY_STATUS, &msr))
-> +                               return -14;
-> +                       p->energy_cores = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_DRAM) {
-> -               if (get_msr(cpu, MSR_DRAM_ENERGY_STATUS, &msr))
-> -                       return -15;
-> -               p->energy_dram = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_DRAM_ENERGY_STATUS, &msr))
-> +                               return -15;
-> +                       p->energy_dram = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_DRAM_ENERGY_STATUS, &msr))
-> +                               return -15;
-> +                       p->energy_dram = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_GFX) {
-> -               if (get_msr(cpu, MSR_PP1_ENERGY_STATUS, &msr))
-> -                       return -16;
-> -               p->energy_gfx = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_PP1_ENERGY_STATUS, &msr))
-> +                               return -16;
-> +                       p->energy_gfx = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_PP1_ENERGY_STATUS, &msr))
-> +                               return -16;
-> +                       p->energy_gfx = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_PKG_PERF_STATUS) {
-> -               if (get_msr(cpu, MSR_PKG_PERF_STATUS, &msr))
-> -                       return -16;
-> -               p->rapl_pkg_perf_status = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_DRAM_PERF_STATUS, &msr))
-> +                               return -16;
-> +                       p->rapl_dram_perf_status = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_PKG_PERF_STATUS, &msr))
-> +                               return -16;
-> +                       p->rapl_pkg_perf_status = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_DRAM_PERF_STATUS) {
-> -               if (get_msr(cpu, MSR_DRAM_PERF_STATUS, &msr))
-> -                       return -16;
-> -               p->rapl_dram_perf_status = msr & 0xFFFFFFFF;
-> +               if (longtime) {
-> +                       if (get_msr_sum(cpu, MSR_DRAM_PERF_STATUS, &msr))
-> +                               return -16;
-> +                       p->rapl_dram_perf_status = msr;
-> +               } else {
-> +                       if (get_msr(cpu, MSR_DRAM_PERF_STATUS, &msr))
-> +                               return -16;
-> +                       p->rapl_dram_perf_status = msr & 0xFFFFFFFF;
-> +               }
->         }
->         if (do_rapl & RAPL_AMD_F17H) {
->                 if (get_msr(cpu, MSR_PKG_ENERGY_STAT, &msr))
-> @@ -3053,6 +3198,109 @@ void do_sleep(void)
->         }
->  }
->
-> +int get_msr_sum(int cpu, off_t offset, unsigned long long *msr)
-> +{
-> +       int ret, idx;
-> +       unsigned long long msr_cur, msr_last;
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
 > +
-> +       if (!per_cpu_msr_sum)
-> +               return 1;
+> +	while (len--)
+> +		iowrite8(*value++, phy->iobase + addr);
 > +
-> +       idx = offset_to_idx(offset);
-> +       if (idx < 0)
-> +               return idx;
-> +       /* get_msr_sum() = sum + (get_msr() - last) */
-> +       ret = get_msr(cpu, offset, &msr_cur);
-> +       if (ret)
-> +               return ret;
-> +       msr_last = per_cpu_msr_sum[cpu].entries[idx].last;
-> +       DELTA_WRAP32(msr_cur, msr_last);
-> +       *msr = msr_last + per_cpu_msr_sum[cpu].entries[idx].sum;
-> +
-> +       return 0;
+> +	return 0;
 > +}
 > +
-> +timer_t timerid;
-> +
-> +/* Timer callback, update the sum of MSRs periodically. */
-> +static int update_msr_sum(struct thread_data *t, struct core_data *c, struct pkg_data *p)
+> +static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
+> +				       u32 addr, u16 *result)
 > +{
-> +       int i, ret;
-> +       int cpu = t->cpu_id;
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
 > +
-> +       for (i = IDX_PKG_ENERGY; i < IDX_COUNT; i++) {
-> +               unsigned long long msr_cur, msr_last;
-> +               int offset;
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	*result = (ioread8(phy->iobase + addr + 1) << 8) |
+> +		  (ioread8(phy->iobase + addr));
 > +
-> +               if (!idx_valid(i))
-> +                       continue;
-> +               offset = idx_to_offset(i);
-> +               if (offset < 0)
-> +                       continue;
-> +               ret = get_msr(cpu, offset, &msr_cur);
-> +               if (ret) {
-> +                       fprintf(outf, "Can not update msr(0x%x)\n", offset);
-> +                       continue;
-> +               }
-> +
-> +               msr_last = per_cpu_msr_sum[cpu].entries[i].last;
-> +               per_cpu_msr_sum[cpu].entries[i].last = msr_cur & 0xffffffff;
-> +
-> +               DELTA_WRAP32(msr_cur, msr_last);
-> +               per_cpu_msr_sum[cpu].entries[i].sum += msr_last;
-> +       }
-> +       return 0;
+> +	return 0;
 > +}
 > +
-> +static void
-> +msr_record_handler(union sigval v)
+> +static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
+> +				       u32 addr, u32 *result)
 > +{
-> +       for_all_cpus(update_msr_sum, EVEN_COUNTERS);
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	*result = (ioread8(phy->iobase + addr + 3) << 24) |
+> +		  (ioread8(phy->iobase + addr + 2) << 16) |
+> +		  (ioread8(phy->iobase + addr + 1) << 8) |
+> +		  (ioread8(phy->iobase + addr));
+> +
+> +	return 0;
 > +}
 > +
-> +void msr_longtime_record(void)
+> +static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
+> +					u32 addr, u32 value)
 > +{
-> +       struct itimerspec its;
-> +       struct sigevent sev;
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
 > +
-> +       per_cpu_msr_sum = calloc(topo.max_cpu_num + 1, sizeof(struct msr_sum_array));
-> +       if (!per_cpu_msr_sum) {
-> +               fprintf(outf, "Can not allocate memory for long time MSR.\n");
-> +               return;
-> +       }
-> +       /*
-> +        * Signal handler might be restricted, so use thread notifier instead.
-> +        */
-> +       memset(&sev, 0, sizeof(struct sigevent));
-> +       sev.sigev_notify = SIGEV_THREAD;
-> +       sev.sigev_notify_function = msr_record_handler;
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	iowrite8(value >> 24, phy->iobase + addr + 3);
+> +	iowrite8(value >> 16, phy->iobase + addr + 2);
+> +	iowrite8(value >> 8, phy->iobase + addr + 1);
+> +	iowrite8(value, phy->iobase + addr);
 > +
-> +       sev.sigev_value.sival_ptr = &timerid;
-> +       if (timer_create(CLOCK_REALTIME, &sev, &timerid) == -1) {
-> +               fprintf(outf, "Can not create timer.\n");
-> +               goto release_msr;
-> +       }
-> +
-> +       its.it_value.tv_sec = 0;
-> +       its.it_value.tv_nsec = 1;
-> +       /*
-> +        * A wraparound time of around 60 secs when power consumption
-> +        * is high, use 50 secs.
-> +        */
-> +       its.it_interval.tv_sec = 50;
-> +       its.it_interval.tv_nsec = 0;
-> +
-> +       if (timer_settime(timerid, 0, &its, NULL) == -1) {
-> +               fprintf(outf, "Can not set timer.\n");
-> +               goto release_timer;
-> +       }
-> +       return;
-> +
-> + release_timer:
-> +       timer_delete(timerid);
-> + release_msr:
-> +       free(per_cpu_msr_sum);
+> +	return 0;
 > +}
->
->  void turbostat_loop()
->  {
-> @@ -5735,6 +5983,7 @@ void cmdline(int argc, char **argv)
->                 {"hide",        required_argument,      0, 'H'},        // meh, -h taken by --help
->                 {"Joules",      no_argument,            0, 'J'},
->                 {"list",        no_argument,            0, 'l'},
-> +               {"Longtime",    no_argument,            0, 'L'},
->                 {"out",         required_argument,      0, 'o'},
->                 {"quiet",       no_argument,            0, 'q'},
->                 {"show",        required_argument,      0, 's'},
-> @@ -5746,7 +5995,7 @@ void cmdline(int argc, char **argv)
->
->         progname = argv[0];
->
-> -       while ((opt = getopt_long_only(argc, argv, "+C:c:Dde:hi:Jn:o:qST:v",
-> +       while ((opt = getopt_long_only(argc, argv, "+C:c:Dde:hi:JLn:o:qST:v",
->                                 long_options, &option_index)) != -1) {
->                 switch (opt) {
->                 case 'a':
-> @@ -5800,6 +6049,9 @@ void cmdline(int argc, char **argv)
->                         list_header_only++;
->                         quiet++;
->                         break;
-> +               case 'L':
-> +                       longtime = 1;
-> +                       break;
->                 case 'o':
->                         outf = fopen_or_die(optarg, "w");
->                         break;
-> @@ -5864,6 +6116,8 @@ int main(int argc, char **argv)
->                 return 0;
->         }
->
-> +       if (longtime)
-> +               msr_longtime_record();
->         /*
->          * if any params left, it must be a command to fork
->          */
-> --
-> 2.17.1
->
+> +
+> +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
+> +	.read_bytes	= tpm_tis_synquacer_read_bytes,
+> +	.write_bytes	= tpm_tis_synquacer_write_bytes,
+> +	.read16		= tpm_tis_synquacer_read16_bw,
+> +	.read32		= tpm_tis_synquacer_read32_bw,
+> +	.write32	= tpm_tis_synquacer_write32_bw,
+> +};
+> +
+> +static int tpm_tis_synquacer_init(struct device *dev,
+> +				  struct tpm_tis_synquacer_info *tpm_info)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
+> +	if (phy == NULL)
+> +		return -ENOMEM;
+> +
+> +	phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
+> +	if (IS_ERR(phy->iobase))
+> +		return PTR_ERR(phy->iobase);
+> +
+> +	return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
+> +				 ACPI_HANDLE(dev));
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
+> +
+> +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
+> +{
+> +	struct tpm_tis_synquacer_info tpm_info = {};
+> +	struct resource *res;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (res == NULL) {
+> +		dev_err(&pdev->dev, "no memory resource defined\n");
+> +		return -ENODEV;
+> +	}
+> +	tpm_info.res = *res;
+> +
+> +	tpm_info.irq = -1;
+> +
+> +	return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
+> +}
+> +
+> +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
+> +{
+> +	struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
+> +
+> +	tpm_chip_unregister(chip);
+> +	tpm_tis_remove(chip);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tis_synquacer_of_platform_match[] = {
+> +	{.compatible = "socionext,synquacer-tpm-mmio"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
+> +#endif
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
+> +	{ "SCX0009" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
+> +#endif
+> +
+> +static struct platform_driver tis_synquacer_drv = {
+> +	.probe = tpm_tis_synquacer_probe,
+> +	.remove = tpm_tis_synquacer_remove,
+> +	.driver = {
+> +		.name		= "tpm_tis_synquacer",
+> +		.pm		= &tpm_tis_synquacer_pm,
+> +		.of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
+> +		.acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
+> +	},
+> +};
+> +
+> +static int __init tpm_tis_synquacer_module_init(void)
+> +{
+> +	int rc;
+> +
+> +	rc = platform_driver_register(&tis_synquacer_drv);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit tpm_tis_synquacer_module_exit(void)
+> +{
+> +	platform_driver_unregister(&tis_synquacer_drv);
+> +}
+> +
+> +module_init(tpm_tis_synquacer_module_init);
+> +module_exit(tpm_tis_synquacer_module_exit);
+> +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.20.1
+> 
 
+I find this appropriate now. I cannot test it in run-time but since it
+cannot break anything else in the TPM stack, it has no risk of causing
+issues to the Linux ecosystem at large.
 
--- 
-Len Brown, Intel Open Source Technology Center
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+/Jarkko
