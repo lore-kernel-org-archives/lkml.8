@@ -2,97 +2,80 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79654C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC1B6207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482AE207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597323692;
-	bh=1KOO84jBp9k+vGNx1PLhbzn8bP6+PJCQeuZYx6xdx/k=;
+	s=default; t=1597323789;
+	bh=39+BFIgNuT6QhOffnjePjX9xFrI4Rlttm49wqJrWtTM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IY0zatFcsim/IRVPV3oyIJjMxP0OnB2Pimy7Ik0zRZ/NBKA0gmSOm3zVe+6jPXVLp
-	 rBBhsCOQdoCPnlcdF4PV59c86jqQ4AWOeccOg4WO+azk/VTP9HTrMpxuzf3Cv+pAnD
-	 qgGZLjDYqcF0A9YSxTbKRH1wt4bMojQntHHivZXY=
+	b=ucSfQSGpf7MqqVOEnYQYv7geEKT4H3S+YllaxEtIlYWDNIWtQe64keRIyInasMl5j
+	 oM2nsm07FeVFd5MJDoa9J/kxEh7PEtfz7MYE21Z3mJ+YKBW10yhhXDCTYlzZHHGym6
+	 UBOw6qJoVjEka1dOcFUlPTf2M9JpQjBLE3K6PZLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHMNBb (ORCPT
+        id S1726632AbgHMNDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:01:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56630 "EHLO mail.kernel.org"
+        Thu, 13 Aug 2020 09:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMNBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:01:31 -0400
+        id S1726053AbgHMNDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 09:03:04 -0400
 Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C992078D;
-        Thu, 13 Aug 2020 13:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7CF92078D;
+        Thu, 13 Aug 2020 13:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597323690;
-        bh=1KOO84jBp9k+vGNx1PLhbzn8bP6+PJCQeuZYx6xdx/k=;
+        s=default; t=1597323784;
+        bh=39+BFIgNuT6QhOffnjePjX9xFrI4Rlttm49wqJrWtTM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kGUPXWdcoZ4yL8eY3VdCnSHYNaNMlfsZcxOlOSzA8v0O3rXynGwN3qL0o1WXOwjA/
-         0k1o1iLSWtsn+c5gslmMgNly9ZNQGMivPXorPSscTJoNJ77bRLo7XvAj8NlJ5kOYCx
-         r+NrNYsTG0aoGpG61GcbkIQO4pMk7BeqCjKCJxW4=
+        b=M8L5VGmKtrzpkoF/nuCrSOGLd3HZdZbKPM4FrSokHUBj0ILQqmGA1zmMbDokxLCqW
+         esHAhHBhP+68iKWp6W3R1ADGMAft1fDklrlJvx7KEP3pIen+FWW3sV/RXQV7RP4Toj
+         Y6dtMB8xkFtXqh60jZ8vCApEtKBt8KA586moVz1Q=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A86BE4097F; Thu, 13 Aug 2020 10:01:27 -0300 (-03)
-Date:   Thu, 13 Aug 2020 10:01:27 -0300
+        id B52644097F; Thu, 13 Aug 2020 10:03:01 -0300 (-03)
+Date:   Thu, 13 Aug 2020 10:03:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tom Hebb <tommyhebb@gmail.com>
-Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-Subject: Re: [PATCH] tools build feature: Quote CC and CXX for their arguments
-Message-ID: <20200813130127.GO13995@kernel.org>
-References: <20200812221518.2869003-1-daniel.diaz@linaro.org>
- <CAMcCCgRGpi+3D4479MLU2xQZJYBA1c6mzZ=bb1VLEwPg3VAgLg@mail.gmail.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Balamuruhan S <bala24@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v3 1/2] perf bench numa: fix cpumask memory leak in
+ node_has_cpus()
+Message-ID: <20200813130301.GP13995@kernel.org>
+References: <cover.1597004831.git.agordeev@linux.ibm.com>
+ <a002ebf17a3970e5d2dc7b9869dc180e68b88db4.1597004831.git.agordeev@linux.ibm.com>
+ <CAM9d7cjLA29eOm6UU5FVE-Zeg7wm4bJaSdwMOH=ghDn=hfBo=A@mail.gmail.com>
+ <20200813113041.GA1685@oc3871087118.ibm.com>
+ <20200813120649.GA21578@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMcCCgRGpi+3D4479MLU2xQZJYBA1c6mzZ=bb1VLEwPg3VAgLg@mail.gmail.com>
+In-Reply-To: <20200813120649.GA21578@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Aug 12, 2020 at 07:31:32PM -0700, Tom Hebb escreveu:
-> On Wed, Aug 12, 2020 at 3:15 PM Daniel Díaz <daniel.diaz@linaro.org> wrote:
-> >   Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-> >   Makefile.perf:230: recipe for target 'sub-make' failed
-> >   make[1]: *** [sub-make] Error 2
-> >   Makefile:69: recipe for target 'all' failed
-> >   make: *** [all] Error 2
-> >
-> > With CC and CXX quoted, some of those features are now detected.
-> >
-> > Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
-> >
-> > Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+Em Thu, Aug 13, 2020 at 05:36:49PM +0530, Srikar Dronamraju escreveu:
+> Looks good to me.
 > 
-> Whoops, I'm the one who introduced this issue. Fix looks good, thanks!
-> 
-> Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
-> Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
+> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
 Thanks, applied.
 
