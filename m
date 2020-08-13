@@ -2,179 +2,147 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC6DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4820B207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VA+FvPCq"
+	by mail.kernel.org (Postfix) with ESMTP id 1247520756
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMDbz (ORCPT
+        id S1726639AbgHMDcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMDby (ORCPT
+        Wed, 12 Aug 2020 23:32:19 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:54828 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgHMDcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:31:54 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FFFC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=z1xWvaAvbcuEB26ko8GuVSncG0nEsKM2kbQPdS0rNHA=; b=VA+FvPCqtRzhRQ6iMVaOl9Rmvs
-        SKqAhT4qAmv2DEYiqTVWNXYYrA/TNfs+r8mTUf238yozMQ9TzWgMFgxAb7/MUlVEwP0SmnECKMTB0
-        jJlJQWEXDyUqXFe0iLfAgsJhqgbzC/ho+lxy+FdmcgkJ7hn/GKVaJUNTGLke7cT6kdWZCfBBZ7iCB
-        CYQOBUSRAWpGJ0qJ4OQutYOWhB5hMGShcj2Ls8hyGcOiW6FEUYWiiyWD3AXRpc8xlONdOz1WhCq2m
-        1px9L+3spyhkSsoDLz+U/VZEwwV17VB+2hk/2WTINHBgqaaUR148gjVbn0hWba838su4LMjHazoO9
-        KcUB0bxQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k63y0-0000um-6R; Thu, 13 Aug 2020 03:31:48 +0000
-Subject: Re: [PATCH v2] lib/cmdline: prevent unintented access to address
-To:     Seungil Kang <sil.kang@samsung.com>,
-        andriy.shevchenko@linux.intel.com
-Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-References: <CGME20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac@epcas1p3.samsung.com>
- <20200813030741.6896-1-sil.kang@samsung.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1bd1fefa-9fd5-b76a-a181-fca289b4aa67@infradead.org>
-Date:   Wed, 12 Aug 2020 20:31:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 23:32:18 -0400
+Received: by mail-il1-f198.google.com with SMTP id a17so3365257ilb.21
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:32:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=P9pLEB9Ie9BNOlGpHvN5myjm3ue4cem8ycZ60nuClrc=;
+        b=BK4u/RcYgrz04zN8c2YRMH+bzrAuEYBVoe+SWp5l4pfsRFulqG4bb7bWvZiN5asYWy
+         wUrTO/eiYcbY1XmKQq5F3WoUUWwdxNwM8f99hum26AY8TKSuiwJrQFDIyWgxqkmP13Gd
+         cMZ1NgB/tVzaozfY+HVTntmmAwLe1WRADZikJ4FHMbP98Qlbgdf1dZ+f60VqzQWnCO1v
+         XhxokEfmOHfCI9bYdO1p/blv2cOQOxUQLFwH8c0Lhd+MB0aWH1S3U7tBI1E5faj+a97C
+         XPayuDip/0ipV9AKtdEsElLbGlEWfFUP1PtktCY8E79jPr5Otz3tsw3L7owlETXWPLju
+         eE4A==
+X-Gm-Message-State: AOAM530pTx2MhH265XmbGNzxEmkOuj7RC5JfW13tb4T3MxECKeOikl43
+        56Jca9+PhDEE01j5JSW596ZYW4zIKO+L+diknEfW+GFqLPK2
+X-Google-Smtp-Source: ABdhPJzWa8bZiMsbcj+1jm07c0oi4qAkSaZR3vRyrO7J61eijlNFH5EPnLXipTjPW8ZzzueQu8rtkTdj5NobvZbFN9m0fZ+F1bdR
 MIME-Version: 1.0
-In-Reply-To: <20200813030741.6896-1-sil.kang@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:1125:: with SMTP id f5mr2803096jar.51.1597289536899;
+ Wed, 12 Aug 2020 20:32:16 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 20:32:16 -0700
+In-Reply-To: <000000000000c98a7f05ac744f53@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000734fe705acb9f3a2@google.com>
+Subject: Re: KMSAN: uninit-value in ath9k_htc_rx_msg
+From:   syzbot <syzbot+2ca247c2d60c7023de7f@syzkaller.appspotmail.com>
+To:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        glider@google.com, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/20 8:07 PM, Seungil Kang wrote:
-> When args = "\"\0", "i" will be 0 and args[i-1] is used. (*lib/cmdline.c +238)
-> Because of "i" is an unsigned int type, the function will access at args[0xFFFFFFFF].
-> It can make a crash.
-> 
-> Signed-off-by: Seungil Kang <sil.kang@samsung.com>
-> ---
-> 
-> Thanks for your review, my comments below
-> 
->> Can you be less ambiguous with the args value? (Perhaps provide a hexdump of it
-> for better understanding)
-> 
->  This kind of args as hexdump below can cause crash.
->  
->  00000000: 736f 6d65 7468 696e 6731 3d73 6f6d 655f  something1=some_
->  00000010: 7661 6c75 6573 2022 0000 0000 0000 0000  values "        
->  
->  The args end with "\"\0".
-> 
->> Please, use proper punctuation, I'm lost where is the sentence and what are the
-> logical parts of them.
-> 
->  I'm sorry to confuse you. I fix the commit msg
-> 
->> Can you point out to the code that calls this and leads to a crash?
-> 
->  *lib/cmdlinc + 201 ~, next_arg function with args = "\"\0"
->  
->  char *next_arg(char *args, char **param, char **val) <-- args = "\"\0".
->  {
->         unsigned int i, equals = 0;
->         int in_quote = 0, quoted = 0;
->         char *next;
-> 
->         if (*args == '"') {   <-- *args == '"' is a true condition,
->                 args++;       <-- args++, so *args = '\0'.
->                 in_quote = 1;
->                 quoted = 1;   <-- quoted also set 1.
->         }
-> 
->         for (i = 0; args[i]; i++) { <-- when reached this point, i = 0, and arg[0] == '\0',
->                                         so for loop is skipped.
->                 if (isspace(args[i]) && !in_quote)
->                         break;
->                 if (equals == 0) {
->                         if (args[i] == '=')
->                                 equals = i;
->                 }
->                 if (args[i] == '"')
->                         in_quote = !in_quote;
->         }
-> 
->         *param = args;
->         if (!equals)
->                 *val = NULL;
->         else {
->                 args[equals] = '\0';
->                 *val = args + equals + 1;
-> 
->         /* Don't include quotes in value. */
->         if (**val == '"') {
->                 (*val)++;
->                 if (args[i-1] == '"')
->                         args[i-1] = '\0';
->                 }
->         }
->         if (quoted && args[i-1] == '"') <-- When reached this point, quoted is still set 1, 
->                                             "i" is still 0, and "i" is unsigned int type,
->                                             so address will be {address of args} + 0xFFFFFFFF.
->                                             It can make a crash.
->                 args[i-1] = '\0';
-> 
->         if (args[i]) {
->                 args[i] = '\0';
->                 next = args + i + 1;
->         } else
->                 next = args + i;
-> 
->         /* Chew up trailing spaces. */
->         return skip_spaces(next);
->  }
-> 
-> 
->> Can you provide a KUnit test module which can check the case?
-> 
->  If necessary, I will make it and share it.
+syzbot has found a reproducer for the following issue on:
 
-Hi,
-Have you tested this patch?
-If so, how?
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=12985a16900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=2ca247c2d60c7023de7f
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1468efe2900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10bb9fba900000
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2ca247c2d60c7023de7f@syzkaller.appspotmail.com
 
-> 
->  lib/cmdline.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/lib/cmdline.c b/lib/cmdline.c
-> index fbb9981a04a4..2fd29d7723b2 100644
-> --- a/lib/cmdline.c
-> +++ b/lib/cmdline.c
-> @@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
->   */
->  char *next_arg(char *args, char **param, char **val)
->  {
-> -	unsigned int i, equals = 0;
-> +	int i, equals = 0;
->  	int in_quote = 0, quoted = 0;
->  	char *next;
->  
-> 
+=====================================================
+BUG: KMSAN: uninit-value in ath9k_htc_rx_msg+0x28f/0x1f50 drivers/net/wireless/ath/ath9k/htc_hst.c:410
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ ath9k_htc_rx_msg+0x28f/0x1f50 drivers/net/wireless/ath/ath9k/htc_hst.c:410
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0x1841/0x1d10 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x687/0x870 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x1cb/0x730 drivers/usb/core/hcd.c:1716
+ dummy_timer+0xd98/0x71c0 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
+ expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
+ __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
+ run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
+ __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:23 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:50 [inline]
+ do_softirq_own_stack+0x7c/0xa0 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:390 [inline]
+ __irq_exit_rcu+0x226/0x270 kernel/softirq.c:420
+ irq_exit_rcu+0xe/0x10 kernel/softirq.c:432
+ sysvec_apic_timer_interrupt+0x107/0x130 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:593
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
+RIP: 0010:acpi_safe_halt drivers/acpi/processor_idle.c:112 [inline]
+RIP: 0010:acpi_idle_do_entry drivers/acpi/processor_idle.c:525 [inline]
+RIP: 0010:acpi_idle_enter+0x817/0xeb0 drivers/acpi/processor_idle.c:651
+Code: 85 db 74 0a f7 d3 44 21 fb 48 85 db 74 32 4d 85 ff 75 3a 48 8b 5d a0 e9 0c 00 00 00 e8 12 b2 78 fb 0f 00 2d 25 15 1c 0b fb f4 <fa> eb 5a 84 c0 8b 7d 90 0f 45 7d 94 e8 d8 9a f4 fb e9 74 fc ff ff
+RSP: 0018:ffff88812df93bc8 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff8881dfefce70 RCX: 000000012db88000
+RDX: ffff88812df88000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff88812df93ca0 R08: ffffffff86420acc R09: ffff88812fffa000
+R10: 0000000000000002 R11: ffff88812df88000 R12: ffff88812df889d8
+R13: ffff8881dfefcc64 R14: 0000000000000000 R15: 0000000000000000
+ cpuidle_enter_state+0x860/0x12b0 drivers/cpuidle/cpuidle.c:235
+ cpuidle_enter+0xe3/0x170 drivers/cpuidle/cpuidle.c:346
+ call_cpuidle kernel/sched/idle.c:126 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:214 [inline]
+ do_idle+0x668/0x810 kernel/sched/idle.c:276
+ cpu_startup_entry+0x45/0x50 kernel/sched/idle.c:372
+ start_secondary+0x1bf/0x240 arch/x86/kernel/smpboot.c:268
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
 
-thanks.
--- 
-~Randy
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
+ kmsan_alloc_page+0xc5/0x1a0 mm/kmsan/kmsan_shadow.c:293
+ __alloc_pages_nodemask+0xdf0/0x1030 mm/page_alloc.c:4889
+ __alloc_pages include/linux/gfp.h:509 [inline]
+ __alloc_pages_node include/linux/gfp.h:522 [inline]
+ alloc_pages_node include/linux/gfp.h:536 [inline]
+ __page_frag_cache_refill mm/page_alloc.c:4964 [inline]
+ page_frag_alloc+0x35b/0x880 mm/page_alloc.c:4994
+ __netdev_alloc_skb+0x2a8/0xc90 net/core/skbuff.c:451
+ __dev_alloc_skb include/linux/skbuff.h:2813 [inline]
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:620 [inline]
+ ath9k_hif_usb_rx_cb+0xe5a/0x1d10 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x687/0x870 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x1cb/0x730 drivers/usb/core/hcd.c:1716
+ dummy_timer+0xd98/0x71c0 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
+ expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
+ __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
+ run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
+ __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
+=====================================================
 
