@@ -2,195 +2,170 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21736C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70224C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3E7420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF7D20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AJOZfHRN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JiLU3v+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHMPuV (ORCPT
+        id S1726758AbgHMPwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMPuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:50:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAC4C061757;
-        Thu, 13 Aug 2020 08:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:References;
-        bh=hcRGhxjeGGcGlL0jZtmM6ynKLp4oPbSQ7Fim3MB2HL4=; b=AJOZfHRNcKSNOPpzUH+9Y0lsem
-        WVTwk3Q43JKKwOubbajp7NsJQfbX7H+m6a5MIkEGah3ohP5pAnx1ZiTWLtxBw7ucngZkZcVYC2DaG
-        Kc/TuCS7s1srPKV/MiGXCYS+Bz1SgHa8cqayJsXbOIbDd7HoOnNPKAetH4m2NIsMy0AoTUV+fxTfN
-        Dc7QB834JroqBZYOdhP5n0Mazpd88hcT5ITKnAn0ePWtGMabxZKh666skge4xMlX4yUhVHZq9Kf8R
-        SYGhJx4aiDNoNPEwlST4Xlw1Ff+2BaeT25kCCRn8yzw0e6CkG61pps9ACFx7Mc10GEHLhW04+b3w2
-        PVtT3gyA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6FUX-0000kK-BX; Thu, 13 Aug 2020 15:50:09 +0000
-Date:   Thu, 13 Aug 2020 16:50:09 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: nvme crash - Re: linux-next: Tree for Aug 13
-Message-ID: <20200813155009.GA2303@infradead.org>
+        Thu, 13 Aug 2020 11:52:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:55242 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbgHMPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:52:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597333948; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=nlXe8blpssYRBGBkCQVSrRhSb3O+xojKAuRLa7+Q7pM=; b=JiLU3v+NgUlXYPsIntLFUoO407MUBdhX0Blx8KrnNL6uVB6tGy1r5HfBLQTh5iEpeZow2gru
+ wojdtOS3KgVHBid4+JM71QMjawyRCrwxpewTZQcyzBDop5vgmCVx1Z62qS37zLQWb/Kf5Syl
+ pqpG5T2ISprEBkrP13n5BJKYdHA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f3561adba4c2cd36721efff (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 15:52:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6CDA7C43395; Thu, 13 Aug 2020 15:52:11 +0000 (UTC)
+Received: from asutoshd-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00551C433C6;
+        Thu, 13 Aug 2020 15:52:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00551C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Date:   Thu, 13 Aug 2020 08:52:03 -0700
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] scsi: ufs: remove several redundant goto
+ statements
+Message-ID: <20200813155203.GA25655@asutoshd-linux1.qualcomm.com>
+References: <20200812143704.30245-1-huobean@gmail.com>
+ <20200812143704.30245-3-huobean@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <454c65b1-872a-a48c-662d-690044662772@huawei.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200812143704.30245-3-huobean@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:00:19PM +0100, John Garry wrote:
-> On 13/08/2020 07:58, Stephen Rothwell wrote:
-> > Hi all,
-> 
-> Hi guys,
-> 
-> I have experienced this this crash below on linux-next for the last few days
-> on my arm64 system. Linus' master branch today also has it.
+On Wed, Aug 12 2020 at 07:37 -0700, Bean Huo wrote:
+>From: Bean Huo <beanhuo@micron.com>
+>
+>Signed-off-by: Bean Huo <beanhuo@micron.com>
+>---
+> drivers/scsi/ufs/ufshcd.c | 26 +++++---------------------
+> 1 file changed, 5 insertions(+), 21 deletions(-)
+>
+>diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>index e3663b85e8ee..cd742c4f78b6 100644
+>--- a/drivers/scsi/ufs/ufshcd.c
+>+++ b/drivers/scsi/ufs/ufshcd.c
+>@@ -4256,10 +4256,8 @@ int ufshcd_make_hba_operational(struct ufs_hba *hba)
+> 		dev_err(hba->dev,
+> 			"Host controller not ready to process requests");
+> 		err = -EIO;
+>-		goto out;
+> 	}
+>
+>-out:
+> 	return err;
+> }
+> EXPORT_SYMBOL_GPL(ufshcd_make_hba_operational);
+>@@ -5542,10 +5540,8 @@ static bool ufshcd_quirk_dl_nac_errors(struct ufs_hba *hba)
+> 			hba->saved_err &= ~UIC_ERROR;
+> 		/* clear NAC error */
+> 		hba->saved_uic_err &= ~UFSHCD_UIC_DL_NAC_RECEIVED_ERROR;
+>-		if (!hba->saved_uic_err) {
+>+		if (!hba->saved_uic_err)
+> 			err_handling = false;
+>-			goto out;
+>-		}
+> 	}
+> out:
+> 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+>@@ -7604,12 +7600,10 @@ static int ufshcd_config_vreg(struct device *dev,
+> 		if (vreg->min_uV && vreg->max_uV) {
+> 			min_uV = on ? vreg->min_uV : 0;
+> 			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
+>-			if (ret) {
+>+			if (ret)
+> 				dev_err(dev,
+> 					"%s: %s set voltage failed, err=%d\n",
+> 					__func__, name, ret);
+>-				goto out;
+>-			}
+> 		}
+> 	}
+> out:
+>@@ -7672,8 +7666,6 @@ static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on)
+> 		goto out;
+>
+> 	ret = ufshcd_toggle_vreg(dev, info->vccq2, on);
+>-	if (ret)
+>-		goto out;
+>
+> out:
+> 	if (ret) {
+>@@ -7719,10 +7711,8 @@ static int ufshcd_init_vreg(struct ufs_hba *hba)
+> 		goto out;
+>
+> 	ret = ufshcd_get_vreg(dev, info->vccq);
+>-	if (ret)
+>-		goto out;
+>-
+>-	ret = ufshcd_get_vreg(dev, info->vccq2);
+>+	if (!ret)
+>+		ret = ufshcd_get_vreg(dev, info->vccq2);
+> out:
+> 	return ret;
+> }
+>@@ -7866,12 +7856,7 @@ static int ufshcd_variant_hba_init(struct ufs_hba *hba)
+>
+> 	err = ufshcd_vops_setup_regulators(hba, true);
+> 	if (err)
+>-		goto out_exit;
+>-
+>-	goto out;
+>-
+>-out_exit:
+>-	ufshcd_vops_exit(hba);
+>+		ufshcd_vops_exit(hba);
+> out:
+> 	if (err)
+> 		dev_err(hba->dev, "%s: variant %s init failed err %d\n",
+>@@ -8036,7 +8021,6 @@ static int ufshcd_set_dev_pwr_mode(struct ufs_hba *hba,
+> 	}
+>
+> 	cmd[4] = pwr_mode << 4;
+>-
+Change LGTM;
+Nit-pick, line removed here by mistake, perhaps?
 
-Adding Robin and the iommu list as this seems to be in the dma-iommu
-code.
-
-> root@ubuntu:/home/john# insmod nvme.ko
-> [148.254564] nvme 0000:81:00.0: Adding to iommu group 21
-> [148.260973] nvme nvme0: pci function 0000:81:00.0
-> root@ubuntu:/home/john# [148.272996] Unable to handle kernel NULL pointer
-> dereference at virtual address 0000000000000010
-> [148.281784] Mem abort info:
-> [148.284584] ESR = 0x96000004
-> [148.287641] EC = 0x25: DABT (current EL), IL = 32 bits
-> [148.292950] SET = 0, FnV = 0
-> [148.295998] EA = 0, S1PTW = 0
-> [148.299126] Data abort info:
-> [148.302003] ISV = 0, ISS = 0x00000004
-> [148.305832] CM = 0, WnR = 0
-> [148.308794] user pgtable: 4k pages, 48-bit VAs, pgdp=00000a27bf3c9000
-> [148.315229] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
-> [148.322016] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [148.327577] Modules linked in: nvme nvme_core
-> [148.331927] CPU: 56 PID: 256 Comm: kworker/u195:0 Not tainted
-> 5.8.0-next-20200812 #27
-> [148.339744] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 -
-> V1.16.01 03/15/2019
-> [148.348260] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
-> [148.353822] pstate: 80c00009 (Nzcv daif +PAN +UAO BTYPE=--)
-> [148.359390] pc : __sg_alloc_table_from_pages+0xec/0x238
-> [148.364604] lr : __sg_alloc_table_from_pages+0xc8/0x238
-> [148.369815] sp : ffff800013ccbad0
-> [148.373116] x29: ffff800013ccbad0 x28: ffff0a27b3d380a8
-> [148.378417] x27: 0000000000000000 x26: 0000000000002dc2
-> [148.383718] x25: 0000000000000dc0 x24: 0000000000000000
-> [148.389019] x23: 0000000000000000 x22: ffff800013ccbbe8
-> [148.394320] x21: 0000000000000010 x20: 0000000000000000
-> [148.399621] x19: 00000000fffff000 x18: ffffffffffffffff
-> [148.404922] x17: 00000000000000c0 x16: fffffe289eaf6380
-> [148.410223] x15: ffff800011b59948 x14: ffff002bc8fe98f8
-> [148.415523] x13: ff00000000000000 x12: ffff8000114ca000
-> [148.420824] x11: 0000000000000000 x10: ffffffffffffffff
-> [148.426124] x9 : ffffffffffffffc0 x8 : ffff0a27b5f9b6a0
-> [148.431425] x7 : 0000000000000000 x6 : 0000000000000001
-> [148.436726] x5 : ffff0a27b5f9b680 x4 : 0000000000000000
-> [148.442027] x3 : ffff0a27b5f9b680 x2 : 0000000000000000
-> [148.447328] x1 : 0000000000000001 x0 : 0000000000000000
-> [148.452629] Call trace:
-> [148.455065]__sg_alloc_table_from_pages+0xec/0x238
-> [148.459931]sg_alloc_table_from_pages+0x18/0x28
-> [148.464541]iommu_dma_alloc+0x474/0x678
-> [148.468455]dma_alloc_attrs+0xd8/0xf0
-> [148.472193]nvme_alloc_queue+0x114/0x160 [nvme]
-> [148.476798]nvme_reset_work+0xb34/0x14b4 [nvme]
-> [148.481407]process_one_work+0x1e8/0x360
-> [148.485405]worker_thread+0x44/0x478
-> [148.489055]kthread+0x150/0x158
-> [148.492273]ret_from_fork+0x10/0x34
-> [148.495838] Code: f94002c3 6b01017f 540007c2 11000486 (f8645aa5)
-> [148.501921] ---[ end trace 89bb2b72d59bf925 ]---
-> 
-> Anything to worry about? I guess not since we're in the merge window, but
-> mentioning just in case ...
-> 
-> Thanks,
-> john
-> 
-> > 
-> > News: The merge window has opened, so please do not add any v5.10
-> > related material to your linux-next included branches until after the
-> > merge window closes again.
-> > 
-> > Changes since 20200812:
-> > 
-> > My fixes tree contains:
-> > 
-> >    73c7adb54169 ("device_cgroup: Fix RCU list debugging warning")
-> > 
-> > Linus' tree produces a WARNING in my qemu testing (see
-> > https://lore.kernel.org/lkml/20200813164654.061dbbd3@canb.auug.org.au/).
-> > 
-> > Non-merge commits (relative to Linus' tree): 946
-> >   1083 files changed, 28405 insertions(+), 9953 deletions(-)
-> > 
-> > ----------------------------------------------------------------------------
-> > 
-> > I have created today's linux-next tree at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> > are tracking the linux-next tree using git, you should not use "git pull"
-> > to do so as that will try to merge the new linux-next release with the
-> > old one.  You should use "git fetch" and checkout or reset to the new
-> > master.
-> > 
-> > You can see which trees have been included by looking in the Next/Trees
-> > file in the source.  There are also quilt-import.log and merge.log
-> > files in the Next directory.  Between each merge, the tree was built
-> > with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> > multi_v7_defconfig for arm and a native build of tools/perf. After
-> > the final fixups (if any), I do an x86_64 modules_install followed by
-> > builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> > ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> > and sparc64 defconfig and htmldocs. And finally, a simple boot test
-> > of the powerpc pseries_le_defconfig kernel in qemu (with and without
-> > kvm enabled).
-> > 
-> > Below is a summary of the state of the merge.
-> > 
-> > I am currently merging 327 trees (counting Linus' and 85 trees of bug
-> > fix patches pending for the current merge release).
-> > 
-> > Stats about the size of the tree over time can be seen at
-> > http://neuling.org/linux-next-size.html .
-> > 
-> > Status of my local build tests will be at
-> > http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> > advice about cross compilers/configs that work, we are always open to add
-> > more builds.
-> > 
-> > Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> > Gortmaker for triage and bug fixes.
-> > 
-> 
-> 
-> _______________________________________________
-> Linux-nvme mailing list
-> Linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
----end quoted text---
+> 	/*
+> 	 * Current function would be generally called from the power management
+> 	 * callbacks hence set the RQF_PM flag so that it doesn't resume the
+>-- 
+>2.17.1
+>
