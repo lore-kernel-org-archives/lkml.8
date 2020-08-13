@@ -2,143 +2,110 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93667C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E963120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597297256;
-	bh=bQZJ0csaHLc3qhSl2N9bDL/Th0k3IbfW8GP+TvkeLZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNvPoOgYCr1X2pES2nKITpQ1APCWeKxMzCBhqIXVGMQRxHDvbFatgIonZirF15aE2
-	 fUFpTS/KmuHMny4SctOjMwh2IiEV6Izb/1zosBQQRjNEwpSfSzp1xb6vX8UEbI7ocN
-	 9FVx3lONfW3iF9gAN8qZETNH8Yt6I4btGKpJ3waI=
+	by mail.kernel.org (Postfix) with ESMTP id 6FDA720639
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJ7YhnJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgHMFkz (ORCPT
+        id S1726567AbgHMFmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgHMFkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:40:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BF7D20639;
-        Thu, 13 Aug 2020 05:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597297254;
-        bh=bQZJ0csaHLc3qhSl2N9bDL/Th0k3IbfW8GP+TvkeLZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hUSp26TN0+hTBL4DvZdAHU5esUKHk4ITr7+3w3yRFw9xYlGbHsd+ezWa3042ogmUv
-         ZYIAkMK4F967W2t2M767YWQRhS3m4Ot4F0KywCwBiv8X2T0D8QDEmKtpmDGfN6EOPm
-         eC1+4cDs9k6dH4LbxS5aLOZhLhLFU9a2V2ozcX8E=
-Date:   Thu, 13 Aug 2020 07:40:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Al Cooper <al.cooper@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] usb: Add Kconfig and Makefile changes to build
- brcmstb-usb-pinmap
-Message-ID: <20200813054052.GB1353152@kroah.com>
-References: <20200812202018.49046-1-alcooperx@gmail.com>
- <20200812202018.49046-4-alcooperx@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812202018.49046-4-alcooperx@gmail.com>
+        Thu, 13 Aug 2020 01:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgHMFmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:42:06 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62573C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:42:06 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id a14so5405300ybm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=K4z6h/ZBrq50C0ovmsW4dSKeXLB4WwD8TYiSUyA2qdo=;
+        b=UJ7YhnJgMIiaMtKnMB6qOrejUG2dFZeUxZ46/HNjBls+FfU7g16lyFv5vCUl+VFSmu
+         zaYXZ9vjWg3ojYt5AiYLtEzUlxhjnfxZRLsmRXEzitMwn7mta+KmSo0L3X36xtXin0Hn
+         +sSXlQMxbQNUdHpi6dO4S3/HDpA4VJcLat8ugbW7I5XA1uIp9u3Y86JAmvGzkcdGvKPq
+         h5abmk9/bZJ2LgabX14evoEtBpL33Nzp/wl/5Q17yAjVs8PA2kDyAsfqdl0nKsSkhhcN
+         DvI0UUR/Z9EoFnddTU8iuuQO3PH5ESGqPdkIBhT4x1/xMcUR3y7mkiZ6BdYvUg/F4039
+         WA5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=K4z6h/ZBrq50C0ovmsW4dSKeXLB4WwD8TYiSUyA2qdo=;
+        b=j28MwGaWUeiVx5Kk4acfJFHBwsxwleC8VBKCGOhhw0CFYGEcvOa1HRvACpmvBWntXr
+         uixDc/Hz/wChad5lXwQ1fr/8lJv8lQPk8S8QLvPlw/ElwNHwUTX7yf3enK3+5jNNbFU3
+         KleCUGsg7b7aYweKEP6f1TWbYHvSVFXgwS7TkPNRL9/h1zYU+xfdYQzti+vLj4JgLY3I
+         nbz4ccrSAJHrX5tyS4OVjlQD+l8KFZP6W82/QO7HzwmoA9Ki1ojdp25GGDCpJttM4P6C
+         jdr7nlQmAPOHBfUBoGQCgsQ2EpYBr38XFfUegNVjtvuaqC5IT0+7Uvag1FKIjZkMY5d1
+         N/Ug==
+X-Gm-Message-State: AOAM531ckXncMFKykqNS9r4u6DooYviwxLkobShPqBseOoE8E2UpEXvN
+        RKmf8Ahjss487QiDksJ8HrZSqrnOa4Hvx3AFOKUMuXtnbR+8dBPxPlln0tRhVaLfDrvBknJx0Wl
+        wVQCRAIjp9X676leH23LgvqmIPVW0q4hHwsv9bnpBg71Ag+xCdLhZ8VGXAsJ+g82UGpIp9wMm0u
+        1aCnF9
+X-Google-Smtp-Source: ABdhPJy1Bm6BaLD7J26+u09kMWFFz+8WIXZI8sBIklgp04H76mKEP1vqFKEYHbpGk54JLdD/OwttkLTZSYlXHygv
+X-Received: by 2002:a25:3754:: with SMTP id e81mr4501384yba.22.1597297325101;
+ Wed, 12 Aug 2020 22:42:05 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 15:41:34 +1000
+Message-Id: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+Subject: [PATCH] rtc: cmos: initialize rtc time when reading alarm
+From:   Victor Ding <victording@google.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Victor Ding <victording@google.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 04:20:18PM -0400, Al Cooper wrote:
-> From: Al Cooper <al.cooper@broadcom.com>
-> 
-> Add Kconfig and Makefile changes to build brcmstb-usb-pinmap and
-> update MAINTAINERS for the new driver.
+cmos_read_alarm() may leave certain fields of a struct rtc_time
+untouched; therefore, these fields contain garbage if not properly
+initialized, leading to inconsistent values when converting into
+time64_t.
+This patch to set all fields of a struct rtc_time to -1 before calling
+cmos_read_alarm().
 
-This can be part of the previous patch, or at least the Kconfig and
-Makefile changes should be there so that we build the code when we add
-it.
+Signed-off-by: Victor Ding <victording@google.com>
+---
 
-> refs #SWLINUX-5537
+ drivers/rtc/rtc-cmos.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-What is this?
+diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+index bcc96ab7793f..c99af567780d 100644
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
+ 			enable_irq_wake(cmos->irq);
+ 	}
+ 
++	memset(&cmos->saved_wkalrm.time, -1, sizeof(struct rtc_time));
+ 	cmos_read_alarm(dev, &cmos->saved_wkalrm);
+ 
+ 	dev_dbg(dev, "suspend%s, ctrl %02x\n",
+@@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
+ 		return;
+ 	}
+ 
++	memset(&current_alarm.time, -1, sizeof(struct rtc_time));
+ 	cmos_read_alarm(dev, &current_alarm);
+ 	t_current_expires = rtc_tm_to_time64(&current_alarm.time);
+ 	t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
+-- 
+2.28.0.236.gb10cc79966-goog
 
-> 
-> Signed-off-by: Al Cooper <al.cooper@broadcom.com>
-> ---
->  MAINTAINERS               | 8 ++++++++
->  drivers/usb/host/Kconfig  | 4 ++++
->  drivers/usb/host/Makefile | 1 +
->  3 files changed, 13 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0569cf304ca..3a44ac61899b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3527,6 +3527,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
->  F:	drivers/usb/host/ehci-brcm.*
->  
-> +BROADCOM BRCMSTB USB PIN MAP DRIVER
-> +M:	Al Cooper <alcooperx@gmail.com>
-> +L:	linux-usb@vger.kernel.org
-> +L:	bcm-kernel-feedback-list@broadcom.com
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> +F:	drivers/usb/host/brcmstb-usb-pinmap.c
-> +
->  BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
->  M:	Al Cooper <alcooperx@gmail.com>
->  L:	linux-kernel@vger.kernel.org
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 1cb3004ea7b2..9c285053bb0c 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -109,12 +109,16 @@ endif # USB_XHCI_HCD
->  config USB_EHCI_BRCMSTB
->         tristate
->  
-> +config BRCM_USB_PINMAP
-> +       tristate
-> +
->  config USB_BRCMSTB
->  	tristate "Broadcom STB USB support"
->  	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
->  	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
->  	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
->  	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-> +	select BRCM_USB_PINMAP
->  	help
->  	  Enables support for XHCI, EHCI and OHCI host controllers
->  	  found in Broadcom STB SoC's.
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index bc731332fed9..0e63ef94790d 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -90,3 +90,4 @@ obj-$(CONFIG_USB_HCD_BCMA)	+= bcma-hcd.o
->  obj-$(CONFIG_USB_HCD_SSB)	+= ssb-hcd.o
->  obj-$(CONFIG_USB_FOTG210_HCD)	+= fotg210-hcd.o
->  obj-$(CONFIG_USB_MAX3421_HCD)	+= max3421-hcd.o
-> +obj-$(CONFIG_BRCM_USB_PINMAP)	+= brcmstb-usb-pinmap.o
-
-Shouldn't this driver be in usb/misc/ with other drivers like this?  Why
-host?
-
-Wait, why is this a separate driver at all?  Why not just build it into
-the USB_BRCMSTB driver?
-
-thanks,
-
-greg k-h
