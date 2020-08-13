@@ -2,93 +2,121 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68940C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5972C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3017E2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA952078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X/4/G4vZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWdedpVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMOcd (ORCPT
+        id S1726574AbgHMOc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
+        Thu, 13 Aug 2020 10:32:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgHMOcc (ORCPT
+        with ESMTP id S1726142AbgHMOc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:32:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20189C061757;
-        Thu, 13 Aug 2020 07:32:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AZ4M8tKLPliGwtcQpOjdflP90B5wX1qQuYOyiE0uFF0=; b=X/4/G4vZU1JqV4cr8bq0T7Bilf
-        TrPRzkxZp1umwgwIqquTlLpJhKBkeGG2Uo9NZDvLNXS4b/EJ8JJ1vqqylnqZf1FFzHs31mRtFdc2I
-        mEFvyOYpohnq3rsTgzqnLY3I3jwslB/ECCQi+biR/VXAQ+wdUcxED7vhxkhUkeFeobLt9H5p+PZys
-        NiZk6EMIRTK2auuUv+lkIXC56G1axCflYSP+fdCVvB3XucJUkpaDRCcsLHKA/23QXlEcs8yeM9Xet
-        kFCCBkwD/ZTJbhK0q7jY5vA2NNEfotNo2u7h3tF5+n/Vf1ky7ktAjcy/ZFT7vYX8ecrjg9uJls6zd
-        8zSlI3lg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6EHF-0004HL-5Y; Thu, 13 Aug 2020 14:32:21 +0000
-Date:   Thu, 13 Aug 2020 15:32:21 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813143221.GI17456@casper.infradead.org>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <20200813111505.GG9477@dhcp22.suse.cz>
- <871rkallqk.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Aug 2020 10:32:59 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE2FC061757;
+        Thu, 13 Aug 2020 07:32:58 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id v6so7431111iow.11;
+        Thu, 13 Aug 2020 07:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3t8eGrZXM10uYzb31bPcLIKkAbsLARz4dGnB5Cy2z60=;
+        b=TWdedpVEAeL5F4lIHfRmXjcM2gOol8GetJGIbvGEfn2PzRRvGuQmT9qms8dyox4tBC
+         TV4olmsqv+0yl4gwyaxhsyMADP4gykCx7w0DeuEAK0G0iKyTcxtK409+XnpWCKn77hM9
+         fGLuSGnkag+rfc+u0KvKsUoGTz7XH2m7xDeTKGi6QXOlYKfSDhZe+K/6trEwSbHHWdGN
+         on+Ef55218X7FivayasbemenUR1HH+CVbum0FuKSmuDOJ5sg5KBdBa3eiKWnW5DcE1FA
+         Nqq/G/Qfu86pN4x96xifFsjaO08utj7p933Ow7bdiPB9+wF2p1BIdWkeFyTKPxrrVnkh
+         3M3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3t8eGrZXM10uYzb31bPcLIKkAbsLARz4dGnB5Cy2z60=;
+        b=RNbiWdL8oJYTsYa2/zcmMAyeBjuMA51XhJKcEwl7YtWE77RjdTyG7yNgwpx59SSfe7
+         +qRRZomBcXCEX1+x40W9cKEDJ8B96dGwVjkboEkIMtDC2eSWD7p4YUMpSsDlFz7Meg1f
+         SDdyc3YZBmLyOt1VXSmB2+7gj1yybavySpB7d8RIrtoM62q773G/2i15QClBLLWP0620
+         iOHYsYki7VdSUgHOV1jOd/vmZrQrwVuWgcFMe//xiKTB4Xl9Hh0nbbnafPlqHEj/Uj5g
+         28Ab2DtpS/fj/TOvHuYW7pzX6WIpfOw0jXikUdzWFoMNzo1XjbivAlgCAohfK/4zcP7h
+         z7dA==
+X-Gm-Message-State: AOAM533SqFpgQrdM6DnhCyUctXCnAwy+1Zqk98L3NZnXBF+HJ5OAjEyl
+        qi29yV6/Ba6sGzFbTT+T0ilcxp3QdtMYwdyXQcA=
+X-Google-Smtp-Source: ABdhPJwfgtmbxCwJdo0mgmwrDG+x4UEu/0RCzfB6YOy8Mg4PEVKtUqPRqlJrLwfvIg901BirRGdH+47G6zM8fBc3IDg=
+X-Received: by 2002:a6b:da0d:: with SMTP id x13mr5199494iob.138.1597329177753;
+ Thu, 13 Aug 2020 07:32:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871rkallqk.fsf@nanos.tec.linutronix.de>
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040224.13054.96724.stgit@localhost.localdomain> <8ea9e186-b223-fb1b-5c82-2aa43c5e9f10@linux.alibaba.com>
+In-Reply-To: <8ea9e186-b223-fb1b-5c82-2aa43c5e9f10@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 13 Aug 2020 07:32:46 -0700
+Message-ID: <CAKgT0UcRFqXUOJ+QjgtjdQE6A7EMgAc_v9b7+mXy-ZJLvG2AgQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kbuild test robot <lkp@intel.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 03:27:15PM +0200, Thomas Gleixner wrote:
-> And guarding it with RT is not working either because then you are back
-> to square one with the problem which triggered the discussion in the
-> first place:
-> 
-> raw_spin_lock()
->   alloc()
->     if (RT && !preemptible())  <- False because RT == false
->     	goto bail;
-> 
->     spin_lock(&zone->lock)  --> LOCKDEP complains
-> 
-> So either you convince Paul not to do that or you need to do something
-> like I suggested in my other reply.
+On Wed, Aug 12, 2020 at 11:57 PM Alex Shi <alex.shi@linux.alibaba.com> wrot=
+e:
+>
+>
+>
+> =E5=9C=A8 2020/8/13 =E4=B8=8B=E5=8D=8812:02, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > We can drop the need for the locked variable by making use of the
+> > lruvec_holds_page_lru_lock function. By doing this we can avoid some rc=
+u
+> > locking ugliness for the case where the lruvec is still holding the LRU
+> > lock associated with the page. Instead we can just use the lruvec and i=
+f it
+> > is NULL we assume the lock was released.
+> >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  mm/compaction.c |   45 ++++++++++++++++++++-------------------------
+> >  1 file changed, 20 insertions(+), 25 deletions(-)
+>
+> Thanks a lot!
+> Don't know if community is ok if we keep the patch following whole patchs=
+et alone?
 
-I'd like to throw in the possibility that we do something like:
-
-  raw_spin_lock()
-    alloc()
-      if (!spin_trylock(&zone->lock))
-        if (RT && !preemptible())
-          goto bail;
-        spin_lock(&zone->lock);
-
-would that make us feel more comfortable about converting zone->lock to
-a raw spinlock?
+I am fine with you squashing it with another patch if you want. In
+theory this could probably be squashed in with the earlier patch I
+submitted that introduced lruvec_holds_page_lru_lock or some other
+patch. It is mostly just a cleanup anyway as it gets us away from
+needing to hold the RCU read lock in the case that we already have the
+correct lruvec.
