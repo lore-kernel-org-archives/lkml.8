@@ -2,98 +2,140 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07323C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4AB920781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE86920781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unYnUkYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgHMHSL (ORCPT
+        id S1726752AbgHMHSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:18:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46908 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 03:18:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43895 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgHMHSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:18:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E72A8ABF1;
-        Thu, 13 Aug 2020 07:18:30 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 09:18:02 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813071802.GC9477@dhcp22.suse.cz>
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
- <20200810123141.GF4773@dhcp22.suse.cz>
- <20200810160739.GA29884@pc636>
- <20200810192525.GG4773@dhcp22.suse.cz>
- <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
- <87k0y56wc1.fsf@nanos.tec.linutronix.de>
- <87mu305c1w.fsf@nanos.tec.linutronix.de>
+        id S1726734AbgHMHSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:18:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597303115; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=1kym1BRXxzdGlj+DXxRYvEYT+hrPHFE3l3KOyzbkWAA=; b=unYnUkYdn8/XJw53Regg/jACqkFOLLWXv9ADNpOHUgTOTFd74nHpVczMxqPmQhKUNY4IXLhJ
+ cy0s//U09qedDETc+Lti3pAVwnfplZdt95j+Mr6Hb9j/aZrWbNsZUOk151BkUlU1nBiKAqtX
+ 9IGNQV9JZeyWBbqnNRtoBa3Cjgw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f34e94bd96d28d61e894459 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 07:18:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D471FC43395; Thu, 13 Aug 2020 07:18:34 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.77.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF63EC433C6;
+        Thu, 13 Aug 2020 07:18:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF63EC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and
+ irq_resume_one() callbacks
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
+ <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <34688fc3-4787-ae49-a017-b24825180f53@codeaurora.org>
+Date:   Thu, 13 Aug 2020 12:48:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu305c1w.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-08-20 13:38:35, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > Thomas Gleixner <tglx@linutronix.de> writes:
-> >> Michal Hocko <mhocko@suse.com> writes:
-> >>> zone->lock should be held for a very limited amount of time.
-> >>
-> >> Emphasis on should. free_pcppages_bulk() can hold it for quite some time
-> >> when a large amount of pages are purged. We surely would have converted
-> >> it to a raw lock long time ago otherwise.
-> >>
-> >> For regular enterprise stuff a few hundred microseconds might qualify as
-> >> a limited amount of time. For advanced RT applications that's way beyond
-> >> tolerable..
-> >
-> > Sebastian just tried with zone lock converted to a raw lock and maximum
-> > latencies go up by a factor of 7 when putting a bit of stress on the
-> > memory subsytem. Just a regular kernel compile kicks them up by a factor
-> > of 5. Way out of tolerance.
-> >
-> > We'll have a look whether it's solely free_pcppages_bulk() and if so we
-> > could get away with dropping the lock in the loop.
-> 
-> So even on !RT and just doing a kernel compile the time spent in
-> free_pcppages_bulk() is up to 270 usec.
-> 
-> It's not only the loop which processes a large pile of pages, part of it
-> is caused by lock contention on zone->lock. Dropping the lock after a
-> processing a couple of pages does not make it much better if enough CPUs
-> are contending on the lock.
+Hi,
 
-OK, this is a bit surprising to me but well, reality sucks sometimes.
+Sure, i will take care these comments in v5.
 
-I was really hoping for a solution which would allow the allocator to
-really do what gfp flags say and if something is nowait then it
-shouldn't really block. I believe we need to document this properly.
+Thanks,
+Maulik
 
-I will comment on the dedicated gfp flag in reply to other email.
+On 8/12/2020 1:39 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Aug 10, 2020 at 4:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> From: Douglas Anderson <dianders@chromium.org>
+>>
+>> The "struct irq_chip" has two callbacks in it: irq_suspend() and
+>> irq_resume().  These two callbacks are interesting because sometimes
+>> an irq chip needs to know about suspend/resume, but they are a bit
+>> awkward because:
+>> 1. They are called once for the whole irq_chip, not once per IRQ.
+>>     It's passed data for one of the IRQs enabled on that chip.  That
+>>     means it's up to the irq_chip driver to aggregate.
+>> 2. They are only called if you're using "generic-chip", which not
+>>     everyone is.
+>> 3. The implementation uses syscore ops, which apparently have problems
+>>     with s2idle.
+>>
+>> Probably the old irq_suspend() and irq_resume() callbacks should be
+>> deprecated.
+>>
+>> Let's introcuce a nicer API that works for all irq_chip devices.  This
+> You grabbed my patch (which is great, thanks!) but forgot to address
+> Stephen's early feedback from <https://crrev.com/c/2321123>.
+> Specifically:
+>
+> s/introcuce/introduce
+>
+>
+>> --- a/include/linux/irq.h
+>> +++ b/include/linux/irq.h
+>> @@ -468,10 +468,16 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
+>>    * @irq_bus_sync_unlock:function to sync and unlock slow bus (i2c) chips
+>>    * @irq_cpu_online:    configure an interrupt source for a secondary CPU
+>>    * @irq_cpu_offline:   un-configure an interrupt source for a secondary CPU
+>> + * @irq_suspend_one:   called on an every irq to suspend it; called even if
+>> + *                     this IRQ is configured for wakeup
+> s/called on an/called on
+>
+>> + * @irq_resume_one:    called on an every irq to resume it; called even if
+>> + *                     this IRQ is configured for wakeup
+> s/called on an/called on
+>
+>
+> -Doug
 
-Thanks for trying that out Sebastian and Thomas!
 -- 
-Michal Hocko
-SUSE Labs
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
