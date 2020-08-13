@@ -2,202 +2,288 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D342C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A1420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFC120656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YoMMQhWR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZlFbecV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHMSak (ORCPT
+        id S1726612AbgHMSav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        Thu, 13 Aug 2020 14:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSaj (ORCPT
+        with ESMTP id S1726167AbgHMSau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:30:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99812C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:30:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ha11so3151439pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:30:38 -0700 (PDT)
+        Thu, 13 Aug 2020 14:30:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A77C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:30:50 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g6so7233829ljn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pM9K305gwu8RlzAPQvohHtve+36DV7y7hr4S9W7Zm3Y=;
-        b=YoMMQhWR9TeO1U0zCVSFy6Foz723aPw27dBj+vjMRJdGoPZvXr47oDHsP+QEi0u+ql
-         M/zsf/PFuPAB3OjbQWHqg7L6nEszjqBgocL3Nr1RcofM7qL0OyCKXty0iDp4kAhXwTBC
-         hzvIMmhFkPH1l17BZVR4wqb6qjwTDSd7QMBNo=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GV8PPFk7zdOcXDLc5senY34tNbe4FyS6paqA9vC9SgI=;
+        b=ZlFbecV91/u8T9JH4QjchtrSUp/D+5RzWlnOcjWxIhMZVrauL50IEurTkxPZybNqVq
+         muJF6+ynwzbq4VhMrC/4zqXHWxrXmTD/ueZoaui8k7VDfeGDiynPu06k1IsXzHtCAavF
+         /cliRz4z5ayMIf33a+qICg/16DNxR5A/992oJN/Vgtudi10j7LrTY9OWoJqSsCM2bvFz
+         5b0OhPEW3FV6bjXB6FIKGozXUkCx3fUj64f/MvW4HKUouRjE2QurPOImOLypp5cnXd14
+         ppvtMSz4m4ZfcE5z43B1y8S7micexY9qI9mIL5c9MXuKEcPsa+kAl+tldG8uEu1TnB/h
+         yjow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pM9K305gwu8RlzAPQvohHtve+36DV7y7hr4S9W7Zm3Y=;
-        b=d+g47gU1ck4qQyjVp/XT1N2Mh9tHloyC0QoLOTmvsiN8RT6O6G/fuKjRE//5TlBPoc
-         Ht4AzG4+O+ABOqktjUECgU5gg3EWdR3vEgZwqR1d7xcFeQJTFvMk4Nj5CnrMnvMpr+ye
-         L7RQeAicBvfrum3FXVCiaV0rH6SgsR0L0OpHpSSv4P4abK0OQsgvYk771CifDqv/XMnN
-         UDUhLG6p/4ACh3Yji6OiP36OxoMweOYFFccS9B+Ab6FYlGWKgKjiHo0vjxwHd/nocIiW
-         EjGJqQ4NqlGlwU49xuOd+/IHyPiqWmrEm1s+uWJGZ9uy5PVifL/xoXFgqTsrNcmfseFo
-         wpbA==
-X-Gm-Message-State: AOAM532JAswi6wuAST7fc8IEY7Ut41Mfpk+ab/zEJs5vt+4LjoYqawZa
-        P0NmZSIAKD7uwT4CMpzWsKcffg==
-X-Google-Smtp-Source: ABdhPJwfUsLTxn6iHL5pLE4vvpb0tGBo8GEBl2HKgqY8vZ6GoQ1i3GnogQaDyl8Rh3qoKuJwPWiJ4w==
-X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr6421314pjk.101.1597343437308;
-        Thu, 13 Aug 2020 11:30:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id z9sm6231843pgh.94.2020.08.13.11.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 11:30:36 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for CPU thermal zones
-Date:   Thu, 13 Aug 2020 11:30:33 -0700
-Message-Id: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GV8PPFk7zdOcXDLc5senY34tNbe4FyS6paqA9vC9SgI=;
+        b=YeaWyNZRNZDgCsqzFAuZCeWTm+QEpXQTYOhPvxkT19m/rABp78F3O5kfsCoSUBHFu2
+         Rt3jXAA42A1OHI8MRb1d1SIpQ25oSvxLt97nr3GIFpJ9CMz/PiebyqRL4z/f7Zc7oBp8
+         kJRfSpF2knk+z1xJLpg9ETAcyGN0W5b75i0g2vGVLBQVVrwhFs5tn4G9ehfC9nItO7yj
+         mWiNl5qMNLzN+PHX3GBCrDz/Ix1zwfMlZdEOnLyoxjFNhyeRBsDH6TZVGTkoAlR2EUXu
+         D1x2h9ldNgoAb2Wrr8rlRRfwnvQuqrnY+KGT7s+U4H5D0TWDOY48Kviy6Lyi8nm5OD43
+         U1sQ==
+X-Gm-Message-State: AOAM531koV9ac+yn5pcMLQ3L7/8Hr1g6muyXf7w9YWdYj500KPrAkvWk
+        g7Oc+LlN/0ijL5nvhZ1AE80BwnPSKkG84AtuKwFABg==
+X-Google-Smtp-Source: ABdhPJz7F3C957Xw9OwvGKIUufX2YxHq8yni5Jpew4l1KXqkCq7wu1v6OCIlEMwaE69mpCvgZDH7R5GzOj0eWVhp7Ng=
+X-Received: by 2002:a05:651c:543:: with SMTP id q3mr2575722ljp.145.1597343447834;
+ Thu, 13 Aug 2020 11:30:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200812161452.3086303-1-balsini@android.com> <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+ <20200813132809.GA3414542@google.com>
+In-Reply-To: <20200813132809.GA3414542@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 13 Aug 2020 20:30:21 +0200
+Message-ID: <CAG48ez0jkU7iwdLYPA0=4PdH0SL8wpEPrYvpSztKG3JEhkeHag@mail.gmail.com>
+Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
+To:     Alessio Balsini <balsini@android.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Miklos Szeredi <miklos@szeredi.hu>,
+        Nikhilesh Reddy <reddyn@codeaurora.org>,
+        Akilesh Kailash <akailash@google.com>,
+        David Anderson <dvander@google.com>,
+        Eric Yan <eric.yan@oneplus.com>,
+        Martijn Coenen <maco@android.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Lawrence <paullawrence@google.com>,
+        Stefano Duo <stefanoduo@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>,
+        kernel-team <kernel-team@android.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'sustainable_power' attribute provides an estimate of the sustained
-power that can be dissipated at the desired control temperature. One
-could argue that this value is not necessarily the same for all devices
-with the same SoC, which may have different form factors or thermal
-designs. However there are reasons to specify a (default) value at SoC
-level for SC7180: most importantly, if no value is specified at all the
-power_allocator thermal governor (aka 'IPA') estimates a value, using the
-minimum power of all cooling devices of the zone, which can result in
-overly aggressive thermal throttling. For most devices an approximate
-conservative value should be more useful than the minimum guesstimate
-of power_allocator. Devices that need a different value can overwrite
-it in their <device>.dts. Also the thermal zones for SC7180 have a high
-level of granularity (essentially one for each function block), which
-makes it more likely that the default value just works for many devices.
+On Thu, Aug 13, 2020 at 3:28 PM Alessio Balsini <balsini@android.com> wrote:
+> On Wed, Aug 12, 2020 at 08:29:58PM +0200, 'Jann Horn' via kernel-team wrote:
+[...]
+> > On Wed, Aug 12, 2020 at 6:15 PM Alessio Balsini <balsini@android.com> wrote:
+> > > Add support for filesystem passthrough read/write of files when enabled in
+> > > userspace through the option FUSE_PASSTHROUGH.
+[...]
+> > Unfortunately, this step isn't really compatible with how the current
+> > FUSE API works. Essentially, the current FUSE API is reached via
+> > operations like the write() syscall, and reaches FUSE through either
+> > ->write_iter or ->splice_write in fuse_dev_operations. In that
+> > context, operations like fget_raw() that operate on the calling
+> > process are unsafe.
+> >
+> > The reason why operations like fget() are unsafe in this context is
+> > that the security model of Linux fundamentally assumes that if you get
+> > a file descriptor from an untrusted process, and you write stuff into
+> > it, anything that happens will be limited to things that the process
+> > that gave you the file descriptor would've been able to do on its own.
+> > Or in other words, an attacker shouldn't be able to gain anything by
+> > convincing a privileged process to write attacker-controlled data into
+> > an attacker-supplied file descriptor. With the current design, an
+> > attacker may be able to trick a privileged process into installing one
+> > of its FDs as a passthrough FD into an attacker-controlled FUSE
+> > instance (while the privileged process thinks that it's just writing
+> > some opaque data into some file), and thereby make it possible for an
+> > attacker to indirectly gain the ability to read/write that FD.
+> >
+>
+> This is a great explanation.
+>
+> I've been thinking about this before posting the patch and my final thought
+> was that being the FUSE daemon already responsible for handling file ops
+> coming from untrusted processes, and the privileges of these ops are anyway
+> escalated to the daemon's, if the FUSE daemon has vulnerabilities to
+> exploit,
 
-The values correspond to 1901 MHz for the big cores, and 1804 MHz for
-the small cores. The values were determined by limiting the CPU
-frequencies to different max values and launching a bunch of processes
-that cause high CPU load ('while true; do true; done &' is simple and
-does a good job). A frequency is deemed sustainable if the CPU
-temperatures don't rise (consistently) above the second trip point
-('control temperature', 95 degC in this case). Once the highest
-sustainable frequency is found, the sustainable power can be calculated
-by multiplying the energy consumption per core at this frequency (which
-can be found in /sys/kernel/debug/energy_model/) with the number of
-cores that are specified as cooling devices.
+This is not about vulnerabilities in the FUSE daemon.
 
-The sustainable frequencies were determined at room temperature
-on a device without heat sink or other passive cooling elements.
+> there's not much we can do to avoid an attacker to mess with files
+> at the same permission level as the FUSE daemon. And this is true also
+> without this patch, right?
+> IOW, the feature introduced here is something that I agree should be
+> handled with care, but is there something that can go wrong if the FUSE
+> daemon is written properly? If we cannot trust the FUSE daemon, then we
+> should also not trust what it would be able to access, so isn't it enough
+> to prove that an attacker wouldn't be able to get more privileges than the
+> FUSE daemon? Sorry if I missed something.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-If maintainers think 'sustainable_power' should be specified at
-device level (with which I conceptually agree) I'm fine with
-doing that, just seemed it could be useful to have a reasonable
-'default' at SoC level in this case.
+My point is that you can use this security issue to steal file
+descriptors from processes that are _not_ supposed to act as FUSE
+daemons. For example, let's say there is some setuid root executable
+that opens /etc/shadow and then writes a message to stdout. If I
+invoke this setuid root executable with stdout pointing to a FUSE
+device fd, and I can arrange for the message written by the setuid
+process to look like a FUSE message, I can trick the setuid process to
+install its /etc/shadow fd as a passthrough fd on a FUSE file, and
+then, through the FUSE filesystem, mess with /etc/shadow.
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Also, for context: While on Android, access to /dev/fuse is
+restricted, desktop Linux systems allow unprivileged users to use
+FUSE.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d46b3833e52f..23f84639d6b9 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -3320,6 +3320,7 @@ cpu0-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 1>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu0_alert0: trip-point0 {
-@@ -3368,6 +3369,7 @@ cpu1-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 2>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu1_alert0: trip-point0 {
-@@ -3416,6 +3418,7 @@ cpu2-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 3>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu2_alert0: trip-point0 {
-@@ -3464,6 +3467,7 @@ cpu3-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 4>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu3_alert0: trip-point0 {
-@@ -3512,6 +3516,7 @@ cpu4-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 5>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu4_alert0: trip-point0 {
-@@ -3560,6 +3565,7 @@ cpu5-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 6>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu5_alert0: trip-point0 {
-@@ -3608,6 +3614,7 @@ cpu6-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 9>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu6_alert0: trip-point0 {
-@@ -3648,6 +3655,7 @@ cpu7-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 10>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu7_alert0: trip-point0 {
-@@ -3688,6 +3696,7 @@ cpu8-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 11>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu8_alert0: trip-point0 {
-@@ -3728,6 +3737,7 @@ cpu9-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 12>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu9_alert0: trip-point0 {
--- 
-2.28.0.220.ged08abb693-goog
+> > The only way I see to fix this somewhat cleanly would be to add a new
+> > command to fuse_dev_ioctl() that can be used to submit replies as an
+> > alternative to the write()-based interface. (That should probably be a
+> > separate patch in this patch series.) Then, you could have a flag
+> > argument to fuse_dev_do_write() that tells it whether the ioctl
+> > interface was used, and use that information to decide whether
+> > fuse_setup_passthrough() is allowed.
+> > (An alternative approach would be to require userspace to set some
+> > flag on the write operation that says "I am intentionally performing
+> > an operation that depends on caller identity" and pass that through -
+> > e.g. by using pwritev2()'s flags argument. But I think historically
+> > the stance has been that stuff like write() simply should not be
+> > looking at the calling process.)
+> >
+>
+> I'm not sure I got it right. Could you please elaborate on what is the
+> purpose of the new fuse_dev_ioctl() command?
+> Do you mean letting the kernel decide whether a FUSE daemon is allowed to
+> run fuse_setup_passthrough() or to decide if passthrough should be allowed
+> on a specific file?
 
+The new fuse_dev_ioctl() command would behave just like
+fuse_dev_write(), except that the ioctl-based interface would permit
+OPEN/CREATE replies with FOPEN_PASSTHROUGH, while the write()-based
+interface would reject them.
+
+> In general, I prefer to avoid as much as I can API changes, let's see if
+> there is a way to leave them untouched. :)
+> What do you think about adding some extra checkings in
+> fuse_setup_passthrough() to let the kernel decide if passthrough is doable?
+> Do you think this would make things better regarding what you mentioned?
+
+I can't think of any checks that you could do there to make it safe,
+because fundamentally what you have to figure out is _userspace's
+intent_, and you can't figure out what that is if userspace just calls
+write().
+
+[...]
+> > > +       if (!passthrough_filp)
+> > > +               return;
+> >
+> > This error path can only be reached if the caller supplied invalid
+> > data. IMO this should bail out with an error.
+>
+> As you can see I switched from the BUG_ON() approach of the previous patch
+> to the extreme opposite of transparent, graceful error handling.
+> Do you think we should abort the whole open operation, or adding a few
+> warning messages may suffice?
+
+In this case, an error indicates that the userspace programmer made a
+mistake. So even if the userspace programmer is not looking at kernel
+logs, we should indicate to them that they messed up - and we can do
+that by returning an error code from the syscall. So I think we should
+ideally abort the operation in this case.
+
+[...]
+> > > +       passthrough_inode = file_inode(passthrough_filp);
+> > > +
+> > > +       iocb->ki_filp = passthrough_filp;
+> >
+> > Hmm... so we're temporarily switching out the iocb's ->ki_filp here? I
+> > wonder whether it is possible for some other code to look at ->ki_filp
+> > concurrently... maybe Jens Axboe knows whether that could plausibly
+> > happen?
+> >
+> > Second question about this switcheroo below...
+> >
+> > > +       if (write) {
+> > > +               if (!passthrough_filp->f_op->write_iter)
+> > > +                       goto out;
+> > > +
+> > > +               ret = call_write_iter(passthrough_filp, iocb, iter);
+> >
+> > Hmm, I don't think we can just invoke
+> > call_write_iter()/call_read_iter() like this. If you look at something
+> > like vfs_writev(), you can see that normally, there are a bunch of
+> > other things that happen:
+> >
+> >  - file_start_write() before the write
+> >  - check whether the file's ->f_mode permits writing with FMODE_WRITE
+> > and FMODE_CAN_WRITE
+> >  - rw_verify_area() for stuff like mandatory locking and LSM security
+> > checks (although admittedly this LSM security check is pretty useless)
+> >  - fsnotify_modify() to trigger inotify watches and such that notify
+> > userspace of file modifications
+> >  - file_end_write() after the write
+> >
+> > You should probably try to use vfs_iocb_iter_write() here, and figure
+> > out how to properly add file_start_write()/file_end_write() calls
+> > around this. Perhaps ovl_write_iter() from fs/overlayfs/file.c can
+> > help with this? Note that you can't always just call file_end_write()
+> > synchronously, since the request may complete asynchronously.
+>
+> Answering here both the two previous questions, that are strictly related.
+> I couldn't find any racy path for a specific iocp->ki_filp. Glad to be
+> proven wrong, let's see if Jens can bring some light here.
+>
+> Jumping back to vfs with call_{read,write}_iter(), this looked to me as the
+> most elegant solution, and I find it handy that they also perform extra
+> checks on the target file.
+
+No, call_write_iter() doesn't do any of the required checking and
+setup and notification steps, it just calls into the file's
+->write_iter handler:
+
+static inline ssize_t call_write_iter(struct file *file, struct kiocb *kio,
+      struct iov_iter *iter)
+{
+        return file->f_op->write_iter(kio, iter);
+}
+
+Did you confuse call_write_iter() with vfs_iocb_iter_write(), or
+something like that?
+
+> I was worried at the beginning about this vfs
+> nesting weirdness, but the nesting unrolls just fine, and with visual
+> inspection I couldn't spot any dangerous situations.
+> Are you just worried about write operations or reads as well? Maybe Jens
+> can give some extra advice here too.
+>
+> > > +out:
+> > > +       iocb->ki_filp = fuse_filp;
+> >
+> > Also a question that I hope Jens can help with: If this is an
+> > asynchronous request, would something bad happen if the request
+> > completes before we reach that last ->ki_filp write (if that is even
+> > possible)? Or could an asynchronous request blow up because this
+> > ->ki_filp write happens before the request has completed?
+>
+> I cannot think of a scenario where we don't complete the request before
+> restoring the original ki_filp. Jens again to prove me wrong.
+
+Requests can complete asynchronously. That means call_write_iter() can
+return more or less immediately, while the request is processed in the
+background, and at some point, a callback is invoked. That's what that
+-EIOCBQUEUED return value is about. In that case, the current code
+will change ->ki_filp while the request is still being handled in the
+background.
+
+I recommend looking at ovl_write_iter() in overlayfs to see how
+they're dealing with this case.
