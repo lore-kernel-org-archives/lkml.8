@@ -2,191 +2,179 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C034C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD94C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B97206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa5APNLz"
+	by mail.kernel.org (Postfix) with ESMTP id DE01A206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597315190;
+	bh=TWydt69E31XoB01H3gVdHDzdQbsd2O4Gh1nyh2dthuk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=u3dZn9efwiEdrBfFzQvU3C+BEXCMi0vEW2SMw9qpDEGQvxAfCF0eMvgJlV6uIZFZn
+	 DGH8Ccrhz5Ph2Y2wo1La60/l2LzJFwTRsQjp4zo0xBZf6A1tXnurJ8VlP+ULutnlK5
+	 3H3U8K8ABAuQbv7vtwdDpmcen125p6jnWK/JedWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMKia (ORCPT
+        id S1726600AbgHMKjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMKia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:38:30 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21134C061757;
-        Thu, 13 Aug 2020 03:38:30 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i10so3030184ybt.11;
-        Thu, 13 Aug 2020 03:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZMZSesP5yzJziVUDR23hWsW+wrdDKjDsymbEjLFqlsQ=;
-        b=sa5APNLzKf8++yFtOdgr0UmEUTQkjLHKmS98JuZjQU8iiXX9W5fsI/pxHxvkQp/pre
-         L1wPQ8UHos5VVPsod04HhKTtIHOLqCwGOMlyfvXCcfcYtXAd05//mXXnj+9Nr9O79lig
-         Gmg5K5MyoBIiiK++bUONSQhbZz3DX0telXDWdsqeEvvcmoILrHlY/SnhCJIMArT17mfw
-         Rf3FgbdozoaaWJpGB9uqw7ZTRP2fGpvxNJCXU52ayjvkDrIsZAC3ZDEurBGTgXoxpL4I
-         2nTC1uKgB/j8/gZ5YLYOkzCNzufavMKERpimxZM9fsOm3Zqt4weTSFvTBDax4QRTAziy
-         xivw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZMZSesP5yzJziVUDR23hWsW+wrdDKjDsymbEjLFqlsQ=;
-        b=pNsY2mFodD2LeRnMlanKT0HMO9EMo2CMsP3hkPzQ/PV73wOVCaXNeqffivTlo/Qjm4
-         6LHdztjWCxMqExzsiKCvqcx9TVWB7//MB06fwiEO+4/IiPU5qla1s6TrRymj533R02jn
-         HAowrkrC2bCUeC7F0VbgTJXByPCT3c2HCiF4wCZIx9tmV/Ptd/dok4ngS8QxgLT+xpRg
-         mbVBdsy4E2kzGLZHD/RguT984Pwk4oI0y+vEJc9mrlGIXxq/llCxigalDqGyEdEXedyc
-         CL6FK4VH+jL8LKpr6nNUKDxL8mp4QaL0Dll8n+kIsCg95GxnmC3qycwcIHeWzE/qjOZT
-         d3yA==
-X-Gm-Message-State: AOAM5315XcLBk7geYmV12EB8A8JnsbRTNm2p5oDBU7d3s+AGtHtUtwjl
-        TwxsH26jqF9zuJbEXEPoZsGc+HA+9fzBtT6fG1U=
-X-Google-Smtp-Source: ABdhPJxlD8cvv3MGdWdeGBFCofqNyFiyRzL6aLDFdKQMT546vAVCQ0J4+sbcoOKuURBKl4JSRx8EFeWSlvxap8nxl8c=
-X-Received: by 2002:a25:6ad6:: with SMTP id f205mr5654937ybc.76.1597315109361;
- Thu, 13 Aug 2020 03:38:29 -0700 (PDT)
+        Thu, 13 Aug 2020 06:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgHMKjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:39:46 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF8AC206A4;
+        Thu, 13 Aug 2020 10:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597315185;
+        bh=TWydt69E31XoB01H3gVdHDzdQbsd2O4Gh1nyh2dthuk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TG+TdSTyyjFkf2ylVgb99HLo6AfeTTG1DjP4k1HOdzJZBOwGuzPCwpIqNfkhpZAd0
+         Ev031unx4MiV0PePocfeA+Hw+5qNS8s/um2OZc+1s+MInabuyro71jbdr9yjsdtj0U
+         IuL+ewyuVlHzydevPcDVlFP8UfmZXtIWN7tmnojI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k6Ae7-001l9U-Cb; Thu, 13 Aug 2020 11:39:43 +0100
 MIME-Version: 1.0
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 13 Aug 2020 11:38:03 +0100
-Message-ID: <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
-Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 13 Aug 2020 11:39:43 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Will Deacon <will@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
+In-Reply-To: <20200813094041.GA9894@willie-the-truck>
+References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
+ <20200813090324.GB9829@willie-the-truck>
+ <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
+ <20200813094041.GA9894@willie-the-truck>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: will@kernel.org, saiprakash.ranjan@codeaurora.org, catalin.marinas@arm.com, andre.przywara@arm.com, mark.rutland@arm.com, suzuki.poulose@arm.com, swboyd@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On 2020-08-13 10:40, Will Deacon wrote:
+> On Thu, Aug 13, 2020 at 02:49:37PM +0530, Sai Prakash Ranjan wrote:
+>> On 2020-08-13 14:33, Will Deacon wrote:
+>> > On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
+>> > > KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
+>> > > bits set and are spectre-v2 safe. But on big.LITTLE systems where
+>> > > they are coupled with other CPU cores such as the KRYO4XX silver
+>> > > based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
+>> > > bits set, the system wide safe value will be set to the lowest value
+>> > > of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
+>> > > ID_AA64PFR0_EL1.
+>> > >
+>> > > This is a problem when booting a guest kernel on gold CPU cores
+>> > > where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
+>> > > and consider them as vulnerable for Spectre variant 2 due to system
+>> > > wide safe value which is used in kvm emulation code when reading id
+>> > > registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
+>> > > for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
+>> > > list which will be consulted even when the sanitised read reports
+>> > > that CSV2 bits are not set for KRYO4XX gold cores.
+>> > >
+>> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
+>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > > ---
+>> > >  arch/arm64/kernel/cpu_errata.c | 1 +
+>> > >  1 file changed, 1 insertion(+)
+>> > >
+>> > > diff --git a/arch/arm64/kernel/cpu_errata.c
+>> > > b/arch/arm64/kernel/cpu_errata.c
+>> > > index 6bd1d3ad037a..6cbdd2d98a2a 100644
+>> > > --- a/arch/arm64/kernel/cpu_errata.c
+>> > > +++ b/arch/arm64/kernel/cpu_errata.c
+>> > > @@ -545,6 +545,7 @@ static const struct midr_range
+>> > > spectre_v2_safe_list[] = {
+>> > >  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+>> > > +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
+>> >
+>> > We shouldn't be putting CPUs in the safe list when they have CSV2
+>> > reporting
+>> > that they are mitigated in hardware, so I don't think this is the right
+>> > approach.
+>> >
+>> 
+>> Ok but the only thing I find wrong in this approach is that it is a
+>> redundant
+>> information because CSV2 is already advertising the mitigation, but 
+>> again
+>> CSV2 check is done first so it doesn't really hurt to add it to the 
+>> safe
+>> list because we already know that it is safe.
+> 
+> It simply doesn't scale. That's why CSV2 exists in the first place, so 
+> we
+> don't have to modify the kernel everytime a new CPU is invented.
+> 
+>> > Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
+>> > physical CPUs without CSV2 set are on the safe list. But then again, KVM
+>> > has always been slightly in denial about big.LITTLE because you can't
+>> > sensibly expose it to a guest if there are detectable differences...
+>> >
+>> 
+>> Sorry but I don't see how the guest kernel will see the CSV2 bits set 
+>> for
+>> gold CPU cores without actually adding them to the safe list or 
+>> reading the
+>> not sanitised value of ID_AA64PFR0_EL1 ?
+> 
+> Well that's for somebody to figure out in the patch. I'm just saying 
+> that
+> adding cores to the safe list when they already have a CSV2 field 
+> conveying
+> the same information is the wrong approach. The right appproach is for 
+> KVM
+> to expose CSV2 as set when the system is not affected by the erratum.
 
-Thank you for the review.
+A sensible way to fix this would be with something like that:
 
-On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar, Laurent, Kieran,
->
-> On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
-> >
-> > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > index 51cd4d162770..67cded5ad827 100644
-> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > @@ -10,6 +10,7 @@ Required Properties:
-> >      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
-> >      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
-> >      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
-> > +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
-> >      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
-> >      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
-> >      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
-> > @@ -75,6 +76,7 @@ corresponding to each DU output.
-> >   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
-> >   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
-> >   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
-> > + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
->
-> As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
-> instead of port 2?
->
-> I know we did it the same for R-Car M3-N and RZ/G2N.
-> But my main worry is adding support for R-Car H3-N later.
->
-I do agree too, with the below diff I tested the LVDS output on RZ/G2N
-Rev2 board and things work fine. But only thing it doesn't explain is
-why does LVDS work on DU2 for G2[H/N] boards :D
-
-Geert, Laurent, Kieran If you agree with the below changes I shall
-post a proper patch fixing it for RZ/G2[HN]
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-index d661724fc28a..0b087d287202 100644
---- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-@@ -2540,8 +2540,8 @@
-                                                remote-endpoint =
-<&dw_hdmi0_in>;
-                                        };
-                                };
--                               port@2 {
--                                       reg = <2>;
-+                               port@3 {
-+                                       reg = <3>;
-                                        du_out_lvds0: endpoint {
-                                                remote-endpoint = <&lvds0_in>;
-                                        };
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 3e67cf70f040..419d81c7763e 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -153,7 +153,7 @@ static const struct rcar_du_device_info
-rcar_du_r8a774b1_info = {
-                },
-                [RCAR_DU_OUTPUT_LVDS0] = {
-                        .possible_crtcs = BIT(0),
--                       .port = 2,
-+                       .port = 3,
-                },
-        },
-        .num_lvds = 1,
-
-Cheers,
-Prabhakar
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 077293b5115f..2735db21ff0d 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1131,6 +1131,9 @@ static u64 read_id_reg(const struct kvm_vcpu 
+*vcpu,
+  		if (!vcpu_has_sve(vcpu))
+  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
++		if (!(val & (0xfUL << ID_AA64PFR0_CSV2_SHIFT)) &&
++		    get_spectre_v2_workaround_state() == 
+ARM64_BP_HARDEN_NOT_REQUIRED)
++			val |= (1UL << ID_AA64PFR0_CSV2_SHIFT);
+  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
 
 
-> >   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
-> >   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
-> >   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
->
-> Apart from that:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> {oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+         M.
+-- 
+Jazz is not dead. It just smells funny...
