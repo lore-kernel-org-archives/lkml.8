@@ -4,229 +4,405 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C51EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA98C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBEF2074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584A82074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vh/XH9Kz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6oAI0ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHMJLa (ORCPT
+        id S1726656AbgHMJL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:11:30 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38042 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgHMJL3 (ORCPT
+        Thu, 13 Aug 2020 05:11:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40861 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726072AbgHMJLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:11:29 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D97nlS141864;
-        Thu, 13 Aug 2020 09:11:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=/JqtlkEZ2IxP0kOfhJd1yadQM7B/Phq73vNVsDC8rV0=;
- b=Vh/XH9KzblD91nLox+7d0V10BMblzfWRNjajigcTIN3UQjChoI/GrWdPtjXMTVhGcIzo
- gmJfL2yJ5tkkLOCHKQognppXJ5wkVaem5S7A4j6DVvL1GtuSTXiLz6c28PYeCd0eTrKN
- ufGuBDqi1lgO5XuI8muISr9MiXG0Q81m48Iafg+VUdQecrXQ3XCxROy/zmWK1ydjDvqM
- zzOXUPGo0S8mJ1HHh8bh0tcKwpREvSJ2It/vUADE+hzr1JXXRLgvOVuVtlCzKY6IVQD8
- VQPRoDwRADxNq1IC3sh8kOUveuazjRGdplJWMO1zHD1UFmEnQetRDqV0R2o+AlICDeI1 wQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32sm0mygwf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 09:11:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D97cXd176701;
-        Thu, 13 Aug 2020 09:11:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32t5mrjbhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 09:11:13 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07D9BBqK014639;
-        Thu, 13 Aug 2020 09:11:11 GMT
-Received: from dhcp-10-175-205-125.vpn.oracle.com (/10.175.205.125)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Aug 2020 09:11:10 +0000
-Date:   Thu, 13 Aug 2020 10:11:02 +0100 (IST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
-cc:     brendanhiggins@google.com, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        urielguajardo@google.com
-Subject: Re: [PATCH v2] kunit: added lockdep support
-In-Reply-To: <20200812193332.954395-1-urielguajardojr@gmail.com>
-Message-ID: <alpine.LRH.2.21.2008130925460.4960@localhost>
-References: <20200812193332.954395-1-urielguajardojr@gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Thu, 13 Aug 2020 05:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597309912;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JR50aZsXgX1PxbTXD+xubMJAdgJ2qC2TFc/eJBihBRg=;
+        b=A6oAI0edjQCnXdsk+sOzap/oCz7/Swea5V1E5x5DQ8ylzrdAQt5tSPAaKeCvPmw8x1uFPR
+        k3dkOdeIyDt1nsAAthKCAS3WkrFZgjLm4jo+6EXPuHRvu3/NS5SNEqAnYKBxHL5It7/fgr
+        69yfgA8qhjoP0e4W1xhIZxCJqGkz0Xk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-_798vFRIOiqaMP3iYSg4Vg-1; Thu, 13 Aug 2020 05:11:47 -0400
+X-MC-Unique: _798vFRIOiqaMP3iYSg4Vg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41BCCE919;
+        Thu, 13 Aug 2020 09:11:45 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C0C45FC1B;
+        Thu, 13 Aug 2020 09:11:39 +0000 (UTC)
+Subject: Re: [PATCH v7 6/7] iommu/uapi: Handle data and argsz filled by users
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1596068467-49322-7-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ee61f1d1-f581-e35f-c50a-80e10b1dd06c@redhat.com>
+Date:   Thu, 13 Aug 2020 11:11:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008130068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1011
- suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130068
+In-Reply-To: <1596068467-49322-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020, Uriel Guajardo wrote:
+Hi Jacob,
 
-> KUnit will fail tests upon observing a lockdep failure. Because lockdep
-> turns itself off after its first failure, only fail the first test and
-> warn users to not expect any future failures from lockdep.
+On 7/30/20 2:21 AM, Jacob Pan wrote:
+> IOMMU user APIs are responsible for processing user data. This patch
+> changes the interface such that user pointers can be passed into IOMMU
+> code directly. Separate kernel APIs without user pointers are introduced
+> for in-kernel users of the UAPI functionality.
+This is just done for a single function, ie. iommu_sva_unbind_gpasid.
+
+If I am not wrong there is no user of this latter after applying the
+whole series? If correct you may remove it at this stage?
+
 > 
-> Similar to lib/locking-selftest [1], we check if the status of
-> debug_locks has changed after the execution of a test case. However, we
-> do not reset lockdep afterwards.
+> IOMMU UAPI data has a user filled argsz field which indicates the data
+> length of the structure. User data is not trusted, argsz must be
+> validated based on the current kernel data size, mandatory data size,
+> and feature flags.
 > 
-> Like the locking selftests, we also fix possible preemption count
-> corruption from lock bugs.
+> User data may also be extended, resulting in possible argsz increase.
+> Backward compatibility is ensured based on size and flags (or
+> the functional equivalent fields) checking.
 > 
-> Depends on kunit: support failure from dynamic analysis tools [2]
+> This patch adds sanity checks in the IOMMU layer. In addition to argsz,
+> reserved/unused fields in padding, flags, and version are also checked.
+> Details are documented in Documentation/userspace-api/iommu.rst
 > 
-> [1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
-> 
-> [2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
-> 
-> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
-> v2 Changes:
-> - Removed lockdep_reset
+>  drivers/iommu/iommu.c | 201 ++++++++++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/iommu.h |  28 ++++---
+>  2 files changed, 212 insertions(+), 17 deletions(-)
 > 
-> - Added warning to users about lockdep shutting off
-> ---
->  lib/kunit/test.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index d8189d827368..7e477482457b 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kref.h>
->  #include <linux/sched/debug.h>
->  #include <linux/sched.h>
-> +#include <linux/debug_locks.h>
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 3a913ce94a3d..1ee55c4b3a3a 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1950,33 +1950,218 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_attach_device);
 >  
->  #include "debugfs.h"
->  #include "string-stream.h"
-> @@ -22,6 +23,26 @@ void kunit_fail_current_test(void)
->  		kunit_set_failure(current->kunit_test);
+> +/*
+> + * Check flags and other user provided data for valid combinations. We also
+> + * make sure no reserved fields or unused flags are set. This is to ensure
+> + * not breaking userspace in the future when these fields or flags are used.
+> + */
+> +static int iommu_check_cache_invl_data(struct iommu_cache_invalidate_info *info)
+> +{
+> +	u32 mask;
+> +	int i;
+> +
+> +	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	mask = (1 << IOMMU_CACHE_INV_TYPE_NR) - 1;
+> +	if (info->cache & ~mask)
+> +		return -EINVAL;
+> +
+> +	if (info->granularity >= IOMMU_INV_GRANU_NR)
+> +		return -EINVAL;
+> +
+> +	switch (info->granularity) {
+> +	case IOMMU_INV_GRANU_ADDR:
+> +		if (info->cache & IOMMU_CACHE_INV_TYPE_PASID)
+> +			return -EINVAL;
+> +
+> +		mask = IOMMU_INV_ADDR_FLAGS_PASID |
+> +			IOMMU_INV_ADDR_FLAGS_ARCHID |
+> +			IOMMU_INV_ADDR_FLAGS_LEAF;
+> +
+> +		if (info->granu.addr_info.flags & ~mask)
+> +			return -EINVAL;
+> +		break;
+> +	case IOMMU_INV_GRANU_PASID:
+> +		mask = IOMMU_INV_PASID_FLAGS_PASID |
+> +			IOMMU_INV_PASID_FLAGS_ARCHID;
+> +		if (info->granu.pasid_info.flags & ~mask)
+> +			return -EINVAL;
+> +
+> +		break;
+> +	case IOMMU_INV_GRANU_DOMAIN:
+> +		if (info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB)
+> +			return -EINVAL;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Check reserved padding fields */
+> +	for (i = 0; i < sizeof(info->padding); i++) {
+> +		if (info->padding[i])
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int iommu_uapi_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+> -				struct iommu_cache_invalidate_info *inv_info)
+> +				void __user *uinfo)
+>  {
+> +	struct iommu_cache_invalidate_info inv_info = { 0 };
+> +	u32 minsz;
+> +	int ret = 0;
+> +
+>  	if (unlikely(!domain->ops->cache_invalidate))
+>  		return -ENODEV;
+>  > -	return domain->ops->cache_invalidate(domain, dev, inv_info);
+> +	/*
+> +	 * No new spaces can be added before the variable sized union, the
+> +	 * minimum size is the offset to the union.
+> +	 */
+> +	minsz = offsetof(struct iommu_cache_invalidate_info, granu);
+> +
+> +	/* Copy minsz from user to get flags and argsz */
+> +	if (copy_from_user(&inv_info, uinfo, minsz))
+> +		return -EFAULT;
+> +
+> +	/* Fields before variable size union is mandatory */
+> +	if (inv_info.argsz < minsz)
+> +		return -EINVAL;
+> +
+> +	/* PASID and address granu require additional info beyond minsz */
+> +	if (inv_info.argsz == minsz &&
+> +	    ((inv_info.granularity == IOMMU_INV_GRANU_PASID) ||
+> +		    (inv_info.granularity == IOMMU_INV_GRANU_ADDR)))
+> +		return -EINVAL;
+> +
+> +	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
+> +	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.pasid_info))
+> +		return -EINVAL;
+> +
+> +	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
+> +	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.addr_info))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * User might be using a newer UAPI header which has a larger data
+> +	 * size, we shall support the existing flags within the current
+> +	 * size. Copy the remaining user data _after_ minsz but not more
+> +	 * than the current kernel supported size.
+> +	 */
+> +	if (copy_from_user((void *)&inv_info + minsz, uinfo + minsz,
+> +			   min_t(u32, inv_info.argsz, sizeof(inv_info)) - minsz))
+> +		return -EFAULT;
+> +
+> +	/* Now the argsz is validated, check the content */
+> +	ret = iommu_check_cache_invl_data(&inv_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return domain->ops->cache_invalidate(domain, dev, &inv_info);
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_uapi_cache_invalidate);
+>  
+> -int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+> -			       struct device *dev, struct iommu_gpasid_bind_data *data)
+> +static int iommu_check_bind_data(struct iommu_gpasid_bind_data *data)
+> +{
+> +	u32 mask;
+> +	int i;
+> +
+> +	if (data->version != IOMMU_GPASID_BIND_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	/* Check the range of supported formats */
+> +	if (data->format >= IOMMU_PASID_FORMAT_LAST)
+> +		return -EINVAL;
+> +
+> +	/* Check all flags */
+> +	mask = IOMMU_SVA_GPASID_VAL;
+> +	if (data->flags & ~mask)
+> +		return -EINVAL;
+> +
+> +	/* Check reserved padding fields */
+> +	for (i = 0; i < sizeof(data->padding); i++) {
+> +		if (data->padding[i])
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int iommu_sva_prepare_bind_data(void __user *udata,
+> +				       struct iommu_gpasid_bind_data *data)
+>  {
+> +	u32 minsz;
+> +
+> +	/*
+> +	 * No new spaces can be added before the variable sized union, the
+> +	 * minimum size is the offset to the union.
+> +	 */
+> +	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
+> +
+> +	/* Copy minsz from user to get flags and argsz */
+> +	if (copy_from_user(data, udata, minsz))
+> +		return -EFAULT;
+> +
+> +	/* Fields before variable size union is mandatory */
+> +	if (data->argsz < minsz)
+> +		return -EINVAL;
+> +	/*
+> +	 * User might be using a newer UAPI header, we shall let IOMMU vendor
+> +	 * driver decide on what size it needs. Since the guest PASID bind data
+> +	 * can be vendor specific, larger argsz could be the result of extension
+> +	 * for one vendor but it should not affect another vendor.
+> +	 * Copy the remaining user data _after_ minsz
+> +	 */
+> +	if (copy_from_user((void *)data + minsz, udata + minsz,
+> +			   min_t(u32, data->argsz, sizeof(*data)) - minsz))
+> +		return -EFAULT;
+> +
+> +	return iommu_check_bind_data(data);
+> +}
+> +
+> +int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +			       void __user *udata)
+> +{
+> +	struct iommu_gpasid_bind_data data = { 0 };
+> +	int ret;
+> +
+>  	if (unlikely(!domain->ops->sva_bind_gpasid))
+>  		return -ENODEV;
+>  
+> -	return domain->ops->sva_bind_gpasid(domain, dev, data);
+> +	ret = iommu_sva_prepare_bind_data(udata, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return domain->ops->sva_bind_gpasid(domain, dev, &data);
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_uapi_sva_bind_gpasid);
+>  
+> -int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> -				 ioasid_t pasid)
+> +int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +			    struct iommu_gpasid_bind_data *data)
+>  {
+>  	if (unlikely(!domain->ops->sva_unbind_gpasid))
+>  		return -ENODEV;
+>  
+> -	return domain->ops->sva_unbind_gpasid(dev, pasid);
+> +	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+> +
+> +int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +				 void __user *udata)
+> +{
+> +	struct iommu_gpasid_bind_data data = { 0 };
+> +	int ret;
+> +
+> +	if (unlikely(!domain->ops->sva_bind_gpasid))
+> +		return -ENODEV;
+> +
+> +	ret = iommu_sva_prepare_bind_data(udata, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return iommu_sva_unbind_gpasid(domain, dev, &data);
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_uapi_sva_unbind_gpasid);
+>  
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 2dcc1a33f6dc..4a02c9e09048 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -432,11 +432,14 @@ extern void iommu_detach_device(struct iommu_domain *domain,
+>  				struct device *dev);
+>  extern int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+>  				       struct device *dev,
+> -				       struct iommu_cache_invalidate_info *inv_info);
+> +				       void __user *uinfo);
+> +
+>  extern int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+> -				      struct device *dev, struct iommu_gpasid_bind_data *data);
+> +				      struct device *dev, void __user *udata);
+>  extern int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+> -					struct device *dev, ioasid_t pasid);
+> +					struct device *dev, void __user *udata);
+> +extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> +				   struct device *dev, struct iommu_gpasid_bind_data *data);
+>  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+>  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> @@ -1054,22 +1057,29 @@ static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
+>  	return IOMMU_PASID_INVALID;
 >  }
 >  
-> +static void kunit_check_locking_bugs(struct kunit *test,
-> +				     unsigned long saved_preempt_count,
-> +				     bool saved_debug_locks)
+> -static inline int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+> -					      struct device *dev,
+> -					      struct iommu_cache_invalidate_info *inv_info)
+> +static inline int
+> +iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+> +			    struct device *dev,
+> +			    struct iommu_cache_invalidate_info *inv_info)
+>  {
+>  	return -ENODEV;
+>  }
+>  
+>  static inline int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+> -					     struct device *dev,
+> -					     struct iommu_gpasid_bind_data *data)
+> +					     struct device *dev, void __user *udata)
+>  {
+>  	return -ENODEV;
+>  }
+>  
+>  static inline int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+> -					       struct device *dev, int pasid)
+> +					       struct device *dev, void __user *udata)
 > +{
-> +	preempt_count_set(saved_preempt_count);
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +	if (softirq_count())
-> +		current->softirqs_enabled = 0;
-> +	else
-> +		current->softirqs_enabled = 1;
-> +#endif
-> +#if IS_ENABLED(CONFIG_LOCKDEP)
-> +	if (saved_debug_locks && !debug_locks) {
-> +		kunit_set_failure(test);
-> +		kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
-> +		kunit_warn(test, "Further tests will have LOCKDEP disabled.");
-> +	}
-> +#endif
+> +	return -ENODEV;
 > +}
+> +
+> +static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> +					  struct device *dev,
+> +					  struct iommu_gpasid_bind_data *data)
+>  {
+>  	return -ENODEV;
+>  }
+> 
+Otherwise looks good to me
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Nit: I could be wrong but the general approach for this sort of
-feature is to do conditional compilation combined with "static inline"
-definitions to handle the case where the feature isn't enabled. 
-Could we tidy this up a bit and haul this stuff out into a
-conditionally-compiled (if CONFIG_LOCKDEP) kunit lockdep.c file?
-Then in kunit's lockdep.h we'd have
+Thanks
 
-struct kunit_lockdep {
-	int preempt_count;
-	bool debug_locks;
-};
+Eric
 
-#if IS_ENABLED(CONFIG_LOCKDEP)
-void kunit_test_init_lockdep(struct kunit_test *test, struct 
-			     kunit_lockdep *lockdep);
-void kunit_test_check_lockdep(struct kunit_test *test,
-			      struct kunit_lockdep *lockdep);
-#else
-static inline void kunit_init_lockdep(struct kunit_test *test,
-				      struct kunit_lockdep *lockdep) { }
-static inline void kunit_check_lockdep(struct kunit_test *test,
-				       struct kunit_lockdep *lockdep) { }
-#endif
-
-
-The test execution code could then call
-
-	struct kunit_lockdep lockdep;
-
-	kunit_test_init_lockdep(test, &lockdep);
-
-	kunit_test_check_lockdep(test, &lockdep);
-
-If that approach makes sense, we could go a bit further
-and we might benefit from a bit more generalization
-here.  _If_ the pattern of needing pre- and post- test
-actions is sustained across multiple analysis tools,
-could we add generic hooks for this? That would allow any
-additional dynamic analysis tools to utilize them.  So 
-kunit_try_run_case() would then cycle through the registered
-pre- hooks prior to running the case and post- hooks after,
-failing if any of the latter returned a failure value.
-
-I'm thinking something like
-
-  kunit_register_external_test("lockdep", lockdep_pre, lockdep_post, 
-			       &kunit_lockdep);
-
-(or we could define a kunit_external_test struct for
-better extensibility).
-
-A void * would be passed to pre/post, in this case it'd
-be a pointer to a struct containing the saved preempt
-count/debug locks, and the registration could be called during
-kunit initialization.  This doesn't need to be done with your
-change of course but I wanted to float the idea as in addition
-to uncluttering the test case execution code, it might allow
-us to build facilities on top of that generic tool support for
-situations like "I'd like to see if the test passes absent
-any lockdep issues, so I'd like to disable lockdep-based failure".
-Such situations are more likely to arise in a world where
-kunit+tests are built as modules and run multiple times within
-a single system boot admittedly, but worth considering I think.
-
-For that we'd need a way to select which dynamic tools kunit
-enables(kernel/module parameters or debugfs could do
-this), but a generic approach might help that sort of thing.
-
-An external test under this model wouldn't have to necessarily
-be external to the area under test; the general criteria for
-such things would be "something I want to track across multiple
-test case execution".
-
-Again I'm not trying to put you on the hook for any of
-the above suggestions (having lockdep support like this is
-fantastic!), but I think it'd be good to see if there's a
-pattern here we could potentially exploit in other use cases.
-
-Thanks!
-
-Alan
