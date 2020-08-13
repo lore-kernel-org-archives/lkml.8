@@ -2,205 +2,312 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF60C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB52078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254582078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EHioGyt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHMQI0 (ORCPT
+        id S1726745AbgHMQJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:08:26 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:32835 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHMQIZ (ORCPT
+        Thu, 13 Aug 2020 12:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgHMQJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:08:25 -0400
-Received: by mail-io1-f72.google.com with SMTP id a12so4403527ioo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:08:24 -0700 (PDT)
+        Thu, 13 Aug 2020 12:09:25 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E0DC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:09:24 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id j23so3178236vsq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rhPxzDEAbDsTxP9pTuuqSCleYcAolz9FzuIO2cC9vEg=;
+        b=EHioGyt8X0ovb69iv+wO2bgemHmETeXUEonigieujzAlN5C5JEl0BMPidKeDNq42ed
+         6PcPmOxaZLF2j8ecZByS+j3Da3iCxyOutRymE3GK8jmRXn4IegZIUBRJuMFx2x1hAKTj
+         1mf6FTRCGV941eVk3vLyCAKGo3xD1YCjBRnZo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=T9Q43hftzUD3PgBeBMYKSUvM8xHe7sGtR9CNbMQ0n6s=;
-        b=PXODzJf4aPt5a+w+obo7RUc70rFMHPAJ78hEe0cUzHG3x5JKKjR01NFa6pqZOslQYq
-         uaGqnGRNYyKGErccI9tpCZEriL4AYrZswFtCAghFM7FNGjh847oMowzu4sYV/3tWUrrS
-         mxBe1BpBefAlFjjL2eQGaqWReq87q4YRiRrh8KicrqmsB1Cg0dqO8SNaXaGZMDYdalZC
-         rdBQj1jXqj7ursSPrnSv+47YdhkEhOJ/2A9eDU2S+OufAeLTN3yUwPPaoTpDx1SRrney
-         5aKwGB6v+3zwBHGZit/07oTRMdpQZqbjfAvk+8sOyfHiuhMVaabMiII5OtajUHeFsZZG
-         w2cQ==
-X-Gm-Message-State: AOAM531JaW6By4hb6HcVlqpBwxo76vMJaxrKUfiVefhySSnF64qSrl5m
-        8Bg02p9kgDeb0B8FCTAQKH/u+2CbQMUWidb/S/c0Kz9kmqzZ
-X-Google-Smtp-Source: ABdhPJxuhLpsygM0Mm5iClkfsSMX64Mvi0d6qVsNTuFWWdPnaYAH0lI2KI1aK7XoQ4NiwjFgbno9wMFZ/yvMLgrQqLfFirTUkfEJ
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rhPxzDEAbDsTxP9pTuuqSCleYcAolz9FzuIO2cC9vEg=;
+        b=QeZR6ORS2B1O4qN/ZrtFxUEr351QM92KtKrLiOjkvD1s4qfxnn2FVyhuAFXwfemCgE
+         oTS2ET1C9cdKv9LmKUm6y2O9YHeZ9Kf0TFzduw1NSWVsCSs0JHo2xwPbhS2Pkwq+87Y3
+         1AH39tg8n69Wlfei8E6jCJTQJ4CH8oaRM+yPCe8uwIcTi9aJPB54eJPz7c1aZxo4B6Lx
+         f1JNAjXZoNRVKU/K7/s7YZsTF2VjN4NAtVciyQh/GdzROLbDXquzd9+iOOZ2DCVZMqfS
+         RDf17fOEaLHn44c5d7zsh3azSsexgCq5d62x62ZL7Uf9NYN7BlrSvorbkipX1yZuz0AJ
+         g4UA==
+X-Gm-Message-State: AOAM53215jXaUPpZXxOy0X3sfhwwKS4syG12ssepfNU0++N/cy2u4W3P
+        rfe4WSEhUac9mUwsBfb+Iw4I5yNTOHA=
+X-Google-Smtp-Source: ABdhPJxojPrRUqMuqzplpxq9HzSfinfChhgXgpiA1DPy3b1DNjqdDlhWAg5U1PVeQcEasP0aFj9I8w==
+X-Received: by 2002:a67:30c5:: with SMTP id w188mr3935672vsw.115.1597334963347;
+        Thu, 13 Aug 2020 09:09:23 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id 81sm873292vky.52.2020.08.13.09.09.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 09:09:21 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id i129so3187644vsi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:09:21 -0700 (PDT)
+X-Received: by 2002:a67:d714:: with SMTP id p20mr4179240vsj.119.1597334961095;
+ Thu, 13 Aug 2020 09:09:21 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ba06:: with SMTP id k6mr5580624iof.101.1597334902820;
- Thu, 13 Aug 2020 09:08:22 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 09:08:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000078537f05acc483bd@google.com>
-Subject: KMSAN: uninit-value in hsr_addr_subst_dest
-From:   syzbot <syzbot+586193f55faeec53d3e3@syzkaller.appspotmail.com>
-To:     alex.shi@linux.alibaba.com, ap420073@gmail.com,
-        davem@davemloft.net, frextrite@gmail.com, glider@google.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
+ <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 13 Aug 2020 09:09:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com>
+Message-ID: <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and
+ irq_resume_one() callbacks
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following issue on:
+On Thu, Aug 13, 2020 at 2:29 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Maulik Shah <mkshah@codeaurora.org> writes:
+> > From: Douglas Anderson <dianders@chromium.org>
+> >
+> > The "struct irq_chip" has two callbacks in it: irq_suspend() and
+> > irq_resume().  These two callbacks are interesting because sometimes
+> > an irq chip needs to know about suspend/resume, but they are a bit
+> > awkward because:
+> > 1. They are called once for the whole irq_chip, not once per IRQ.
+> >    It's passed data for one of the IRQs enabled on that chip.  That
+> >    means it's up to the irq_chip driver to aggregate.
+> > 2. They are only called if you're using "generic-chip", which not
+> >    everyone is.
+> > 3. The implementation uses syscore ops, which apparently have problems
+> >    with s2idle.
+>
+> The main point is that these callbacks are specific to generic chip and
+> not used anywhere else.
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14680fd6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=586193f55faeec53d3e3
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+586193f55faeec53d3e3@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in hsr_addr_subst_dest+0x4f7/0x760 net/hsr/hsr_framereg.c:315
-CPU: 1 PID: 15547 Comm: syz-executor.3 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- hsr_addr_subst_dest+0x4f7/0x760 net/hsr/hsr_framereg.c:315
- hsr_xmit net/hsr/hsr_forward.c:221 [inline]
- hsr_forward_do net/hsr/hsr_forward.c:285 [inline]
- hsr_forward_skb+0x22a2/0x3600 net/hsr/hsr_forward.c:361
- hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- __bpf_tx_skb net/core/filter.c:2086 [inline]
- __bpf_redirect_common net/core/filter.c:2125 [inline]
- __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
- ____bpf_clone_redirect net/core/filter.c:2165 [inline]
- bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
- ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
- __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
- bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
- bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
- bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
- __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
- __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
- __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f0c549
-Code: Bad RIP value.
-RSP: 002b:00000000f55060cc EFLAGS: 00000296 ORIG_RAX: 0000000000000165
-RAX: ffffffffffffffda RBX: 000000000000000a RCX: 0000000020000740
-RDX: 0000000000000028 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memmove_metadata+0xe/0x10 mm/kmsan/kmsan.c:272
- __msan_memmove+0x43/0x50 mm/kmsan/kmsan_instr.c:92
- create_tagged_skb net/hsr/hsr_forward.c:172 [inline]
- frame_get_tagged_skb net/hsr/hsr_forward.c:194 [inline]
- hsr_forward_do net/hsr/hsr_forward.c:273 [inline]
- hsr_forward_skb+0x2ae1/0x3600 net/hsr/hsr_forward.c:361
- hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- __bpf_tx_skb net/core/filter.c:2086 [inline]
- __bpf_redirect_common net/core/filter.c:2125 [inline]
- __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
- ____bpf_clone_redirect net/core/filter.c:2165 [inline]
- bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
- ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
- __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
- bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
- bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
- bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
- __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
- __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
- __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2839 [inline]
- __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
- __pskb_copy_fclone+0x173/0x1940 net/core/skbuff.c:1552
- __pskb_copy include/linux/skbuff.h:1147 [inline]
- create_tagged_skb net/hsr/hsr_forward.c:158 [inline]
- frame_get_tagged_skb net/hsr/hsr_forward.c:194 [inline]
- hsr_forward_do net/hsr/hsr_forward.c:273 [inline]
- hsr_forward_skb+0x1ee8/0x3600 net/hsr/hsr_forward.c:361
- hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- __bpf_tx_skb net/core/filter.c:2086 [inline]
- __bpf_redirect_common net/core/filter.c:2125 [inline]
- __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
- ____bpf_clone_redirect net/core/filter.c:2165 [inline]
- bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
- ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
- __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
- bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
- bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
- bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
- __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
- __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
- __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-=====================================================
+I'm not sure I understand.  This callback is used by drivers that use
+generic-chip but I don't think there's anything specific about
+generic-chip in these callbacks.  Sure many of them use the
+generic-chip's "wake_active" tracking but a different IRQ chip could
+track "wake_active" itself without bringing in all of generic-chip and
+still might want to accomplish the same thing, right?
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > Probably the old irq_suspend() and irq_resume() callbacks should be
+> > deprecated.
+>
+> You need to analyze first what these callbacks actually do. :)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+See below.  I intended my callbacks to be for the same type of thing
+as the existing ones, though perhaps either my naming or description
+was confusing.
+
+
+> > Let's introcuce a nicer API that works for all irq_chip devices.
+>
+> s/Let's intro/Intro/
+>
+> Let's is pretty useless in a changelog especially if you read it some
+> time after the patch got applied.
+
+Sounds fine.  Hopefully Maulik can adjust when he posts the next version.
+
+
+> > This will be called by the core and is called once per IRQ.  The core
+> > will call the suspend callback after doing its normal suspend
+> > operations and the resume before its normal resume operations.
+>
+> Will be? You are adding the code which calls that unconditionally even.
+>
+> > +void suspend_one_irq(struct irq_desc *desc)
+> > +{
+> > +     struct irq_chip *chip = desc->irq_data.chip;
+> > +
+> > +     if (chip->irq_suspend_one)
+> > +             chip->irq_suspend_one(&desc->irq_data);
+> > +}
+> > +
+> > +void resume_one_irq(struct irq_desc *desc)
+> > +{
+> > +     struct irq_chip *chip = desc->irq_data.chip;
+> > +
+> > +     if (chip->irq_resume_one)
+> > +             chip->irq_resume_one(&desc->irq_data);
+> > +}
+>
+> There not much of a point to have these in chip.c. The functionality is
+> clearly pm.c only.
+
+No objections to it moving.  Since Maulik is posting the patches,
+hopefully he can move it?
+
+
+> >  static bool suspend_device_irq(struct irq_desc *desc)
+> >  {
+> > +     bool sync = false;
+> > +
+> >       if (!desc->action || irq_desc_is_chained(desc) ||
+> >           desc->no_suspend_depth)
+> > -             return false;
+> > +             goto exit;
+>
+> What?
+>
+> If no_suspend_depth is > 0 why would you try to tell the irq chip
+> that this line needs to be suspended?
+>
+> If there is no action, then the interrupt line is in shut down
+> state. What's the point of suspending it?
+>
+> Chained interrupts are special and you really have to think hard whether
+> calling suspend for them unconditionally is a good idea. What if a
+> wakeup irq is connected to this chained thing?
+
+I think there is a confusion about what this callback is intended to
+do and that probably needs to be made clearer, either by renaming or
+by comments (or both).  Let's think about these two things that we
+might be telling the IRQ:
+
+a) Please disable yourself in preparation for suspending.
+
+b) The system is suspending, please take any action you need to.
+
+I believe you are reading this as a).  I intended it to be b).  Can
+you think of a name for these callbacks that would make it clearer?
+suspend_notify() / resume_notify() maybe?
+
+
+Specifically the problem we're trying to address is when an IRQ is
+marked as "disabled" (driver called disable_irq()) but also marked as
+"wakeup" (driver called enable_irq_wake()).  As per my understanding,
+this means:
+
+* Don't call the interrupt handler for this interrupt until I call
+enable_irq() but keep tracking it (either in hardware or in software).
+Specifically it's a requirement that if the interrupt fires one or
+more times while masked the interrupt handler should be called as soon
+as enable_irq() is called.
+
+* If this interrupt fires while the system is suspended then please
+wake the system up.
+
+
+On some (many?) interrupt controllers a masked interrupt won't wake
+the system up.  Thus we need some point in time where the interrupt
+controller can unmask interrupts in hardware so that they can act as
+wakeups.  Also: if an interrupt was masked lazily this could be a good
+time to ensure that these interrupts _won't_ wake the system up.  Thus
+the point of these callbacks is to provide a hook for IRQ chips to do
+this.  Now that you understand the motivation perhaps you can suggest
+a better way to accomplish this if the approach in this patch is not
+OK.
+
+
+I will note that a quick audit of existing users of the gernic-chip's
+irq_suspend() show that they are doing exactly this.  So the point of
+my patch is to actually allow other IRQ chips (ones that aren't using
+generic-chip) to do this type of thing.  At the same time my patch
+provides a way for current users of generic-chip to adapt their
+routines so they work without syscore (which, I guess, isn't
+compatible with s2idle).
+
+
+> >       if (irqd_is_wakeup_set(&desc->irq_data)) {
+> >               irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+> > +
+> >               /*
+> >                * We return true here to force the caller to issue
+> >                * synchronize_irq(). We need to make sure that the
+> >                * IRQD_WAKEUP_ARMED is visible before we return from
+> >                * suspend_device_irqs().
+> >                */
+> > -             return true;
+> > +             sync = true;
+> > +             goto exit;
+>
+> So again. This interrupt is a wakeup source. What's the point of
+> suspending it unconditionally.
+
+Again this is a confusion about whether I'm saying "please suspend
+yourself" or "the system is suspending, please take needed action".
+
+
+> >       }
+> >
+> >       desc->istate |= IRQS_SUSPENDED;
+> > @@ -95,7 +99,10 @@ static bool suspend_device_irq(struct irq_desc *desc)
+> >        */
+> >       if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+> >               mask_irq(desc);
+> > -     return true;
+> > +
+> > +exit:
+> > +     suspend_one_irq(desc);
+> > +     return sync;
+>
+> So what happens in this case:
+>
+>    CPU0                         CPU1
+>    interrupt                    suspend_device_irq()
+>      handle()                     chip->suspend_one()
+>        action()                 ...
+>        chip->fiddle();
+>
+> ????
+
+Ah, so I guess we need to move the call to suspend_one_irq() till
+after the (potential) call to synchronize_irq() in in
+suspend_device_irqs()?
+
+
+> What is the logic here and how is this going to work under all
+> circumstances without having magic hacks in the irq chip to handle all
+> the corner cases?
+>
+> This needs way more thoughts vs. the various states and sync
+> requirements. Just adding callbacks, invoking them unconditionally, not
+> giving any rationale how the whole thing is supposed to work and then
+> let everyone figure out how to deal with the state and corner case
+> handling at the irq chip driver level does not cut it, really.
+>
+> State handling is core functionality and if irq chip drivers have
+> special requirements then they want to be communicated with flags and/or
+> specialized callbacks.
+
+Hopefully with the above explanation this makes more sense?  If not,
+hopefully you can suggest how to adapt it to accomplish what we need
+(allow wakeup from masked IRQs that have wakeup enabled).
+
+Thanks!
+
+-Doug
