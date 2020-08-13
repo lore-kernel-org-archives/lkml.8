@@ -2,107 +2,113 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356D120791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="chZ+Ddiz"
+	by mail.kernel.org (Postfix) with ESMTP id 4D44520771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgHMHb2 (ORCPT
+        id S1726526AbgHMHcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:31:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30638 "EHLO m43-7.mailgun.net"
+        Thu, 13 Aug 2020 03:32:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55544 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgHMHb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:31:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597303887; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=10zIpoDC5WFOJCsOf60NRljx1E04tbY7lNT51eZXHZw=; b=chZ+Ddizp6I+eZPGF10FWto9CEROaHCCuTAQ3jdSn96QACkDo5trxtrTBYqwXcb6yUFgodOy
- 6+dtZjrw5MqlsyKwEZCgbsEbBxllyS2eImKfB4ViW0SWFuyKITqgIYS9ONSkyLgQjytQcRuz
- Vv6fYtNwWyFL69GJPMz93RS5k/s=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f34ec30247ccc308ceae74d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 07:30:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DDBD9C433CB; Thu, 13 Aug 2020 07:30:55 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.77.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E430BC433C6;
-        Thu, 13 Aug 2020 07:30:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E430BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during
- init
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
- <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
-Date:   Thu, 13 Aug 2020 13:00:44 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726072AbgHMHcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:32:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3F77DB1ED;
+        Thu, 13 Aug 2020 07:32:21 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 09:31:58 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+Message-ID: <20200813073158.GI12903@alley>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley>
+ <20200812163908.GH12903@alley>
+ <87v9hn2y1p.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9hn2y1p.fsf@jogness.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu 2020-08-13 02:30:02, John Ogness wrote:
+> On 2020-08-12, Petr Mladek <pmladek@suse.com> wrote:
+> > So, I have one crazy idea to add one more state bit so that we
+> > could have:
+> >
+> >   + committed: set when the data are written into the data ring.
+> >   + final: set when the data block could not longer get reopened
+> >   + reuse: set when the desctiptor/data block could get reused
+> >
+> > "final" bit will define when the descriptor could not longer
+> > get reopened (cleared committed bit) and the data block could
+> > not get extended.
+> 
+> I implemented this solution for myself and am currently running more
+> tests. Some things that I changed from your suggestion:
+> 
+> 1. I created a separate prb_reserve_cont() function. The reason for this
+> is because the caller needs to understand what is happening. The caller
+> is getting an existing record with existing data and must append new
+> data. The @text_len field of the info reports how long the existing data
+> is.
 
-On 8/12/2020 3:01 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-08-10 04:21:00)
->> Clear previous kernel's configuration during init by resetting
->> interrupts in enable bank to zero.
-> Can you please add some more information here about why we're not
-> clearing all the pdc irqs and only the ones that are listed in DT?
-sure.
->   Is
-> that because the pdc is shared between exception levels of the CPU and
-> so some irqs shouldn't be used? Does the DT binding need to change to
-> only list the hwirqs that are usable by the OS instead of the ones that
-> are usable for the entire system? The binding doesn't mention this at
-> all so I am just guessing here.
+I see.
 
-The IRQs specified in qcom,pdc-ranges property in DT are the only ones 
-that can be used in the current OS for the PDC.
+> So the LOG_CONT handling code in printk.c looks something like this:
 
-So instead of setting entire register to zero (each reg supports 32 
-interrupts enable bit) only clearing the ones that can be used.
+Yeah, it makes sense.
 
-Thanks,
-Maulik
 
->
->> Suggested-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> 2. I haven't yet figured out how to preserve calling context when a
+> newline appears. For example:
+> 
+> pr_info("text");
+> pr_cont(" 1");
+> pr_cont(" 2\n");
+> pr_cont("3");
+> pr_cont(" 4\n");
+> 
+> For "3" the calling context (info, timestamp) is lost because with "2"
+> the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+I am going to answer Sergey's reply.
 
+
+> 3. There are some memory barriers introduced, but it looks like it
+> shouldn't add too much complexity.
+
+Uff. I have hooped for this.
+
+> I will continue to refine my working version and post a patch so that we
+> have something to work with. This looks to be the most promising way
+> forward. Thanks.
+
+Uff, I am happy that it seems working. Several other approaches looked
+much more complicated or they caused regressions.
+
+Best Regards,
+Petr
