@@ -2,109 +2,146 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC78C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E37C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DEA20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5F320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mLpjo5WO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFCLXi/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHMWHX (ORCPT
+        id S1726704AbgHMWH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:07:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60779 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbgHMWHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:07:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BSLJz20Jqz9sTF;
-        Fri, 14 Aug 2020 08:07:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597356436;
-        bh=O90B6lPgDbctD7DTLOixetS5SEhrzQ35jkHhZCRy+/Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mLpjo5WOrz0/70Oi8Dx8l/LlsKMCkIbWO/zb9uPqVzRXkHS5/AinqEXnOpZmQ3DqT
-         cqWyeDAM/IkyrRqP9654DnFlAofd72coChEsr68RAJ3M+LW32CLgtmjoCKTgAmIWns
-         BQKpojE9XgIGI8T+H1j0ZWvNGYjepuRJtuYisb2iJpQ4T4Wq6w21rIm/UZsLI5LjWO
-         /at+uZOZnX5eSmClgc/7waqIJeLaCSVJ+0S51kImQsdo39/xrDFFFHiuMBVmC6ILE6
-         c++oFnx4RfmYGa746f0OWCQ8mWeObac6XzNzIjNucweLEFZAVXoLLggkOR+brchABw
-         OSnr4YqCVH39g==
-Date:   Fri, 14 Aug 2020 08:07:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Xen Devel <Xen-devel@lists.xensource.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: linux-next: Fixes tag needs some work in the xen-tip tree
-Message-ID: <20200814080714.6aa441cd@canb.auug.org.au>
+        Thu, 13 Aug 2020 18:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgHMWHI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 18:07:08 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D48C061757;
+        Thu, 13 Aug 2020 15:07:07 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id j22so3848049lfm.2;
+        Thu, 13 Aug 2020 15:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sWzvdmgXDHuOtJszdX4J4B9Z4Waxa6XTUameiQDphcY=;
+        b=lFCLXi/++Wld7Pef95SQoNaKCO+nuVwKA83lj/LWRH6z1GpTKPIvZgA5QoycREtvh5
+         Jdo4w+LW3Mkg1MqCnYz+wIXca7AxkwEy8q+D9I7X2L4Kw0YawnZfLX6TVhiiaAMI+/Du
+         Gr3Jv0qPWpGsCBR8yQsjnui7P5NDvMkGgoMdoBQM5KCEWfJ12s0XVlKWfNMR9n3S+348
+         RLtZj72ntG+TmiCwaW7D1WMAkaoYvf6c4dUcxXlmw0zvFjuMhxde/Wc34oL04cMFcCTz
+         0NlkoALfIqdTnf4Q2EJ+FJq66X97NMUloMese9QHP1AX+p3P5d6JukihtBt+MxOHu1g+
+         2o4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sWzvdmgXDHuOtJszdX4J4B9Z4Waxa6XTUameiQDphcY=;
+        b=Y0Tspg7PHZKjz3SY+15r1ll2ZmRi6qklPjK7C7yKfxWXWGulz7VKci3LZcGL/cPYvQ
+         NPWJU4fuoIIpnOyQn9RvMMosQRg32fiGCSK6zg+uyr3vgDShUMwg0Kee+5O3hq85B2Bh
+         VPWXO/Ht1EAS5Zf6Eg59BEnwjhQXHX1F8IpVjP5mitTwe+H+F1KDIQ8b4NNz4wCepJmc
+         o71ebn1kCfAq+d9DP+EHapLgk5nEWPjuVsAcsMgEDknbF5QfXyOMu99kEslyIYAdfyTa
+         cfAUNniPUaW4PQJjo8ctY+BDDrKCcXNYiYlczONbcOU75GWarSR3wrHKahJm6rl3nJCB
+         NC4g==
+X-Gm-Message-State: AOAM533DBCsGb52XzvhIOqN2dtlxwEyyLkPbFdCY5QjLjKMiHmiJbPIs
+        baMUcmPqjaJ7b/ihZMEG+DxuOGZ2
+X-Google-Smtp-Source: ABdhPJyxqKir1ref2JB/ZBi9uoJB2LHWMxuOvTIGdPa97QGjik3HXoPPQbGgeYDxvzXimJtkPnh0FA==
+X-Received: by 2002:a05:6512:20c1:: with SMTP id u1mr3143864lfr.17.1597356426488;
+        Thu, 13 Aug 2020 15:07:06 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id z20sm1354452ljk.97.2020.08.13.15.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 15:07:05 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v10 2/4] drm/tegra: output: Support DRM bridges
+Date:   Fri, 14 Aug 2020 01:06:54 +0300
+Message-Id: <20200813220656.30838-3-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200813220656.30838-1-digetx@gmail.com>
+References: <20200813220656.30838-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MhZ8wxdqyR2_58Uq9lvmpR4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MhZ8wxdqyR2_58Uq9lvmpR4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Newer Tegra device-trees will specify a video output graph which involves
+a bridge. This patch adds initial support for the DRM bridges to the Tegra
+DRM output.
 
-Hi all,
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpu/drm/tegra/drm.h    |  2 ++
+ drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-In commit
+diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+index b25443255be6..f38de08e0c95 100644
+--- a/drivers/gpu/drm/tegra/drm.h
++++ b/drivers/gpu/drm/tegra/drm.h
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/consumer.h>
+ 
+ #include <drm/drm_atomic.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
+@@ -116,6 +117,7 @@ struct tegra_output {
+ 	struct device_node *of_node;
+ 	struct device *dev;
+ 
++	struct drm_bridge *bridge;
+ 	struct drm_panel *panel;
+ 	struct i2c_adapter *ddc;
+ 	const struct edid *edid;
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index a6a711d54e88..ccd1421f1b24 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_simple_kms_helper.h>
+ 
+@@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
+ 	if (!output->of_node)
+ 		output->of_node = output->dev->of_node;
+ 
++	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
++					  &output->panel, &output->bridge);
++	if (err && err != -ENODEV)
++		return err;
++
+ 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
+ 	if (panel) {
++		/*
++		 * Don't mix nvidia,panel phandle with the graph in a
++		 * device-tree.
++		 */
++		WARN_ON(output->panel || output->bridge);
++
+ 		output->panel = of_drm_find_panel(panel);
+ 		of_node_put(panel);
+ 
+-- 
+2.27.0
 
-  14dee0586104 ("drm/xen-front: Fix misused IS_ERR_OR_NULL checks")
-
-Fixes tag
-
-  Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display fron=
-tend"
-
-has these problem(s):
-
-  - missing space between the SHA1 and the subject
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-Fixes: c575b7eeb89f ("drm/xen-front: Add support for Xen PV display fronten=
-d")
-
-Also, please keep all the commit message tags together at the end of
-the commit message.
-
-Not worth rebasing over, just to remember for next time, thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/MhZ8wxdqyR2_58Uq9lvmpR4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl81uZIACgkQAVBC80lX
-0Gx0EAgAixJH9UPNrwekGE13e/05L03RxpI+G04md3cJ2kk44qGeGtK+qiTjHpZh
-sPsD4q2b4tyljqbRo8x3G3Z/ekS1t/a324NznDn9fAfyEY2ZHsqjjm4E+szpYINb
-v720/bnq6/hQ+6chniPGufY7Cv/ZRcw7DRT10VWHeEV+HIH2RuHiUdVqX4cHKtGj
-mH6Yn+x9MoT3XxoBngmMwCDTaBsmCbw1tQOVF1eW6/OelD6cX9fvXmh+O0mZNDo+
-NY85c2zvgyPqB9+9pQiErAmhTDDJvqDryIKgjGeV6jhPTb1hp+smfuscho2YZjDP
-ewBtoupmn40opBvAvUQM02PXx8LpNA==
-=1asd
------END PGP SIGNATURE-----
-
---Sig_/MhZ8wxdqyR2_58Uq9lvmpR4--
