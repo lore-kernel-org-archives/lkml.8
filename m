@@ -2,170 +2,222 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0669C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86FD20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9D22076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V49QSua1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EoGmj8wJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgHMDDw (ORCPT
+        id S1726641AbgHMDIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:03:52 -0400
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:42240
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726419AbgHMDDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:03:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W9XyYyemwiOM7SttEWTAs/cvNVMwlwA1VH3OIzbZVC6p+5fCc9HjZJ2O6grSxPPEOzrXaymY1jNOlFYVvECo/FsGGV6gzv/eYBnbxuigGAJ4Wj3WHu/e5HWS8MI88QJFItGtVOcQVHRSHmlAvzqjIv74Fiw82yrDfwilKzJ91m7m513mYljelVGS5XXZBaObqRIJ+9QMDcovZ84N+aTA1Kl9Gr8d9h9EOGAnLFcl670I2Y8TR5+1fuNeA5v21wCF3ALRV0TiWiCHZLH4hMdeHOCged6vBw7V6Q+LrNQ34BNCDQ5PueOKv1lFzZylCw6Qcx3HyHbcfyW5HPCOhhQAsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JLscaqRrm2LeDBt6Ws5XPqhwufiOKmtQcAbcFh+ywdk=;
- b=XZM4FgoEjzaFhKg8Rxm1ErGb3kxOVgcx4jZCzHp8zZ3ETZ/6rptwAlrIRkNQu21n5f7yoFhbUrf3xmIKPRW6rJEkh6MbZorzc6J8bbCcJZE8mU0uV6Xj5aF3+ZTPmzEYzL73DcIW4TG74UsKzcuyhjh2hRmz8dIoHUv+hcaJpmBW8mJE3y8lBlpQmR620LlNs6oBUlstA8Df4GNNllllF8LHpd8wekPzOFEeFgw5LuM7bxWswM/6RgB/xqk/ZC0mrE9WgZSoqvBreCRI/gcSe5IiqFefgDEh7s0gQuizF6rRv24zAiZFVEYm1LfCLxA5ShQP/0YhtMJxuohhqvUieg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JLscaqRrm2LeDBt6Ws5XPqhwufiOKmtQcAbcFh+ywdk=;
- b=V49QSua1krU1AwN9GxieYGveJ8Y7pdbeDBZ///Jz4xw1wqiEVb+VxtMVdFomIPoCFx2UA8x9Bb6LioVF/Zrnway5/ZMSUIfVxDOzDOfWEDYGSpczz/668eaa81g60TsJNYwSZjZzZVRKy3Rw0fjomOUTy4aJ85Iii4K1iXd1vqs=
-Received: from AM0PR04MB4772.eurprd04.prod.outlook.com (2603:10a6:208:c2::17)
- by AM0PR0402MB3441.eurprd04.prod.outlook.com (2603:10a6:208:1a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Thu, 13 Aug
- 2020 03:03:47 +0000
-Received: from AM0PR04MB4772.eurprd04.prod.outlook.com
- ([fe80::b00e:440a:6ac6:b3c4]) by AM0PR04MB4772.eurprd04.prod.outlook.com
- ([fe80::b00e:440a:6ac6:b3c4%3]) with mapi id 15.20.3283.016; Thu, 13 Aug 2020
- 03:03:46 +0000
-From:   Jiafei Pan <jiafei.pan@nxp.com>
-To:     Jiafei Pan <jiafei.pan@nxp.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "romain.perier@gmail.com" <romain.perier@gmail.com>,
-        "will@kernel.org" <will@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>
-Subject: RE: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
-Thread-Topic: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
-Thread-Index: AQHWa6gdrPnfNrtYpEW7p3l8OUGNa6k1YJYQ
-Date:   Thu, 13 Aug 2020 03:03:46 +0000
-Message-ID: <AM0PR04MB4772B1B6D3391BAEAD4411808A430@AM0PR04MB4772.eurprd04.prod.outlook.com>
-References: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
-In-Reply-To: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dd12a398-837a-4840-5b85-08d83f357edc
-x-ms-traffictypediagnostic: AM0PR0402MB3441:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3441108374408C403229E2A38A430@AM0PR0402MB3441.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: G5F+OXgHJjOIkwxdq3ypFjC9UYYofPzG/I/MtV0O2GBvNsu8hhrIZe2ciyLUUpmQIBKLURvsBfJCiw0tbbXOVCHrLa69kVq5dreNGgrn+m8eBv2T4LwlQpcscj5mYR2t2q9ydw0vcLzJxjPXrs1I7tic/XffnxEZybFcZGMy/2vVL23SwrtlmSTWL6FOFzkktKSJMB3o6A/H4IPfZhNpeSZIuXbhgnU0PhdJR7taJoWn4qHitzR2K5V8TePuLPrn4tgBuOujTgSlvZ7PRchpJDeaz8wrc9oAur9RFFxNsCo71G+gCr2oCZRij+GYvV6WlPUbQH6pznjFxkHpRuQfJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4772.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(110136005)(316002)(64756008)(8936002)(66446008)(66476007)(8676002)(66946007)(76116006)(71200400001)(66556008)(4326008)(54906003)(53546011)(86362001)(52536014)(7696005)(33656002)(2906002)(83380400001)(478600001)(55016002)(44832011)(186003)(9686003)(6506007)(5660300002)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: FOa6kYynldgqn+V2fuvv69YndPOIpMNOpOPN/Ytaas2fYZFqJPB8VbbqQpolWiCtoXh3aiK4KItm+mYOrEQDbDzlxNEJ0mydyX4NDd9fkMT6wvKglgOgvvgxuiy92PHEkZt1ZTstoQEr9knMnoU1yKKnBFC0UKH1c4zCbypXiK1BuvqWhW2yfs2CZwMw6tji3CVFXKLhYtw/G0koV5Zr/SJZRPNMzTEv7D1Waid0A88p8XG449yot8iMiHl2o3rjpIcR0RUcjoq05qGXuVZZjU3Vvbu8YVdcUh+Kb7zmEr5IYzvoVA/gLCrS8TH4330F+cSr4EU5em+i1o1DMaJaB/vh2oqwQlvnN8yVZH3CmI9A22/MwumpMCorNVWKafzAX+QHGSFyLdKVJsRjB7tS+nGe/2DR8jgQB5lei3ZgzrxdOnexvSWER0Lf1m/Q98LMp+8EbpNioJYtmDQb/O8CCAcLO3IGRuXpSYqPVYrSW8El2vUZyER9B5fSH6rT6K8hqFMZEICO0bQTweXTJnhRTBnoQl0Xx6IbMpPjcaod8+0siJaQPdZSkvN28MnfCOXA2URgCQkprWQbFZgSm6Axf1bkVX6GfzvCe3ooV9B0WzyOxfrNK0SVNW4CoJn0ze0oUa8aQic5YGNo0FetpPj8/g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB4772.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd12a398-837a-4840-5b85-08d83f357edc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 03:03:46.5693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +k3qJv3LyQrWMc53kn7J2UsWmQgB0UKtp7a/RrIzYGq2kDntjKJd1ImNnTzgdkO/ZZjzY9XOF+Ug5qBsi7WuTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3441
+        Wed, 12 Aug 2020 23:08:17 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:32324 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgHMDIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 23:08:16 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200813030812epoutp0322ed98a82d2d9d6d861ec39677897409~qtQ6WrcQb0726507265epoutp03J
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:08:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200813030812epoutp0322ed98a82d2d9d6d861ec39677897409~qtQ6WrcQb0726507265epoutp03J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597288092;
+        bh=CESfa1yDWoOQu7bTQ2QDKDIcx/TcB4vJLS+NeETuFco=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=EoGmj8wJDwNQOAv+Kda6ThWf+vTlRTqlUrwgLR20SYw/zVKJp3awqPQgZE6y+/UL9
+         3mQT7LjE9PA+piOMvzsSgfnrloB2WOPcnl+QohyHL2RiRCDcS+dsijMTNB3kZdo6N0
+         z0hr+nvbZs8iGZ41h8FGvsugZbVoH/Q2UftQmc2s=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200813030811epcas1p1590fbc952ca00a030366769d6be6f523~qtQ55Vcmn0056800568epcas1p1O;
+        Thu, 13 Aug 2020 03:08:11 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BRs2f2pd2zMqYkW; Thu, 13 Aug
+        2020 03:08:10 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        02.32.28581.A9EA43F5; Thu, 13 Aug 2020 12:08:10 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac~qtQ4a8-Ft2467324673epcas1p3e;
+        Thu, 13 Aug 2020 03:08:10 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200813030810epsmtrp2e2c65c8fa9a934239dc2fd47de89af8e~qtQ4aMk1G0107701077epsmtrp2a;
+        Thu, 13 Aug 2020 03:08:10 +0000 (GMT)
+X-AuditID: b6c32a38-2e3ff70000006fa5-ad-5f34ae9a542f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        71.55.08303.99EA43F5; Thu, 13 Aug 2020 12:08:09 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.104.227]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200813030809epsmtip2da208a96f76ecab2483506e2dcc9ba6a~qtQ4OpXSq0426604266epsmtip2N;
+        Thu, 13 Aug 2020 03:08:09 +0000 (GMT)
+From:   Seungil Kang <sil.kang@samsung.com>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        Seungil Kang <sil.kang@samsung.com>
+Subject: [PATCH v2] lib/cmdline: prevent unintented access to address
+Date:   Thu, 13 Aug 2020 12:07:41 +0900
+Message-Id: <20200813030741.6896-1-sil.kang@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNKsWRmVeSWpSXmKPExsWy7bCmvu6sdSbxBtffC1vMWb+GzaK3aTqT
+        xfkHv9gsmhevZ7PofiVjcXnXHDaL1f9OMVpc2P+OxWLzpqnMDpwe2w6oemxa1cnm8e7cOXaP
+        EzN+s3jMOxnosX/uGnaP9/uusnn0bVnF6PF5k1wAZ1SOTUZqYkpqkUJqXnJ+SmZeuq2Sd3C8
+        c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QhUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OIS
+        W6XUgpScAkODAr3ixNzi0rx0veT8XCtDAwMjU6DKhJyMjneLWApOS1U8aS5uYPzL38XIySEh
+        YCIx881B5i5GLg4hgR2MEmsezGCFcD4xSpz8tQoq85lRYtfzLlaYlnvv+xghErsYJZ5/ecsE
+        4XxhlLj2cDYbSBWbgKbE0mlPwTpEBFQlfnXtA+tgFrjMKHHs4kL2LkZ2DmEBV4l9tV2MHBws
+        QCUf7sSAVPMKWEicu3efBWKXvMTqDQfAjpAQuMYu0XYYxAFJuEhcOzIF6iBhiVfHt7BD2FIS
+        n9/tZYNoaAd64fshRging1Hi79lfUN3GEr09F5hBNjMDHbp+lz5EWFFi5++5jCA2swCfxLuv
+        PawgJRICvBIdbUIQJUoSL49PgpoiIbFw4Q2ovR4SDdv+MIHYQgKxEi+W/GScwCg7C2HBAkbG
+        VYxiqQXFuempxYYFJsiRtIkRnOq0LHYwzn37Qe8QIxMH4yFGCQ5mJRFe5svG8UK8KYmVValF
+        +fFFpTmpxYcYTYEBNpFZSjQ5H5hs80riDU2NjI2NLUzMzM1MjZXEeR/eUogXEkhPLEnNTk0t
+        SC2C6WPi4JRqYGp3ZM+bcD9R9X12tYe05oUGuRm55bo6RVEnXwRl7OFObPmwcTZr2ao9ttcr
+        M3wZ7jWzvzkrftt888u76bs9vV3WCecZaJwqkq/SuTbB/MCM6Ju/parbXARz64/vN+o8FL1q
+        /srvMzrZP1rvEjqiPuVesUPWZgWrkgk7Yms751/7KaoSWT75y5b6F1kL0ozP+E1oncR09wVT
+        18r1Hideur3g3/lxxfJ3mXXKNmYeQg2ZdvUirMej1rHXTY+dw3KIL4SLZ8GZtZ73Jj7Oq4xs
+        n341bWtwfP08QfmaZXU1dZZv/CdeevSz/mFSq95eOZXUvB9P7H9OSb3OXVHdfbHFM3xRXBT/
+        0ek2yZ++5Bu8UmIpzkg01GIuKk4EAO8taNH+AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGLMWRmVeSWpSXmKPExsWy7bCSvO7MdSbxBltnW1rMWb+GzaK3aTqT
+        xfkHv9gsmhevZ7PofiVjcXnXHDaL1f9OMVpc2P+OxWLzpqnMDpwe2w6oemxa1cnm8e7cOXaP
+        EzN+s3jMOxnosX/uGnaP9/uusnn0bVnF6PF5k1wAZxSXTUpqTmZZapG+XQJXRse7RSwFp6Uq
+        njQXNzD+5e9i5OSQEDCRuPe+j7GLkYtDSGAHo8Tc6w/ZIBISEgdeH2TpYuQAsoUlDh8uhqj5
+        xChxtvc1M0gNm4CmxNJpT1lBbBEBVYlfXfvABjEL3GWUOLnnD1ARO4ewgKvEvlqQMSxAJR/u
+        xIBU8wpYSJy7d58FYpO8xOoNB5gnMPIsYGRYxSiZWlCcm55bbFhglJdarlecmFtcmpeul5yf
+        u4kRHHRaWjsY96z6oHeIkYmD8RCjBAezkggv82XjeCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8
+        X2ctjBMSSE8sSc1OTS1ILYLJMnFwSjUwxTRa9ipd4dp8RN4t99+Rk5UfVbZo3+6znvJqUfbC
+        8k3LHzd9dCzhi91lpnVwo+1GFqsJkY0n1J5Nzvc2P7in4nzEzApRod9b3qp4ma9uO1xibCQg
+        8eL+pqTWhd+ZV8fdmFPJmmTao+tY5+lwd9eWw8Gh06+uu5PqPOdVZ9jUgrxnu176qj9e3hAb
+        F5ok/v7pUynWA72Wehbxfe0xKxVNCrMe/xENenr1knDMhH3ZV55FcjWuMD6idbkvcab2i0Cl
+        41vWV6ysvLc9mnXhW86fp66YhcVl3t/1tevENP8jT2drs7T+3CxwOn/vz9a4iy2V21ZIOvJ9
+        97uSdsQ/q0aRz5H5tZdJlXTn2XeTyh2fK7EUZyQaajEXFScCAB3eWIupAgAA
+X-CMS-MailID: 20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac
+References: <CGME20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any comments? Thanks.
+When args = "\"\0", "i" will be 0 and args[i-1] is used. (*lib/cmdline.c +238)
+Because of "i" is an unsigned int type, the function will access at args[0xFFFFFFFF].
+It can make a crash.
 
-@Steven Rostedt, I thinks irq off checking is necessary especially for Pree=
-mpt-RT kernel, because some context may be changed from irq off to irq on w=
-hen enable Preempt RT, I once met a issue that hrtimer soft irq is lost whe=
-n enabled Preempt RT, finally I found napi_schedule_irqoff is called in har=
-dware interrupt handler, there maybe no issue for non RT kernel, but for Pr=
-eempt RT, interrupt is threaded, so irq is on in interrupt handler, the res=
-ult is __raise_softirq_irqoff is called in irq on context, so that per-CPU =
-softirq masking is corrupted because of the process of updating of soft irq=
- masking is interrupted and not a atomic operation , and then caused hrtime=
-r soft irq is lost. So I think adding irq status checking in __raise_softir=
-q_irqoff can report such issue directly and help us to find the root cause =
-of such issue.
-
-I know that there may be performance impaction to add extra checking here, =
-if it is the case, how about to include it in some debug configuration item=
-s? Such as CONFIG_DEBUG_PREEMPT or other debug items?
-
-Best Regards,
-Jiafei.
-
------Original Message-----
-From: Jiafei Pan <Jiafei.Pan@nxp.com>=20
-Sent: Thursday, August 6, 2020 12:07 PM
-To: peterz@infradead.org; mingo@kernel.org; tglx@linutronix.de; rostedt@goo=
-dmis.org; romain.perier@gmail.com; will@kernel.org
-Cc: linux-kernel@vger.kernel.org; linux-rt-users@vger.kernel.org; Jiafei Pa=
-n <jiafei.pan@nxp.com>; Leo Li <leoyang.li@nxp.com>; Vladimir Oltean <vladi=
-mir.oltean@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>
-Subject: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
-
-__raise_softirq_irqoff will update per-CPU mask of pending softirqs, it nee=
-d to be called in irq disabled context in order to keep it atomic operation=
-, otherwise it will be interrupted by hardware interrupt, and per-CPU softi=
-rqs pending mask will be corrupted, the result is there will be unexpected =
-issue, for example hrtimer soft irq will be losed and soft hrtimer will nev=
-er be expire and handled.
-
-Adding irqs disabled checking here to provide warning in irqs enabled conte=
-xt.
-
-Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+Signed-off-by: Seungil Kang <sil.kang@samsung.com>
 ---
- kernel/softirq.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c index bf88d7f62433..11f61e=
-54a3ae 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -481,6 +481,11 @@ void raise_softirq(unsigned int nr)
-=20
- void __raise_softirq_irqoff(unsigned int nr)  {
-+	/* This function can only be called in irq disabled context,
-+	 * otherwise or_softirq_pending will be interrupted by hardware
-+	 * interrupt, so that there will be unexpected issue.
-+	 */
-+	WARN_ON_ONCE(!irqs_disabled());
- 	trace_softirq_raise(nr);
- 	or_softirq_pending(1UL << nr);
+Thanks for your review, my comments below
+
+> Can you be less ambiguous with the args value? (Perhaps provide a hexdump of it
+for better understanding)
+
+ This kind of args as hexdump below can cause crash.
+ 
+ 00000000: 736f 6d65 7468 696e 6731 3d73 6f6d 655f  something1=some_
+ 00000010: 7661 6c75 6573 2022 0000 0000 0000 0000  values "        
+ 
+ The args end with "\"\0".
+
+> Please, use proper punctuation, I'm lost where is the sentence and what are the
+logical parts of them.
+
+ I'm sorry to confuse you. I fix the commit msg
+
+> Can you point out to the code that calls this and leads to a crash?
+
+ *lib/cmdlinc + 201 ~, next_arg function with args = "\"\0"
+ 
+ char *next_arg(char *args, char **param, char **val) <-- args = "\"\0".
+ {
+        unsigned int i, equals = 0;
+        int in_quote = 0, quoted = 0;
+        char *next;
+
+        if (*args == '"') {   <-- *args == '"' is a true condition,
+                args++;       <-- args++, so *args = '\0'.
+                in_quote = 1;
+                quoted = 1;   <-- quoted also set 1.
+        }
+
+        for (i = 0; args[i]; i++) { <-- when reached this point, i = 0, and arg[0] == '\0',
+                                        so for loop is skipped.
+                if (isspace(args[i]) && !in_quote)
+                        break;
+                if (equals == 0) {
+                        if (args[i] == '=')
+                                equals = i;
+                }
+                if (args[i] == '"')
+                        in_quote = !in_quote;
+        }
+
+        *param = args;
+        if (!equals)
+                *val = NULL;
+        else {
+                args[equals] = '\0';
+                *val = args + equals + 1;
+
+        /* Don't include quotes in value. */
+        if (**val == '"') {
+                (*val)++;
+                if (args[i-1] == '"')
+                        args[i-1] = '\0';
+                }
+        }
+        if (quoted && args[i-1] == '"') <-- When reached this point, quoted is still set 1, 
+                                            "i" is still 0, and "i" is unsigned int type,
+                                            so address will be {address of args} + 0xFFFFFFFF.
+                                            It can make a crash.
+                args[i-1] = '\0';
+
+        if (args[i]) {
+                args[i] = '\0';
+                next = args + i + 1;
+        } else
+                next = args + i;
+
+        /* Chew up trailing spaces. */
+        return skip_spaces(next);
  }
---
+
+
+> Can you provide a KUnit test module which can check the case?
+
+ If necessary, I will make it and share it.
+
+ lib/cmdline.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index fbb9981a04a4..2fd29d7723b2 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
+  */
+ char *next_arg(char *args, char **param, char **val)
+ {
+-	unsigned int i, equals = 0;
++	int i, equals = 0;
+ 	int in_quote = 0, quoted = 0;
+ 	char *next;
+ 
+-- 
 2.17.1
 
