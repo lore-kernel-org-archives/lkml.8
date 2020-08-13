@@ -2,99 +2,88 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07512078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C0920716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H4oTw6Xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHMSeL (ORCPT
+        id S1726593AbgHMSfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:34:11 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:20511 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbgHMSeL (ORCPT
+        Thu, 13 Aug 2020 14:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMSfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:34:11 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Aug 2020 11:34:10 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 13 Aug 2020 11:34:10 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 025401813; Thu, 13 Aug 2020 11:34:09 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v1 1/1] power: supply: add wireless power_supply_type
-Date:   Thu, 13 Aug 2020 11:34:08 -0700
-Message-Id: <1597343648-11136-1-git-send-email-gurus@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 13 Aug 2020 14:35:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFCDC061757;
+        Thu, 13 Aug 2020 11:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=R0TbUVnS+LBBcuAR5BFfn8q7iOgSSh24gcpRLah9OLo=; b=H4oTw6XtpdFTxq8jH4skOl/Obx
+        7T2pjjbWEHuXzIh6AneSVgk+JsCeOx0xxuyyOJYfF6gaq8PYVAQ7BZ61WmlbQuK4qvMJoHNdtk1jg
+        0zVgPF9bNw0X3pl5vmyCNlS4mF6hJio0o4xdaoWaHLs37972RVDYJLdOJTB9qZ4CeLofmJQso83pA
+        ouIZA9fms+mII3oTTo2TizKYpMPGggJB2uPpNS6FdRLuTwKaLwI0U7NbXFJWZ2SpTtitKheKXx1D6
+        RuaCHB/yWTgzIsMKuqxrSjnGMLTYoHhufSjtpd5iPQPhcwGpC/EoQjomZY+EfDkLWlxorTRuIanVY
+        d0/mtl+g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6I4c-0002EY-Od; Thu, 13 Aug 2020 18:35:35 +0000
+Subject: Re: linux-next: Tree for Aug 13 (drivers/media/i2c/max9286.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+References: <20200813165846.27887669@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
+Date:   Thu, 13 Aug 2020 11:35:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200813165846.27887669@canb.auug.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+On 8/12/20 11:58 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: The merge window has opened, so please do not add any v5.10
+> related material to your linux-next included branches until after the
+> merge window closes again.
+> 
+> Changes since 20200812:
+> 
 
-Currently, power_supply framework supports only Battery, UPS,
-Mains and USB power_supply_type. Add wireless power_supply_type
-so that the drivers which supports wireless can register a power
-supply class device with POWER_SUPPLY_TYPE_WIRELESS.
+on x86_64:
 
-Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- Documentation/ABI/testing/sysfs-class-power | 2 +-
- drivers/power/supply/power_supply_sysfs.c   | 1 +
- include/linux/power_supply.h                | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+# CONFIG_GPIOLIB is not set
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 40213c7..651599f 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -34,7 +34,7 @@ Description:
- 		Describes the main type of the supply.
- 
- 		Access: Read
--		Valid values: "Battery", "UPS", "Mains", "USB"
-+		Valid values: "Battery", "UPS", "Mains", "USB", "Wireless"
- 
- ===== Battery Properties =====
- 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 3d38308..a616b9d 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -56,6 +56,7 @@ static const char * const POWER_SUPPLY_TYPE_TEXT[] = {
- 	[POWER_SUPPLY_TYPE_USB_PD]		= "USB_PD",
- 	[POWER_SUPPLY_TYPE_USB_PD_DRP]		= "USB_PD_DRP",
- 	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	= "BrickID",
-+	[POWER_SUPPLY_TYPE_WIRELESS]		= "Wireless",
- };
- 
- static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 97cc4b8..ef03299 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -186,6 +186,7 @@ enum power_supply_type {
- 	POWER_SUPPLY_TYPE_USB_PD,		/* Power Delivery Port */
- 	POWER_SUPPLY_TYPE_USB_PD_DRP,		/* PD Dual Role Port */
- 	POWER_SUPPLY_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
-+	POWER_SUPPLY_TYPE_WIRELESS,		/* Wireless */
- };
- 
- enum power_supply_usb_type {
+../drivers/media/i2c/max9286.c: In function 'max9286_register_gpio':
+../drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no member named 'of_node'
+  gpio->of_node = dev->of_node;
+
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
