@@ -2,81 +2,86 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C650C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59525C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88D0205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D8B205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMQbA (ORCPT
+        id S1726603AbgHMQbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:31:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47484 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgHMQa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:30:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8B28CAD63;
-        Thu, 13 Aug 2020 16:31:17 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 18:30:54 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Charan Teja Kalla <charante@codeaurora.org>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, david@redhat.com,
-        rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
-Subject: Re: [PATCH V2] mm, page_alloc: fix core hung in free_pcppages_bulk()
-Message-ID: <20200813163054.GR9477@dhcp22.suse.cz>
-References: <1597150703-19003-1-git-send-email-charante@codeaurora.org>
- <20200813114105.GI9477@dhcp22.suse.cz>
- <9ca76893-dfe8-9a46-f2ec-6b3c663e848e@codeaurora.org>
+        Thu, 13 Aug 2020 12:31:18 -0400
+Received: from 6.mo5.mail-out.ovh.net ([178.32.119.138]:55774 "EHLO
+        6.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgHMQbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:31:18 -0400
+X-Greylist: delayed 1705 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 12:31:17 EDT
+Received: from player159.ha.ovh.net (unknown [10.108.35.240])
+        by mo5.mail-out.ovh.net (Postfix) with ESMTP id ECE9728EC77
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:23:13 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player159.ha.ovh.net (Postfix) with ESMTPSA id 54DD31538AC9B;
+        Thu, 13 Aug 2020 16:23:08 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-96R001d0cd8b33-75d1-4926-8d88-7b8eb7db5b9d,
+                    E10370F5499BCD549250CF93A1A6372B2A4BB833) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Guillaume Ligneul <guillaume.ligneul@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] drivers/hwmon/lm73.c: use simple i2c probe
+Date:   Thu, 13 Aug 2020 18:23:00 +0200
+Message-Id: <20200813162300.1514695-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ca76893-dfe8-9a46-f2ec-6b3c663e848e@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 7561825253049847130
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhduheelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 21:51:29, Charan Teja Kalla wrote:
-> Thanks Michal for comments.
-> 
-> On 8/13/2020 5:11 PM, Michal Hocko wrote:
-> > On Tue 11-08-20 18:28:23, Charan Teja Reddy wrote:
-> > [...]
-> >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >> index e4896e6..839039f 100644
-> >> --- a/mm/page_alloc.c
-> >> +++ b/mm/page_alloc.c
-> >> @@ -1304,6 +1304,11 @@ static void free_pcppages_bulk(struct zone *zone, int count,
-> >>  	struct page *page, *tmp;
-> >>  	LIST_HEAD(head);
-> >>  
-> >> +	/*
-> >> +	 * Ensure proper count is passed which otherwise would stuck in the
-> >> +	 * below while (list_empty(list)) loop.
-> >> +	 */
-> >> +	count = min(pcp->count, count);
-> >>  	while (count) {
-> >>  		struct list_head *list;
-> > 
-> > 
-> > How does this prevent the race actually?
-> 
-> This doesn't prevent the race. This only fixes the core hung(as this is
-> called with spin_lock_irq()) caused by the race condition. This core
-> hung is because of incorrect count value is passed to the
-> free_pcppages_bulk() function.
+This driver doesn't use the id information provided by the old i2c
+probe function, so it can trivially be converted to the simple
+("probe_new") form.
 
-Let me ask differently. What does enforce that the count and lists do
-not get out of sync in the loop. Your changelog says that the fix is to
-use the proper value without any specifics.
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ drivers/hwmon/lm73.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/hwmon/lm73.c b/drivers/hwmon/lm73.c
+index 733c48bf6c98..beb0d61bcd82 100644
+--- a/drivers/hwmon/lm73.c
++++ b/drivers/hwmon/lm73.c
+@@ -190,7 +190,7 @@ ATTRIBUTE_GROUPS(lm73);
+ /* device probe and removal */
+ 
+ static int
+-lm73_probe(struct i2c_client *client, const struct i2c_device_id *id)
++lm73_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+ 	struct device *hwmon_dev;
+@@ -277,7 +277,7 @@ static struct i2c_driver lm73_driver = {
+ 		.name	= "lm73",
+ 		.of_match_table = lm73_of_match,
+ 	},
+-	.probe		= lm73_probe,
++	.probe_new	= lm73_probe,
+ 	.id_table	= lm73_ids,
+ 	.detect		= lm73_detect,
+ 	.address_list	= normal_i2c,
 -- 
-Michal Hocko
-SUSE Labs
+2.25.4
+
