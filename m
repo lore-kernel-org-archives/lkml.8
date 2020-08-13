@@ -2,136 +2,98 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D54C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C340D20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321B320774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597320384;
+	bh=st+ZZPEZNLMRcB4dWVw2s7KfAWhEwQAt4jahZwwVrZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1UlBuTYsG/OBZ9GANrKbLRhigOZX40BfVzzxK9uznWMW2AwDeZB6mK9CEeqbtsrns
+	 us8TsgkqUIGaE42j8WHXjM2t2KYXEq4+sQdlwtupUe7lQIW7phlQFc5gjemuxS8G8k
+	 MNch1H2SH2Dajq0v/cWfeSziTl+yZGt54vn1SCk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHMMFy (ORCPT
+        id S1726681AbgHMMGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:05:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50710 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 08:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgHMMD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:03:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 26F8BACE3;
-        Thu, 13 Aug 2020 11:47:01 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 13:46:38 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200813114638.GJ9477@dhcp22.suse.cz>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
- <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
- <20200811015148.GA10792@MiWiFi-R3L-srv>
- <20200811065406.GC4793@dhcp22.suse.cz>
- <eb9d1e13-7455-0c4e-1f94-0c859c36c0bb@oracle.com>
+        id S1726623AbgHMMF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:05:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B452120866;
+        Thu, 13 Aug 2020 11:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597319237;
+        bh=st+ZZPEZNLMRcB4dWVw2s7KfAWhEwQAt4jahZwwVrZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CP/ObbMctMPM3r9rVqSbqkqy4LHRQVBbqKV1BxOr9spCYysSMcmVJrxLzyjkFNWvA
+         P/ccRpJBmfKeZuLE+Wwle5uIOAZrPcmzMeigqVgnTh3ZUtJ8ocVgr8mIWRbhwW7Wkc
+         Py30Ty4Z3yBW1lvJJZ2VKdfgUdPyPCEP+ioOchtc=
+Date:   Thu, 13 Aug 2020 13:47:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI
+ flash chip writable
+Message-ID: <20200813114726.GA3852402@kroah.com>
+References: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
+ <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
+ <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com>
+ <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
+ <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
+ <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com>
+ <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+ <CAFmMkTE+2Qxo43bZkwCszEYbXFV22YdpLJD40gB6LgvnPbvdSA@mail.gmail.com>
+ <20200813090105.GC3452881@kroah.com>
+ <CAFmMkTFgjW+9gNfx=2SU7B0foww=SLiiyVi+P-hZpEFDbMTf2Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <eb9d1e13-7455-0c4e-1f94-0c859c36c0bb@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFmMkTFgjW+9gNfx=2SU7B0foww=SLiiyVi+P-hZpEFDbMTf2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11-08-20 14:43:28, Mike Kravetz wrote:
-> On 8/10/20 11:54 PM, Michal Hocko wrote:
-> > 
-> > I have managed to forgot all the juicy details since I have made that
-> > change. All that remains is that the surplus pages accounting was quite
-> > tricky and back then I didn't figure out a simpler method that would
-> > achieve the consistent look at those counters. As mentioned above I
-> > suspect this could lead to pre-mature allocation failures while the
-> > migration is ongoing.
+On Thu, Aug 13, 2020 at 08:42:57AM -0300, Daniel Gutson wrote:
+> El jue., 13 ago. 2020 6:00 a. m., Greg Kroah-Hartman <
+> gregkh@linuxfoundation.org> escribió:
 > 
-> It is likely lost in the e-mail thread, but the suggested change was to
-> alloc_surplus_huge_page().  The code which allocates the migration target
-> (alloc_migrate_huge_page) will not be changed.  So, this should not be
-> an issue.
+> > On Wed, Aug 12, 2020 at 12:41:35PM -0300, Daniel Gutson wrote:
+> > > ping
+> >
+> > What does that mean here?
+> >
+> 
+> I didn't get an answer from Arnd Bergman who expressed concerns. I want to
+> know if my answer was enough or there are more potential changes I have to
+> do.
 
-OK, I've missed that obviously.
+No need to wait for anyone, it's not our job to always respond :)
 
-> >                       Sure quite unlikely to happen and the race window
-> > is likely very small. Maybe this is even acceptable but I would strongly
-> > recommend to have all this thinking documented in the changelog.
-> 
-> I wrote down a description of what happens in the two different approaches
-> "temporary page" vs "surplus page".  It is at the very end of this e-mail.
-> When looking at the details, I came up with what may be an even better
-> approach.  Why not just call the low level routine to free the page instead
-> of going through put_page/free_huge_page?  At the very least, it saves a
-> lock roundtrip and there is no need to worry about the counters/accounting.
-> 
-> Here is a patch to do that.  However, we are optimizing a return path in
-> a race condition that we are unlikely to ever hit.  I 'tested' it by allocating
-> an 'extra' page and freeing it via this method in alloc_surplus_huge_page.
-> 
-> >From 864c5f8ef4900c95ca3f6f2363a85f3cb25e793e Mon Sep 17 00:00:00 2001
-> From: Mike Kravetz <mike.kravetz@oracle.com>
-> Date: Tue, 11 Aug 2020 12:45:41 -0700
-> Subject: [PATCH] hugetlb: optimize race error return in
->  alloc_surplus_huge_page
-> 
-> The routine alloc_surplus_huge_page() could race with with a pool
-> size change.  If this happens, the allocated page may not be needed.
-> To free the page, the current code will 'Abuse temporary page to
-> workaround the nasty free_huge_page codeflow'.  Instead, directly
-> call the low level routine that free_huge_page uses.  This works
-> out well because the page is new, we hold the only reference and
-> already hold the hugetlb_lock.
-> 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
->  mm/hugetlb.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 590111ea6975..ac89b91fba86 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1923,14 +1923,17 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
->  	/*
->  	 * We could have raced with the pool size change.
->  	 * Double check that and simply deallocate the new page
-> -	 * if we would end up overcommiting the surpluses. Abuse
-> -	 * temporary page to workaround the nasty free_huge_page
-> -	 * codeflow
-> +	 * if we would end up overcommiting the surpluses.
->  	 */
->  	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
-> -		SetPageHugeTemporary(page);
-> +		/*
-> +		 * Since this page is new, we hold the only reference, and
-> +		 * we already hold the hugetlb_lock call the low level free
-> +		 * page routine.  This saves at least a lock roundtrip.
-> +		 */
-> +		(void)put_page_testzero(page); /* don't call destructor */
-> +		update_and_free_page(h, page);
->  		spin_unlock(&hugetlb_lock);
-> -		put_page(page);
->  		return NULL;
->  	} else {
->  		h->surplus_huge_pages++;
+Take what you feel is correct, fix up your patch along those lines, and
+resubmit, that's all you can do.
 
-Yes this makes sense. I would have to think about this more to be
-confident and give Acked-by but this looks sensible from a quick glance.
+good luck!
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+greg k-h
