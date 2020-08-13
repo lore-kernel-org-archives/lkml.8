@@ -2,139 +2,86 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68486C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4646C20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XYEFqrb5"
+	by mail.kernel.org (Postfix) with ESMTP id 76FFB20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgHMNqG (ORCPT
+        id S1726596AbgHMNqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgHMNqB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:46:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC002C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:46:00 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id 88so5356944wrh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+mDarYxBbq/J7Ixc+CG3XEZjLyzyzKfnJvqheYjMPSo=;
-        b=XYEFqrb5M5fB90DCMr82s6xu+3kUi6clBH3J28tKhMKeygyzSyUtxHNkRA/aXIPrip
-         /KqR/1taagrKL2diCV5inDH2lOvvXlLdeLhm3SxNslPAp9BnkdXdUkeaPxLrV07LMk8F
-         vnJEQrP2qAqie3vzkghqQtRDLvf8N2RATLMESMuSYNxOAendWUG/PVRbBlTNmYpRunj2
-         NqA9kyuj7qTxop4DFEjiMJUfkzt8sIEUFt/eCzfIzJYShJ8cI35gx4jmzRgqBK4FEbgP
-         nb9ccd1ky7aEbw2chQw5x5eD/J1I23/yWnTg2P0J1tgAo2d2umAFUtxPbYPA9gWBniYm
-         b7hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+mDarYxBbq/J7Ixc+CG3XEZjLyzyzKfnJvqheYjMPSo=;
-        b=ki2svpj227/M4yldmladXo4Ta07DIPRPzbZi0HbcH7OJGFlZRq8YRIUENjOG5rshZZ
-         Ts4FYzg4kW/gj7R5vyKzttabo5XfeKmOYYCuX+kuiDIxQUO/7s/iGETtT0O91SgzuNvr
-         NdkNtI0U4jQyuiD7/8YrRCFLw92L7C0ZJnlFvCsUZBImsJgMUxWx/93VIkf8ovdKv4Nu
-         grbRhTMi2hI7nDGboO1HSnObTGbe0mUQgFZpEaf4SveG2dnfQt6Ghw6jXnvWvMjRO4KQ
-         XZuqdI/+Ge8pbQamaQjDnOUYY91mX4S4wqfPM9seoid6sN/WBu9AGeSiATD1KZWdBVjU
-         zKXA==
-X-Gm-Message-State: AOAM532zmOr/i1fLFOY0d0t0cBeec9NOZpRsdMu2QUpNicwNPoUj398P
-        pfl/YUZXOwYiNE9znzc/EC6btA==
-X-Google-Smtp-Source: ABdhPJx7xfjEhBxs/ZAYptGT+NyxCdP60vku9IappFsc1k/bm/potYSblfH9oTAcEG9YnIt13D4dGw==
-X-Received: by 2002:adf:ab46:: with SMTP id r6mr4167024wrc.260.1597326359282;
-        Thu, 13 Aug 2020 06:45:59 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id d14sm10603833wre.44.2020.08.13.06.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 06:45:57 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 14:45:53 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Alexandru Stan <amstan@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
- interpolation
-Message-ID: <20200813134553.2hykfvqjtgr4e2pl@holly.lan>
-References: <20200721042522.2403410-1-amstan@chromium.org>
- <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
- <20200807082113.GI6419@phenom.ffwll.local>
+        Thu, 13 Aug 2020 09:46:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35714 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgHMNqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 09:46:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 27092B1B8;
+        Thu, 13 Aug 2020 13:46:22 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 15:45:58 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813134558.GM9477@dhcp22.suse.cz>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <20200813111505.GG9477@dhcp22.suse.cz>
+ <871rkallqk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807082113.GI6419@phenom.ffwll.local>
+In-Reply-To: <871rkallqk.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 10:21:13AM +0200, daniel@ffwll.ch wrote:
-> On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
-> > Some displays need the low end of the curve cropped in order to make
-> > them happy. In that case we still want to have the 0% point, even though
-> > anything between 0% and 5%(example) would be skipped.
-> > 
-> > Signed-off-by: Alexandru Stan <amstan@chromium.org>
-> > ---
-> > 
-> >  drivers/video/backlight/pwm_bl.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > index 5193a72305a2..b24711ddf504 100644
-> > --- a/drivers/video/backlight/pwm_bl.c
-> > +++ b/drivers/video/backlight/pwm_bl.c
-> > @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
-> >  			/* Fill in the last point, since no line starts here. */
-> >  			table[x2] = y2;
-> >  
-> > +			/*
-> > +			 * If we don't start at 0 yet we're increasing, assume
-> > +			 * the dts wanted to crop the low end of the range, so
-> > +			 * insert a 0 to provide a display off mode.
-> > +			 */
-> > +			if (table[0] > 0 && table[0] < table[num_levels - 1])
-> > +				table[0] = 0;
+On Thu 13-08-20 15:27:15, Thomas Gleixner wrote:
+> Michal Hocko <mhocko@suse.com> writes:
+> > On Thu 13-08-20 11:58:40, Uladzislau Rezki wrote:
+> > [...]
+> >> Sorry for jumping in. We can rely on preemptable() for sure, if CONFIG_PREEMPT_RT
+> >> is enabled, something like below:
+> >> 
+> >> if (IS_ENABLED_RT && preemptebale())
+> >
+> > Sure. I thought this was an RT specific thing that would be noop
+> > otherwise.
 > 
-> Isn't that what the enable/disable switch in backlights are for? There's
-> lots of backligh drivers (mostly the firmware variety) where setting the
-> backlight to 0 does not shut it off, it's just the lowest setting.
+> Well, even if RT specific it would be still something returning either
+> true or false unconditionally.
 > 
-> But I've not been involved in the details of these discussions.
+> And guarding it with RT is not working either because then you are back
+> to square one with the problem which triggered the discussion in the
+> first place:
+> 
+> raw_spin_lock()
+>   alloc()
+>     if (RT && !preemptible())  <- False because RT == false
+>     	goto bail;
+> 
+>     spin_lock(&zone->lock)  --> LOCKDEP complains
+> 
+> So either you convince Paul not to do that or you need to do something
+> like I suggested in my other reply.
 
-It's been a long standing complaint that the backlight drivers are not
-consistent w.r.t. whether 0 means off or lowest. The most commonly used
-backlights (ACPI in particular) do not adopt 0 means off but lots of
-specific drivers do.
-
-IMHO what is "right" depends on the display technology. For displays
-that are essentially black when the backlight is off and become
-difficult or impossible to read I'm a little dubious about standardizing
-on zero means off. There are situations when zero means off
-does make sense however. For example front-lit or transflexive displays
-are readable when the "backlight" is off and on these displays it would
-make sense.
-
-
-Daniel.
+Can we somehow annotate the lock to be safe for nesting for lockdep?
+-- 
+Michal Hocko
+SUSE Labs
