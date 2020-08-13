@@ -2,118 +2,318 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99552C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C1C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75CD42074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB0F206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g4mDUYV/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ulKfNKLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHMJxe (ORCPT
+        id S1726542AbgHMJzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgHMJxe (ORCPT
+        Thu, 13 Aug 2020 05:55:24 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48573 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMJzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:53:34 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086EBC061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:53:34 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id q3so2982113ybp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yul9D5KaapMfO0wSYYumb3nXfH25wAQuTtPB6LytFFQ=;
-        b=g4mDUYV/kR2xqvMovbB9tOP1UwfQk6O047mQnaEfU/wAgqPu1NK8GhI6gfzcY5gZQ3
-         kZdFLbxgB7OqRvASEeMmcEe99LPAOZaz1kZskBXb/8XLTVke3a8uOYyXOpCAh4FedTtR
-         9E7hUlfMGcRn3WfwvWi5YlF/FOSHG3E+wgdpSgj+p9Y2eLtGyRueVDENXxuIaA1s3otY
-         fFOfdc7Cz1qEY35Es+aJJFSnpioiFZWGZk+LMsIWu/gGIUaAk2if4K2HJi4QVVS8cDdU
-         ckMfr+jW5QSRMSVhuiCR8ex32+qd5wmgdgLepZcJIB/BCSs6gIOX0NPYuRcry/7YIAgL
-         JPPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yul9D5KaapMfO0wSYYumb3nXfH25wAQuTtPB6LytFFQ=;
-        b=tYSVKjhiedHQCNPiw6F/HhiqK6ILeuvTPAyJ/Ngv74UxjvCMw/9j+v/3ccWD6H1UWI
-         0UI0sAxPdz/FyapEdLGkT07wpkuHCt4Qx9n4mD0lw+fSClpio4weFBu4IViec8/i1RkM
-         udTuNi2AAuAaSGUu8R0l/HjMiNiDwz6nPkMgCaZI0GUj0SFFcMRPK5iiTIGUrflmJtAx
-         9JWvTXuAuyr8bA3u2JVaf3p/3D/t5Y3iZg3fptrWiX8U7puqJ9lw1J2s8UM7ssi68Ko1
-         56eDS8k2WKLnQhyhetcpJ5A9ISPJy/6CzJtLe96ci1I+ztTAms+O5yuq5YVfUGFlETu6
-         cCmw==
-X-Gm-Message-State: AOAM531uS146DMhGu4kpTZHp4tqOe8RXOlpUXlDUmrpY3B66+tBwfK3o
-        mOmPUkw9wCPJwQNIR3yrBicc2dK9Rk9LWb4PfOjadQ==
-X-Google-Smtp-Source: ABdhPJzfpaSBTx1xrZzflOrcYcv5QD4lOFsRlbhX3DHwVGqruN6Tmp191fs//DhyO/wYUtsNm9az23vyctAAcFPz7n0=
-X-Received: by 2002:a25:ab34:: with SMTP id u49mr5170276ybi.516.1597312412264;
- Thu, 13 Aug 2020 02:53:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com>
-In-Reply-To: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Thu, 13 Aug 2020 02:53:20 -0700
-Message-ID: <CANN689G0DkL-wpxMha=nyysPYG6LM3Aw7060k2xQTxTA4PAf-w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Try to release mmap_lock temporarily in smaps_rollup
-To:     Chinwen Chang <chinwen.chang@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Steven Price <steven.price@arm.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jimmy Assarsson <jimmyassarsson@gmail.com>,
-        Huang Ying <ying.huang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 13 Aug 2020 05:55:23 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200813095520euoutp019d488b8672173e62d552b68cbde8b586~qy0ZPCRIc2827528275euoutp01t
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:55:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200813095520euoutp019d488b8672173e62d552b68cbde8b586~qy0ZPCRIc2827528275euoutp01t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597312520;
+        bh=pbcmhTFv8QmhXk6820rAhoNUO/TkBc40q1AEGWorLLY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=ulKfNKLHnNU686NzmkHNDE8oKr+P2cPE/yJq9DclFoasVbl+ni61RMRDbiPRPmqHD
+         FexeoNekhtvteI/Dp6QMeD0WegW+mPXtqbBkrAQ/0PKF4LL7LMCJBlv5mwhMWH73qQ
+         YPL4fiolJEmuiDlr9sKTi8EE9Uwxv7wFJKhs1leY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200813095520eucas1p230b921067a32bdf9dd3973d09cbdf52b~qy0Y_0Tvr1596915969eucas1p2t;
+        Thu, 13 Aug 2020 09:55:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id CE.C2.05997.80E053F5; Thu, 13
+        Aug 2020 10:55:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200813095520eucas1p209432599420d62e0e54a5545334c329c~qy0YpIMZh1146911469eucas1p2t;
+        Thu, 13 Aug 2020 09:55:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200813095520eusmtrp2fe4e9b5d47a39aa0810c3ed57fe67bea~qy0YoVe951763817638eusmtrp2Z;
+        Thu, 13 Aug 2020 09:55:20 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-79-5f350e080c68
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CC.E2.06314.70E053F5; Thu, 13
+        Aug 2020 10:55:20 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200813095519eusmtip1dd85c2a532534f620e64589b11d3d65f~qy0YKPvHN3006430064eusmtip1_;
+        Thu, 13 Aug 2020 09:55:19 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     linux-clk@vger.kernel.org
+Cc:     tomasz.figa@gmail.com, cw00.choi@samsung.com, sboyd@kernel.org,
+        mturquette@baylibre.com, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v3] clk: samsung: Prevent potential endless loop in the PLL
+ set_rate ops
+Date:   Thu, 13 Aug 2020 11:55:08 +0200
+Message-Id: <20200813095508.7563-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7djPc7ocfKbxBt9eCllsnLGe1eL6l+es
+        Fh977rFaXN41h81ixvl9TBZrj9xlt7h4ytXi8Jt2Vot/1zayWKza9YfRgcvj/Y1Wdo+ds+6y
+        e2xa1cnm0bdlFaPH501yAaxRXDYpqTmZZalF+nYJXBkzJ69gKdhiUjGhn6WB8aJWFyMnh4SA
+        iUT3261sXYxcHEICKxglLi9aygrhfGGUeLroFguE85lRYvrk94wwLa+uP2GCSCxnlPjRfpMZ
+        ruXXmTXsIFVsAoYSvUf7wDpEBGQlbh37CbaEWaCZSeJzfxMLSEJYIEri4bpnYDaLgKpE3+1L
+        YA28AlYSsxdsYoVYJy+xesMBsA0SAq/ZJDZd+cgMkXCRWPf2CwuELSzx6vgWdghbRuL/zvlM
+        EA3NjBI9u2+zQzgTGCXuH18A9YW1xJ1zv4Bu4gC6SVNi/S59EFNCwFHi61NGCJNP4sZbQZBi
+        ZiBz0rbpzBBhXomONiGIGSoSv1dNZ4KwpSS6n/yHusZDouHTNbBrhARiJdo+rGaewCg3C2HV
+        AkbGVYziqaXFuempxUZ5qeV6xYm5xaV56XrJ+bmbGIGJ4vS/4192MO76k3SIUYCDUYmHd8Iv
+        43gh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2KU5mBREuc1XvQyVkggPbEk
+        NTs1tSC1CCbLxMEp1cAocJhJ68mKWLZrDCvfz4xX2T6ndSHXrAK200+277lw8flUlZvPXl5W
+        3G2rPyXg4NqITasvtF887Xh99R8g9dRi2d/E65nXl046bjVBaM+eqW/lE1ZJVZ+fZn16lbaO
+        zIl+Yat/z76+Lqm9c9kzMtBBeb6czMk3rDdjv2iG1jyLWqwlbtB580mBEktxRqKhFnNRcSIA
+        a1z/hRADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsVy+t/xu7ocfKbxBjOsLTbOWM9qcf3Lc1aL
+        jz33WC0u75rDZjHj/D4mi7VH7rJbXDzlanH4TTurxb9rG1ksVu36w+jA5fH+Riu7x85Zd9k9
+        Nq3qZPPo27KK0ePzJrkA1ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07
+        m5TUnMyy1CJ9uwS9jJmTV7AUbDGpmNDP0sB4UauLkZNDQsBE4tX1J0xdjFwcQgJLGSW2Tm8A
+        cjiAElIS81uUIGqEJf5c62KDqPnEKHFp9wpmkASbgKFE79E+RhBbREBW4taxn2BFzAK9TBLt
+        37ewgCSEBSIkJh28yA5iswioSvTdvgTWwCtgJTF7wSZWiA3yEqs3HGCewMizgJFhFaNIamlx
+        bnpusaFecWJucWleul5yfu4mRmBwbjv2c/MOxksbgw8xCnAwKvHwTvhlHC/EmlhWXJl7iFGC
+        g1lJhNfp7Ok4Id6UxMqq1KL8+KLSnNTiQ4ymQMsnMkuJJucDIyevJN7Q1NDcwtLQ3Njc2MxC
+        SZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOj6NtlL3IOOdlLbVt1baECK0eLaFTlvnOyucrP
+        fKpE+RQN1k3aflmxTEsnzlFw2fXFKj+Pbp8fu+3h2lf71n+bt1nqyG1zSdncVfmlIjy1Cw9L
+        T/o4p++9HevbnRduT9U3qfyjWcL198dr1u89Z84dWugdv6drpqN8htlG47qstue7OHdZNAiZ
+        KrEUZyQaajEXFScCAAQEVetkAgAA
+X-CMS-MailID: 20200813095520eucas1p209432599420d62e0e54a5545334c329c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200813095520eucas1p209432599420d62e0e54a5545334c329c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200813095520eucas1p209432599420d62e0e54a5545334c329c
+References: <CGME20200813095520eucas1p209432599420d62e0e54a5545334c329c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 7:14 PM Chinwen Chang
-<chinwen.chang@mediatek.com> wrote:
-> Recently, we have observed some janky issues caused by unpleasantly long
-> contention on mmap_lock which is held by smaps_rollup when probing large
-> processes. To address the problem, we let smaps_rollup detect if anyone
-> wants to acquire mmap_lock for write attempts. If yes, just release the
-> lock temporarily to ease the contention.
->
-> smaps_rollup is a procfs interface which allows users to summarize the
-> process's memory usage without the overhead of seq_* calls. Android uses it
-> to sample the memory usage of various processes to balance its memory pool
-> sizes. If no one wants to take the lock for write requests, smaps_rollup
-> with this patch will behave like the original one.
->
-> Although there are on-going mmap_lock optimizations like range-based locks,
-> the lock applied to smaps_rollup would be the coarse one, which is hard to
-> avoid the occurrence of aforementioned issues. So the detection and
-> temporary release for write attempts on mmap_lock in smaps_rollup is still
-> necessary.
+In the .set_rate callback for some PLLs there is a loop polling state
+of the PLL lock bit and it may become an endless loop when something
+goes wrong with the PLL. For some PLLs there is already code for polling
+with a timeout but it uses the ktime API, which doesn't work in some
+conditions when the set_rate op is called, in particular during
+initialization of the clk provider before the clocksource initialization
+has completed. Hence the ktime API cannot be used to reliably detect
+the PLL locking timeout.
 
-I do not mind extending the mmap lock API as needed. However, in the
-past I have tried adding rwsem_is_contended to mlock(), and later to
-mm_populate() paths, and IIRC gotten pushback on it both times. I
-don't feel strongly on this, but would prefer if someone else approved
-the rwsem_is_contended() use case.
+This patch adds a common helper function for busy waiting on the PLL lock
+bit with timeout detection.
 
-Couple related questions, how many VMAs are we looking at here ? Would
-need_resched() be workable too ?
+Actual PLL lock time depends on the P divider value, the VCO frequency
+and a constant PLL type specific LOCK_FACTOR and can be calculated as
 
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+ lock_time = Pdiv * LOCK_FACTOR / VCO_freq
+
+Common timeout value of 10 ms is used for all the PLLs with an assumption
+that maximum possible value of Pdiv is 64, maximum possible LOCK_FACTOR
+value is 3000 and minimum VCO frequency is 24 MHz.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+Changes for v3:
+ - use busy-loop with udelay() instead of ktime API
+Changes for v2:
+ - use common readl_relaxed_poll_timeout_atomic() macro
+---
+ drivers/clk/samsung/clk-pll.c | 94 ++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index ac70ad7..c83d261 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -15,7 +15,7 @@
+ #include "clk.h"
+ #include "clk-pll.h"
+
+-#define PLL_TIMEOUT_MS		10
++#define PLL_TIMEOUT_US		10000U
+
+ struct samsung_clk_pll {
+ 	struct clk_hw		hw;
+@@ -63,6 +63,25 @@ static long samsung_pll_round_rate(struct clk_hw *hw,
+ 	return rate_table[i - 1].rate;
+ }
+
++static int samsung_pll_lock_wait(struct samsung_clk_pll *pll,
++				 unsigned int reg_mask)
++{
++	int i;
++
++	/* Wait until the PLL is in steady locked state */
++	for (i = 0; i < PLL_TIMEOUT_US / 2; i++) {
++		if (readl_relaxed(pll->con_reg) & reg_mask)
++			return 0;
++
++		udelay(2);
++		cpu_relax();
++	}
++
++	pr_err("Could not lock PLL %s\n", clk_hw_get_name(&pll->hw));
++
++	return -ETIMEDOUT;
++}
++
+ static int samsung_pll3xxx_enable(struct clk_hw *hw)
+ {
+ 	struct samsung_clk_pll *pll = to_clk_pll(hw);
+@@ -241,12 +260,9 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	writel_relaxed(tmp, pll->con_reg);
+
+ 	/* Wait until the PLL is locked if it is enabled. */
+-	if (tmp & BIT(pll->enable_offs)) {
+-		do {
+-			cpu_relax();
+-			tmp = readl_relaxed(pll->con_reg);
+-		} while (!(tmp & BIT(pll->lock_offs)));
+-	}
++	if (tmp & BIT(pll->enable_offs))
++		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
++
+ 	return 0;
+ }
+
+@@ -318,7 +334,7 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 					unsigned long parent_rate)
+ {
+ 	struct samsung_clk_pll *pll = to_clk_pll(hw);
+-	u32 tmp, pll_con0, pll_con1;
++	u32 pll_con0, pll_con1;
+ 	const struct samsung_pll_rate_table *rate;
+
+ 	rate = samsung_get_pll_settings(pll, drate);
+@@ -356,13 +372,8 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	pll_con1 |= rate->kdiv << PLL36XX_KDIV_SHIFT;
+ 	writel_relaxed(pll_con1, pll->con_reg + 4);
+
+-	/* wait_lock_time */
+-	if (pll_con0 & BIT(pll->enable_offs)) {
+-		do {
+-			cpu_relax();
+-			tmp = readl_relaxed(pll->con_reg);
+-		} while (!(tmp & BIT(pll->lock_offs)));
+-	}
++	if (pll_con0 & BIT(pll->enable_offs))
++		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
+
+ 	return 0;
+ }
+@@ -437,7 +448,6 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	struct samsung_clk_pll *pll = to_clk_pll(hw);
+ 	const struct samsung_pll_rate_table *rate;
+ 	u32 con0, con1;
+-	ktime_t start;
+
+ 	/* Get required rate settings from table */
+ 	rate = samsung_get_pll_settings(pll, drate);
+@@ -489,20 +499,7 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	writel_relaxed(con0, pll->con_reg);
+
+ 	/* Wait for locking. */
+-	start = ktime_get();
+-	while (!(readl_relaxed(pll->con_reg) & PLL45XX_LOCKED)) {
+-		ktime_t delta = ktime_sub(ktime_get(), start);
+-
+-		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
+-			pr_err("%s: could not lock PLL %s\n",
+-					__func__, clk_hw_get_name(hw));
+-			return -EFAULT;
+-		}
+-
+-		cpu_relax();
+-	}
+-
+-	return 0;
++	return samsung_pll_lock_wait(pll, PLL45XX_LOCKED);
+ }
+
+ static const struct clk_ops samsung_pll45xx_clk_ops = {
+@@ -588,7 +585,6 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	struct samsung_clk_pll *pll = to_clk_pll(hw);
+ 	const struct samsung_pll_rate_table *rate;
+ 	u32 con0, con1, lock;
+-	ktime_t start;
+
+ 	/* Get required rate settings from table */
+ 	rate = samsung_get_pll_settings(pll, drate);
+@@ -648,20 +644,7 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	writel_relaxed(con1, pll->con_reg + 0x4);
+
+ 	/* Wait for locking. */
+-	start = ktime_get();
+-	while (!(readl_relaxed(pll->con_reg) & PLL46XX_LOCKED)) {
+-		ktime_t delta = ktime_sub(ktime_get(), start);
+-
+-		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
+-			pr_err("%s: could not lock PLL %s\n",
+-					__func__, clk_hw_get_name(hw));
+-			return -EFAULT;
+-		}
+-
+-		cpu_relax();
+-	}
+-
+-	return 0;
++	return samsung_pll_lock_wait(pll, PLL46XX_LOCKED);
+ }
+
+ static const struct clk_ops samsung_pll46xx_clk_ops = {
+@@ -1035,14 +1018,9 @@ static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 			(rate->sdiv << PLL2550XX_S_SHIFT);
+ 	writel_relaxed(tmp, pll->con_reg);
+
+-	/* wait_lock_time */
+-	do {
+-		cpu_relax();
+-		tmp = readl_relaxed(pll->con_reg);
+-	} while (!(tmp & (PLL2550XX_LOCK_STAT_MASK
+-			<< PLL2550XX_LOCK_STAT_SHIFT)));
+-
+-	return 0;
++	/* Wait for locking. */
++	return samsung_pll_lock_wait(pll,
++			PLL2550XX_LOCK_STAT_MASK << PLL2550XX_LOCK_STAT_SHIFT);
+ }
+
+ static const struct clk_ops samsung_pll2550xx_clk_ops = {
+@@ -1132,13 +1110,9 @@ static int samsung_pll2650x_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	con1 |= ((rate->kdiv & PLL2650X_K_MASK) << PLL2650X_K_SHIFT);
+ 	writel_relaxed(con1, pll->con_reg + 4);
+
+-	do {
+-		cpu_relax();
+-		con0 = readl_relaxed(pll->con_reg);
+-	} while (!(con0 & (PLL2650X_LOCK_STAT_MASK
+-			<< PLL2650X_LOCK_STAT_SHIFT)));
+-
+-	return 0;
++	/* Wait for locking. */
++	return samsung_pll_lock_wait(pll,
++			PLL2650X_LOCK_STAT_MASK << PLL2650X_LOCK_STAT_SHIFT);
+ }
+
+ static const struct clk_ops samsung_pll2650x_clk_ops = {
+--
+2.7.4
+
