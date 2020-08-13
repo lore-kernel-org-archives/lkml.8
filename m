@@ -2,107 +2,74 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10177C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5025C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D402078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1402078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgHMMVE convert rfc822-to-8bit (ORCPT
+        id S1726526AbgHMMWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:21:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58628 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMMVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:21:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 1197F299E38
-Received: by earth.universe (Postfix, from userid 1000)
-        id 42CA73C0C80; Thu, 13 Aug 2020 14:20:59 +0200 (CEST)
-Date:   Thu, 13 Aug 2020 14:20:59 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCHv4 4/4] Input: EXC3000: Add support to query model and
- fw_version
-Message-ID: <20200813122059.hhf5qjnbwiyh2exg@earth.universe>
-References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
- <20200805160520.456570-5-sebastian.reichel@collabora.com>
- <20200807003901.GQ1665100@dtor-ws>
+        Thu, 13 Aug 2020 08:22:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40920 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726053AbgHMMWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:22:32 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E90ADF781A8B1DCAB5CF;
+        Thu, 13 Aug 2020 20:22:29 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
+ 20:22:21 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <dvhart@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] futex: Convert to use the preferred fallthrough macro
+Date:   Thu, 13 Aug 2020 08:21:17 -0400
+Message-ID: <20200813122117.51173-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200807003901.GQ1665100@dtor-ws>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Convert the uses of fallthrough comments to fallthrough macro.
 
-On Thu, Aug 06, 2020 at 05:39:01PM -0700, Dmitry Torokhov wrote:
-> Hi Sebastian,
-> 
-> On Wed, Aug 05, 2020 at 06:05:20PM +0200, Sebastian Reichel wrote:
-> >  
-> > +static int exc3000_query_interrupt(struct exc3000_data *data)
-> > +{
-> > +	u8 *buf = data->buf;
-> > +	int err;
-> > +
-> > +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	if (buf[0] != 0x42)
-> 
-> I changed this to 'B' to match the rest of the function.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ kernel/futex.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-OK. I assumed this to be a easter egg reference to the Answer to
-the Ultimate Question of Life, the Universe, and Everything from
-the Hitchhiker's Guide, so I left it as a number. I might be totally
-wrong on that one, so fine with me.
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 83404124b77b..5310dc330656 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3744,12 +3744,12 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 	switch (cmd) {
+ 	case FUTEX_WAIT:
+ 		val3 = FUTEX_BITSET_MATCH_ANY;
+-		/* fall through */
++		fallthrough;
+ 	case FUTEX_WAIT_BITSET:
+ 		return futex_wait(uaddr, flags, val, timeout, val3);
+ 	case FUTEX_WAKE:
+ 		val3 = FUTEX_BITSET_MATCH_ANY;
+-		/* fall through */
++		fallthrough;
+ 	case FUTEX_WAKE_BITSET:
+ 		return futex_wake(uaddr, flags, val, val3);
+ 	case FUTEX_REQUEUE:
+-- 
+2.19.1
 
-> > +		return -EPROTO;
-> > +
-> > +	if (buf[4] == 'E')
-> > +		strlcpy(data->model, buf+5, sizeof(data->model));
-> > +	else if (buf[4] == 'D')
-> > +		strlcpy(data->fw_version, buf+5, sizeof(data->fw_version));
-> > +	else
-> > +		return -EPROTO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +	error = sysfs_create_group(&client->dev.kobj, &exc3000_attribute_group);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	error = devm_add_action_or_reset(&client->dev, exc3000_unregister_sysfs, &client->dev);
-> > +	if (error)
-> > +		return error;
-> 
-> Replaced 2 calls with devm_device_add_group().
-
-ah, I missed that because it does not have sysfs in its name and its
-not in the <linux/sysfs.h>.
-
-> Please yell if I managed to break it...
-
-The touchscreen works as expected, sysfs files are created and
-removed correctly and also work as expected. All looks good.
-
--- Sebastian
