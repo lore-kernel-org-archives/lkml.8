@@ -2,94 +2,120 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC00AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43577206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8DC2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbMlVToU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgHMD5G (ORCPT
+        id S1725949AbgHMECU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:57:06 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41189 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHMD5F (ORCPT
+        Thu, 13 Aug 2020 00:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbgHMECU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:57:05 -0400
-Received: by mail-il1-f200.google.com with SMTP id l71so3416205ild.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:57:04 -0700 (PDT)
+        Thu, 13 Aug 2020 00:02:20 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F84C061757;
+        Wed, 12 Aug 2020 21:02:19 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id p4so4187212qkf.0;
+        Wed, 12 Aug 2020 21:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=P1KdIUWFxYzw82EVvLFYFt+MNwT3Xk5xYJFfFDC3pI4=;
+        b=pbMlVToUVOgIRz7b6T0Cmo4L05tlQHpSEVkoGFYVI4InDZqz4mjEonJrT9TjtNOg8b
+         H1zOIK5DzV6MtTsxmV9fSHEIQLgp/HpHSogVOWCoFPhXQ6fJFFwWEdNL+N2CnZ5Lq9Eh
+         KLznw3j1mF7Yruy5bR7H1RwKK4cjJgFtfOyvX0pzuvUqmYwxNC3KQCf7LAfK6G+6ZOar
+         rpdpM45wwqdiH4P8c7aHDPC4mw11hvtSvQcNXzQFAvg25sg0+z3INGyrQmgjMM1H3qEa
+         VyH0kukxWyHrDUZoZ6LRTGeYFuS4MGUaeC8vuTJIpa+DGhF0afM/3v0dej2rrOgFilDF
+         iYRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=818BGdNc1wvnUSaZirTtzYWcZvgSsVpOYq9GYar7pzo=;
-        b=W2XkRhoc7IsuCJz3RkDAOG+V17rKQO/z5EcSp7LPz9Ex9RhbHfe5s4QJTk90G/lsdi
-         76qvxWT2ASNhKP90ny+DM/tYHmYcmHauUpZgTVgebJSr+ZpZiKBq8l3XV829szqz7dON
-         dwcdBUegl6FPwNeV6oaB/SHtiwzWL2oNcBhoboj2yNhha392rx9AvPIhhqaBbjOA5Aug
-         Nv2FAAZT06Pv+O5OAW/69BaMN77tlKT/3CMMyHde39IpVmCslq7YVyh0Z4mSpwcpadJr
-         RjB5RKYdy96yQL9gj4CT98uQDhlsgIqeyEY7iC/Kl7gku2UUTLy8TyFf7rPyTm9lyssH
-         OgYA==
-X-Gm-Message-State: AOAM531gH8szk4O4tvVhqUDSBGjUYdiZ35SlvSwJsNzDGsQnUMWbLtBX
-        szxofsFxaVR3kaKkoCCQ6TXo8116hoo9NHw2KAmf0PYE2FDa
-X-Google-Smtp-Source: ABdhPJxyW2a+ykA+fUEC8D6mFHSlTwIHpmNmLpjhnj+1O5R02Uizom5WTc4bNxK6AVfdyCvjg+GBZ9zseGC71qHLHgVFHLNbJAN8
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=P1KdIUWFxYzw82EVvLFYFt+MNwT3Xk5xYJFfFDC3pI4=;
+        b=lNyJWoXdzHs1+xbWmR94bA2hxi0rjW2YPjnmQ+CDh0CygUBfDYXufv3snB4Z3vSsrg
+         QMSlmyyVgrfnuqUt8eV2k4fJ54Sd6Ftx63G7N5d9iK1083HeYaUn6FURbqgI+lYSC8ix
+         zF2rwnrliSmZPcRz+qnwPx/mhSfydPw++CECqEj3dtHamNkG8hJieUafRElzhi8cQw80
+         B6bDNzb8+BDDuHSKUeEXjPpJPc75QY7uDUSBS7MuRKFIb9yNzJz1Y4EHGEis1SZvFXa/
+         E9kWqyj24+c50JGHjBpgTRJWfzGktv4igoXL+gM3loM89TwULhRZL3szveQCboHjcZTL
+         HzHg==
+X-Gm-Message-State: AOAM531q7WJ+D4ZWzFFrrxPirKf+xeHIrOYTeGNhNxwXRQNurF0YgJqu
+        nJto7whTe4jPH3JvpJuNnlA=
+X-Google-Smtp-Source: ABdhPJzUScI/ggo7Kl82ZaCRO+U2DpmtWJjkKWWj5B4Aq/dBT4HFNpT8fzz6O/LZ5kWWbVs/g/S0og==
+X-Received: by 2002:ae9:f449:: with SMTP id z9mr3140477qkl.352.1597291338871;
+        Wed, 12 Aug 2020 21:02:18 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id m66sm4215602qkf.86.2020.08.12.21.02.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Aug 2020 21:02:17 -0700 (PDT)
+Subject: [RFC PATCH 0/3] Re: [PATCH v17 14/21] mm/compaction: do page
+ isolation first in compaction
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     alex.shi@linux.alibaba.com
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        daniel.m.jordan@oracle.com, linux-mm@kvack.org,
+        shakeelb@google.com, willy@infradead.org, hannes@cmpxchg.org,
+        tj@kernel.org, cgroups@vger.kernel.org, akpm@linux-foundation.org,
+        richard.weiyang@gmail.com, mgorman@techsingularity.net,
+        iamjoonsoo.kim@lge.com
+Date:   Wed, 12 Aug 2020 21:02:15 -0700
+Message-ID: <20200813035100.13054.25671.stgit@localhost.localdomain>
+In-Reply-To: <3828d045-17e4-16aa-f0e6-d5dda7ad6b1b@linux.alibaba.com>
+References: <3828d045-17e4-16aa-f0e6-d5dda7ad6b1b@linux.alibaba.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-Received: by 2002:a92:874a:: with SMTP id d10mr2849478ilm.273.1597291024427;
- Wed, 12 Aug 2020 20:57:04 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 20:57:04 -0700
-In-Reply-To: <00000000000084b59f05abe928ee@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001d3cbb05acba4cc2@google.com>
-Subject: Re: INFO: task hung in pipe_release (2)
-From:   syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>
-To:     James.Bottomley@HansenPartnership.com, amanieu@gmail.com,
-        arnd@arndb.de, benh@kernel.crashing.org, bfields@fieldses.org,
-        borntraeger@de.ibm.com, bp@alien8.de, catalin.marinas@arm.com,
-        chris@zankel.net, christian@brauner.io, corbet@lwn.net,
-        cyphar@cyphar.com, dalias@libc.org, davem@davemloft.net,
-        deller@gmx.de, dvyukov@google.com, fenghua.yu@intel.com,
-        geert@linux-m68k.org, gor@linux.ibm.com, heiko.carstens@de.ibm.com,
-        hpa@zytor.com, ink@jurassic.park.msu.ru, jcmvbkbc@gmail.com,
-        jhogan@kernel.org, jlayton@kernel.org, kvalo@codeaurora.org,
-        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux@armlinux.org.uk,
-        linux@dominikbrodowski.net, linuxppc-dev@lists.ozlabs.org,
-        luis.f.correia@gmail.com, luto@kernel.org, martink@posteo.de,
-        mattst88@gmail.com, ming.lei@canonical.com, ming.lei@redhat.com,
-        mingo@redhat.com, monstr@monstr.eu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+Here are the patches I had discussed earlier to address the issues in
+isolate_migratepages_block.
 
-commit fddb5d430ad9fa91b49b1d34d0202ffe2fa0e179
-Author: Aleksa Sarai <cyphar@cyphar.com>
-Date:   Sat Jan 18 12:07:59 2020 +0000
+They are based on the tree at:
+ https://github.com/alexshi/linux.git lrunext 
 
-    open: introduce openat2(2) syscall
+The first patch is mostly cleanup to address the RCU locking in the
+function. The second addresses the test_and_set_skip issue, and the third
+relocates PageCompound.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164e716a900000
-start commit:   6ba1b005 Merge tag 'asm-generic-fixes-5.8' of git://git.ke..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=154e716a900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=114e716a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=61acc40a49a3e46e25ea
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142ae224900000
+I did some digging into the history of the skip bits and since they are
+only supposed to be a hint I thought we could probably just drop the
+testing portion of the call since the LRU flag is preventing more than one
+thread from accessing the function anyway so it would make sense to just
+switch it to a set operation similar to what happens when low_pfn ==
+end_pfn at the end of the call.
 
-Reported-by: syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com
-Fixes: fddb5d430ad9 ("open: introduce openat2(2) syscall")
+I have only had a chance to build test these since rebasing on the tree. In
+addition I am not 100% certain the PageCompound changes are correct as they
+operate on the assumption that get_page_unless_zero is enough to keep a
+compound page from being split up. I plan on doing some testing tomorrow,
+but thought I would push these out now so that we could discuss them.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+---
+
+Alexander Duyck (3):
+      mm: Drop locked from isolate_migratepages_block
+      mm: Drop use of test_and_set_skip in favor of just setting skip
+      mm: Identify compound pages sooner in isolate_migratepages_block
+
+
+ mm/compaction.c |  126 +++++++++++++++++++------------------------------------
+ 1 file changed, 44 insertions(+), 82 deletions(-)
+
+--
