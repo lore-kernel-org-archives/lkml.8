@@ -2,72 +2,90 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A5BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158E220716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1F920716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GJymZi33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgHMHHx (ORCPT
+        id S1726597AbgHMHIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:07:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42918 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbgHMHHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:07:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4D1B2B17C;
-        Thu, 13 Aug 2020 07:08:13 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 09:07:44 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Charan Teja Reddy <charante@codeaurora.org>,
-        akpm@linux-foundation.org, vbabka@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: fix core hung in free_pcppages_bulk()
-Message-ID: <20200813070744.GB9477@dhcp22.suse.cz>
-References: <1597075833-16736-1-git-send-email-charante@codeaurora.org>
- <3b07d2a6-8ce7-5957-8ca5-a8d977852e14@redhat.com>
+        Thu, 13 Aug 2020 03:08:07 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55533 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725982AbgHMHIG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:08:06 -0400
+X-UUID: 2c024129dac94eefb06f8e9923260d7e-20200813
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Em+aZRblnSBBXfbIqqdD7o9UIm1k6YffKGxm9JLcp40=;
+        b=GJymZi33EF/dF6e1Y00qJmDN/6669Y/F3GNzCAAiaH1F+lSaDZsXD5tW5gWiygBqymQffYZ6VAy0ap8b5vAbCtNmqhkx1GMpqnybIdu1UdTbhQPwiianQzm9JFf8AJEIZdTfmAdEfHB8GRk0Ekt1xzf8Gzp6mWdSkMfOgNXWydc=;
+X-UUID: 2c024129dac94eefb06f8e9923260d7e-20200813
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1870755673; Thu, 13 Aug 2020 15:08:01 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 13 Aug 2020 15:07:58 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 13 Aug 2020 15:07:58 +0800
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>
+CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <hector.yuan@mediatek.com>
+Subject: [PATCH v1] cpufreq: mediatek-hw: Add support for Mediatek cpufreq HW driver
+Date:   Thu, 13 Aug 2020 15:07:53 +0800
+Message-ID: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b07d2a6-8ce7-5957-8ca5-a8d977852e14@redhat.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 22E7736455FFC7AFAC1005B33F5D3A93FDE664E47FE8A993C0634980A15532C92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11-08-20 10:29:24, David Hildenbrand wrote:
-[...]
-> I was wondering if we should rather set all pageblocks to
-> MIGRATE_ISOLATE in online_pages() before doing the online_pages_range()
-> call, and do undo_isolate_page_range() after onlining is done.
-> 
-> move_pfn_range_to_zone()->memmap_init_zone() marks all pageblocks
-> MIGRATE_MOVABLE, and as that function is used also during boot, we could
-> supply a parameter to configure this.
-> 
-> This would prevent another race from happening: Having pages exposed to
-> the buddy ready for allocation in online_pages_range() before the
-> sections are marked online.
-> 
-> This would avoid any pages from getting allocated before we're
-> completely done onlining.
+VGhlIENQVWZyZXEgSFcgcHJlc2VudCBpbiBzb21lIE1lZGlhdGVrIGNoaXBzZXRzIG9mZmxvYWRz
+DQp0aGUgc3RlcHMgbmVjZXNzYXJ5IGZvciBjaGFuZ2luZyB0aGUgZnJlcXVlbmN5IG9mIENQVXMu
+DQpUaGUgZHJpdmVyIGltcGxlbWVudHMgdGhlIGNwdWZyZXEgZHJpdmVyIGludGVyZmFjZSBmb3IN
+CnRoaXMgaGFyZHdhcmUgZW5naW5lLiANCg0KVGhpcyBwYXRjaCBkZXBlbmRzIG9uIHRoZSBNVDY3
+NzkgRFRTIHBhdGNoIHN1Ym1pdHRlZCBieSBIYW5rcyBDaGVuDQogaHR0cHM6Ly9sa21sLm9yZy9s
+a21sLzIwMjAvOC80LzEwOTQNCg0KDQpIZWN0b3IuWXVhbiAoMik6DQogIGR0LWJpbmRpbmdzOiBj
+cHVmcmVxOiBhZGQgYmluZGluZ3MgZm9yIE1lZGlhVGVrIGNwdWZyZXEgSFcNCiAgY3B1ZnJlcTog
+bWVkaWF0ZWstaHc6IEFkZCBzdXBwb3J0IGZvciBNZWRpYXRlayBjcHVmcmVxIEhXIGRyaXZlcg0K
+DQogLi4uL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAg
+IDYxICsrKysrDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2NwdWZyZXEvS2NvbmZpZy5hcm0gICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMTEgKw0KIGRyaXZlcnMvY3B1ZnJlcS9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9jcHVmcmVxL21lZGlhdGVrLWNwdWZy
+ZXEtaHcuYyAgICAgICAgICAgICAgfCAgMjU1ICsrKysrKysrKysrKysrKysrKysrDQogNSBmaWxl
+cyBjaGFuZ2VkLCAzMjkgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3Lnlh
+bWwNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jcHVmcmVxL21lZGlhdGVrLWNwdWZyZXEt
+aHcuYw0K
 
-This sounds like a reasonable idea to me.
-
-> We would need MIGRATE_ISOLATE/CONFIG_MEMORY_ISOLATION also for
-> CONFIG_MEMORY_HOTPLUG.
-
-We already do depend on the memory isolation in the hotremove. Doing the
-same for hotplug in general makes sense as well.
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
