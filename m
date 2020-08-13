@@ -6,105 +6,104 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B863C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA5420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E432820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHMQgg (ORCPT
+        id S1726636AbgHMQgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:36:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51728 "EHLO pegase1.c-s.fr"
+        Thu, 13 Aug 2020 12:36:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46753 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgHMQge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:36:34 -0400
+        id S1726564AbgHMQgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:36:36 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BSBzM1khRz9vCy5;
-        Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BSBzN432nz9vCyF;
+        Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1cCf7Dl5xlxy; Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+        with ESMTP id iMel7HhtXNCD; Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BSBzM10PNz9vCy4;
-        Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BSBzN3Cddz9vCy4;
+        Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 030438B7A6;
-        Thu, 13 Aug 2020 18:36:33 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 13F248B7A7;
+        Thu, 13 Aug 2020 18:36:34 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ScPSZq6sBYHM; Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
+        with ESMTP id vZvoj64d3-_E; Thu, 13 Aug 2020 18:36:34 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BE0868B7A1;
-        Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C012F8B7A1;
+        Thu, 13 Aug 2020 18:36:33 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 97F1065C8D; Thu, 13 Aug 2020 16:36:32 +0000 (UTC)
-Message-Id: <11a330af231af22874c006302a945388846f8112.1597336548.git.christophe.leroy@csgroup.eu>
+        id 9EA7565C8D; Thu, 13 Aug 2020 16:36:33 +0000 (UTC)
+Message-Id: <cf59a61d9e6da20e45c872a02460b783092127aa.1597336548.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <11a330af231af22874c006302a945388846f8112.1597336548.git.christophe.leroy@csgroup.eu>
+References: <11a330af231af22874c006302a945388846f8112.1597336548.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 1/9] powerpc: Remove flush_instruction_cache for book3s/32
+Subject: [PATCH 2/9] powerpc: Remove SYNC on non 6xx
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Aug 2020 16:36:32 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 16:36:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only callers of flush_instruction_cache() are:
+SYNC is usefull for Powerpc 601 only. On everything else,
+SYNC is empty.
 
-arch/powerpc/kernel/swsusp_booke.S:	bl flush_instruction_cache
-arch/powerpc/mm/nohash/40x.c:	flush_instruction_cache();
-arch/powerpc/mm/nohash/44x.c:	flush_instruction_cache();
-arch/powerpc/mm/nohash/fsl_booke.c:	flush_instruction_cache();
-arch/powerpc/platforms/44x/machine_check.c:			flush_instruction_cache();
-arch/powerpc/platforms/44x/machine_check.c:		flush_instruction_cache();
-
-This function is not used by book3s/32, drop it.
+Remove it from code that is not made to run on 6xx.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/misc_32.S | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/powerpc/kernel/head_40x.S   | 1 -
+ arch/powerpc/kernel/head_booke.h | 1 -
+ arch/powerpc/kernel/misc_64.S    | 1 -
+ 3 files changed, 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index b24f866fef81..bd870743c06f 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -271,9 +271,8 @@ _ASM_NOKPROBE_SYMBOL(real_writeb)
+diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
+index 5b282d9965a5..44c9018aed1b 100644
+--- a/arch/powerpc/kernel/head_40x.S
++++ b/arch/powerpc/kernel/head_40x.S
+@@ -72,7 +72,6 @@ turn_on_mmu:
+ 	lis	r0,start_here@h
+ 	ori	r0,r0,start_here@l
+ 	mtspr	SPRN_SRR0,r0
+-	SYNC
+ 	rfi				/* enables MMU */
+ 	b	.			/* prevent prefetch past rfi */
  
- /*
-  * Flush instruction cache.
-- * This is a no-op on the 601.
-  */
--#ifndef CONFIG_PPC_8xx
-+#if !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC_BOOK3S_32)
- _GLOBAL(flush_instruction_cache)
- #if defined(CONFIG_4xx)
- 	lis	r3, KERNELBASE@h
-@@ -290,18 +289,11 @@ _GLOBAL(flush_instruction_cache)
- 	mfspr	r3,SPRN_L1CSR1
- 	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
- 	mtspr	SPRN_L1CSR1,r3
--#elif defined(CONFIG_PPC_BOOK3S_601)
--	blr			/* for 601, do nothing */
--#else
--	/* 603/604 processor - use invalidate-all bit in HID0 */
--	mfspr	r3,SPRN_HID0
--	ori	r3,r3,HID0_ICFI
--	mtspr	SPRN_HID0,r3
- #endif /* CONFIG_4xx */
- 	isync
- 	blr
- EXPORT_SYMBOL(flush_instruction_cache)
--#endif /* CONFIG_PPC_8xx */
-+#endif /* CONFIG_PPC_8xx || CONFIG_PPC_BOOK3S_32 */
+diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+index 18f87bf9e32b..71c359d438b5 100644
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -176,7 +176,6 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
+ #endif
+ 	mtspr	SPRN_SRR1,r10
+ 	mtspr	SPRN_SRR0,r11
+-	SYNC
+ 	RFI				/* jump to handler, enable MMU */
+ 99:	b	ret_from_kernel_syscall
+ .endm
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index 7bb46ad98207..070465825c21 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -365,7 +365,6 @@ _GLOBAL(kexec_smp_wait)
  
- /*
-  * Copy a whole page.  We use the dcbz instruction on the destination
+ 	li	r4,KEXEC_STATE_REAL_MODE
+ 	stb	r4,PACAKEXECSTATE(r13)
+-	SYNC
+ 
+ 	b	kexec_wait
+ 
 -- 
 2.25.0
 
