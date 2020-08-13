@@ -2,107 +2,101 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D83C2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4352B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OYR7Bzfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHMIlq (ORCPT
+        id S1726072AbgHMImE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:41:46 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:27292 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbgHMIlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:41:45 -0400
-Received: from localhost.localdomain (unknown [10.192.85.18])
-        by mail-app4 (Coremail) with SMTP id cS_KCgAXj3qq_DRf0nLmAA--.33413S4;
-        Thu, 13 Aug 2020 16:41:17 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ASoC: intel: Fix memleak in sst_media_open
-Date:   Thu, 13 Aug 2020 16:41:10 +0800
-Message-Id: <20200813084112.26205-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgAXj3qq_DRf0nLmAA--.33413S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJry7Wr47CFykWF1UKFW8Crg_yoW8GrW3pa
-        1vv3yvg3s3Ja18Xa48t3W0vF1Yya4SvF4rGr95Aw10yrWFqrn5Xrs7try8CFWxCrWxW34D
-        Zr4UtrWUAF43WrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvC1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VU1a9aPUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowACsP
+        Thu, 13 Aug 2020 04:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgHMImD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 04:42:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A7EC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:42:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id d4so2435193pjx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UbdKBrdotq83jU1QMt2IgDl1E5bjqx/qouMsGAbK12g=;
+        b=OYR7BzflZ0O26S/A/8KyvAlO9i5MxabYg3uJa4lwLP/KO8VpoWe1AGRaLgoCvgILZ5
+         p9+GoT6fxqwL+icHSjdQqdh2Fskcy629eO6zofQY/xX+VYwCo5TgfzB8Fop7L3jCxNb5
+         +OM9N8p9615NU0FnPwJPjVhkN7i2zeP39mdaY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UbdKBrdotq83jU1QMt2IgDl1E5bjqx/qouMsGAbK12g=;
+        b=kJk2QoFFxVRYzSXFRcFszgNC3VIWeXu1SQso5sM5LgOMrw3zND55TPVU/Z6DkTdT5G
+         VTFz4ZCc0HtLCpi8ujsDFV9cXmfF/YfA6CvHyD4zE5bgexfZ1gYCNwnHFUDvo7/Y1gPm
+         cteFmJO1sq1Kuy7Elv+qvCoCPpDLJztGWdU3cliIMdsHCeAVDs82yj1hOtV9ihBTJ3pV
+         Tn6FBwv6Hpk5lgFi0yCndPHsnedqt4drIhQxiyozzd+J0hil/I6I6UwWhw2lLO1sbRX/
+         ssVOMrS24sJB+H1G6YIJjUUUofVdlXSXebGcm+82xa4RaibMEB5VYEBlWavXm9SgYE1w
+         Tu8w==
+X-Gm-Message-State: AOAM530/uK/dmnOdmk7eVzd7GLSTiw+dCuz3CoMykAI4NXXdrcCPIoZO
+        qR/zNu5ImhfFuL4F0kb/+U8VEQ==
+X-Google-Smtp-Source: ABdhPJz6TJ9Uw4cwCnhTlFM6qfZ5wovRm/Htuj/dUG3SzboFS8rc3aZmT9tP3vIGXe59SYYi15vlSQ==
+X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr2996916plo.193.1597308122498;
+        Thu, 13 Aug 2020 01:42:02 -0700 (PDT)
+Received: from josephsih-z840.tpe.corp.google.com ([2401:fa00:1:10:de4a:3eff:fe7d:ff5f])
+        by smtp.gmail.com with ESMTPSA id y29sm5032035pfr.11.2020.08.13.01.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 01:42:01 -0700 (PDT)
+From:   Joseph Hwang <josephsih@chromium.org>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com
+Cc:     josephsih@google.com, chromeos-bluetooth-upstreaming@chromium.org,
+        Joseph Hwang <josephsih@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v1 0/2] To support the HFP WBS, a chip vendor may choose a particular
+Date:   Thu, 13 Aug 2020 16:41:27 +0800
+Message-Id: <20200813084129.332730-1-josephsih@chromium.org>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When power_up_sst() fails, stream needs to be freed
-just like when try_module_get() fails. However, current
-code is returning directly and ends up leaking memory.
+USB alternate seeting of which the packet size is distinct.
+The patches are to expose the packet size to user space so that
+the user space does not need to hard code those values.
 
-Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+We have verified this patch on Chromebooks which use
+- Realtek 8822CE controller with USB alt setting 1
+- Intel controller with USB alt setting 6
+Our user space audio server, cras, can get the correct
+packet length from the socket option.
 
-Changelog:
 
-v2: - Add a new label 'out_power_up' to unify code style.
----
- sound/soc/intel/atom/sst-mfld-platform-pcm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Joseph Hwang (2):
+  Bluetooth: btusb: define HCI packet sizes of USB Alts
+  Bluetooth: sco: expose WBS packet length in socket option
 
-diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-index 49b9f18472bc..b1cac7abdc0a 100644
---- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-@@ -331,7 +331,7 @@ static int sst_media_open(struct snd_pcm_substream *substream,
- 
- 	ret_val = power_up_sst(stream);
- 	if (ret_val < 0)
--		return ret_val;
-+		goto out_power_up;
- 
- 	/* Make sure, that the period size is always even */
- 	snd_pcm_hw_constraint_step(substream->runtime, 0,
-@@ -340,8 +340,9 @@ static int sst_media_open(struct snd_pcm_substream *substream,
- 	return snd_pcm_hw_constraint_integer(runtime,
- 			 SNDRV_PCM_HW_PARAM_PERIODS);
- out_ops:
--	kfree(stream);
- 	mutex_unlock(&sst_lock);
-+out_power_up:
-+	kfree(stream);
- 	return ret_val;
- }
- 
+ drivers/bluetooth/btusb.c         | 43 +++++++++++++++++++++++--------
+ include/net/bluetooth/bluetooth.h |  2 ++
+ include/net/bluetooth/hci_core.h  |  1 +
+ net/bluetooth/sco.c               |  8 ++++++
+ 4 files changed, 43 insertions(+), 11 deletions(-)
+
 -- 
-2.17.1
+2.28.0.236.gb10cc79966-goog
 
