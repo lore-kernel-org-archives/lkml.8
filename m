@@ -6,112 +6,107 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A711DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C178DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8276D2224D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFFD20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bEywIbIK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XEDJQTTr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wM2UU7TQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SRitxauO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHMKqO (ORCPT
+        id S1726053AbgHMKrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
+        Thu, 13 Aug 2020 06:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgHMKqH (ORCPT
+        with ESMTP id S1726252AbgHMKrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:46:07 -0400
+        Thu, 13 Aug 2020 06:47:14 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AACC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:46:07 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED95C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:47:11 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 12:47:07 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597315565;
+        s=2020; t=1597315629;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=HCg1ZdtTl1KhAjawebiFvNnjllljAIdwgNvbFA5RkDM=;
-        b=bEywIbIK22XdO0ai4D1Bx5DPlNeBk5voSqr1vXsP7AVobytK6wgdxdlRVmMkzuluT+WZVx
-        MDloLbbbkcCw5CYBGSqNJnqOP8wLSBb/i1z9Pu72J2vywDadD+M24YBHPspCFrFRlvPekG
-        ht4wyZ3kWRvi0+eoeLZPIX9yFEn9oNmFg9L3tgIkYe3TwlyIkQYXx7vohIewPzrZjxYvMK
-        1RtPof3s4s5hVkx1bniz52OVM69jGptBpmwKGm0OwFJfTd8dfefh2BJbR9fZlgOsbGbDZw
-        tajT9V9wYYJLv6pX3PxRuB1fBjHLbFL268WOHVjZ5sHYR7LW6WcoSseCUxgGTw==
+        bh=iPnKb6ykt3lbBozkoOhiaH4Rw5GGiygCvzNCOPY8nxs=;
+        b=wM2UU7TQD0Fympa+ZvPZyVCn/sgTOZn9FXejFXSulPpwNZUDPYL4/YPXqT/3YtZtj1AO9Y
+        J3nu/K69TYqMXI+dtV9Xo0/R1TPw1nZbsFWzxmSnaxQabH4rqpN9Yn/vnlHrBtFrnJaVAZ
+        OmwpnYlBvPg+BWzM2xyDxEkopBqQD91cP8t7/i1+s1FP70cUROP8XZDIeR6XnqM53ey+ZK
+        2YwjqU4EryLFhJSed8Hs27mLFeDdlYji6o3gUOnnEfftz1OlWr39tiW+86Ac8r5S1ESoAo
+        g8c84YufnLPqLRYtHRpDEW3w6t7TVXmkvkbXXJ6Al0x7UIuod6P4tDRUI6OrBw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597315565;
+        s=2020e; t=1597315629;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=HCg1ZdtTl1KhAjawebiFvNnjllljAIdwgNvbFA5RkDM=;
-        b=XEDJQTTrOA+Ajl0PYX6L2bHeRYagwpHbpMD6GjEmX5RnhID6Q16IBfPaZLonVzbv8Bm8QM
-        1oIdgPsL0mAp4JDA==
-To:     Qianli Zhao <zhaoqianligood@gmail.com>, john.stultz@linaro.org,
-        sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
-Subject: Re: [PATCH] timer: mask unnecessary set of flags in do_init_timer
-In-Reply-To: <1596767378-27241-1-git-send-email-zhaoqianligood@gmail.com>
-References: <1596767378-27241-1-git-send-email-zhaoqianligood@gmail.com>
-Date:   Thu, 13 Aug 2020 12:46:05 +0200
-Message-ID: <87h7t6lt76.fsf@nanos.tec.linutronix.de>
+        bh=iPnKb6ykt3lbBozkoOhiaH4Rw5GGiygCvzNCOPY8nxs=;
+        b=SRitxauOk1DMbQi7+1ZivyhVFy7ufb6QFcwDkfMbS6gsrqQDB45QU28XrJrIKG2HYxB3iL
+        FHG1vJJWVeBpnaAQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/alternatives: Let __text_poke() acquire the pte lock
+ with enabled interrupts
+Message-ID: <20200813104707.fxydmk6ctiwjql75@linutronix.de>
+References: <20200706164215.2502730-1-bigeasy@linutronix.de>
+ <87eeoc53o2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87eeoc53o2.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qianli Zhao <zhaoqianligood@gmail.com> writes:
+On 2020-08-12 16:39:41 [+0200], Thomas Gleixner wrote:
+> Sebastian,
+Hi tglx,
 
-Please start the first word after the colon with an upper case letter.
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> writes:
+> 
+> > The pte lock is never acquired from an IRQ-off region so it does not
+> > require the interrupts to be disabled.
+> 
+> I doubt that this is true. It surely is acquired within other locks
+> which might be taken with spin_lock_irq(). Which is completely fine on
+> RT.
+> 
+> But that's not the point. The point is that pte_lock() does not require
+> to be taken with interrupts disabled.
 
-> do_init_timer can specify flags of timer_list,
+The IRQ-off vs in-IRQ working was chosen poorly.
 
-Please write do_init_timer() so it's entirely clear that this is about a
-function.
+> Please be precise about these kind of things. Handwavy descriptions
+> cause more problems than they solve.
+> 
+> > RT complains here because the spinlock_t must not be acquired with
+> > disabled interrupts.
+> >
+> > use_temporary_mm() expects interrupts to be off because it invokes
+> > switch_mm_irqs_off() and uses per-CPU (current active mm) data.
+> >
+> > Move local_irq_save() after the the pte lock has been acquired. Move
+> > local_irq_restore() after the pte lock has been released.
+> 
+> While part 1 is correct, part 2 is the exact opposite of what the patch
+> does.
+> 
+>   Move the PTE lock handling outside the interrupt disabled region.
+> 
+> describes precisely what this is about without any gory details which
+> can be seen in the patch itself. Hmm?
 
-> but this function does not expect to specify the CPU or idx.
+Oki reworded.
 
-or idx does not mean anything unless someone looks at the
-code. Changelogs want to explain things so they can be understood
-without staring at the code.
+> Thanks,
+> 
+>         tglx
 
-> If user invoking do_init_timer and specify CPU,
-> The result may not what we expected.
-
-Right. And which caller exactly hands in crappy flags?
-
-> E.g:
-> do_init_timer invoked in core2,and specify flags 0x1
-> final result flags is 0x3.If the specified CPU number
-> exceeds the actual number,more serious problems will happen
-
-More serious problems is not a really helpful technical explanation and
-0x3 does not make sense for a changelog reader either because it again
-requires to look up the code.
-
->  	timer->entry.pprev = NULL;
->  	timer->function = func;
-> -	timer->flags = flags | raw_smp_processor_id();
-> +	timer->flags = (flags & ~TIMER_BASEMASK & ~TIMER_ARRAYMASK) |
-> raw_smp_processor_id();
-
-If the caller hands in invalid flags then silently fixing them up is
-fundamentally wrong. So this wants to be:
-
-   if (WARN_ON(flags & ~TIMER_INIT_FLAGS))
-   	flags &= TIMER_INIT_FLAGS;
-
-and TIMER_INIT_FLAGS wants to be exactly the set of flags which are
-valid for being handed in by a caller, i.e.:
-
-      TIMER_DEFFERABLE, TIMER_PINNED, TIMER_IRQSAFE
-
-Guess what happens when the caller hands in TIMER_MIGRATING?
-
-If we do sanity checking then we do it correct and not just silently
-papering over the particular problem which you ran into.
-
-Thanks,
-
-        tglx
+Sebastian
