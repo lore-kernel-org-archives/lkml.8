@@ -2,121 +2,89 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F49C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14BF620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JDgXNAvB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rWwIStof"
+	by mail.kernel.org (Postfix) with ESMTP id 3C45620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgHMHo3 (ORCPT
+        id S1726533AbgHMHpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMHo2 (ORCPT
+        Thu, 13 Aug 2020 03:45:45 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:60653 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726107AbgHMHpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:44:28 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A021C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:44:28 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597304666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xwAqU//1A3R+DJkuFK8D981mTCm47eLPJEs5PgpmP9k=;
-        b=JDgXNAvBhNk7sR7EzwEc33vq9Lw8Usil2bJSf+xGy78xRTZa1mb7JbaUerHQlJvov8bdiW
-        7FY0pDMbtSdFEjk3GLTa/ou1+hf29dbq583M+dLloPbI/AihV1u/ft57SFze7ndul95X6R
-        tulbwjxr3i+dl0kpLQe1OMtq0t/Q4gTIb1sZBiG/pLPGlaVTxvLIUlOdYPIefin43DKhsp
-        jTFELLi3TP6UuqLwZ7T7JnWMbYh3bibtSWwgS6+yVxz0imH+XtvLauLgEpQa/mtv6WmEUV
-        xWRJN80hCA9Lu/ZOYfAsfjKHG30ilXoEc2+GfXowupqNIkmFw748kYfx5G/B8w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597304666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xwAqU//1A3R+DJkuFK8D981mTCm47eLPJEs5PgpmP9k=;
-        b=rWwIStofMz+NLlwO+Tl2ilc3Yyj+GtzqpIP8SXEkLp3BQ0QflC7HoMs0sV6IjEhJcAa0KJ
-        iKD/3V2YvH11FiCg==
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
-In-Reply-To: <20200813051853.GA510@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de> <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com> <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley> <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de> <20200813051853.GA510@jagdpanzerIV.localdomain>
-Date:   Thu, 13 Aug 2020 09:50:25 +0206
-Message-ID: <875z9nvvl2.fsf@jogness.linutronix.de>
+        Thu, 13 Aug 2020 03:45:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5dIbAA_1597304727;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5dIbAA_1597304727)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 13 Aug 2020 15:45:29 +0800
+Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
+        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040224.13054.96724.stgit@localhost.localdomain>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
+Date:   Thu, 13 Aug 2020 15:44:51 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200813040224.13054.96724.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
-> This is not an unseen pattern, I'm afraid. And the problem here can
-> be more general:
->
-> 	pr_info("text");
-> 	pr_cont("1");
-> 	exception/IRQ/NMI
-> 		pr_alert("text\n");
-> 	pr_cont("2");
-> 	pr_cont("\n");
->
-> I guess the solution would be to store "last log_level" in task_struct
-> and get current (new) timestamp for broken cont line?
 
-(Warning: new ideas ahead)
 
-The fundamental problem is that there is no real association between
-the cont parts. So any interruption results in a broken record. If we
-really want to do this correctly, we need real association.
+在 2020/8/13 下午12:02, Alexander Duyck 写道:
+> -		rcu_read_lock();
+> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> -
+>  		/* If we already hold the lock, we can skip some rechecking */
+> -		if (lruvec != locked) {
+> -			if (locked)
+> -				unlock_page_lruvec_irqrestore(locked, flags);
+> +		if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec)) {
 
-With the new finalize flag for records, I thought about perhaps adding
-support for chaining data blocks.
+Ops, lruvec_holds_page_lru_lock need rcu_read_lock. 
 
-A data block currently stores an unsigned long for the ID of the
-associated descriptor. But it could optionally include a second unsigned
-long, which is the lpos of the next text part. All the data blocks of a
-chain would point back to the same descriptor. The descriptor would only
-point to the first data block of the chain and include a flag that it is
-using chained data blocks.
+> +			if (lruvec)
+> +				unlock_page_lruvec_irqrestore(lruvec, flags);
+>  
+> +			lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
+> -			locked = lruvec;
+>  			rcu_read_unlock();
+>  
 
-Then we would only need to track the sequence number of the open record
-and new data blocks could be added to the data block chain of the
-correct record. Readers cannot see the record until it is finalized.
-
-Also, since only finalized records can be invalidated, there are no
-races of chains becoming invalidated while being appended.
-
-My concerns about this idea:
-
-- What if the printk user does not correctly terminate the cont message?
-  There is no mechanism to allow that open record to be force-finalized
-  so that readers can read newer records.
-
-- For tasks, the sequence number of the open record could be stored on
-  the task_struct. For non-tasks, we could use a global per-cpu variable
-  where each CPU stores 2 sequence numbers: the sequence number of the
-  open record for the non-task and the sequence number of the open
-  record for an interrupting NMI. Is that sufficient?
-
-John Ogness
+and some bugs:
+[  534.564741] CPU: 23 PID: 545 Comm: kcompactd1 Kdump: loaded Tainted: G S      W         5.8.0-next-20200803-00028-g9a7ff2cd6e5c #85
+[  534.577320] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS, BIOS 1.0.PL.IP.P.027.02 05/29/2020
+[  534.587693] Call Trace:
+[  534.590522]  dump_stack+0x96/0xd0
+[  534.594231]  ___might_sleep.cold.90+0xff/0x115
+[  534.599102]  kcompactd+0x24b/0x370
+[  534.602904]  ? finish_wait+0x80/0x80
+[  534.606897]  ? kcompactd_do_work+0x3d0/0x3d0
+[  534.611566]  kthread+0x14e/0x170
+[  534.615182]  ? kthread_park+0x80/0x80
+[  534.619252]  ret_from_fork+0x1f/0x30
+[  535.629483] BUG: sleeping function called from invalid context at include/linux/freezer.h:57
+[  535.638691] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 545, name: kcompactd1
+[  535.647601] INFO: lockdep is turned off.
