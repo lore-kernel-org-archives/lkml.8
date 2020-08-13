@@ -2,115 +2,148 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2775420771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5g4MUvi"
+	by mail.kernel.org (Postfix) with ESMTP id 3850C20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMKy1 (ORCPT
+        id S1726522AbgHMK5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMKy0 (ORCPT
+        Thu, 13 Aug 2020 06:57:55 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:17067 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726072AbgHMK5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:54:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2245C061757;
-        Thu, 13 Aug 2020 03:54:25 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so2473252plt.3;
-        Thu, 13 Aug 2020 03:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=026T1eG5lZk+Wr91d+c3pl0tT533eyHDT1un/ZVIEiQ=;
-        b=N5g4MUvi3aX7cw4+QxHxSCaHu0HzL9AeTap8dDQfgMkVFxtzETldAZzXAdpY+jbNKI
-         CnnDbCPonLGmZrJdN7NEEJDjfxb8qUzHsLv/Ht0wEKYnNJJ9tPTZBWShQBw5+h8Pn4hr
-         LbZ1kcQ+QPko2tFgW4ASzqfIx1Zbb2Ycczf36/dJqP2cF1XkhEFgn3a/gBQGBhZvxUlA
-         AOSfrlPRvT4Ep/bInbBDA9WeERb9K1nRXQsQGp9zu6JBBLTGC7uNVI9LLb9/bd/Gf6dy
-         CotDoqyxdwYd9pUJ0oltzGOeeVyMTFYzHngH5BObxCr6NOtOxCcGZux2ntnRQ7jSW7zW
-         FBxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=026T1eG5lZk+Wr91d+c3pl0tT533eyHDT1un/ZVIEiQ=;
-        b=Twzj6UGKVsn/GJmxCse1+QiFMW08AHruxMzYoPGLNJWQBK+wdddQ2APiI51EyytjhV
-         5JO3HpsQRIZ5uCH9/AxM+GC3ge0rWKUhWhn7QO7VyORF9M2Reo7xadP/luGEBuo3ptD8
-         Oe5zlGVE5PYCq+pBG2EQewdG0r5gGWNsTz3xgBxk2z9fr9KbE6e0vP8YKPtf1jwMK4Ob
-         b42YosDcj0W48zeaozGmxrPvTxvGTG6rQRqucB7frgNp6h27cIFpc0rbOS1IDEb/XaTs
-         dIN0W4O/wHNFoHV4HkPv65lHRcslsCfCuOqx2YDDszU340Elic5VnSItUEHMv9a7E509
-         aSww==
-X-Gm-Message-State: AOAM5334nUIn5w8Hiwwz+SwURHVWhPdCD4vBEu84/GxhKKEDVyBz/Loy
-        W0ZrplGAeemZSL+kn/du2z7Imb50REUaR1yG4wI=
-X-Google-Smtp-Source: ABdhPJz3SSmn8gR4W4NFbW4GPuuVS3v88BRlmU6R2ZhnspZZTqdHUwI6xo75LP306ipW5G/4PtsGz7q0ZvJzqiuD8LU=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr4332425pjv.181.1597316065322;
- Thu, 13 Aug 2020 03:54:25 -0700 (PDT)
+        Thu, 13 Aug 2020 06:57:55 -0400
+X-IronPort-AV: E=Sophos;i="5.76,308,1592863200"; 
+   d="scan'208";a="463349984"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:57:53 +0200
+Date:   Thu, 13 Aug 2020 12:57:52 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
+cc:     michal.lkml@markovi.net, Gilles.Muller@lip6.fr,
+        gregkh@linuxfoundation.org, nicolas.palix@imag.fr,
+        linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
+Subject: Re: [Cocci] [PATCH] scripts: coccicheck: Change default value for
+ parallelism
+In-Reply-To: <CACAkLuqo+CJeyvVZ0oaN=6SqQNxXinfv8t6FNPyORO=GCCvstA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2008131257180.19118@hadrien>
+References: <20200812182722.4553-1-sylphrenadin@gmail.com> <alpine.DEB.2.22.394.2008122211330.2468@hadrien> <CACAkLuqo+CJeyvVZ0oaN=6SqQNxXinfv8t6FNPyORO=GCCvstA@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-3-cmo@melexis.com>
-In-Reply-To: <20200813075125.4949-3-cmo@melexis.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 13 Aug 2020 13:54:09 +0300
-Message-ID: <CAHp75Vc3_WkUQOaC86aKe9Fh88Zpip3brShyR64KjXJBt5rrng@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] iio:temperature:mlx90632: Add kerneldoc to the
- internal struct
-To:     Crt Mori <cmo@melexis.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-2144651173-1597316273=:19118"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
->
-> Document internal/private struct for mlx90632 device.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Crt Mori <cmo@melexis.com>
-> ---
->  drivers/iio/temperature/mlx90632.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
-> index c3de10ba5b1e..ce75f5a3486b 100644
-> --- a/drivers/iio/temperature/mlx90632.c
-> +++ b/drivers/iio/temperature/mlx90632.c
-> @@ -89,9 +89,16 @@
->  #define MLX90632_MAX_MEAS_NUM  31 /**< Maximum measurements in list */
->  #define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
->
-> +/**
-> + * struct mlx90632_data - private data for the MLX90632 device
-> + * @client: I2C client of the device
-> + * @lock: Internal mutex for multiple reads for single measurement
-> + * @regmap: Regmap of the device
-> + * @emissivity: Object emissivity from 0 to 1000 where 1000 = 1.
-> + */
->  struct mlx90632_data {
->         struct i2c_client *client;
-> -       struct mutex lock; /* Multiple reads for single measurement */
-> +       struct mutex lock;
->         struct regmap *regmap;
->         u16 emissivity;
->  };
-> --
-> 2.25.1
->
+--8323329-2144651173-1597316273=:19118
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+On Thu, 13 Aug 2020, Sumera Priyadarsini wrote:
+
+>
+>
+> On Thu, 13 Aug, 2020, 1:45 AM Julia Lawall, <julia.lawall@inria.fr> wrote:
+>
+>
+>       On Wed, 12 Aug 2020, Sumera Priyadarsini wrote:
+>
+>       > By default, coccicheck utilizes all available threads to implement
+>       > parallelisation. However, when hyperthreading is enabled, this leads
+>       > to all threads per core being occupied resulting in longer wall-clock
+>       > times and higher power consumption.
+>
+>       I have the feeling that the above sentence is not quite optimal.
+>       Actually, using all of the available hardware threads would not be a bad
+>       thing, if it was giving a benefit.  The point is that it doesn't.  It
+>       makes the performance worse instead.
+>
+>
+> How does this sound? 
+>  
+> However, when all available threads are used, a decrease in performance was noted. The elapsed time was minimum when at most one thread per core was used. 
+
+This looks better, thanks.
+
+julia
+
+>
+>
+>
+>
+>       > Hence, to improve performance,
+>       > modify coccicheck to use only one thread per core atmost.
+>
+>       "atmost" is not a word.  It would be clearer to say "to use at most one
+>       thread per core".
+>
+>       > In the cases where the total number of threads is more than 8 and
+>       > hyperthreading is enabled, it was observed that optimum performance
+>       > is achieved around one-fourth of the total number of cores.
+>       > Modify the script further to accommodate this use case.
+>
+>       It would be nice to give some performance numbers and some information
+>       about the machine used.
+>
+>
+> Alright, will add this. 
+>
+>
+>       thanks,
+>       julia
+>
+>       >
+>       > Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+>       > ---
+>       >  scripts/coccicheck | 9 +++++++++
+>       >  1 file changed, 9 insertions(+)
+>       >
+>       > diff --git a/scripts/coccicheck b/scripts/coccicheck
+>       > index e04d328210ac..dd228dcc915e 100755
+>       > --- a/scripts/coccicheck
+>       > +++ b/scripts/coccicheck
+>       > @@ -75,8 +75,17 @@ else
+>       >          OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
+>       >      fi
+>       >
+>       > +    # Use only one thread per core by default if hyperthreading is enabled
+>       > +    THREADS_PER_CORE=$(lscpu | grep "Thread(s) per core: " | tr -cd [:digit:])
+>       >      if [ -z "$J" ]; then
+>       >          NPROC=$(getconf _NPROCESSORS_ONLN)
+>       > +     if [ $THREADS_PER_CORE -gt 1 -a $NPROC -gt 2 ] ; then
+>       > +             if [ $NPROC -gt 8 ] ; then
+>       > +                     NPROC=$((NPROC/4))
+>       > +             else
+>       > +                     NPROC=$((NPROC/2))
+>       > +             fi
+>       > +     fi
+>       >      else
+>       >          NPROC="$J"
+>       >      fi
+>       > --
+>       > 2.17.1
+>       >
+>       > _______________________________________________
+>       > Cocci mailing list
+>       > Cocci@systeme.lip6.fr
+>       > https://systeme.lip6.fr/mailman/listinfo/cocci
+>       >
+>
+>
+>
+--8323329-2144651173-1597316273=:19118--
