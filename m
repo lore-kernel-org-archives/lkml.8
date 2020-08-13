@@ -2,173 +2,205 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E68C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF60C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 754C920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597334686;
-	bh=XqcHT3MKT/04RZq+kFZVQf0kCHYUKx7+O2n73vzqiLA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HNPM8piGNLzofvTTTz9OEbPTFANnJRxHUqwcl65IY1DIg7fgBAApNZ875XC1C16ZL
-	 wWIg9MxRe3E27VObo+7UWFwr10iJM8oCvsrkDeTC53hk/t3BKnBF4XYiN1rZkYR/xR
-	 eMfYBXyh81lfdvPsLFYQcgXBv4N/LGZfI2Mi6Oi0=
+	by mail.kernel.org (Postfix) with ESMTP id 2DEB52078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgHMQEo (ORCPT
+        id S1726131AbgHMQI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMQEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:04:43 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D412078D;
-        Thu, 13 Aug 2020 16:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597334682;
-        bh=XqcHT3MKT/04RZq+kFZVQf0kCHYUKx7+O2n73vzqiLA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=E+mNz3NmgfvdmI+risGgO+wtDgnsWWtgjpMC5uqNosNdTzXF3abAOxC6/cUfi1Qc6
-         1mCWH5RqbyjEkNWyfF8IU5+ZqwG/467m7DCOZMfGTEedWPcW5z5Nna4isCbKimPtuP
-         lzujRN7egrOhqHQefWfzob8g/tG/w0s1vp+JbCII=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8C248352279C; Thu, 13 Aug 2020 09:04:42 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 09:04:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813160442.GV4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <20200813154159.GR4295@paulmck-ThinkPad-P72>
- <20200813155412.GP9477@dhcp22.suse.cz>
+        Thu, 13 Aug 2020 12:08:26 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:32835 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgHMQIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:08:25 -0400
+Received: by mail-io1-f72.google.com with SMTP id a12so4403527ioo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 09:08:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=T9Q43hftzUD3PgBeBMYKSUvM8xHe7sGtR9CNbMQ0n6s=;
+        b=PXODzJf4aPt5a+w+obo7RUc70rFMHPAJ78hEe0cUzHG3x5JKKjR01NFa6pqZOslQYq
+         uaGqnGRNYyKGErccI9tpCZEriL4AYrZswFtCAghFM7FNGjh847oMowzu4sYV/3tWUrrS
+         mxBe1BpBefAlFjjL2eQGaqWReq87q4YRiRrh8KicrqmsB1Cg0dqO8SNaXaGZMDYdalZC
+         rdBQj1jXqj7ursSPrnSv+47YdhkEhOJ/2A9eDU2S+OufAeLTN3yUwPPaoTpDx1SRrney
+         5aKwGB6v+3zwBHGZit/07oTRMdpQZqbjfAvk+8sOyfHiuhMVaabMiII5OtajUHeFsZZG
+         w2cQ==
+X-Gm-Message-State: AOAM531JaW6By4hb6HcVlqpBwxo76vMJaxrKUfiVefhySSnF64qSrl5m
+        8Bg02p9kgDeb0B8FCTAQKH/u+2CbQMUWidb/S/c0Kz9kmqzZ
+X-Google-Smtp-Source: ABdhPJxuhLpsygM0Mm5iClkfsSMX64Mvi0d6qVsNTuFWWdPnaYAH0lI2KI1aK7XoQ4NiwjFgbno9wMFZ/yvMLgrQqLfFirTUkfEJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813155412.GP9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a6b:ba06:: with SMTP id k6mr5580624iof.101.1597334902820;
+ Thu, 13 Aug 2020 09:08:22 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 09:08:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000078537f05acc483bd@google.com>
+Subject: KMSAN: uninit-value in hsr_addr_subst_dest
+From:   syzbot <syzbot+586193f55faeec53d3e3@syzkaller.appspotmail.com>
+To:     alex.shi@linux.alibaba.com, ap420073@gmail.com,
+        davem@davemloft.net, frextrite@gmail.com, glider@google.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 05:54:12PM +0200, Michal Hocko wrote:
-> On Thu 13-08-20 08:41:59, Paul E. McKenney wrote:
-> > On Thu, Aug 13, 2020 at 04:53:35PM +0200, Michal Hocko wrote:
-> > > On Thu 13-08-20 16:34:57, Thomas Gleixner wrote:
-> > > > Michal Hocko <mhocko@suse.com> writes:
-> > > > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
-> > > > >> It basically requires to convert the wait queue to something else. Is
-> > > > >> the waitqueue strict single waiter?
-> > > > >
-> > > > > I would have to double check. From what I remember only kswapd should
-> > > > > ever sleep on it.
-> > > > 
-> > > > That would make it trivial as we could simply switch it over to rcu_wait.
-> > > > 
-> > > > >> So that should be:
-> > > > >> 
-> > > > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
-> > > > >> 
-> > > > >> which is limiting the damage to those callers which hand in
-> > > > >> GFP_RT_NOWAIT.
-> > > > >> 
-> > > > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
-> > > > >> zone->lock in the wrong context. And we want to know about that so we
-> > > > >> can look at the caller and figure out how to solve it.
-> > > > >
-> > > > > Yes, that would have to somehow need to annotate the zone_lock to be ok
-> > > > > in those paths so that lockdep doesn't complain.
-> > > > 
-> > > > That opens the worst of all cans of worms. If we start this here then
-> > > > Joe programmer and his dog will use these lockdep annotation to evade
-> > > > warnings and when exposed to RT it will fall apart in pieces. Just that
-> > > > at that point Joe programmer moved on to something else and the usual
-> > > > suspects can mop up the pieces. We've seen that all over the place and
-> > > > some people even disable lockdep temporarily because annotations don't
-> > > > help.
-> > > 
-> > > Hmm. I am likely missing something really important here. We have two
-> > > problems at hand:
-> > > 1) RT will become broken as soon as this new RCU functionality which
-> > > requires an allocation from inside of raw_spinlock hits the RT tree
-> > > 2) lockdep splats which are telling us that early because of the
-> > > raw_spinlock-> spin_lock dependency.
-> > 
-> > That is a reasonable high-level summary.
-> > 
-> > > 1) can be handled by handled by the bailing out whenever we have to use
-> > > zone->lock inside the buddy allocator - essentially even more strict
-> > > NOWAIT semantic than we have for RT tree - proposed (pseudo) patch is
-> > > trying to describe that.
-> > 
-> > Unless I am missing something subtle, the problem with this approach
-> > is that in production-environment CONFIG_PREEMPT_NONE=y kernels, there
-> > is no way at runtime to distinguish between holding a spinlock on the
-> > one hand and holding a raw spinlock on the other.  Therefore, without
-> > some sort of indication from the caller, this approach will not make
-> > CONFIG_PREEMPT_NONE=y users happy.
-> 
-> If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
-> check then there is no functional problem - GFP_RT_SAFE would still be
-> GFP_NOWAIT so functional wise the allocator will still do the right
-> thing.
+Hello,
 
-Perhaps it was just me getting confused, early hour Pacific Time and
-whatever other excuses might apply.  But I thought that you still had
-an objection to GFP_RT_SAFE based on changes in allocator semantics for
-other users.
+syzbot found the following issue on:
 
-Of course, if it is just me being confused, by all means let's give this
-a shot!!!
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14680fd6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=586193f55faeec53d3e3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
 
-> [...]
-> 
-> > > That would require changing NOWAIT/ATOMIC allocations semantic quite
-> > > drastically for !RT kernels as well. I am not sure this is something we
-> > > can do. Or maybe I am just missing your point.
-> > 
-> > Exactly, and avoiding changing this semantic for current users is
-> > precisely why we are proposing some sort of indication to be passed
-> > into the allocation request.  In Uladzislau's patch, this was the
-> > __GFP_NO_LOCKS flag, but whatever works.
-> 
-> As I've tried to explain already, I would really hope we can do without
-> any new gfp flags. We are running out of them and they tend to generate
-> a lot of maintenance burden. There is a lot of abuse etc. We should also
-> not expose such an implementation detail of the allocator to callers
-> because that would make future changes even harder. The alias, on the
-> othere hand already builds on top of existing NOWAIT semantic and it
-> just helps the allocator to complain about a wrong usage while it
-> doesn't expose any internals.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-And I am plenty happy if an existing flag or set of flags (up to and
-including the all-zeroes empty set) can be used in this case.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+586193f55faeec53d3e3@syzkaller.appspotmail.com
 
-							Thanx, Paul
+=====================================================
+BUG: KMSAN: uninit-value in hsr_addr_subst_dest+0x4f7/0x760 net/hsr/hsr_framereg.c:315
+CPU: 1 PID: 15547 Comm: syz-executor.3 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ hsr_addr_subst_dest+0x4f7/0x760 net/hsr/hsr_framereg.c:315
+ hsr_xmit net/hsr/hsr_forward.c:221 [inline]
+ hsr_forward_do net/hsr/hsr_forward.c:285 [inline]
+ hsr_forward_skb+0x22a2/0x3600 net/hsr/hsr_forward.c:361
+ hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
+ __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4625 [inline]
+ xmit_one+0x3cf/0x750 net/core/dev.c:3556
+ dev_hard_start_xmit net/core/dev.c:3572 [inline]
+ __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
+ __bpf_tx_skb net/core/filter.c:2086 [inline]
+ __bpf_redirect_common net/core/filter.c:2125 [inline]
+ __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
+ ____bpf_clone_redirect net/core/filter.c:2165 [inline]
+ bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
+ ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
+ __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
+ bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
+ bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
+ bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
+ __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
+ __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
+ __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f0c549
+Code: Bad RIP value.
+RSP: 002b:00000000f55060cc EFLAGS: 00000296 ORIG_RAX: 0000000000000165
+RAX: ffffffffffffffda RBX: 000000000000000a RCX: 0000000020000740
+RDX: 0000000000000028 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memmove_metadata+0xe/0x10 mm/kmsan/kmsan.c:272
+ __msan_memmove+0x43/0x50 mm/kmsan/kmsan_instr.c:92
+ create_tagged_skb net/hsr/hsr_forward.c:172 [inline]
+ frame_get_tagged_skb net/hsr/hsr_forward.c:194 [inline]
+ hsr_forward_do net/hsr/hsr_forward.c:273 [inline]
+ hsr_forward_skb+0x2ae1/0x3600 net/hsr/hsr_forward.c:361
+ hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
+ __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4625 [inline]
+ xmit_one+0x3cf/0x750 net/core/dev.c:3556
+ dev_hard_start_xmit net/core/dev.c:3572 [inline]
+ __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
+ __bpf_tx_skb net/core/filter.c:2086 [inline]
+ __bpf_redirect_common net/core/filter.c:2125 [inline]
+ __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
+ ____bpf_clone_redirect net/core/filter.c:2165 [inline]
+ bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
+ ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
+ __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
+ bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
+ bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
+ bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
+ __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
+ __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
+ __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2839 [inline]
+ __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
+ __pskb_copy_fclone+0x173/0x1940 net/core/skbuff.c:1552
+ __pskb_copy include/linux/skbuff.h:1147 [inline]
+ create_tagged_skb net/hsr/hsr_forward.c:158 [inline]
+ frame_get_tagged_skb net/hsr/hsr_forward.c:194 [inline]
+ hsr_forward_do net/hsr/hsr_forward.c:273 [inline]
+ hsr_forward_skb+0x1ee8/0x3600 net/hsr/hsr_forward.c:361
+ hsr_dev_xmit+0x133/0x230 net/hsr/hsr_device.c:221
+ __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4625 [inline]
+ xmit_one+0x3cf/0x750 net/core/dev.c:3556
+ dev_hard_start_xmit net/core/dev.c:3572 [inline]
+ __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
+ __bpf_tx_skb net/core/filter.c:2086 [inline]
+ __bpf_redirect_common net/core/filter.c:2125 [inline]
+ __bpf_redirect+0x1479/0x16b0 net/core/filter.c:2132
+ ____bpf_clone_redirect net/core/filter.c:2165 [inline]
+ bpf_clone_redirect+0x498/0x650 net/core/filter.c:2137
+ ___bpf_prog_run+0x4498/0x98e0 kernel/bpf/core.c:1516
+ __bpf_prog_run512+0x12e/0x190 kernel/bpf/core.c:1694
+ bpf_test_run+0x52d/0xed0 include/linux/filter.h:734
+ bpf_prog_test_run_skb+0x1053/0x2ad0 net/bpf/test_run.c:459
+ bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
+ __do_sys_bpf+0xb364/0x1a4c0 kernel/bpf/syscall.c:4135
+ __se_sys_bpf+0x8e/0xa0 kernel/bpf/syscall.c:4075
+ __ia32_sys_bpf+0x4a/0x70 kernel/bpf/syscall.c:4075
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
