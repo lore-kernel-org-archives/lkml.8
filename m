@@ -2,259 +2,174 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6996C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE4F20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B057F20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aPGwSU3D"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="OU0ZUnoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMOt4 (ORCPT
+        id S1726533AbgHMOxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        Thu, 13 Aug 2020 10:53:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgHMOtm (ORCPT
+        with ESMTP id S1726131AbgHMOxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:49:42 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DF4C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:49:40 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id q19so5031614qtp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:49:40 -0700 (PDT)
+        Thu, 13 Aug 2020 10:53:09 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D69C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:53:09 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id b2so2732111qvp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:53:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=fCGrFQfpfR4RJs5ZY7NRIygzu/+q9MlAoBreTUrZtKI=;
-        b=aPGwSU3DH9pOxvTlq3Vws4aZ298GUILOkQMZa7HkaFW7bbJTqkoKkJdDwZOvXyfLCD
-         WjttKGnSDKQuTC1kLTWwWqMTBI1ZC/bDZLtFG9RSer2bvKuAZn5jEnRuMjOj4r6Ulfap
-         WUhkJRfcn3VqdCv6hUbALW+EyFpBFQmAJbqtUzpKSYKypkVGXwwmjX1BnrtwwWD+FMU5
-         eL1WKBbm1M6vWDjHt54UOwQEex3jLh5y7x1L4MlyPsaiXESuJaS6q/Mt00dYpzsCtLCU
-         8JYET0WCgV0cQCSmIMmVESEZN206LNEL8hAZAZ3dOdAq6vKM75+dnliVv9V5CxmTWOyl
-         wTdQ==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QuYyyEUf06CmnNYAz7kwB5OeYF/6966Caycqxe7vEQ0=;
+        b=OU0ZUnoLeM1DwRoOITnt86qC2+PnWCy+k9kfNjiMlfeaWL7l+d4UxDzgQAHqy3dBQD
+         hovu5kZyylIbQoPzZ5FbnD4BgRo10pRkjiN/X6IckpchwJ3ILFXxJXBybLaHdEtW4+jd
+         vbsR3bzIh6eXQ0yE7t88x5wbKq4K0JKg2P+1qMROTgnbaa7V89sx1FJPrxzjzbJEp9rI
+         fvNEf9j7zojY4EwizrI3rdhZnLCqcLMk5uYsdIClc9feasQPHkt55dYaf3kWaRAlJvNC
+         MUa981mSnEfuc6kaCxX39Yw/l7ugpQnjZGW7QrSyL1bTDXVwNCTPsonJXeqJEZs4zTT8
+         l5UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=fCGrFQfpfR4RJs5ZY7NRIygzu/+q9MlAoBreTUrZtKI=;
-        b=ITYM4Q14Ew6NZTt7cR6lLR7Xu3eRwo1NKAbKC8vN5q4RE8XiXVdcOIEcIQ+uNXPwY+
-         kN3NPEEPtEOdN2oflsiWvKWmz/8BgL4cS8yp4xdxDAcL07DqnTxRuyQsoTmQA7bGNb43
-         cFYfAo9yCC8mZ9N/R/8Z9+JYmdbQ1ecTEaS5PyM6BdmqmjoHaIyuUPcZKsTefJ1eNTu7
-         jmQ/I+xuQiTjkFKadSxsrhM/9t2YHPNHQATvkjfq7P59q8w6x/C51LW6WDQ1y0fD3EGV
-         8Qdtju5DhI2bRg010jcP6y3bfqEtDPNYXwZPN+7h+5t/GxgrAHTipYa5LGV9vvcQ3UHt
-         +GrQ==
-X-Gm-Message-State: AOAM530NYb714cJLmlR/Zltnw8aD3HV4ql9oXiMs7CzR6G8dXvUVyqam
-        U8dr0AulfPl61D8VFYWbNLE8Kc6nMw==
-X-Google-Smtp-Source: ABdhPJwhDd55Hhnw1Df03C8Ckc1A5yrI74oFew+g5Iv+yieF4ooMZEPMYiaFMZYEMPON3RGCK0rWZJmfPg==
-X-Received: by 2002:ad4:54c6:: with SMTP id j6mr5037154qvx.126.1597330178932;
- Thu, 13 Aug 2020 07:49:38 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 16:48:59 +0200
-In-Reply-To: <20200813144914.737306-1-tweek@google.com>
-Message-Id: <20200813144914.737306-2-tweek@google.com>
-Mime-Version: 1.0
-References: <20200813144914.737306-1-tweek@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH v2 2/2] selinux: add basic filtering for audit trace events
-From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QuYyyEUf06CmnNYAz7kwB5OeYF/6966Caycqxe7vEQ0=;
+        b=h9khAMGnH7EqOjxlVhndaqXOjvjp3fAKRgCq2GGtAPT5NHy7V5+ITjvHqaKmLlJcNo
+         IfqgoBOTQLs0ebRN+5fJSxL8o+prya/O/TSHYOevzl6cxZkXw+CkwQ7iZReOE46QrSCs
+         e5lVZDr8U/HY7/81RiFXm6pXDvxQ7iLpXv1jSqxBa1NKKnsxZ0CvpHnZG8Ratu+qbAmJ
+         Nsl1mjnS92+SpMR8Ehjc85oO59gBd/FwXZEGgU+7vVMZWLr539MwkiIZalTBOzY7MSQX
+         Qv2HDIIRPcMX465ACPW09Vddlv3dowgU9Fr1ph5UTdM6iZviv77VfXiTdvBvbJdoDVF5
+         sPSg==
+X-Gm-Message-State: AOAM530PFrHVDzdiI7zehyWneN7X43xIOZImwro6rpgqoY1q/Xx44zzO
+        Sn7Vwx9HxxWSGk7OHxK2oMH8dg==
+X-Google-Smtp-Source: ABdhPJwVQph4UB/Lye91a1yKRdFfpibnEOA2suh+gJICEklsFUB5lOQIhhQ3OhNt9t405rUTR0aWNw==
+X-Received: by 2002:ad4:4a27:: with SMTP id n7mr5048422qvz.184.1597330387282;
+        Thu, 13 Aug 2020 07:53:07 -0700 (PDT)
+Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id 9sm6559668qtg.4.2020.08.13.07.53.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 07:53:06 -0700 (PDT)
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH] proc: use vmalloc for our kernel buffer
+Date:   Thu, 13 Aug 2020 10:53:05 -0400
+Message-Id: <20200813145305.805730-1-josef@toxicpanda.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Enderborg <peter.enderborg@sony.com>
+Since
 
-This patch adds further attributes to the event. These attributes are
-helpful to understand the context of the message and can be used
-to filter the events.
+  sysctl: pass kernel pointers to ->proc_handler
 
-There are three common items. Source context, target context and tclass.
-There are also items from the outcome of operation performed.
+we have been pre-allocating a buffer to copy the data from the proc
+handlers into, and then copying that to userspace.  The problem is this
+just blind kmalloc()'s the buffer size passed in from the read, which in
+the case of our 'cat' binary was 64kib.  Order-4 allocations are not
+awesome, and since we can potentially allocate up to our maximum order,
+use vmalloc for these buffers.
 
-An event is similar to:
-           <...>-1309  [002] ....  6346.691689: selinux_audited:
-       requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
-       result=3D-13 ssid=3D315 tsid=3D61
-       scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
-       tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
-
-With systems where many denials are occurring, it is useful to apply a
-filter. The filtering is a set of logic that is inserted with
-the filter file. Example:
- echo "tclass=3D=3D\"file\" && ssid!=3D42" > events/avc/selinux_audited/fil=
-ter
-
-This adds that we only get tclass=3Dfile but not for ssid 42.
-
-The trace can also have extra properties. Adding the user stack
-can be done with
-   echo 1 > options/userstacktrace
-
-Now the output will be
-         runcon-1365  [003] ....  6960.955530: selinux_audited:
-     requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
-     result=3D-13 ssid=3D315 tsid=3D61
-     scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
-     tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
-          runcon-1365  [003] ....  6960.955560: <user stack trace>
- =3D>  <00007f325b4ce45b>
- =3D>  <00005607093efa57>
-
-Note that the ssid is the internal numeric representation of scontext
-and tsid is numeric for tcontext. They are useful for filtering.
-
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
-v2 changes:
-- update changelog to include usage examples
+ fs/proc/proc_sysctl.c  |  6 +++---
+ include/linux/string.h |  1 +
+ mm/util.c              | 26 ++++++++++++++++++++++++++
+ 3 files changed, 30 insertions(+), 3 deletions(-)
 
- include/trace/events/avc.h | 41 ++++++++++++++++++++++++++++----------
- security/selinux/avc.c     | 22 +++++++++++---------
- 2 files changed, 44 insertions(+), 19 deletions(-)
-
-diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
-index 07c058a9bbcd..ac5ef2e1c2c5 100644
---- a/include/trace/events/avc.h
-+++ b/include/trace/events/avc.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 6c1166ccdaea..207ac6e6e028 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -571,13 +571,13 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+ 		goto out;
+ 
+ 	if (write) {
+-		kbuf = memdup_user_nul(ubuf, count);
++		kbuf = vmemdup_user_nul(ubuf, count);
+ 		if (IS_ERR(kbuf)) {
+ 			error = PTR_ERR(kbuf);
+ 			goto out;
+ 		}
+ 	} else {
+-		kbuf = kzalloc(count, GFP_KERNEL);
++		kbuf = kvzalloc(count, GFP_KERNEL);
+ 		if (!kbuf)
+ 			goto out;
+ 	}
+@@ -600,7 +600,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+ 
+ 	error = count;
+ out_free_buf:
+-	kfree(kbuf);
++	kvfree(kbuf);
+ out:
+ 	sysctl_head_finish(head);
+ 
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 9b7a0632e87a..aee3689fb865 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -12,6 +12,7 @@
+ extern char *strndup_user(const char __user *, long);
+ extern void *memdup_user(const void __user *, size_t);
+ extern void *vmemdup_user(const void __user *, size_t);
++extern void *vmemdup_user_nul(const void __user *, size_t);
+ extern void *memdup_user_nul(const void __user *, size_t);
+ 
  /*
-- * Author: Thi=C3=A9baud Weksteen <tweek@google.com>
-+ * Authors:	Thi=C3=A9baud Weksteen <tweek@google.com>
-+ *		Peter Enderborg <Peter.Enderborg@sony.com>
-  */
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM avc
-@@ -12,23 +13,43 @@
-=20
- TRACE_EVENT(selinux_audited,
-=20
--	TP_PROTO(struct selinux_audit_data *sad),
-+	TP_PROTO(struct selinux_audit_data *sad,
-+		char *scontext,
-+		char *tcontext,
-+		const char *tclass
-+	),
-=20
--	TP_ARGS(sad),
-+	TP_ARGS(sad, scontext, tcontext, tclass),
-=20
- 	TP_STRUCT__entry(
--		__field(unsigned int, tclass)
--		__field(unsigned int, audited)
-+		__field(u32, requested)
-+		__field(u32, denied)
-+		__field(u32, audited)
-+		__field(int, result)
-+		__string(scontext, scontext)
-+		__string(tcontext, tcontext)
-+		__string(tclass, tclass)
-+		__field(u32, ssid)
-+		__field(u32, tsid)
- 	),
-=20
- 	TP_fast_assign(
--		__entry->tclass =3D sad->tclass;
--		__entry->audited =3D sad->audited;
-+		__entry->requested	=3D sad->requested;
-+		__entry->denied		=3D sad->denied;
-+		__entry->audited	=3D sad->audited;
-+		__entry->result		=3D sad->result;
-+		__entry->ssid		=3D sad->ssid;
-+		__entry->tsid		=3D sad->tsid;
-+		__assign_str(tcontext, tcontext);
-+		__assign_str(scontext, scontext);
-+		__assign_str(tclass, tclass);
- 	),
-=20
--	TP_printk("tclass=3D%u audited=3D%x",
--		__entry->tclass,
--		__entry->audited)
-+	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d ssid=
-=3D%u tsid=3D%u scontext=3D%s tcontext=3D%s tclass=3D%s",
-+		__entry->requested, __entry->denied, __entry->audited, __entry->result,
-+		__entry->ssid, __entry->tsid, __get_str(scontext), __get_str(tcontext),
-+		__get_str(tclass)
-+	)
- );
-=20
- #endif
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index b0a0af778b70..7de5cc5169af 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -705,35 +705,39 @@ static void avc_audit_post_callback(struct audit_buff=
-er *ab, void *a)
- {
- 	struct common_audit_data *ad =3D a;
- 	struct selinux_audit_data *sad =3D ad->selinux_audit_data;
--	char *scontext;
-+	char *scontext =3D NULL;
-+	char *tcontext =3D NULL;
-+	const char *tclass =3D NULL;
- 	u32 scontext_len;
-+	u32 tcontext_len;
- 	int rc;
-=20
--	trace_selinux_audited(sad);
--
- 	rc =3D security_sid_to_context(sad->state, sad->ssid, &scontext,
- 				     &scontext_len);
- 	if (rc)
- 		audit_log_format(ab, " ssid=3D%d", sad->ssid);
- 	else {
- 		audit_log_format(ab, " scontext=3D%s", scontext);
--		kfree(scontext);
- 	}
-=20
--	rc =3D security_sid_to_context(sad->state, sad->tsid, &scontext,
--				     &scontext_len);
-+	rc =3D security_sid_to_context(sad->state, sad->tsid, &tcontext,
-+				     &tcontext_len);
- 	if (rc)
- 		audit_log_format(ab, " tsid=3D%d", sad->tsid);
- 	else {
--		audit_log_format(ab, " tcontext=3D%s", scontext);
--		kfree(scontext);
-+		audit_log_format(ab, " tcontext=3D%s", tcontext);
- 	}
-=20
--	audit_log_format(ab, " tclass=3D%s", secclass_map[sad->tclass-1].name);
-+	tclass =3D secclass_map[sad->tclass-1].name;
-+	audit_log_format(ab, " tclass=3D%s", tclass);
-=20
- 	if (sad->denied)
- 		audit_log_format(ab, " permissive=3D%u", sad->result ? 0 : 1);
-=20
-+	trace_selinux_audited(sad, scontext, tcontext, tclass);
-+	kfree(tcontext);
-+	kfree(scontext);
+diff --git a/mm/util.c b/mm/util.c
+index 5ef378a2a038..4de3b4b0f358 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -208,6 +208,32 @@ void *vmemdup_user(const void __user *src, size_t len)
+ }
+ EXPORT_SYMBOL(vmemdup_user);
+ 
++/**
++ * vmemdup_user - duplicate memory region from user space and NUL-terminate
++ *
++ * @src: source address in user space
++ * @len: number of bytes to copy
++ *
++ * Return: an ERR_PTR() on failure.  Result may be not
++ * physically contiguous.  Use kvfree() to free.
++ */
++void *vmemdup_user_nul(const void __user *src, size_t len)
++{
++	void *p;
 +
- 	/* in case of invalid context report also the actual context string */
- 	rc =3D security_sid_to_context_inval(sad->state, sad->ssid, &scontext,
- 					   &scontext_len);
---=20
-2.28.0.236.gb10cc79966-goog
++	p = kvmalloc(len, GFP_USER);
++	if (!p)
++		return ERR_PTR(-ENOMEM);
++
++	if (copy_from_user(p, src, len)) {
++		kvfree(p);
++		return ERR_PTR(-EFAULT);
++	}
++
++	return p;
++}
++EXPORT_SYMBOL(vmemdup_user_nul);
++
+ /**
+  * strndup_user - duplicate an existing string from user space
+  * @s: The string to duplicate
+-- 
+2.24.1
 
