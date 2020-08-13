@@ -2,100 +2,94 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA2BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76AF20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EADA20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:03:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wUkEP4gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHMMCk (ORCPT
+        id S1726249AbgHMMDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:02:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33922 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726570AbgHML7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:59:19 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 43880746B97B89570544;
-        Thu, 13 Aug 2020 19:59:10 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
- 19:59:04 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>, <willemb@google.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: correct zerocopy refcnt with newly allocated UDP or RAW uarg
-Date:   Thu, 13 Aug 2020 07:58:00 -0400
-Message-ID: <20200813115800.4546-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 13 Aug 2020 08:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgHMMBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:01:35 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AE4C061757;
+        Thu, 13 Aug 2020 05:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i41Yc10MxJ8SD/RmIm1p0LXK6Fe4vVxPBwR0fO9tHsU=; b=wUkEP4gznD8yhOKXfehUrg6u+p
+        4PCOcBf33WvByOdBvWwLPp6R8/WwxJlEYyQ3CY9ej+Zc55i7MERAd+5CuKACgEOMwJkJpICIjvu6D
+        4s1dRmOfQoghu7xdIO1fYpsEAEON7cEh4NTueg4+NtGD15C7xchhSji6EQqceguowmv1PUXzJ7Nts
+        a0pAqKr+kEI15dkeOFh7FsqIvbIZKziG+7HYp+GACowqL/3hO1OafqdRTUrgk5GEc79FmzQH2KoHP
+        UeKSdlIY4bl8Zozt8Pc5cSWRv3VGquq0YjgcJVVK0c7xUZQ0+VQiSFpdainJpwi+h0C1SJd8c8qzl
+        p9a5QjuA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6Bu5-0003VD-3H; Thu, 13 Aug 2020 12:00:17 +0000
+Date:   Thu, 13 Aug 2020 13:00:17 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     peterz@infradead.org
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jacob Wen <jian.w.wen@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: insert a general SMP memory barrier before
+ wake_up_bit()
+Message-ID: <20200813120017.GH17456@casper.infradead.org>
+References: <20200813024438.13170-1-jian.w.wen@oracle.com>
+ <20200813073115.GA15436@infradead.org>
+ <20200813114050.GW2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813114050.GW2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The var extra_uref is introduced to pass the initial reference taken in
-sock_zerocopy_alloc to the first generated skb. But now we may fail to pass
-the initial reference with newly allocated UDP or RAW uarg when the skb is
-zcopied.
+On Thu, Aug 13, 2020 at 01:40:50PM +0200, peterz@infradead.org wrote:
+> On Thu, Aug 13, 2020 at 08:31:15AM +0100, Christoph Hellwig wrote:
+> > On Thu, Aug 13, 2020 at 10:44:38AM +0800, Jacob Wen wrote:
+> > > wake_up_bit() uses waitqueue_active() that needs the explicit smp_mb().
+> > 
+> > Sounds like the barrier should go into wake_up_bit then..
+> 
+> Oh, thanks for reminding me..
+> 
+> https://lkml.kernel.org/r/20190624165012.GH3436@hirez.programming.kicks-ass.net
+> 
+> I'll try and get back to that.
 
-If the skb is zcopied, we always set extra_uref to false. This is fine with
-reallocted uarg because no extra ref is taken by UDP and RAW zerocopy. But
-if uarg is newly allocated via sock_zerocopy_alloc(), we lost the initial
-reference because extra_uref is false and we missed to pass it to the first
-generated skb.
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -340,11 +340,8 @@ static int btmtkuart_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ 	if (hdr->evt == HCI_EV_VENDOR) {
+ 		if (test_and_clear_bit(BTMTKUART_TX_WAIT_VND_EVT,
+-				       &bdev->tx_state)) {
+-			/* Barrier to sync with other CPUs */
+-			smp_mb__after_atomic();
++				       &bdev->tx_state))
+ 			wake_up_bit(&bdev->tx_state, BTMTKUART_TX_WAIT_VND_EVT);
+-		}
+ 	}
+ 
+ 	return 0;
 
-To fix this, we should set extra_uref to true if UDP or RAW uarg is newly
-allocated when the skb is zcopied.
+It'd be nice to be able to write:
 
-Fixes: 522924b58308 ("net: correct udp zerocopy refcnt also when zerocopy only on append")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ipv4/ip_output.c  | 4 +++-
- net/ipv6/ip6_output.c | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+	if (hdr->evt == HCI_EV_VENDOR)
+		test_clear_and_wake_up_bit(&bdev->tx_state,
+						BTMTKUART_TX_WAIT_VND_EVT);
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 61f802d5350c..78d3b5d48617 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1019,7 +1019,9 @@ static int __ip_append_data(struct sock *sk,
- 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
- 		if (!uarg)
- 			return -ENOBUFS;
--		extra_uref = !skb_zcopy(skb);	/* only ref on new uarg */
-+		/* Only ref on newly allocated uarg. */
-+		if (!skb_zcopy(skb) || (sk->sk_type != SOCK_STREAM && skb_zcopy(skb) != uarg))
-+			extra_uref = true;
- 		if (rt->dst.dev->features & NETIF_F_SG &&
- 		    csummode == CHECKSUM_PARTIAL) {
- 			paged = true;
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index c78e67d7747f..0f82923239a9 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1476,7 +1476,9 @@ static int __ip6_append_data(struct sock *sk,
- 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
- 		if (!uarg)
- 			return -ENOBUFS;
--		extra_uref = !skb_zcopy(skb);	/* only ref on new uarg */
-+		/* Only ref on newly allocated uarg. */
-+		if (!skb_zcopy(skb) || (sk->sk_type != SOCK_STREAM && skb_zcopy(skb) != uarg))
-+			extra_uref = true;
- 		if (rt->dst.dev->features & NETIF_F_SG &&
- 		    csummode == CHECKSUM_PARTIAL) {
- 			paged = true;
--- 
-2.19.1
-
+... maybe with a better name.
