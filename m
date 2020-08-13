@@ -2,197 +2,188 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A9AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2ECC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4994820829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597341576;
-	bh=CFADI5K3ybqlcI8c32cfvSt3eSFxRcdgnW/IUHOEoBQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bUzUvM2OM16Y+9W9ZzrKV8IdoDkp0n85WrPshO2npYI4xD45j5n32rNuJ52k7KRAK
-	 C+Te77er33ANKjvRetdYUriIguSrGUr75+QfufVyznC9xb31xUxP0AINULfaY1rTrv
-	 8vJrjE6OJvEVRAolktC0GtCyWUCaEP3M7DxUSlPI=
+	by mail.kernel.org (Postfix) with ESMTP id 7231020774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scDYOzoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHMR7f (ORCPT
+        id S1726518AbgHMSCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgHMR7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:59:34 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF132078D;
-        Thu, 13 Aug 2020 17:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597341573;
-        bh=CFADI5K3ybqlcI8c32cfvSt3eSFxRcdgnW/IUHOEoBQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A/rtatHY8zbxQCJNEvrAKDbUf6pObl+Ye84cXF2q7CRd0h6vC7MfxK+hMRgde2x7W
-         UxkKBq/1LN6WZ8eMxAG6QEd3N9jesHDIdJlY4sHd5+WVLvZdhE5S0nS3yR96dppNXu
-         gNNsCaG81ubAsaYs5P9khhRJ8Q2sez93yO/ydg4I=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6HVj-001yy9-UI; Thu, 13 Aug 2020 18:59:32 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Aug 2020 18:59:31 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
-In-Reply-To: <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
-References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
- <20200813090324.GB9829@willie-the-truck>
- <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
- <20200813094041.GA9894@willie-the-truck>
- <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
- <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <8ffd22d5926aedda0c9fa6ea429fd84e@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: saiprakash.ranjan@codeaurora.org, will@kernel.org, catalin.marinas@arm.com, andre.przywara@arm.com, mark.rutland@arm.com, suzuki.poulose@arm.com, swboyd@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Thu, 13 Aug 2020 14:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMSCu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 14:02:50 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D61C061757;
+        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g19so7131350ejc.9;
+        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
+        b=scDYOzozLAVzFpo2tbfIot2rR9/9IltAD0tuAFuZ7Q71nxeQbbQNCj22+aLiCqCYPQ
+         InGoDHYkp1iGqDUMlAuLtnqGrF2877ip1R9rbaQtVY7ZEHNotMQOeppIeqM/PtfskRMU
+         KvVpOm/lImRYi24xXHTpTqfuFjxCnrXVmFy36Hxa5+6bg5DIFQn4EIKo2SFkDYS3cFR0
+         IlgXGiudJyvnzZqs9lkCGMFd2GHvaVbMNAzKHXl7FxW5q1b5y5IH+w2iRy3ZVWO+xnx4
+         nm6tNRw9wlSmmNKr1mgK7BhWW7ucPcSE5m2hYkdNbbQ+i6zy5zNkZ6zEhSyYA2YD0fhe
+         BoHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
+        b=cz4Agg23y1egc/4VYvSCljm7v2PzW5ebxhZbLCPKwHxmwRoMPN6q6A8KhzUj54UJpj
+         q91ZD4kpzYnfiD8Bj7fLF97/mWfWTdEUa9aijmchyeWWgZdUn+7x7+dRgNtqq6OLMY66
+         2RyQnV2hr02H8/u7OFuHKlW8xoRcWLY00hrhD7m8pegxGlOcTDETMIed+1dcLESILdii
+         X55wO8MDJv3g2oObO35Zud4l/vHXNQfSoyfUtMlCSKRgAY11vqlUFosl8rwmFWn4GO2c
+         aROPsJ3vzIhDY7tKefCdcrpIvjSMAK/AJ2EKQiS3Z22g6dU9N9gCGjvFGNHROojM/MJX
+         erKA==
+X-Gm-Message-State: AOAM533gUpEm55gVwg4+HWmsyUjn/pxitYnUYjYFUTMQnMHlepSsaPAC
+        7ccBxjRih+qUelJQGzi2q30=
+X-Google-Smtp-Source: ABdhPJxM58xedodB7DOsuuj57AwE9aKU+sUl+gC9XA4qMAErBNxt/zB0UcR4VAT9G/tRXl9btm+U4Q==
+X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr5917864ejr.400.1597341768898;
+        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id ci27sm5131051ejc.23.2020.08.13.11.02.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: update cpu supplies on rk3288
+Date:   Thu, 13 Aug 2020 20:02:41 +0200
+Message-Id: <20200813180241.14660-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13 13:33, Sai Prakash Ranjan wrote:
-> On 2020-08-13 16:09, Marc Zyngier wrote:
->> On 2020-08-13 10:40, Will Deacon wrote:
->>> On Thu, Aug 13, 2020 at 02:49:37PM +0530, Sai Prakash Ranjan wrote:
->>>> On 2020-08-13 14:33, Will Deacon wrote:
->>>> > On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
->>>> > > KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
->>>> > > bits set and are spectre-v2 safe. But on big.LITTLE systems where
->>>> > > they are coupled with other CPU cores such as the KRYO4XX silver
->>>> > > based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
->>>> > > bits set, the system wide safe value will be set to the lowest value
->>>> > > of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
->>>> > > ID_AA64PFR0_EL1.
->>>> > >
->>>> > > This is a problem when booting a guest kernel on gold CPU cores
->>>> > > where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
->>>> > > and consider them as vulnerable for Spectre variant 2 due to system
->>>> > > wide safe value which is used in kvm emulation code when reading id
->>>> > > registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
->>>> > > for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
->>>> > > list which will be consulted even when the sanitised read reports
->>>> > > that CSV2 bits are not set for KRYO4XX gold cores.
->>>> > >
->>>> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
->>>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>>> > > ---
->>>> > >  arch/arm64/kernel/cpu_errata.c | 1 +
->>>> > >  1 file changed, 1 insertion(+)
->>>> > >
->>>> > > diff --git a/arch/arm64/kernel/cpu_errata.c
->>>> > > b/arch/arm64/kernel/cpu_errata.c
->>>> > > index 6bd1d3ad037a..6cbdd2d98a2a 100644
->>>> > > --- a/arch/arm64/kernel/cpu_errata.c
->>>> > > +++ b/arch/arm64/kernel/cpu_errata.c
->>>> > > @@ -545,6 +545,7 @@ static const struct midr_range
->>>> > > spectre_v2_safe_list[] = {
->>>> > >  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
->>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
->>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
->>>> > > +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
->>>> >
->>>> > We shouldn't be putting CPUs in the safe list when they have CSV2
->>>> > reporting
->>>> > that they are mitigated in hardware, so I don't think this is the right
->>>> > approach.
->>>> >
->>>> 
->>>> Ok but the only thing I find wrong in this approach is that it is a
->>>> redundant
->>>> information because CSV2 is already advertising the mitigation, but 
->>>> again
->>>> CSV2 check is done first so it doesn't really hurt to add it to the 
->>>> safe
->>>> list because we already know that it is safe.
->>> 
->>> It simply doesn't scale. That's why CSV2 exists in the first place, 
->>> so we
->>> don't have to modify the kernel everytime a new CPU is invented.
->>> 
->>>> > Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
->>>> > physical CPUs without CSV2 set are on the safe list. But then again, KVM
->>>> > has always been slightly in denial about big.LITTLE because you can't
->>>> > sensibly expose it to a guest if there are detectable differences...
->>>> >
->>>> 
->>>> Sorry but I don't see how the guest kernel will see the CSV2 bits 
->>>> set for
->>>> gold CPU cores without actually adding them to the safe list or 
->>>> reading the
->>>> not sanitised value of ID_AA64PFR0_EL1 ?
->>> 
->>> Well that's for somebody to figure out in the patch. I'm just saying 
->>> that
->>> adding cores to the safe list when they already have a CSV2 field 
->>> conveying
->>> the same information is the wrong approach. The right appproach is 
->>> for KVM
->>> to expose CSV2 as set when the system is not affected by the erratum.
->> 
->> A sensible way to fix this would be with something like that:
->> 
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 077293b5115f..2735db21ff0d 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1131,6 +1131,9 @@ static u64 read_id_reg(const struct kvm_vcpu 
->> *vcpu,
->>  		if (!vcpu_has_sve(vcpu))
->>  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
->>  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
->> +		if (!(val & (0xfUL << ID_AA64PFR0_CSV2_SHIFT)) &&
->> +		    get_spectre_v2_workaround_state() == 
->> ARM64_BP_HARDEN_NOT_REQUIRED)
->> +			val |= (1UL << ID_AA64PFR0_CSV2_SHIFT);
->>  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
->>  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
->>  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
->> 
-> 
-> Thanks Marc, I gave this a go on SC7180 where the issue was seen and
-> this fix is good.
-> 
-> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+The use of cpu0-supply for cpu0 alone is deprecated,
+so add cpu-supply to each cpu separately and
+update all existing rk3288 boards that use this property.
 
-There is still a problem with this approach. A late CPU could
-come up after a guest has been started. If that CPU identified
-as vulnerable by the host kernel, get_spectre_v2_workaround_state()
-will return a different value, breaking the guest (or more
-likely, leaving it exposed to Spectre-v2 attacks).
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-miqi.dts     | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-popmetal.dts | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-r89.dts      | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-vyasa.dts    | 14 +++++++++++++-
+ 4 files changed, 52 insertions(+), 4 deletions(-)
 
-We'd need to disable the late onlining of CPUs that would change
-the mitigation state, and this is... ugly.
-
-         M.
+diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
+index 213c9eb84..8a3992105 100644
+--- a/arch/arm/boot/dts/rk3288-miqi.dts
++++ b/arch/arm/boot/dts/rk3288-miqi.dts
+@@ -81,7 +81,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
+diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+index 6a5194039..160ed8b93 100644
+--- a/arch/arm/boot/dts/rk3288-popmetal.dts
++++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+@@ -103,7 +103,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
+diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+index a258c7ae5..e5ba901c7 100644
+--- a/arch/arm/boot/dts/rk3288-r89.dts
++++ b/arch/arm/boot/dts/rk3288-r89.dts
+@@ -91,7 +91,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &gmac {
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index 1a20854a1..aa50f8ed4 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -125,7 +125,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
 -- 
-Jazz is not dead. It just smells funny...
+2.11.0
+
