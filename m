@@ -2,111 +2,127 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6351C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4613C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA1620791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F4720791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:39:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FfWWYol9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g3AF9+1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHMTip (ORCPT
+        id S1726648AbgHMTj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:38:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:49393 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbgHMTio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:38:44 -0400
-IronPort-SDR: /8VVSEtINFwOPBsvCo9HpdrL/w64ZWmE2+6EbKs40dAKAyZGCYnGMnmgsHm3Zzv5soUlF+VoBx
- Zd2q9QNDvSyg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="154276590"
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="154276590"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:38:43 -0700
-IronPort-SDR: DzrqYHtiVYVsyOU+gg7XI4CBfhv+F7ihvlSrjxRBmKV5NZwQT11lZZHyixZHyrx8Iww6683MGW
- UZglPogzVZJA==
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="470336080"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:38:43 -0700
-Date:   Thu, 13 Aug 2020 12:38:42 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200813193842.GV29439@linux.intel.com>
-References: <DD7996A6-CBA3-47CE-8DF2-9A6ADD3FE89E@amacapital.net>
- <C107C4D3-1730-41BA-960C-C75B32DB43A0@amacapital.net>
+        Thu, 13 Aug 2020 15:39:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60590 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgHMTj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 15:39:27 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597347566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cHxWr4K717iNYyicWp7dXoDXvMnNK+4qcSlmZq+2kjA=;
+        b=FfWWYol9ZfI6+cPX/qTj+Y64u1qcWbBtfIZuxxspIlI4J9yTWUcrkR2lL4t4JjhCgKw50M
+        XJ6KTF8qqlXMROJMCmNj5jlU5EUO7t2Ptc/8st6bG0K4qpY3NChTwadVt4fUo9mPEhJuTm
+        1bBiFizep1x9h3Q/aDsu971eF5eFZHhaaq/U/7yCDwHig1JiIdv09QN0ZgG8hY4sxWHdf0
+        sMxnU3x7IKJuJwF9ZEQ2JckbAwz5WiigERa9qZaOg1xQhsobsA2obP2JtpCaEGDvrsV1W7
+        nM7hxsj4Evc1fHDAwByIG31trNN2Xp5nLJNdKVnQ6K7hflv1C96ON48FRps4yQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597347566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cHxWr4K717iNYyicWp7dXoDXvMnNK+4qcSlmZq+2kjA=;
+        b=g3AF9+1CEEkBzkddAs3juyTKp1K2oX16sBKJyzRYDv1pidIZj+oXJjHffR/kEv/ofAxOGB
+        +5AeXwKGAT7MEgDw==
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] af_packet: TPACKET_V3: fix fill status rwlock imbalance
+Date:   Thu, 13 Aug 2020 21:45:25 +0206
+Message-Id: <20200813193925.32477-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <C107C4D3-1730-41BA-960C-C75B32DB43A0@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 08:16:54AM -0700, Andy Lutomirski wrote:
-> 
-> > On Aug 10, 2020, at 5:52 PM, Andy Lutomirski <luto@amacapital.net> wrote:
-> > 
-> > ﻿
-> >>> On Aug 10, 2020, at 4:48 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> >>> 
-> >>> ﻿On Mon, Aug 10, 2020 at 04:08:46PM -0700, Andy Lutomirski wrote:
-> >>> What am I missing?  I still don't really understand why we are
-> >>> supporting this mechanism at all.  Just the asm code to invoke the
-> >>> callback seems to be about half of the entire function.
-> >> 
-> >> Because the Intel SDK (and other SDKs?) wants to use the host stack to pass
-> >> parameters out of the enclave.
-> > 
-> > Ugh, right.  I forgot about that particular abomination.
-> > 
-> > I suppose that passing a context pointer would be reasonable.
-> 
-> The alternative would be to pass in a parameter that gets put in RSP before
-> entering the enclave. The idea is that the untrusted runtime would allocate a
-> couple pages with guard pages at either end, and enclaves using the
-> regrettable arguments-on-the-stack scheme would end up using the alternative
-> stack.
-> 
-> At the end of the day, none of this really matters too much. Languages that
-> can do inline asm but can’t do container_of() can get fixed or use
-> workarounds.
+After @blk_fill_in_prog_lock is acquired there is an early out vnet
+situation that can occur. In that case, the rwlock needs to be
+released.
 
-So, is your "official" opinion
+Also, since @blk_fill_in_prog_lock is only acquired when @tp_version
+is exactly TPACKET_V3, only release it on that exact condition as
+well.
 
-   Go update the vDSO to allow passing an arbitrary pointer.
+And finally, add sparse annotation so that it is clearer that
+prb_fill_curr_block() and prb_clear_blk_fill_status() are acquiring
+and releasing @blk_fill_in_prog_lock, respectively. sparse is still
+unable to understand the balance, but the warnings are now on a
+higher level that make more sense.
 
-or
+Fixes: 632ca50f2cbd ("af_packet: TPACKET_V3: replace busy-wait loop")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ net/packet/af_packet.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-   Eh, don't bother.
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 0b8160d1a6e0..479c257ded73 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -941,6 +941,7 @@ static int prb_queue_frozen(struct tpacket_kbdq_core *pkc)
+ }
+ 
+ static void prb_clear_blk_fill_status(struct packet_ring_buffer *rb)
++	__releases(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket_kbdq_core *pkc  = GET_PBDQC_FROM_RB(rb);
+ 
+@@ -989,6 +990,7 @@ static void prb_fill_curr_block(char *curr,
+ 				struct tpacket_kbdq_core *pkc,
+ 				struct tpacket_block_desc *pbd,
+ 				unsigned int len)
++	__acquires(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket3_hdr *ppd;
+ 
+@@ -2286,8 +2288,11 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	if (do_vnet &&
+ 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
+ 				    sizeof(struct virtio_net_hdr),
+-				    vio_le(), true, 0))
++				    vio_le(), true, 0)) {
++		if (po->tp_version == TPACKET_V3)
++			prb_clear_blk_fill_status(&po->rx_ring);
+ 		goto drop_n_account;
++	}
+ 
+ 	if (po->tp_version <= TPACKET_V2) {
+ 		packet_increment_rx_head(po, &po->rx_ring);
+@@ -2393,7 +2398,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
+ 		spin_unlock(&sk->sk_receive_queue.lock);
+ 		sk->sk_data_ready(sk);
+-	} else {
++	} else if (po->tp_version == TPACKET_V3) {
+ 		prb_clear_blk_fill_status(&po->rx_ring);
+ 	}
+ 
+-- 
+2.20.1
+
