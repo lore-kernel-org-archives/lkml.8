@@ -2,149 +2,167 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550A4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A26C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32535206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F7920781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xe+P9dZ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgQJdDhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHMKAJ (ORCPT
+        id S1726603AbgHMKAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
+        Thu, 13 Aug 2020 06:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMKAI (ORCPT
+        with ESMTP id S1726224AbgHMKAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:00:08 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40323C061757;
-        Thu, 13 Aug 2020 03:00:08 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id p13so5051676ilh.4;
-        Thu, 13 Aug 2020 03:00:08 -0700 (PDT)
+        Thu, 13 Aug 2020 06:00:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48665C061757;
+        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 2so2543687pjx.5;
+        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HBBtCO4sYM5cGR1OJM1rAIGM4XRmcSnzOKplJZRaOEc=;
-        b=Xe+P9dZ0OSVuCym8sAxPQNreP5MjursDti/gFYeaftd5qnAd6Izt9VC+6bixwPH+pv
-         WxzgGszSAp1+JVOTYygBvRvTfPXfVeH7BvOsgua8WFWP7gxiFq6yUFNye6tPXa6LJYd8
-         xZtWUurhXUagXKlmKNSyLG2E2wbNBaQG8wfES3yYNLqlWlMwbv1Xm6HhqSVbfXxTCas2
-         l8YndA9nsuJ69i8eJHq6Yv5g4tO+8OSg3LvQapOGcDpQ7/6aXjWEU7oELCHeUClUN3Zy
-         H4aaDimtP0/uG2xaHn4OhukVIEeb1SkQK89TQjXvIp11Aa4Lj/C8JPXkhZSOmRohjb8P
-         FxAQ==
+        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
+        b=mgQJdDhFJsY+4ZZX7nEd7PUwFxnI/GND9MTZddYsJCzitgcZ8MJKOwXL8SWS8NZDjY
+         R3WQ0U7ZX6RWtqId3eSKxzrexiVUkm2RMXbUo5ZS1MN3yIse3C5RWZVhXDKYtP/GuldE
+         mgF1hswi5xwPoWYi3izh0o7+NrQ5IYVWkka5O99Ga5km9xVUt8hYGWD0FOWJj10lyO0b
+         8B1ajYPiFpCYyMoGEfYJOVJdE8b9GuCrYYoF6wwfPEJq+HWjmJLHJGB7GhGKLpDXgCtg
+         cdp0MyDny9Xmw6tbbDHfgqlm6hkES9WGQrf1WUbgF4aHv7BGVPCOlR7iJy1eubUGuXiv
+         tFJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HBBtCO4sYM5cGR1OJM1rAIGM4XRmcSnzOKplJZRaOEc=;
-        b=TSbkyh9eyGUMJO215Dj9KYDuOyK4/Umrmh8OzJ0MAash/5Wt3QwyswqExymvtG5zrG
-         QY2v9PswHunSfuNQlR1+vM3UD4OfDrRViTvHtUDjV/Bit58+nrCZwKoPuVomtSPMzlz8
-         wVF3ZDtN85YLgOQW6DulyJTV8k/TUWbeWVfpczOyp1jPfVx1tiVLTvN/NcwBg6jb9QL+
-         NFM5um62LcQi83fpG7Y0j1+WesbCp4S7DOzRpEXbk92M3fXVOVXCzz1ymXSHysjRkLZw
-         kXvDVCSk/PVwTC4uxlBXE4Xe9e96KCvh+I0Jigk12IpGKJ4WnPiClc+ZhZZ5wSGuNbCv
-         Azhg==
-X-Gm-Message-State: AOAM531ds8nsczKKoWNFk+MEccAImUqE8q/nYtS2AYl6oUBq7EwFOkoR
-        N/+GawOrUsjya/LxuTU0I3GkFp9RMih+pThfC/g=
-X-Google-Smtp-Source: ABdhPJyt8lWpNkTHkUK9B0ljcj5r7jnaP8ULbYH0x7eFYLRekeCXt/sOJIy9rXNdFS4t8tfgET7/n+I6kpIRkxRD+w8=
-X-Received: by 2002:a92:4a02:: with SMTP id m2mr4077272ilf.258.1597312807549;
- Thu, 13 Aug 2020 03:00:07 -0700 (PDT)
+        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
+        b=GDjo2O1wdhWqYcaZvuVzIuHGKODOOGhWimoklPRQOXXNReBJjSwiDuvg1WO0ARkmp/
+         VvJ6+ZUAkaHLavrYVnlmbyafrhdp3g9vWHy74KZwfjGPLNVti54oQJXXVL0ZC+sSl3bU
+         +5sQKG1IqfBblAVLedikSnvu36oPbFsGPDVbGaTWx1K8vH/anv6F6/8DC6u39a1zzSqC
+         c96zWOTZ/FD53H31DeDf4elNdmT9/8GDOfuS6JVFQBaqkIuqcK5pGNbnO3cvBU/agq+m
+         BcucrvB7hC/OBRg1yVraZMM6kFigHPHLMq10dcMiDBFto9AuYkuADEhH6HYOD6JjNBDy
+         lAHQ==
+X-Gm-Message-State: AOAM531guplY+wkgjDHeGbw4p/96/5cv773OZ6et45RdIR8qOzazcLDo
+        89vMdHtUJdM4LTaZos8tQ4BLHUrPOLzZNxgcmA+HwaKO1Kw=
+X-Google-Smtp-Source: ABdhPJz38GeLmThoezC6lraEWn1MkImxxv3Tn3zbkSqQi3x5qtMSX50ThTooPvM8JHxj3dDmc1o23Vd8TYq7Iec2SNE=
+X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr3178004plb.255.1597312839745;
+ Thu, 13 Aug 2020 03:00:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com> <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
- <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
-In-Reply-To: <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Thu, 13 Aug 2020 19:59:56 +1000
-Message-ID: <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
+References: <20200810065128.3324-3-fengping.yu@mediatek.com> <20200813005509.GU1665100@dtor-ws>
+In-Reply-To: <20200813005509.GU1665100@dtor-ws>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Aug 2020 13:00:24 +0300
+Message-ID: <CAHp75VfKckoK4facC3nMDLLUYUtd5Y66+E5xgkVpVYfyTTa9Hg@mail.gmail.com>
+Subject: Re: [PATCH v17 2/3] drivers: input: keyboard: Add mtk keypad driver
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Fengping Yu <fengping.yu@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 7:00 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
->
->
-> On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
-> > On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-> >> *snip*
-> >> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> >> index 3902c9f..04ac76d 100644
-> >> --- a/arch/s390/pci/pci.c
-> >> +++ b/arch/s390/pci/pci.c
-> >> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
-> >>  {
-> >>         struct zpci_dev *zdev = to_zpci(pdev);
-> >>
-> >> +       /*
-> >> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
-> >> +        * detached from its parent PF.  We rely on firmware emulation to
-> >> +        * provide underlying PF details.
-> >> +        */
-> >> +       if (zdev->vfn && !zdev->zbus->multifunction)
-> >> +               pdev->detached_vf = 1;
+On Thu, Aug 13, 2020 at 3:57 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Mon, Aug 10, 2020 at 02:51:28PM +0800, Fengping Yu wrote:
+> > From: "fengping.yu" <fengping.yu@mediatek.com>
 > >
-> > The enable hook seems like it's a bit too late for this sort of
-> > screwing around with the pci_dev. Anything in the setup path that
-> > looks at ->detached_vf would see it cleared while anything that looks
-> > after the device is enabled will see it set. Can this go into
-> > pcibios_add_device() or a fixup instead?
-> >
+> > This patch adds matrix keypad support for Mediatek SoCs.
+
+...
+
+> > +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
+> > +{
+> > +     struct mtk_keypad *keypad = dev_id;
+> > +     unsigned short *keycode = keypad->input_dev->keycode;
+> > +     DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
+> > +     DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
+> > +     int bit_nr;
+> > +     int pressed;
+> > +     unsigned short code;
+> > +
+> > +     regmap_bulk_read(keypad->regmap, MTK_KPD_MEM,
+> > +                     new_state, MTK_KPD_NUM_MEMS);
+> > +
+> > +     bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
+> > +
+> > +     for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
 >
-> This particular check could go into pcibios_add_device() yes.
-> We're also currently working on a slight rework of how
-> we establish the VF to parent PF linking including the sysfs
-> part of that. The latter sadly can only go after the sysfs
-> for the virtfn has been created and that only happens
-> after all fixups. We would like to do both together because
-> the latter sets pdev->is_virtfn which I think is closely related.
+> Should we be explicit:
 >
-> I was thinking of starting another discussion
-> about adding a hook that is executed just after the sysfs entries
-> for the PCI device are created but haven't yet.
+>                 if (bit_nr % 32 >= 16) // or "if ((bit_nr / 16) % 2)"
+>                         continue;
+>
+> so that we sure we do not trip over garbage (if any) in the unused
+> bits?
 
-if all you need is sysfs then pcibios_bus_add_device() or a bus
-notifier should work
+Shouldn't we rather rely on the fact that bitmap API explicitly takes
+a bit number as an argument. What garbage are you thinking of?
+If you are talking about gaps, then probably existing
+for_each_set_clump8() or free size analogue (not yet in upstream,
+though) should be used instead?
 
-> That said pcibios_enable_device() is called before drivers
-> like vfio-pci are enabled
+> > +             /* 1: not pressed, 0: pressed */
+> > +             pressed = !test_bit(bit_nr, new_state);
+> > +             dev_dbg(&keypad->input_dev->dev, "%s",
+> > +                     pressed ? "pressed" : "released");
+> > +
+> > +             /* 32bit register only use low 16bit as keypad mem register */
+> > +             code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
+>
+> This will give index of 16 for (0,0).
 
-Hmm, is that an s390 thing? I was under the impression that drivers
-handled enabling the device rather than assuming the platform did it
-for them. Granted it's usually one of the first things a driver does,
-but there's still scope for surprising behaviour.
+I was also puzzled by this in one of the review rounds, but I don't
+remember what was the explanation.
 
-> and so as long as all uses of pdev->detached_vf
-> are in drivers it should be early enough. AFAIK almost everything
-> dealing with VFs before that is already skipped with pdev->no_vf_scan
-> though.
+> Is this what we want? Hmm, this is
+> all weird... I think we need:
+>
+>                 row = bit_nr / 32;
+>                 col = bit_nr % 32;
+>                 if (col > 15)
+>                         continue;
+>
+>                 // set row_shift in probe() as:
+>                 // keypad_data->row_shift =
+>                 //              get_count_order(keypad_data->n_cols);
+>                 code = keycode[MATRIX_SCAN_CODE(row, col,
+>                                                 keypad_data->row_shift)];
+>
+> This will properly unpack the keymap built by
+> matrix_keypad_build_keymap().
+>
+> > +
+> > +             input_report_key(keypad->input_dev, code, pressed);
+> > +             input_sync(keypad->input_dev);
+> > +
+> > +             dev_dbg(&keypad->input_dev->dev,
+> > +                     "report Linux keycode = %d\n", code);
+> > +     }
+> > +
+> > +     bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
 
-I'm sure it works fine in your particular case. My main gripe is that
-you're adding a flag in a generic structure so people reading the code
-without that context may make assumptions about when it's valid to
-use. The number of pcibios_* hooks we have means that working out when
-and where something happens in the pci setup path usually involves
-going on a ~magical journey~ through generic and arch specific code.
-It's not *that* bad once you've worked out how it all fits together,
-but it's still a pain. If we can initialise stuff before the pci_dev
-is added to the bus it's usually for the better.
-
-Oliver
+-- 
+With Best Regards,
+Andy Shevchenko
