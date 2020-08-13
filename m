@@ -2,154 +2,131 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71091C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89DE20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:22:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zX+uBrde";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4Zz+45My"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA5020768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597325028;
+	bh=nwBcHLQtnlfDIMhhidp3mFZTNefj9XCZxmSg2p2PeNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SUfd+mnrOTI5ghU50jJ0qga6UGcUpF8D3wtq9g144eU9tznSWBsRooyFUlEMnknOe
+	 79fvCfTCXQQKHK3QpUbNB7gk01yQH+iOCX/TlRFOLAKU+/5uAmhpdXZe8gJTF/sStR
+	 3y2x6+RFA9eXTPzUA6VFxjKUaL85QnhU86AH7zeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHMNWF (ORCPT
+        id S1726486AbgHMNXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMNWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:22:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4690C061757;
-        Thu, 13 Aug 2020 06:22:03 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597324921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a75FvpsngyHZBmQ4rj7wRDEgOahPu9fXmXI+cwPoWYo=;
-        b=zX+uBrdeE0IqtapTP6+A90KGBuvFL+Xo+8GijbcJBHy+X/r41FA537fdpvrVCFJNwxXgj+
-        VUMnQKqYJ6pY6TAVLdotmwasumB7wikZ9ySD91JlbIRg12pahFzoTl3tydG2lr0BGvksLm
-        F7bcsz//Ui0KSbgCpZhDycWNGeCqSTuIpVPKKNRFbVPsyysApVxB2iN0IKtGquggLog1Rk
-        OREFGBcTKKZw7ENYoJBCdWGlavos5C16gaDjFlSH6EPJqfe0niY3GoB/Ac/n/jbtWqwoyg
-        0tZsuFZfImVZ0vntcuvvSfwT3kOslzIIfIO3fD3vtcg3MT1EcCd7aw68LT92Tw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597324921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a75FvpsngyHZBmQ4rj7wRDEgOahPu9fXmXI+cwPoWYo=;
-        b=4Zz+45Myel25NXIboO0ClR0DuWBpwMC6Es4vQzFsvQuRkLsYuk/VeKyz/p3E06pL8uWl6C
-        bqDZmUlnnCiyvJBw==
-To:     Uladzislau Rezki <urezki@gmail.com>, Michal Hocko <mhocko@suse.com>
-Cc:     paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200813095840.GA25268@pc636>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72> <874kp87mca.fsf@nanos.tec.linutronix.de> <20200813075027.GD9477@dhcp22.suse.cz> <20200813095840.GA25268@pc636>
-Date:   Thu, 13 Aug 2020 15:22:00 +0200
-Message-ID: <874kp6llzb.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Aug 2020 09:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgHMNXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 09:23:42 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA7C20768;
+        Thu, 13 Aug 2020 13:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597325021;
+        bh=nwBcHLQtnlfDIMhhidp3mFZTNefj9XCZxmSg2p2PeNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K2bZ9XVlxHbkebFL8JjRdtexL55UfQMacYaxyE4tNNZt4FM2Ugk1aqNszSOgJphdf
+         lq99tGEJh98XYa0sffw9jLBkTFC5QJsGtyb64dNSjcUhMzvPVOIkyn9DPYdIYhCVO9
+         r0K3MWq6HRLkkIwcEysqu15NO+hz+8DfMz2UzrTU=
+Date:   Thu, 13 Aug 2020 14:23:36 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Hanna Hawa <hannah@marvell.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 05/13] iommu/arm-smmu-qcom: Add implementation for
+ the adreno GPU SMMU
+Message-ID: <20200813132336.GA10359@willie-the-truck>
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200810222657.1841322-6-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810222657.1841322-6-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uladzislau Rezki <urezki@gmail.com> writes:
-> On Thu, Aug 13, 2020 at 09:50:27AM +0200, Michal Hocko wrote:
->> On Wed 12-08-20 02:13:25, Thomas Gleixner wrote:
->> [...]
->> > I can understand your rationale and what you are trying to solve. So, if
->> > we can actually have a distinct GFP variant:
->> > 
->> >   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
->> 
->> Even if we cannot make the zone->lock raw I would prefer to not
->> introduce a new gfp flag. Well we can do an alias for easier grepping
->> #define GFP_RT_SAFE	0
+On Mon, Aug 10, 2020 at 04:26:49PM -0600, Jordan Crouse wrote:
+> Add a special implementation for the SMMU attached to most Adreno GPU
+> target triggered from the qcom,adreno-smmu compatible string.
+> 
+> The new Adreno SMMU implementation will enable split pagetables
+> (TTBR1) for the domain attached to the GPU device (SID 0) and
+> hard code it context bank 0 so the GPU hardware can implement
+> per-instance pagetables.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |   3 +
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 156 ++++++++++++++++++++-
+>  2 files changed, 157 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> index 88f17cc33023..d199b4bff15d 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> @@ -223,6 +223,9 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>  	    of_device_is_compatible(np, "qcom,sm8250-smmu-500"))
+>  		return qcom_smmu_impl_init(smmu);
+>  
+> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,adreno-smmu"))
+> +		return qcom_adreno_smmu_impl_init(smmu);
+> +
+>  	if (of_device_is_compatible(np, "marvell,ap806-smmu-500"))
+>  		smmu->impl = &mrvl_mmu500_impl;
+>  
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> index be4318044f96..3be10145bf57 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> @@ -12,6 +12,138 @@ struct qcom_smmu {
+>  	struct arm_smmu_device smmu;
+>  };
+>  
+> +#define QCOM_ADRENO_SMMU_GPU_SID 0
+> +
+> +static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
+> +{
+> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +	struct arm_smmu_master_cfg *cfg = dev_iommu_priv_get(dev);
+> +	int idx, i;
+> +
+> +	/*
+> +	 * The GPU will always use SID 0 so that is a handy way to uniquely
+> +	 * identify it and configure it for per-instance pagetables
+> +	 */
+> +	for_each_cfg_sme(cfg, fwspec, i, idx) {
+> +		u16 sid = FIELD_GET(ARM_SMMU_SMR_ID, fwspec->ids[i]);
+> +
+> +		if (sid == QCOM_ADRENO_SMMU_GPU_SID)
+> +			return true;
+> +	}
 
-Just using 0 is sneaky but yes, that's fine :)
+Is for_each_cfg_sme() really what you want here? You're not using idx for
+anything, so I guess it should really be a loop over the sids (e.g. a bog
+standard for loop from 0 to fw->num_ids - 1)?
 
-Bikeshedding: GFP_RT_NOWAIT or such might be more obvious.
-
->> that would imply nowait semantic and would exclude waking up kswapd as
->> well. If we can make wake up safe under RT then the alias would reflect
->> that without any code changes.
-
-It basically requires to convert the wait queue to something else. Is
-the waitqueue strict single waiter?
-
->> The second, and the more important part, would be to bail out anytime
->> the page allocator is to take a lock which is not allowed in the current
->> RT context. Something like
-
->> +	/*
->> +	 * Hard atomic contexts are not supported by the allocator for
->> +	 * anything but pcp requests
->> +	 */
->> +	if (!preemtable())
-
-If you make that preemtible() it might even compile, but that still wont
-work because if CONFIG_PREEMPT_COUNT=n then preemptible() is always
-false.
-
-So that should be:
-
-	if (!preemptible() && gfp == GFP_RT_NOWAIT)
-
-which is limiting the damage to those callers which hand in
-GFP_RT_NOWAIT.
-
-lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
-zone->lock in the wrong context. And we want to know about that so we
-can look at the caller and figure out how to solve it.
-
->> > The page allocator allocations should also have a limit on the number of
->> > pages and eventually also page order (need to stare at the code or let
->> > Michal educate me that the order does not matter).
->> 
->> In practice anything but order 0 is out of question because we need
->> zone->lock for that currently. Maybe we can introduce pcp lists for
->> higher orders in the future - I have a vague recollection Mel was
->> playing with that some time ago.
-
-Ok.
- 
->> > To make it consistent the same GFP_ variant should allow the slab
->> > allocator go to the point where the slab cache is exhausted.
->> > 
->> > Having a distinct and clearly defined GFP_ variant is really key to
->> > chase down offenders and to make reviewers double check upfront why this
->> > is absolutely required.
->> 
->> Having a high level and recognizable gfp mask is OK but I would really
->> like not to introduce a dedicated flag. The page allocator should be
->> able to recognize the context which cannot be handled.
-
-The GFP_xxx == 0 is perfectly fine.
-
-> Sorry for jumping in. We can rely on preemptable() for sure, if CONFIG_PREEMPT_RT
-> is enabled, something like below:
->
-> if (IS_ENABLED_RT && preemptebale())
-
-Ha, you morphed preemtable() into preemptebale() which will not compile
-either :)
-
-Thanks,
-
-        tglx
+Will
