@@ -2,300 +2,195 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67391C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD19C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8A920771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60FF20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nNIyh4yX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mar5kH4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMW7F (ORCPT
+        id S1726639AbgHMW77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36136 "EHLO
+        Thu, 13 Aug 2020 18:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgHMW7E (ORCPT
+        with ESMTP id S1726205AbgHMW76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:59:04 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0EEC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 15:59:04 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id n25so3772290vsq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 15:59:04 -0700 (PDT)
+        Thu, 13 Aug 2020 18:59:58 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130B4C061757;
+        Thu, 13 Aug 2020 15:59:58 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id r19so3455205qvw.11;
+        Thu, 13 Aug 2020 15:59:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X0gX4eWr1/ebRNhUOFdjjldrlfyAtArfMfYSU2M/IDs=;
-        b=nNIyh4yXC3P8AV5HVGVCyZB96qURK7ACagbp9qszCefal6hW3g/vhFIFUZL01cJ83e
-         2EIWjFZ8qpY3IFtfEdQWG8AFOjRflmIilXxvAvOtU8GJQfUNGPiLw2HsmmfogXkt06wE
-         QxNYwcdUvaK4ytUpt+7JqAeL8emTWqzaZgteE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d4y6RKmJp64y+vBgl80qCMwx5Kvv2+JF1QEkaEd/Q/Y=;
+        b=Mar5kH4b1luz+Eg0+FRCRdeG3PMCNh9r0ZcwNQfrIICZN3sGLom6wSFcSYxHWFGXx3
+         GcQG+hF7+A1FWcDIFmYXRsvXD3jjMdX/cofcMP3dmvGcGsnLANVfawW8V2MnCx85cpqg
+         rHmYiMmPLbYQPHGp8/DMSpcYwWRW9uusJyvdnZAV37t8PKq9DKTVLc4W/JZhwYLSib7O
+         URlCsA9+RWGAjyqNqs0dlzi0HqZRWWQVlk2T8jSi2LPBwVS/smjuV6UQVcYrndmcSw7v
+         k7Gdzf16IEpxuIi6EVJzNcJrwqmfsJfH5mJgF2jRgqJ0sUScZQzQQp0U9PW15p+TUjaN
+         yqrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X0gX4eWr1/ebRNhUOFdjjldrlfyAtArfMfYSU2M/IDs=;
-        b=CP2V7GpS4QDDbIh9f0qi5JolmJk/yPhU6r7oBQF1a7QOVckaq0mywYEOtIAlFy+Jie
-         q9aPaojiijjr9IqqcGJjUWzCymeN844qGCtMtIYvcV37MDt1XCfA/fFMbiuosmhoi20u
-         kdr+KWTCBGdrCYX48HIt79m1d61An9uAUlswyQFilYxRIfmPD1Mu9NYbm8kI/4nKIBsc
-         ZrTYIIlH9p2ndtMQIP/avie8EC6zAU5U4GSga0Q9HWCIgiVMKzfihogKVW6eqdwEvqhX
-         XVmYEzTFBcxanO6gzkjjLMRTvpGoES7f05dKNj6lHG3NJ1A4sLgi5CgAINGlwRqETXfT
-         64AQ==
-X-Gm-Message-State: AOAM533WSDPiCz+/M2UVs3ou4T5cPUdjwFRrkPB29tNiJ0xM35UaTPj0
-        FI8zOSONJQtj6HkEt41GY0kYEDPV8cs=
-X-Google-Smtp-Source: ABdhPJxfbWJICxyUNomoh/x2xb0+KItGbWrZq8N/48eC0nt62R6gsrPmB/7v/iX8eRVOhRX+scLLXQ==
-X-Received: by 2002:a67:3249:: with SMTP id y70mr5453287vsy.199.1597359542898;
-        Thu, 13 Aug 2020 15:59:02 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id d10sm1004641vsk.15.2020.08.13.15.59.01
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d4y6RKmJp64y+vBgl80qCMwx5Kvv2+JF1QEkaEd/Q/Y=;
+        b=sIpI+33DGcReBEPCTK3tiv3zoLRdfFZ9UYgpM+y/9GLPJaGP59I3Kw6rFPiUTZAgMh
+         Y0gJgV0ES1LqZITiHW4u25tf71igMMYfM05EKYYCLCC0Icd+C6lZ7Eg/EC3FT+Xp2sU8
+         s6WH1jbD1u2myPR1khPtGZALv3t0nH5QlT3W/yrxkxj0lDUPoXDCsSVerIx1XVmb8QQ4
+         1rEU0sDFdka9ZU7uapqjgt4XDIyD3H4zdRRHRmdIqNN6YVGYIZoqdMtpyadm9LkYILEO
+         Fgoh0cBWEXVi6dxCF5jfgkXz1dIv723ae4oNBilfUPv3IoQFXPx2cInUuOVUUPefU+dp
+         wgqw==
+X-Gm-Message-State: AOAM5319dMsfPxYq31ToHWbBv2FLow3sF6wEx7eBLRkLdF3RIpv0T3HA
+        vOnle2WvVeRnGYfvykGSYYWPcKGyJDQ=
+X-Google-Smtp-Source: ABdhPJwZrLegS3Rzau/i8wqVIuJofDyPm23QT+dQhzDPpYvIi6pmHV7EZ2ZMog2JpgyWTkD2Yg4TCA==
+X-Received: by 2002:a05:6214:2f0:: with SMTP id h16mr109906qvu.201.1597359597139;
+        Thu, 13 Aug 2020 15:59:57 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:1557:417:a433:9b3f? ([2601:282:803:7700:1557:417:a433:9b3f])
+        by smtp.googlemail.com with ESMTPSA id t187sm6819566qka.26.2020.08.13.15.59.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 15:59:01 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id 1so3773171vsl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 15:59:01 -0700 (PDT)
-X-Received: by 2002:a67:fd67:: with SMTP id h7mr4962382vsa.121.1597359540516;
- Thu, 13 Aug 2020 15:59:00 -0700 (PDT)
+        Thu, 13 Aug 2020 15:59:56 -0700 (PDT)
+Subject: Re: [PATCH 2/3] ipv4/icmp: l3mdev: Perform icmp error route lookup on
+ source device routing table
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        David Ahern <dsahern@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20200811195003.1812-1-mathieu.desnoyers@efficios.com>
+ <20200811195003.1812-3-mathieu.desnoyers@efficios.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <adb0c227-9189-5f8e-cc36-0e24b789befe@gmail.com>
+Date:   Thu, 13 Aug 2020 16:59:54 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
- <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com> <878sei42ql.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <878sei42ql.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 13 Aug 2020 15:58:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-Message-ID: <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and
- irq_resume_one() callbacks
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200811195003.1812-3-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/11/20 1:50 PM, Mathieu Desnoyers wrote:
+> As per RFC792, ICMP errors should be sent to the source host.
+> 
+> However, in configurations with Virtual Routing and Forwarding tables,
+> looking up which routing table to use is currently done by using the
+> destination net_device.
+> 
+> commit 9d1a6c4ea43e ("net: icmp_route_lookup should use rt dev to
+> determine L3 domain") changes the interface passed to
+> l3mdev_master_ifindex() and inet_addr_type_dev_table() from skb_in->dev
+> to skb_dst(skb_in)->dev. This effectively uses the destination device
+> rather than the source device for choosing which routing table should be
+> used to lookup where to send the ICMP error.
+> 
+> Therefore, if the source and destination interfaces are within separate
+> VRFs, or one in the global routing table and the other in a VRF, looking
+> up the source host in the destination interface's routing table will
+> fail if the destination interface's routing table contains no route to
+> the source host.
+> 
+> One observable effect of this issue is that traceroute does not work in
+> the following cases:
+> 
+> - Route leaking between global routing table and VRF
+> - Route leaking between VRFs
+> 
+> Preferably use the source device routing table when sending ICMP error
+> messages. If no source device is set, fall-back on the destination
+> device routing table.
+> 
+> Fixes: 9d1a6c4ea43e ("net: icmp_route_lookup should use rt dev to determine L3 domain")
+> Link: https://tools.ietf.org/html/rfc792
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: David Ahern <dsahern@kernel.org>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> ---
+>  net/ipv4/icmp.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+> index cf36f955bfe6..1eb83d82ec68 100644
+> --- a/net/ipv4/icmp.c
+> +++ b/net/ipv4/icmp.c
+> @@ -465,6 +465,7 @@ static struct rtable *icmp_route_lookup(struct net *net,
+>  					int type, int code,
+>  					struct icmp_bxm *param)
+>  {
+> +	struct net_device *route_lookup_dev = NULL;
+>  	struct rtable *rt, *rt2;
+>  	struct flowi4 fl4_dec;
+>  	int err;
+> @@ -479,7 +480,17 @@ static struct rtable *icmp_route_lookup(struct net *net,
+>  	fl4->flowi4_proto = IPPROTO_ICMP;
+>  	fl4->fl4_icmp_type = type;
+>  	fl4->fl4_icmp_code = code;
+> -	fl4->flowi4_oif = l3mdev_master_ifindex(skb_dst(skb_in)->dev);
+> +	/*
+> +	 * The device used for looking up which routing table to use is
+> +	 * preferably the source whenever it is set, which should ensure
+> +	 * the icmp error can be sent to the source host, else fallback
+> +	 * on the destination device.
+> +	 */
+> +	if (skb_in->dev)
+> +		route_lookup_dev = skb_in->dev;
+> +	else if (skb_dst(skb_in))
+> +		route_lookup_dev = skb_dst(skb_in)->dev;
+> +	fl4->flowi4_oif = l3mdev_master_ifindex(route_lookup_dev);
+>  
+>  	security_skb_classify_flow(skb_in, flowi4_to_flowi(fl4));
+>  	rt = ip_route_output_key_hash(net, fl4, skb_in);
+> @@ -503,7 +514,7 @@ static struct rtable *icmp_route_lookup(struct net *net,
+>  	if (err)
+>  		goto relookup_failed;
+>  
+> -	if (inet_addr_type_dev_table(net, skb_dst(skb_in)->dev,
+> +	if (inet_addr_type_dev_table(net, route_lookup_dev,
+>  				     fl4_dec.saddr) == RTN_LOCAL) {
+>  		rt2 = __ip_route_output_key(net, &fl4_dec);
+>  		if (IS_ERR(rt2))
+> 
 
-On Thu, Aug 13, 2020 at 3:09 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> > Specifically the problem we're trying to address is when an IRQ is
-> > marked as "disabled" (driver called disable_irq()) but also marked as
-> > "wakeup" (driver called enable_irq_wake()).  As per my understanding,
-> > this means:
-> >
-> > * Don't call the interrupt handler for this interrupt until I call
-> > enable_irq() but keep tracking it (either in hardware or in software).
-> > Specifically it's a requirement that if the interrupt fires one or
-> > more times while masked the interrupt handler should be called as soon
-> > as enable_irq() is called.
->
-> irq_disable() has two operating modes:
->
->     1) Immediately mask the interrupt at the irq chip level
->
->     2) Software disable it. If an interrupt is raised while disabled
->        then the flow handler observes disabled state, masks it, marks it
->        pending and returns without invoking any device handler.
->
-> On a subsequent irq_enable() the interrupt is unmasked if it was masked
-> and if the interrupt is marked pending and the interrupt is not level
-> type then it's attempted to retrigger it. Either in hardware or by a
-> software replay mechanism.
->
-> > * If this interrupt fires while the system is suspended then please
-> > wake the system up.
->
-> Well, that's kinda contradicting itself. If the interrupt is masked then
-> what is the point? I'm surely missing something subtle here.
+ICMP's can be generated in many locations:
+1. forward path - I think the skb_in dev is always set,
 
-This is how I've always been told that the API works and there are at
-least a handful of drivers in the kernel whose suspend routines both
-enable wakeup and call disable_irq().  Isn't this also documented as
-of commit f9f21cea3113 ("genirq: Clarify that irq wake state is
-orthogonal to enable/disable")?
+2. ingress and upper layer protocols -  dev is dropped prior to
+transport layers, so, for example, UDP sending port unreachable calls
+icmp_send with skb_in->dev set to NULL.
 
+3. local packets and egress - e.g., link failures and here I believe skb
+dev is set.
 
-> > On some (many?) interrupt controllers a masked interrupt won't wake
-> > the system up.  Thus we need some point in time where the interrupt
-> > controller can unmask interrupts in hardware so that they can act as
-> > wakeups.
->
-> So far nobody told me about this until now, but why exactly do we need
-> yet another unspecified callback instead of simply telling the core via
-> an irq chip flag that it should always unmask the interrupt if it is a
-> wakeup source?
->
-> > Also: if an interrupt was masked lazily this could be a good
-> > time to ensure that these interrupts _won't_ wake the system up.
->
-> Setting IRQCHIP_MASK_ON_SUSPEND does exactly that. No need for a chip
-> driver to do any magic. You just have to use it.
->
-> So the really obvious counterpart for this is to have:
->
->        IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND
->
-> and then do:
->
-> @@ -81,6 +81,8 @@ static bool suspend_device_irq(struct ir
->                  * IRQD_WAKEUP_ARMED is visible before we return from
->                  * suspend_device_irqs().
->                  */
-> +               if (chip->flags & IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND)
-> +                       unmask_irq(desc);
->                 return true;
->         }
->
-> plus the counterpart in the resume path. This also ensures that state is
-> consistent.
+If in and out are in the same L3 domain, either device works where for
+VRF route leaking with the forward path in and out are in separate
+domains so yes you want the ingress device.
 
-This sounds wonderful to me.  Maulik: I think you could replace quite
-a few of the patches in the series and just use that.
+This change seems fine to me and I have not seen any issues with
+existing selftests.
 
-
-> The magic behind the back of the core code unmask brings core state and
-> hardware state out of sync. So if for whatever reason the interrupt is
-> raised in the CPU before the resume path can mask it again, then the
-> flow handler will see disabled state, invoke mask_irq() which does
-> nothing because core state is masked and if that's a level irq it will
-> come back forever.
->
-> > Thus the point of these callbacks is to provide a hook for IRQ chips
-> > to do this.  Now that you understand the motivation perhaps you can
-> > suggest a better way to accomplish this if the approach in this patch
-> > is not OK.
->
-> See above.
->
-> > I will note that a quick audit of existing users of the gernic-chip's
-> > irq_suspend() show that they are doing exactly this.  So the point of
-> > my patch is to actually allow other IRQ chips (ones that aren't using
-> > generic-chip) to do this type of thing.  At the same time my patch
-> > provides a way for current users of generic-chip to adapt their
-> > routines so they work without syscore (which, I guess, isn't
-> > compatible with s2idle).
->
-> If that's the main problem which is solved in these callbacks, then I
-> really have to ask why this has not been raised years ago. Why can't
-> people talk?
-
-Not all of us have the big picture that you do to know how things
-ought to work, I guess.  If nothing else someone looking at this
-problem would think: "this must be a common problem, let's go see how
-all the other places do it" and then they find how everyone else is
-doing it and do it that way.  It requires the grander picture that a
-maintainer has in order to say: whoa, everyone's copying the same
-hack--let's come up with a better solution.
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
 
-> IIRC back then when the callbacks for GC were added the reason was that
-> the affected chips needed a way to save and restore the full chip state
-> because the hardware lost it during suspend. S2idle did not exist back
-> then at least not in it's current form. Oh well...
->
-> But gust replacing them by something which is yet another sinkhole for
-> horrible hacks behind the core code is not making it any better.
->
-> I fear another sweep through the unpleasantries of chip drivers is due
-> sooner than later. Aside of finding time, I need to find my eyecancer
-> protection glasses and check my schnaps stock.
->
-> >> So what happens in this case:
-> >>
-> >>    CPU0                         CPU1
-> >>    interrupt                    suspend_device_irq()
-> >>      handle()                     chip->suspend_one()
-> >>        action()                 ...
-> >>        chip->fiddle();
-> >>
-> >> ????
-> >
-> > Ah, so I guess we need to move the call to suspend_one_irq() till
-> > after the (potential) call to synchronize_irq() in in
-> > suspend_device_irqs()?
->
-> For what you are trying to achieve, no. IRQCHIP_MASK_ON_SUSPEND is
-> already safe.
->
-> If we add IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND then there is no sync
-> problem either.
->
-> > Hopefully with the above explanation this makes more sense?
->
-> At least the explanation helped to understand the problem, while the
-> changelog was pretty useless in that regard:
->
->   "These two callbacks are interesting because sometimes an irq chip
->    needs to know about suspend/resume."
->
-> Really valuable and precise technical information.
+But I did notice that unreachable / fragmentation needed messages are
+NOT working with this change. You can see that by changing the MTU of
+eth1 in r1 to 1400 and running:
+   ip netns exec h1 ping -s 1450 -Mdo -c1 172.16.2.2
 
-Funny to get yelled at for not providing a detailed enough changelog.
-Usually people complain that my changelogs are too detailed.  Sigh.
+You really should get that working as well with VRF route leaking.
 
 
-> But aside of the confusion, even with your explanation of what you are
-> trying to solve, I really want a coherent explanation why this should be
-> done for any of those:
->
->   1) an interrupt which has no action, i.e. an interrupt which has no
->      active users and is in the worst case completely deactivated or was
->      never activated to begin with.
->
->      In the inactive case it might be in a state where unmask issues an
->      invalid vector, causes hardware malfunction or hits undefined
->      software state in the chip drivers in the hierarchy.
->
->      If you want to be woken up by irq X, then request irq X which
->      ensures that irq X is in a usable state at all levels of the
->      stack. If you call disable_irq() or mark the interrupt with
->      IRQ_NOAUTOEN, fine, it's still consistent state.
->
->   2) interrupts which have no_suspend_depth > 0 which means that
->      there is an action requested which explicitely says: don't touch me
->      on suspend.
->
->      If that driver invokes disable_irq() then it can keep the pieces.
->
->   3) chained interrupts
->
->      They are never disabled and never masked. So why would anything
->      need to be done here?
->
->      Side note: they should not exist at all, but that's a different
->      story.
->
-> If you don't have coherent explanations, then please just don't touch
-> that condition at all.
->
-> Hint: "Sometimes a chip needs to know" does not qualify :)
-
-Clearly I am not coherent.  ;-)  My only goal was to help enable
-interrupts that were disabled / marked as wakeup (as per above,
-documented to be OK) to work on Qualcomm chips.  This specifically
-affects me because a driver that I need to work (cros_ec) does this.
-If IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND is good to add then it sounds like
-a great plan to me.
-
-
--Doug
