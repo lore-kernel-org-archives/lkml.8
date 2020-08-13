@@ -2,103 +2,168 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F77C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D787C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A4220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E7A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jKv8GqrL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxAUxvrg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHMWGg (ORCPT
+        id S1726621AbgHMWHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
+        Thu, 13 Aug 2020 18:07:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgHMWGf (ORCPT
+        with ESMTP id S1726205AbgHMWHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:06:35 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101ACC061757;
-        Thu, 13 Aug 2020 15:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ErzwXfMAZv3xEGRgsJEvMJhUXvljJ3nFsFpsjv0+gvc=; b=jKv8GqrLvXer6/E1Hs9pJKS4/r
-        +eZF/mMz8/p6BX7RrgfXlS/EFHCF57uUb3qjyhHHitaGkufm2ndRqQUtO3W6Wp49HYNCLrDq2EvPi
-        xNDMmRevmkpqYEWMOwQt9Vimgngy/fJwtQpqgxLpqT/XWAXIuFpcrg3CnUL+dSNP375QgC6JNEjCV
-        5Q2bSJ+2fx0MiKdHxwZ4lOPgP2L/GKS6yvdmFUBQWoyhb+Rs9QNsg7/P5B5Iws1M0Q2bCSarzAFB/
-        Le46j37i11ZXdLoMsixhAl+sAjxOWiHt8qnh/mGDzPW5hD8qyqEjbclTpp6iMQ6WEBL3sxHWA/PXc
-        P9mdaB3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6LMb-0004bF-Qg; Thu, 13 Aug 2020 22:06:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C834304D58;
-        Fri, 14 Aug 2020 00:06:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 229EC2B929A56; Fri, 14 Aug 2020 00:06:19 +0200 (CEST)
-Date:   Fri, 14 Aug 2020 00:06:19 +0200
-From:   peterz@infradead.org
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813220619.GA2674@hirez.programming.kicks-ass.net>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813182618.GX2674@hirez.programming.kicks-ass.net>
- <20200813185257.GF4295@paulmck-ThinkPad-P72>
+        Thu, 13 Aug 2020 18:07:06 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2941CC061757;
+        Thu, 13 Aug 2020 15:07:06 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m22so7862797ljj.5;
+        Thu, 13 Aug 2020 15:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Ysu8KrstKJsXPbkwkVItOAIAaYVSsgcZTJ2gKC2O1I=;
+        b=KxAUxvrgwR3I2pKBP5QTLzVQP0xoAxZ+CMYA5FL6oNPR+yc357ql9y+Z4hNbaksnkM
+         vu86VzKgSZSz8utCP5M+2/IWHy4zTx3IUwRVSeHoKO8OaTTe6D/mtbvKOEgcITXr77xg
+         uq8BD6IEIQIGYgjRycD1ak6l3lnJAfaLr/KTURE1aj/Zqb9AKEvo2r/FtK3UBhAPYMY1
+         FfyPjyZcBOpM7m9L7y4p/iM3iykm5fmsNZ+enM/cY0AkjCL4fNCgKMhI5N5To8a1+TjE
+         mrlEDyoEY6Ps8321tWfpto4FnhKFIs2v3o45HH6PF9vz4GcnrfnnK0w9wBiLf/8TixkF
+         Qcrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Ysu8KrstKJsXPbkwkVItOAIAaYVSsgcZTJ2gKC2O1I=;
+        b=sFczNC13/i4QAeZd7ZWeDS1LggOKUHimN6UfK86qNsSMSM/6V66GpErQVgkhxvGdfd
+         GAnZRnRs9A1mpdrAWqghu5duaVgZNakvTHJxg1o/Et1wJR6l6OdPaQZt3uqoQfu5Owwj
+         DJOqS9pe0SHvK3fynbO0PwDeL5uwdcnc3NB+VRY4zncqtQyBT8z+MPSOOfYUnOxNzMLO
+         OpLzzGGLl2JBa8N9ISYITmtVV7HiMpPC7I7xwWc9d5QNa00VcwrLmlLYeSqWw1fe7MVS
+         ETpJFic+2uN1ZYhm9dSuyXcSLZWwPDsEINlLgxPqj8Khdg0ZwKbob13rNtnF219HX1NJ
+         W2jA==
+X-Gm-Message-State: AOAM533TSk9XoMCo+DDdcVmcJcpdrxl2kTwZbm8SPbnF6xIxF/eBDKDr
+        U/DA5PUodyrYfgusWN9P5lqD98qQ
+X-Google-Smtp-Source: ABdhPJwlvzEAqLKr4E+m8miJjz2G5rz6UVpDHH6Mzqw7j0fFAKTOFbtYuFWieIV4pwxHpS78FYSpnQ==
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr2800647ljp.247.1597356424639;
+        Thu, 13 Aug 2020 15:07:04 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id z20sm1354452ljk.97.2020.08.13.15.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 15:07:04 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v10 0/4] Support DRM bridges on NVIDIA Tegra
+Date:   Fri, 14 Aug 2020 01:06:52 +0300
+Message-Id: <20200813220656.30838-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813185257.GF4295@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 11:52:57AM -0700, Paul E. McKenney wrote:
-> On Thu, Aug 13, 2020 at 08:26:18PM +0200, peterz@infradead.org wrote:
+Hello,
 
-> > I thought the rule was:
-> > 
-> >  - No allocators (alloc/free) inside raw_spinlock_t, full-stop.
-> > 
-> > Why are we trying to craft an exception?
-> 
-> So that we can reduce post-grace-period cache misses by a factor of
-> eight when invoking RCU callbacks.  This reduction in cache misses also
-> makes it more difficult to overrun RCU with floods of either call_rcu()
-> or kfree_rcu() invocations.
-> 
-> The idea is to allocate page-sized arrays of pointers so that the callback
-> invocation can sequence through the array instead of walking a linked
-> list, hence the reduction in cache misses.
+This series adds initial support for the DRM bridges to NVIDIA Tegra DRM
+driver. This is required by newer device-trees where we model the LVDS
+encoder bridge properly. In particular this series is needed in order to
+light up display panels of recently merged Acer A500 and Nexus 7 devices.
 
-I'm still not getting it, how do we end up trying to allocate memory
-from under raw spinlocks if you're not allowed to use kfree_rcu() under
-one ?
+Changelog:
 
-Can someone please spell out the actual problem?
+v10: - No changes. Patches missed v5.9 kernel, re-sending for v5.10.
+       @Thierry, please pick up this series into linux-next or let me
+       know what needs to be changed, thanks in advance!
+
+v9: - Dropped the of-graph/drm-of patches from this series because they
+      are now factored out into a standalone series [1].
+
+      [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=186813
+
+    - The "drm/panel-simple: Add missing connector type for some panels"
+      patch of v8 was already applied.
+
+v8: - The new of_graph_get_local_port() helper is replaced with the
+      of_graph_presents(), which simply checks the graph presence in a
+      given DT node. Thank to Laurent Pinchart for the suggestion!
+
+    - The of_graph_get_local_port() is still there, but now it isn't a public
+      function anymore. In the review to v7 Laurent Pinchart suggested that
+      the function's doc-comments and name could be improved and I implemented
+      these suggestions in v8.
+
+    - A day ago I discovered that devm_drm_panel_bridge_add() requires
+      panel to have connector type to be properly set, otherwise function
+      rejects panels with the incomplete description. So, I checked what
+      LVDS panels are used on Tegra and fixed the missing connector types
+      in this new patch:
+
+        drm/panel-simple: Add missing connector type for some panels
+
+v7: - Removed the obscure unused structs (which GCC doesn't detect, but CLANG
+      does) in the patch "Wrap directly-connected panel into DRM bridge",
+      which was reported by kernel test robot for v6.
+
+v6: - Added r-b and acks from Rob Herring and Sam Ravnborg.
+
+    - Rebased on a recent linux-next, patches now apply without fuzz.
+
+v5: - Added new patches that make drm_of_find_panel_or_bridge() more usable
+      if graph isn't defined in a device-tree:
+
+        of_graph: add of_graph_get_local_port()
+        drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
+
+    - Updated "Support DRM bridges" patch to use drm_of_find_panel_or_bridge()
+      directly and added WARN_ON(output->panel || output->bridge) sanity-check.
+
+    - Added new "Wrap directly-connected panel into DRM bridge" patch, as
+      was suggested by Laurent Pinchart.
+
+v4: - Following review comments that were made by Laurent Pinchart to the v3,
+      we now create and use the "bridge connector".
+
+v3: - Following recommendation from Sam Ravnborg, the new bridge attachment
+      model is now being used, i.e. we ask bridge to *not* create a connector
+      using the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
+
+    - The bridge is now created only for the RGB (LVDS) output, and only
+      when necessary. For now we don't need bridges for HDMI or DSI outputs.
+
+    - I noticed that we're leaking OF node in the panel's error code path,
+      this is fixed now by the new patch "Don't leak OF node on error".
+
+v2: - Added the new "rgb: Don't register connector if bridge is used"
+      patch, which hides the unused connector provided by the Tegra DRM
+      driver when bridge is used, since bridge provides its own connector
+      to us.
+
+
+Dmitry Osipenko (4):
+  drm/tegra: output: Don't leak OF node on error
+  drm/tegra: output: Support DRM bridges
+  drm/tegra: output: rgb: Support LVDS encoder bridge
+  drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
+
+ drivers/gpu/drm/tegra/drm.h    |   2 +
+ drivers/gpu/drm/tegra/output.c |  21 +++++--
+ drivers/gpu/drm/tegra/rgb.c    | 102 +++++++++++++++++----------------
+ 3 files changed, 72 insertions(+), 53 deletions(-)
+
+-- 
+2.27.0
+
