@@ -2,153 +2,138 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A463CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1E720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="gmiIs9xB"
+	by mail.kernel.org (Postfix) with ESMTP id 88E7820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgHMLaQ (ORCPT
+        id S1726710AbgHMLai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:30:16 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:34726 "EHLO mail2.skidata.com"
+        Thu, 13 Aug 2020 07:30:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39208 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgHMLaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:30:14 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 07:30:12 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597318212; x=1628854212;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=89bAGdQq58IWsLtFPLh9wpw9ICJ6Mc83yC/h2CpVF7Y=;
-  b=gmiIs9xB40mH5A5EZR2XIW6s9njJ+NmW1Jbq8TKZrHpuAX42r+Qo2ETa
-   MEkO42ZuX6gv+G+6Dt7Zk68YEc836Z4GbWXRS8+7emfWPQKZ54ThPsLBL
-   cNORA9GoL4kI1YtlLLMEl8KS4d82vdXrwZiRSt6uOJSgAknvzTBHDgzeQ
-   GlXOrV2WmuYbi+UNI/BrybRyWROEvHqKzGIjdfCJRe9vPHiPvgVhtqwYQ
-   xS64s8kIFaZZOAmNcXl01Ewkci2pB5eZcsSYk/KOsJ/1eRuxK4iKQyfr1
-   H/XLIFePptK55urI2+7zpSuugKYtVo0GjQpw9Cx0zzyVhu1Xd9caC+SMn
-   w==;
-IronPort-SDR: g2o/GJDhU0h+zjPmQsuKI9ODAT/nVkeCiipCpG2uwpWm3Ae9iIIdcYGq0fMra8Ta3DFaRKw9EN
- QHBiww9oRQd1JARQBabv+Mtm/liFgUXSvJNk1lVA4Sn+BgZlk68O6Yp7I/qdZbSH89QuUn4G8p
- bHRgOEaC8nffSuA5+pzf4rHSs7uX7mvkRpbaWzW3tNAD61xzP6sUICpmgLgiQ3BHpmpR4MGc0n
- Z3a5yxwqqljYiuMXgJWpi4RtTZw/LJi7D9uHi++qB7ptZ6mu0pQJA9I0ZlmGWFaIjYC/4aIRDr
- TJ4=
-X-IronPort-AV: E=Sophos;i="5.76,308,1592863200"; 
-   d="scan'208";a="2640424"
-Date:   Thu, 13 Aug 2020 13:22:58 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <timur@kernel.org>, <nicoleotsuka@gmail.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <linux-imx@nxp.com>,
-        <shawnguo@kernel.org>, <kernel@pengutronix.de>,
-        Benjamin Bara <benjamin.bara@skidata.com>
-Subject: pcm|dmaengine|imx-sdma race condition on i.MX6
-Message-ID: <20200813112258.GA327172@pcleri>
+        id S1726131AbgHMLah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:30:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0B235B6A3;
+        Thu, 13 Aug 2020 11:30:58 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 13:30:35 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+Message-ID: <20200813113035.GN12903@alley>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley>
+ <20200812163908.GH12903@alley>
+ <87v9hn2y1p.fsf@jogness.linutronix.de>
+ <20200813051853.GA510@jagdpanzerIV.localdomain>
+ <875z9nvvl2.fsf@jogness.linutronix.de>
+ <20200813084136.GK12903@alley>
+ <87v9hmrg84.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+In-Reply-To: <87v9hmrg84.fsf@jogness.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-we've found a race condition with the PCM on the i.MX6 which results in
-an -EIO for the SNDRV_PCM_IOCTL_READI_FRAMES ioctl after an -EPIPE (XRUN).
+On Thu 2020-08-13 12:35:47, John Ogness wrote:
+> On 2020-08-13, Petr Mladek <pmladek@suse.com> wrote:
+> > On Thu 2020-08-13 09:50:25, John Ogness wrote:
+> >> On 2020-08-13, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+> >> > This is not an unseen pattern, I'm afraid. And the problem here can
+> >> > be more general:
+> >> >
+> >> > 	pr_info("text");
+> >> > 	pr_cont("1");
+> >> > 	exception/IRQ/NMI
+> >> > 		pr_alert("text\n");
+> >> > 	pr_cont("2");
+> >> > 	pr_cont("\n");
+> >> >
+> >> > I guess the solution would be to store "last log_level" in task_struct
+> >> > and get current (new) timestamp for broken cont line?
+> >> 
+> >> (Warning: new ideas ahead)
+> >> 
+> >> The fundamental problem is that there is no real association between
+> >> the cont parts. So any interruption results in a broken record. If we
+> >> really want to do this correctly, we need real association.
+> 
+> I believe I failed to recognize the fundamental problem. The fundamental
+> problem is that the pr_cont() semantics are very poor. I now strongly
+> believe that we need to fix those semantics by having the pr_cont() user
+> take responsibility for buffering the message. Patching the ~2000
+> pr_cont() users will be far easier than continuing to twist ourselves
+> around this madness.
 
-A possible reproduction may look like the following reduced call graph
-during a PCM capture:
+Yes, this would make the API much more reliable. But it is not completely
+easy. It has been discussed several times. The most serious attempt
+is https://lore.kernel.org/lkml/1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp/#t
 
-us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES)
-      - wait_for_avail()
-        - schedule_timeout()
-   -> snd_pcm_update_hw_ptr0()
-      - snd_pcm_update_state: EPIPE (XRUN)
-      - sdma_disable_channel_async() # get's scheduled away due to sleep
-us <- ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns -EPIPE
-us -> ioctl(SNDRV_PCM_IOCTL_PREPARE) # as reaction to the EPIPE (XRUN)
-us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) # next try to capture frames
-      - sdma_prep_dma_cyclic()
-        - sdma_load_context() # not loaded as context_loaded is 1
-      - wait_for_avail()
-        - schedule_timeout()
-# now the sdma_channel_terminate_work() comes back and sets
-# context_loaded = false and frees in vchan_dma_desc_free_list().
-us <- ioctl returns -EIO (capture write error (DMA or IRQ trouble?))
+lockdep.c is probably the most complicated pr_cont() user. The
+conversion complicated the code a bit, see
+https://lore.kernel.org/lkml/1541165517-3557-3-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp/
+
+Linus also wanted to have an API to flush part of the message
+before some action and finalize it later. It would be usable
+for things like:
+
+	pr_info("Doing something dangerous... ");
+	printk_flush();
+	do_dangerous_thing();
+	pr_cont("ok\n");
+
+Where pr_cont() would allow to flush part of the message to the
+consoles and add the end of the line later when it did not crash.
+
+It would need some support in the lockless ring buffer API anyway.
+But it is only nice to have from my POV.
 
 
-What we have found out, based on our understanding:
-The dmaengine docu states that a dmaengine_terminate_async() must be
-followed by a dmaengine_synchronize().
-However, in the pcm_dmaengine.c, only dmaengine_terminate_async() is
-called (for performance reasons and because it might be called from an
-interrupt handler).
+> The alloc function would need to work for any context, but that would
+> not be an issue. If the cont message started to get too large, pr_cont()
+> could do its own flushing in between, while still holding on to the
+> context information. If for some reason the alloc function could not
+> allocate a buffer, all the pr_cont() calls could fallback to logging the
+> individual cont parts.
 
-In our tests, we saw that the user-space immediately calls
-ioctl(SNDRV_PCM_IOCTL_PREPARE) as a handler for the happened xrun
-(previous ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns with -EPIPE). In
-our case (imx-sdma.c), the terminate really happens asynchronously with
-a worker thread which is not awaited/synchronized by the
-ioctl(SNDRV_PCM_IOCTL_PREPARE) call.
+Also this was discussed several times. The most acceptable solution
+was to use "small" buffer on the stack (128 bytes or so).
 
-Since the syscall immediately enters an atomic context
-(snd_pcm_stream_lock_irq()), we are not able to flush the work of the
-termination worker from within the DMA context. This leads to an
-unterminated DMA getting re-initialized and then terminated.
 
-On the i.MX6 platform the problem is (if I got it correctly) that the
-sdma_channel_terminate_work() called after the -EPIPE gets scheduled
-away (for the 1-2ms sleep [1]). During that time the userspace already
-sends in the ioctl(SNDRV_PCM_IOCTL_PREPARE) and
-ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
-As none of them are anyhow synchronized to the terminate_worker the
-vchan_dma_desc_free_list() [2] and "sdmac->context_loaded = false;" [3]
-are executed during the wait_for_avail() [4] of the
-ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
+> I believe this would solve all cont-related problems while also allowing
+> the new ringbuffer to remain as it already is in linux-next.
 
-To make sure we identified the problem correctly we've tested to add a
-"dmaengine_synchronize()" before the snd_pcm_prepare() in [5]. This
-fixed the race condition in all our tests. (Before we were able to
-reproduce it in 100% of the test runs).
+You are right. The buffering is really good step. It would make
+the API sane and reliable. It has been proposed and discussed many
+times. The main obstacle was that there was no volunteer to get this
+done. If you are able to do so, it would be amazing.
 
-Based on our understanding, there are two different points to ensure
-the termination:
-Either ensure that the termination is finished within the previous
-SNDRV_PCM_IOCTL_READI_FRAMES call (inside the DMA context) or finishing
-it in the SNDRV_PCM_IOCTL_PREPARE call (and all other applicable ioclts)
-before entering the atomic context (from the PCM context).
+I am just not sure what is more complicated. Getting lockless
+operation correctly is always tricky. But going though 2000
+callers individually is also a lot of work.
 
-We initially thought about implementing the first approach, basically
-splitting up the dma_device terminate_all operation into a sync
-(busy-wait) and a async one. This would align the operations with the
-DMAengine interface and would enable a sync termination variant from
-atomic contexts.
-However, we saw that the dma_free_attrs() function has a WARN_ON on irqs
-disabled, which would be the case for the sync variant.
-
-Side note: We found this issue on the current v5.4.y LTS branch,
-but it also affects v5.8.y.
-
-Any feedback or pointers how we may fix the problem are warmly welcome!
-If anything is unclear please just ask :-)
-
-regards;
-Richard Leitner
-Benjamin Bara
-
-[1]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1066
-[2]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1071
-[3]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1072
-[4]https://elixir.bootlin.com/linux/v5.8/source/sound/core/pcm_lib.c#L1825
-[5]https://elixir.bootlin.com/linux/v5.8/source/sound/core/pcm_native.c#L3226
+Best Regards,
+Petr
