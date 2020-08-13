@@ -2,267 +2,118 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D495BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9879C20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C040F20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cADRa2L+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2gNhKgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHMAAH (ORCPT
+        id S1726574AbgHMACV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 20:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50384 "EHLO
+        Wed, 12 Aug 2020 20:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgHMAAD (ORCPT
+        with ESMTP id S1726126AbgHMACU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 20:00:03 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92434C061384
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:00:02 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id i129so2027226vsi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:00:02 -0700 (PDT)
+        Wed, 12 Aug 2020 20:02:20 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F62C061383;
+        Wed, 12 Aug 2020 17:02:20 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id x6so1876010pgx.12;
+        Wed, 12 Aug 2020 17:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YZ0DPU+7FEgTW1kdKvFkaE475aoyAvXltQCD2JpTtaU=;
-        b=cADRa2L+LNtmOC8nGDW4NEBh1LKPUNQBVbSJ2lRlPO7/ex575XERs6bkt8ye0WQ36q
-         nKfPHAfk093ngCTZeIOX3r4GXkJbFYEonLHqKYPfvuBmjEDniJ+DDci92BugIbisNdPp
-         AwJF9BUpjxQHhED+vrE0T9EHVEbtGvjX8N8kc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NL6rjLUzSXMKDMOOhTr8S6EoaPbeYW69JWbRVQ0AlOQ=;
+        b=U2gNhKgvUtMwI0xzUVhx//Bq/+qwtjFeuaYS1iveIR3A4bsACyis1XddGwiY6dK2Sn
+         6jbT7RsiRVg4o5I9ePAPB9paTugf7W0AFcLzK5wXEbTZo+P35e/+ALwm2rCJrrKtDu3k
+         QF8c2z47qQ9ToSjndnfod7w9oaqdqX0rpY9OcEHNQNshW0I1MNOYt8B2wVa6hUuRfxLP
+         JX84Att2w1CT9xa5NObA6SMP5S2SXrU9yu9N1jAjKiD8MtKfyIvLn5dP8l7iZy+cIMPr
+         eafUH6Ta2blVR9Y7ToWsVuBk8fVhSdKCO5nOlGZBcndN73qqU5NcvBYHd5k9LbAGOJ7U
+         1ZZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YZ0DPU+7FEgTW1kdKvFkaE475aoyAvXltQCD2JpTtaU=;
-        b=fQ19ueLs+0t2XQnkEQinBULdC3sPVKiFws9EJvg5hoRtQ9CnN62FO8r+G6cyuvhJN5
-         8pa5EySG1H2oC0dDLU80LfSIu0/yybx6n+jna+50JkEXHlIVkH4DS3YUtUuKWKyFC0wb
-         VHs1QOwfGR3A4R5BBoMgXOE2FqMYECF8N7QtVF8V4WdYVHpNZ3WvReomGXDhAeQ13gqw
-         YgA8Er8vWzzkORSTZ+NEeN9FZ0m3Asc8Uq0AyFp1m67BdDrSfncgivznar9NYX9t5sXV
-         AXliAUf+s9HsPsPwm65MZihLWqMTGNkkFoHPbZGevlKLKwA4R724NcvachBFflp4rlV/
-         Nw6A==
-X-Gm-Message-State: AOAM532N8ovb0V4TIZ6oPVzjMIY0cyog0cqIkhaOK3vfUMQzmoGZ4VkH
-        xKudNFJnAEAIXDHtI8PgzcTXgrc+qMs=
-X-Google-Smtp-Source: ABdhPJy+1O1tuZH+Cm0RUojIhatTT3pfscrBv2KG5gFDavzaOXIStiJM+97ZIdQ/wy06Hi5qFtPUQA==
-X-Received: by 2002:a67:3015:: with SMTP id w21mr1241595vsw.99.1597276801375;
-        Wed, 12 Aug 2020 17:00:01 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id 61sm32083uau.16.2020.08.12.17.00.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 17:00:00 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id x187so900127vkc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:00:00 -0700 (PDT)
-X-Received: by 2002:a1f:fc02:: with SMTP id a2mr1543414vki.65.1597276799887;
- Wed, 12 Aug 2020 16:59:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NL6rjLUzSXMKDMOOhTr8S6EoaPbeYW69JWbRVQ0AlOQ=;
+        b=julcxlrFBIA58gh+dHoy4i5doghRosqY1UiB3S5eVZQXhWM2FUfHntEnmX5LnytCD4
+         IJAUfkMsQOj+Emap87btcFgXtCpByja0z1BB1KSPQBY7TLQR4irAjkWuCiOMcfqtL2u5
+         ctWPFH0Jrrtdb4UZzOevHjwxxhEmc0jaseWr8NjqXmpmVsPgYo0hdidDVxqSHmllBExE
+         CbMb7eBLmOMorIE9xCH0rsfnUpfwTq07Y07yTjECcZEvk37Azvn2MDUSkg9Ehv4mICMZ
+         OH291lX9v2l/+u7TNMTOj/yRO/WxfuDsqm0VyM6dNv8k/JqKfvZ3an06ffthnwLbYNTi
+         BPLw==
+X-Gm-Message-State: AOAM532ZU1N1Ufqz/N2Zy/xWJNwV9khpODZ5bEW5KOwWqYjDpWTJUpSJ
+        2gGRIR/Dx8TGo7/qtrf117de8x7eB9E=
+X-Google-Smtp-Source: ABdhPJyrSzvVBwV+Sltkyb+UhvogaKP8htnyL7cUHmv9324U3QvGSXf9RSUI9G2wmyoYoKvDJUop1g==
+X-Received: by 2002:a62:d149:: with SMTP id t9mr1853163pfl.59.1597276939794;
+        Wed, 12 Aug 2020 17:02:19 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id y20sm3563448pfn.183.2020.08.12.17.02.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 17:02:18 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/adreno: fix updating ring fence
+Date:   Wed, 12 Aug 2020 17:03:09 -0700
+Message-Id: <20200813000311.708728-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org> <1595333413-30052-2-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1595333413-30052-2-git-send-email-sumit.garg@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 12 Aug 2020 16:59:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uqi28A=sm5+JhAqBM2OtBM3_XwvvkaKyEDVL9uVEioog@mail.gmail.com>
-Message-ID: <CAD=FV=Uqi28A=sm5+JhAqBM2OtBM3_XwvvkaKyEDVL9uVEioog@mail.gmail.com>
-Subject: Re: [RFC 1/5] tty/sysrq: Make sysrq handler NMI aware
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Rob Clark <robdclark@chromium.org>
 
-On Tue, Jul 21, 2020 at 5:10 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> In a future patch we will add support to the serial core to make it
-> possible to trigger a magic sysrq from an NMI context. Prepare for this
-> by marking some sysrq actions as NMI safe. Safe actions will be allowed
-> to run from NMI context whilst that cannot run from an NMI will be queued
-> as irq_work for later processing.
->
-> A particular sysrq handler is only marked as NMI safe in case the handler
-> isn't contending for any synchronization primitives as in NMI context
-> they are expected to cause deadlocks. Note that the debug sysrq do not
-> contend for any synchronization primitives. It does call kgdb_breakpoint()
-> to provoke a trap but that trap handler should be NMI safe on
-> architectures that implement an NMI.
->
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  drivers/tty/sysrq.c       | 33 ++++++++++++++++++++++++++++++++-
->  include/linux/sysrq.h     |  1 +
->  kernel/debug/debug_core.c |  1 +
->  3 files changed, 34 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index 7c95afa9..8017e33 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -50,6 +50,8 @@
->  #include <linux/syscalls.h>
->  #include <linux/of.h>
->  #include <linux/rcupdate.h>
-> +#include <linux/irq_work.h>
-> +#include <linux/kfifo.h>
->
->  #include <asm/ptrace.h>
->  #include <asm/irq_regs.h>
-> @@ -111,6 +113,7 @@ static const struct sysrq_key_op sysrq_loglevel_op = {
->         .help_msg       = "loglevel(0-9)",
->         .action_msg     = "Changing Loglevel",
->         .enable_mask    = SYSRQ_ENABLE_LOG,
-> +       .nmi_safe       = true,
->  };
->
->  #ifdef CONFIG_VT
-> @@ -157,6 +160,7 @@ static const struct sysrq_key_op sysrq_crash_op = {
->         .help_msg       = "crash(c)",
->         .action_msg     = "Trigger a crash",
->         .enable_mask    = SYSRQ_ENABLE_DUMP,
-> +       .nmi_safe       = true,
->  };
->
->  static void sysrq_handle_reboot(int key)
-> @@ -170,6 +174,7 @@ static const struct sysrq_key_op sysrq_reboot_op = {
->         .help_msg       = "reboot(b)",
->         .action_msg     = "Resetting",
->         .enable_mask    = SYSRQ_ENABLE_BOOT,
-> +       .nmi_safe       = true,
->  };
->
->  const struct sysrq_key_op *__sysrq_reboot_op = &sysrq_reboot_op;
-> @@ -217,6 +222,7 @@ static const struct sysrq_key_op sysrq_showlocks_op = {
->         .handler        = sysrq_handle_showlocks,
->         .help_msg       = "show-all-locks(d)",
->         .action_msg     = "Show Locks Held",
-> +       .nmi_safe       = true,
->  };
->  #else
->  #define sysrq_showlocks_op (*(const struct sysrq_key_op *)NULL)
-> @@ -289,6 +295,7 @@ static const struct sysrq_key_op sysrq_showregs_op = {
->         .help_msg       = "show-registers(p)",
->         .action_msg     = "Show Regs",
->         .enable_mask    = SYSRQ_ENABLE_DUMP,
-> +       .nmi_safe       = true,
->  };
->
->  static void sysrq_handle_showstate(int key)
-> @@ -326,6 +333,7 @@ static const struct sysrq_key_op sysrq_ftrace_dump_op = {
->         .help_msg       = "dump-ftrace-buffer(z)",
->         .action_msg     = "Dump ftrace buffer",
->         .enable_mask    = SYSRQ_ENABLE_DUMP,
-> +       .nmi_safe       = true,
->  };
->  #else
->  #define sysrq_ftrace_dump_op (*(const struct sysrq_key_op *)NULL)
-> @@ -538,6 +546,23 @@ static void __sysrq_put_key_op(int key, const struct sysrq_key_op *op_p)
->                  sysrq_key_table[i] = op_p;
->  }
->
-> +#define SYSRQ_NMI_FIFO_SIZE    64
-> +static DEFINE_KFIFO(sysrq_nmi_fifo, int, SYSRQ_NMI_FIFO_SIZE);
+We need to set it to the most recent completed fence, not the most
+recent submitted.  Otherwise we have races where we think we can retire
+submits that the GPU is not finished with, if the GPU doesn't manage to
+overwrite the seqno before we look at it.
 
-A 64-entry FIFO seems excessive. Quite honestly even a FIFO seems a
-bit excessive and it feels like if two sysrqs were received in super
-quick succession that it would be OK to just process the first one.  I
-guess if it simplifies the processing to have a FIFO then it shouldn't
-hurt, but no need for 64 entries.
+This can show up with hang recovery if one of the submits after the
+crashing submit also hangs after it is replayed.
 
+Fixes: f97decac5f4c ("drm/msm: Support multiple ringbuffers")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static void sysrq_do_nmi_work(struct irq_work *work)
-> +{
-> +       const struct sysrq_key_op *op_p;
-> +       int key;
-> +
-> +       while (kfifo_out(&sysrq_nmi_fifo, &key, 1)) {
-> +               op_p = __sysrq_get_key_op(key);
-> +               if (op_p)
-> +                       op_p->handler(key);
-> +       }
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index f9e3badf2fca..34e6242c1767 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -405,7 +405,7 @@ int adreno_hw_init(struct msm_gpu *gpu)
+ 		ring->next = ring->start;
+ 
+ 		/* reset completed fence seqno: */
+-		ring->memptrs->fence = ring->seqno;
++		ring->memptrs->fence = ring->fctx->completed_fence;
+ 		ring->memptrs->rptr = 0;
+ 	}
+ 
+-- 
+2.26.2
 
-Do you need to manage "suppress_printk" in this function?  Do you need
-to call rcu_sysrq_start() and rcu_read_lock()?
-
-If so, how do you prevent racing between the mucking we're doing with
-these things and the mucking that the NMI does with them?
-
-
-> +}
-> +
-> +static DEFINE_IRQ_WORK(sysrq_nmi_work, sysrq_do_nmi_work);
-> +
->  void __handle_sysrq(int key, bool check_mask)
->  {
->         const struct sysrq_key_op *op_p;
-> @@ -568,7 +593,13 @@ void __handle_sysrq(int key, bool check_mask)
->                 if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
->                         pr_info("%s\n", op_p->action_msg);
->                         console_loglevel = orig_log_level;
-> -                       op_p->handler(key);
-> +
-> +                       if (in_nmi() && !op_p->nmi_safe) {
-> +                               kfifo_in(&sysrq_nmi_fifo, &key, 1);
-
-Rather than kfifo_in() and kfifo_out(), I think you can use
-kfifo_put() and kfifo_get().  As I understand it those just get/put
-one element which is what you want.
-
-
-> +                               irq_work_queue(&sysrq_nmi_work);
-
-Wishful thinking, but (as far as I can tell) irq_work_queue() only
-queues work on the CPU running the NMI.  I don't have lots of NMI
-experience, but any chance there is a variant that will queue work on
-any CPU?  Then sysrq handlers that aren't NMI aware will be more
-likely to work.
-
-
-
-
-> +                       } else {
-> +                               op_p->handler(key);
-> +                       }
->                 } else {
->                         pr_info("This sysrq operation is disabled.\n");
->                         console_loglevel = orig_log_level;
-> diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-> index 3a582ec..630b5b9 100644
-> --- a/include/linux/sysrq.h
-> +++ b/include/linux/sysrq.h
-> @@ -34,6 +34,7 @@ struct sysrq_key_op {
->         const char * const help_msg;
->         const char * const action_msg;
->         const int enable_mask;
-> +       const bool nmi_safe;
->  };
->
->  #ifdef CONFIG_MAGIC_SYSRQ
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 9e59347..2b51173 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -943,6 +943,7 @@ static const struct sysrq_key_op sysrq_dbg_op = {
->         .handler        = sysrq_handle_dbg,
->         .help_msg       = "debug(g)",
->         .action_msg     = "DEBUG",
-> +       .nmi_safe       = true,
->  };
->  #endif
->
-> --
-> 2.7.4
->
