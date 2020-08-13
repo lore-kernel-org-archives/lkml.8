@@ -2,134 +2,287 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6BA0206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:52:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ9PHLG0"
+	by mail.kernel.org (Postfix) with ESMTP id 7756B206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHMDwD (ORCPT
+        id S1726635AbgHMDxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgHMDwD (ORCPT
+        Wed, 12 Aug 2020 23:53:16 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:37965 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726334AbgHMDxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:52:03 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A662C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:52:03 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so2042097pls.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VA5B9P3jl9Rwei4btklJKhUkayY4KVxIbC/8uysb2Ms=;
-        b=FJ9PHLG0g7f2Maa7cEQaeUtA3Ylx3IdGyk8cYMtQQU+98QK+IT2QqARjp/wBJnclBX
-         gh6+YGAnyaAijFJi1Sa+mALef97sfGBdvrTpPoi1Tx8/fcwx3zDq290YDgbx0QCLIx+Y
-         jGF0U0KLIzHVkBlpJBAd/BG1JF/1W6VfIMxDDa/lbXLKGWIH0+1lHKtpPgOmlAS68sBZ
-         qLoNgZSoLqdoYUfoKHkCGuNi1zx52XhloQWeVTec1kqBA+ao3SrUx63zekVagojb1lj2
-         Sy6ZYa/hOxGI0tm69Rqv5U/hZFdlQdoZYBCPKmJbHw1blMl9WYcv72/dlef9I24UTDcK
-         tf0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VA5B9P3jl9Rwei4btklJKhUkayY4KVxIbC/8uysb2Ms=;
-        b=Fb/yyaQgYnxTTy8uI3A9XhFDlHPikdTV521MUTJRyiwdGoo8jazU3WTAZHgXHjNKXm
-         6TjbceBCl2hEAg9VeoJGC47NJ/rjkejrFi+CUKjFtOLgFwmxCLoQFj8rxUNQMvMXi04u
-         E05qTJKvlCORWb4ixetwS8VXEypq0hZl5pxHrh606dqoUqPS4DdtybvcjSdeHPNOx7Xy
-         jgCTIP+VWJstY4N/7KTMMjM4Qu+1wOHT0xvaiC/BJ0qYmgKXDkBgwQy3V+3WPJhvr/Rm
-         s5G+BjQlqS4s3ba+AmF6+3zFrGaVvxlkQd+LjfGPcsWwpq5iwuphYkmgA6E5Cxbg+aqB
-         Tqsg==
-X-Gm-Message-State: AOAM532jefl4DWGgVStk2d8KiqCG6uDLf4/OkzwrgKvBmf7BsBd/f8m0
-        Vks3Mfbrzn6XbwbHVJ+pxHQT4NGG/OU=
-X-Google-Smtp-Source: ABdhPJyyBYECo8VpyG+iLLqstmWjZwM/PavaoCFYPLSee0oyVvu3TxY0sHJDPEst5m3pobV1uZahJQ==
-X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr2239283plq.135.1597290722526;
-        Wed, 12 Aug 2020 20:52:02 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e7sm3630443pgn.64.2020.08.12.20.51.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Aug 2020 20:52:01 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Doug Berger <opendmb@gmail.com>
-Subject: [PATCH] mm: include CMA pages in lowmem_reserve at boot
-Date:   Wed, 12 Aug 2020 20:51:38 -0700
-Message-Id: <1597290698-24266-1-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 12 Aug 2020 23:53:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5c8daw_1597290787;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5c8daw_1597290787)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 13 Aug 2020 11:53:08 +0800
+Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in
+ compaction
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
+ <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com>
+ <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
+ <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
+ <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
+ <d9818e06-95f1-9f21-05c0-98f29ea96d89@linux.alibaba.com>
+ <CAKgT0Ues0ShkSbb1XtA7z7EYB8NCPgLGq8zZUjrXK_jcWn8mDQ@mail.gmail.com>
+ <9581db48-cef3-788a-7f5a-8548fee56c13@linux.alibaba.com>
+ <CAKgT0UeuuQqpYRXXAs_YurWyDOtqx4y3sx7e4Xi2TE6s_7++Fg@mail.gmail.com>
+ <3828d045-17e4-16aa-f0e6-d5dda7ad6b1b@linux.alibaba.com>
+ <CAKgT0Ud6ZQ4ZTm1cAUKCdb8FMu0fk9vXgf-bnmb0aY5ndDHwyA@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <3d224c35-a53d-3daa-4c76-026d1f2b2656@linux.alibaba.com>
+Date:   Thu, 13 Aug 2020 11:52:31 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAKgT0Ud6ZQ4ZTm1cAUKCdb8FMu0fk9vXgf-bnmb0aY5ndDHwyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lowmem_reserve arrays provide a means of applying pressure
-against allocations from lower zones that were targeted at
-higher zones. Its values are a function of the number of pages
-managed by higher zones and are assigned by a call to the
-setup_per_zone_lowmem_reserve() function.
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses
-of the /proc/sys/vm/lowmem_reserve_ratio sysctl file.
 
-The function init_per_zone_wmark_min() was moved up from a
-module_init to a core_initcall to resolve a sequencing issue
-with khugepaged. Unfortunately this created a sequencing issue
-with CMA page accounting.
+在 2020/8/13 上午10:17, Alexander Duyck 写道:
+>> zone lock is probability better. you can try and test.
+> So I spent a good chunk of today looking the code over and what I
+> realized is that we probably don't even really need to have this code
+> protected by the zone lock since the LRU bit in the pageblock should
+> do most of the work for us. In addition we can get rid of the test
+> portion of this and just make it a set only operation if I am not
+> mistaken.
+> 
+>>>>> the LRU flag is cleared then you are creating a situation where
+>>>>> multiple processes will be stomping all over each other as you can
+>>>>> have each thread essentially take a page via the LRU flag, but only
+>>>>> one thread will process a page and it could skip over all other pages
+>>>>> that preemptively had their LRU flag cleared.
+>>>> It increase a bit crowd here, but lru_lock do reduce some them, and skip_bit
+>>>> could stop each other in a array check(bitmap). So compare to whole node
+>>>> lru_lock, the net profit is clear in patch 17.
+>>> My concern is that what you can end up with is multiple threads all
+>>> working over the same pageblock for isolation. With the old code the
+>>> LRU lock was used to make certain that test_and_set_skip was being
+>>> synchronized on the first page in the pageblock so you would only have
+>>> one thread going through and working a single pageblock. However after
+>>> your changes it doesn't seem like the test_and_set_skip has that
+>>> protection since only one thread will ever be able to successfully
+>>> call it for the first page in the pageblock assuming that the LRU flag
+>>> is set on the first page in the pageblock block.
+>>>
+>>>>> If you take a look at the test_and_set_skip the function only acts on
+>>>>> the pageblock aligned PFN for a given range. WIth the changes you have
+>>>>> in place now that would mean that only one thread would ever actually
+>>>>> call this function anyway since the first PFN would take the LRU flag
+>>>>> so no other thread could follow through and test or set the bit as
+>>>> Is this good for only one process could do test_and_set_skip? is that
+>>>> the 'skip' meaning to be?
+>>> So only one thread really getting to fully use test_and_set_skip is
+>>> good, however the issue is that there is nothing to synchronize the
+>>> testing from the other threads. As a result the other threads could
+>>> have isolated other pages within the pageblock before the thread that
+>>> is calling test_and_set_skip will get to complete the setting of the
+>>> skip bit. This will result in isolation failures for the thread that
+>>> set the skip bit which may be undesirable behavior.
+>>>
+>>> With the old code the threads were all synchronized on testing the
+>>> first PFN in the pageblock while holding the LRU lock and that is what
+>>> we lost. My concern is the cases where skip_on_failure == true are
+>>> going to fail much more often now as the threads can easily interfere
+>>> with each other.
+>> I have a patch to fix this, which is on
+>>         https://github.com/alexshi/linux.git lrunext
+> I don't think that patch helps to address anything. You are now
+> failing to set the bit in the case that something modifies the
+> pageblock flags while you are attempting to do so. I think it would be
+> better to just leave the cmpxchg loop as it is.
 
-The CMA pages are added to the managed page count of a zone
-when cma_init_reserved_areas() is called at boot also as a
-core_initcall. This makes it uncertain whether the CMA pages
-will be added to the managed page counts of their zones before
-or after the call to init_per_zone_wmark_min() as it becomes
-dependent on link order. With the current link order the pages
-are added to the managed count after the lowmem_reserve arrays
-are initialized at boot.
+It do increae the case-lru-file-mmap-read in vm-scalibity about 3% performance.
+Yes, I am glad to see it can be make better.
 
-This means the lowmem_reserve values at boot may be lower than
-the values used later if /proc/sys/vm/lowmem_reserve_ratio is
-accessed even if the ratio values are unchanged.
 
-In many cases the difference is not significant, but in others
-it may have an affect.
+> 
+>>>>> well. The expectation before was that all threads would encounter this
+>>>>> test and either proceed after setting the bit for the first PFN or
+>>>>> abort after testing the first PFN. With you changes only the first
+>>>>> thread actually runs this test and then it and the others will likely
+>>>>> encounter multiple failures as they are all clearing LRU bits
+>>>>> simultaneously and tripping each other up. That is why the skip bit
+>>>>> must have a test and set done before you even get to the point of
+>>>>> clearing the LRU flag.
+>>>> It make the things warse in my machine, would you like to have a try by yourself?
+>>> I plan to do that. I have already been working on a few things to
+>>> clean up and optimize your patch set further. I will try to submit an
+>>> RFC this evening so we can discuss.
+>>>
+>> Glad to see your new code soon. Would you like do it base on
+>>                 https://github.com/alexshi/linux.git lrunext
+> I can rebase off of that tree. It may add another half hour or so. I
+> have barely had any time to test my code. When I enabled some of the
+> debugging features in the kernel related to using the vm-scalability
+> tests the boot time became incredibly slow so I may just make certain
+> I can boot and not mess the system up before submitting my patches as
+> an RFC. I can probably try testing them more tomorrow.
+> 
+>>>>>>> The point I was getting at with the PageCompound check is that instead
+>>>>>>> of needing the LRU lock you should be able to look at PageCompound as
+>>>>>>> soon as you call get_page_unless_zero() and preempt the need to set
+>>>>>>> the LRU bit again. Instead of trying to rely on the LRU lock to
+>>>>>>> guarantee that the page hasn't been merged you could just rely on the
+>>>>>>> fact that you are holding a reference to it so it isn't going to
+>>>>>>> switch between being compound or order 0 since it cannot be freed. It
+>>>>>>> spoils the idea I originally had of combining the logic for
+>>>>>>> get_page_unless_zero and TestClearPageLRU into a single function, but
+>>>>>>> the advantage is you aren't clearing the LRU flag unless you are
+>>>>>>> actually going to pull the page from the LRU list.
+>>>>>> Sorry, I still can not follow you here. Compound code part is unchanged
+>>>>>> and follow the original logical. So would you like to pose a new code to
+>>>>>> see if its works?
+>>>>> No there are significant changes as you reordered all of the
+>>>>> operations. Prior to your change the LRU bit was checked, but not
+>>>>> cleared before testing for PageCompound. Now you are clearing it
+>>>>> before you are testing if it is a compound page. So if compaction is
+>>>>> running we will be seeing the pages in the LRU stay put, but the
+>>>>> compound bit flickering off and on if the compound page is encountered
+>>>>> with the wrong or NULL lruvec. What I was suggesting is that the
+>>>> The lruvec could be wrong or NULL here, that is the base stone of whole
+>>>> patchset.
+>>> Sorry I had a typo in my comment as well as it is the LRU bit that
+>>> will be flickering, not the compound. The goal here is to avoid
+>>> clearing the LRU bit unless we are sure we are going to take the
+>>> lruvec lock and pull the page from the list.
+>>>
+>>>>> PageCompound test probably doesn't need to be concerned with the lock
+>>>>> after your changes. You could test it after you call
+>>>>> get_page_unless_zero() and before you call
+>>>>> __isolate_lru_page_prepare(). Instead of relying on the LRU lock to
+>>>>> protect us from the page switching between compound and not we would
+>>>>> be relying on the fact that we are holding a reference to the page so
+>>>>> it should not be freed and transition between compound or not.
+>>>>>
+>>>> I have tried the patch as your suggested, it has no clear help on performance
+>>>> on above vm-scaliblity case. Maybe it's due to we checked the same thing
+>>>> before lock already.
+>>>>
+>>>> diff --git a/mm/compaction.c b/mm/compaction.c
+>>>> index b99c96c4862d..cf2ac5148001 100644
+>>>> --- a/mm/compaction.c
+>>>> +++ b/mm/compaction.c
+>>>> @@ -985,6 +985,16 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>>>>                 if (unlikely(!get_page_unless_zero(page)))
+>>>>                         goto isolate_fail;
+>>>>
+>>>> +                       /*
+>>>> +                        * Page become compound since the non-locked check,
+>>>> +                        * and it's on LRU. It can only be a THP so the order
+>>>> +                        * is safe to read and it's 0 for tail pages.
+>>>> +                        */
+>>>> +                       if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+>>>> +                               low_pfn += compound_nr(page) - 1;
+>>>> +                               goto isolate_fail_put;
+>>>> +                       }
+>>>> +
+>>>>                 if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+>>>>                         goto isolate_fail_put;
+>>>>
+>>>> @@ -1013,16 +1023,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>>>>                                         goto isolate_abort;
+>>>>                         }
+>>>>
+>>>> -                       /*
+>>>> -                        * Page become compound since the non-locked check,
+>>>> -                        * and it's on LRU. It can only be a THP so the order
+>>>> -                        * is safe to read and it's 0 for tail pages.
+>>>> -                        */
+>>>> -                       if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+>>>> -                               low_pfn += compound_nr(page) - 1;
+>>>> -                               SetPageLRU(page);
+>>>> -                               goto isolate_fail_put;
+>>>> -                       }
+>>>>                 } else
+>>>>                         rcu_read_unlock();
+>>>>
+>>> So actually there is more we could do than just this. Specifically a
+>>> few lines below the rcu_read_lock there is yet another PageCompound
+>>> check that sets low_pfn yet again. So in theory we could combine both
+>>> of those and modify the code so you end up with something more like:
+>>> @@ -968,6 +974,16 @@ isolate_migratepages_block(struct compact_control
+>>> *cc, unsigned long low_pfn,
+>>>                 if (unlikely(!get_page_unless_zero(page)))
+>>>                         goto isolate_fail;
+>>>
+>>> +               if (PageCompound(page)) {
+>>> +                       const unsigned int order = compound_order(page);
+>>> +
+>>> +                       if (likely(order < MAX_ORDER))
+>>> +                               low_pfn += (1UL << order) - 1;
+>>> +
+>>> +                       if (unlikely(!cc->alloc_contig))
+>>> +                               goto isolate_fail_put;
+>>>
+>> The current don't check this unless locked changed. But anyway check it
+>> every page may have no performance impact.
+> Yes and no. The same code is also ran outside the lock and that is why
+> I suggested merging the two and creating this block of logic. It will
+> be clearer once I have done some initial smoke testing and submitted
+> my patch.
+> 
+>> +               }
+>>> +
+>>>                 if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+>>>                         goto isolate_fail_put;
+>>>
+>>> Doing this you would be more likely to skip over the entire compound
+>>> page in a single jump should you not be able to either take the LRU
+>>> bit or encounter a busy page in __isolate_Lru_page_prepare. I had
+>>> copied this bit from an earlier check and modified it as I was not
+>>> sure I can guarantee that this is a THP since we haven't taken the LRU
+>>> lock yet. However I believe the page cannot be split up while we are
+>>> holding the extra reference so the PageCompound flag and order should
+>>> not change until we call put_page.
+>>>
+>> It looks like the lock_page protect this instead of get_page that just works
+>> after split func called.
+> So I thought that the call to page_ref_freeze that is used in
+> functions like split_huge_page_to_list is meant to address this case.
+> What it is essentially doing is setting the reference count to zero if
+> the count is at the expected value. So with the get_page_unless_zero
+> it would either fail because the value is already zero, or the
+> page_ref_freeze would fail because the count would be one higher than
+> the expected value. Either that or I am still missing another piece in
+> the understanding of this.
 
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the
-CMA pages have the chance to be properly accounted in their
-zone(s) and allowing the lowmem_reserve arrays to receive
-consistent values.
+Uh, the front xa_lock or anon_vma lock guard the -refcount, so long locking path...
 
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8b7d0ecf30b1..f3e340ec2b6b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7887,7 +7887,7 @@ int __meminit init_per_zone_wmark_min(void)
- 
- 	return 0;
- }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
- 
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
--- 
-2.7.4
-
+Thanks
+Alex
