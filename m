@@ -2,87 +2,175 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFED9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882462074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01EF20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KBgg1LCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgHMJOS (ORCPT
+        id S1726467AbgHMJRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:14:18 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40011 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMJOO (ORCPT
+        Thu, 13 Aug 2020 05:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMJRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:14:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h16so4240150oti.7;
-        Thu, 13 Aug 2020 02:14:14 -0700 (PDT)
+        Thu, 13 Aug 2020 05:17:04 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2A7C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:17:03 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c6so4927860ilo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AVVK701BmMx0nOUeszXW5DOWYJuKUEBlmJUyUmBXonw=;
+        b=KBgg1LChIJzojq8wCoeBtwucYMjlQp1QRp2wmwPAM1zKPNUxxR3/5bSVizhTzk6G44
+         npUXrcnyRvP3lRa9ULHZykC+QGgP49O13LGemQfktRZo0AwGCTZxu1Ja45c7yx18xNv1
+         muca13rZx62UlS4IYGcPmIkoylmr5XPcDhItlD5VtS/lOEzd/55M7WX/jCSGZlcxiQI+
+         xvnTzujx3DLUkky5EGUiKdsM2s3jPLVW09TCdy6GQnvkfys69duwnup2xrOpSZ4dzgrb
+         MtdejXgoIja4ZEo0YCTAljx1ZieNdcHRbla7np/JOHNAUDYiXq7g/vRLdZ5Giy7MIEkC
+         pJKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6deScSjL4QPU+1nm9bXBybyRqV1GDJ1sApO6/RiKbQU=;
-        b=VGbrwNcZ3/J4uijzuU/SX72K4DIcpm1fy3kXkKAo9p++CkbJhCdgaPqR8KsKUICW+2
-         LctVbMJcgCPLHtv6PNnpK8ZDE4BRagDvGHx4AgaVBvXFU1mjyngwHstvOTo9jQKrinkk
-         1KLuGLHMbZ2aZgbiL9TSk5Yc+ver3yPjLAwDCejHw2Wr60zMaNr7nSKqgxLyg1t2lsqZ
-         EEgjSbfim+Q6fln+nJ/CpVmNlk3XYAkQuWW6SdB47BTyuA/AYNJanhrJXXiFfEhfvnlR
-         ipW73fcXROj/8x82rDqfYARPgz0wcSKke3YfqBbuwz2y1oTDgmtiOYZShJuNyGk6Xpzo
-         hXBQ==
-X-Gm-Message-State: AOAM531bDTAWKKRx55VCYrXafRRvYgknppPFMPAeclWKwCD8Pj5n6SV7
-        PCeHEQz5toNVz8IflRuZaGJviNRGpjb5vkvdaClxxQ==
-X-Google-Smtp-Source: ABdhPJxZzEDqr9QJqNG51CIenvHAo83Rhirby8BLtJumtqG8XOC3gc7VCxo0DqRRIU++IWQ6D6dQIcAZYqRgLk9McTQ=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr3418868otn.250.1597310053733;
- Thu, 13 Aug 2020 02:14:13 -0700 (PDT)
+        bh=AVVK701BmMx0nOUeszXW5DOWYJuKUEBlmJUyUmBXonw=;
+        b=KHnGm7KNJAp3KZF8MepKsjV78EaRZUSV6iTxtlpsM9tm3pwEgIAKkpyCLduY7CcD11
+         7CkBtLqhoTCftclD8ku9uStu3jRbc6G1kkdHixL4OFcfYETHHjEFl5tOjJPEwlgsP9cA
+         /i1Qh2Ne+BYPL/Zna2v6PrgVI3d8Naj1l1e2F1Yw9trEctzDywpzjLvRNfo40i+30LE1
+         e2iWr7K3ZGFkDY/FydJjnB1a14aAML51X6NzZCZ/dMt8ky/6QgZMkUcPZTTj/t3Hregy
+         jqX3yhpBmu+DfWuZ5PvO+nadY1gIgZAj1cghqNJKBY0rolmuBSARduEwr/G3QG/5vGsu
+         sn4w==
+X-Gm-Message-State: AOAM5336NQQr6HzIFCNJid3tIjCJUf4TEreK09IRa4AVQRLpspMF3+Sa
+        Y+Px2pGc+s4plgDJvwXBkYj5Fp6P/fL1SdJ9gna3zw==
+X-Google-Smtp-Source: ABdhPJxRPXxN0U59d/h40YvTBY16ELyNZJXxcUBHQUGymL9OOd1KXfE1MSjnoyNb6ubpiCdMHTv5+ANAII49M9IQehI=
+X-Received: by 2002:a92:d5ca:: with SMTP id d10mr3686682ilq.216.1597310222851;
+ Thu, 13 Aug 2020 02:17:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 13 Aug 2020 11:14:02 +0200
-Message-ID: <CAMuHMdU-hHmLeGkgC+mBD5nwWXGsD=fGcywyQgx86cPtxgyrSw@mail.gmail.com>
-Subject: Re: [PATCH 6/9] arm64: dts: renesas: r8a774e1: Populate HDMI encoder node
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+References: <20200623184515.4132564-1-guro@fb.com> <20200623184515.4132564-5-guro@fb.com>
+ <20200811152737.GB650506@cmpxchg.org> <20200811170611.GB1507044@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200811170611.GB1507044@carbon.DHCP.thefacebook.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 13 Aug 2020 14:46:51 +0530
+Message-ID: <CA+G9fYuTsjEpDpODGcYf5hnGwzxj__tVdCMpWeC+ojg5pkYCzw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
+ parent cgroup
+To:     Roman Gushchin <guro@fb.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Cgroups <cgroups@vger.kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Kernel Team <kernel-team@fb.com>, lkft-triage@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 4:03 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+The kernel warnings  were noticed on linux next 20200813 while booting
+on arm64, arm, x86_64 and i386.
+
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: e6d113aca646fb6a92b237340109237fd7a9c770
+  git describe: next-20200813
+  make_kernelversion: 5.8.0
+  kernel-config:
+https://builds.tuxbuild.com/YQHc_PpEV-DF8rU7N9tlIQ/kernel.config
+
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 130093bdf74b..e25f2db7e61c 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5137,6 +5137,9 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+>         if (!pn)
+>                 return 1;
 >
-> Populate HDMI node properties in R8A774E1 SoC dtsi.
+> +       /* We charge the parent cgroup, never the current task */
+> +       WARN_ON_ONCE(!current->active_memcg);
+> +
+>         pn->lruvec_stat_local = alloc_percpu_gfp(struct lruvec_stat,
+>                                                  GFP_KERNEL_ACCOUNT);
+>         if (!pn->lruvec_stat_local) {
+> @@ -5219,6 +5222,9 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+>                 goto fail;
+>         }
 >
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +       /* We charge the parent cgroup, never the current task */
+> +       WARN_ON_ONCE(!current->active_memcg);
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10 (after resolving the port numbering).
+[    0.217404] ------------[ cut here ]------------
+[    0.218038] WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226
+mem_cgroup_css_alloc+0x680/0x740
+[    0.219188] Modules linked in:
+[    0.219597] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-next-20200813 #1
+[    0.220187] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.221190] EIP: mem_cgroup_css_alloc+0x680/0x740
+[    0.222190] Code: d6 17 5d ff 8d 65 f4 89 d8 5b 5e 5f 5d c3 8d 74
+26 00 b8 58 39 6a d1 e8 fe 94 55 ff 8d 65 f4 89 d8 5b 5e 5f 5d c3 8d
+74 26 00 <0f> 0b e9 01 fa ff ff 8d b4 26 00 00 00 00 66 90 bb f4 ff ff
+ff ba
+[    0.223188] EAX: 00000000 EBX: d13666c0 ECX: 00000cc0 EDX: 0000ffff
+[    0.224187] ESI: 00000000 EDI: f4c11000 EBP: d1361f50 ESP: d1361f40
+[    0.225188] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
+[    0.226190] CR0: 80050033 CR2: ffd19000 CR3: 115f8000 CR4: 00040690
+[    0.227195] Call Trace:
+[    0.227882]  ? _cond_resched+0x17/0x30
+[    0.228195]  cgroup_init_subsys+0x66/0x12a
+[    0.229193]  cgroup_init+0x118/0x323
+[    0.230194]  start_kernel+0x43c/0x47d
+[    0.231193]  i386_start_kernel+0x48/0x4a
+[    0.232194]  startup_32_smp+0x164/0x168
+[    0.233195] ---[ end trace dfcf9be7b40caf05 ]---
+[    0.2342#
+08] ------------[ cut here ]------------
+[    0.235192] WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5141
+mem_cgroup_css_alloc+0x718/0x740
+[    0.236187] Modules linked in:
+[    0.236590] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+  5.8.0-next-20200813 #1
+[    0.237190] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.238194] EIP: mem_cgroup_css_alloc+0x718/0x740
+[    0.239191] Code: 48 ff e9 7c fd ff ff 8d 76 00 a1 b0 14 40 d1 e9
+53 fc ff ff 8d b6 00 00 00 00 0f 0b 8d b6 00 00 00 00 0f 0b 8d b6 00
+00 00 00 <0f> 0b e9 df f9 ff ff 90 89 f8 e8 29 0c 5c ff 89 f2 b8 10 f4
+40 d1
+[    0.240190] EAX: 00000000 EBX: f4c0c800 ECX: 00000000 EDX: d0eab660
+[    0.241189] ESI: 00000000 EDI: f4c11000 EBP: d1361f50 ESP: d1361f40
+[    0.242189] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
+[    0.243190] CR0: 80050033 CR2: ffd19000 CR3: 115f8000 CR4: 00040690
+[    0.244188] Call Trace:
+[    0.245191]  ? _cond_resched+0x17/0x30
+[    0.245686]  cgroup_init_subsys+0x66/0x12a
+[    0.246189]  cgroup_init+0x118/0x323
+[    0.246654]  start_kernel+0x43c/0x47d
+[    0.247189]  i386_start_kernel+0x48/0x4a
+[    0.247697]  startup_32_smp+0x164/0x168
+[    0.248188] ---[ end trace dfcf9be7b40caf06 ]---
+[    0.248990] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.249187] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
 
-Gr{oetje,eeting}s,
 
-                        Geert
+Full test log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200813/testrun/3061112/suite/linux-log-parser/test/check-kernel-warning-1665815/log
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Linaro LKFT
+https://lkft.linaro.org
