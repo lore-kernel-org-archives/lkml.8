@@ -2,154 +2,240 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73837C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89E2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAA220716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EFE20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8brHypj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMOU3 (ORCPT
+        id S1726605AbgHMOVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:20:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31839 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgHMOU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:20:28 -0400
-IronPort-SDR: 3Y0joxLg31Jr4eW0jv4vjpn0DbZ7xZ6MsTLB63l4RrEc9LU3wyUOiHQANW9niZ7o3WSsY2hMdr
- ydMcB+IdOOTQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="172264691"
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="172264691"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:20:27 -0700
-IronPort-SDR: afcjcKv9+GBaMkWwFzcTjep5VNfo3vNcoZiThdR/L17KtRva95L4xFPh5JcL7WTSMjwFDWknhM
- zuGaGsIjuoHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="325425064"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2020 07:20:24 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k6E5e-008SOa-OM; Thu, 13 Aug 2020 17:20:22 +0300
-Date:   Thu, 13 Aug 2020 17:20:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>, kurt@linutronix.de,
-        Raul Rangel <rrangel@google.com>,
-        "S, Shirish" <Shirish.S@amd.com>
-Subject: Re: Recursive/circular locking in
- serial8250_console_write/serial8250_do_startup
-Message-ID: <20200813142022.GY1891694@smile.fi.intel.com>
-References: <20200812154813.GA46894@roeck-us.net>
- <20200813050629.GA95559@roeck-us.net>
- <20200813115948.GA3854926@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813115948.GA3854926@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 13 Aug 2020 10:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgHMOVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:21:38 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877E8C061757;
+        Thu, 13 Aug 2020 07:21:37 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id s189so7509453iod.2;
+        Thu, 13 Aug 2020 07:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZFwKOeefuJ9BwLJB/h+tffKpE4E/wD0tX8RKafaeamo=;
+        b=j8brHypjvZXCRtF0FSf9CZ7EVpi+tSuYSHbNnQWo5djucgpeppUtqrWngOIWyONq+B
+         E2UtsZKGONeEwJ7aGWsTC61ff4fpmlacQoxfZ9RyOqMuTyygXBe3axG+XWdiDYGxb8SF
+         jI+kOj9TAirWQ2Avpl+xJyf9DCD7h0l9oWOYtx1PigGBg7VGLJouAJroA5eHrub3wnzk
+         LHAcQAm/ODwTBVnW2nSGqOUeMeHcdkh4axUSZEORacTgsZzMoS4wxu7TlRc98LTb9GSW
+         p2RTxjeIYdNyT9d+f+L9ZOzY6AljAmGo2rVqlb+VCmwaj6Uc0/frS3MPc+4xrvaKhzNa
+         2bNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZFwKOeefuJ9BwLJB/h+tffKpE4E/wD0tX8RKafaeamo=;
+        b=dg2w1k4rJdUbMl/4nCAxDkwQJsHYStry/LF4mMUM/fRMzwrXjvc0fZrHAq6xJHRyfx
+         DRlWOcZ/APHqSymPqTAy76W/xffA0WZjEyJE3TfzH5GAiLBNPgJiW11LTcn7POYBe6VC
+         I5BxIZomCTTvILBrytJuE+S9bA6p355rqprRSamnYJX8iAj/mbX13D2ltBKQrwMLfHmP
+         z0OyQ+1K7YuV/azkayYGqRhjja64ktiaY1KtCyAj+NBQjixvHlbqV/e1JOvZXc3STbXy
+         KVCh3UlOCk1SxmGD+zM6397R0VORQ+Sd3MMxhDCCh9UvWSSdgRS1tZfGVEiD/uoyR8ZU
+         qlpA==
+X-Gm-Message-State: AOAM530PABnJW5EWcHqD89NY5y+s7+2+HNaSKTbeDJBlFM1nPFJaE5Up
+        OVMa9m4BITF26PUF5JL7wQg=
+X-Google-Smtp-Source: ABdhPJyIYg/Gw5O8Yh4tpNhKC70T2a7HFu6GXj7JTm3lSbVP6GV4lvCqcS7CdoqeZfjnwUtDnUf5Jw==
+X-Received: by 2002:a02:cc53:: with SMTP id i19mr5342744jaq.33.1597328496878;
+        Thu, 13 Aug 2020 07:21:36 -0700 (PDT)
+Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id t88sm1541411ild.8.2020.08.13.07.21.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Aug 2020 07:21:34 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
+ (IPE)
+From:   Chuck Lever <chucklever@gmail.com>
+In-Reply-To: <1597246946.7293.9.camel@HansenPartnership.com>
+Date:   Thu, 13 Aug 2020 10:21:31 -0400
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3F328A12-25DD-418B-A7D0-64DA09236E1C@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+ <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+ <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
+ <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+ <1596639689.3457.17.camel@HansenPartnership.com>
+ <alpine.LRH.2.21.2008050934060.28225@namei.org>
+ <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+ <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+ <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+ <1597073737.3966.12.camel@HansenPartnership.com>
+ <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
+ <1597124623.30793.14.camel@HansenPartnership.com>
+ <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
+ <1597170509.4325.55.camel@HansenPartnership.com>
+ <2CA41152-6445-4716-B5EE-2D14E5C59368@gmail.com>
+ <1597246946.7293.9.camel@HansenPartnership.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 01:59:48PM +0200, Greg KH wrote:
-> On Wed, Aug 12, 2020 at 10:06:29PM -0700, Guenter Roeck wrote:
-> > On Wed, Aug 12, 2020 at 08:48:13AM -0700, Guenter Roeck wrote:
-> > > Hi,
-> > > 
-> > > crbug.com/1114800 reports a hard lockup due to circular locking in the
-> > > 8250 console driver. This is seen if CONFIG_PROVE_LOCKING is enabled.
-> > > 
-> > > Problem is as follows:
-> > > - serial8250_do_startup() locks the serial (console) port.
-> > > - serial8250_do_startup() then disables interrupts if interrupts are
-> > >   shared, by calling disable_irq_nosync().
-> > > - disable_irq_nosync() calls __irq_get_desc_lock() to lock the interrupt
-> > >   descriptor.
-> > > - __irq_get_desc_lock() calls lock_acquire()
-> > > - If CONFIG_PROVE_LOCKING is enabled, validate_chain() and check_noncircular()
-> > >   are called and identify a potential locking error.
-> > > - This locking error is reported via printk, which ultimately calls
-> > >   serial8250_console_write().
-> > > - serial8250_console_write() tries to lock the serial console port.
-> > >   Since it is already locked, the system hangs and ultimately reports
-> > >   a hard lockup.
-> > > 
-> > > I understand we'll need to figure out and fix what lockdep complains about,
-> > > and I am working on that. However, even if that is fixed, we'll need a
-> > > solution for the recursive lock: Fixing the lockdep problem doesn't
-> > > guarantee that a similar problem (or some other log message) won't be
-> > > detected and reported sometime in the future while serial8250_do_startup()
-> > > holds the console port lock.
-> > > 
-> > > Ideas, anyone ? Everything I came up with so far seems clumsy and hackish.
-> > > 
-> > 
-> > Turns out the situation is a bit worse than I thought. disable_irq_nosync(),
-> > when called from serial8250_do_startup(), locks the interrupt descriptor.
-> > The order of locking is
-> > 	serial port lock
-> > 	  interrupt descriptor lock
-> > 
-> > At the same time, __setup_irq() locks the interrupt descriptor as well.
-> > With the descriptor locked, it may report an error message using pr_err().
-> > This in turn may call serial8250_console_write(), which will try to lock
-> > the console serial port. The lock sequence is
-> > 	interrupt descriptor lock
-> > 	  serial port lock
-> > 
-> > I added the lockdep splat to the bug log at crbug.com/1114800.
-> > 
-> > Effectively, I think, this means we can't call disable_irq_nosync()
-> > while holding a serial port lock, or at least not while holding a
-> > serial port lock that is associated with a console.
-> > 
-> > The problem was introduced (or, rather, exposed) with upstream commit
-> > 7febbcbc48fc ("serial: 8250: Check UPF_IRQ_SHARED in advance").
-> 
-> Adding Andy, who wrote the above commit :)
-> 
-> Andy, any thoughts?
 
-So, we have here a problem and my commit is indeed revealed it since it's
-basically did spread of what we used to have only in two drivers (and
-originally reported problem was against third one, i.e. 8250_pnp) to all 8250.
-Even if we revert that commit, we got the other problem appear, hence it's a
-matter who to suffer until the clean solution will be provided.
 
-As per earlier discussion [1] (and I Cc'ed this to people from there) it
-appears there is another issue with RT kernels which brought initially that
-controversial disable_irq_nosync() call. Same here, if we drop this call
-somebody will be unsatisfied.
+> On Aug 12, 2020, at 11:42 AM, James Bottomley =
+<James.Bottomley@HansenPartnership.com> wrote:
+>=20
+> On Wed, 2020-08-12 at 09:56 -0400, Chuck Lever wrote:
+>>> On Aug 11, 2020, at 2:28 PM, James Bottomley <James.Bottomley@Hanse
+>>> nPartnership.com> wrote:
+>>>=20
+>>> On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
+>>>> Mimi's earlier point is that any IMA metadata format that
+>>>> involves unsigned digests is exposed to an alteration attack at
+>>>> rest or in transit, thus will not provide a robust end-to-end
+>>>> integrity guarantee.
+>>>=20
+>>> I don't believe that is Mimi's point, because it's mostly not
+>>> correct: the xattr mechanism does provide this today.  The point is
+>>> the mechanism we use for storing IMA hashes and signatures today is
+>>> xattrs because they have robust security properties for local
+>>> filesystems that the kernel enforces.  This use goes beyond IMA,
+>>> selinux labels for instance use this property as well.
+>>=20
+>> I don't buy this for a second. If storing a security label in a
+>> local xattr is so secure, we wouldn't have any need for EVM.
+>=20
+> What don't you buy?  Security xattrs can only be updated by local =
+root.
+> If you trust local root, the xattr mechanism is fine ... it's the only
+> one a lot of LSMs use, for instance.  If you don't trust local root or
+> worry about offline backups, you use EVM.  A thing isn't secure or
+> insecure, it depends on the threat model.  However, if you don't trust
+> the NFS server it doesn't matter whether you do or don't trust local
+> root, you can't believe the contents of the xattr.
+>=20
+>>> What I think you're saying is that NFS can't provide the robust
+>>> security for xattrs we've been relying on, so you need some other
+>>> mechanism for storing them.
+>>=20
+>> For NFS, there's a network traversal which is an attack surface.
+>>=20
+>> A local xattr can be attacked as well: a device or bus malfunction
+>> can corrupt the content of an xattr, or a privileged user can modify
+>> it.
+>>=20
+>> How does that metadata get from the software provider to the end
+>> user? It's got to go over a network, stored in various ways, some
+>> of which will not be trusted. To attain an unbroken chain of
+>> provenance, that metadata has to be signed.
+>>=20
+>> I don't think the question is the storage mechanism, but rather the
+>> protection mechanism. Signing the metadata protects it in all of
+>> these cases.
+>=20
+> I think we're saying about the same thing.
 
-The real fix possible to go to completely lockless printk(), but on the other
-hand it probably won't prevent other locking corner cases (dead lock?) in 8250
-console write callback.
+Roughly.
 
-The fix proposed in [2] perhaps not the way to go either...
 
-The idea about not allowing disabling IRQ for console port may be least
-painful as a (temporary?) mitigation.
+> For most people the
+> security mechanism of local xattrs is sufficient.  If you're paranoid,
+> you don't believe it is and you use EVM.
 
-[1]: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
-[2]: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
+When IMA metadata happens to be stored in local filesystems in
+a trusted xattr, it's going to enjoy the protection you describe
+without needing the addition of a cryptographic signature.
 
--- 
-With Best Regards,
-Andy Shevchenko
+However, that metadata doesn't live its whole life there. It
+can reside in a tar file, it can cross a network, it can live
+on a back-up tape. I think we agree that any time that metadata
+is in transit or at rest outside of a Linux local filesystem, it
+is exposed.
+
+Thus I'm interested in a metadata protection mechanism that does
+not rely on the security characteristics of a particular storage
+container. For me, a cryptographic signature fits that bill
+nicely.
+
+
+>>> I think Mimi's other point is actually that IMA uses a flat hash
+>>> which we derive by reading the entire file and then watching for
+>>> mutations. Since you cannot guarantee we get notice of mutation
+>>> with NFS, the entire IMA mechanism can't really be applied in its
+>>> current form and we have to resort to chunk at a time verifications
+>>> that a Merkel tree would provide.
+>>=20
+>> I'm not sure what you mean by this. An NFS client relies on
+>> notification of mutation to maintain the integrity of its cache of
+>> NFS file content, and it's done that since the 1980s.
+>=20
+> Mutation detection is part of the current IMA security model.  If IMA
+> sees a file mutate it has to be rehashed the next time it passes the
+> gate.  If we can't trust the NFS server, we can't trust the NFS
+> mutation notification and we have to have a different mechanism to
+> check the file.
+
+When an NFS server lies about mtime and ctime, then NFS is completely
+broken. Untrusted NFS server doesn't mean "broken behavior" -- I
+would think that local filesystems will have the same problem if
+they can't trust a local block device to store filesystem metadata
+like indirect blocks and timestamps.
+
+It's not clear to me that IMA as currently implemented can protect
+against broken storage devices or incorrect filesystem behavior.
+
+
+>> In addition to examining a file's mtime and ctime as maintained by
+>> the NFS server, a client can rely on the file's NFSv4 change
+>> attribute or an NFSv4 delegation.
+>=20
+> And that's secure in the face of a malicious or compromised server?
+>=20
+> The bottom line is still, I think we can't use linear hashes with an
+> open/exec/mmap gate with NFS and we have to move to chunk at a time
+> verification like that provided by a merkel tree.
+
+That's fine until we claim that remote filesystems require one form of
+metadata and local filesystems use some other form.
+
+To guarantee an unbroken chain of provenance, everyone has to use the
+same portable metadata format that is signed once by the content =
+creator.
+That's essentially why I believe the Merkle-based metadata format must
+require that the tree root is signed.
+
+
+--
+Chuck Lever
+chucklever@gmail.com
+
 
 
