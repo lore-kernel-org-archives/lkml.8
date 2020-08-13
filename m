@@ -2,101 +2,84 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2087BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F240620768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jowLIS51"
+	by mail.kernel.org (Postfix) with ESMTP id CA97120715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgHMFrg (ORCPT
+        id S1726486AbgHMF41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:47:36 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:45339 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725964AbgHMFrg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:47:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597297655; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=b0DJcUHjzFWq9ObgzTOR68emrB/phIhPyW57gsGau7g=; b=jowLIS51shkTF9sc/BtPZJ5C/CDEwgDSHJspmhHqn8WGtf3L8kZHgFDDtmoDT5vCMh2nBp4Q
- yCeMtPhhBbs91TIPJUqFPtcsflEBX68Okw1G5yoGLf4oTwj7SLK6+EYbLICSlJbsGGDEkKE5
- Yz29qxl4RpW2YCKYA4CAQJ7YkjA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f34d3f61e4d3989d458c6bb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 05:47:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 330DFC433C9; Thu, 13 Aug 2020 05:47:34 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.77.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98AE7C433C6;
-        Thu, 13 Aug 2020 05:47:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98AE7C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
- <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <7a0a6fcd-33ed-0427-6b42-b5d467f743f5@codeaurora.org>
-Date:   Thu, 13 Aug 2020 11:17:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 13 Aug 2020 01:56:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51300 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgHMF41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:56:27 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BRwmm2XF4z9tyg4;
+        Thu, 13 Aug 2020 07:56:24 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8pcqs7f3aQ33; Thu, 13 Aug 2020 07:56:24 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRwmm140Jz9tyg3;
+        Thu, 13 Aug 2020 07:56:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1C5D78B780;
+        Thu, 13 Aug 2020 07:56:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Dvdo23uApDSf; Thu, 13 Aug 2020 07:56:25 +0200 (CEST)
+Received: from [172.25.230.104] (po15451.idsi0.si.c-s.fr [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E7F428B768;
+        Thu, 13 Aug 2020 07:56:24 +0200 (CEST)
+Subject: Re: [PATCH v3 2/2] powerpc/uaccess: Add pre-update addressing to
+ __get_user_asm() and __put_user_asm()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <c27bc4e598daf3bbb225de7a1f5c52121cf1e279.1597235091.git.christophe.leroy@csgroup.eu>
+ <13041c7df39e89ddf574ea0cdc6dedfdd9734140.1597235091.git.christophe.leroy@csgroup.eu>
+ <20200812193712.GV6753@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <37d2f5ea-6d10-ec6d-4725-95bc51aae9fd@csgroup.eu>
+Date:   Thu, 13 Aug 2020 07:56:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200812193712.GV6753@gate.crashing.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 8/12/2020 1:02 AM, Stephen Boyd wrote:
-> Can the subject be more specific? "pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED flag"?
 
-Sure i can update subject in v5.
-
-Thanks,
-Maulik
-
->
-> Quoting Maulik Shah (2020-08-10 04:20:54)
->> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
->> during suspend and mask before setting irq type.
+Le 12/08/2020 à 21:37, Segher Boessenkool a écrit :
+> On Wed, Aug 12, 2020 at 12:25:17PM +0000, Christophe Leroy wrote:
+>> Enable pre-update addressing mode in __get_user_asm() and __put_user_asm()
 >>
->> Masking before changing type should make sure any spurious interrupt
->> is not detected during this operation.
->>
->> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 >> ---
+>> v3: new, splited out from patch 1.
+> 
+> It still looks fine to me, you can keep my Reviewed-by: :-)
+> 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Ah yes thanks, forgot it when I commited it.
 
+Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+
+Christophe
