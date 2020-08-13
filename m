@@ -2,148 +2,162 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3850C20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E4A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:59:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OEs+ZoQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgHMK5z (ORCPT
+        id S1726640AbgHMK7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:57:55 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:17067 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbgHMK5z (ORCPT
+        Thu, 13 Aug 2020 06:59:39 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37856 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMK71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:57:55 -0400
-X-IronPort-AV: E=Sophos;i="5.76,308,1592863200"; 
-   d="scan'208";a="463349984"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:57:53 +0200
-Date:   Thu, 13 Aug 2020 12:57:52 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
-cc:     michal.lkml@markovi.net, Gilles.Muller@lip6.fr,
-        gregkh@linuxfoundation.org, nicolas.palix@imag.fr,
-        linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH] scripts: coccicheck: Change default value for
- parallelism
-In-Reply-To: <CACAkLuqo+CJeyvVZ0oaN=6SqQNxXinfv8t6FNPyORO=GCCvstA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2008131257180.19118@hadrien>
-References: <20200812182722.4553-1-sylphrenadin@gmail.com> <alpine.DEB.2.22.394.2008122211330.2468@hadrien> <CACAkLuqo+CJeyvVZ0oaN=6SqQNxXinfv8t6FNPyORO=GCCvstA@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Thu, 13 Aug 2020 06:59:27 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 83D07551;
+        Thu, 13 Aug 2020 12:59:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597316364;
+        bh=MkCO5WRnwp35q3JzVhLn32/9iCBNr/ShuvAxpwbx+0w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OEs+ZoQnEGKW2rKPrLo5ZB2ySsOpJ9yrxXrpapBX+kUbnKBvv70r3Vpd7R6fRFpsS
+         QJKuhIM+9V/ZzqJ1LP/wkLMTGhx8/NE9nz9F6nLZA5BuiHnSkavsxaC8VJvulh8ppE
+         /tEeOHeoESQX91aKUCO0J5nm9nRkgCTmbsdI3aTw=
+Date:   Thu, 13 Aug 2020 13:59:10 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1
+ bindings
+Message-ID: <20200813105910.GB6057@pendragon.ideasonboard.com>
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+ <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2144651173-1597316273=:19118"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
---8323329-2144651173-1597316273=:19118
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On Thu, Aug 13, 2020 at 11:38:03AM +0100, Lad, Prabhakar wrote:
+> On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven wrote:
+> > On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar wrote:
+> > > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >
+> > > Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
+> > >
+> > > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > index 51cd4d162770..67cded5ad827 100644
+> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > @@ -10,6 +10,7 @@ Required Properties:
+> > >      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
+> > >      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
+> > >      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
+> > > +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
+> > >      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+> > >      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+> > >      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> > > @@ -75,6 +76,7 @@ corresponding to each DU output.
+> > >   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
+> > >   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
+> > >   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
+> > > + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
+> >
+> > As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
+> > instead of port 2?
+> >
+> > I know we did it the same for R-Car M3-N and RZ/G2N.
+> > But my main worry is adding support for R-Car H3-N later.
 
+Why should we do so ? The port number here isn't tied to the DU channel
+number. It only identifies the output port. Many DUs can route DU
+channel outputs to different output ports.
 
+> I do agree too, with the below diff I tested the LVDS output on RZ/G2N
+> Rev2 board and things work fine. But only thing it doesn't explain is
+> why does LVDS work on DU2 for G2[H/N] boards :D
+> 
+> Geert, Laurent, Kieran If you agree with the below changes I shall
+> post a proper patch fixing it for RZ/G2[HN]
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> index d661724fc28a..0b087d287202 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> @@ -2540,8 +2540,8 @@
+>                                                 remote-endpoint =
+> <&dw_hdmi0_in>;
+>                                         };
+>                                 };
+> -                               port@2 {
+> -                                       reg = <2>;
+> +                               port@3 {
+> +                                       reg = <3>;
+>                                         du_out_lvds0: endpoint {
+>                                                 remote-endpoint = <&lvds0_in>;
+>                                         };
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 3e67cf70f040..419d81c7763e 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -153,7 +153,7 @@ static const struct rcar_du_device_info
+> rcar_du_r8a774b1_info = {
+>                 },
+>                 [RCAR_DU_OUTPUT_LVDS0] = {
+>                         .possible_crtcs = BIT(0),
+> -                       .port = 2,
+> +                       .port = 3,
+>                 },
+>         },
+>         .num_lvds = 1,
+> 
+> > >   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
+> > >   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
+> > >   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
+> >
+> > Apart from that:
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Thu, 13 Aug 2020, Sumera Priyadarsini wrote:
+-- 
+Regards,
 
->
->
-> On Thu, 13 Aug, 2020, 1:45 AM Julia Lawall, <julia.lawall@inria.fr> wrote:
->
->
->       On Wed, 12 Aug 2020, Sumera Priyadarsini wrote:
->
->       > By default, coccicheck utilizes all available threads to implement
->       > parallelisation. However, when hyperthreading is enabled, this leads
->       > to all threads per core being occupied resulting in longer wall-clock
->       > times and higher power consumption.
->
->       I have the feeling that the above sentence is not quite optimal.
->       Actually, using all of the available hardware threads would not be a bad
->       thing, if it was giving a benefit.  The point is that it doesn't.  It
->       makes the performance worse instead.
->
->
-> How does this sound? 
->  
-> However, when all available threads are used, a decrease in performance was noted. The elapsed time was minimum when at most one thread per core was used. 
-
-This looks better, thanks.
-
-julia
-
->
->
->
->
->       > Hence, to improve performance,
->       > modify coccicheck to use only one thread per core atmost.
->
->       "atmost" is not a word.  It would be clearer to say "to use at most one
->       thread per core".
->
->       > In the cases where the total number of threads is more than 8 and
->       > hyperthreading is enabled, it was observed that optimum performance
->       > is achieved around one-fourth of the total number of cores.
->       > Modify the script further to accommodate this use case.
->
->       It would be nice to give some performance numbers and some information
->       about the machine used.
->
->
-> Alright, will add this. 
->
->
->       thanks,
->       julia
->
->       >
->       > Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
->       > ---
->       >  scripts/coccicheck | 9 +++++++++
->       >  1 file changed, 9 insertions(+)
->       >
->       > diff --git a/scripts/coccicheck b/scripts/coccicheck
->       > index e04d328210ac..dd228dcc915e 100755
->       > --- a/scripts/coccicheck
->       > +++ b/scripts/coccicheck
->       > @@ -75,8 +75,17 @@ else
->       >          OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
->       >      fi
->       >
->       > +    # Use only one thread per core by default if hyperthreading is enabled
->       > +    THREADS_PER_CORE=$(lscpu | grep "Thread(s) per core: " | tr -cd [:digit:])
->       >      if [ -z "$J" ]; then
->       >          NPROC=$(getconf _NPROCESSORS_ONLN)
->       > +     if [ $THREADS_PER_CORE -gt 1 -a $NPROC -gt 2 ] ; then
->       > +             if [ $NPROC -gt 8 ] ; then
->       > +                     NPROC=$((NPROC/4))
->       > +             else
->       > +                     NPROC=$((NPROC/2))
->       > +             fi
->       > +     fi
->       >      else
->       >          NPROC="$J"
->       >      fi
->       > --
->       > 2.17.1
->       >
->       > _______________________________________________
->       > Cocci mailing list
->       > Cocci@systeme.lip6.fr
->       > https://systeme.lip6.fr/mailman/listinfo/cocci
->       >
->
->
->
---8323329-2144651173-1597316273=:19118--
+Laurent Pinchart
