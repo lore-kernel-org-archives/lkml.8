@@ -2,89 +2,117 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F49C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B569CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C45620716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639F42078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XEX2+JsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMHpp (ORCPT
+        id S1726587AbgHMHqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:45:45 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:60653 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726107AbgHMHpm (ORCPT
+        Thu, 13 Aug 2020 03:46:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40902 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMHqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:45:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5dIbAA_1597304727;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5dIbAA_1597304727)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Aug 2020 15:45:29 +0800
-Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
-        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
-        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
-        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
-        akpm@linux-foundation.org, richard.weiyang@gmail.com,
-        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
- <20200813040224.13054.96724.stgit@localhost.localdomain>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
-Date:   Thu, 13 Aug 2020 15:44:51 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 13 Aug 2020 03:46:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D7g8vu134750;
+        Thu, 13 Aug 2020 07:46:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1MX3Zx2lAV/2UR78cqQ4np2FmrbW68MrXye6TvNF6z8=;
+ b=XEX2+JsCOP1FjleAxNmKy6cPA1aTpr1Z4OyqsAMbOpR1U9kQf9by8BeNhbZvc4kqcFh1
+ 4vOjOyd1fjK+72rPNgPcGr+w9e6JIvZqfpk1NXgiK/iBlJlYd4uEsL7FlWNqC511EBOT
+ xB2P0g4XD5gqZi/e57oxndVb122DQ/laY4yuIa+q135HAHhJ5QhW3LI5MnqW3hTr53Lp
+ b8OU0Y99hecJjRiOEyM3kB3bp0r96UTrvj0VFCmf87qZZ/0aP5D+ufUdI0t0EhAzHZYu
+ m29xKqSo1KFjftHQC3jKk8j1fAbWwRmi1zD/0kidNxc00WfTUU4NvCO0TFHhNCKdG1hK vA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32t2ydwdn0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Aug 2020 07:46:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D7bZUY014534;
+        Thu, 13 Aug 2020 07:46:23 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 32u3h4vbse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Aug 2020 07:46:23 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07D7kKTL008965;
+        Thu, 13 Aug 2020 07:46:22 GMT
+Received: from [10.191.2.179] (/10.191.2.179)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Aug 2020 07:46:20 +0000
+Subject: Re: [PATCH] block: insert a general SMP memory barrier before
+ wake_up_bit()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20200813024438.13170-1-jian.w.wen@oracle.com>
+ <20200813073115.GA15436@infradead.org>
+From:   Jacob Wen <jian.w.wen@oracle.com>
+Message-ID: <0a1d9db5-dc5f-5718-048d-861385ce2832@oracle.com>
+Date:   Thu, 13 Aug 2020 15:46:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200813040224.13054.96724.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200813073115.GA15436@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130058
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 8/13/20 3:31 PM, Christoph Hellwig wrote:
+> On Thu, Aug 13, 2020 at 10:44:38AM +0800, Jacob Wen wrote:
+>> wake_up_bit() uses waitqueue_active() that needs the explicit smp_mb().
+> Sounds like the barrier should go into wake_up_bit then..
 
-在 2020/8/13 下午12:02, Alexander Duyck 写道:
-> -		rcu_read_lock();
-> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> -
->  		/* If we already hold the lock, we can skip some rechecking */
-> -		if (lruvec != locked) {
-> -			if (locked)
-> -				unlock_page_lruvec_irqrestore(locked, flags);
-> +		if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec)) {
+wake_up_bit() doesn't know which one to chose: smp_mb__after_atomic() or 
+smp_mb().
 
-Ops, lruvec_holds_page_lru_lock need rcu_read_lock. 
-
-> +			if (lruvec)
-> +				unlock_page_lruvec_irqrestore(lruvec, flags);
->  
-> +			lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
-> -			locked = lruvec;
->  			rcu_read_unlock();
->  
-
-and some bugs:
-[  534.564741] CPU: 23 PID: 545 Comm: kcompactd1 Kdump: loaded Tainted: G S      W         5.8.0-next-20200803-00028-g9a7ff2cd6e5c #85
-[  534.577320] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS, BIOS 1.0.PL.IP.P.027.02 05/29/2020
-[  534.587693] Call Trace:
-[  534.590522]  dump_stack+0x96/0xd0
-[  534.594231]  ___might_sleep.cold.90+0xff/0x115
-[  534.599102]  kcompactd+0x24b/0x370
-[  534.602904]  ? finish_wait+0x80/0x80
-[  534.606897]  ? kcompactd_do_work+0x3d0/0x3d0
-[  534.611566]  kthread+0x14e/0x170
-[  534.615182]  ? kthread_park+0x80/0x80
-[  534.619252]  ret_from_fork+0x1f/0x30
-[  535.629483] BUG: sleeping function called from invalid context at include/linux/freezer.h:57
-[  535.638691] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 545, name: kcompactd1
-[  535.647601] INFO: lockdep is turned off.
+>
+>> Signed-off-by: Jacob Wen <jian.w.wen@oracle.com>
+>> ---
+>>   fs/block_dev.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/fs/block_dev.c b/fs/block_dev.c
+>> index 0ae656e022fd..e74980848a2a 100644
+>> --- a/fs/block_dev.c
+>> +++ b/fs/block_dev.c
+>> @@ -1175,6 +1175,7 @@ static void bd_clear_claiming(struct block_device *whole, void *holder)
+>>   	/* tell others that we're done */
+>>   	BUG_ON(whole->bd_claiming != holder);
+>>   	whole->bd_claiming = NULL;
+>> +	smp_mb();
+>>   	wake_up_bit(&whole->bd_claiming, 0);
+>>   }
+>>   
+>> -- 
+>> 2.17.1
+>>
+> ---end quoted text---
