@@ -2,154 +2,107 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06650C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD972C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D608C20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3D120768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nQIRT8+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgHMEy3 (ORCPT
+        id S1726117AbgHMFCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 00:54:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63538 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgHMEy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 00:54:29 -0400
-IronPort-SDR: ImVL/sZbYaeo8e+K5Gan+SNc3rBEUb0Pmp1dx1YGNNaLnp2gOE6LcZwgjhOWaccP58PKAQp/zg
- T6wCV+nxhDug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="142001557"
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="142001557"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 21:54:28 -0700
-IronPort-SDR: mLOlVFMGG1+lMAWVCHxdsWhNcEll08QkHk3MO5+6k0H92Vp3SeZE22GlGR040akuQfCvqJSkkL
- nZxkCWHafZxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="325296166"
-Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
-  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2020 21:54:26 -0700
-Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200807084841.7112-1-chenyi.qiang@intel.com>
- <20200807084841.7112-8-chenyi.qiang@intel.com>
- <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-Message-ID: <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
-Date:   Thu, 13 Aug 2020 12:52:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 13 Aug 2020 01:02:37 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:3853 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725829AbgHMFCh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:02:37 -0400
+X-UUID: 6e10a722735d46e29184642ae826d270-20200813
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vc0/8bE6UotQMHbyr5S0xQjHvklXp5WypDibcqFMXHo=;
+        b=nQIRT8+HQ0fCRyWTUobaV1i5dmltDjpkPegt6WMx47+4xcaROz9Qo0leU+Fk6FsLqoMObf8bnARUmtk2XFN8XM4XYnxmQ+o7NF5Yn8ndkmV1wz7x2rjSGn6iASl6RvwLWIPfsKjWQbhGQzmzM0Ls5aMmAoriPP+oci/VCMAI7qY=;
+X-UUID: 6e10a722735d46e29184642ae826d270-20200813
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1345128821; Thu, 13 Aug 2020 13:02:27 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS32DR.mediatek.inc (172.27.6.104) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 13 Aug 2020 13:02:21 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 13 Aug 2020 13:02:24 +0800
+Message-ID: <1597294944.31472.2.camel@mtksdaap41>
+Subject: Re: [PATCH v17 1/3] dt-bindings: Add bindings for Mediatek matrix
+ keypad
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     Fengping Yu <fengping.yu@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 13 Aug 2020 13:02:24 +0800
+In-Reply-To: <20200812221357.GS1665100@dtor-ws>
+References: <20200810064058.6467-1-fengping.yu@mediatek.com>
+         <20200810064058.6467-2-fengping.yu@mediatek.com>
+         <1597110443.22273.5.camel@mtksdaap41> <20200812221357.GS1665100@dtor-ws>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BA401CDDF3393E80B94BDC4FC2C3180630F59DD1B08243174249AEA12A760DA12000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gV2VkLCAyMDIwLTA4LTEyIGF0IDE1OjEzIC0wNzAwLCBEbWl0cnkgVG9yb2tob3Ygd3JvdGU6
+DQo+IEhpLA0KPiANCj4gT24gVHVlLCBBdWcgMTEsIDIwMjAgYXQgMDk6NDc6MjNBTSArMDgwMCwg
+WWluZ2pvZSBDaGVuIHdyb3RlOg0KPiA+IEhpLA0KPiA+IA0KPiA+IA0KPiA+IE9uIE1vbiwgMjAy
+MC0wOC0xMCBhdCAxNDo0MCArMDgwMCwgRmVuZ3BpbmcgWXUgd3JvdGU6DQo+ID4gPiBGcm9tOiAi
+ZmVuZ3BpbmcueXUiIDxmZW5ncGluZy55dUBtZWRpYXRlay5jb20+DQo+ID4gPiANCj4gPiA+IFRo
+aXMgcGF0Y2ggYWRkIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhdGVrIG1hdHJpeCBrZXlw
+YWQgZHJpdmVyLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBmZW5ncGluZy55dSA8ZmVu
+Z3BpbmcueXVAbWVkaWF0ZWsuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sICAgIHwgODcgKysrKysrKysrKysrKysrKysrKw0K
+PiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspDQo+ID4gPiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3Bk
+LnlhbWwNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnB1dC9tdGsta3BkLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sDQo+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
+PiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kNzRkZDhhNmZiZGUNCj4gPiANCj4gPiA8Li4uPg0K
+PiA+IA0KPiA+IA0KPiA+ID4gKyAga2V5cGFkLG51bS1jb2x1bW5zOg0KPiA+ID4gKyAgICBkZXNj
+cmlwdGlvbjogTnVtYmVyIG9mIGNvbHVtbiBsaW5lcyBjb25uZWN0ZWQgdG8gdGhlIGtleXBhZCBj
+b250cm9sbGVyLA0KPiA+ID4gKyAgICBpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVt
+YmVyLCBpbnN0ZWFkIHlvdSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlDQo+ID4gPiArICAgIGZv
+ciBlYWNoIElDLiBJZiBub3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyAxLg0KPiA+
+ID4gKw0KPiA+ID4gKyAga2V5cGFkLG51bS1yb3dzOg0KPiA+ID4gKyAgICBkZXNjcmlwdGlvbjog
+TnVtYmVyIG9mIHJvdyBsaW5lcyBjb25uZWN0ZWQgdG8gdGhlIGtleXBhZCBjb250cm9sbGVyLCBp
+dCBpcw0KPiA+ID4gKyAgICBub3QgZXF1YWwgdG8gUENCIHJvd3MgbnVtYmVyLCBpbnN0ZWFkIHlv
+dSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlIGZvciBlYWNoIElDLg0KPiA+ID4gKyAgICBJZiBu
+b3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyAxLg0KPiA+IA0KPiA+IFlvdXIgc291
+cmNlIGNvZGUgY2FuJ3QgcmVhbGx5IGhhbmRsZSBkdHMgd2l0aG91dCByb3dzL2NvbHVtbnMNCj4g
+PiBwcm9wZXJ0aWVzLiBBbHNvLCB0aGUgZGVmYXVsdCB2YWx1ZSBkb2Vzbid0IG1ha2UgYW55IHNl
+bnNlLiBObyBJQyB3aWxsDQo+ID4gaGF2ZSByb3dzIG9yIGNvbHVtbnMgc2V0IHRvIDEuDQo+ID4g
+DQo+ID4gU2luY2UgdGhlc2UgYXJlIElDIHNwZWNpZmllZCwgbm90IGJvYXJkIHNwZWNpZmllZCwg
+SSB0aGluayB5b3Ugc2hvdWxkDQo+ID4ganVzdCBoYXZlIHRoZSBjb3JyZWN0IG51bWJlcnMgaW4g
+ZHJpdmVyLg0KPiANCj4gSXQgaXMgYWN0dWFsbHkgcHJvcGVydHkgb2YgYm9hcmQgdG8gZGVjaWRl
+IGhvdyBtYW55IGtleXMgaXQgd2FudHMgdG8NCj4gd2lyZSB1cC4gSW4gZXh0cmVtZSBjYXNlIGl0
+IHdpbGwgYmUgYSBzaW5nbGUga2V5LCBpLmUuIG51bWJlciBvZiByb3dzDQo+IGFuZCBjb2x1bW5z
+IHdpbGwgaW5kZWVkIGJlIDEuDQo+IA0KPiBUaGFua3MuDQo+IA0KDQpGcm9tIHRoZSBiaW5kaW5n
+ICJpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVtYmVyLCBpbnN0ZWFkIHlvdQ0Kc2hv
+dWxkIGFkZCByZXF1aXJlZCB2YWx1ZSBmb3IgZWFjaCBJQy4iDQpEcml2ZXIgY29kZSB1c2UgdGhp
+cyB0byBjYWxjdWxhdGUgYml0IHBvc2l0aW9uIGluIHJlZ2lzdGVyLCB3aGljaCBpcyBJQw0KZGVw
+ZW5kZW50Lg0KDQpKb2UuQw0KDQo=
 
-
-On 8/11/2020 8:05 AM, Jim Mattson wrote:
-> On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->>
->> PKS MSR passes through guest directly. Configure the MSR to match the
->> L0/L1 settings so that nested VM runs PKS properly.
->>
->> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
->> ---
->>   arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
->>   arch/x86/kvm/vmx/vmcs12.c |  2 ++
->>   arch/x86/kvm/vmx/vmcs12.h |  6 +++++-
->>   arch/x86/kvm/vmx/vmx.c    | 10 ++++++++++
->>   arch/x86/kvm/vmx/vmx.h    |  1 +
->>   5 files changed, 50 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index df2c2e733549..1f9823d21ecd 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -647,6 +647,12 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
->>                                          MSR_IA32_PRED_CMD,
->>                                          MSR_TYPE_W);
->>
->> +       if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PKRS))
->> +               nested_vmx_disable_intercept_for_msr(
->> +                                       msr_bitmap_l1, msr_bitmap_l0,
->> +                                       MSR_IA32_PKRS,
->> +                                       MSR_TYPE_R | MSR_TYPE_W);
-> 
-> What if L1 intercepts only *reads* of MSR_IA32_PKRS?
-> 
->>          kvm_vcpu_unmap(vcpu, &to_vmx(vcpu)->nested.msr_bitmap_map, false);
->>
->>          return true;
-> 
->> @@ -2509,6 +2519,11 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
->>          if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
->>              !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
->>                  vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
->> +
->> +       if (kvm_cpu_cap_has(X86_FEATURE_PKS) &&
-> 
-> Is the above check superfluous? I would assume that the L1 guest can't
-> set VM_ENTRY_LOAD_IA32_PKRS unless this is true.
-> 
-
-I enforce this check to ensure vmcs_write to the Guest_IA32_PKRS without 
-error. if deleted, vmcs_write to GUEST_IA32_PKRS may executed when PKS 
-is unsupported.
-
->> +           (!vmx->nested.nested_run_pending ||
->> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
->> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
-> 
-> This doesn't seem right to me. On the target of a live migration, with
-> L2 active at the time the snapshot was taken (i.e.,
-> vmx->nested.nested_run_pending=0), it looks like we're going to try to
-> overwrite the current L2 PKRS value with L1's PKRS value (except that
-> in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
-> 0). Am I missing something?
-> 
-
-We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS. 
-Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's 
-PKRS to L2.
-
->>          vmx_set_rflags(vcpu, vmcs12->guest_rflags);
->>
->>          /* EXCEPTION_BITMAP and CR0_GUEST_HOST_MASK should basically be the
-> 
-> 
->> @@ -3916,6 +3943,8 @@ static void sync_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
->>                  vmcs_readl(GUEST_PENDING_DBG_EXCEPTIONS);
->>          if (kvm_mpx_supported())
->>                  vmcs12->guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
->> +       if (kvm_cpu_cap_has(X86_FEATURE_PKS))
-> 
-> Shouldn't we be checking to see if the *virtual* CPU supports PKS
-> before writing anything into vmcs12->guest_ia32_pkrs?
-> 
-
-Yes, It's reasonable.
-
->> +               vmcs12->guest_ia32_pkrs = vmcs_read64(GUEST_IA32_PKRS);
->>
->>          vmx->nested.need_sync_vmcs02_to_vmcs12_rare = false;
->>   }
