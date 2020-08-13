@@ -2,188 +2,108 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7231020774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5495B20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scDYOzoz"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RgebBq50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgHMSCv (ORCPT
+        id S1726576AbgHMSDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSCu (ORCPT
+        Thu, 13 Aug 2020 14:03:08 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41566 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMSDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:02:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D61C061757;
-        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g19so7131350ejc.9;
-        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
-        b=scDYOzozLAVzFpo2tbfIot2rR9/9IltAD0tuAFuZ7Q71nxeQbbQNCj22+aLiCqCYPQ
-         InGoDHYkp1iGqDUMlAuLtnqGrF2877ip1R9rbaQtVY7ZEHNotMQOeppIeqM/PtfskRMU
-         KvVpOm/lImRYi24xXHTpTqfuFjxCnrXVmFy36Hxa5+6bg5DIFQn4EIKo2SFkDYS3cFR0
-         IlgXGiudJyvnzZqs9lkCGMFd2GHvaVbMNAzKHXl7FxW5q1b5y5IH+w2iRy3ZVWO+xnx4
-         nm6tNRw9wlSmmNKr1mgK7BhWW7ucPcSE5m2hYkdNbbQ+i6zy5zNkZ6zEhSyYA2YD0fhe
-         BoHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
-        b=cz4Agg23y1egc/4VYvSCljm7v2PzW5ebxhZbLCPKwHxmwRoMPN6q6A8KhzUj54UJpj
-         q91ZD4kpzYnfiD8Bj7fLF97/mWfWTdEUa9aijmchyeWWgZdUn+7x7+dRgNtqq6OLMY66
-         2RyQnV2hr02H8/u7OFuHKlW8xoRcWLY00hrhD7m8pegxGlOcTDETMIed+1dcLESILdii
-         X55wO8MDJv3g2oObO35Zud4l/vHXNQfSoyfUtMlCSKRgAY11vqlUFosl8rwmFWn4GO2c
-         aROPsJ3vzIhDY7tKefCdcrpIvjSMAK/AJ2EKQiS3Z22g6dU9N9gCGjvFGNHROojM/MJX
-         erKA==
-X-Gm-Message-State: AOAM533gUpEm55gVwg4+HWmsyUjn/pxitYnUYjYFUTMQnMHlepSsaPAC
-        7ccBxjRih+qUelJQGzi2q30=
-X-Google-Smtp-Source: ABdhPJxM58xedodB7DOsuuj57AwE9aKU+sUl+gC9XA4qMAErBNxt/zB0UcR4VAT9G/tRXl9btm+U4Q==
-X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr5917864ejr.400.1597341768898;
-        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ci27sm5131051ejc.23.2020.08.13.11.02.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: rockchip: update cpu supplies on rk3288
-Date:   Thu, 13 Aug 2020 20:02:41 +0200
-Message-Id: <20200813180241.14660-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 13 Aug 2020 14:03:06 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 22C4420B4908;
+        Thu, 13 Aug 2020 11:03:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 22C4420B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597341785;
+        bh=Modxb3K7yV+fn+lZsLzpD0bAJRLvdDqXtA/f5BPYSis=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RgebBq50MoWJJfQ7slTtrv5HkiXjG+9SaCMslTqbChbX1hVnbpmfrZSXcIDcSXNAu
+         qNuXkGBr41h1uCxxJxB0mCQE/2nvLRLV89bqD5RWPh0/bKuhZSZAhoSJAb+Zs6sDKK
+         mJEiMmEwRxPU5kYyb2e2UTOq+xY6mVHR7Ti/fXn4=
+Subject: Re: [PATCH 2/2] SELinux: Measure state and hash of policy using IMA
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        paul Moore <paul@paul-moore.com>
+References: <20200813170707.2659-1-nramas@linux.microsoft.com>
+ <20200813170707.2659-3-nramas@linux.microsoft.com>
+ <5f738fd8-fe28-5358-b3d8-b671b45caa7f@gmail.com>
+ <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
+ <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <e935c06f-09e2-a2f7-f97f-768bc017f477@linux.microsoft.com>
+Date:   Thu, 13 Aug 2020 11:03:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of cpu0-supply for cpu0 alone is deprecated,
-so add cpu-supply to each cpu separately and
-update all existing rk3288 boards that use this property.
+On 8/13/20 10:58 AM, Stephen Smalley wrote:
+> On Thu, Aug 13, 2020 at 1:52 PM Lakshmi Ramasubramanian
+> <nramas@linux.microsoft.com> wrote:
+>>
+>> On 8/13/20 10:42 AM, Stephen Smalley wrote:
+>>
+>>>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+>>>> new file mode 100644
+>>>> index 000000000000..f21b7de4e2ae
+>>>> --- /dev/null
+>>>> +++ b/security/selinux/measure.c
+>>>> @@ -0,0 +1,204 @@
+>>>> +static int selinux_hash_buffer(void *buf, size_t buf_len,
+>>>> +                   void **buf_hash, int *buf_hash_len)
+>>>> +{
+>>>> +    struct crypto_shash *tfm;
+>>>> +    struct shash_desc *desc = NULL;
+>>>> +    void *digest = NULL;
+>>>> +    int desc_size;
+>>>> +    int digest_size;
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    tfm = crypto_alloc_shash("sha256", 0, 0);
+>>>> +    if (IS_ERR(tfm))
+>>>> +        return PTR_ERR(tfm);
+>>> Can we make the algorithm selectable via kernel parameter and/or writing
+>>> to a new selinuxfs node?
+>>
+>> I can add a kernel parameter to select this hash algorithm.
+> 
+> Also can we provide a Kconfig option for the default value like IMA does?
+> 
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3288-miqi.dts     | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-popmetal.dts | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-r89.dts      | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-vyasa.dts    | 14 +++++++++++++-
- 4 files changed, 52 insertions(+), 4 deletions(-)
+Would we need both - Kconfig and kernel param?
 
-diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
-index 213c9eb84..8a3992105 100644
---- a/arch/arm/boot/dts/rk3288-miqi.dts
-+++ b/arch/arm/boot/dts/rk3288-miqi.dts
-@@ -81,7 +81,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &emmc {
-diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
-index 6a5194039..160ed8b93 100644
---- a/arch/arm/boot/dts/rk3288-popmetal.dts
-+++ b/arch/arm/boot/dts/rk3288-popmetal.dts
-@@ -103,7 +103,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &emmc {
-diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
-index a258c7ae5..e5ba901c7 100644
---- a/arch/arm/boot/dts/rk3288-r89.dts
-+++ b/arch/arm/boot/dts/rk3288-r89.dts
-@@ -91,7 +91,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &gmac {
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 1a20854a1..aa50f8ed4 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -125,7 +125,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &emmc {
--- 
-2.11.0
+The other option is to provide an IMA function to return the current 
+hash algorithm used for measurement. That way a consistent hash 
+algorithm can be employed by both IMA and the callers. Would that be better?
+
+  -lakshmi
 
