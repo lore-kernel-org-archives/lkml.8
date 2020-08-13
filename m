@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E13BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F84C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC42A20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF9C204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0O3VVSf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2geYsx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgHMV4j (ORCPT
+        id S1726676AbgHMV4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgHMV4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Aug 2020 17:56:35 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0D3C061757;
-        Thu, 13 Aug 2020 14:56:35 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b11so3812034lfe.10;
-        Thu, 13 Aug 2020 14:56:35 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgHMV4c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 17:56:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6923EC061757;
+        Thu, 13 Aug 2020 14:56:32 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so7813452ljn.11;
+        Thu, 13 Aug 2020 14:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WTkK39BlZkedB5Vph2dghueoQAO2WsRm0+GwhySEKyY=;
-        b=l0O3VVSf0dYKebIDxndlR/t/F2RLrn/zKRoOGjnGLxMx8bnX2hwymf1eZQsqys6tsD
-         AsqopKdS0kfkrtQsAu82vdMzBGR7Cv0BTspPLjqarhzMSjriKXQoCPn9Hojsj+ytQ3jR
-         iyAadB948zlIFHN0on94OvcSNqH4IWuy/TTGVrSqFfpKiDgvaib5VeB6jlEpnBuKP9o/
-         KnLLArRk61U3HdFvPqziKxw2auZnkr5X6uFnZ64CT6gIDUGmg/i6YePcFCKJm47YecUs
-         d/d2pOtRMdxHjlnZ/39/byJJz8bpiOjzw+YNWkB9KO44utPF6KV1sr5UHMz9z9phIVuI
-         wyWg==
+        bh=O7qBXRGOJkpPjsWWIvuCbGocx96q/WvFO969Ya+/TD4=;
+        b=i2geYsx8r78/23QAK4haMQCO4P3mUskznKeR7l8N8Ha3L0hNlNLHQGiI8/E8TK2oaQ
+         ocED2HdkzeCiQf9qFIh62YqLgnWdHkUL0ofHLTOJLF5ysacLvA8nls6FgTBaPq7JGpiy
+         skIQTg4Is6FW8/mfZaG7ollg1ZrPEj0c9HjmaMPMIxTg1bp62J/O4pGnRs3qy6PpWig4
+         3WNXRnC02za6PrtLWCeiKOUKrqu3u1Bj7U4byOSijjgPZ9LrSB2pNMBwvo5iqEQn6B6p
+         xZ32xFTM8tPsmkPoI16dzCWSWD7Z20Hl4r8yfwaW+tT28b8C25vvuh3TAD+ezEzjxRKv
+         5EBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WTkK39BlZkedB5Vph2dghueoQAO2WsRm0+GwhySEKyY=;
-        b=GWFS0V83VaAKrAhW/ztTUL5x6u+b+ZNctBlWs+QV9+KEtwLgZgG/LoKIGnrZd4VotS
-         6kKHXQxHz0NIbChW/jJYHk18B46+wEno8cZKnY0fGt5OGazQb9seFYwXBggMmDlM/909
-         j8g1YL4hKopPygYDPxpEi4emlBkox0tiHJfKYOoTwEGjBPx7l7luoNgMkXwWT7yH5hGQ
-         e9sXnHoQGDJQ3h+VBG2mf6g9B8tooFCFE4B6WaVXfssSAeLBZ/1cVCWnu10ymswUyKF4
-         45mOEfLYxcspMN0eGIROnJm/Je0lkHaQSejbPIqFYyxQqcHFsLIXEUMjS31seXauLUql
-         vCTA==
-X-Gm-Message-State: AOAM5302cX1hqpdEnzNcgbIo8zg9geavmXYAK0xdH1leRIWjKmn4iyBO
-        o07zkWSHae/Kq/MyFneMRd4=
-X-Google-Smtp-Source: ABdhPJwpXkbGHsxGhgR7mAcufwuWAY7AnTmGU57eUQgfeST1zhEUCzFswSyjx17Cd53DZIZBQEiSTg==
-X-Received: by 2002:a19:418a:: with SMTP id o132mr3214359lfa.63.1597355794110;
-        Thu, 13 Aug 2020 14:56:34 -0700 (PDT)
+        bh=O7qBXRGOJkpPjsWWIvuCbGocx96q/WvFO969Ya+/TD4=;
+        b=bdbf3jgQu42i99Q0UJ39213XFOP08jefxakLTDGxTqs8RmTqUHbAOXS0vycC30cwqw
+         Q8eq4kvD+fjTrXrW7k2hWfHetf59/aNszkcOdzKk6stn8Aj32Rqi+HZzTHXAE9vMbiAe
+         sLr4CIBc1IeLXyFJ5+T+ZcZ/se8/Ip17kcLR43ERxZXkRUEy+E6+pKP2xI2t1hOOtyvl
+         At5tHGuzKGx7uEKc5xBYfe0xqzeK2tOyI59rLuQKamrS53WhfX8gH9K0jXjFmQhO+zGz
+         MOGTOvNTYlyamK69Y/Vmc9u0Etm3ie17TZFCKqIegoN6aeyccZsOkdkp/fBgavaDi4iL
+         eZ5g==
+X-Gm-Message-State: AOAM530NCvkVcBJRD3HgtqZ+Dv7nZjT8TBqCSCf2wbyy/hX3WWmRh7ko
+        TV16Yb244V8R9LZiTAUwHsA=
+X-Google-Smtp-Source: ABdhPJzI8Zb+3XIWnEMDQ/hzYFtXQxfOW8jntx5zXPHoaLem5kvIfWYygZGhvVKDuiPr/3qyzxHYDg==
+X-Received: by 2002:a2e:9810:: with SMTP id a16mr2666614ljj.157.1597355790900;
+        Thu, 13 Aug 2020 14:56:30 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z20sm1349977ljk.97.2020.08.13.14.56.33
+        by smtp.gmail.com with ESMTPSA id z20sm1349977ljk.97.2020.08.13.14.56.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:56:33 -0700 (PDT)
+        Thu, 13 Aug 2020 14:56:30 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
@@ -73,9 +73,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Stone <daniel@fooishbar.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v12 4/4] drm/panel-simple: Read panel orientation
-Date:   Fri, 14 Aug 2020 00:56:09 +0300
-Message-Id: <20200813215609.28643-5-digetx@gmail.com>
+Subject: [PATCH RESEND v12 1/4] drm/panel: Add helper for reading DT rotation
+Date:   Fri, 14 Aug 2020 00:56:06 +0300
+Message-Id: <20200813215609.28643-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200813215609.28643-1-digetx@gmail.com>
 References: <20200813215609.28643-1-digetx@gmail.com>
@@ -86,51 +86,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The panel orientation needs to parsed from a device-tree and assigned to
-the panel's connector in order to make orientation property available to
-userspace. That's what this patch does for the panel-simple driver.
+From: Derek Basehore <dbasehore@chromium.org>
 
+This adds a helper function for reading the rotation (panel
+orientation) from the device tree.
+
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Derek Basehore <dbasehore@chromium.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/drm_panel.c | 43 +++++++++++++++++++++++++++++++++++++
+ include/drm/drm_panel.h     |  9 ++++++++
+ 2 files changed, 52 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cb6550d37e85..6e3e99a30d85 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -112,6 +112,8 @@ struct panel_simple {
- 	struct gpio_desc *hpd_gpio;
- 
- 	struct drm_display_mode override_mode;
-+
-+	enum drm_panel_orientation orientation;
- };
- 
- static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
-@@ -371,6 +373,9 @@ static int panel_simple_get_modes(struct drm_panel *panel,
- 	/* add hard-coded panel modes */
- 	num += panel_simple_get_non_edid_modes(p, connector);
- 
-+	/* set up connector's "panel orientation" property */
-+	drm_connector_set_panel_orientation(connector, p->orientation);
-+
- 	return num;
+diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+index 8c7bac85a793..5557c75301f1 100644
+--- a/drivers/gpu/drm/drm_panel.c
++++ b/drivers/gpu/drm/drm_panel.c
+@@ -300,6 +300,49 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
+ 	return ERR_PTR(-EPROBE_DEFER);
  }
- 
-@@ -530,6 +535,12 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 		return err;
- 	}
- 
-+	err = of_drm_get_panel_orientation(dev->of_node, &panel->orientation);
-+	if (err) {
-+		dev_err(dev, "failed to parse rotation property: %d\n", err);
-+		return err;
+ EXPORT_SYMBOL(of_drm_find_panel);
++
++/**
++ * of_drm_get_panel_orientation - look up the orientation of the panel through
++ * the "rotation" binding from a device tree node
++ * @np: device tree node of the panel
++ * @orientation: orientation enum to be filled in
++ *
++ * Looks up the rotation of a panel in the device tree. The orientation of the
++ * panel is expressed as a property name "rotation" in the device tree. The
++ * rotation in the device tree is counter clockwise.
++ *
++ * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
++ * rotation property doesn't exist. -EERROR otherwise.
++ */
++int of_drm_get_panel_orientation(const struct device_node *np,
++				 enum drm_panel_orientation *orientation)
++{
++	int rotation, ret;
++
++	ret = of_property_read_u32(np, "rotation", &rotation);
++	if (ret == -EINVAL) {
++		/* Don't return an error if there's no rotation property. */
++		*orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
++		return 0;
 +	}
 +
- 	ddc = of_parse_phandle(dev->of_node, "ddc-i2c-bus", 0);
- 	if (ddc) {
- 		panel->ddc = of_find_i2c_adapter_by_node(ddc);
++	if (ret < 0)
++		return ret;
++
++	if (rotation == 0)
++		*orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
++	else if (rotation == 90)
++		*orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
++	else if (rotation == 180)
++		*orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
++	else if (rotation == 270)
++		*orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++EXPORT_SYMBOL(of_drm_get_panel_orientation);
+ #endif
+ 
+ #if IS_REACHABLE(CONFIG_BACKLIGHT_CLASS_DEVICE)
+diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+index 6193cb555acc..781c735f0f9b 100644
+--- a/include/drm/drm_panel.h
++++ b/include/drm/drm_panel.h
+@@ -35,6 +35,8 @@ struct drm_device;
+ struct drm_panel;
+ struct display_timing;
+ 
++enum drm_panel_orientation;
++
+ /**
+  * struct drm_panel_funcs - perform operations on a given panel
+  *
+@@ -191,11 +193,18 @@ int drm_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector
+ 
+ #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
+ struct drm_panel *of_drm_find_panel(const struct device_node *np);
++int of_drm_get_panel_orientation(const struct device_node *np,
++				 enum drm_panel_orientation *orientation);
+ #else
+ static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
++static inline int of_drm_get_panel_orientation(const struct device_node *np,
++		enum drm_panel_orientation *orientation)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_DRM_PANEL) && (IS_BUILTIN(CONFIG_BACKLIGHT_CLASS_DEVICE) || \
 -- 
 2.27.0
 
