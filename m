@@ -2,195 +2,139 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9925CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA342184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BB521775
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PVYnGy0Z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZJrSkx77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgHMBqe (ORCPT
+        id S1726837AbgHMBqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:46:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4022 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726673AbgHMBqa (ORCPT
+        Wed, 12 Aug 2020 21:46:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11293 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726673AbgHMBqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:46:30 -0400
-X-UUID: a83d17fcab4e4f118142b12a28016c02-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=asJV3IBv1/0dhV/oRZH8LjXOLv7AOsr87CflwjOG1gY=;
-        b=PVYnGy0ZK311eNEtTn2eQmP3xSy5bUO3wADqWYO4OGKZRd21CPQXoGLDpw6KidMHoHJqQFYZVqjd5KqftvCA55YxNTcywwQwq0WrwKvTgpoYF0IAaDNoQawR29c4nbIraJkRSMSmCL8sk05nNlKBwn42ciaBiAn5Cuo1AgxgGI8=;
-X-UUID: a83d17fcab4e4f118142b12a28016c02-20200813
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 636757711; Thu, 13 Aug 2020 09:46:21 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 09:46:19 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 09:46:15 +0800
-Message-ID: <1597283178.9999.19.camel@mtksdccf07>
-Subject: Re: [PATCH 1/5] timer: kasan: record and print timer stack
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Marco Elver <elver@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>
-Date:   Thu, 13 Aug 2020 09:46:18 +0800
-In-Reply-To: <CANpmjNO9=JBcSV-nif9a=4Zt7gTCp6e5c2jVXMCSFgP3v2P9-w@mail.gmail.com>
-References: <20200810072313.529-1-walter-zh.wu@mediatek.com>
-         <CANpmjNO9=JBcSV-nif9a=4Zt7gTCp6e5c2jVXMCSFgP3v2P9-w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 12 Aug 2020 21:46:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597283204; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=J+GkYlJeue+xhm0JgHaodonblQjXsPYjEk8/Vc2LCdw=; b=ZJrSkx77qpcfXjgAhIP25kVpsvuB2nuH0RovnEUk/pYZXe6tLpZrJ/HlP5WRL7dLwbJpLNiS
+ lMOmFiCQx7zq/92/4oZ+xynIw+zhb1J8VfxBC8/td6YA5K2gwckKSIpRwM3BdyIXN+DqgMyH
+ FkpRqlIW+xsvX+dhS8Z2usMJo00=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f349b6a2889723bf8da7be5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 01:46:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF09AC43391; Thu, 13 Aug 2020 01:46:17 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49181C433A1;
+        Thu, 13 Aug 2020 01:46:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49181C433A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org
+Subject: [PATCH v3 4/6] tracing: add trace_export support for trace_marker
+Date:   Thu, 13 Aug 2020 09:45:50 +0800
+Message-Id: <20200813014552.23539-5-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200813014552.23539-1-tingwei@codeaurora.org>
+References: <20200813014552.23539-1-tingwei@codeaurora.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: A828CD4FB1E137D0EE7E3C33E0D2CE14A46CDB2C1BF3FFD27ED08E538949AC012000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTEyIGF0IDE2OjEzICswMjAwLCBNYXJjbyBFbHZlciB3cm90ZToNCj4g
-T24gTW9uLCAxMCBBdWcgMjAyMCBhdCAwOToyMywgV2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVk
-aWF0ZWsuY29tPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIHJlY29yZHMgdGhlIGxhc3QgdHdvIHRp
-bWVyIHF1ZXVlaW5nIHN0YWNrcyBhbmQgcHJpbnRzDQo+ID4gdXAgdG8gMiB0aW1lciBzdGFja3Mg
-aW4gS0FTQU4gcmVwb3J0LiBJdCBpcyB1c2VmdWwgZm9yIHByb2dyYW1tZXJzDQo+ID4gdG8gc29s
-dmUgdXNlLWFmdGVyLWZyZWUgb3IgZG91YmxlLWZyZWUgbWVtb3J5IHRpbWVyIGlzc3Vlcy4NCj4g
-Pg0KPiA+IFdoZW4gdGltZXJfc2V0dXAoKSBvciB0aW1lcl9zZXR1cF9vbl9zdGFjaygpIGlzIGNh
-bGxlZCwgdGhlbiBpdA0KPiA+IHByZXBhcmVzIHRvIHVzZSB0aGlzIHRpbWVyIGFuZCBzZXRzIHRp
-bWVyIGNhbGxiYWNrLCB3ZSBzdG9yZQ0KPiA+IHRoaXMgY2FsbCBzdGFjayBpbiBvcmRlciB0byBw
-cmludCBpdCBpbiBLQVNBTiByZXBvcnQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIg
-V3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+DQo+ID4gQ2M6IEFuZHJleSBSeWFiaW5pbiA8
-YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQo+ID4gQ2M6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZA
-Z29vZ2xlLmNvbT4NCj4gPiBDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5j
-b20+DQo+ID4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiA+IENj
-OiBKb2huIFN0dWx0eiA8am9obi5zdHVsdHpAbGluYXJvLm9yZz4NCj4gPiBDYzogU3RlcGhlbiBC
-b3lkIDxzYm95ZEBrZXJuZWwub3JnPg0KPiA+IENjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4
-LWZvdW5kYXRpb24ub3JnPg0KPiA+IC0tLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2thc2FuLmggfCAg
-MiArKw0KPiA+ICBrZXJuZWwvdGltZS90aW1lci5jICAgfCAgMiArKw0KPiA+ICBtbS9rYXNhbi9n
-ZW5lcmljLmMgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgbW0va2FzYW4va2Fz
-YW4uaCAgICAgIHwgIDQgKysrLQ0KPiA+ICBtbS9rYXNhbi9yZXBvcnQuYyAgICAgfCAxMSArKysr
-KysrKysrKw0KPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkNCj4gDQo+IEknbSBjb21tZW50aW5nIG9uIHRoZSBjb2RlIGhlcmUsIGJ1dCBpdCBhbHNv
-IGFwcGxpZXMgdG8gcGF0Y2ggMi81LCBhcw0KPiBpdCdzIGFsbW9zdCBhIGNvcHktcGFzdGUuDQo+
-IA0KPiBJbiBnZW5lcmFsLCBJJ2Qgc2F5IHRoZSBzb2x1dGlvbiB0byBnZXQgdGhpcyBmZWF0dXJl
-IGlzIHBvb3JseQ0KPiBkZXNpZ25lZCwgcmVzdWx0aW5nIGluIGV4Y2Vzc2l2ZSBMT0MgYWRkZWQu
-IFRoZSBsb2dpYyBhZGRlZCBhbHJlYWR5DQo+IGV4aXN0cyBmb3IgdGhlIGF1eCBzdGFja3MuDQo+
-IA0KDQpUaGF0J3MgdHJ1ZSwgd2Ugd2lsbCBoYXZlIHJlZmFjdG9yaW5nIGZvciBpdC4NCg0KPiA+
-IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2Fu
-LmgNCj4gPiBpbmRleCAyM2I3ZWUwMDU3MmQuLjc2MzY2NGIzNmRjNiAxMDA2NDQNCj4gPiAtLS0g
-YS9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgN
-Cj4gPiBAQCAtMTc1LDEyICsxNzUsMTQgQEAgc3RhdGljIGlubGluZSBzaXplX3Qga2FzYW5fbWV0
-YWRhdGFfc2l6ZShzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpIHsgcmV0dXJuIDA7IH0NCj4gPiAg
-dm9pZCBrYXNhbl9jYWNoZV9zaHJpbmsoc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCj4gPiAg
-dm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpOw0KPiA+
-ICB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKTsNCj4gPiArdm9pZCBrYXNh
-bl9yZWNvcmRfdG1yX3N0YWNrKHZvaWQgKnB0cik7DQo+ID4NCj4gPiAgI2Vsc2UgLyogQ09ORklH
-X0tBU0FOX0dFTkVSSUMgKi8NCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fY2Fj
-aGVfc2hyaW5rKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiAgc3RhdGljIGlubGlu
-ZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30N
-Cj4gPiAgc3RhdGljIGlubGluZSB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRy
-KSB7fQ0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX3Rtcl9zdGFjayh2b2lk
-ICpwdHIpIHt9DQo+IA0KPiBJdCBhcHBlYXJzIHRoYXQgdGhlICdhdXgnIHN0YWNrIGlzIGN1cnJl
-bnRseSBvbmx5IHVzZWQgZm9yIGNhbGxfcmN1DQo+IHN0YWNrcywgYnV0IHRoaXMgaW50ZXJmYWNl
-IGRvZXMgbm90IGluaGVyZW50bHkgdGllIGl0IHRvIGNhbGxfcmN1LiBUaGUNCj4gb25seSB0aGlu
-ZyB0eWluZyBpdCB0byBjYWxsX3JjdSBpcyB0aGUgZmFjdCB0aGF0IHRoZSByZXBvcnQgY2FsbHMg
-b3V0DQo+IGNhbGxfcmN1Lg0KPiANCj4gPiAgLyoqDQo+ID4gZGlmZiAtLWdpdCBhL21tL2thc2Fu
-L2dlbmVyaWMuYyBiL21tL2thc2FuL2dlbmVyaWMuYw0KPiA+IGluZGV4IDRiM2NiYWQ3NDMxYi4u
-ZjM1ZGNlYzk5MGFiIDEwMDY0NA0KPiA+IC0tLSBhL21tL2thc2FuL2dlbmVyaWMuYw0KPiA+ICsr
-KyBiL21tL2thc2FuL2dlbmVyaWMuYw0KPiA+IEBAIC0zNDcsNiArMzQ3LDI3IEBAIHZvaWQga2Fz
-YW5fcmVjb3JkX2F1eF9zdGFjayh2b2lkICphZGRyKQ0KPiA+ICAgICAgICAgYWxsb2NfaW5mby0+
-YXV4X3N0YWNrWzBdID0ga2FzYW5fc2F2ZV9zdGFjayhHRlBfTk9XQUlUKTsNCj4gPiAgfQ0KPiA+
-DQo+ID4gK3ZvaWQga2FzYW5fcmVjb3JkX3Rtcl9zdGFjayh2b2lkICphZGRyKQ0KPiA+ICt7DQo+
-ID4gKyAgICAgICBzdHJ1Y3QgcGFnZSAqcGFnZSA9IGthc2FuX2FkZHJfdG9fcGFnZShhZGRyKTsN
-Cj4gPiArICAgICAgIHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZTsNCj4gPiArICAgICAgIHN0cnVj
-dCBrYXNhbl9hbGxvY19tZXRhICphbGxvY19pbmZvOw0KPiA+ICsgICAgICAgdm9pZCAqb2JqZWN0
-Ow0KPiA+ICsNCj4gPiArICAgICAgIGlmICghKHBhZ2UgJiYgUGFnZVNsYWIocGFnZSkpKQ0KPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gKw0KPiA+ICsgICAgICAgY2FjaGUgPSBwYWdl
-LT5zbGFiX2NhY2hlOw0KPiA+ICsgICAgICAgb2JqZWN0ID0gbmVhcmVzdF9vYmooY2FjaGUsIHBh
-Z2UsIGFkZHIpOw0KPiA+ICsgICAgICAgYWxsb2NfaW5mbyA9IGdldF9hbGxvY19pbmZvKGNhY2hl
-LCBvYmplY3QpOw0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiByZWNvcmQg
-dGhlIGxhc3QgdHdvIHRpbWVyIHN0YWNrcy4NCj4gPiArICAgICAgICAqLw0KPiA+ICsgICAgICAg
-YWxsb2NfaW5mby0+dG1yX3N0YWNrWzFdID0gYWxsb2NfaW5mby0+dG1yX3N0YWNrWzBdOw0KPiA+
-ICsgICAgICAgYWxsb2NfaW5mby0+dG1yX3N0YWNrWzBdID0ga2FzYW5fc2F2ZV9zdGFjayhHRlBf
-Tk9XQUlUKTsNCj4gPiArfQ0KPiANCj4gVGhlIHNvbHV0aW9uIGhlcmUgaXMsIHVuZm9ydHVuYXRl
-bHksIHBvb3JseSBkZXNpZ25lZC4gVGhpcyBpcyBhDQo+IGNvcHktcGFzdGUgb2YgdGhlIGthc2Fu
-X3JlY29yZF9hdXhfc3RhY2soKSBmdW5jdGlvbi4NCj4gDQoNCmthc2FuX3JlY29yZF9hdXhfc3Rh
-Y2soKSB3aWxsIGJlIHJlLXVzZWQgZm9yIGNhbGxfcmN1LCB0aW1lciwgYW5kDQp3b3JrcXVldWUu
-DQoNCj4gPiAgdm9pZCBrYXNhbl9zZXRfZnJlZV9pbmZvKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNo
-ZSwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZvaWQgKm9iamVjdCwgdTgg
-dGFnKQ0KPiA+ICB7DQo+ID4gZGlmZiAtLWdpdCBhL21tL2thc2FuL2thc2FuLmggYi9tbS9rYXNh
-bi9rYXNhbi5oDQo+ID4gaW5kZXggZWY2NTVhMWM2ZTE1Li5jNTA4MjdmMzg4YTMgMTAwNjQ0DQo+
-ID4gLS0tIGEvbW0va2FzYW4va2FzYW4uaA0KPiA+ICsrKyBiL21tL2thc2FuL2thc2FuLmgNCj4g
-PiBAQCAtMTA4LDEwICsxMDgsMTIgQEAgc3RydWN0IGthc2FuX2FsbG9jX21ldGEgew0KPiA+ICAg
-ICAgICAgc3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3RyYWNrOw0KPiA+ICAjaWZkZWYgQ09ORklH
-X0tBU0FOX0dFTkVSSUMNCj4gPiAgICAgICAgIC8qDQo+ID4gLSAgICAgICAgKiBjYWxsX3JjdSgp
-IGNhbGwgc3RhY2sgaXMgc3RvcmVkIGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEuDQo+ID4g
-KyAgICAgICAgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgYW5kIHRpbWVyIHF1ZXVlaW5nIHN0YWNr
-IGFyZSBzdG9yZWQNCj4gPiArICAgICAgICAqIGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEu
-DQo+ID4gICAgICAgICAgKiBUaGUgZnJlZSBzdGFjayBpcyBzdG9yZWQgaW50byBzdHJ1Y3Qga2Fz
-YW5fZnJlZV9tZXRhLg0KPiA+ICAgICAgICAgICovDQo+ID4gICAgICAgICBkZXBvdF9zdGFja19o
-YW5kbGVfdCBhdXhfc3RhY2tbMl07DQo+ID4gKyAgICAgICBkZXBvdF9zdGFja19oYW5kbGVfdCB0
-bXJfc3RhY2tbMl07DQo+ID4gICNlbHNlDQo+ID4gICAgICAgICBzdHJ1Y3Qga2FzYW5fdHJhY2sg
-ZnJlZV90cmFja1tLQVNBTl9OUl9GUkVFX1NUQUNLU107DQo+ID4gICNlbmRpZg0KPiA+IGRpZmYg
-LS1naXQgYS9tbS9rYXNhbi9yZXBvcnQuYyBiL21tL2thc2FuL3JlcG9ydC5jDQo+ID4gaW5kZXgg
-ZmVkM2M4ZmRmZDI1Li42ZmEzYmZlZTM4MWYgMTAwNjQ0DQo+ID4gLS0tIGEvbW0va2FzYW4vcmVw
-b3J0LmMNCj4gPiArKysgYi9tbS9rYXNhbi9yZXBvcnQuYw0KPiA+IEBAIC0xOTEsNiArMTkxLDE3
-IEBAIHN0YXRpYyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
-IHZvaWQgKm9iamVjdCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBwcmludF9zdGFjayhh
-bGxvY19pbmZvLT5hdXhfc3RhY2tbMV0pOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHBy
-X2VycigiXG4iKTsNCj4gPiAgICAgICAgICAgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgICAg
-ICAgICAgaWYgKGFsbG9jX2luZm8tPnRtcl9zdGFja1swXSkgew0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHByX2VycigiTGFzdCB0aW1lciBzdGFjazpcbiIpOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHByaW50X3N0YWNrKGFsbG9jX2luZm8tPnRtcl9zdGFja1swXSk7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+ICsgICAgICAgICAgICAg
-ICB9DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChhbGxvY19pbmZvLT50bXJfc3RhY2tbMV0pIHsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwcl9lcnIoIlNlY29uZCB0byBsYXN0IHRpbWVy
-IHN0YWNrOlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJpbnRfc3RhY2soYWxs
-b2NfaW5mby0+dG1yX3N0YWNrWzFdKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwcl9l
-cnIoIlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gDQo+IFdoeSBjYW4ndCB3ZSBqdXN0
-IHVzZSB0aGUgYXV4IHN0YWNrIGZvciBldmVyeXRoaW5nLCBhbmQgc2ltcGx5IGNoYW5nZQ0KPiB0
-aGUgbWVzc2FnZSBwcmludGVkIGluIHRoZSByZXBvcnQuIEFmdGVyIGFsbCwgdGhlIHN0YWNrIHRy
-YWNlIHdpbGwNCj4gaW5jbHVkZSBhbGwgdGhlIGluZm9ybWF0aW9uIHRvIHRlbGwgaWYgaXQncyBj
-YWxsX3JjdSwgdGltZXIsIG9yDQo+IHdvcmtxdWV1ZS4NCj4gDQoNClRoaXMgaXMgYSBnb29kIHN1
-Z2dlc3Rpb24sIG5leHQgcGF0Y2ggd2lsbCBkbyBpdC4NCg0KPiBUaGUgcmVwb3J0aW5nIGNvZGUg
-d291bGQgc2ltcGx5IGhhdmUgdG8gYmUgY2hhbmdlZCB0byBzYXkgc29tZXRoaW5nDQo+IGxpa2Ug
-Ikxhc3QgcG90ZW50aWFsbHkgcmVsYXRlZCB3b3JrIGNyZWF0aW9uOiIgLS0gYmVjYXVzZSB3aGF0
-IHRoZQ0KPiAiYXV4IiB0aGluZyBpcyB0cnlpbmcgdG8gYWJzdHJhY3QgYXJlIHN0YWNrIHRyYWNl
-cyB0byB3b3JrIGNyZWF0aW9ucw0KPiB0aGF0IHRvb2sgYW4gYWRkcmVzcyB0aGF0IGlzIGNsb3Nl
-bHkgcmVsYXRlZC4gV2hldGhlciBvciBub3QgeW91IHdhbnQNCj4gdG8gY2FsbCBpdCAid29yayIg
-aXMgdXAgdG8geW91LCBidXQgdGhhdCdzIHRoZSBtb3N0IGdlbmVyaWMgdGVybSBJDQo+IGNvdWxk
-IHRoaW5rIG9mIHJpZ2h0IG5vdyAoYW55IGJldHRlciB0ZXJtcz8pLg0KPiANCg0KV29yayBpcyBn
-b29kLg0KDQo+IEFub3RoZXIgYXJndW1lbnQgZm9yIHRoaXMgY29uc29saWRhdGlvbiBpcyB0aGF0
-IGl0J3MgaGlnaGx5IHVubGlrZWx5DQo+IHRoYXQgYXV4X3N0YWNrW2FdICYmIHRtcl9zdGFja1ti
-XSAmJiB3cV9zdGFja1tjXSwgYW5kIHlvdSBuZWVkIHRvDQo+IHByaW50IGFsbCB0aGUgc3RhY2tz
-LiBJZiB5b3UgYXJlIHdvcnJpZWQgd2UgbmVlZCBtb3JlIGF1eCBzdGFja3MsIGp1c3QNCj4gbWFr
-ZSB0aGUgYXJyYXkgc2l6ZSAzKyAoYnV0IEkgdGhpbmsgaXQncyBub3QgbmVjZXNzYXJ5KS4NCj4g
-DQoNCldlIGhvcGUgdGhhdCBuZXh0IHBhdGNoIGtlZXAgaXQgYXMgaXQgaXMgYXV4X3N0YWNrWzJd
-LCBpdCBtYXkgcmVjb3JkDQpjYWxsX3JjdSwgdGltZXIsIG9yIHdvcmtxdWV1ZS4gQmVjYXVzZSBz
-dHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSBpcyAxNg0KYnl0ZXMsIGl0IHdpbGwgaGF2ZSB0aGUgbWlu
-aW1hbCByZWR6b25lIHNpemUgYW5kIGdvb2QgYWxpZ25tZW50LCBsZXRzDQpnZXQgYmV0dGVyIG1l
-bW9yeSBjb25zdW1wdGlvbi4NCg0KDQpUaGFua3MgZm9yIHlvdXIgZ29vZCBzdWdnZXN0aW9uLg0K
-DQpXYWx0ZXINCg0KDQo+IFRoYW5rcywNCj4gLS0gTWFyY28NCg0K
+Add the support to route trace_marker buffer to other destination
+via trace_export.
+
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/linux/trace.h | 1 +
+ kernel/trace/trace.c  | 9 +++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index 5a01eeffb254..80b7df68bc0f 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -6,6 +6,7 @@
+ 
+ #define TRACE_EXPORT_FUNCTION	BIT(0)
+ #define TRACE_EXPORT_EVENT	BIT(1)
++#define TRACE_EXPORT_MARKER	BIT(2)
+ 
+ /*
+  * The trace export - an export of Ftrace output. The trace_export
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2f9302a8b322..67993abda394 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -271,6 +271,7 @@ static struct trace_export __rcu *ftrace_exports_list __read_mostly;
+ 
+ static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
+ static DEFINE_STATIC_KEY_FALSE(trace_event_exports_enabled);
++static DEFINE_STATIC_KEY_FALSE(trace_marker_exports_enabled);
+ 
+ static inline void ftrace_exports_enable(struct trace_export *export)
+ {
+@@ -279,6 +280,9 @@ static inline void ftrace_exports_enable(struct trace_export *export)
+ 
+ 	if (export->flags & TRACE_EXPORT_EVENT)
+ 		static_branch_inc(&trace_event_exports_enabled);
++
++	if (export->flags & TRACE_EXPORT_MARKER)
++		static_branch_inc(&trace_marker_exports_enabled);
+ }
+ 
+ static inline void ftrace_exports_disable(struct trace_export *export)
+@@ -288,6 +292,9 @@ static inline void ftrace_exports_disable(struct trace_export *export)
+ 
+ 	if (export->flags & TRACE_EXPORT_EVENT)
+ 		static_branch_dec(&trace_event_exports_enabled);
++
++	if (export->flags & TRACE_EXPORT_MARKER)
++		static_branch_dec(&trace_marker_exports_enabled);
+ }
+ 
+ static void ftrace_exports(struct ring_buffer_event *event, int flag)
+@@ -6648,6 +6655,8 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	} else
+ 		entry->buf[cnt] = '\0';
+ 
++	if (static_branch_unlikely(&trace_marker_exports_enabled))
++		ftrace_exports(event, TRACE_EXPORT_MARKER);
+ 	__buffer_unlock_commit(buffer, event);
+ 
+ 	if (tt)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
