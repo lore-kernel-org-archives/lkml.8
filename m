@@ -2,90 +2,95 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A5BC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9702C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1F920716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A0620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GJymZi33"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fklxr+GN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMHIH (ORCPT
+        id S1726621AbgHMHIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:08:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:55533 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725982AbgHMHIG (ORCPT
+        Thu, 13 Aug 2020 03:08:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgHMHIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:08:06 -0400
-X-UUID: 2c024129dac94eefb06f8e9923260d7e-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Em+aZRblnSBBXfbIqqdD7o9UIm1k6YffKGxm9JLcp40=;
-        b=GJymZi33EF/dF6e1Y00qJmDN/6669Y/F3GNzCAAiaH1F+lSaDZsXD5tW5gWiygBqymQffYZ6VAy0ap8b5vAbCtNmqhkx1GMpqnybIdu1UdTbhQPwiianQzm9JFf8AJEIZdTfmAdEfHB8GRk0Ekt1xzf8Gzp6mWdSkMfOgNXWydc=;
-X-UUID: 2c024129dac94eefb06f8e9923260d7e-20200813
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1870755673; Thu, 13 Aug 2020 15:08:01 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 15:07:58 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 15:07:58 +0800
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>
-CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <hector.yuan@mediatek.com>
-Subject: [PATCH v1] cpufreq: mediatek-hw: Add support for Mediatek cpufreq HW driver
-Date:   Thu, 13 Aug 2020 15:07:53 +0800
-Message-ID: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 13 Aug 2020 03:08:17 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54021C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:08:17 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id a79so2334161pfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oXHNkcnjdKbtST/Cm72EMU54y/enkmsrbD67DAs+07Q=;
+        b=Fklxr+GNMBRv9AdOmZve+uLJ4LVS10Wd3Efz0ihbZTLMTOPOgReJJykQoZcjwpyjjS
+         d4rRk8uWKwlA8L0irHe9fQ+OspRENYO6F/zcD9N/Mlxe4qKRj4EGAhNVUA8nl1b9969x
+         tjZWGCjF6mJmHcYf5Y5y3Jb2zwct9S+zg1BSwNwGmOjkHim50IkRMlgAhdmJqNqCjlqO
+         VME/tlWH6CN8XMVXFHBLEBlJGUVmRPf5nIVitK+qSrEW+YLa2AdGrWldO53L2xn6d3a6
+         hx9/RDRBygqotoV08G4c9S8WQs00HkQy9YbiChcAzlnvXkACAF33vSzFNnJCojz62lJU
+         ZqyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oXHNkcnjdKbtST/Cm72EMU54y/enkmsrbD67DAs+07Q=;
+        b=GlEG4HNBHQ62ePJvmL+0oSNCDMkHv6qaL5vxdKpggjb5Rez3JsPlfFhvGXPnvht4sH
+         V7GQpBoPfn+izuu41qVGC/8xtDFDmYsU0r28RVOCZhbR/QJCsBQjc6/3Pd7ud/Bp4k4p
+         fPTdQFbFLjifPqV5YxQOq3CSAz4RUAe+cF1HzxzHAaXxVnRKwUjX1hlWX4ElktlChINB
+         UYh9xTTnhmod8DzfFj4IGRqjUDoLLnc2Npnzfcx0rBRr6iA/3OEjOy5L7ss/7gRttK21
+         UF8XvQsrtTiOG9YpWdpuxgYg7G+ImVaV2smcRslJy6xrybE6ph+L43X+dVISGZlWMmLP
+         Hq9Q==
+X-Gm-Message-State: AOAM530BZuBuzP76zZ+CeikCtl4miahaMUl/DqmOnmcBYABivG8XZcPu
+        5QHpqWz1Sgc2/yVQnrhvyaw6GQ==
+X-Google-Smtp-Source: ABdhPJy5mTa6bjpMvZNEqyus64np+Q1hqEXWGxyB6FdFHAaKwxpJXm138hVyyVcESnvJqC/jue2U6g==
+X-Received: by 2002:a62:2e45:: with SMTP id u66mr3107106pfu.121.1597302496590;
+        Thu, 13 Aug 2020 00:08:16 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t10sm4260202pgp.15.2020.08.13.00.08.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 00:08:15 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 00:04:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     amit.pundir@linaro.org, agross@kernel.org,
+        devicetree@vger.kernel.org, john.stultz@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sumit.semwal@linaro.org
+Subject: Re: your mail
+Message-ID: <20200813070448.GA499758@builder.lan>
+References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
+ <20200806223134.42748-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 22E7736455FFC7AFAC1005B33F5D3A93FDE664E47FE8A993C0634980A15532C92000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806223134.42748-1-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIENQVWZyZXEgSFcgcHJlc2VudCBpbiBzb21lIE1lZGlhdGVrIGNoaXBzZXRzIG9mZmxvYWRz
-DQp0aGUgc3RlcHMgbmVjZXNzYXJ5IGZvciBjaGFuZ2luZyB0aGUgZnJlcXVlbmN5IG9mIENQVXMu
-DQpUaGUgZHJpdmVyIGltcGxlbWVudHMgdGhlIGNwdWZyZXEgZHJpdmVyIGludGVyZmFjZSBmb3IN
-CnRoaXMgaGFyZHdhcmUgZW5naW5lLiANCg0KVGhpcyBwYXRjaCBkZXBlbmRzIG9uIHRoZSBNVDY3
-NzkgRFRTIHBhdGNoIHN1Ym1pdHRlZCBieSBIYW5rcyBDaGVuDQogaHR0cHM6Ly9sa21sLm9yZy9s
-a21sLzIwMjAvOC80LzEwOTQNCg0KDQpIZWN0b3IuWXVhbiAoMik6DQogIGR0LWJpbmRpbmdzOiBj
-cHVmcmVxOiBhZGQgYmluZGluZ3MgZm9yIE1lZGlhVGVrIGNwdWZyZXEgSFcNCiAgY3B1ZnJlcTog
-bWVkaWF0ZWstaHc6IEFkZCBzdXBwb3J0IGZvciBNZWRpYXRlayBjcHVmcmVxIEhXIGRyaXZlcg0K
-DQogLi4uL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAg
-IDYxICsrKysrDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2NwdWZyZXEvS2NvbmZpZy5hcm0gICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgMTEgKw0KIGRyaXZlcnMvY3B1ZnJlcS9NYWtlZmlsZSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9jcHVmcmVxL21lZGlhdGVrLWNwdWZy
-ZXEtaHcuYyAgICAgICAgICAgICAgfCAgMjU1ICsrKysrKysrKysrKysrKysrKysrDQogNSBmaWxl
-cyBjaGFuZ2VkLCAzMjkgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3Lnlh
-bWwNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jcHVmcmVxL21lZGlhdGVrLWNwdWZyZXEt
-aHcuYw0K
+On Thu 06 Aug 15:31 PDT 2020, Konrad Dybcio wrote:
 
+> Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+> 
+> >// This removed_region is needed to boot the device
+> >               // TODO: Find out the user of this reserved memory
+> >               removed_region: memory@88f00000 {
+> 
+> This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
+> 
+
+This is in line with what the documentation indicates and then it would
+be better to just bump &tz_mem to a size of 0x4900000.
+
+Regards,
+Bjorn
