@@ -2,195 +2,195 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB968C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED3920716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA8C2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HhXmpc/f"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QOdD78f3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHMHyk (ORCPT
+        id S1726604AbgHMHzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:54:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbgHMHyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:54:39 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07D7XLor098999;
-        Thu, 13 Aug 2020 03:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=pvGpKk/te6wBrI+pp2guEgQc15OWxh2xznhiozF4vwo=;
- b=HhXmpc/felX4qtADi4vUIKF8kMcmVNbRzYF1X51Jj0/NU1jqJnPuBbgtsfBwPE26viZ0
- iVlm+QEP5uRr1QWvj9rRYOmDUm92JTfxLRqk4dIPeyyzDOmFraCFsB1RqJnVa8rMHdHp
- ABFWseoOzlWEMoKn0QNjFR93MMruiMZ/huAWb3TAujmHZ5eSvJapndNcBlpaMzp1sJO6
- RsE/p7/HtHQL3ylNp2x6T/s+Vq6nU0ZyHXe+VrD3DboNls8mAdEMvIjCjIUHRSvU5lP/
- Mh34Of93SED6xqlLeMJVpZMxa0A4+ALJvmaWAyN3NDVMI4rVrTQRxLnyZTIR6/xy0d2u fA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qk5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 03:54:32 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07D7ZNcl105533;
-        Thu, 13 Aug 2020 03:54:31 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 03:54:31 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07D7ns1a000342;
-        Thu, 13 Aug 2020 07:54:29 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 32skp838g2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 07:54:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07D7sQKF34013482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 07:54:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2CAF4C046;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A7944C044;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
- <20200812143254.2f080c38@x1.home>
- <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <19bb6ca8-f6bb-841c-e4dd-cd9e8e6e430f@linux.ibm.com>
-Date:   Thu, 13 Aug 2020 09:54:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 13 Aug 2020 03:55:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11320 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgHMHzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:55:48 -0400
+IronPort-SDR: vXiaq06ugu06LRjynMr6YOitOnUefkJVMg+PBvqkbr9Qy0fo/dhnjhIje/A0C7L2hRVaPUgxOJ
+ ng+/B5rg5C2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="215707697"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="215707697"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:55:47 -0700
+IronPort-SDR: eHRZJSoMklw2RN+YicjlzZIvr4HTqR9vMFyf3eGNyp5EfLobKYYLhylgDCyWUf1SYh4tn/gHIg
+ z7o3Dl+ivg1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="318432452"
+Received: from unknown (HELO fmsmsx605.amr.corp.intel.com) ([10.18.84.215])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2020 00:55:47 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 13 Aug 2020 00:55:46 -0700
+Received: from fmsmsx123.amr.corp.intel.com (10.18.125.38) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 13 Aug 2020 00:55:46 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx123.amr.corp.intel.com (10.18.125.38) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 13 Aug 2020 00:55:46 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 13 Aug 2020 00:55:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QOKJOe8kDABnf81XdmA78jPLBJfweqp8Kfm+pkxHDaRTzLD7c+3dppYZ2pc3p4/EBtmhKB2f99Rn5YCZTug2yVlPQ8KfbIxF/uMScZiDpuy7HVkcKWiKRdsdS6YqyIpxaCbpm0J4YYb9M6GR1GvxbWtlo7N8vC5PEdEaGSSP7qrnOG0N76txT477WJil8pUxzRcbA8OccYoGDPTGgrl4xFZyoPV7+ivsZDMnSl7yDbOE49ysElsp4MwbOX165nn/EeSz9USdmTsQFPiH03s97bU4usOc2DywRIlxSngeSJXzXRP6MhRpHkGCPcrETuc0tOnSbMmc93aM2nkYvI508Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yYVhLOE5V+J7kHnn/lWJvJwrZ5YAbWQg5zG7CKcH88c=;
+ b=enNbigok+Re1kPeIpyTCmzp9gIAy0FageN7A9va+uZ3TeII9+YwQsbpSBZWERU2m6F4YjB/LQ8eMtTM03+AUZ6I5C2y0yP25lpmK8KWW7uuTdTZAqiXzv+WrJnrgRwlRt43xA1ZafBdubNPMbeawpGh0JrJR+F35UcYJGYaGtz+OnR9n9cNkrIrUUTWinB76xLwKF2h7epZJ7WsQtGL7uxrgrAzzGlNG/fQvficQb7DNRLe5XR/HtzPIJxeZwrdXdlhBxhNEXe5ZjAb60zGSxZ8GWGFTcjQILbfynru4C1yEntn53ffIqzxcTOC4r+KZtp59vghLcUV/LHbhjFXcgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yYVhLOE5V+J7kHnn/lWJvJwrZ5YAbWQg5zG7CKcH88c=;
+ b=QOdD78f3ypKikxB88KEOQ/E6Jo0BiLVQ18p0ynlajV2WGXvZW7u4G0XrI2xOKl1byYD50JUzW/jgaSNm6tp5c4uOOlpzeSoYaAavpPIjfue7D7ZXq9lD5R/hnZP5q7b4GpVFb+kuTPnQKRfbA7p0Cs5+nxsq8skn7d9hYKYzzmM=
+Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
+ by DM6PR11MB3785.namprd11.prod.outlook.com (2603:10b6:5:13f::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 13 Aug
+ 2020 07:55:44 +0000
+Received: from DM6PR11MB3642.namprd11.prod.outlook.com
+ ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
+ ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3261.025; Thu, 13 Aug 2020
+ 07:55:44 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+CC:     Takashi Iwai <tiwai@suse.de>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        "Sam McNally" <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DAgAAlz4CAABcIUIAABbiAgACx9iCAALX6gIADSeRAgAYuywCAACtmAIAAiqgQgAAJsgCAAFelAIAAC9AAgAAD0wCAAA/XgIAAWOKAgAAhvQCAAAewgIAApDwAgAAzaoCAAAsZAIAAAU+AgAAMkQCAAAEQAIAAdTUAgAACd4CAABB9AIAAAZsggAAKpgCAAObvAIAAFs5Q
+Date:   Thu, 13 Aug 2020 07:55:43 +0000
+Message-ID: <DM6PR11MB364285D8B21B723EB88915CB97430@DM6PR11MB3642.namprd11.prod.outlook.com>
+References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+ <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+ <s5htux939x1.wl-tiwai@suse.de>
+ <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+ <s5ho8nh37br.wl-tiwai@suse.de>
+ <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+ <20200811145353.GG6967@sirena.org.uk>
+ <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+ <20200811172209.GM6967@sirena.org.uk>
+ <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
+ <s5hr1scz908.wl-tiwai@suse.de>
+ <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
+ <s5hlfikz6y8.wl-tiwai@suse.de>
+ <CAGvk5Pq3rEGJX=WjriPfWg_sEAVWHGZ9S=4iySNfYaHX7Xcw0g@mail.gmail.com>
+ <s5h8sekz4ox.wl-tiwai@suse.de>
+ <e4cc6231-8b19-c145-1b18-91d3a00131d3@linux.intel.com>
+ <s5hv9hnx6am.wl-tiwai@suse.de>
+ <be45d821-57c6-6ca5-0864-ac3aa521d82e@linux.intel.com>
+ <DM6PR11MB364242D3652EDC2F9B8B214897420@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <0714b222-d3fc-5744-1147-bfac7df2651e@linux.intel.com>
+ <CAGvk5Pqg000SnrRhVD+8cOtAVokomRSa6MLdaKKnY2P6R_ruGA@mail.gmail.com>
+In-Reply-To: <CAGvk5Pqg000SnrRhVD+8cOtAVokomRSa6MLdaKKnY2P6R_ruGA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_05:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 clxscore=1011 malwarescore=0 impostorscore=0
- adultscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130057
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [114.36.93.60]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19ec3ac1-de2f-42b3-b8df-08d83f5e4821
+x-ms-traffictypediagnostic: DM6PR11MB3785:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB378522B4448EF9C67C47139297430@DM6PR11MB3785.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9fLuQ5pzX/VR/QCmLCka47e4Avlii8g0JktCXodCJYcB6TJZBUQEBW3VQAWAt/n9gdhBO6ZTyJzEyw1EAN+R9Bs5U1g0K/I6Sum+mJXDoj0QUf4rnuGxRv3vb97YF6FQKVBvVjCTXP1d1l77A3O7GLc9e3oI8inzPpnwteifu5nIo1YvwGYAzgmQTgteNvzgmnCxdh3mO26t0/18KuJ5kPahN6q8pWE+bWAW0Mg+aMVZFSBDnAKKml2hK6PAKQo92Q9UGdaGauYk6zCDcDilDg5qckSL2eftaQ9QbXqKalcyoV1i9xaM+IGmq//tx/VsPSu4j3paiSrMrUPISJvVxmqLfnUWuXdTNDniQY3gH3SH05J7QzAPyIbS19Bm2lvp
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(186003)(64756008)(66446008)(7696005)(66476007)(76116006)(66946007)(66556008)(83380400001)(26005)(5660300002)(52536014)(478600001)(7416002)(71200400001)(54906003)(6506007)(86362001)(8936002)(2906002)(9686003)(8676002)(55016002)(110136005)(4326008)(316002)(33656002)(11716003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: oIbMoGJE8aVRNygBYbkz9+Tg73C+EmP31UcsWS77+GsBP8bEVCyS/Tpgf9F4P/bv1c5egzLJIIdJ52SySj+6oST5rB6Hy312g2jRYybUDrE1Dvm6d8yw9p3Y3BsKslm6w7tjZwcoPZR6dg48dRAzjDeX6bqKVhl+ijGeOMHEtYSc6SV/zdonYKYzdPeIZaAQhPamLIsMKRkn7oqfg9ubZAGN0o8HUktqDf3R0TNNJ1ejCgPrrAbg9i+bSQBxvX6xfd7atV7yY6BuJYy5kZyY8s1LrPEnmjUSa5AD0JW2vbEgNQpdDKwxDILptlkzBeKP0B2tUwY6K0ULhd8dbAFMiFy5J8wejXy4yZr+nwwRopH1yWcXGMfj/mDTInU1OBisy2DnqEIy0qQqt1EhaUDUYD21ZYU+gYgx9QNmWbonLt4MCxQVgZ0KHQp9y+2kAr+LvBqWm5NebtrzUYgal9tRoBSm5b0Bel3nG1oQfoWjB0SisaXWoMh6Cbhuo42KrFoJtwEA2Wo1I+870ijBZ/RyQH2wb8jTG8jI9QMNot5Vjr3qh6v1ihMFsQXJ7u2B9C6f30LZz6jl5gGFws0wtUb70wnWQRzZxkQjaKbE68GVpDYzAxgSG/hox0jokAUrcNlSCrPe4+KRfpBKyRTI/49vAw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19ec3ac1-de2f-42b3-b8df-08d83f5e4821
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 07:55:44.0751
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A7CN3buowdNqW/D/HE5r+JBmk1fZ4RAieK/HZBDgdL6AFxIunDQ6JS8Wj/YVl8J7AvhW1F4wUWDWihyv5SBl7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3785
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/13/20 3:59 AM, Oliver O'Halloran wrote:
-> On Thu, Aug 13, 2020 at 6:33 AM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
->>
->> On Wed, 12 Aug 2020 15:21:11 -0400
->> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>
-... snip ...
->>
->> Is there too much implicit knowledge in defining a "detached VF"?  For
->> example, why do we know that we can skip the portion of
->> vfio_config_init() that copies the vendor and device IDs from the
->> struct pci_dev into the virtual config space?  It's true on s390x, but
->> I think that's because we know that firmware emulates those registers
->> for us.
->>
->> We also skip the INTx pin register sanity checking.  Do we do
->> that because we haven't installed the broken device into an s390x
->> system?  Because we know firmware manages that for us too?  Or simply
->> because s390x doesn't support INTx anyway, and therefore it's another
->> architecture implicit decision?
-> 
-> Agreed. Any hacks we put in for normal VFs are going to be needed for
-> the passed-though VF case. Only applying the memory space enable
-> workaround doesn't make sense to me either.
-
-We did actually have the detached_vf check in that if in
-a previous patch version, turning on the INTx and quirk checks.
-We decided to send a minimal version for the discussion.
-That said I agree that this is currently too specific to our
-case.
-
-> 
->> If detached_vf is really equivalent to is_virtfn for all cases that
->> don't care about referencing physfn on the pci_dev, then we should
->> probably have a macro to that effect.
-
-In my opinion it really is, that's why we initially tried to just
-set pdev->is_virtfn leaving the physfn pointer NULL for these
-detached VFs. 
-But as you said that gets uncomfortable because of the union and existing code
-assuming that pdev->is_virtfn always means physfn is set.
-
-I think the underlying problem here is, that the current use
-of pdev->is_virtfn conflates the two reasons we need to know whether
-something is a VF:
-
-1. For dealing with the differences in how a VF presents itself vs a PF
-2. For knowing whether the physfn/sriov union is a pointer to the parent PF
-
-If we could untangle this in a sane way I think that would
-be the best long term solution.
-
-> 
-> A pci_is_virtfn() helper would be better than open coding both checks
-> everywhere. That said, it might be solving the wrong problem. The
-> union between ->physfn and ->sriov has always seemed like a footgun to
-> me so we might be better off switching the users who want a physfn to
-> a helper instead. i.e.
-> 
-> struct pci_dev *pci_get_vf_physfn(struct pci_dev *vf)
-> {
->         if (!vf->is_virtfn)
->                 return NULL;
-> 
->         return vf->physfn;
-> }
-
-Hmm, this is almost exactly  include/linux/pci.h:pci_physfn()
-except that returns the argument pdev itself when is_virtfn
-is not set.
-
-> 
-> ...
-> 
-> pf = pci_get_vf_physfn(vf)
-> if (pf)
->     /* do pf things */
-> 
-> Then we can just use ->is_virtfn for the normal and detached cases.
-
-I'm asssuming you mean by setting vf->is_virtfn = 1; vf->physfn = NULL
-for the detached case? I think that actually also works with the existing
-pci_physfn() helper but it requires handling a returned NULL at
-all callsites.
-
-> 
-> Oliver
-> 
+PiA+ID4NCj4gPiA+IENSQVMgY2FsbHMgc25kX3BjbV9od19wYXJhbXNfc2V0X2J1ZmZlcl9zaXpl
+X21heCgpIHRvIHVzZSBhcyBsYXJnZQ0KPiA+ID4gYnVmZmVyIGFzIHBvc3NpYmxlLiBTbyB0aGUg
+cGVyaW9kIHNpemUgaXMgYW4gYXJiaXRyYXJ5IG51bWJlciBpbg0KPiA+ID4gZGlmZmVyZW50IHBs
+YXRmb3Jtcy4gQXRvbSBTU1QgcGxhdGZvcm0gaGFwcGVucyB0byBiZSAyNTYsIGFuZCBDTUwNCj4g
+PiA+IFNPRiBwbGF0Zm9ybSBpcyAxMDU2IGZvciBleGFtcGxlLg0KPiA+DQo+ID4gb2ssIGJ1dCBl
+YXJsaWVyIGluIHRoaXMgdGhyZWFkIGl0IHdhcyBtZW50aW9uZWQgdGhhdCB2YWx1ZXMgc3VjaCBh
+cw0KPiA+IDQzMiBhcmUgbm90IHN1aXRhYmxlLiB0aGUgc3RhdGVtZW50IGFib3ZlIHNlZW1zIHRv
+IG1lYW4gdGhlIHBlcmlvZA0KPiA+IGFjdHVhbCB2YWx1ZSBpcyBhICJkb24ndCBjYXJlIiwgc28g
+SSBkb24ndCBxdWl0ZSBzZWUgd2h5IHRoaXMgc3BlY2lmaWMNCj4gPiBwYXRjaDIgcmVzdHJpY3Rp
+bmcgdGhlIHZhbHVlIHRvIDI0MCBpcyBuZWNlc3NhcnkuIFBhdGNoMSBpcyBuZWVkZWQgZm9yDQo+
+ID4gc3VyZSwNCj4gPiBQYXRjaDIgaXMgd2hlcmUgVGFrYXNoaSBhbmQgSSBhcmUgbm90IGNvbnZp
+bmNlZC4NCj4gDQo+IEkgaGF2ZSBkb3dubG9hZGVkIHRoZSBwYXRjaDEgYnV0IGl0IGRvZXMgbm90
+IHdvcmsuIEFmdGVyIGFwcGx5aW5nIHBhdGNoMSwNCj4gdGhlIGRlZmF1bHQgcGVyaW9kIHNpemUg
+Y2hhbmdlcyB0byAzMjAuIEhvd2V2ZXIsIGl0IGFsc28gaGFzIHRoZSBzYW1lIGlzc3VlDQo+IHdp
+dGggcGVyaW9kIHNpemUgMzIwLiAoSXQgY2FuIGJlIHZlcmlmaWVkIGJ5IGFwbGF5LikNCg0KVGhl
+IHBlcmlvZF9zaXplIGlzIHJlbGF0ZWQgdG8gdGhlIGF1ZGlvIGxhdGVuY3kgc28gaXQncyBkZWNp
+ZGVkIGJ5IGFwcGxpY2F0aW9uDQphY2NvcmRpbmcgdG8gdGhlIHVzZSBjYXNlIGl0J3MgcnVubmlu
+Zy4gVGhhdCdzIHdoeSB0aGVyZSBhcmUgY29uY2VybnMgYWJvdXQNCnBhdGNoIDIgYW5kIGFsc28g
+eW91IGNhbm5vdCBmaW5kIHNpbWlsYXIgY29uc3RyYWludHMgaW4gb3RoZXIgbWFjaGluZSBkcml2
+ZXIuDQoNCkFub3RoZXIgcHJvYmxlbSBpcyB0aGUgYnVmZmVyIHNpemUuIFRvbyBsYXJnZSBidWZm
+ZXIgaXMgbm90IGp1c3Qgd2FzdGluZyBtZW1vcmllcy4NCkl0IGFsc28gY3JlYXRlcyBwcm9ibGVt
+cyB0byBtZW1vcnkgYWxsb2NhdG9yIHNpbmNlIGNvbnRpbnVvdXMgcGFnZXMgYXJlIG5vdA0KYWx3
+YXlzIHRoZXJlLiBVc2luZyBhIHNtYWxsIHBlcmlvZF9jb3VudCBsaWtlIDIgb3IgNCBzaG91bGQg
+YmUgc3VmZmljaWVudCBmb3IgYXVkaW8NCmRhdGEgdHJhbnNmZXIuDQoNCmJ1ZmZlcl9zaXplID0g
+cGVyaW9kX3NpemUgKiBwZXJpb2RfY291bnQgKiAxMDAwMDAwIC8gc2FtcGxlX3JhdGU7DQpzbmRf
+cGNtX2h3X3BhcmFtc19zZXRfYnVmZmVyX3RpbWVfbmVhcihtUGNtRGV2aWNlLCBwYXJhbXMsICZi
+dWZmZXJfc2l6ZSwgTlVMTCk7DQoNCkFuZCBvbmUgbW9yZSBwcm9ibGVtIGhlcmU6IHlvdSBuZWVk
+IHRvIGRlY2lkZSBwZXJpb2Rfc2l6ZSBhbmQgcGVyaW9kX2NvdW50DQpmaXJzdCBpbiBvcmRlciB0
+byBjYWxjdWxhdGUgdGhlIGJ1ZmZlciBzaXplLi4uDQoNCg0KUmVnYXJkcywNCkJyZW50DQo=
