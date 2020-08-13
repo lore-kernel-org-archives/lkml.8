@@ -2,130 +2,78 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B798BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93F4206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DFD206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Im2DwbtF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="K8LgK7r8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHMDzc (ORCPT
+        id S1726705AbgHMDzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:55:32 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38446 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726334AbgHMDzc (ORCPT
+        Wed, 12 Aug 2020 23:55:41 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:41344 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgHMDzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:55:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597290931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tQVpSBd8H4mxwa7+/E4VYo7bjaBiT+FzyTgSS58XOy4=;
-        b=Im2DwbtFzyfMe5bKGxHxJHOQqK39nergYst+OJJVmwT+ONkdiMhzE53BBFsgv6+57Wvx2f
-        /YXNWzJTSTLvyBhDqeLzfHlxjOTWB6OC8zBZNX00p9K/5iioz62uCcUo5fh8i/4oK+Y79A
-        tdBJtfi7sENtaqB5Y0r2reiLmYsmfl0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-cGpmWOrCOKuNoqayZYf34Q-1; Wed, 12 Aug 2020 23:55:29 -0400
-X-MC-Unique: cGpmWOrCOKuNoqayZYf34Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA0BE79EC0;
-        Thu, 13 Aug 2020 03:55:27 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4697B100AE52;
-        Thu, 13 Aug 2020 03:55:24 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH net] bonding: show saner speed for broadcast mode
-Date:   Wed, 12 Aug 2020 23:55:09 -0400
-Message-Id: <20200813035509.739-1-jarod@redhat.com>
+        Wed, 12 Aug 2020 23:55:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Mut7N42mh5vYAnOGpRQfTephvtNDrJcec2/m7aRKhb0=; b=K8LgK7r8nixrKQsEJO7cKuUmi5
+        85iU3LQed/6W8Jblqn1daLqQqiDKsepKA3iAsMumiAH5v3UVTRsBX7m/OVFVuyQUjHQqoffztqlzi
+        +fpod/sxu2YxplgTD8K+g8EoMTXg9P6KbMdiOQ7CJCQtGxZknapgf4wYecK3B/OwVUPWMaCw4l08t
+        WHUMrEtC3cKJTfUoVRXkKAfahj5gLCam/zHPgRNkhVZjpo2jbEdc4ybItCYYjdtIE2roKouxoeniX
+        nKN2zs13wqbYsFeT5RGPM1FXmhK5+xn26xzBzXOEq+jGpqgL/kOdOXfn04ckjXOHoop/+yihs0ETg
+        Pfcs7CVw==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1k64L1-0002aC-AP; Wed, 12 Aug 2020 21:55:36 -0600
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@wdc.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+References: <20200812232444.18310-1-logang@deltatee.com>
+ <20200813003200.GA1640756@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <829bed01-44c9-cac7-eb1b-9d1ccca7fd47@deltatee.com>
+Date:   Wed, 12 Aug 2020 21:55:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200813003200.GA1640756@dhcp-10-100-145-180.wdl.wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: hch@lst.de, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, keith.busch@wdc.com, sagi@grimberg.me, axboe@kernel.dk, kbusch@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2] nvme: Use spin_lock_irq() when taking the ctrl->lock
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-all interfaces, so the "speed" of the bond isn't really the aggregate of
-all interfaces, but rather, the speed of the lowest active interface.
 
-Also, the type of the speed field is u32, not unsigned long, so adjust
-that accordingly, as required to make min() function here without
-complaining about mismatching types.
 
-Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
----
- drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+On 2020-08-12 6:32 p.m., Keith Busch wrote:
+> There's an unrelated whitespace change in nvme_init_identify().
+> Otherwise, looks fine.
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 5ad43aaf76e5..c853ca67058c 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4552,13 +4552,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return ret;
- }
- 
-+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-+{
-+	if (speed == 0 || speed == SPEED_UNKNOWN)
-+		speed = slave->speed;
-+	else
-+		speed = min(speed, slave->speed);
-+
-+	return speed;
-+}
-+
- static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 					   struct ethtool_link_ksettings *cmd)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	unsigned long speed = 0;
- 	struct list_head *iter;
- 	struct slave *slave;
-+	u32 speed = 0;
- 
- 	cmd->base.duplex = DUPLEX_UNKNOWN;
- 	cmd->base.port = PORT_OTHER;
-@@ -4570,8 +4580,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 	 */
- 	bond_for_each_slave(bond, slave, iter) {
- 		if (bond_slave_can_tx(slave)) {
--			if (slave->speed != SPEED_UNKNOWN)
--				speed += slave->speed;
-+			if (slave->speed != SPEED_UNKNOWN) {
-+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-+					speed = bond_mode_bcast_speed(slave,
-+								      speed);
-+				else
-+					speed += slave->speed;
-+			}
- 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
- 			    slave->duplex != DUPLEX_UNKNOWN)
- 				cmd->base.duplex = slave->duplex;
--- 
-2.20.1
+Oops, sorry. can this be fixed up when it's merged?
 
+Logan
