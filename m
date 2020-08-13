@@ -2,160 +2,109 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEECC20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHMQgU (ORCPT
+        id S1726596AbgHMQgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:36:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49638 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 12:36:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51728 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgHMQgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:36:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 53E3DAD78;
-        Thu, 13 Aug 2020 16:36:40 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 18:36:17 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813163617.GS9477@dhcp22.suse.cz>
-References: <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <20200813154159.GR4295@paulmck-ThinkPad-P72>
- <20200813155412.GP9477@dhcp22.suse.cz>
- <20200813162047.GA27774@pc636>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813162047.GA27774@pc636>
+        id S1726249AbgHMQge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:36:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BSBzM1khRz9vCy5;
+        Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1cCf7Dl5xlxy; Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BSBzM10PNz9vCy4;
+        Thu, 13 Aug 2020 18:36:31 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 030438B7A6;
+        Thu, 13 Aug 2020 18:36:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ScPSZq6sBYHM; Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BE0868B7A1;
+        Thu, 13 Aug 2020 18:36:32 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 97F1065C8D; Thu, 13 Aug 2020 16:36:32 +0000 (UTC)
+Message-Id: <11a330af231af22874c006302a945388846f8112.1597336548.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH 1/9] powerpc: Remove flush_instruction_cache for book3s/32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 13 Aug 2020 16:36:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 18:20:47, Uladzislau Rezki wrote:
-> > On Thu 13-08-20 08:41:59, Paul E. McKenney wrote:
-> > > On Thu, Aug 13, 2020 at 04:53:35PM +0200, Michal Hocko wrote:
-> > > > On Thu 13-08-20 16:34:57, Thomas Gleixner wrote:
-> > > > > Michal Hocko <mhocko@suse.com> writes:
-> > > > > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
-> > > > > >> It basically requires to convert the wait queue to something else. Is
-> > > > > >> the waitqueue strict single waiter?
-> > > > > >
-> > > > > > I would have to double check. From what I remember only kswapd should
-> > > > > > ever sleep on it.
-> > > > > 
-> > > > > That would make it trivial as we could simply switch it over to rcu_wait.
-> > > > > 
-> > > > > >> So that should be:
-> > > > > >> 
-> > > > > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
-> > > > > >> 
-> > > > > >> which is limiting the damage to those callers which hand in
-> > > > > >> GFP_RT_NOWAIT.
-> > > > > >> 
-> > > > > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
-> > > > > >> zone->lock in the wrong context. And we want to know about that so we
-> > > > > >> can look at the caller and figure out how to solve it.
-> > > > > >
-> > > > > > Yes, that would have to somehow need to annotate the zone_lock to be ok
-> > > > > > in those paths so that lockdep doesn't complain.
-> > > > > 
-> > > > > That opens the worst of all cans of worms. If we start this here then
-> > > > > Joe programmer and his dog will use these lockdep annotation to evade
-> > > > > warnings and when exposed to RT it will fall apart in pieces. Just that
-> > > > > at that point Joe programmer moved on to something else and the usual
-> > > > > suspects can mop up the pieces. We've seen that all over the place and
-> > > > > some people even disable lockdep temporarily because annotations don't
-> > > > > help.
-> > > > 
-> > > > Hmm. I am likely missing something really important here. We have two
-> > > > problems at hand:
-> > > > 1) RT will become broken as soon as this new RCU functionality which
-> > > > requires an allocation from inside of raw_spinlock hits the RT tree
-> > > > 2) lockdep splats which are telling us that early because of the
-> > > > raw_spinlock-> spin_lock dependency.
-> > > 
-> > > That is a reasonable high-level summary.
-> > > 
-> > > > 1) can be handled by handled by the bailing out whenever we have to use
-> > > > zone->lock inside the buddy allocator - essentially even more strict
-> > > > NOWAIT semantic than we have for RT tree - proposed (pseudo) patch is
-> > > > trying to describe that.
-> > > 
-> > > Unless I am missing something subtle, the problem with this approach
-> > > is that in production-environment CONFIG_PREEMPT_NONE=y kernels, there
-> > > is no way at runtime to distinguish between holding a spinlock on the
-> > > one hand and holding a raw spinlock on the other.  Therefore, without
-> > > some sort of indication from the caller, this approach will not make
-> > > CONFIG_PREEMPT_NONE=y users happy.
-> > 
-> > If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
-> > check then there is no functional problem - GFP_RT_SAFE would still be
-> > GFP_NOWAIT so functional wise the allocator will still do the right
-> > thing.
-> > 
-> > [...]
-> > 
-> > > > That would require changing NOWAIT/ATOMIC allocations semantic quite
-> > > > drastically for !RT kernels as well. I am not sure this is something we
-> > > > can do. Or maybe I am just missing your point.
-> > > 
-> > > Exactly, and avoiding changing this semantic for current users is
-> > > precisely why we are proposing some sort of indication to be passed
-> > > into the allocation request.  In Uladzislau's patch, this was the
-> > > __GFP_NO_LOCKS flag, but whatever works.
-> > 
-> > As I've tried to explain already, I would really hope we can do without
-> > any new gfp flags. We are running out of them and they tend to generate
-> > a lot of maintenance burden. There is a lot of abuse etc. We should also
-> > not expose such an implementation detail of the allocator to callers
-> > because that would make future changes even harder. The alias, on the
-> > othere hand already builds on top of existing NOWAIT semantic and it
-> > just helps the allocator to complain about a wrong usage while it
-> > doesn't expose any internals.
-> > 
-> I know that Matthew and me raised it. We do can handle it without
-> introducing any flag. I mean just use 0 as argument to the page_alloc(gfp_flags = 0) 
-> 
-> i.e. #define __GFP_NO_LOCKS 0
-> 
-> so it will be handled same way how it is done in the "mm: Add __GFP_NO_LOCKS flag"
-> I can re-spin the RFC patch and send it out for better understanding.
-> 
-> Does it work for you, Michal? Or it is better just to drop the patch here?
+The only callers of flush_instruction_cache() are:
 
-That would change the semantic for GFP_NOWAIT users who decided to drop
-__GFP_KSWAPD_RECLAIM or even use 0 gfp mask right away, right? The point
-I am trying to make is that an alias is good for RT because it doesn't
-have any users (because there is no RT atomic user of the allocator)
-currently.
+arch/powerpc/kernel/swsusp_booke.S:	bl flush_instruction_cache
+arch/powerpc/mm/nohash/40x.c:	flush_instruction_cache();
+arch/powerpc/mm/nohash/44x.c:	flush_instruction_cache();
+arch/powerpc/mm/nohash/fsl_booke.c:	flush_instruction_cache();
+arch/powerpc/platforms/44x/machine_check.c:			flush_instruction_cache();
+arch/powerpc/platforms/44x/machine_check.c:		flush_instruction_cache();
 
+This function is not used by book3s/32, drop it.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/misc_32.S | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
+index b24f866fef81..bd870743c06f 100644
+--- a/arch/powerpc/kernel/misc_32.S
++++ b/arch/powerpc/kernel/misc_32.S
+@@ -271,9 +271,8 @@ _ASM_NOKPROBE_SYMBOL(real_writeb)
+ 
+ /*
+  * Flush instruction cache.
+- * This is a no-op on the 601.
+  */
+-#ifndef CONFIG_PPC_8xx
++#if !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC_BOOK3S_32)
+ _GLOBAL(flush_instruction_cache)
+ #if defined(CONFIG_4xx)
+ 	lis	r3, KERNELBASE@h
+@@ -290,18 +289,11 @@ _GLOBAL(flush_instruction_cache)
+ 	mfspr	r3,SPRN_L1CSR1
+ 	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
+ 	mtspr	SPRN_L1CSR1,r3
+-#elif defined(CONFIG_PPC_BOOK3S_601)
+-	blr			/* for 601, do nothing */
+-#else
+-	/* 603/604 processor - use invalidate-all bit in HID0 */
+-	mfspr	r3,SPRN_HID0
+-	ori	r3,r3,HID0_ICFI
+-	mtspr	SPRN_HID0,r3
+ #endif /* CONFIG_4xx */
+ 	isync
+ 	blr
+ EXPORT_SYMBOL(flush_instruction_cache)
+-#endif /* CONFIG_PPC_8xx */
++#endif /* CONFIG_PPC_8xx || CONFIG_PPC_BOOK3S_32 */
+ 
+ /*
+  * Copy a whole page.  We use the dcbz instruction on the destination
 -- 
-Michal Hocko
-SUSE Labs
+2.25.0
+
