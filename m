@@ -2,120 +2,137 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3100CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B883FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1FC20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597317526;
-	bh=7bP+WASRwWMl9CKAiOD+Bh8wlRVHiP3hbBmd+hvq9Gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GMpyOfjhC76bgfO2F/6uUirQ788SM5D6hVaWnz6hb6qRwN8D1OmI6l1T7YPRz4UpB
-	 pkRuTXjr/8BgZvB2+X95z9ZPePkUnz+rkeAECoyMRt08Oo9uAjKUwe6H+SR1roX0eB
-	 9iLgyldsb8fFUbBDdL/JfAFALoxJBPcx9RT4WwzM=
+	by mail.kernel.org (Postfix) with ESMTP id 8ECBB20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bNUdBuTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHMLSm (ORCPT
+        id S1726745AbgHMLTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgHMLSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:18:41 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B75F20715;
-        Thu, 13 Aug 2020 11:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597317520;
-        bh=7bP+WASRwWMl9CKAiOD+Bh8wlRVHiP3hbBmd+hvq9Gw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b3MYPTLonWpH1ZQAmeKqRJwjvD3JKpPlsR0lU7b6hqk2iIJXj7Ewn3myCzXCWLUTF
-         iWHbTlHJUCYuSPKOAbK81QAjkPeTAHFKQmXa5I1M/eb4utd2IOWDRypQC7Xfc8u9NK
-         2jbDREpzW6Y8dnCsjtoMFJ5eOY9xATPi+rVVrbgA=
-Date:   Thu, 13 Aug 2020 12:18:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        James Clark <james.clark@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        john.garry@huawei.com
-Subject: Re: [PATCH v2 0/4] Perf tool: Enable Arm arch timer counter and
- arm-spe's timestamp
-Message-ID: <20200813111833.GA10098@willie-the-truck>
-References: <20200807071620.11907-1-leo.yan@linaro.org>
- <CANLsYkzR+DSrss0dzPjMPKW+4ZGMbD9V23PLDSZAJM1-SQU0CQ@mail.gmail.com>
- <20200812185334.GN13995@kernel.org>
- <20200813095901.GB9894@willie-the-truck>
+        Thu, 13 Aug 2020 07:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgHMLTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:19:08 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C213C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:19:08 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w25so5714544ljo.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qcVxyjLOc1XVQD85n/+izIou9HNM43cYVLg/SeyZZMI=;
+        b=bNUdBuTwV/3TZ/Z2ohABO3rXzw8ixSfjeDWsfXjjDrX20nyzrlw+kFWqi3ovJUynzQ
+         T1jyIFdxNfWCxLqjjyxSHXr5s0oW5LxFuvCml7jlfGz/Es56tr8LGQJ0Ayd8iqZPt9ZY
+         PsDEcqKEmN8WW+xd7XLaSVnCibx6LBsuymT1hEUj+XD/gGeGo2ourVChPri6ZJkqQOVR
+         ceDCAPqSkGUMysZ8x4Jtlz5llwNp3sqtR86ChhD8zQbr6L7twY6lDI+UEQ3DiEXxQa/F
+         8Qku+cOjt+2i4dOy7CD3axyIFL6EvdiknM+KuArG/9J4BcsypOjwY3z7KRAA02hS0wBv
+         06Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qcVxyjLOc1XVQD85n/+izIou9HNM43cYVLg/SeyZZMI=;
+        b=DU7ck+OqjfrgzQ/kawOk8ohG9G7xgPRej2QIxSqWZCl9UO66x9TFV0R/HiWVtLHiHB
+         Gun+CWKoCmU03AyGN5ssC4avpcpYyDaYa64FQzxW+aS2QOgahuzrH5fd0mZXnKBNEqOR
+         5qbyDbyxxj3Sqbl5ckEYqCQ6q+hlOgbOQX2EBPmmB4lG5fy6mknwoJtI5mbEqQW/JPIf
+         8q50pqO5mAOTLlGg6d+E7wAgpYjZ1wIgKw7Q2Uwo8skEvcBhsVaHRy2VR24VW48QXggi
+         VH2icO6/CRntHzRz3asb8IcS9xrWTEOlcy2CZBGQ93WGm6v7p6Djcq1qELzzrfcWAY+u
+         W5EQ==
+X-Gm-Message-State: AOAM531zFbneRAO/bi/1Cb3nGn9lmaTnp8m8ycp3EM3fZdHJ/0d+xzF9
+        Toaj+Aoyd9KkUJRnTBAZtoSWoMb9ZaGjWm6vLSfZJg==
+X-Google-Smtp-Source: ABdhPJzYfGbMEn7r8RSAZZZ27h0Qx8uCYkmnUIyQdLzHLY2mY0DXgQIKq5PcNQCWG8lcb6/k/8aEZqf77v7vU/NmbRA=
+X-Received: by 2002:a05:651c:91:: with SMTP id 17mr1857137ljq.173.1597317546530;
+ Thu, 13 Aug 2020 04:19:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813095901.GB9894@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200725181404.18951-1-ansuelsmth@gmail.com> <20200725181404.18951-2-ansuelsmth@gmail.com>
+ <CAHLCerMc8yUjh9qwUCa=jMZHs18GC4qeS3rqT1_6K90QJd=nVA@mail.gmail.com> <006f01d66fe1$e6c0d450$b4427cf0$@gmail.com>
+In-Reply-To: <006f01d66fe1$e6c0d450$b4427cf0$@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 13 Aug 2020 16:48:55 +0530
+Message-ID: <CAP245DWuMh6Bkv7P4Y6mV3n59KFyCGKoy7e00E9d9ijR_rr1WA@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 1/7] drivers: thermal: tsens: Add VER_0 tsens version
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Adding John, as I only just realised he wasn't on CC and we were talking
-  about him! ]
+On Tue, Aug 11, 2020 at 6:48 PM <ansuelsmth@gmail.com> wrote:
+>
+>
+>
+> > -----Messaggio originale-----
+> > Da: Amit Kucheria <amit.kucheria@linaro.org>
 
-On Thu, Aug 13, 2020 at 10:59:01AM +0100, Will Deacon wrote:
-> On Wed, Aug 12, 2020 at 03:53:34PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Aug 12, 2020 at 10:06:53AM -0600, Mathieu Poirier escreveu:
-> > > The ARM SPE perf tools code is orphan and I don't have the cycles to
-> > > pick it up.  Leo has spent a lot of time in that code and as such I
-> > > suggest that he starts maintaining it, probably following the same
-> > > kind of arrangement you and I have for coresight.
-> > 
-> > Thats ok with me, I think we should reflect that on the MAINTAINERS
-> > file, right?
-> > 
-> > We have this already:
-> > 
-> > PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
-> > R:      John Garry <john.garry@huawei.com>
-> > R:      Will Deacon <will@kernel.org>
-> > L:      linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > S:      Supported
-> > F:      tools/perf/pmu-events/arch/arm64/
-> > 
-> > I think we should have entries for CoreSight and ARM SPE, one listing
-> > you as the maintainer and the other listing Leo, right?
-> 
-> Fine by me. I'll continue to maintain the in-kernel SPE driver, but I'd love
-> to see somebody step up to looking after the userspace code. It's seriously
-> unloved on arm64 :(
-> 
-> I'd even be happy to see one or two M: entries added for
-> tools/perf/pmu-events/arch/arm64/. I realistically don't have the time to
-> take that on, but I'd be thrilled if any/all of John, Mathieu and Leo were
-> to be listed there if they are willing to do so and can spare the time to
-> look after it. Even just silly things like making sure the thing
-> cross-compiles have been broken in the recent past, so it's not necessarily
-> about handling huge amounts of incoming patches.
-> 
-> In other words, rather than slice up the arm64 parts of the perf tool, I'd
-> argue in favour of a joint maintainership model for all the arm64 bits, if
-> we have a few willing volunteers.
-> 
-> Will
+> >
+> > >                         if (IS_ERR(priv->rf[i]))
+> > >                                 return PTR_ERR(priv->rf[i]);
+> > >                 }
+> > > @@ -775,12 +800,80 @@ int __init init_common(struct tsens_priv
+> > *priv)
+> > >                         goto err_put_device;
+> > >         }
+> > >
+> > > -       priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
+> > > -                                                    priv->fields[TSENS_EN]);
+> > > -       if (IS_ERR(priv->rf[TSENS_EN])) {
+> > > -               ret = PTR_ERR(priv->rf[TSENS_EN]);
+> > > -               goto err_put_device;
+> > > +       if (tsens_version(priv) >= VER_0_1) {
+> > > +               priv->rf[TSENS_EN] = devm_regmap_field_alloc(
+> > > +                       dev, priv->srot_map, priv->fields[TSENS_EN]);
+> > > +               if (IS_ERR(priv->rf[TSENS_EN])) {
+> > > +                       ret = PTR_ERR(priv->rf[TSENS_EN]);
+> > > +                       goto err_put_device;
+> > > +               }
+> > > +
+> > > +               priv->rf[SENSOR_EN] = devm_regmap_field_alloc(
+> > > +                       dev, priv->srot_map, priv->fields[SENSOR_EN]);
+> > > +               if (IS_ERR(priv->rf[SENSOR_EN])) {
+> > > +                       ret = PTR_ERR(priv->rf[SENSOR_EN]);
+> > > +                       goto err_put_device;
+> > > +               }
+> > > +               priv->rf[INT_EN] = devm_regmap_field_alloc(
+> > > +                       dev, priv->tm_map, priv->fields[INT_EN]);
+> > > +               if (IS_ERR(priv->rf[INT_EN])) {
+> > > +                       ret = PTR_ERR(priv->rf[INT_EN]);
+> > > +                       goto err_put_device;
+> > > +               }
+> > > +       } else {
+> >
+> > Let's not create two big sections with if-else for 8960 and everything
+> > else. For example, what is wrong with using common code for TSENS_EN?
+> >
+> > If the concern is memory wasted trying to allocate fields not present
+> > on this older platform, perhaps consider adding a check in the loop to
+> > break early in case of 8960?
+> >
+>
+> About TSENS_EN the old platform doesn't have SROT so I need to use TM_MAP.
+> Should I set the srot map to match the tm map so we can use the common function?
+> Aside from this problem, I will try to remove the big if-else.
+
+Ick. I guess srot_map and tm_map pointing to the same region is the
+lesser of two evils? It makes it so this will be constrained to a
+single place in init_common().
