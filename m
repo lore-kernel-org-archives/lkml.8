@@ -2,79 +2,223 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B868C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9185AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5A420791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B9120791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDjvd4jR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHMMzA (ORCPT
+        id S1726605AbgHMMzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:55:00 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:26134 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMMzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:55:00 -0400
-X-Greylist: delayed 4762 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 08:54:59 EDT
-Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-        by h3cspam02-ex.h3c.com with ESMTP id 07DBZXOS027013
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 19:35:33 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam02-ex.h3c.com with ESMTPS id 07DBYhDN026643
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 19:34:43 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 13 Aug 2020 19:34:46 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <rostedt@goodmis.org>, <mingo@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] tracing: use __this_cpu_read() in trace_buffered_event_enable()
-Date:   Thu, 13 Aug 2020 19:28:03 +0800
-Message-ID: <20200813112803.12256-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Aug 2020 08:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMMzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:55:02 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E34C061757;
+        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id x2so3225762ybf.12;
+        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
+        b=CDjvd4jRQ4l4RbEGS7kLoVz83KH2o2s7f6rdC0YEkG0f8Va0KUGU5njmNmvWD0j9O2
+         RfANcDqb2X+yWziaXZEzlqOWhHgeTL5f/SXl5lb/HJJBolKmL8PtCbAybApFYU+4oNy+
+         lnxF35PhN+5FMSGJj7yvZ7+IaMhqk+Zr8Er4UrJAtC1B6RMdi44Rt0whIC9p5hiRDI5t
+         RfaFR/cw7Y4b7tmBtWDoizH2xMs4738luDMcpqysPS53DKQksGYxvXrMEIOO6EKOPvsf
+         ii3XQiL+ZlfdLla0STQiINsAwKKJAMkoTsBMKTHQiS4jiBtGJI7vp72c0zujwo8S7HEC
+         Lxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
+        b=pQ3fxRiFz/MNTGAP4wzAT1dLR12EBDDoDzr1Xn13iatBmTT7Kc8N0iXbdQ/5pmxIWA
+         Q232MDbEPhWLndhwp3Hx1NVilBSzpsCgTIl2wZPP0Qut35qY1MEyCb3M3a6ilNA+jAlV
+         sqbZ4XmpNurUON0t39OBzOpBd87/16GTZqY+DCDu5LO73A5g8crgZGmD1NGhGF8toKs6
+         kEyQ0fyheNpnNPXBk8tzoZRM90YfI0AuOVjkgrjqP/h24oyVNN16ZDUocKjo6q2At/bo
+         3LTy6Q9PWyplTaAqYtAlhjK4SF11KBMxF/ieQ2huj7f9uEIyanJxf3ohYcd4XRJYnB6k
+         XrEA==
+X-Gm-Message-State: AOAM530oeceWO/0FA1vHeHY5fZT1xeIRTZfQ0XqClBt1UA6KJCTBnyRg
+        jLEx+BcX2PYRwPsTVoY2RBC82UVl36ZPrKgpisjf2krQ
+X-Google-Smtp-Source: ABdhPJyorRbchJgGCyTLDbB3eJQXWKepkgtINQSgf1E6LPJzQ0rtraBZ92Kn14p9F4+c7jW6VIEg4dj5p7BbrEEtpHs=
+X-Received: by 2002:a25:6ad6:: with SMTP id f205mr6436845ybc.76.1597323301408;
+ Thu, 13 Aug 2020 05:55:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 07DBYhDN026643
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200811112638.GF6054@pendragon.ideasonboard.com>
+In-Reply-To: <20200811112638.GF6054@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 13:54:35 +0100
+Message-ID: <CA+V-a8sVA9r3_yrM6z7EX-XGp1d6Wy-6LjWsO7Td93C-236jvg@mail.gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code is executed with preemption disabled, so it's
-safe to use __this_cpu_read().
+Hi Laurent,
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the review.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index bb6226972..7d0d71ce9 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2514,7 +2514,7 @@ void trace_buffered_event_enable(void)
- 
- 		preempt_disable();
- 		if (cpu == smp_processor_id() &&
--		    this_cpu_read(trace_buffered_event) !=
-+		    __this_cpu_read(trace_buffered_event) !=
- 		    per_cpu(trace_buffered_event, cpu))
- 			WARN_ON_ONCE(1);
- 		preempt_enable();
--- 
-2.17.1
+On Tue, Aug 11, 2020 at 12:26 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thank you for the patch.
+>
+> On Fri, Aug 07, 2020 at 06:49:54PM +0100, Lad Prabhakar wrote:
+> > The iwg21d comes with a 7" capacitive touch screen, therefore
+> > add support for it.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 84 +++++++++++++++++++++++++
+> >  1 file changed, 84 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > index b3461a61a4bf..cf59fd61e422 100644
+> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > @@ -30,6 +30,7 @@
+> >
+> >  /dts-v1/;
+> >  #include "r8a7742-iwg21m.dtsi"
+> > +#include <dt-bindings/pwm/pwm.h>
+> >
+> >  / {
+> >       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> > @@ -52,6 +53,50 @@
+> >               clock-frequency = <26000000>;
+> >       };
+> >
+> > +     lcd_backlight: backlight {
+> > +             compatible = "pwm-backlight";
+> > +             pwms = <&tpu 2 5000000 0>;
+> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
+> > +             pinctrl-0 = <&backlight_pins>;
+> > +             pinctrl-names = "default";
+> > +             default-brightness-level = <7>;
+> > +             enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
+>
+> It's actually a power supply, not an enable GPIO, but it doesn't matter
+> much, I don't think there's a need to declare a regulator just for the
+> sake of it.
+>
+Agreed will leave it as is.
 
+> > +     };
+> > +
+> > +     lvds-receiver {
+> > +             compatible = "ti,ds90cf384a", "lvds-decoder";
+> > +             powerdown-gpios = <&gpio5 28 GPIO_ACTIVE_LOW>;
+>
+> This should be handled as a shared power supply, as it's also needed for
+> the touch screen. Biju has sent patches for the iwg20d that fixes a
+> probe issue due to that problem, I think you can just copy the fix.
+>
+Done.
+
+> > +
+> > +             ports {
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     port@0 {
+> > +                             reg = <0>;
+> > +                             lvds_receiver_in: endpoint {
+> > +                                     remote-endpoint = <&lvds0_out>;
+> > +                             };
+> > +                     };
+> > +                     port@1 {
+> > +                             reg = <1>;
+> > +                             lvds_receiver_out: endpoint {
+> > +                                     remote-endpoint = <&panel_in>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     panel {
+> > +             compatible = "edt,etm0700g0dh6";
+> > +             backlight = <&lcd_backlight>;
+> > +
+> > +             port {
+> > +                     panel_in: endpoint {
+> > +                             remote-endpoint = <&lvds_receiver_out>;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> >       reg_1p5v: 1p5v {
+> >               compatible = "regulator-fixed";
+> >               regulator-name = "1P5V";
+> > @@ -129,12 +174,31 @@
+> >               VDDIO-supply = <&reg_3p3v>;
+> >               VDDD-supply = <&reg_1p5v>;
+> >       };
+> > +
+> > +     touch: touchpanel@38 {
+> > +             compatible = "edt,edt-ft5406";
+> > +             reg = <0x38>;
+> > +             interrupt-parent = <&gpio0>;
+> > +             interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
+>
+> Should the reset GPIO also be wired ? It seems to be shared with the
+> audio codec though, which is annoying.
+>
+Done.
+
+> > +     };
+> >  };
+> >
+> >  &cmt0 {
+> >       status = "okay";
+> >  };
+> >
+> > +&du {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&gpio0 {
+> > +     touch-interrupt {
+> > +             gpio-hog;
+> > +             gpios = <24 GPIO_ACTIVE_LOW>;
+> > +             input;
+> > +     };
+>
+> Is this needed, or does requesting the interrupt in the touch screen
+> driver configured the GPIO to an input automatically ?
+>
+Yes this is needed, the touch driver does not configure the pin as
+GPIO input without this touch doesn't work.
+
+Cheers,
+Prabhakar
