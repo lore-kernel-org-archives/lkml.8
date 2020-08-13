@@ -2,153 +2,68 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B142C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DDC2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnrKUUml"
+	by mail.kernel.org (Postfix) with ESMTP id 4422D20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMO0z (ORCPT
+        id S1726522AbgHMOb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        Thu, 13 Aug 2020 10:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgHMO0y (ORCPT
+        with ESMTP id S1726082AbgHMOb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:26:54 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B36DC061757;
-        Thu, 13 Aug 2020 07:26:54 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g14so7574267iom.0;
-        Thu, 13 Aug 2020 07:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GxNk6clU3GutwGWPMQKKGMAHcko+Fcxjva5mT8vHA9w=;
-        b=EnrKUUmlZEVpPRj/draNaTL+xj7fm12tnG8YBCxdMfhuuvKGGYpBM58nXaMgwUYS0H
-         ++sLe6PMR37iRjVJ9YGOAQJhCBN6fLW9aPvhTTug1Fih0dDBe26GPD0QdmwaT6BtFe4a
-         IR2hoWGPr1QfdsTD25jx+hdDhzKDyoGGwBKR6MnET80E6XiqZvOlhSw8Qt3OsCNYdNXw
-         UocKsYWZgRJNkRil0H4DBNH8LJosbla/DxOWE8WHdpNNYpHBnAPOlsr4ynWDRMp70cgj
-         qeHsS3xjFfClcd77lQGvsREAVwdnK1hgfIQ69ar2Qj0466wbosmB6wWo8Q50unI+H5XT
-         rt/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GxNk6clU3GutwGWPMQKKGMAHcko+Fcxjva5mT8vHA9w=;
-        b=cAylxknSOudkrPm6yp5JyB9996R0ih31BhsAEYPuTIvszijZUvmqUMK94k6WAXnHB+
-         M45pL+/yjPK7MKMUzOr6F3hxr7thTVeqgF4M9CNDY5Nh+EDksXrChF8biMZekAGzT4kq
-         0L4Av5nQES7g4fXsAkf2inl5Mg0DRjb2LUD9znD26hyQg+Fx8QoG1h9R4ohBBQ2u9lTr
-         7Y+yCDkXwMdSWEksI8ivaQOWABa5Yvj70vCzO9bOG0n1U6BBB7uQe1pYrDGjCY/QUcWQ
-         2IOStSA9fN/Xgsh+vORqub32xjA+PRkJe/T8Qj3PBCjFe7ZxqE8Mpf0YV3yCC42wNBIO
-         P2kg==
-X-Gm-Message-State: AOAM532gItTju3dly+D2Qe9dTYjFwmGt7WOdHLHEiNQ1ac+OX76h0FzD
-        zlrte13aM/nqlB3Ss6fsSL9H31kC3Gg98KQlde8=
-X-Google-Smtp-Source: ABdhPJwAjcnJnLIvqD6xalBjx2poeXgpGi+ipQtmatKYko58J3jdGJCaaIQoFz6Iz8L1aALp+dfVyRczxIcfl/cFt6c=
-X-Received: by 2002:a02:3311:: with SMTP id c17mr5127932jae.114.1597328813804;
- Thu, 13 Aug 2020 07:26:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
- <20200813040224.13054.96724.stgit@localhost.localdomain> <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
-In-Reply-To: <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 13 Aug 2020 07:26:42 -0700
-Message-ID: <CAKgT0UfO0j9yQCiQD+QDpNPCGncfH-+yP+qmEYGA_Fz=jmqAUQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+        Thu, 13 Aug 2020 10:31:26 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580BAC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:31:26 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1k6EGH-003g8J-F9; Thu, 13 Aug 2020 16:31:21 +0200
+Message-ID: <fdee2bf96e207a45d0e88e4a5f05044a112d6ba5.camel@sipsolutions.net>
+Subject: Re: [Ksummit-discuss] Linux Foundation Technical Advisory Board
+ Elections -- voting procedures
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Laura Abbott <laura@labbott.name>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "ksummit-discuss@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 13 Aug 2020 16:31:19 +0200
+In-Reply-To: <ade3420c-89fd-bed0-52e3-a0396eaeda2d@labbott.name>
+References: <ade3420c-89fd-bed0-52e3-a0396eaeda2d@labbott.name>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:45 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
-e:
->
->
->
-> =E5=9C=A8 2020/8/13 =E4=B8=8B=E5=8D=8812:02, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> > -             rcu_read_lock();
-> > -             lruvec =3D mem_cgroup_page_lruvec(page, pgdat);
-> > -
-> >               /* If we already hold the lock, we can skip some rechecki=
-ng */
-> > -             if (lruvec !=3D locked) {
-> > -                     if (locked)
-> > -                             unlock_page_lruvec_irqrestore(locked, fla=
-gs);
-> > +             if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec))=
- {
->
-> Ops, lruvec_holds_page_lru_lock need rcu_read_lock.
+Hi Laura,
 
-How so? The reason I wrote lruvec_holds_page_lru_lock the way I did is
-that it is simply comparing the pointers held by the page and the
-lruvec. It is never actually accessing any of the values, just the
-pointers. As such we should be able to compare the two since the
-lruvec is still locked and the the memcg and pgdat held by the lruvec
-should not be changed. Likewise with the page pointers assuming the
-values match.
+Seeing your reminder reminded me :)
 
-> > +                     if (lruvec)
-> > +                             unlock_page_lruvec_irqrestore(lruvec, fla=
-gs);
-> >
-> > +                     lruvec =3D mem_cgroup_page_lruvec(page, pgdat);
-> >                       compact_lock_irqsave(&lruvec->lru_lock, &flags, c=
-c);
-> > -                     locked =3D lruvec;
-> >                       rcu_read_unlock();
-> >
->
-> and some bugs:
-> [  534.564741] CPU: 23 PID: 545 Comm: kcompactd1 Kdump: loaded Tainted: G=
- S      W         5.8.0-next-20200803-00028-g9a7ff2cd6e5c #85
-> [  534.577320] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS=
-, BIOS 1.0.PL.IP.P.027.02 05/29/2020
-> [  534.587693] Call Trace:
-> [  534.590522]  dump_stack+0x96/0xd0
-> [  534.594231]  ___might_sleep.cold.90+0xff/0x115
-> [  534.599102]  kcompactd+0x24b/0x370
-> [  534.602904]  ? finish_wait+0x80/0x80
-> [  534.606897]  ? kcompactd_do_work+0x3d0/0x3d0
-> [  534.611566]  kthread+0x14e/0x170
-> [  534.615182]  ? kthread_park+0x80/0x80
-> [  534.619252]  ret_from_fork+0x1f/0x30
-> [  535.629483] BUG: sleeping function called from invalid context at incl=
-ude/linux/freezer.h:57
-> [  535.638691] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 545=
-, name: kcompactd1
-> [  535.647601] INFO: lockdep is turned off.
+> We will be using the electronic voting method that we used in 2019. All
+> Linux Plumbers Attendees will automatically receive a ballot. Anyone
+> who is otherwise eligible to vote should e-mail 
+> tab-elections@lists.linuxfoundation.org to request a ballot. The deadline
+> for requesting a ballot is August 17, 00:00 UTC (one week before
+> Linux Plumbers)
 
-Ah, I see the bug now. It isn't the lruvec_holds_page_lru_lock that
-needs the LRU lock. This is an issue as a part of a merge conflict.
-There should have been an rcu_read_lock added before
-mem_cgroup_page_lruvec.
+Will you be sending out some kind of voting tokens for the ballot? And
+if so, when is that supposed to happen? I (believe I) have requested a
+ballot, but didn't get a response so far.
+
+Thanks,
+Johannes
+
