@@ -2,119 +2,108 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F68C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476D120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLUvqXVI"
+	by mail.kernel.org (Postfix) with ESMTP id 9FCEA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHMOHR (ORCPT
+        id S1726622AbgHMOJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:07:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33280 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726053AbgHMOHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:07:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597327630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zGXP4qw+AnPxVdaG8af/8IcGg0r93+iBSNIWSEPA6j8=;
-        b=QLUvqXVINTXUM8ERNWq/oNzrDPpO8amLPEPmWHRrtlhf9fI6E3gfusAOTIzTu+8LBMxDNm
-        QER24JuYaUDER3H7gzjSV6yys+g1zBoydbXft7GQ9295jbZtmreJtOQm/0qB1bL/JQ90ml
-        A52klH09zL0qhjPXeoxI+Dz5Xmm26Ws=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-dZkGXCqRMbyriU9pqb1ZNw-1; Thu, 13 Aug 2020 10:07:07 -0400
-X-MC-Unique: dZkGXCqRMbyriU9pqb1ZNw-1
-Received: by mail-oo1-f72.google.com with SMTP id r66so2881085ooa.17
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:07:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zGXP4qw+AnPxVdaG8af/8IcGg0r93+iBSNIWSEPA6j8=;
-        b=d+9rZ1GM3NEZSjZ1M/YBqFE8w0Q9UIEwxJ9zk2sLhvkVcpIQHQsPqBz4MqY+quY6+7
-         Q46Stq5r2o7KNs3nDOkCGnOZ3fmpu+VpjGNjr187hZye0Hl4YF+qLU4Rg5hk9MkudqOz
-         HftgWAJNNVCxDww/l0R2x2KrN8s7ewhSTZgdBENv9aNz6o/kzXsOzPbLWVHq1+5a7iIa
-         AIeHYhydYGCHCrhDx5Pu1/EmPDbR6ju/MGQLMyVkz+Y8eSRakca1Ne86sUE1cGGPjjes
-         bYIsLateAyslIjQcNG9hFxEg6rcTVnJvKFkJfbYInJXS1KDHZSc3w8lzOltHJandM5AB
-         X5OA==
-X-Gm-Message-State: AOAM533RRkEu2r+/mJzYYSO6vytExRyez6iOFD7D/uObluAfFPXGGMRH
-        0Av3SA6n2UPtvBjwr7ROphTpmdXY+ECEC/KCvQ9sUB/WrYL+FknpfgKakL8BNxEHEnVZoAgGrVi
-        lCu2XheVqRtWcnuuF5ewODoQQeIUOuB5uGUJjRSTv
-X-Received: by 2002:a4a:52c2:: with SMTP id d185mr4787882oob.8.1597327626802;
-        Thu, 13 Aug 2020 07:07:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzeiGfQxpCVrZBxl/IupXG+HiieUJGX1pf9TTQuoJCQy4jQixWt3yjdm0mI9ztVpuUj6EB1hgCns/RG7IOzMsk=
-X-Received: by 2002:a4a:52c2:: with SMTP id d185mr4787847oob.8.1597327626508;
- Thu, 13 Aug 2020 07:07:06 -0700 (PDT)
+        Thu, 13 Aug 2020 10:09:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13846 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgHMOI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:08:57 -0400
+IronPort-SDR: sHShGv06QUvYIugrdHcjVDwrIkhNjW1RErZg669+25WpmAthoFmV5Qb2z5UHMXJzSEqtyO1+MI
+ IiPSaUtn+Qwg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="154185340"
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="154185340"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:08:56 -0700
+IronPort-SDR: o0MhVUkf4xPzEwR7h5E3yQ59OcocB9KOzuxf7ng3Ug8K5sl+Cj+JJ+tAo2jwUPoy/mLQte8mva
+ Q2GA2O+HUFrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="325420663"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2020 07:08:54 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k6Dm5-008SAB-PZ; Thu, 13 Aug 2020 17:00:09 +0300
+Date:   Thu, 13 Aug 2020 17:00:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Seungil Kang <sil.kang@samsung.com>
+Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] lib/cmdline: prevent unintented access to address
+Message-ID: <20200813140009.GX1891694@smile.fi.intel.com>
+References: <CGME20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac@epcas1p3.samsung.com>
+ <20200813030741.6896-1-sil.kang@samsung.com>
 MIME-Version: 1.0
-References: <20200813035509.739-1-jarod@redhat.com> <27389.1597296596@famine>
-In-Reply-To: <27389.1597296596@famine>
-From:   Jarod Wilson <jarod@redhat.com>
-Date:   Thu, 13 Aug 2020 10:06:56 -0400
-Message-ID: <CAKfmpSeRsh4tYaQPg22d8L92i1jEP3J9Y5G8udutGruVURa=Fg@mail.gmail.com>
-Subject: Re: [PATCH net] bonding: show saner speed for broadcast mode
-To:     Jay Vosburgh <jay.vosburgh@canonical.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813030741.6896-1-sil.kang@samsung.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 1:30 AM Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
->
-> Jarod Wilson <jarod@redhat.com> wrote:
->
-> >Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-> >all interfaces, so the "speed" of the bond isn't really the aggregate of
-> >all interfaces, but rather, the speed of the lowest active interface.
->
->         Did you mean "slowest" here?
+On Thu, Aug 13, 2020 at 12:07:41PM +0900, Seungil Kang wrote:
+> When args = "\"\0", "i" will be 0 and args[i-1] is used. (*lib/cmdline.c +238)
 
-I think I was thinking "lowest speed", but the way it's written does
-seem a little ambiguous, and slowest would fit better. I'll repost
-with slowest.
+What I meant is to put hex dump of the args here in the parentheses, something like
 
-> >Also, the type of the speed field is u32, not unsigned long, so adjust
-> >that accordingly, as required to make min() function here without
-> >complaining about mismatching types.
-> >
-> >Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-> >CC: Jay Vosburgh <j.vosburgh@gmail.com>
-> >CC: Veaceslav Falico <vfalico@gmail.com>
-> >CC: Andy Gospodarek <andy@greyhouse.net>
-> >CC: "David S. Miller" <davem@davemloft.net>
-> >CC: netdev@vger.kernel.org
-> >Signed-off-by: Jarod Wilson <jarod@redhat.com>
->
->         Did you notice this by inspection, or did it come up in use
-> somewhere?  I can't recall ever hearing of anyone using broadcast mode,
-> so I'm curious if there is a use for it, but this change seems
-> reasonable enough regardless.
+"When args = "... \"\0" (... 0x22 0x00), 'i' will be..."
 
-Someone working on our virt management tools was working on something
-displaying bonding speeds in the UI, and reached out, thinking the
-reporting for broadcast mode was wrong. My response was similar: I
-don't think I've ever actually used broadcast mode or heard of anyone
-using it, but for that one person who does, sure, we can probably make
-that adjustment. :)
+> Because of "i" is an unsigned int type, the function will access at args[0xFFFFFFFF].
+> It can make a crash.
+
+...
+
+> > Can you point out to the code that calls this and leads to a crash?
+> 
+>  *lib/cmdlinc + 201 ~, next_arg function with args = "\"\0"
+
+Not the next_arg() code :-) The code which calls here...
+
+...
+
+> > Can you provide a KUnit test module which can check the case?
+> 
+>  If necessary, I will make it and share it.
+
+Please, do as a separate patch in the series.
+
+...
+
+> --- a/lib/cmdline.c
+> +++ b/lib/cmdline.c
+> @@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
+>   */
+>  char *next_arg(char *args, char **param, char **val)
+>  {
+> -	unsigned int i, equals = 0;
+> +	int i, equals = 0;
+>  	int in_quote = 0, quoted = 0;
+>  	char *next;
+
+At the first glance this is not correct fix for it: 0 - 1 is always 'all 1:s'
+independently on signedness, but I need to think about.
+
+And your test case / module would help a lot, if present.
 
 -- 
-Jarod Wilson
-jarod@redhat.com
+With Best Regards,
+Andy Shevchenko
+
 
