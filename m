@@ -2,103 +2,152 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61899C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F2AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8C72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A9A20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:16:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oOFjRBHz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJcUozzx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me8R6C+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgHMQOg (ORCPT
+        id S1726631AbgHMQQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:14:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59600 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgHMQOe (ORCPT
+        Thu, 13 Aug 2020 12:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgHMQQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:14:34 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597335272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=66uJUorK5q7WBNWrxkKSEUxXZkFJ2RBMqFNCx+IQFx0=;
-        b=oOFjRBHzQlN+As6SH+DyrVe2USN0vtJQnp/6vhWsa/D39lvLO+wMMkw/+jjXidC4Ds24z+
-        jacAuqJvVEt0fkLYUVB17Av9dZ7LhgnLHViGhioFTBzKNaaN9VuTzvOB5zOLMnq0XJPvgU
-        9IlMNOXi2hdniFIZkh9hQSh9QGCJyCbf45wM0veye3MXLnuH2vQNJog8rH4rgfKnhm+PJp
-        lLarHvRldgIMM8mxAK5JhDGR3quYK5gKTGvJZfcnSVlx7OrVjrpsaDRbX6dkg4FsA+Y+nn
-        ZIwI6RnzKcMNtvpYXKlH7Of/wEBG1SnwQlo8j1qN74j2QePz/7xf+ZqnO8Jz+w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597335272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=66uJUorK5q7WBNWrxkKSEUxXZkFJ2RBMqFNCx+IQFx0=;
-        b=qJcUozzxZ0Wmz6U+FNL0TGmzZm/M4UNNZ+yBk0JAXDJFCk5RJoj2tuGkXcYLTj2ouTm3cm
-        54nJ4Z4S13mbrfAQ==
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200813143221.GI17456@casper.infradead.org>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72> <874kp87mca.fsf@nanos.tec.linutronix.de> <20200813075027.GD9477@dhcp22.suse.cz> <20200813095840.GA25268@pc636> <20200813111505.GG9477@dhcp22.suse.cz> <871rkallqk.fsf@nanos.tec.linutronix.de> <20200813143221.GI17456@casper.infradead.org>
-Date:   Thu, 13 Aug 2020 18:14:32 +0200
-Message-ID: <87pn7uttef.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Aug 2020 12:16:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3DCC061757;
+        Thu, 13 Aug 2020 09:16:39 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id p14so5187718wmg.1;
+        Thu, 13 Aug 2020 09:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZDZxK557QyydjLfRKCH3a63KYLOab4MosSYsDN0lTPI=;
+        b=Me8R6C+bT+HcxPAfKWKJXWW0PdK3ui8PTkMX4mfTZia+OsdLQzy26AOH4SPA6csTne
+         AH/QScFCt8eRHHy2kzT0sDROOyf/+cesMWqQDzb45MRYMkUxfYD4JU2UFEkPDBweUBWh
+         sJ/MW/U31mPfbg6SC3XGecibDGmFei+W06ypvarH3yHd2NYMKqVlsHuPeDVYWw0HcyNq
+         lxgL9T9/VTNfOTsOVzyWrBvLE9UymEpSfbSKTeDB9N9XjyKafFen4Me03sf8odU6w2LK
+         7VGQQiyLYvEn+HgMVau1xJUNdI/Qgc3hT9zkTgbZpBYzqv70RrLfp518z+Su3/QtbSWd
+         MMVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZDZxK557QyydjLfRKCH3a63KYLOab4MosSYsDN0lTPI=;
+        b=IqWhVWrb36HKQZMtkS+pWRkVXE4ovhqA5qgSnIecSaQPkDMIzwGgG6bBgHro57YNdN
+         htscDxBTHrOHEOQgUOkL5yP4S/WUhdHB1f5XUzIbdm/2KwVPlP2jL0sanjLySF8XoTrS
+         LovPevFJIHjI3Ey+mmpZuUDllI6g7QLEhdCYy5S67tYA0YSwCtIbPnaDavxpK2GpR01z
+         CEnLekZ0fsRSvnCXC24WPcsJSqqQDo2jRLKSZ8cnsByDd4qcm5ApKTyoXYdy7O+ItQeI
+         MNUT+JMvQQgxP1kPwsvGWT5KH4LY5Xe3lsUphVC2oGU9MFJuxrHPYHN7W03WZgwRCN3T
+         KBzg==
+X-Gm-Message-State: AOAM531MHcNXSk/qxSSGCpIjZVRsxKa/EagPHyME4kg5ZYFriSRyNyfp
+        N1/JbRji8MFz3mGvWkKuQc/IatJZaWCPl8YWiWVL9ssm
+X-Google-Smtp-Source: ABdhPJx9BIL8YvczFKCJBH4UENkHUjiA1/2Ml3mI2JxBFhQVn2uDFhMYCBAVLjNaZCNs0zfCkO4LE+S5uR3RemIOvk0=
+X-Received: by 2002:a7b:c257:: with SMTP id b23mr4890016wmj.164.1597335395036;
+ Thu, 13 Aug 2020 09:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org> <20200810222657.1841322-8-jcrouse@codeaurora.org>
+In-Reply-To: <20200810222657.1841322-8-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 13 Aug 2020 09:17:21 -0700
+Message-ID: <CAF6AEGsA-jWLvSjZYz=ZkM7cxC5Wv6rDcoVv-9K5QpEZT=Cv7A@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v12 07/13] drm/msm: Add a context pointer to
+ the submitqueue
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eric Anholt <eric@anholt.net>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sean Paul <sean@poorly.run>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> writes:
-> On Thu, Aug 13, 2020 at 03:27:15PM +0200, Thomas Gleixner wrote:
->> And guarding it with RT is not working either because then you are back
->> to square one with the problem which triggered the discussion in the
->> first place:
->> 
->> raw_spin_lock()
->>   alloc()
->>     if (RT && !preemptible())  <- False because RT == false
->>     	goto bail;
->> 
->>     spin_lock(&zone->lock)  --> LOCKDEP complains
->> 
->> So either you convince Paul not to do that or you need to do something
->> like I suggested in my other reply.
+On Mon, Aug 10, 2020 at 3:27 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> I'd like to throw in the possibility that we do something like:
+> Each submitqueue is attached to a context. Add a pointer to the
+> context to the submitqueue at create time and refcount it so
+> that it stays around through the life of the queue.
 >
->   raw_spin_lock()
->     alloc()
->       if (!spin_trylock(&zone->lock))
->         if (RT && !preemptible())
->           goto bail;
->         spin_lock(&zone->lock);
+> GPU submissions can access the active context via the submitqueue
+> instead of requiring it to be passed around from function to
+> function.
 >
-> would that make us feel more comfortable about converting zone->lock to
-> a raw spinlock?
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 12 +++++-------
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  5 ++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c |  5 ++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +--
+>  drivers/gpu/drm/msm/msm_drv.c           |  3 ++-
+>  drivers/gpu/drm/msm/msm_drv.h           |  8 ++++++++
+>  drivers/gpu/drm/msm/msm_gem.h           |  1 +
+>  drivers/gpu/drm/msm/msm_gem_submit.c    |  8 ++++----
+>  drivers/gpu/drm/msm/msm_gpu.c           |  9 ++++-----
+>  drivers/gpu/drm/msm/msm_gpu.h           |  7 +++----
+>  drivers/gpu/drm/msm/msm_submitqueue.c   |  8 +++++++-
+>  11 files changed, 39 insertions(+), 30 deletions(-)
+>
 
-Even if that could cure that particular problem of allocations in deep
-atomic context, making zone->lock raw brings back the problem of
-zone->lock being held/contended for hundreds of microseconds with
-interrupts disabled which is causing RT tasks to miss their deadlines by
-big margins.
+[snip]
 
-Thanks,
+> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+> index 972490b14ba5..9c573c4269cb 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.h
+> +++ b/drivers/gpu/drm/msm/msm_gem.h
+> @@ -142,6 +142,7 @@ struct msm_gem_submit {
+>         bool valid;         /* true if no cmdstream patching needed */
+>         bool in_rb;         /* "sudo" mode, copy cmds into RB */
+>         struct msm_ringbuffer *ring;
+> +       struct msm_file_private *ctx;
 
-        tglx
+So, it looks like this is (currently) unused, and everything is
+instead using submit->queue->ctx
+
+That said, changing this so the submit also holds a ref to the ctx
+seems to fix the intermittent splat I can trigger by repeatedly
+hanging the gpu.  Which (from the pile of additional tracepoints I've
+added on top of this series) seems to be related to re-playing submits
+after the userspace process has crashed and/or closed the device.
+
+It seems like the reference the submit holds to the queue should keep
+the ctx (and therefore address space) alive, but I need to dig through
+that a bit more.
+
+BR,
+-R
+
+>         unsigned int nr_cmds;
+>         unsigned int nr_bos;
+>         u32 ident;         /* A "identifier" for the submit for logging */
