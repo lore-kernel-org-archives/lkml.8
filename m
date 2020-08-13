@@ -2,82 +2,112 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9314DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF60C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615B022BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b7xCoKf8"
+	by mail.kernel.org (Postfix) with ESMTP id 0E3822074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgHMJHe (ORCPT
+        id S1726651AbgHMJHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:07:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30433 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726204AbgHMJHb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:07:31 -0400
-X-UUID: b28c1db532aa4cf291066c0ffc851c14-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=v5RL6V9x3ufySZ6lQXXP3W0N4mG04Wkwj8+hcLlIG0M=;
-        b=b7xCoKf8OA74GZtLEi66e55I4YMaROmG4DF5OsPC9td9b0BXYWuxPfmi+/v3LaLCdHCt7dEJwbjV90HzRjngfqHCAKW1PutW1/KZP0/KjwoMnkJ9T7Bf6M1zKlIh44BGirkq8EEmn958/9B1Y8VgrNppQX1xsMV5yGUoEERoIGo=;
-X-UUID: b28c1db532aa4cf291066c0ffc851c14-20200813
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <wenbin.mei@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1594527651; Thu, 13 Aug 2020 17:07:21 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 17:07:19 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 17:07:18 +0800
-From:   Wenbin Mei <wenbin.mei@mediatek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>, <stable@vger.kernel.org>
-Subject: [v4,2/3] arm64: dts: mt7622: add reset node for mmc device
-Date:   Thu, 13 Aug 2020 17:06:17 +0800
-Message-ID: <20200813090618.28009-3-wenbin.mei@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200813090618.28009-1-wenbin.mei@mediatek.com>
-References: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+        Thu, 13 Aug 2020 05:07:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7109 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgHMJHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:07:49 -0400
+IronPort-SDR: 9PcyCk15d7S+UDmSEln3MvyU1nw4FAkxi8pCCwhTBACVlG1g2w+gLo9UvIvLuCrilhujA1j/pJ
+ V0v6lwIHT4HQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151605469"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="151605469"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 02:07:49 -0700
+IronPort-SDR: /dng0qgxe4ytvTgRYkcMNtGBMOynSwGAPVH+eX/Wk2LdOA8CuIW7OqoOQivzodL7qoLnQ7+pci
+ 3UU1b2qIBySA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="318448547"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2020 02:07:47 -0700
+Date:   Thu, 13 Aug 2020 17:04:09 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Moritz Fischer' <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>
+Subject: Re: [PATCH v4 1/4] fpga: dfl: change data type of feature id to u16
+Message-ID: <20200813090409.GA1080@yilunxu-OptiPlex-7050>
+References: <1597027273-25288-1-git-send-email-yilun.xu@intel.com>
+ <1597027273-25288-2-git-send-email-yilun.xu@intel.com>
+ <20200812035604.GA2544@epycbox.lan>
+ <3810fb75b42e45928a39a97449a01520@AcuMS.aculab.com>
+ <20200813075843.GB7383@yilunxu-OptiPlex-7050>
+ <54216e492cec4f84bc43dee176130e89@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54216e492cec4f84bc43dee176130e89@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBjb21taXQgYWRkcyByZXNldCBub2RlIGZvciBtbWMgZGV2aWNlLg0KDQpDYzogPHN0YWJs
-ZUB2Z2VyLmtlcm5lbC5vcmc+ICMgdjUuNCsNCkZpeGVzOiA5NjY1ODBhZDIzNmUgKCJtbWM6IG1l
-ZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgTVQ3NjIyIFNvQyIpDQpTaWduZWQtb2ZmLWJ5OiBXZW5i
-aW4gTWVpIDx3ZW5iaW4ubWVpQG1lZGlhdGVrLmNvbT4NClRlc3RlZC1ieTogRnJhbmsgV3VuZGVy
-bGljaCA8ZnJhbmstd0BwdWJsaWMtZmlsZXMuZGU+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRz
-L21lZGlhdGVrL210NzYyMi5kdHNpIHwgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
-bnMoKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIy
-LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYyMi5kdHNpDQppbmRleCAx
-YTM5ZTBlZjc3NmIuLjViOWVjMDMyY2U4ZCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
-ZWsvbXQ3NjIyLmR0c2kNCkBAIC02ODYsNiArNjg2LDggQEANCiAJCWNsb2NrcyA9IDwmcGVyaWNm
-ZyBDTEtfUEVSSV9NU0RDMzBfMF9QRD4sDQogCQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9NU0RDNTBf
-MF9TRUw+Ow0KIAkJY2xvY2stbmFtZXMgPSAic291cmNlIiwgImhjbGsiOw0KKwkJcmVzZXRzID0g
-PCZwZXJpY2ZnIE1UNzYyMl9QRVJJX01TREMwX1NXX1JTVD47DQorCQlyZXNldC1uYW1lcyA9ICJo
-cnN0IjsNCiAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQogCX07DQogDQotLSANCjIuMTguMA0K
+On Thu, Aug 13, 2020 at 08:28:05AM +0000, David Laight wrote:
+> From: Xu Yilun
+> > Sent: 13 August 2020 08:59
+> > On Wed, Aug 12, 2020 at 08:52:39AM +0000, David Laight wrote:
+> > > From: Moritz Fischer
+> > > > Sent: 12 August 2020 04:56
+> > > >
+> > > > On Mon, Aug 10, 2020 at 10:41:10AM +0800, Xu Yilun wrote:
+> > > > > The feature id is stored in a 12 bit field in DFH. So a u16 variable is
+> > > > > enough for feature id.
+> > > > >
+> > > > > This patch changes all feature id related places to fit u16.
+> > >
+> > > How much bigger does it make the kernel?
+> > 
+> > The patch changes the definition of feature id from u64 to u16, and will
+> > make the kernel slightly smaller.
+> 
+> Unlikely.
+> Most of the structures will gain a 'pad' field.
+> Using u16 for function parameters and results almost certainly
+> requires instructions to mask the value.
+> Any arithmetic on u16 will require masking instructions on
+> (probably) all architectures except x86.
+> 
+> Using 'unsigned int' is probably best.
+> 
+> u16 is never a good idea unless you are defining enough
+> of them in a structure (eg as an array) to reduce the
+> structure size below some threshold.
+> (Or are matching some hardware layout.)
 
+I got it. Thanks for your detailed explanation. I think we may change them to
+u32. Is it the same case for u8? Think we may also change the dfl_device_id.type.
+
+
+Hi Moritz:
+
+The patch is applied to for-next, is it possible we recall it, or we
+make another fix after it?
+
+Thanks,
+Yilun.
+
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
