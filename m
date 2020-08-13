@@ -2,79 +2,93 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C672120774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FD6204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMW1P (ORCPT
+        id S1726587AbgHMWax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:27:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:57480 "EHLO foss.arm.com"
+        Thu, 13 Aug 2020 18:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgHMW1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:27:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0E5E1063;
-        Thu, 13 Aug 2020 15:27:14 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BD903F22E;
-        Thu, 13 Aug 2020 15:27:13 -0700 (PDT)
-References: <20200812125300.11889-1-valentin.schneider@arm.com> <20200812125300.11889-3-valentin.schneider@arm.com> <20200813191614.GB2337490@gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
-Subject: Re: [PATCH v5 02/17] ARM: Revert back to default scheduler topology.
-In-reply-to: <20200813191614.GB2337490@gmail.com>
-Date:   Thu, 13 Aug 2020 23:27:05 +0100
-Message-ID: <jhjzh6ydvwm.mognet@arm.com>
+        id S1726205AbgHMWax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 18:30:53 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9833C204EC;
+        Thu, 13 Aug 2020 22:30:52 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 18:30:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] bootconfig: Fix off-by-one in xbc_node_compose_key_after()
+Message-ID: <20200813183050.029a6003@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-On 13/08/20 20:16, Ingo Molnar wrote:
-> * Valentin Schneider <valentin.schneider@arm.com> wrote:
->
->> The ARM-specific GMC level is meant to be built using the thread sibling
->> mask, but no devicetree in arch/arm/boot/dts uses the 'thread' cpu-map
->> binding. With SD_SHARE_POWERDOMAIN gone, this topology level can be
->> removed, at which point ARM no longer benefits from having a custom defined
->> topology table.
->>
->> Delete the GMC topology level by making ARM use the default scheduler
->> topology table. This essentially reverts commit
->>
->>   fb2aa85564f4 ("sched, ARM: Create a dedicated scheduler topology table")
->>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Suggested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
->
-> Minor changelog nit, it's helpful to add this final sentence:
->
->     No change in functionality is expected.
->
-> ( If indeed no change in functionality is expected. ;-)
->
+While reviewing some patches for bootconfig, I noticed the following
+code in xbc_node_compose_key_after():
 
-Right, that's indeed the case here given the GMC domain would always be
-degenerated anyway.
+	ret = snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+		       depth ? "." : "");
+	if (ret < 0)
+		return ret;
+	if (ret > size) {
+		size = 0;
+	} else {
+		size -= ret;
+		buf += ret;
+	}
 
-> Thanks,
->
->       Ingo
+But snprintf() returns the number of bytes that would be written, not
+the number of bytes that are written (ignoring the nul terminator).
+This means that if the number of non null bytes written were to equal
+size, then the nul byte, which snprintf() always adds, will overwrite
+that last byte.
+
+	ret = snprintf(buf, 5, "hello");
+	printf("buf = '%s'\n", buf);
+	printf("ret = %d\n", ret);
+
+produces:
+
+	buf = 'hell'
+	ret = 5
+
+The string was truncated without ret being greater than 5.
+Test (ret >= size) for overwrite.
+
+Cc: stable@vger.kernel.org
+Fixes: 76db5a27a827c ("bootconfig: Add Extra Boot Config support")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index a5f701161f6b..42735f2b8860 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -248,7 +248,7 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+ 			       depth ? "." : "");
+ 		if (ret < 0)
+ 			return ret;
+-		if (ret > size) {
++		if (ret >= size) {
+ 			size = 0;
+ 		} else {
+ 			size -= ret;
