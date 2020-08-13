@@ -3,151 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9438CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72AAC20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FA720716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i916syol"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sa29hv4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMTvo (ORCPT
+        id S1726593AbgHMT6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:51:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13069 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgHMTvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:51:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597348303; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=dDK8BdAhyMff+YBgjmOEx9G0LZqK11Et6I+uQh1z7Wc=; b=i916syolOI0CvTDEVYLUSZQTxIPcjuNI/b7qLIkfe4FcYwMkH5gnboZIbuuJzONcgg4uIf65
- uy8N7VAn1iRmf/lKZxqblPO69cNLQxeR+844jqp6xFNTj1TwqH28yvedOQSUVBv7zbKBKZLw
- 2bMbBnx/lD+vZFIjivnrsT++8co=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f3599c803528d4024cd761c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 19:51:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 293F6C433C6; Thu, 13 Aug 2020 19:51:36 +0000 (UTC)
-Received: from [192.168.1.3] (unknown [183.83.140.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE6BCC433C9;
-        Thu, 13 Aug 2020 19:51:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EE6BCC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-Subject: Re: [PATCH] firmware_loader: fix memory leak for paged buffer
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     mcgrof@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1597258819-14080-1-git-send-email-prsood@codeaurora.org>
- <s5ha6yyvh1f.wl-tiwai@suse.de>
-From:   Prateek Sood <prsood@codeaurora.org>
-Message-ID: <3f9dac61-1ba5-1a44-1d08-75666c9398bc@codeaurora.org>
-Date:   Fri, 14 Aug 2020 01:21:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 13 Aug 2020 15:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgHMT6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 15:58:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA65C061757;
+        Thu, 13 Aug 2020 12:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:Cc:From:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=nJ8XtxrvF6PfqLWB3lP2qE8CmRj4uuFVhReQWgn4JaA=; b=Sa29hv4nZ2Yn/5b5d3KvgO97mE
+        n6+plK6ybXlXKPZn8Gc/dbm1JOgkh0y7Ssx82Hf5ENZ1iCpHVK9U2TvObuV+QCmLYhVLLUe3CKiAY
+        htX+7L4aQumZ/c0tMSjI7M7qhZo/Q0HjhKURc17Ry6VrfOJV7Gjp2F2YYDfYQ3kUxDISNd70d6t+M
+        LnVZVm/SoTm391QP+ZPZmbKL7kxgB7QIZVIyv9rbB2Jwz4AxNPesb6yhyvWrWGck6oMjp5b4V7RED
+        fr7tIOexZgh2EdYMfEZt+6bu0NvcMo4ELiZrei5w0+jVxOMzXHD6zKmk/Kgac52xE7ShQa7SYM1C8
+        uaXoB1xg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6JN5-0006YD-3I; Thu, 13 Aug 2020 19:58:43 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, jsbarnes@google.com
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arjan van de Ven <arjan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not
+ enabled
+Message-ID: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
+Date:   Thu, 13 Aug 2020 12:58:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <s5ha6yyvh1f.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Randy Dunlap <rdunlap@infradead.org>
 
-On 8/13/2020 6:28 PM, Takashi Iwai wrote:
-> On Wed, 12 Aug 2020 21:00:19 +0200,
-> Prateek Sood wrote:
->> vfree() is being called on paged buffer allocated
->> using alloc_page() and mapped using vmap().
->>
->> Freeing of pages in vfree() relies on nr_pages of
->> struct vm_struct. vmap() does not update nr_pages.
->> It can lead to memory leaks.
->>
->> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-> Thanks for spotting this out!  This is essentially a revert of the
-> commit ddaf29fd9bb6 ("firmware: Free temporary page table after
-> vmapping"), so better to mention it via Fixes tag as well as Cc to
-> stable.
-> About the changes:
->> --- a/drivers/base/firmware_loader/firmware.h
->> +++ b/drivers/base/firmware_loader/firmware.h
->> @@ -142,10 +142,12 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
->>   void fw_free_paged_buf(struct fw_priv *fw_priv);
->>   int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed);
->>   int fw_map_paged_buf(struct fw_priv *fw_priv);
->> +bool fw_is_paged_buf(struct fw_priv *fw_priv);
-> I guess this isn't necessary if we just swap the call order of
-> fw_free_paged_buf() and vfree(); then fw_priv->is_paged_buf is
-> referred only in fw_free_paged_buf().
-> That is, something like below.
->
-> In anyway, take my review tag:
->    Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Fix build error when CONFIG_ACPI is not set/enabled by adding
+the header file <asm/acpi.h> which contains a stub for the function
+in the build error.
 
-Thanks for reviewing.
+../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
+../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
+  acpi_noirq_set();
 
-I would prefer to keep the patch as is to have vmap() and vunmap() pair used
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jesse Barnes <jsbarnes@google.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+---
+Found in linux-next, but applies to/exists in mainline also.
 
-for readability. Will upload a new version with Fixes tag and your 
-Reviewed-by.
+Alternative.1: X86_INTEL_MID depends on ACPI
+Alternative.2: drop X86_INTEL_MID support
 
->
-> thanks,
->
-> Takashi
->
-> --- a/drivers/base/firmware_loader/main.c
-> +++ b/drivers/base/firmware_loader/main.c
-> @@ -252,9 +252,9 @@ static void __free_fw_priv(struct kref *ref)
->   	list_del(&fw_priv->list);
->   	spin_unlock(&fwc->lock);
->   
-> -	fw_free_paged_buf(fw_priv); /* free leftover pages */
->   	if (!fw_priv->allocated_size)
->   		vfree(fw_priv->data);
-> +	fw_free_paged_buf(fw_priv); /* free leftover pages */
->   	kfree_const(fw_priv->fw_name);
->   	kfree(fw_priv);
->   }
-> @@ -272,7 +272,7 @@ void fw_free_paged_buf(struct fw_priv *fw_priv)
->   {
->   	int i;
->   
-> -	if (!fw_priv->pages)
-> +	if (!fw_priv->is_paged_buf)
->   		return;
->   
->   	for (i = 0; i < fw_priv->nr_pages; i++)
-> @@ -328,10 +328,6 @@ int fw_map_paged_buf(struct fw_priv *fw_priv)
->   	if (!fw_priv->data)
->   		return -ENOMEM;
->   
-> -	/* page table is no longer needed after mapping, let's free */
-> -	kvfree(fw_priv->pages);
-> -	fw_priv->pages = NULL;
-> -
->   	return 0;
->   }
->   #endif
+ arch/x86/pci/intel_mid_pci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation
-Center, Inc., is a member of Code Aurora Forum, a Linux Foundation
-Collaborative Project
+--- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
++++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
+@@ -33,6 +33,7 @@
+ #include <asm/hw_irq.h>
+ #include <asm/io_apic.h>
+ #include <asm/intel-mid.h>
++#include <asm/acpi.h>
+ 
+ #define PCIE_CAP_OFFSET	0x100
+ 
 
