@@ -2,140 +2,125 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4DAC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15C02078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1022078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZRKobHr"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MBM2K/qe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHMSjZ (ORCPT
+        id S1726499AbgHMSl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
+        Thu, 13 Aug 2020 14:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSjX (ORCPT
+        with ESMTP id S1726174AbgHMSl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:39:23 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDF5C061757;
-        Thu, 13 Aug 2020 11:39:23 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k12so5646114otr.1;
-        Thu, 13 Aug 2020 11:39:23 -0700 (PDT)
+        Thu, 13 Aug 2020 14:41:58 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7CDC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:41:58 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g14so8459088iom.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:41:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Y7lNN8r9lQHJr7MGliJHH6oai9G3/LoeZrHO1ezSymg=;
-        b=hZRKobHrmcwd7ZBaJZr1UhFE9EkEawa4jcXjhvjc7A0JwqsL2rpjf/L2SIHFKiStNe
-         soofYzcuF4lbxAffpF62tDVqI6gyYJ9/0dqVuP2p7hHzu1f0m160hVIWhzVrFQDGnPGA
-         qgizYVuYrqGjKEBqH2Q3s65w4PlO6j52SlGLMZajVogKJwB30YP3dvngY4Gy/1MwL31a
-         GDBac+LreOXZsEeDAnjUis2LdW5yrixuTiK8/6lkZ8uTgg5/JfoiAm0Cx4HcAb7AbIG9
-         zlTtycrarSA3+uJtnGv3xkTJqZ/SES7upawwm/Jcj2Rqwbr4NcmYDVBn8WKQtr7Ka2b6
-         Tvjw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Hzbm3U98VQ+ShITvSxX5QCW9SBtJ8CzZvSrTwXTlKwM=;
+        b=MBM2K/qelVHRwtlKmhypAUIfRGzEcAeP0Pqv1YTk9a/T+e9Ek5fRA/e+QI9wJ0oOLX
+         6ZjS0N4WJ6XMC++IxkV4RrNtoZpoJgCV3MSJIjt+w0Uzh5nGBIHE7ZLlB3bIuUKwfEN4
+         rYQNoaWD1smF5p3ftzsFvrnC2BLucG8Vz0rMG8OqqK68GLsGQDQ7Vhu4UQx704MBzMtV
+         MgKMes0fQ0tDItr/cxs0aPHxHq9X5RYav0EieWK9ynngPDaYbSqNqepVItfC2635gf6F
+         gDYEoEB5cDrFjYbks+BN5ko/UUAK3slq+iLik138fx0pIzAjJ6AFA29yCSz2FvO9dzDX
+         x/iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Y7lNN8r9lQHJr7MGliJHH6oai9G3/LoeZrHO1ezSymg=;
-        b=uDCEVHg7hO3fvln7wjUzgzYofzVbFn3MdE3RJbTHdMVMizZdyhITg3vHWKHHRqIpV0
-         gpvTNkBjhxs6HTGrfwepySZLMsBesdSH24bQYfw8V54auncthqR0c8W0nfkOEhWq30tD
-         hr2mAUODg+JW3PGMADcnIgoyM9XLR6lXd6SddXKdJt7JCiN5GPt0aV51qL/FbHzv3OgX
-         p87+4yNNjFLNJr9YyiV/aGUymEtxM8nlWqaT1+Ym309ImjJM2Cd5zb3ULTTaK8mzrFeI
-         xAooL73jwnzFJZp3stGWDhKF6jdnjk8MZaYwBOy4Z/40pzXsjSATMg+v9RYO4bX/LKoV
-         nKsQ==
-X-Gm-Message-State: AOAM531dO0W+CnLp0FxcRQTQ2b76SjtoMgKsU0Py6Eilbxwm65TKX9Ij
-        hLhXpl5MrCoQpXfCEJJIW0g2pF6g1kQ6571HzRA=
-X-Google-Smtp-Source: ABdhPJxOp79nbcc+gKMVWTSK9TAVg9Xfj8b3S6m17wgxhIQIhStE/aQ6riTh85EJ8Bn2tWlj/ZtPP3EqiCpIShZ/YfE=
-X-Received: by 2002:a05:6830:16d8:: with SMTP id l24mr5273440otr.89.1597343963111;
- Thu, 13 Aug 2020 11:39:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Hzbm3U98VQ+ShITvSxX5QCW9SBtJ8CzZvSrTwXTlKwM=;
+        b=l8YiP9wGejHYETtEeQ4+4LQ9nd6x4pkne0kT5MkdJFUPD8b96B4f4Y9xbtiotIQSHF
+         NEAw2wgwYKGkuAsevaCUqt2x9VGTjhWxMmbjKSrt9rrVRS5j0RO+ODlImareTAd8WQVe
+         EWqChjnq2u/ojmwcYYfBm3rEvyFD0vEmmvp2TMNlwrI3vv9LbNJApPAtre667ry27az4
+         bIMf8rmdNeXg463YDQ3YYk7L15D+5xRaErt0maXGRMVUWtPkm8SD22kuCrlibEGIdC0H
+         3mr6rL8Kfd1FYrWvs7p3YgvLjxSE1679O9B+/HgRNhn4w7Bpvq9IEORvPh5KZoRWoUAt
+         hc2w==
+X-Gm-Message-State: AOAM533pSDUcg6byCI6Cw61rx/U7PdmmDDiOn3OvMX8ZJ6siHk17i4As
+        LD/ys4bDfFPlcnFqmUZFvAzQjBQeZvY=
+X-Google-Smtp-Source: ABdhPJzTr+uvcNkptOs34udM7mfT+B14s08iYIxU585rhdBeyZLeRDtASILST6RNeJ5IXxSMKFIdbQ==
+X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr6691818jaj.7.1597344117686;
+        Thu, 13 Aug 2020 11:41:57 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k7sm3041838iow.21.2020.08.13.11.41.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 11:41:57 -0700 (PDT)
+Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
+To:     Jann Horn <jannh@google.com>, Alessio Balsini <balsini@android.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Nikhilesh Reddy <reddyn@codeaurora.org>,
+        Akilesh Kailash <akailash@google.com>,
+        David Anderson <dvander@google.com>,
+        Eric Yan <eric.yan@oneplus.com>,
+        Martijn Coenen <maco@android.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Lawrence <paullawrence@google.com>,
+        Stefano Duo <stefanoduo@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>,
+        kernel-team <kernel-team@android.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+References: <20200812161452.3086303-1-balsini@android.com>
+ <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c135d701-4455-95c7-e58a-82e8075d2ea7@kernel.dk>
+Date:   Thu, 13 Aug 2020 12:41:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200802215903.91936-1-mic@digikod.net> <20200802215903.91936-6-mic@digikod.net>
- <779c290b-45f5-b86c-c573-2edb4004105d@tycho.nsa.gov> <03f522c0-414c-434b-a0d1-57c3b17fa67f@digikod.net>
-In-Reply-To: <03f522c0-414c-434b-a0d1-57c3b17fa67f@digikod.net>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 13 Aug 2020 14:39:12 -0400
-Message-ID: <CAEjxPJ7POnxKy=5w-iQkKhjftxf2-=UuvA6D8EmhUPJyS1F6qg@mail.gmail.com>
-Subject: Re: [PATCH v20 05/12] LSM: Infrastructure management of the superblock
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Kees Cook <keescook@chromium.org>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 10:17 AM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>=
- wrote:
->
->
-> On 12/08/2020 21:16, Stephen Smalley wrote:
-> > On 8/2/20 5:58 PM, Micka=C3=ABl Sala=C3=BCn wrote:
-> >> From: Casey Schaufler <casey@schaufler-ca.com>
-> >>
-> >> Move management of the superblock->sb_security blob out
-> >> of the individual security modules and into the security
-> >> infrastructure. Instead of allocating the blobs from within
-> >> the modules the modules tell the infrastructure how much
-> >> space is required, and the space is allocated there.
-> >>
-> >> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> >> Reviewed-by: Kees Cook <keescook@chromium.org>
-> >> Reviewed-by: John Johansen <john.johansen@canonical.com>
-> >> Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
-> >> Reviewed-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> >> Link:
-> >> https://lore.kernel.org/r/20190829232935.7099-2-casey@schaufler-ca.com
-> >> ---
-> >>
-> >> Changes since v17:
-> >> * Rebase the original LSM stacking patch from v5.3 to v5.7: I fixed so=
-me
-> >>    diff conflicts caused by code moves and function renames in
-> >>    selinux/include/objsec.h and selinux/hooks.c .  I checked that it
-> >>    builds but I didn't test the changes for SELinux nor SMACK.
-> >
-> > You shouldn't retain Signed-off-by and Reviewed-by lines from an earlie=
-r
-> > patch if you made non-trivial changes to it (even more so if you didn't
-> > test them).
->
-> I think I made trivial changes according to the original patch. But
-> without reply from other people with Signed-off-by or Reviewed-by
-> (Casey, Kees, John), I'll remove them. I guess you don't want your
-> Reviewed-by to be kept, so I'll remove it, except if you want to review
-> this patch (or the modified part).
+On 8/12/20 12:29 PM, Jann Horn wrote:
+>> +       passthrough_inode = file_inode(passthrough_filp);
+>> +
+>> +       iocb->ki_filp = passthrough_filp;
+> 
+> Hmm... so we're temporarily switching out the iocb's ->ki_filp here? I
+> wonder whether it is possible for some other code to look at ->ki_filp
+> concurrently... maybe Jens Axboe knows whether that could plausibly
+> happen?
 
-At the very least your Reviewed-by line is wrong - yours should be
-Signed-off-by because the patch went through you and you modified it.
-I'll try to take a look as time permits but FYI you should this
-address (already updated in MAINTAINERS) going forward.
+I looked into the io_uring use case, and we're using req->file (which is
+the same as kiocb->ki_filp) after submission for the polled-IO case.
+That's IOCB_HIPRI, not poll(2) related. So it's not safe for that case,
+but that probably isn't supported by fuse. But something to keep in
+mind...
+
+In general, kiocb->ki_filp is used for setup, and then at IO completion.
+That use case appears safe, as long as the ki_filp is restored before
+->ki_complete() is called.
+
+Only other exception should be the poll handlers. They arm at setup
+time, which is still fine, but re-arm if we get triggered and the file
+is still not ready. I _think_ this case is still fine without having
+seen all of the bits for this use case, as we haven't actually called
+read/write_iter at that point on it.
+
+But in general, I'd say it looks a bit iffy to be fiddling with ki_filp.
+Maybe use a new kiocb and stack them like that instead?
+
+-- 
+Jens Axboe
+
