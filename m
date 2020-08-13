@@ -2,149 +2,179 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB0D2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597289400;
-	bh=7IjTk2DY46eXNf6sb5o7KFN9VINS9QIkpmlTDWFxFEY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TXR2NTtEJWThZemBz/KCH265km6LE51tm2AIZn0CPLNBWR7FGItqh5+KzpxmlnfT4
-	 +xs+GUqQtcGYZbpg69i5LFCEhO9JAnldTzXZvA/cEEE/40jer1mcuzF6y7ajsTjuN1
-	 IuiHe6AmeW3vKSuKJqQXWRaqCKbfXrUJvuwPsa3g=
+	by mail.kernel.org (Postfix) with ESMTP id 4820B207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:31:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VA+FvPCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMD36 (ORCPT
+        id S1726603AbgHMDbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMD36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:29:58 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 187DA206A4;
-        Thu, 13 Aug 2020 03:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597289398;
-        bh=7IjTk2DY46eXNf6sb5o7KFN9VINS9QIkpmlTDWFxFEY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=x7WwxEjsaZ4qWutWElZaeWHdML0w/R3OzvZyXCG1iaItGaE89XSexloSg1lwB2kSw
-         ZfHu8UWvAxBv9hm8iiocl3VEkjo1o56lzjlp1Jx8GSXPdSoEvtUK1zjnUN57DYZqQT
-         1oKvYSLI9HHNziscc5MLa5feMQRpbOxEQVV0fJak=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E51FB3522615; Wed, 12 Aug 2020 20:29:57 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 20:29:57 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     rcu@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, dipankar@in.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH tip/core/rcu 06/12] rcu: Do full report for .need_qs for
- strict GPs
-Message-ID: <20200813032957.GN4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200812225632.GA19759@paulmck-ThinkPad-P72>
- <20200812225732.20068-6-paulmck@kernel.org>
- <CAG48ez3WyDBLPs8cBt3-3HGJ_xvAg0-JPZRDP1mf1eLmPjSvPA@mail.gmail.com>
+        Wed, 12 Aug 2020 23:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMDby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 23:31:54 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FFFC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=z1xWvaAvbcuEB26ko8GuVSncG0nEsKM2kbQPdS0rNHA=; b=VA+FvPCqtRzhRQ6iMVaOl9Rmvs
+        SKqAhT4qAmv2DEYiqTVWNXYYrA/TNfs+r8mTUf238yozMQ9TzWgMFgxAb7/MUlVEwP0SmnECKMTB0
+        jJlJQWEXDyUqXFe0iLfAgsJhqgbzC/ho+lxy+FdmcgkJ7hn/GKVaJUNTGLke7cT6kdWZCfBBZ7iCB
+        CYQOBUSRAWpGJ0qJ4OQutYOWhB5hMGShcj2Ls8hyGcOiW6FEUYWiiyWD3AXRpc8xlONdOz1WhCq2m
+        1px9L+3spyhkSsoDLz+U/VZEwwV17VB+2hk/2WTINHBgqaaUR148gjVbn0hWba838su4LMjHazoO9
+        KcUB0bxQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k63y0-0000um-6R; Thu, 13 Aug 2020 03:31:48 +0000
+Subject: Re: [PATCH v2] lib/cmdline: prevent unintented access to address
+To:     Seungil Kang <sil.kang@samsung.com>,
+        andriy.shevchenko@linux.intel.com
+Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+References: <CGME20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac@epcas1p3.samsung.com>
+ <20200813030741.6896-1-sil.kang@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1bd1fefa-9fd5-b76a-a181-fca289b4aa67@infradead.org>
+Date:   Wed, 12 Aug 2020 20:31:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez3WyDBLPs8cBt3-3HGJ_xvAg0-JPZRDP1mf1eLmPjSvPA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200813030741.6896-1-sil.kang@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 02:50:27AM +0200, Jann Horn wrote:
-> On Thu, Aug 13, 2020 at 12:57 AM <paulmck@kernel.org> wrote:
-> > The rcu_preempt_deferred_qs_irqrestore() function is invoked at
-> > the end of an RCU read-side critical section (for example, directly
-> > from rcu_read_unlock()) and, if .need_qs is set, invokes rcu_qs() to
-> > report the new quiescent state.  This works, except that rcu_qs() only
-> > updates per-CPU state, leaving reporting of the actual quiescent state
-> > to a later call to rcu_report_qs_rdp(), for example from within a later
-> > RCU_SOFTIRQ instance.  Although this approach is exactly what you want if
-> > you are more concerned about efficiency than about short grace periods,
-> > in CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, short grace periods are
-> > the name of the game.
-> >
-> > This commit therefore makes rcu_preempt_deferred_qs_irqrestore() directly
-> > invoke rcu_report_qs_rdp() in CONFIG_RCU_STRICT_GRACE_PERIOD=y, thus
-> > shortening grace periods.
+On 8/12/20 8:07 PM, Seungil Kang wrote:
+> When args = "\"\0", "i" will be 0 and args[i-1] is used. (*lib/cmdline.c +238)
+> Because of "i" is an unsigned int type, the function will access at args[0xFFFFFFFF].
+> It can make a crash.
 > 
-> Ooh, I'm very happy about this series! :)
-
-Glad you like it!  And I hope that it helps!
-
-One usability concern is whether rcutree.rcu_unlock_delay needs to be
-applied only some small fraction of the time in order to allow the delay
-to be large (a couple hundred microseconds?)  while still avoiding doing
-too much more damage to timing and performance than absolutely necessary.
-
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 7ed55c5..1761ff4 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -459,8 +459,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
-> >                 return;
-> >         }
-> >         t->rcu_read_unlock_special.s = 0;
-> > -       if (special.b.need_qs)
-> > -               rcu_qs();
-> > +       if (special.b.need_qs) {
-> > +               if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
-> > +                       rcu_report_qs_rdp(rdp->cpu, rdp);
+> Signed-off-by: Seungil Kang <sil.kang@samsung.com>
+> ---
 > 
-> Not an issue with this patch specifically, but: I'm looking at
-> rcu_report_qs_rdp(), and some of the parts that I do vaguely
-> understand look a bit off to me.
+> Thanks for your review, my comments below
 > 
-> rcu_report_qs_rdp() is given a CPU number as first argument, but never
-> actually uses that argument. (And the only existing caller also passes
-> in rdp->cpu, just like this patch.) I guess that argument can go away?
+>> Can you be less ambiguous with the args value? (Perhaps provide a hexdump of it
+> for better understanding)
 > 
-> The comment above rcu_report_qs_rdp() claims that it "must be called
-> from the specified CPU", but there is a branch in there that
-> specifically checks whether that is true ("if (rdp->cpu ==
-> smp_processor_id())"). As far as I can tell, rcu_report_qs_rdp() is,
-> as the comment says, indeed never invoked with another CPU's rcu_data
-> (only invoked via rcu_core() -> rcu_check_quiescent_state() ->
-> rcu_report_qs_rdp(), and rcu_core() looks up "rdp =
-> raw_cpu_ptr(&rcu_data)"). So perhaps if there is a check for whether
-> rdp belongs to the current CPU, that check should have a WARN_ON(), or
-> something like that, since it indicates that the API contract
-> specified in the comment was violated?
+>  This kind of args as hexdump below can cause crash.
+>  
+>  00000000: 736f 6d65 7468 696e 6731 3d73 6f6d 655f  something1=some_
+>  00000010: 7661 6c75 6573 2022 0000 0000 0000 0000  values "        
+>  
+>  The args end with "\"\0".
+> 
+>> Please, use proper punctuation, I'm lost where is the sentence and what are the
+> logical parts of them.
+> 
+>  I'm sorry to confuse you. I fix the commit msg
+> 
+>> Can you point out to the code that calls this and leads to a crash?
+> 
+>  *lib/cmdlinc + 201 ~, next_arg function with args = "\"\0"
+>  
+>  char *next_arg(char *args, char **param, char **val) <-- args = "\"\0".
+>  {
+>         unsigned int i, equals = 0;
+>         int in_quote = 0, quoted = 0;
+>         char *next;
+> 
+>         if (*args == '"') {   <-- *args == '"' is a true condition,
+>                 args++;       <-- args++, so *args = '\0'.
+>                 in_quote = 1;
+>                 quoted = 1;   <-- quoted also set 1.
+>         }
+> 
+>         for (i = 0; args[i]; i++) { <-- when reached this point, i = 0, and arg[0] == '\0',
+>                                         so for loop is skipped.
+>                 if (isspace(args[i]) && !in_quote)
+>                         break;
+>                 if (equals == 0) {
+>                         if (args[i] == '=')
+>                                 equals = i;
+>                 }
+>                 if (args[i] == '"')
+>                         in_quote = !in_quote;
+>         }
+> 
+>         *param = args;
+>         if (!equals)
+>                 *val = NULL;
+>         else {
+>                 args[equals] = '\0';
+>                 *val = args + equals + 1;
+> 
+>         /* Don't include quotes in value. */
+>         if (**val == '"') {
+>                 (*val)++;
+>                 if (args[i-1] == '"')
+>                         args[i-1] = '\0';
+>                 }
+>         }
+>         if (quoted && args[i-1] == '"') <-- When reached this point, quoted is still set 1, 
+>                                             "i" is still 0, and "i" is unsigned int type,
+>                                             so address will be {address of args} + 0xFFFFFFFF.
+>                                             It can make a crash.
+>                 args[i-1] = '\0';
+> 
+>         if (args[i]) {
+>                 args[i] = '\0';
+>                 next = args + i + 1;
+>         } else
+>                 next = args + i;
+> 
+>         /* Chew up trailing spaces. */
+>         return skip_spaces(next);
+>  }
+> 
+> 
+>> Can you provide a KUnit test module which can check the case?
+> 
+>  If necessary, I will make it and share it.
 
-It looks like you are correct, and that the first parameter can be
-dropped, the "if" you mention replaced by a WARN_ON_ONCE(), and
-the body of that "if" be unconditional.  I have it on my list, and
-if it still looks correct in the cold hard light of dawn, I will
-apply it with your Reported-by.
+Hi,
+Have you tested this patch?
+If so, how?
 
-And thank you very much for looking it over!
 
-						Thanx, Paul
+> 
+>  lib/cmdline.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/cmdline.c b/lib/cmdline.c
+> index fbb9981a04a4..2fd29d7723b2 100644
+> --- a/lib/cmdline.c
+> +++ b/lib/cmdline.c
+> @@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
+>   */
+>  char *next_arg(char *args, char **param, char **val)
+>  {
+> -	unsigned int i, equals = 0;
+> +	int i, equals = 0;
+>  	int in_quote = 0, quoted = 0;
+>  	char *next;
+>  
+> 
+
+thanks.
+-- 
+~Randy
+
