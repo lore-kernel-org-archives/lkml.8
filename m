@@ -2,110 +2,60 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C84DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18276207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597324785;
-	bh=SknD/q4aQWNYq5Nk/fIPKkA97wOWHoR/XOtsWCarsUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yfM8DBoOkaaral0FxalKnZLKhnljGMFBc1/imB7vNoDR35kROarpnI5xIFQsJwRa2
-	 QlzMEPcfDLiVMHaDXX8jSwIuBEkarPyJJqzt3jW9HG83VRa5gdMNsROcSW07uNYuqB
-	 nkT/oHZrvwERYgWdnDjNH8FonwaGWmowZr2qHXw0=
+	by mail.kernel.org (Postfix) with ESMTP id E42CF208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMNTn (ORCPT
+        id S1726587AbgHMNU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38790 "EHLO mail.kernel.org"
+        Thu, 13 Aug 2020 09:20:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38950 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgHMNTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:19:43 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D15620774;
-        Thu, 13 Aug 2020 13:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597324782;
-        bh=SknD/q4aQWNYq5Nk/fIPKkA97wOWHoR/XOtsWCarsUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KyQtPDjjhE0RUI+jOnEFEBNw/+u3ZIzQvrcfs2bqJcSclzMEqquyp5iHRtp1RNgLN
-         0GHvoyF53tu5IMoeKYfshHf8pzTzkTlYFu4UrJiZttWR4h8heT83viHSVM3LlABhmz
-         fUatW3ekpHN47Oz+hbzPT5iwPkIrwjnHUHdfpCyU=
-Date:   Thu, 13 Aug 2020 14:19:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Douglas Anderson <dianders@chromium.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
+        id S1726252AbgHMNU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 09:20:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B38E3B12F;
+        Thu, 13 Aug 2020 13:20:48 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 15:20:25 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hanna Hawa <hannah@marvell.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/13] iommu/arm-smmu: Add Adreno SMMU specific
- implementation
-Message-ID: <20200813131933.GC10256@willie-the-truck>
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] printk: reduce LOG_BUF_SHIFT range for H8300
+Message-ID: <20200813132025.GJ6215@alley>
+References: <20200812073122.25412-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+In-Reply-To: <20200812073122.25412-1-john.ogness@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:26:44PM -0600, Jordan Crouse wrote:
-> This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
-> pagetable switching.
+On Wed 2020-08-12 09:37:22, John Ogness wrote:
+> The .bss section for the h8300 is relatively small. A value of
+> CONFIG_LOG_BUF_SHIFT that is larger than 19 will create a static
+> printk ringbuffer that is too large. Limit the range appropriately
+> for the H8300.
 > 
-> The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
-> runtime to allow each individual instance or application to have its own
-> pagetable.  In order to take advantage of the HW capabilities there are certain
-> requirements needed of the SMMU hardware.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-"capabilities" is a polite way of putting it ;)
+This patch is committed in printk/linux.git, branch printk-rework.
 
-Anyway, modulo two design comments, I think this is about as nice as we're
-going to get this. Thanks for persevering, and sorry that you have to deal
-with such dreadful hardware.
-
-Hopefully the next version will be the one, although I'd like Robin to take
-a quick look as well if he gets a chance.
-
-Will
+Best Regards,
+Petr
