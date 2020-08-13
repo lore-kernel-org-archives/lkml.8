@@ -2,85 +2,107 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1995520771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356D120791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:31:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YGeTingr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="chZ+Ddiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHMHbU (ORCPT
+        id S1726484AbgHMHb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgHMHbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:31:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291BCC061757;
-        Thu, 13 Aug 2020 00:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ajCb1YweODRt8vtNgU7fmlorkYYs90KZ1F0rpuEPtl0=; b=YGeTingr3glZ1JMMusE7MilLak
-        YI89fMIo2FLGBSdXX9JYBIDTA+JBbbgemHrKTM51+e4gaqUgQylwW6Ii779fE0k0948daKKAI2mHL
-        t6r3HKOoxdEUctwqjLGL0tdfqoa1zbfNg5gLflFt+6j9xBojWz9Eaz8PAi7S78FTGfU/1j4oNnq4j
-        jFnAjhC3driUp+OJ9ybAced0njDwxF8UujHre2BD53vEGAPhtJZqMWIfGGbF4rNFMkJOT3HsZOoUZ
-        5COFx/sIkzxvnttM7QEXRjlJ2bEI+Q+z0ic/BFsDL9J0FrBmIiXW/E1Q5beEsiq+UsD4e+wyQ1w4r
-        JIfVgb4A==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k67hj-00049n-W6; Thu, 13 Aug 2020 07:31:16 +0000
-Date:   Thu, 13 Aug 2020 08:31:15 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jacob Wen <jian.w.wen@oracle.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] block: insert a general SMP memory barrier before
- wake_up_bit()
-Message-ID: <20200813073115.GA15436@infradead.org>
-References: <20200813024438.13170-1-jian.w.wen@oracle.com>
+        Thu, 13 Aug 2020 03:31:28 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:30638 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgHMHb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:31:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597303887; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=10zIpoDC5WFOJCsOf60NRljx1E04tbY7lNT51eZXHZw=; b=chZ+Ddizp6I+eZPGF10FWto9CEROaHCCuTAQ3jdSn96QACkDo5trxtrTBYqwXcb6yUFgodOy
+ 6+dtZjrw5MqlsyKwEZCgbsEbBxllyS2eImKfB4ViW0SWFuyKITqgIYS9ONSkyLgQjytQcRuz
+ Vv6fYtNwWyFL69GJPMz93RS5k/s=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5f34ec30247ccc308ceae74d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 07:30:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DDBD9C433CB; Thu, 13 Aug 2020 07:30:55 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.77.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E430BC433C6;
+        Thu, 13 Aug 2020 07:30:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E430BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during
+ init
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
+ <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
+ <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
+Date:   Thu, 13 Aug 2020 13:00:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813024438.13170-1-jian.w.wen@oracle.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 10:44:38AM +0800, Jacob Wen wrote:
-> wake_up_bit() uses waitqueue_active() that needs the explicit smp_mb().
+Hi,
 
-Sounds like the barrier should go into wake_up_bit then..
+On 8/12/2020 3:01 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-08-10 04:21:00)
+>> Clear previous kernel's configuration during init by resetting
+>> interrupts in enable bank to zero.
+> Can you please add some more information here about why we're not
+> clearing all the pdc irqs and only the ones that are listed in DT?
+sure.
+>   Is
+> that because the pdc is shared between exception levels of the CPU and
+> so some irqs shouldn't be used? Does the DT binding need to change to
+> only list the hwirqs that are usable by the OS instead of the ones that
+> are usable for the entire system? The binding doesn't mention this at
+> all so I am just guessing here.
 
-> 
-> Signed-off-by: Jacob Wen <jian.w.wen@oracle.com>
-> ---
->  fs/block_dev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 0ae656e022fd..e74980848a2a 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1175,6 +1175,7 @@ static void bd_clear_claiming(struct block_device *whole, void *holder)
->  	/* tell others that we're done */
->  	BUG_ON(whole->bd_claiming != holder);
->  	whole->bd_claiming = NULL;
-> +	smp_mb();
->  	wake_up_bit(&whole->bd_claiming, 0);
->  }
->  
-> -- 
-> 2.17.1
-> 
----end quoted text---
+The IRQs specified in qcom,pdc-ranges property in DT are the only ones 
+that can be used in the current OS for the PDC.
+
+So instead of setting entire register to zero (each reg supports 32 
+interrupts enable bit) only clearing the ones that can be used.
+
+Thanks,
+Maulik
+
+>
+>> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
