@@ -2,306 +2,123 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E40C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A59EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B48C20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DA520781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHMIM5 (ORCPT
+        id S1726647AbgHMIO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:12:57 -0400
-Received: from relay.sw.ru ([185.231.240.75]:42248 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbgHMIM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:12:56 -0400
-Received: from [192.168.15.100]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k68Lr-0002dn-Rl; Thu, 13 Aug 2020 11:12:44 +0300
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     adobriyan@gmail.com, "Eric W. Biederman" <ebiederm@xmission.com>,
-        viro@zeniv.linux.org.uk, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
- <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
- <875za43b3w.fsf@x220.int.ebiederm.org>
- <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
- <20200806080540.GA18865@gmail.com>
- <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
- <20200810173431.GA68662@gmail.com>
- <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
- <20200812175338.GA596568@gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <8f3c9414-9efc-cc01-fb2a-4d83266e96b2@virtuozzo.com>
-Date:   Thu, 13 Aug 2020 11:12:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 13 Aug 2020 04:14:26 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:53079 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgHMIOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 04:14:25 -0400
+Received: by mail-io1-f72.google.com with SMTP id n16so3503246iop.19
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:14:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=T3KzcsfU3IPS4IZAZXg1Ymp2fNeF0MGN3kDCnkCvTTY=;
+        b=DIWU+yqeythxLdtoMR5oHtgSRYptDfjoccjETmhhcoiUArdY7kFDzwxOoECUChNcqg
+         IUsFmUdNEi6lx8PQwbHrEQb9VTGmChf/1bNqBtJ7BdrmglKArheIorfGvE3hdYee+It1
+         rdkaLHhEkW5LJabhbMevlQZcBKevgXW+0fr+/a9aYe5DnDofAsxHz0Eg1bfm5+jw1gTQ
+         pqkDzizVy+gsdVRUCiCPrDlcyO5zSu1a6YMIK1OKR3AT/7eKkfD40vN9n3ByBodXIkNM
+         iQHLuMK7UKV0NPrT0/0F2MbY2C2K4L7nTx35ijsYIqLyNohyNixqW5tqI+o7G4szCySn
+         fEOg==
+X-Gm-Message-State: AOAM533Bjc0IJiI/K1J9WrqfV+ULJ1izKdxiX0bwI5ErIpJF1G2va/fa
+        ulttVkG1UYSEuxGjWwLMkG/5jKAP0m/eLNbhae2ZJ6Pa3Glj
+X-Google-Smtp-Source: ABdhPJzqD/zGN6fLKzlkCav4NKWGrkw9AQVcG8r/DfGi+uymODWZO/qxRYQGqoPgLg6heLX/8MTsxOwUVtH5gy7McS8Vwj1QH61G
 MIME-Version: 1.0
-In-Reply-To: <20200812175338.GA596568@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:c88f:: with SMTP id y137mr3757335iof.55.1597306464087;
+ Thu, 13 Aug 2020 01:14:24 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 01:14:24 -0700
+In-Reply-To: <000000000000ef601705ac9d161b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000063b35705acbde4e5@google.com>
+Subject: Re: KMSAN: kernel-usb-infoleak in hif_usb_send
+From:   syzbot <syzbot+f83a1df1ed4f67e8d8ad@syzkaller.appspotmail.com>
+To:     glider@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.08.2020 20:53, Andrei Vagin wrote:
-> On Tue, Aug 11, 2020 at 01:23:35PM +0300, Kirill Tkhai wrote:
->> On 10.08.2020 20:34, Andrei Vagin wrote:
->>> On Fri, Aug 07, 2020 at 11:47:57AM +0300, Kirill Tkhai wrote:
->>>> On 06.08.2020 11:05, Andrei Vagin wrote:
->>>>> On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
->>>>>> On 31.07.2020 01:13, Eric W. Biederman wrote:
->>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
->>>>>>>
->>>>>>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
->>>>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
->>>>>>>>>
->>>>>>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
->>>>>>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
->>>>>>>>>> but some also may be as open files, which are not attached to a process.
->>>>>>>>>> When a namespace open fd is sent over unix socket and then closed, it is
->>>>>>>>>> impossible to know whether the namespace exists or not.
->>>>>>>>>>
->>>>>>>>>> Also, even if namespace is exposed as attached to a process or as open file,
->>>>>>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
->>>>>>>>>> this multiplies at tasks and fds number.
->>>>>>>>>
->>>>>>>>> I am very dubious about this.
->>>>>>>>>
->>>>>>>>> I have been avoiding exactly this kind of interface because it can
->>>>>>>>> create rather fundamental problems with checkpoint restart.
->>>>>>>>
->>>>>>>> restart/restore :)
->>>>>>>>
->>>>>>>>> You do have some filtering and the filtering is not based on current.
->>>>>>>>> Which is good.
->>>>>>>>>
->>>>>>>>> A view that is relative to a user namespace might be ok.    It almost
->>>>>>>>> certainly does better as it's own little filesystem than as an extension
->>>>>>>>> to proc though.
->>>>>>>>>
->>>>>>>>> The big thing we want to ensure is that if you migrate you can restore
->>>>>>>>> everything.  I don't see how you will be able to restore these files
->>>>>>>>> after migration.  Anything like this without having a complete
->>>>>>>>> checkpoint/restore story is a non-starter.
->>>>>>>>
->>>>>>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
->>>>>>>>
->>>>>>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
->>>>>>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
->>>>>>>> problem here.
->>>>>>>
->>>>>>> An obvious diffference is that you are adding the inode to the inode to
->>>>>>> the file name.  Which means that now you really do have to preserve the
->>>>>>> inode numbers during process migration.
->>>>>>>
->>>>>>> Which means now we have to do all of the work to make inode number
->>>>>>> restoration possible.  Which means now we need to have multiple
->>>>>>> instances of nsfs so that we can restore inode numbers.
->>>>>>>
->>>>>>> I think this is still possible but we have been delaying figuring out
->>>>>>> how to restore inode numbers long enough that may be actual technical
->>>>>>> problems making it happen.
->>>>>>
->>>>>> Yeah, this matters. But it looks like here is not a dead end. We just need
->>>>>> change the names the namespaces are exported to particular fs and to support
->>>>>> rename().
->>>>>>
->>>>>> Before introduction a principally new filesystem type for this, can't
->>>>>> this be solved in current /proc?
->>>>>
->>>>> do you mean to introduce names for namespaces which users will be able
->>>>> to change? By default, this can be uuid.
->>>>
->>>> Yes, I mean this.
->>>>
->>>> Currently I won't give a final answer about UUID, but I planned to show some
->>>> default names, which based on namespace type and inode num. Completely custom
->>>> names for any /proc by default will waste too much memory.
->>>>
->>>> So, I think the good way will be:
->>>>
->>>> 1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
->>>> random seed, which is generated on boot;
->>>>
->>>> 2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
->>>>
->>>> 3)Allow rename, and allocate space only for renamed names.
->>>>
->>>> Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
->>>>
->>>>> And I have a suggestion about the structure of /proc/namespaces/.
->>>>>
->>>>> Each namespace is owned by one of user namespaces. Maybe it makes sense
->>>>> to group namespaces by their user-namespaces?
->>>>>
->>>>> /proc/namespaces/
->>>>>                  user
->>>>>                  mnt-X
->>>>>                  mnt-Y
->>>>>                  pid-X
->>>>>                  uts-Z
->>>>>                  user-X/
->>>>>                         user
->>>>>                         mnt-A
->>>>>                         mnt-B
->>>>>                         user-C
->>>>>                         user-C/
->>>>>                                user
->>>>>                  user-Y/
->>>>>                         user
->>>>
->>>> Hm, I don't think that user namespace is a generic key value for everybody.
->>>> For generic people tasks a user namespace is just a namespace among another
->>>> namespace types. For me it will look a bit strage to iterate some user namespaces
->>>> to build container net topology.
->>>
->>> I can’t agree with you that the user namespace is one of others. It is
->>> the namespace for namespaces. It sets security boundaries in the system
->>> and we need to know them to understand the whole system.
->>>
->>> If user namespaces are not used in the system or on a container, you
->>> will see all namespaces in one directory. But if the system has a more
->>> complicated structure, you will be able to build a full picture of it.
->>>
->>> You said that one of the users of this feature is CRIU (the tool to
->>> checkpoint/restore containers)  and you said that it would be good if
->>> CRIU will be able to collect all container namespaces before dumping
->>> processes, sockets, files etc. But how will we be able to do this if we
->>> will list all namespaces in one directory?
->>
->> There is no a problem, this looks rather simple. Two cases are possible:
->>
->> 1)a container has dedicated namespaces set, and CRIU just has to iterate
->>   files in /proc/namespaces of root pid namespace of the container.
->>   The relationships between parents and childs of pid and user namespaces
->>   are founded via ioctl(NS_GET_PARENT).
->>   
->> 2)container has no dedicated namespaces set. Then CRIU just has to iterate
->>   all host namespaces. There is no another way to do that, because container
->>   may have any host namespaces, and hierarchy in /proc/namespaces won't
->>   help you.
->>
->>> Here are my thoughts why we need to the suggested structure is better
->>> than just a list of namespaces:
->>>
->>> * Users will be able to understand securies bondaries in the system.
->>>   Each namespace in the system is owned by one of user namespace and we
->>>   need to know these relationshipts to understand the whole system.
->>
->> Here are already NS_GET_PARENT and NS_GET_USERNS. What is the problem to use
->> this interfaces?
-> 
-> We can use these ioctl-s, but we will need to enumerate all namespaces in
-> the system to build a view of the namespace hierarchy. This will be very
-> expensive. The kernel can show this hierarchy without additional cost.
+syzbot has found a reproducer for the following issue on:
 
-No. We will have to iterate /proc/namespaces of a specific container to get
-its namespaces. It's a subset of all namespaces in system, and these all the
-namespaces, which are potentially allowed for the container.
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13555816900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=f83a1df1ed4f67e8d8ad
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ab61e2900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17614e6e900000
 
->>
->>> * This is simplify collecting namespaces which belong to one container.
->>>
->>> For example, CRIU collects all namespaces before dumping file
->>> descriptors. Then it collects all sockets with socket-diag in network
->>> namespaces and collects mount points via /proc/pid/mountinfo in mount
->>> namesapces. Then these information is used to dump socket file
->>> descriptors and opened files.
->>
->> This is just the thing I say. This allows to avoid writing recursive dump.
-> 
-> I don't understand this. How are you going to collect namespaces in CRIU
-> without knowing which are used by a dumped container?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f83a1df1ed4f67e8d8ad@syzkaller.appspotmail.com
 
-My patchset exports only the namespaces, which are allowed for a specific
-container, and no more above this. All exported namespaces are alive,
-so someone holds a reference on every of it. So they are used.
+usb 1-1: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1.4.0.fw, size: 51008
+=====================================================
+BUG: KMSAN: kernel-usb-infoleak in kmsan_handle_urb+0x28/0x40 mm/kmsan/kmsan_hooks.c:307
+CPU: 0 PID: 3219 Comm: kworker/0:2 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_handle_urb+0x28/0x40 mm/kmsan/kmsan_hooks.c:307
+ usb_submit_urb+0x861/0x2470 drivers/usb/core/urb.c:406
+ hif_usb_send_regout drivers/net/wireless/ath/ath9k/hif_usb.c:127 [inline]
+ hif_usb_send+0x633/0x1790 drivers/net/wireless/ath/ath9k/hif_usb.c:470
+ htc_issue_send drivers/net/wireless/ath/ath9k/htc_hst.c:34 [inline]
+ htc_connect_service+0x14b4/0x19f0 drivers/net/wireless/ath/ath9k/htc_hst.c:275
+ ath9k_wmi_connect+0x178/0x2c0 drivers/net/wireless/ath/ath9k/wmi.c:268
+ ath9k_init_htc_services+0xf3/0x11f0 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x4dc/0x3ed0 drivers/net/wireless/ath/ath9k/htc_drv_init.c:962
+ ath9k_htc_hw_init+0xdf/0x190 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x42e/0xab0 drivers/net/wireless/ath/ath9k/hif_usb.c:1218
+ request_firmware_work_func+0x1aa/0x2d0 drivers/base/firmware_loader/main.c:1001
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-It seems you haven't understood the way I suggested here. See patch [11/23]
-for the details. It's about permissions, and the subset of exported namespaces
-is formalized there.
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2839 [inline]
+ __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ htc_connect_service+0x1057/0x19f0 drivers/net/wireless/ath/ath9k/htc_hst.c:258
+ ath9k_wmi_connect+0x178/0x2c0 drivers/net/wireless/ath/ath9k/wmi.c:268
+ ath9k_init_htc_services+0xf3/0x11f0 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x4dc/0x3ed0 drivers/net/wireless/ath/ath9k/htc_drv_init.c:962
+ ath9k_htc_hw_init+0xdf/0x190 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x42e/0xab0 drivers/net/wireless/ath/ath9k/hif_usb.c:1218
+ request_firmware_work_func+0x1aa/0x2d0 drivers/base/firmware_loader/main.c:1001
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
->> But this has nothing about advantages of hierarchy in /proc/namespaces.
-> 
-> Really? You said that you implemented this series to help CRIU dumping
-> namespaces. I think we need to implement the CRIU part to prove that
-> this interface is usable for this case. Right now, I have doubts about
-> this.
+Bytes 4-7 of 18 are uninitialized
+Memory access of size 18 starts at ffff88810755bc00
+=====================================================
 
-Yes, really. See my comment above and patch [11/23].
-
->>
->>> * We are going to assign names to namespaces. But this means that we
->>> need to guarantee that all names in one directory are unique. The
->>> initial proposal was to enumerate all namespaces in one proc directory,
->>> that means names of all namespaces have to be unique. This can be
->>> problematic in some cases. For example, we may want to dump a container
->>> and then restore it more than once on the same host. How are we going to
->>> avoid namespace name conficts in such cases?
->>
->> Previous message I wrote about .rename of proc files, Alexey Dobriyan
->> said this is not a taboo. Are there problem which doesn't cover the case
->> you point?
-> 
-> Yes, there is. Namespace names will be visible from a container, so they
-> have to be restored. But this means that two containers can't be
-> restored from the same snapshot due to namespace name conflicts.
-> 
-> But if we will show namespaces how I suggest, each container will see
-> only its sub-tree of namespaces and we will be able to specify any name
-> for the container root user namespace.
-
-Now I'm sure you missed my idea. See proc_namespaces_readdir() in [11/23].
-
-I do export sub-tree.
-
->>
->>> If we will have per-user-namespace directories, we will need to
->>> guarantee that names are unique only inside one user namespace.
->>
->> Unique names inside one user namespace won't introduce a new /proc
->> mount. You can't pass a sub-directory of /proc/namespaces/ to a specific
->> container. To give a virtualized name you have to have a dedicated pid ns.
->>
->> Let we have in one /proc mount:
->>
->> /mnt1/proc/namespaces/userns1/.../[namespaceX_name1 -- inode XXX]
->>
->> In another another /proc mount we have:
->>
->> /mnt2/proc/namespaces/userns1/.../[namespaceX_name1_synonym -- inode XXX]
->>
->> The virtualization is made per /proc (i.e., per pid ns). Container should
->> receive either /mnt1/proc or /mnt2/proc on restore as it's /proc.
->>
->> There is no a sense of directory hierarchy for virtualization, since
->> you can't use specific sub-directory as a root directory of /proc/namespaces
->> to a container. You still have to introduce a new pid ns to have virtualized
->> /proc.
-> 
-> I think we can figure out how to implement this. As the first idea, we
-> can use the same way how /proc/net is implemented.
-> 
->>
->>> * With the suggested structure, for each user namepsace, we will show
->>>   only its subtree of namespaces. This looks more natural than
->>>   filltering content of one directory.
->>
->> It's rather subjectively I think. /proc is related to pid ns, and user ns
->> hierarchy does not look more natural for me.
-> 
-> or /proc is wrong place for this
