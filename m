@@ -2,87 +2,93 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F39C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A81206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7DD206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHNLBk convert rfc822-to-8bit (ORCPT
+        id S1726772AbgHNLHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgHNLBZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:01:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7561BC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:01:24 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k6XST-0003Z0-ON; Fri, 14 Aug 2020 13:01:13 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k6XSM-0007pB-22; Fri, 14 Aug 2020 13:01:06 +0200
-Date:   Fri, 14 Aug 2020 13:01:06 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>
-Cc:     robin@protonic.nl, linux@rempel-privat.de, kernel@pengutronix.de,
-        socketcan@hartkopp.net, mkl@pengutronix.de, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Subject: Re: [PATCH net 0/4] support multipacket broadcast message
-Message-ID: <20200814110106.y3kn5sjvidx5ar34@pengutronix.de>
-References: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:59:34 up 273 days,  2:18, 260 users,  load average: 0.04, 0.08,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 14 Aug 2020 07:07:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43675 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgHNLHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 07:07:40 -0400
+IronPort-SDR: Mo+AbIdmW5s1xPSQsLEoimLGrxLOaAP28LP/nCYuuhXqIDlk8jozTq1NMDBhBsubdYxJNgwW3r
+ VBS/wNh7AG2g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="142229951"
+X-IronPort-AV: E=Sophos;i="5.76,312,1592895600"; 
+   d="scan'208";a="142229951"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 04:07:39 -0700
+IronPort-SDR: sknYMxwwD9yR/zUZHlAfvix6BJJJe3IwgbAve7p7mTA2iH0+cr5vcux7S02xS7O8hAexJDwggh
+ 25wj9gUY7xEg==
+X-IronPort-AV: E=Sophos;i="5.76,312,1592895600"; 
+   d="scan'208";a="440082398"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 04:07:35 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH] soundwire: SDCA: add helper macro to access controls
+Date:   Fri, 14 Aug 2020 07:13:45 +0800
+Message-Id: <20200813231345.26194-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-On Wed, Aug 05, 2020 at 11:50:21AM +0800, Zhang Changzhong wrote:
-> Zhang Changzhong (4):
->   can: j1939: fix support for multipacket broadcast message
->   can: j1939: cancel rxtimer on multipacket broadcast session complete
->   can: j1939: abort multipacket broadcast session when timeout occurs
->   can: j1939: add rxtimer for multipacket broadcast session
-> 
->  net/can/j1939/transport.c | 48 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 36 insertions(+), 12 deletions(-)
+The upcoming SDCA (SoundWire Device Class Audio) specification defines
+a hiearchical encoding to interface with Class-defined capabilities,
+based on which audio function, entity, control and channel being used.
 
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+The specification is not yet accessible to the general public but this
+information is released with explicit permission from the MIPI Board
+to avoid delays with SDCA support on Linux platforms.
 
-Thank you for your work!
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
+ include/linux/soundwire/sdw_registers.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Regards,
-Oleksij
+diff --git a/include/linux/soundwire/sdw_registers.h b/include/linux/soundwire/sdw_registers.h
+index 5d3c271af7d1..3ca09a02b9fc 100644
+--- a/include/linux/soundwire/sdw_registers.h
++++ b/include/linux/soundwire/sdw_registers.h
+@@ -305,4 +305,14 @@
+ #define SDW_CASC_PORT_MASK_INTSTAT3		1
+ #define SDW_CASC_PORT_REG_OFFSET_INTSTAT3	2
+ 
++/* v1.2 device - SDCA address mapping */
++#define SDW_SDCA_CTL(fun, ent, ctl, ch) (BIT(30) |	\
++					 (((fun) & 0x7) << 22) |	\
++					 (((ent) & 0x40) << 15) |	\
++					 (((ent) & 0x3f) << 7) |	\
++					 (((ctl) & 0x30) << 15) |	\
++					 (((ctl) & 0x0f) << 3) |	\
++					 (((ch) & 0x38) << 12) |	\
++					 ((ch) & 0x07))
++
+ #endif /* __SDW_REGISTERS_H */
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.17.1
+
