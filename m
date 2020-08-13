@@ -2,293 +2,220 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDBC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4542EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8F220768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F54D2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="zR2bfU+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHMFMt (ORCPT
+        id S1726529AbgHMFNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:12:49 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:37228 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725915AbgHMFMs (ORCPT
+        Thu, 13 Aug 2020 01:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgHMFNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:12:48 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id B14EA1A8D4F;
-        Thu, 13 Aug 2020 15:12:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k65Xa-0001Uw-B8; Thu, 13 Aug 2020 15:12:38 +1000
-Date:   Thu, 13 Aug 2020 15:12:38 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
- page fault
-Message-ID: <20200813051238.GA3339@dread.disaster.area>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-16-vgoyal@redhat.com>
- <20200810222238.GD2079@dread.disaster.area>
- <20200811175530.GB497326@redhat.com>
- <20200812012345.GG2079@dread.disaster.area>
- <20200812211012.GA540706@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812211012.GA540706@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
-        a=dml2hL0GLVIsGKko77gA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 13 Aug 2020 01:13:21 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243ABC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:13:21 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ep8so2206190pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+J8A0qF/eNe42BPDc+xMFoc9GcTD6VVzaJumEar2SQc=;
+        b=zR2bfU+KPhwPWrAaEka7wqg4fbcY+CJtGs5VH5TN7eC9XPdneRbLFmgKDuwdEGZEkd
+         iKF5arQVHJFrokETZHdZhjDq28L5ucSC2Km/IrQ93ZxQBjoVdIgpfHn3HO7W8OfGYUnj
+         4XG0hqjFA4pz1L43K8NGXCZLvxeIggMc0oX7twkIYjhdGe1XpzMwaITtf0G9d+MLjZsj
+         hUI9F+XUC9W277t1VloFb81EndIFF/0mNvO4GXJzIE/IaZnonp31b4M3h875MXXSdm+6
+         +utAaaq5iKMCDW4w8te35PRDt0Tqy5eBENO/EfY0SbVoNv2L017aDVH1xxYKT6Ysmpx0
+         iiZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=+J8A0qF/eNe42BPDc+xMFoc9GcTD6VVzaJumEar2SQc=;
+        b=uUo2f2arQ1VmbbWTrJ7EyyePVus4xlybKLCfGLOaO37/5CS6qq3rMLMNgbLNYuIfsl
+         FOrvLXb2s0KiNCNPDYhLkq+Y6WpIlpTMzC2p14vpCm4n6yP5BMWRpXFboFU9JO+Fjo3g
+         h1gz5H5+/o5/pppeyReRXRqixk2fMbdNEP94ep5wURp5wU7OWR5lx54hM2nML3yWsDrj
+         msmmjCS6v3vKqiSMTuj9nxFj2TjliiwTOJyMzGEkpgfzRLseq+1TGh6Cb2gFCWIpCIfc
+         XAVqp6kUnVUPL0fsetwo7MPbbeIngl/2KcuZ4zF1iQvp1DuBxXKge2zGOXA94tA60nVB
+         LdqA==
+X-Gm-Message-State: AOAM533W7dSv+1wrshf7U86Wrq9Br18hgURpir67UrYbFWeZ1UYFVv2t
+        UUY+t+YamRdgUuy7j9g/IyYzXA==
+X-Google-Smtp-Source: ABdhPJyF6AYwTg19jJKmW4oQqCoviEKZqDJ+3nXP9DnLdpgpKoNaMloOaDfSPDQQEeQZrAHvs1F8jg==
+X-Received: by 2002:a17:90a:fa11:: with SMTP id cm17mr3466801pjb.153.1597295600514;
+        Wed, 12 Aug 2020 22:13:20 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id f63sm3821776pjk.53.2020.08.12.22.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 22:13:19 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 22:13:19 -0700 (PDT)
+X-Google-Original-Date: Wed, 12 Aug 2020 22:13:18 PDT (-0700)
+Subject:     Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
+In-Reply-To: <CAJF2gTQjYyNnhg8KhFEm6MwOCb=c0hNsSq=HOeuSCrOzR9Qf0Q@mail.gmail.com>
+CC:     rostedt@goodmis.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, guoren@linux.alibaba.com,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     guoren@kernel.org
+Message-ID: <mhng-609449f5-6f1e-4669-8cb0-f06493d58cf2@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 05:10:12PM -0400, Vivek Goyal wrote:
-> On Wed, Aug 12, 2020 at 11:23:45AM +1000, Dave Chinner wrote:
-> > On Tue, Aug 11, 2020 at 01:55:30PM -0400, Vivek Goyal wrote:
-> > > On Tue, Aug 11, 2020 at 08:22:38AM +1000, Dave Chinner wrote:
-> > > > On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
-> > > > > We need some kind of locking mechanism here. Normal file systems like
-> > > > > ext4 and xfs seems to take their own semaphore to protect agains
-> > > > > truncate while fault is going on.
-> > > > > 
-> > > > > We have additional requirement to protect against fuse dax memory range
-> > > > > reclaim. When a range has been selected for reclaim, we need to make sure
-> > > > > no other read/write/fault can try to access that memory range while
-> > > > > reclaim is in progress. Once reclaim is complete, lock will be released
-> > > > > and read/write/fault will trigger allocation of fresh dax range.
-> > > > > 
-> > > > > Taking inode_lock() is not an option in fault path as lockdep complains
-> > > > > about circular dependencies. So define a new fuse_inode->i_mmap_sem.
-> > > > 
-> > > > That's precisely why filesystems like ext4 and XFS define their own
-> > > > rwsem.
-> > > > 
-> > > > Note that this isn't a DAX requirement - the page fault
-> > > > serialisation is actually a requirement of hole punching...
-> > > 
-> > > Hi Dave,
-> > > 
-> > > I noticed that fuse code currently does not seem to have a rwsem which
-> > > can provide mutual exclusion between truncation/hole_punch path
-> > > and page fault path. I am wondering does that mean there are issues
-> > > with existing code or something else makes it unnecessary to provide
-> > > this mutual exlusion.
-> > 
-> > I don't know enough about the fuse implementation to say. What I'm
-> > saying is that nothing in the core mm/ or VFS serilises page cache
-> > access to the data against direct filesystem manipulations of the
-> > underlying filesystem structures.
-> 
-> Hi Dave,
-> 
-> Got it. I was checking nfs and they also seem to be calling filemap_fault
-> and not taking any locks to block faults. fallocate() (nfs42_fallocate)
-> seems to block read/write/aio/dio but does not seem to do anything
-> about blocking faults. I am wondering if remote filesystem are
-> little different in this aspect. Especially fuse does not maintain
-> any filesystem block/extent data. It is file server which is doing
-> all that.
+On Thu, 06 Aug 2020 22:01:01 PDT (-0700), guoren@kernel.org wrote:
+> On Fri, Aug 7, 2020 at 12:01 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>>
+>> On Fri, 7 Aug 2020 10:59:16 +0800
+>> Guo Ren <guoren@kernel.org> wrote:
+>> > >
+>> > > This looks like a bug in the lockdep_assert_held() in whatever arch
+>> > > (riscv) is running.
+>> > Seems you think it's a bug of arch implementation with the wrong usage
+>> > of text_mutex?
+>> >
+>> > Also @riscv maintainer,
+>> > How about modifying it in riscv's code? we still need to solve it.
+>> >
+>> > ----------------
+>> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+>> > index ace8a6e..fb266c3 100644
+>> > --- a/arch/riscv/include/asm/ftrace.h
+>> > +++ b/arch/riscv/include/asm/ftrace.h
+>> > @@ -23,6 +23,12 @@ static inline unsigned long
+>> > ftrace_call_adjust(unsigned long addr)
+>> >
+>> >  struct dyn_arch_ftrace {
+>> >  };
+>> > +
+>> > +#ifdef CONFIG_DYNAMIC_FTRACE
+>> > +struct dyn_ftrace;
+>> > +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+>> > +#define ftrace_init_nop ftrace_init_nop
+>> > +#endif
+>> >  #endif
+>> >
+>> >  #ifdef CONFIG_DYNAMIC_FTRACE
+>> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>> > index 2ff63d0..9e9f7c0 100644
+>> > --- a/arch/riscv/kernel/ftrace.c
+>> > +++ b/arch/riscv/kernel/ftrace.c
+>> > @@ -97,6 +97,17 @@ int ftrace_make_nop(struct module *mod, struct
+>> > dyn_ftrace *rec,
+>> >         return __ftrace_modify_call(rec->ip, addr, false);
+>> >  }
+>> >
+>> > +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+>> > +{
+>> > +       int ret;
+>> > +
+>> > +       mutex_lock(&text_mutex);
+>> > +       ret = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>
+>> Looking at x86, we have the following code:
+>>
+>> static int ftrace_poke_late = 0;
+>>
+>> int ftrace_arch_code_modify_prepare(void)
+>>     __acquires(&text_mutex)
+>> {
+>>         /*
+>>          * Need to grab text_mutex to prevent a race from module loading
+>>          * and live kernel patching from changing the text permissions while
+>>          * ftrace has it set to "read/write".
+>>          */
+>>         mutex_lock(&text_mutex);
+>>         ftrace_poke_late = 1;
+>>         return 0;
+>> }
+>>
+>> int ftrace_arch_code_modify_post_process(void)
+>>     __releases(&text_mutex)
+>> {
+>>         /*
+>>          * ftrace_make_{call,nop}() may be called during
+>>          * module load, and we need to finish the text_poke_queue()
+>>          * that they do, here.
+>>          */
+>>         text_poke_finish();
+>>         ftrace_poke_late = 0;
+>>         mutex_unlock(&text_mutex);
+>>         return 0;
+>> }
+>>
+>> And if ftrace_poke_late is not set, then ftrace_make_nop() does direct
+>> modification (calls text_poke_early(), which is basically a memcpy).
+>>
+>> This path doesn't have any checks against text_mutex being held,
+>> because it only happens at boot up.
+> The solution is ok for me, but I want to get riscv maintainer's
+> opinion before the next patch.
+> @Paul Walmsley
+> @Palmer Dabbelt
 
-I suspect they have all the same problems, and worse, the behaviour
-will largely be dependent on the server side behaviour that is out
-of the user's control.
+Sorry, I'm not really sure what's going on here.  I'm not really seeing code
+that matches this in our port right now, so maybe this is aginst some other
+tree?  If it's the RISC-V kprobes patch set then I was hoping to take a look at
+that tomorrow (or I guess a bit earlier this week, but I had some surprise work
+stuff to do).  IIRC there were a handful of races in the last patch set I saw,
+but it's been a while so I don't remember for sure.
 
-Essentially, nobody except us XFS folks seem to regard hole punching
-corrupting data or exposing stale data as being a problem that needs
-to be avoided or fixed. The only reason ext4 has the i_mmap_sem is
-because ext4 wanted to support DAX, and us XFS developers said "DAX
-absolutely requires that the filesystem can lock out physical access
-to the storage" and so they had no choice in the matter.
+That said, I certainly wouldn't be surprised if there's a locking bug in our
+ftrace stuff.  It'd be way easier for me to figure out what's going on if you
+have a concrete suggestion as to how to fix the issues -- even if it's just a
+workaround.
 
-Other than that, nobody really seems to understand or care about all
-these nasty little mmap() corner cases that we've seen corrupt user
-data or expose stale data to users over many years.....
-
-> > i.e. nothing in the VFS or page fault IO path prevents this race
-> > condition:
-> > 
-> > P0				P1
-> > fallocate
-> > page cache invalidation
-> > 				page fault
-> > 				read data
-> > punch out data extents
-> > 				<data exposed to userspace is stale>
-> > 				<data exposed to userspace has no
-> > 				backing store allocated>
-> > 
-> > 
-> > That's where the ext4 and XFS internal rwsem come into play:
-> > 
-> > fallocate
-> > down_write(mmaplock)
-> > page cache invalidation
-> > 				page fault
-> > 				down_read(mmaplock)
-> > 				<blocks>
-> > punch out data
-> > up_write(mmaplock)
-> > 				<unblocks>
-> > 				<sees hole>
-> > 				<allocates zeroed pages in page cache>
-> > 
-> > And there's not stale data exposure to userspace.
-> 
-> Got it. I noticed that both fuse/nfs seem to have reversed the
-> order of operation. They call server to punch out data first
-> and then truncate page cache. And that should mean that even
-> if mmap reader will not see stale data after fallocate(punch_hole)
-> has finished.
-
-Yes, but that doesn't prevent page fault races from occuring, it
-just changes the nature of them.. Such as.....
-
-> > There is nothing stopping, say, memory reclaim from reclaiming pages
-> > over the range while the hole is being punched, then having the
-> > application refault them while the backing store is being freed.
-> > While the page fault read IO is in progress, there's nothing
-> > stopping the filesystem from freeing those blocks, nor reallocating
-> > them and writing something else to them (e.g. metadata). So they
-> > could read someone elses data.
-> > 
-> > Even worse: the page fault is a write fault, it lands in a hole, has
-> > space allocated, the page cache is zeroed, page marked dirty, and
-> > then the hole punch calls truncate_pagecache_range() which tosses
-> > away the zeroed page and the data the userspace application wrote
-> > to the page.
-> 
-> But isn't that supposed to happen.
-
-Right, it isn;'t supposed to happen, but it can happen if
-page_mkwrite doesn't serialise against fallocate(). i.e. without a
-i_mmap_sem, nothing in the mm page fault paths serialise the page
-fault against the filesystem fallocate operation in progress.
-
-Indeed, looking at fuse_page_mkwrite(), it just locks the page,
-checks the page->mapping hasn't changed (that's one of those
-"doesn't work for hole punching page invalidation" checks that I
-mentioned!) and then it waits for page writeback to complete. IOWs,
-fuse will allow a clean page in cache to be dirtied without the
-filesystem actually locking anything or doing any sort of internal
-serialisation operation.
-
-IOWs, there is nothing stopping an application on fuse from hitting
-this data corruption when a concurrent hole punch is run:
-
- P0				P1
- <read() loop to find zeros>
- fallocate
- write back dirty data
- punch out data extents
- .....
- 				<app reads data via mmap>
-				  read fault, clean page in cache!
- 				<app writes data via mmap>
- 				  write page fault
-				  page_mkwrite
-				    <page is locked just fine>
-				  page is dirtied.
-				<app writes new data to page>
- .....
- page cache invalidation
-   <app's dirty page thrown away>
-				.....
-				<app reads data via mmap>
-				  read page fault
-				    <maps punched hole, returns zeros>
-				app detects data corruption
-
-That can happen quite easily - just go put a "sparsify" script into
-cron so that runs of zeroes in files are converted into holes to
-free up disk space every night....
-
-> If fallocate(hole_punch) and mmaped
-> write are happening at the same time, then there is no guarantee
-> in what order they will execute.
-
-It's not "order of exceution" that is the problem here - it's
-guaranteeing *atomic execution* that is the problem. See the example
-above - by not locking out page faults, fallocate() does not execute
-atomically w.r.t. to mmap() access to the file, and hence we end up
-losing changes the to data made via mmap.
-
-That's precisely what the i_mmap_sem fixes. It *guarantees* the
-ordering of the fallocate() operation and the page fault based
-access to the underlying data by ensuring that the *operations
-execute atomically* with respect to each other. And, by definition,
-that atomicity of execution removes all the races that can lead to
-data loss, corruption and/or stale data exposure....
-
-> App might read back data it wrote
-> or might read back zeros depdening on order it was executed. (Even
-> with proper locking).
-
-That behaviour is what "proper locking" provides. If you don't
-have an i_mmap_sem to guarantee serialisation of page faults against
-fallocate (i.e. "unproper locking"), then you also can get stale
-data, the wrong data, data loss, access-after-free, overwrite of
-metadata or other people's data, etc.
-
-> > The application then refaults the page, reading stale data off
-> > disk instead of seeing what it had already written to the page....
-> > 
-> > And unlike truncated pages, the mm/ code cannot reliably detect
-> > invalidation races on lockless lookup of pages that are within EOF.
-> > They rely on truncate changing the file size before page
-> > invalidation to detect races as page->index then points beyond EOF.
-> > Hole punching does not change inode size, so the page cache lookups
-> > cannot tell the difference between a new page that just needs IO to
-> > initialise the data and a page that has just been invalidated....
-> > 
-> > IOWs, there are many ways things can go wrong with hole punch, and
-> > the only way to avoid them all is to do invalidate and lock out the
-> > page cache before starting the fallocate operation. i.e.:
-> > 
-> > 	1. lock up the entire IO path (vfs and page fault)
-> > 	2. drain the AIO+DIO path
-> > 	3. write back dirty pages
-> > 	4. invalidate the page cache
-> 
-> I see that this is definitely safe. Stop all read/write/faults/aio/dio
-> before proceeding with punching hole and invalidating page cache.
-> 
-> I think for my purpose, I need to take fi->i_mmap_sem in memory
-> range freeing path and need to exactly do all the above to make
-> sure that no I/O, fault or AIO/DIO is going on before I take
-> away the memory range I have allocated for that inode offset. This
-> is I think very similar to assigning blocks/extents and taking
-> these away. In that code path I am already taking care of
-> taking inode lock as well as i_mmap_sem. But I have not taken
-> care of AIO/DIO stuff. I will introduce that too.
-> 
-> For the time being I will handle this fallocate/ftruncate possible
-> races in a separate patch series. To me it makes sense to do what
-> ext4/xfs are doing. But there might be more to it when it comes
-> to remote filesystems... 
-
-Remote filesystems introduce a whole new range of data coherency
-problems that are outside the scope of mmap() vs fallocate()
-serialisation. That is, page fault vs fallocate serialisation is a
-local client serialisation condition, not a remote filesystem
-data coherency issue...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>
+>>
+>> > +       mutex_unlock(&text_mutex);
+>> > +
+>> > +       return ret;
+>> > +}
+>> > +
+>> >  int ftrace_update_ftrace_func(ftrace_func_t func)
+>> >  {
+>> >         int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
+>> > -------------------
+>> >
+>> > > > --- a/kernel/trace/ftrace.c
+>> > > > +++ b/kernel/trace/ftrace.c
+>> > > > @@ -26,6 +26,7 @@
+>> > > >  #include <linux/uaccess.h>
+>> > > >  #include <linux/bsearch.h>
+>> > > >  #include <linux/module.h>
+>> > > > +#include <linux/memory.h>
+>> > > >  #include <linux/ftrace.h>
+>> > > >  #include <linux/sysctl.h>
+>> > > >  #include <linux/slab.h>
+>> > > > @@ -6712,9 +6713,11 @@ void __init ftrace_init(void)
+>> > >
+>> > > ftrace_init() is called before SMP is initialized. Nothing else should
+>> > > be running here. That means grabbing a mutex is useless.
+>> > I don't agree, ftrace_init are modifying kernel text, so we should
+>> > give the lock of text_mutex to keep semantic consistency.
+>>
+>>
+>> Did you test your patch on x86 with lockdep?
+> Ah.., no :P
+>
+>>
+>> ftrace_process_locs() grabs the ftrace_lock, which I believe is held
+>> when text_mutex is taken in other locations. So this will probably not
+>> work anyway.
+>>
+>> text_mutex isn't to be taken at the ftrace level.
+> Yes, currently it seemed only to be used by kernel/kprobes.c.
