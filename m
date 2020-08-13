@@ -2,133 +2,159 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23195C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86820C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD8220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6594320791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IfWJSMRB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAvjxfRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHMTkn (ORCPT
+        id S1726621AbgHMTlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33934 "EHLO
+        Thu, 13 Aug 2020 15:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgHMTkm (ORCPT
+        with ESMTP id S1726334AbgHMTlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:40:42 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75447C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:40:42 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id e20so1996804uav.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:40:42 -0700 (PDT)
+        Thu, 13 Aug 2020 15:41:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DB5C061757;
+        Thu, 13 Aug 2020 12:41:03 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ha11so3240353pjb.1;
+        Thu, 13 Aug 2020 12:41:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fYIbVh3/szn+XzzaL9yiDzfDpyZxulF6xv5AQpsf1tY=;
-        b=IfWJSMRBSPVM6hOXnA7qZrjX5syp4z2F5c/a0ybY32nxgmyWYvJC3PnC//hObz1GIq
-         JCX1cS1T0JzkjuTXRwlu8hgGdfyv+RMeJMcn8VkVtke7FGmUXeFeXUyJCes9uF/nxuWM
-         aEWDJQKHXJ5zKrxqIqRsl8RiNiNsfYYnvlya0qKajyxOLIpkfeU9uY6vphwL1JojH8VB
-         AKaMCvPfk3ERZRTPZKATnMCdjy7K+dousuKogn9nD7BZZkZsaC6yBTC1vUr0Tp2j4EQr
-         K5NVgdb3+3V4NH8dPRnmPq2nDbprDE/GdDEDsxgKpWaRuIC8aT/X98QeERIsZv0FjEyo
-         t6bA==
+        bh=0ItWqBHS3w4jy5wn4p04F1o5bOPDbMS03wqOneXGD2w=;
+        b=pAvjxfRpO04XR0yxwLloK2cUKe3FTLgE9OBjc/0k39x1lb1VE0hjqlv+bvc9IkffKw
+         ohcZ3HcTN/J8jKsJH9UMIWVs7yDAxfq4TtxmlItOeQALNzNb4cADGB1vllk2emMv8g3t
+         /9+YiQOL+Nz0jnrED0b5TpDp1E7u0A23uI6+oDawQzCGa2KcpTS/MT1pNJBZL6UT1gCK
+         uosSAPCvfaxgsNJSdVNtnhUtiZv9wIe2dPOBMe9ogrU7jbmCzgFQtmzUdCChbvG2VefL
+         coajWmbmOZRNc7x4+5l4hEWmOsI8QjEA+7+uCwh+Hg/PFsojVsjnXfYSb8QxwfDwrlzk
+         LYeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fYIbVh3/szn+XzzaL9yiDzfDpyZxulF6xv5AQpsf1tY=;
-        b=eQ+AKJOPPz1T1RIlHM4O44hju/foI0At+WNVLKqSQWW2etgi7xWnzT3JZwEybCGCmJ
-         KmRWdAGOAp+13o1oreGLXkEq9lFp3TFUaG3KZ64KMam4xILSKPK1XIhAJ4UMZL922YiT
-         0oWlXzgVojFwy/Eqne3xut/E+krgCgrsA7OjUOfG64FvK2dvQy5j+9BD00s9TrAAJaPy
-         SrHT54zorkszUvRubaaTMALQz7tLkkVlYIbeBY5FnpUukwnejVKjwFgvsFz5IQzBzy3I
-         1bVjFxpWAzOzUS4zCmttFBaZ6T7LuXiuHtr1ZfYDoRmH18xNl9B7Bz5t3nRVFWd3O9h6
-         ZrFA==
-X-Gm-Message-State: AOAM533ZnuzDviS7T+itQ4eiHFIGJichG8EJsn6Wnsgw3b15At2Gk5Ls
-        Ckf675T/07y1lvBukKRmCWsR8FRS9pfHQ04tsv6ALQ==
-X-Google-Smtp-Source: ABdhPJxfOCn7KR3p+zSEbGdL5eE4T5BBbTrT9qk60O4S7asbIPLShiHuIStsMj7Da9/K5beKHDXZecy/X0O6gp5r6js=
-X-Received: by 2002:ab0:69d6:: with SMTP id u22mr4804520uaq.65.1597347640377;
- Thu, 13 Aug 2020 12:40:40 -0700 (PDT)
+        bh=0ItWqBHS3w4jy5wn4p04F1o5bOPDbMS03wqOneXGD2w=;
+        b=TGKNCoD+QrLXvPMLXKRobEpcZCvxZRL3puEgZ7lhnIlnP1U2gsuP5pGCReZRJ15dzw
+         jszu31eBuKRqz/eOSDq0qKJBW2FnUC/NVZdylACjgZvWHGhDzG9E8BI0Fyoz5Hm/3iJY
+         NU75TAqskhCVwt6QoAF/tYyicgcAESPDDme4fIQ7Q38rX/VcmhPTiftJH5NIsAJlxnxH
+         C3PKnivu+sB/vGgPgwh1+fv0KG0hbHssIBUk3iXSu4vwvFDqctw7mOca8STmO8VBCU/0
+         HT7mYRXEo6bHP1LgdyGeKQDC+mzH39XxGmYj4c44/lhZp9l2ND3K5v53In+yfrGeRiok
+         u7Rg==
+X-Gm-Message-State: AOAM5308Ao5jQ/C2DAij7JkYGKgaf9uhPLRI054uz56eiDjmOsYOb/pA
+        tBHsKoW6IDhIWlGI8WeiTzCudz4aScSxLH1UYRP8foVUbfc=
+X-Google-Smtp-Source: ABdhPJy2rnCAGpf1YLxMoHo84kHU8QJ01pqvdjAcecx4qOd6Y0/r5k9Cv9x3aJSz/r4b2d9pfVtmJUAeffc+M2z0AYw=
+X-Received: by 2002:a17:90b:509:: with SMTP id r9mr4074225pjz.228.1597347663347;
+ Thu, 13 Aug 2020 12:41:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200812022934.568134-1-badhri@google.com> <20200813082507.GE1169992@kuha.fi.intel.com>
-In-Reply-To: <20200813082507.GE1169992@kuha.fi.intel.com>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Thu, 13 Aug 2020 12:40:04 -0700
-Message-ID: <CAPTae5KUdTN5fVn45xFwhWS5Gy_xFJ91gAObb7qMk2KA+n72yQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v3] tcpm: During PR_SWAP, source caps should be sent
- only after tSwapSourceStart
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-4-cmo@melexis.com>
+ <CAHp75VfNwb5uBp=H0295LEJjXy1+=V5yvSN1PHbtMYzgg=_EAA@mail.gmail.com>
+ <CAKv63uv=b60B9RXBJF4HEhMOowu-qbGrv7LsmJVvkkERSida-A@mail.gmail.com>
+ <CAHp75Vd+3SopKog6uhSKoOLn+tECsQfs7kRbJsrMZEbNRpk8bQ@mail.gmail.com> <CAKv63usrjEHTmYtahedqULnqu-fM3TFC8HJ=S4h+w=UTv5sd-Q@mail.gmail.com>
+In-Reply-To: <CAKv63usrjEHTmYtahedqULnqu-fM3TFC8HJ=S4h+w=UTv5sd-Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Aug 2020 22:40:47 +0300
+Message-ID: <CAHp75VeH5SA2KeiTSN__8ndj1v_SEb7mEWPG1p2Lz-tATDWi8A@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] iio:temperature:mlx90632: Convert polling while
+ loop to do-while
+To:     Crt Mori <cmo@melexis.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
+On Thu, Aug 13, 2020 at 4:04 PM Crt Mori <cmo@melexis.com> wrote:
+> On Thu, 13 Aug 2020 at 13:24, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Aug 13, 2020 at 2:14 PM Crt Mori <cmo@melexis.com> wrote:
+> > > On Thu, 13 Aug 2020 at 13:03, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
 
-Sure. Same as the other patch I will try to address your question here
-and will update the commit description once you are satisfied with the
-description.
+...
 
-Subject:
-During PR_SWAP, source caps should be sent only after tSwapSourceStart
-
-Commit description:
-The patch addresses the compliance test failures while running
-TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 of the "Deterministic PD
-Compliance MOI" test plan published in https://www.usb.org/usbc.
-For a product to be Type-C compliant, it's expected that these tests
-are run on usb.org certified Type-C compliance tester as mentioned in
-https://www.usb.org/usbc.
-
-The purpose of the tests TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 is to
-verify the PR_SWAP response of the device. While doing so, the test
-asserts that Source Capabilities message is NOT received from the test
-device within tSwapSourceStart min (20 ms) from the time the last bit
-of GoodCRC corresponding to the RS_RDY message sent by the UUT was
-sent. If it does then the test fails.
-
-This is in line with the requirements from the USB Power Delivery
-Specification Revision 3.0, Version 1.2:
-"6.6.8.1 SwapSourceStartTimer
-The SwapSourceStartTimer Shall be used by the new Source, after a
-Power Role Swap or Fast Role Swap, to ensure that it does not send
-Source_Capabilities Message before the new Sink is ready to receive
-the
-Source_Capabilities Message. The new Source Shall Not send the
-Source_Capabilities Message earlier than tSwapSourceStart after the
-last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
-Message sent by the new Source indicating that its power supply is
-ready."
-
-The patch makes sure that TCPM does not send the Source_Capabilities
-Message within tSwapSourceStart(20ms) by transitioning into
-SRC_STARTUP only after  tSwapSourceStart(20ms).
-
-Thanks,
-Badhri
-
-On Thu, Aug 13, 2020 at 1:25 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
+> > > > I don't see how it prevents using iopoll.h. It uses usleep_range()
+> > > > under the hood in the same way you did here, but open coded.
+> > > >
+> > >
+> > > One loop is indeed 10ms and that is not the problem, the problem is
+> > > that timeout is at least 3 calls of this data ready (3 channels), so
+> > > that is at minimum 30ms of timeout, or it could even be 4 in worse
+> > > case scenario and that is outside of the range for usleep to measure.
+> > > So in case of the other loop, where we wait 200ms for channel refresh
+> > > it is also out of scope. Timeout should be in number of tries or in
+> > > msleep range if you ask me.
+> >
+> > I still didn't buy it. You have in both cases usleep_range(). Why in
+> > your case it's okay and in regmap_read_poll_timeout() is not?
+> >
 >
-> Hi,
+> I tried and it did not work, so then I read the manual. Looking into
 >
-> > This fixes TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 failures
+> * regmap_read_poll_timeout_atomic - Poll until a condition is met or a
+> timeout occurs
+
+Why _atomic?!
+
+> ...
+>  * @delay_us: Time to udelay between reads in us (0 tight-loops).
+>  *            Should be less than ~10us since udelay is used
+>  *            (see Documentation/timers/timers-howto.rst).
+>  * @timeout_us: Timeout in us, 0 means never timeout
 >
-> I'm sorry, but that statement is way too cryptic. You really need to
-> explain what those are.
 >
-> thanks,
+> So I went to read Documentation/timers/timers-howto.rst
 >
-> --
-> heikki
+> SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
+> * Use usleep_range
+>
+> - Why not msleep for (1ms - 20ms)?
+> Explained originally here:
+> http://lkml.org/lkml/2007/8/3/250
+>
+> msleep(1~20) may not do what the caller intends, and
+> will often sleep longer (~20 ms actual sleep for any
+> value given in the 1~20ms range). In many cases this
+> is not the desired behavior.
+>
+> Since I am above the 20ms range, it is too much for usleep_range and
+> that proved to be a case as I got -ETIMEOUT and the desired channels
+> were not read.
+> > > > ...
+> > > >
+> > > > > -       while (tries-- > 0) {
+> > > > > +       do {
+> > > > >                 ret = regmap_read(data->regmap, MLX90632_REG_STATUS,
+> > > > >                                   &reg_status);
+> > > > >                 if (ret < 0)
+> > > > >                         return ret;
+> > > > > -               if (reg_status & MLX90632_STAT_DATA_RDY)
+> > > > > -                       break;
+> > > > >                 usleep_range(10000, 11000);
+
+You use here usleep_range(). The same is used for
+regmap_read_poll_timeout(). What's the difference?
+
+Since it uses 1/4 of the range you probably need to update tries and
+timeout_us to make it work.
+
+> > > > > -       }
+> > > > > +       } while (!(reg_status & MLX90632_STAT_DATA_RDY) && tries--);
+> > > > >
+> > > > >         if (tries < 0) {
+> > > > >                 dev_err(&data->client->dev, "data not ready");
+
+-- 
+With Best Regards,
+Andy Shevchenko
