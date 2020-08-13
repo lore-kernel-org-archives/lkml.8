@@ -2,125 +2,150 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209CAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D242C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED1F82078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB972074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lWi1FzHH"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DVhNg6Kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHMJtv (ORCPT
+        id S1726292AbgHMJvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55690 "EHLO
+        Thu, 13 Aug 2020 05:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMJtu (ORCPT
+        with ESMTP id S1726048AbgHMJvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:49:50 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67963C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:49:50 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l2so4667004wrc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:49:50 -0700 (PDT)
+        Thu, 13 Aug 2020 05:51:10 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B307C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:51:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k8so4491807wma.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=0LlvHfm0fDcpoyyMaORTx/eYLC8CvpylDILZS1NvjiE=;
-        b=lWi1FzHH1BV+EzmrSga7ApiENnWG4rnFNvY55jJnx4HEYYqFbLTyoosig8cHp1FiY+
-         KzDuXOaac641oazK7Pj5mp5b/e6dsFLKNW4tORrAeiih1MKDWVWE0X2vuI1VAcIyx2P7
-         Yyv67b5AUWBZMZM3ni5igMfct6/Px27rLKJM8=
+        bh=zg93XxO4l+jcR8PfpAZh0n8+oaLX+Q4lgRFm3zGssrc=;
+        b=DVhNg6KjuaCUFHNyZn3fii/TgH9lle+4x/mX1ByaV25FzltReZ+eVhVlAFfxQ0o9Cs
+         BHZf8neUfriA+xuI3HFmlV1P91lUGIGAxoPO8cUIZwTOwse3gLkuyLdaGIZS3d1/pHDo
+         nbyzVt8rKGwFYDxNNBq7//TAbTd/Q+eWflGMc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :content-transfer-encoding:in-reply-to;
-        bh=0LlvHfm0fDcpoyyMaORTx/eYLC8CvpylDILZS1NvjiE=;
-        b=hTGT87A4AHSVo89qwbrjODap4YzfTXUZXKxKVzH5ilcJKBb1436XjceeU/MDIUvgCH
-         DLMx1xzN0v3CHcf4oT+RAUJ+WfFxwEzgUvsAHNPBi2GmXMRsGoO4vG4tbYx30w2nkR5H
-         Tvzf1KW9nqR49cKn3s9+plgX04BOBjnGkb0svK9J4ISTRtE0faBD2uyL7fFnuYZt+x1k
-         KKZVsWuNNzY1/aiRl9zZcIfCQ8cz/Ciamu25I39P5B/YYG7YwskdGLprCkgK0VK97UVL
-         t4h7ZlU1flacgueCwjKiDnw/1GqXc2qFIaVr8Y8hlyPC1TH2y3kUegkUZ13zCRf1huv1
-         rPZg==
-X-Gm-Message-State: AOAM533G8yt+eKVwQbhpkf2GEzZp8qCeyTIYSXI+uiwgQP2qFLryleA+
-        UCJNCswSi6VOnRVCQKaXJuHvUw==
-X-Google-Smtp-Source: ABdhPJycUujEr7rVda86HPb+DkIE8Ht8J0MPhgd4scPfkc4FA7fTcodh9eVHq8K2RnSra1Me1/FpMg==
-X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr3037067wrq.327.1597312188920;
-        Thu, 13 Aug 2020 02:49:48 -0700 (PDT)
+        bh=zg93XxO4l+jcR8PfpAZh0n8+oaLX+Q4lgRFm3zGssrc=;
+        b=RY0FwCBxekUdmYX6X5oNpCrtkwwkl2A4moUctsKhExfPNSeDl/oUu/ZOatOd7bL4OT
+         FaStGM9bGppnaLVE1E7v0M7apeZ/gHCTjseIQ03IM7bv68SKdkXOIQ3IYrTcRxYlqVQV
+         E4opIGCXnLE2Jk0bq5AsyoHDMAM6JvDnLWfXz5ND0yARFsjQpR8d7RGEv9PYkHjDsG6i
+         ui9OTn0cKh2JD9dWE+gOyMXxlUclE3OvISSy2tw1gw7CfXVeIJAkecU/IR/xFrkqR5Sy
+         DQkl0xIBel96/gvgFd6GxoN0/yftxIXDqmKFztLAyPXAtcMgQ7KiAl/fS7z5gbxuZ7mw
+         aE3w==
+X-Gm-Message-State: AOAM531nOVA19FqtvdKExRNr6W6ZMgcOKNiHF7h+vwCa0szGGnyE7ZTy
+        3ECQ2ZJ99YJDS+YQmA7hBRgPUA==
+X-Google-Smtp-Source: ABdhPJzcoJ5rRTPQL/cGJK9cs5jwZn25rutC7+9OZPz6v1i5Qk0+wLJa418Yrv09qyu0BV9p+dgqdA==
+X-Received: by 2002:a1c:1d2:: with SMTP id 201mr3368914wmb.132.1597312268880;
+        Thu, 13 Aug 2020 02:51:08 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 68sm9267182wra.39.2020.08.13.02.49.47
+        by smtp.gmail.com with ESMTPSA id 124sm8705928wmd.31.2020.08.13.02.51.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 02:49:48 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 11:49:46 +0200
+        Thu, 13 Aug 2020 02:51:08 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 11:51:06 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
-Message-ID: <20200813094946.GJ2352366@phenom.ffwll.local>
-Mail-Followup-To: Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
-        Christoph Hellwig <hch@infradead.org>, linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-3-roger.pau@citrix.com>
- <20200813073337.GA16160@infradead.org>
- <20200813075420.GC975@Air-de-Roger>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] drm/hisilicon: Fix build error of no type of module_init
+Message-ID: <20200813095106.GK2352366@phenom.ffwll.local>
+Mail-Followup-To: Thomas Zimmermann <tzimmermann@suse.de>,
+        Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com
+References: <1597289955-27381-1-git-send-email-tiantao6@hisilicon.com>
+ <5e7ed4d6-8961-bdd0-6698-47571066357a@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200813075420.GC975@Air-de-Roger>
+In-Reply-To: <5e7ed4d6-8961-bdd0-6698-47571066357a@suse.de>
 X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn� wrote:
-> On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
-> > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
-> > > If enabled (because ZONE_DEVICE is supported) the usage of the new
-> > > functionality untangles Xen balloon and RAM hotplug from the usage of
-> > > unpopulated physical memory ranges to map foreign pages, which is the
-> > > correct thing to do in order to avoid mappings of foreign pages depend
-> > > on memory hotplug.
-> > 
-> > So please just select ZONE_DEVICE if this is so much better rather
-> > than maintaining two variants.
+On Thu, Aug 13, 2020 at 10:03:18AM +0200, Thomas Zimmermann wrote:
+> Hi
 > 
-> We still need to other variant for Arm at least, so both need to be
-> maintained anyway, even if we force ZONE_DEVICE on x86.
+> Am 13.08.20 um 05:39 schrieb Tian Tao:
+> > Add missing include to fix build error:
+> > hibmc_drm_drv.c:385:1: warning: data definition has no type or storage
+> > class [enabled by default]
+> > hibmc_drm_drv.c:385:1: error: type defaults to ‘int’ in declaration
+> > of ‘module_init’ [-Werror=implicit-int]
+> > hibmc_drm_drv.c:385:1: warning: parameter names (without types) in function
+> > of ‘module_exit’ [-Werror=implicit-int]
+> > hibmc_drm_drv.c:385:292:1: warning: parameter names (without types) in
+> > function declaration [enabled by default]
+> > 
+> > Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> 
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> 
+> I pushed the patch to drm-misc-next, but forgot to add my R-b tag. If
+> anyone complains, it's my fault.
 
-Why does arm not have ZONE_DEVICE?
+sob implies r-b generally, most maintainers do it like that and don't add
+both their sob and r-b tag. That's also why dim doesn't enforce an r-b tag
+in this case.
 -Daniel
+> 
+> Best regards
+> Thomas
+> 
+> > ---
+> >  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > index 1ae360d..2b4f821 100644
+> > --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > @@ -11,6 +11,7 @@
+> >   *	Jianhua Li <lijianhua@huawei.com>
+> >   */
+> >  
+> > +#include <linux/module.h>
+> >  #include <linux/pci.h>
+> >  
+> >  #include <drm/drm_atomic_helper.h>
+> > 
+> 
+> -- 
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Maxfeldstr. 5, 90409 Nürnberg, Germany
+> (HRB 36809, AG Nürnberg)
+> Geschäftsführer: Felix Imendörffer
+> 
+
+
+
+
 -- 
 Daniel Vetter
 Software Engineer, Intel Corporation
