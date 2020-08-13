@@ -2,110 +2,178 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B59C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5356220715
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC452087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:04:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pi5Iglis"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="mGV8LJX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgHMVAG (ORCPT
+        id S1726684AbgHMVEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:00:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
+        Thu, 13 Aug 2020 17:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgHMVAF (ORCPT
+        with ESMTP id S1726564AbgHMVEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:00:05 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2DBC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:00:04 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id y206so3427800pfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:00:04 -0700 (PDT)
+        Thu, 13 Aug 2020 17:04:20 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A39C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:04:20 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 6so5520582qtt.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UoqEFQFA+F2osxU/9euekhAQaDalb1swCejrkv3klN8=;
-        b=pi5IglisWWNCVXf4cCgnmoGQBiskzf1aYbQ0rxrmGz2yJGuQ/SI5lIAFLPEKT0t3uO
-         TjUBXgpbbAJmuFxr+EFWIN/uOp7LcgkL7D+PgwrD3R4B+snypEOYUbirw3RiD7UeWY/9
-         w86xtDvCNFUqh+sF7o2dJU7iodtUtPu0EL+cQlIpCyvEMEqYuSyZAFhpCgoYaqvwQkcO
-         HEo7FnebR/FkrKD+2/vq6Q+drp+7/c6BD07wSUo5RE1O/9kBSKcLD2GYySsjzGaXspck
-         TKGozWfVOFqgqzfvgR9aREUIidixDyvOOlYWPno6VNSBVkMuQ8+HxuFFrJNQ7ZQT6E8i
-         WAog==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=iMH/6Zv7UJy3jzK0zhlQaSqjciySOnJZj31o6dSJNp0=;
+        b=mGV8LJX7jIXJO2ymUdiXZYijB2e+ZMK7XHGqFN7hn1NZ2MBT5RjyZxQ4WXOFe8+WHt
+         Xz9wiSNl3SFee2XcCbpPp9fI5dBds2L6mLNiPdRlIC91M8nRqvCs61IsMvlLN+YMjVaf
+         5YaEE6xqNbtNUwlNEPvkZhN5BdP1xst9DntCQnwxyEUcy/9Q68+WIuOwOFo5uSzaZiH/
+         IgJ0eVPykHOab6o9Sqar+fIbd39/hCv3svVU7f4vYX1pF6e5fDbwU0QwnE/eaPYBMqKt
+         g3cSqX7vD6KzXI1mQWRn1Gu/KbFdmbES2SJSXpSmPMezhYxCItPKwkg8bD9oDwYi+Rh3
+         ACDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UoqEFQFA+F2osxU/9euekhAQaDalb1swCejrkv3klN8=;
-        b=Dvglvc5jZtUwUvAmpR7yF/mV+glI5jHWAbXuxJ7eBELd/iBGqIRak4YTsioIH4rjaR
-         MB9PYOrBE+OJkv1d4p+4sscVr1VSSF6IPxHxz8HhkBoNzHyiDpjDM2bUO8zNAvKzOBYu
-         gCEiWyBpyp8SW07jFmEuvxbwx83U7wM/Vj7PEBCmzH8CrY4AAYxh+NbunfEu/6i/J/39
-         Lu1wV2vH/gn/8RMe1lszizsjFL0vsmtyfZEVMWG0/IWmwQf4nKZHm6WBb2Wb8XXpVNjk
-         VF29qn2ffFv9+z0qs2KB0S7ZKm8cbNEdXCdwSoDKlSNKVP4ypHbgzGeuunVMkoe5Ts/o
-         MiCQ==
-X-Gm-Message-State: AOAM532TThEaCRI5V1Ht09/2kyTBeyJcFEwzcndHE5pDE7fz/gq5sDAc
-        Gbp8BcUA1MVIjKDQjio0sYH+qw==
-X-Google-Smtp-Source: ABdhPJyful70oodpga5zr1qvGs774nq0cEJpOpB8JP7Fu7pSipQq6C+Yol3ZyBVODGjyvDn9q8ubgA==
-X-Received: by 2002:a62:7acb:: with SMTP id v194mr5865361pfc.302.1597352403601;
-        Thu, 13 Aug 2020 14:00:03 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f18sm6963800pfj.35.2020.08.13.14.00.02
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iMH/6Zv7UJy3jzK0zhlQaSqjciySOnJZj31o6dSJNp0=;
+        b=L3/uiXVOUQgJJQBbVIFIN1FkujUrLBt53t2rHW3m0MWg87ol39EID5VelcwMajHoUP
+         WUYxl0Jcv0ot/3SxjzLGnL04e+yPNirKKJ9UNpxRUXf+IuxuCJTFVjfk8lY9z3qyhO+j
+         WTEKW95r9wVdoRtZUxyC1ALuWs/rg6yV/iku+fYnubizDgLDFwy3i/RvrdZAEm7MyvDK
+         W6uPH0sFqX3o5LEmOqVccpCzuttXmVgXS0hcHOQVz55taRX3/xCyRaabOnCjn9RSdH5C
+         mnfKzNUTjMyBumBApdDjT8z8WY9yNHbscOiuQOkB1aCBR6wnCInyS4rST20VBixMCm7z
+         Qbtw==
+X-Gm-Message-State: AOAM532LqKINEnjf3uKOioew30RfzvYhAWo+YlntjNVsL+4kMKypt2Pe
+        eSw9WVREADBmpBlfrO3CBVZFHowPzgo3zw==
+X-Google-Smtp-Source: ABdhPJyPNFgx549j0l3N/LKNneKVgw/mWcfHpscrbRpHjpSU9ncv/HznYP1aP5fwY+EgXkHbRfttEg==
+X-Received: by 2002:ac8:6952:: with SMTP id n18mr2620247qtr.27.1597352658507;
+        Thu, 13 Aug 2020 14:04:18 -0700 (PDT)
+Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id q68sm6391579qke.123.2020.08.13.14.04.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:00:02 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 15:00:00 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     gregkh@linuxfoundation.org, suzuki.poulose@arm.com,
-        mike.leach@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com
-Subject: Re: [PATCH v2] coresight: etm4x: Add Support for HiSilicon ETM device
-Message-ID: <20200813210000.GO3393195@xps15>
-References: <1597323562-3706-1-git-send-email-liuqi115@huawei.com>
+        Thu, 13 Aug 2020 14:04:17 -0700 (PDT)
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        kernel-team@fb.com
+Subject: [PATCH 1/6] proc: use vmalloc for our kernel buffer
+Date:   Thu, 13 Aug 2020 17:04:06 -0400
+Message-Id: <20200813210411.905010-2-josef@toxicpanda.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200813210411.905010-1-josef@toxicpanda.com>
+References: <20200813210411.905010-1-josef@toxicpanda.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597323562-3706-1-git-send-email-liuqi115@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 08:59:22PM +0800, Qi Liu wrote:
-> Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
-> contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
-> 
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+Since
 
-I have applied your patch to my local branch - it will be published on Monday
-with the release of the v5.9-rc1 kernel.
+  sysctl: pass kernel pointers to ->proc_handler
 
-Thanks,
-Mathieu
+we have been pre-allocating a buffer to copy the data from the proc
+handlers into, and then copying that to userspace.  The problem is this
+just blind kmalloc()'s the buffer size passed in from the read, which in
+the case of our 'cat' binary was 64kib.  Order-4 allocations are not
+awesome, and since we can potentially allocate up to our maximum order,
+use vmalloc for these buffers.
 
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 6d7d216..7797a57 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1587,6 +1587,8 @@ static const struct amba_id etm4_ids[] = {
->  	CS_AMBA_UCI_ID(0x000bb805, uci_id_etm4),/* Qualcomm Kryo 4XX Cortex-A55 */
->  	CS_AMBA_UCI_ID(0x000bb804, uci_id_etm4),/* Qualcomm Kryo 4XX Cortex-A76 */
->  	CS_AMBA_UCI_ID(0x000cc0af, uci_id_etm4),/* Marvell ThunderX2 */
-> +	CS_AMBA_UCI_ID(0x000b6d01, uci_id_etm4),/* HiSilicon-Hip08 */
-> +	CS_AMBA_UCI_ID(0x000b6d02, uci_id_etm4),/* HiSilicon-Hip09 */
->  	{},
->  };
-> 
-> --
-> 2.8.1
-> 
+Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+---
+ fs/proc/proc_sysctl.c  |  6 +++---
+ include/linux/string.h |  1 +
+ mm/util.c              | 27 +++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 3 deletions(-)
+
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 6c1166ccdaea..8e19bad83b45 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -571,13 +571,13 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+ 		goto out;
+ 
+ 	if (write) {
+-		kbuf = memdup_user_nul(ubuf, count);
++		kbuf = kvmemdup_user_nul(ubuf, count);
+ 		if (IS_ERR(kbuf)) {
+ 			error = PTR_ERR(kbuf);
+ 			goto out;
+ 		}
+ 	} else {
+-		kbuf = kzalloc(count, GFP_KERNEL);
++		kbuf = kvzalloc(count, GFP_KERNEL);
+ 		if (!kbuf)
+ 			goto out;
+ 	}
+@@ -600,7 +600,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+ 
+ 	error = count;
+ out_free_buf:
+-	kfree(kbuf);
++	kvfree(kbuf);
+ out:
+ 	sysctl_head_finish(head);
+ 
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 9b7a0632e87a..21bb6d3d88c4 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -12,6 +12,7 @@
+ extern char *strndup_user(const char __user *, long);
+ extern void *memdup_user(const void __user *, size_t);
+ extern void *vmemdup_user(const void __user *, size_t);
++extern void *kvmemdup_user_nul(const void __user *, size_t);
+ extern void *memdup_user_nul(const void __user *, size_t);
+ 
+ /*
+diff --git a/mm/util.c b/mm/util.c
+index 5ef378a2a038..cf454d57d3e2 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -208,6 +208,33 @@ void *vmemdup_user(const void __user *src, size_t len)
+ }
+ EXPORT_SYMBOL(vmemdup_user);
+ 
++/**
++ * kvmemdup_user_nul - duplicate memory region from user space and NUL-terminate
++ *
++ * @src: source address in user space
++ * @len: number of bytes to copy
++ *
++ * Return: an ERR_PTR() on failure.  Result may be not
++ * physically contiguous.  Use kvfree() to free.
++ */
++void *kvmemdup_user_nul(const void __user *src, size_t len)
++{
++	char *p;
++
++	p = kvmalloc(len + 1, GFP_USER);
++	if (!p)
++		return ERR_PTR(-ENOMEM);
++
++	if (copy_from_user(p, src, len)) {
++		kvfree(p);
++		return ERR_PTR(-EFAULT);
++	}
++	p[len] = '\0';
++
++	return p;
++}
++EXPORT_SYMBOL(kvmemdup_user_nul);
++
+ /**
+  * strndup_user - duplicate an existing string from user space
+  * @s: The string to duplicate
+-- 
+2.24.1
+
