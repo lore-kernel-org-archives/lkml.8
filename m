@@ -2,228 +2,138 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2761208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4906720774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ptTO6H/I"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ui9khg8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMR0s (ORCPT
+        id S1726596AbgHMR1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:26:48 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33123 "EHLO
+        Thu, 13 Aug 2020 13:27:52 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:17047 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726557AbgHMR0q (ORCPT
+        by vger.kernel.org with ESMTP id S1726522AbgHMR1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:26:46 -0400
+        Thu, 13 Aug 2020 13:27:51 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597339605; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=oi6P8fKsHQ4rH2DcZ8NplCdAFudKxyEMedgiGuidvB4=;
- b=ptTO6H/IwFxrfytfLD1stXY79q+o7QSIxsMvsJ7bUU1c4OyZhSE5urE+yFNtCSQA9qHOIYG/
- 9c+VHQifSXoLPGKJUsVdhBT5ApZCpRJ0HLZrQT/pOrr0eSJqR5bcIjw+z2SE6Oes2BZToWDZ
- gwsx+mWEsyPKdUz8eNG17ZEw7Ss=
+ s=smtp; t=1597339670; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=/+3WtLDRfWjwNOXtJnp0hfGVNxfJvGelGD1RlImJwUc=; b=Ui9khg8MAVSMwJkv+GYoUVQ5RnjW6DLFx7g0X11CDaRdeFQJGEWuyD9vrib/4i8ZqGcj9auT
+ gEV/epCm0LV6/RYjttgyC+G0D8pheAJ9sCIAAlBv5x/yRAUJd27lv6J9EqxZU4LVgU09XHZS
+ 0T7NDH4ZkCe9uWO2oGd2TSKu9Vw=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f3577be2f4952907dd24813 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 17:26:22
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f35780a2889723bf8f3a0eb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 17:27:38
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2C91C4339C; Thu, 13 Aug 2020 17:26:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id EC9AEC433CA; Thu, 13 Aug 2020 17:27:37 +0000 (UTC)
+Received: from [192.168.1.103] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A15FDC433CA;
-        Thu, 13 Aug 2020 17:26:20 +0000 (UTC)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67A5DC433C6;
+        Thu, 13 Aug 2020 17:27:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67A5DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH V2] mm, page_alloc: fix core hung in free_pcppages_bulk()
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz, david@redhat.com,
+        rientjes@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
+References: <1597150703-19003-1-git-send-email-charante@codeaurora.org>
+ <20200813114105.GI9477@dhcp22.suse.cz>
+ <9ca76893-dfe8-9a46-f2ec-6b3c663e848e@codeaurora.org>
+ <20200813163054.GR9477@dhcp22.suse.cz>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <099b1a12-7fcd-f665-3f9d-e20d4e1396d3@codeaurora.org>
+Date:   Thu, 13 Aug 2020 22:57:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200813163054.GR9477@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Aug 2020 22:56:20 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Gross <agross@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-kernel-owner@vger.kernel.org,
-        Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
-In-Reply-To: <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
-References: <20200811190252.10559-1-sibis@codeaurora.org>
- <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
- <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org>
- <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
-Message-ID: <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13 18:04, Ulf Hansson wrote:
-> On Wed, 12 Aug 2020 at 19:03, Sibi Sankar <sibis@codeaurora.org> wrote:
->> 
->> Uffe,
->> Thanks for taking time to review the
->> series!
->> 
->> On 2020-08-12 15:15, Ulf Hansson wrote:
->> > On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
->> >>
->> >> This is for power domains which needs to stay powered on for suspend
->> >> but can be powered on/off as part of runtime PM. This flag is aimed at
->> >> power domains coupled to remote processors which enter suspend states
->> >> independent to that of the application processor. Such power domains
->> >> are turned off only on remote processor crash/shutdown.
->> >
->> > As Kevin also requested, please elaborate more on the use case.
->> >
->> > Why exactly must the PM domain stay powered on during system suspend?
->> > Is there a wakeup configured that needs to be managed - or is there a
->> > co-processor/FW behaviour that needs to be obeyed to?
->> 
->> Yes this is a co-processor behavior that
->> needs to be obeyed. Specifically application
->> processor notifies the Always on Subsystem
->> (AOSS) that a particular co-processor is up
->> using the power domains exposed by AOSS QMP
->> driver. AOSS uses this information to wait
->> for the co-processors to suspend before
->> starting its sleep sequence. The application
->> processor powers off these power domains only
->> if the co-processor has crashed or powered
->> off.
-> 
-> Thanks for clarifying!
-> 
-> Although, can you please elaborate a bit more on the actual use case?
-> What are the typical co-processor and what drivers are involved in
-> managing it?
+Thanks Michal.
 
-The co-processors using the power domains
-exposed by qcom_aoss driver are modem,
-audio dsp, compute dsp managed using
-qcom_q6v5_mss and qcom_q6v5_pas driver.
+On 8/13/2020 10:00 PM, Michal Hocko wrote:
+> On Thu 13-08-20 21:51:29, Charan Teja Kalla wrote:
+>> Thanks Michal for comments.
+>>
+>> On 8/13/2020 5:11 PM, Michal Hocko wrote:
+>>> On Tue 11-08-20 18:28:23, Charan Teja Reddy wrote:
+>>> [...]
+>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>>> index e4896e6..839039f 100644
+>>>> --- a/mm/page_alloc.c
+>>>> +++ b/mm/page_alloc.c
+>>>> @@ -1304,6 +1304,11 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+>>>>  	struct page *page, *tmp;
+>>>>  	LIST_HEAD(head);
+>>>>  
+>>>> +	/*
+>>>> +	 * Ensure proper count is passed which otherwise would stuck in the
+>>>> +	 * below while (list_empty(list)) loop.
+>>>> +	 */
+>>>> +	count = min(pcp->count, count);
+>>>>  	while (count) {
+>>>>  		struct list_head *list;
+>>>
+>>>
+>>> How does this prevent the race actually?
+>>
+>> This doesn't prevent the race. This only fixes the core hung(as this is
+>> called with spin_lock_irq()) caused by the race condition. This core
+>> hung is because of incorrect count value is passed to the
+>> free_pcppages_bulk() function.
+> 
+> Let me ask differently. What does enforce that the count and lists do
+> not get out of sync in the loop. 
 
-> 
-> As you may know, runtime PM becomes disabled during system suspend of
-> a device. Which means, if the driver tries to power off the
-> coprocessor (via calling pm_runtime_put() for example), somewhere in
-> the system suspend phase of the corresponding device, its attached PM
-> domain stays powered on when managed by genpd.
+count value is updated whenever an order-0 page is being added to the
+pcp lists through free_unref_page_commit(), which is being called with
+both interrupts, premption disabled.
+static void free_unref_page_commit(struct page *page, {
+	....
+	list_add(&page->lru, &pcp->lists[migratetype]);
+	pcp->count++
+}
 
-The drivers aren't really expected
-do anything during suspend/resume
-pretty much because the co-processors
-enter low-power modes independent to
-that of the application processor. On
-co-processor crash the remoteproc core
-does a pm_stay_awake followed by a
-pm_relax after crash recovery.
+As these are pcp lists, they only gets touched by another process when
+this process is context switched, which happens only after enabling
+premption or interrupts. So, as long as process is operating on these
+pcp lists in free_unref_page_commit function, the count and lists are
+always synced.
 
+However, the problem here is not that the count and lists are being out
+of sync. They do always in sync, as explained above. It is with the
+asking free_pcppages_bulk() to free the pages more than what is present
+in the pcp lists which is ending up in while(list_empty()).
+
+> Your changelog says that the fix is to
+> use the proper value without any specifics.
 > 
-> Then in the suspend_noirq phase, genpd tries to power off the PM
-> domain, unless there are wakeups to consider.
-> 
-> Taking the above into account, wouldn't that mean that you potentially
-> may end up keeping the PM domain powered on, even if it actually can
-> be powered off in the suspend_noirq phase by genpd?
-> 
-> Kind regards
-> Uffe
-> 
->> >
->> >>
->> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> >> ---
->> >>  drivers/base/power/domain.c | 3 ++-
->> >>  include/linux/pm_domain.h   | 5 +++++
->> >>  2 files changed, 7 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
->> >> index 2cb5e04cf86cd..ba78ac4a450d4 100644
->> >> --- a/drivers/base/power/domain.c
->> >> +++ b/drivers/base/power/domain.c
->> >> @@ -129,6 +129,7 @@ static const struct genpd_lock_ops genpd_spin_ops
->> >> = {
->> >>  #define genpd_is_active_wakeup(genpd)  (genpd->flags &
->> >> GENPD_FLAG_ACTIVE_WAKEUP)
->> >>  #define genpd_is_cpu_domain(genpd)     (genpd->flags &
->> >> GENPD_FLAG_CPU_DOMAIN)
->> >>  #define genpd_is_rpm_always_on(genpd)  (genpd->flags &
->> >> GENPD_FLAG_RPM_ALWAYS_ON)
->> >> +#define genpd_is_suspend_on(genpd)     (genpd->flags &
->> >> GENPD_FLAG_SUSPEND_ON)
->> >>
->> >>  static inline bool irq_safe_dev_in_no_sleep_domain(struct device
->> >> *dev,
->> >>                 const struct generic_pm_domain *genpd)
->> >> @@ -949,7 +950,7 @@ static void genpd_sync_power_off(struct
->> >> generic_pm_domain *genpd, bool use_lock,
->> >>  {
->> >>         struct gpd_link *link;
->> >>
->> >> -       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd))
->> >> +       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd) ||
->> >> genpd_is_suspend_on(genpd))
->> >>                 return;
->> >>
->> >>         if (genpd->suspended_count != genpd->device_count
->> >> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
->> >> index ee11502a575b0..3002a2d68936a 100644
->> >> --- a/include/linux/pm_domain.h
->> >> +++ b/include/linux/pm_domain.h
->> >> @@ -55,6 +55,10 @@
->> >>   *
->> >>   * GENPD_FLAG_RPM_ALWAYS_ON:   Instructs genpd to always keep the PM
->> >> domain
->> >>   *                             powered on except for system suspend.
->> >> + *
->> >> + * GENPD_FLAG_SUSPEND_ON:      Instructs genpd to keep the PM domain
->> >> powered
->> >> + *                             on during suspend and runtime PM
->> >> controlled
->> >> + *                             otherwise.
->> >>   */
->> >>  #define GENPD_FLAG_PM_CLK       (1U << 0)
->> >>  #define GENPD_FLAG_IRQ_SAFE     (1U << 1)
->> >> @@ -62,6 +66,7 @@
->> >>  #define GENPD_FLAG_ACTIVE_WAKEUP (1U << 3)
->> >>  #define GENPD_FLAG_CPU_DOMAIN   (1U << 4)
->> >>  #define GENPD_FLAG_RPM_ALWAYS_ON (1U << 5)
->> >> +#define GENPD_FLAG_SUSPEND_ON   (1U << 6)
->> >>
->> >>  enum gpd_status {
->> >>         GPD_STATE_ACTIVE = 0,   /* PM domain is active */
->> >> --
->> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->> >> Forum,
->> >> a Linux Foundation Collaborative Project
->> >>
->> 
->> --
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->> a Linux Foundation Collaborative Project.
+Will change this to: Ensure the count value passed is not greater than
+the pcp lists count. Any better you suggest?
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
