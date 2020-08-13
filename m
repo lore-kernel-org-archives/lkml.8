@@ -2,114 +2,214 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B04BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE92C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5A620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kpNfml3P"
+	by mail.kernel.org (Postfix) with ESMTP id C7C2820716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHMHIY (ORCPT
+        id S1726678AbgHMHIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:08:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46250 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726639AbgHMHIW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:08:22 -0400
-X-UUID: 4d3e63dde98149d9a01d08479df424f2-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=gpARQxC1AZt6f+ZHYA/7gHQMcpim6UyqrkhBThG0UAQ=;
-        b=kpNfml3PYikXEGUMU/PbMbDsTrdbe8rdMXh8hP2VlnDJ+IqaspNuaV/x9u2o8kXts5QzLWKFypHHOohQ5LH8Rrsx65w2ijtzlHGGdOvaBkjnq1m373OOWYD6SkhrsVdwyeiMs4kVgvRtW3FBXh5MezaqiC58VgV2L9/TaOPhRhY=;
-X-UUID: 4d3e63dde98149d9a01d08479df424f2-20200813
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1978797628; Thu, 13 Aug 2020 15:08:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 15:08:08 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 15:08:08 +0800
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>
-CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <hector.yuan@mediatek.com>
-Subject: [PATCH v2 2/2] dt-bindings: cpufreq: add bindings for MediaTek cpufreq HW
-Date:   Thu, 13 Aug 2020 15:07:55 +0800
-Message-ID: <1597302475-15484-3-git-send-email-hector.yuan@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
-References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
+        Thu, 13 Aug 2020 03:08:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63473 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726639AbgHMHI2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:08:28 -0400
+IronPort-SDR: gzgyN83ils9xFzdlYoT4zk0nSIfuq3QHvxfAblhEcRqcBQu441icEZlsaNeD0uS+V35oDvNVxA
+ 7Jii1IOxzbTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133701753"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="133701753"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:08:27 -0700
+IronPort-SDR: KKrJjfLfaYLtu3wmR2BrzkrhyRJSqVGwTP88BWOaZg7K2Y6PJzTxW5viobH/4F3l0N8KDPv1wN
+ iFY5P5IYSrXQ==
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="470116018"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:08:24 -0700
+Subject: Re: [PATCH] perf parse-events: Set exclude_guest for user-space
+ counting
+To:     Like Xu <like.xu@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+References: <20200812065953.22143-1-yao.jin@linux.intel.com>
+ <20200812121504.GE13995@kernel.org>
+ <74097816-3f36-abea-1eaa-8942aedd7322@linux.intel.com>
+ <ab4ae047-ba0b-fed6-36e4-d667e3437e34@linux.intel.com>
+ <75360db6-0574-aef5-8c90-6eb8f2a6afb3@linux.intel.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <3341af83-c9f3-49c4-d54b-bf4d2a68e639@linux.intel.com>
+Date:   Thu, 13 Aug 2020 15:08:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 243C5C9360AE5E81DE14DCB92FF591F7A9CBD5026502A21E5CC2BB3E2FE2F9952000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <75360db6-0574-aef5-8c90-6eb8f2a6afb3@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2
-aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgSFcgZHJpdmVyLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBIZWN0b3IuWXVhbiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRp
-bmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAgIDYxICsrKysrKysr
-KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykNCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1
-ZnJlcS1tZWRpYXRlay1ody55YW1sDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3LnlhbWwgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3Lnlh
-bWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi41OWJiMjRlDQotLS0gL2Rl
-di9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9j
-cHVmcmVxLW1lZGlhdGVrLWh3LnlhbWwNCkBAIC0wLDAgKzEsNjEgQEANCisjIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkNCislWUFNTCAxLjIN
-CistLS0NCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2NwdWZyZXEvY3B1ZnJl
-cS1tZWRpYXRlay1ody55YW1sIw0KKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRh
-LXNjaGVtYXMvY29yZS55YW1sIw0KKw0KK3RpdGxlOiBNZWRpYVRlaydzIENQVUZSRVEgQmluZGlu
-Z3MNCisNCittYWludGFpbmVyczoNCisgIC0gSGVjdG9yIFl1YW4gPGhlY3Rvci55dWFuQG1lZGlh
-dGVrLmNvbT4NCisNCitkZXNjcmlwdGlvbjoNCisgIENQVUZSRVEgSFcgaXMgYSBoYXJkd2FyZSBl
-bmdpbmUgdXNlZCBieSBNZWRpYVRlaw0KKyAgU29DcyB0byBtYW5hZ2UgZnJlcXVlbmN5IGluIGhh
-cmR3YXJlLiBJdCBpcyBjYXBhYmxlIG9mIGNvbnRyb2xsaW5nIGZyZXF1ZW5jeQ0KKyAgZm9yIG11
-bHRpcGxlIGNsdXN0ZXJzLg0KKw0KK3Byb3BlcnRpZXM6DQorICBjb21wYXRpYmxlOg0KKyAgICBj
-b25zdDogbWVkaWF0ZWssY3B1ZnJlcS1odw0KKw0KKyAgcmVnOg0KKyAgICBtaW5JdGVtczogMQ0K
-KyAgICBtYXhJdGVtczogMg0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAgIEFkZHJlc3NlcyBh
-bmQgc2l6ZXMgZm9yIHRoZSBtZW1vcnkgb2YgdGhlIEhXIGJhc2VzIGluIGVhY2ggZnJlcXVlbmN5
-IGRvbWFpbi4NCisNCisgIHJlZy1uYW1lczoNCisgICAgaXRlbXM6DQorICAgICAgLSBjb25zdDog
-ImZyZXEtZG9tYWluMCINCisgICAgICAtIGNvbnN0OiAiZnJlcS1kb21haW4xIg0KKyAgICBkZXNj
-cmlwdGlvbjogfA0KKyAgICAgIEZyZXF1ZW5jeSBkb21haW4gbmFtZS4NCisNCisgICIjZnJlcS1k
-b21haW4tY2VsbHMiOg0KKyAgICBjb25zdDogMQ0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAg
-IE51bWJlciBvZiBjZWxscyBpbiBhIGZyZXFlbmN5IGRvbWFpbiBzcGVjaWZpZXIuDQorDQorcmVx
-dWlyZWQ6DQorICAtIGNvbXBhdGlibGUNCisgIC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSAi
-I2ZyZXEtZG9tYWluLWNlbGxzIg0KKw0KK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KKw0K
-K2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIHNvYyB7DQorICAgICAgICAjYWRkcmVzcy1jZWxscyA9
-IDwyPjsNCisgICAgICAgICNzaXplLWNlbGxzID0gPDI+Ow0KKw0KKyAgICAgICAgY3B1ZnJlcV9o
-dzogY3B1ZnJlcUAxMWJjMDAgew0KKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-Y3B1ZnJlcS1odyI7DQorICAgICAgICAgICAgcmVnID0gPDAgMHgxMWJjMTAgMCAweDhjPiwNCisg
-ICAgICAgICAgICAgICA8MCAweDExYmNhMCAwIDB4OGM+Ow0KKyAgICAgICAgICAgIHJlZy1uYW1l
-cyA9ICJmcmVxLWRvbWFpbjAiLCAiZnJlcS1kb21haW4xIjsNCisgICAgICAgICAgICAjZnJlcS1k
-b21haW4tY2VsbHMgPSA8MT47DQorICAgICAgICB9Ow0KKyAgICB9Ow0KKw0KLS0gDQoxLjcuOS41
-DQo=
 
+
+On 8/13/2020 2:57 PM, Like Xu wrote:
+> Hi Yao,
+> 
+> On 2020/8/13 11:11, Jin, Yao wrote:
+>> Hi Like,
+>>
+>> On 8/12/2020 9:02 PM, Like Xu wrote:
+>>> On 2020/8/12 20:15, Arnaldo Carvalho de Melo wrote:
+>>>> Em Wed, Aug 12, 2020 at 02:59:53PM +0800, Jin Yao escreveu:
+>>>>> Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
+>>>>>
+>>>>> But it doesn't make sense that we request for user-space counting
+>>>>> but we also get the guest report.
+>>>>>
+>>>
+>>> Please hold the horse and allow this possibility.
+>>>
+>>> Some authorized perf users on the host may
+>>> only want to count (KVM) guest user space events.
+>>>
+>>> Thanks,
+>>> Like Xu
+>>>
+>>
+>> Without this patch, if we don't set the ":u" modifier, exclude_guest = 1.
+> 
+> It's true for the non ":u" case.
+> 
+>>
+>> perf record -e cycles ./div
+>> perf evlist -v
+>> cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD, 
+>> read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, 
+>> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+>>
+>> So this patch doesn't change perf's original behavior.
+> 
+> The patch changes the "perf kvm" original behavior.
+> 
+> Testcase: perf kvm --host --guest --guestkallsyms=guest-kallsyms \
+> --guestmodules=guest-modules record -e cycles:u ...
+> 
+> From:
+> 
+> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, 
+> read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
+> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq }: 4000, sample_type: 
+> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, 
+> sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+> 
+> To:
+> 
+> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, 
+> read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1,
+> 
+> exclude_guest: 1
+> 
+> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq }: 4000, sample_type: 
+> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, 
+> sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+> 
+> Thanks,
+> Like Xu
+
+The behavior is similar as native kernel. The change of exclude_guest (0 -> 1) is expected.
+
+On native kernel,
+
+Before:
+
+   perf record -e cycles:u ./div
+   perf evlist -v
+   cycles:u: ..., exclude_kernel: 1, exclude_hv: 1, ...
+
+After:
+
+   perf record -e cycles:u ./div
+   perf evlist -v
+   cycles:u: ..., exclude_kernel: 1, exclude_hv: 1,  exclude_guest: 1, ...
+
+Thanks
+Jin Yao
+
+>>
+>> Thanks
+>> Jin Yao
+>>
+>>>>> To keep perf semantics consistent and clear, this patch sets
+>>>>> exclude_guest for user-space counting.
+>>>>
+>>>> Applied, and also added this, that you should consider doing in the
+>>>> future (modulo the "Committer testing:" header :) ):
+>>>>
+>>>> Committer testing:
+>>>>
+>>>> Before:
+>>>>
+>>>>    # perf record -e cycles:u
+>>>>    ^C[ perf record: Woken up 1 times to write data ]
+>>>>    [ perf record: Captured and wrote 1.231 MB perf.data (91 samples) ]
+>>>>    #
+>>>>    # perf evlist -v
+>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
+>>>> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, 
+>>>> exclude_hv: 1, freq: 1, sample_id_all: 1
+>>>>    <SNIP>
+>>>>    #
+>>>>
+>>>> After:
+>>>>
+>>>>    # perf record -e cycles:u
+>>>>    ^C[ perf record: Woken up 1 times to write data ]
+>>>>    [ perf record: Captured and wrote 1.263 MB perf.data (403 samples) ]
+>>>>    #
+>>>>    # perf evlist -v
+>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
+>>>> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, 
+>>>> exclude_hv: 1, freq: 1, sample_id_all: 1, exclude_guest: 1
+>>>>    #
+>>>>
+>>>> ----
+>>>>
+>>>> I.e. show actual command output before and after that demonstrates the
+>>>> problem and then the solution.
+>>>>
+>>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>>>>> ---
+>>>>>   tools/perf/util/parse-events.c | 2 ++
+>>>>>   1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>>>>> index 9f7260e69113..4d809f1fe269 100644
+>>>>> --- a/tools/perf/util/parse-events.c
+>>>>> +++ b/tools/perf/util/parse-events.c
+>>>>> @@ -1794,6 +1794,8 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
+>>>>>           if (*str == 'u') {
+>>>>>               if (!exclude)
+>>>>>                   exclude = eu = ek = eh = 1;
+>>>>> +            if (!exclude_GH)
+>>>>> +                eG = 1;
+>>>>>               eu = 0;
+>>>>>           } else if (*str == 'k') {
+>>>>>               if (!exclude)
+>>>>> -- 
+>>>>> 2.17.1
+>>>>>
+>>>>
+>>>
+> 
