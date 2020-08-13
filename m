@@ -2,114 +2,150 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34310C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16754206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3484206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="wdDEWxTK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0Vgyqpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHMVb6 (ORCPT
+        id S1726663AbgHMVec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51032 "EHLO
+        Thu, 13 Aug 2020 17:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgHMVb5 (ORCPT
+        with ESMTP id S1726467AbgHMVeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:31:57 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B431C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:31:57 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id b2so3364426qvp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 14:31:56 -0700 (PDT)
+        Thu, 13 Aug 2020 17:34:31 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648A3C061757;
+        Thu, 13 Aug 2020 14:34:31 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m22so7788931ljj.5;
+        Thu, 13 Aug 2020 14:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A0O34qikXns/ytpRF66igHLNzjuKUB2GXbD8H3lK9Cw=;
-        b=wdDEWxTKceXP4HFWkn5yqXxqTabNCYq3NagIUeqh7V54xWCyhnM12KnaT8TFARdxoZ
-         64m7DXucAflzdtOUJMjgrOngoGqb44Vq/t6L8rwrgAzV0F3kfbC6ZKihH+qVMARSfX2E
-         AboiW0bCtznAPQH4PIdH7U/uL3W0n8tW8KH2nfK/F4C9UCJlBwAj1oiOMZo7Hq1zybIP
-         hxXS+pkkTtCPFrE+CqidsGVnbfv4uh0M02k9pFy2dr/cpLPoI7xEE88H5MmveghRVnqu
-         0KhBGumVj4x/AOCHRfOypzB4y15VLmUDhbRS0tMB6s9rBGKG8NPr6I4v052d2dh6ZhlU
-         i/hw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IThCDjeYxkkM18VbuagJbEDKwOsjCUD5KwOfUA5QrWc=;
+        b=L0Vgyqpru8kmueUsI4cVMqp6htGxBMqzWsqUuXQPNeZvPK2y2MuDiHPu7qelLmRmJK
+         cRLvokXPeEs+Pfbmq9vu/zr+xclqXoYNjOW9fYWfk8QFVFr1fQv8YHM3lUv2VI7vkuj1
+         Dwc4gvPB9j9wy9nknQao6OgKHG4wTJjzIm/8qL3pvBRgBIYqPdRu1Bt3Er7id/8frVh5
+         nPSlN9IzzY/2Rsx18Kp72B/98RCIh1+du2sII5gzZAqO39vsRo5Pre3ANx0dWIemEFU1
+         znZNYXeLliGeOzNQCt7tK2jmIUKvykrEaOEmAd9mGcfJ3/L/9wEXlkUYam/C5UbztUgc
+         AoOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=A0O34qikXns/ytpRF66igHLNzjuKUB2GXbD8H3lK9Cw=;
-        b=ZvEa2yvY47pwX7+7bPTKiLpfg/eQrgiWYZ25svp1eLFAO6KXTUqq3SF/vcbwvftl/D
-         twihfbndvyJjw8Iu5Ig2OH53SDcp9v+dluEKYhSYxNF0LuMny1NYQ9GKbx1z6B7lSAM5
-         Ze0CKXBXWwvxWKmkJ8QZA5vaf5e7ZOZXlcO/rp6JJtFMbXbrqgIq/DB9Ay1jiqkGLq9A
-         6lAqWlnt2n9+8KrVi9vXGDwKhbaHMrOyM9IQAh91vPth13vzE14j+krIUbLJyejYEWDb
-         DYTKz7BYqttx5n03Rbi/m8NO2tS0WenhLUdlot7B6RA+nRBXloOSmFZr/jnB0dmC4NHb
-         ZgDQ==
-X-Gm-Message-State: AOAM532GKyuEBQ6vgKXa69B0USE7okksr/xMkI6d6prda7QKK0wHxvix
-        9AU+HDdbsEVQ3V4mq5OsOP9kXw==
-X-Google-Smtp-Source: ABdhPJw1739/fps5sGg94EWIzpqBNse+OfMx9SH2Fwv3YnMBXDckZmA8TU/hJN9RPgxR4hPxf11hKg==
-X-Received: by 2002:ad4:54b2:: with SMTP id r18mr6617359qvy.92.1597354315991;
-        Thu, 13 Aug 2020 14:31:55 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:fe9c])
-        by smtp.gmail.com with ESMTPSA id i75sm6829279qke.70.2020.08.13.14.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 14:31:55 -0700 (PDT)
-Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "willy@infradead.org" <willy@infradead.org>
-References: <20200813145305.805730-1-josef@toxicpanda.com>
- <20200813153356.857625-1-josef@toxicpanda.com>
- <20200813153722.GA13844@lst.de>
- <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
- <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
- <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
- <3612878ce143427b89a70de3abfb657d@AcuMS.aculab.com>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <cd5ecedc-cef1-4325-36aa-e7b06485f3a1@toxicpanda.com>
-Date:   Thu, 13 Aug 2020 17:31:54 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        bh=IThCDjeYxkkM18VbuagJbEDKwOsjCUD5KwOfUA5QrWc=;
+        b=qUGyPZI5VfvZt0p0MZvVXIOjeZTO/KL00rYjQNbKjJUcwFOlqcbUYkp+irRh8jbzE+
+         Cd/Zigocw9EwvEJeq5wMLGyQQ1Li9hEf/eknefQ/WLEAbV5pphuIWa7Rt7DpnrDbMVFM
+         QeQwZQO5XZmExhXE7OQ+/Y22OhKf4PiHTr/5aO3tggoN0zbTYOpUIGf4EuSB30jc5JYE
+         NskWsF9+s5J50H17JxXVlLKy1BvgcL9pHA0NavaOTIvXoes71AICy98X80g6U1ci161c
+         97snsOyZxhwN7Xf5V5+YWtOoiukH/Z6/BHDHAeVyNAp83sWMnQL8kQPboECN+cMJfH9s
+         zcaw==
+X-Gm-Message-State: AOAM530kYap4jnrACXaMXuCkn4H44psHmsJWjBy0xhrKKv5HKGupgtsy
+        Iqd+Wkm3vM8D/4APxrfKUok=
+X-Google-Smtp-Source: ABdhPJy7yIGjPYA4/SOFJxhPGBV9c3CsJJwXuYU/XrKIbhdrF8Hoz43SP8lvuUwkYMhr8W94+XKQFw==
+X-Received: by 2002:a2e:92d0:: with SMTP id k16mr2736517ljh.70.1597354469716;
+        Thu, 13 Aug 2020 14:34:29 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 14:34:29 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Heidelberg <david@ixit.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Bruce E . Robertson" <bruce.e.robertson@intel.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v3 00/10] Summit SMB3xx driver & device-tree
+Date:   Fri, 14 Aug 2020 00:33:59 +0300
+Message-Id: <20200813213409.24222-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <3612878ce143427b89a70de3abfb657d@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 5:10 PM, David Laight wrote:
-> From: Josef Bacik
->> Sent: 13 August 2020 18:19
-> ...
->> We wouldn't even need the extra +1 part, since we're only copying in how much
->> the user wants anyway, we could just go ahead and convert this to
->>
->> left -= snprintf(buffer, left, "0x%04x\n", *(unsigned int *) table->data);
->>
->> and be fine, right?  Or am I misunderstanding what you're looking for?  Thanks,
-> 
-> Doesn't that need to be scnprintf()?
-> IIRC snprintf() returns the number of bytes that would have been
-> written were the buffer infinite size?
-> (I suspect this is an 'accidental' return value from the original
-> SYSV? userspace implementation that just dumped characters that
-> wouldn't fit in the buffer somewhere.)
-> 
+We gathered existing patches, fixed and improved what we could and
+final result is an working charging driver with device-tree support
+for Nexus 7.
 
-Yeah, if you look at the patches I just sent you'll notice I used scnprintf() 
-everywhere.  Thanks,
+At this moment charging works with:
+ - Nexus 7 2012 (grouper and tilapia)
+ - Nexus 7 2013 (flo and deb)
+ - ... and there are more devices equipped with these chargers.
 
-Josef
+Changelog:
+
+v3: - The uint32 type now isn't specified for standard units in the SMB
+      DT binding because standard units already have a type.
+      Thanks to Rob Herring for the suggestion!
+
+    - The battery binding changes are rebased on top of the new battery.yaml
+
+    - The new battery temperature DT properties now have shorter names
+      and use <min max> format. Thanks to Rob Herring for the suggestion!
+
+    - Added new patch that adds SMB charger node to the new Nexus 7 2012
+      device-tree which has been merged into v5.9 kernel.
+
+v2: - Addressed v1 review comments from Rob Herring and Sebastian Reichel
+      by moving out common battery properties from the charger node into the
+      battery-cell node.
+
+    - power_supply_register() of the SMB driver converted to resource-managed
+      API variant.
+
+    - Improved DT property names of the SMB binding by making them to follow
+      the generic power-supply naming scheme (-microvolts at the end, etc).
+
+David Heidelberg (7):
+  dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
+  power: supply: smb347-charger: Use resource-managed API
+  power: supply: smb347-charger: Implement device-tree support
+  power: supply: smb347-charger: Support SMB345 and SMB358
+  power: supply: smb347-charger: Remove virtual smb347-battery
+  ARM: dts: qcom: apq8064-nexus7: Add SMB345 battery charger
+  ARM: tegra: nexus7: Add SMB347 battery charger
+
+Dmitry Osipenko (3):
+  dt-bindings: battery: Add temperature properties
+  power: supply: Support battery temperature device-tree properties
+  power: supply: smb347-charger: Replace mutex with IRQ disable/enable
+
+ .../bindings/power/supply/battery.yaml        |  24 +
+ .../power/supply/summit,smb347-charger.yaml   | 152 +++++
+ .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  24 +
+ .../tegra30-asus-nexus7-grouper-common.dtsi   |  24 +-
+ drivers/power/supply/Kconfig                  |   6 +-
+ drivers/power/supply/power_supply_core.c      |  19 +
+ drivers/power/supply/smb347-charger.c         | 565 +++++++++---------
+ .../dt-bindings/power/summit,smb347-charger.h |  19 +
+ include/linux/power_supply.h                  |   6 +
+ 9 files changed, 568 insertions(+), 271 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+ create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+
+-- 
+2.27.0
+
