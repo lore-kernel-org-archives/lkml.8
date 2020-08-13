@@ -2,213 +2,135 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED08C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D057BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C34205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC377205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n/GFm0Qo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGN4/7qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHMBVZ (ORCPT
+        id S1726612AbgHMBVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:21:25 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:26740 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgHMBVZ (ORCPT
+        Wed, 12 Aug 2020 21:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgHMBV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:21:25 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200813012121epoutp01bef3c62ca13fdc8e848aa190cdd2dc8c~qrzn3CSLH1227012270epoutp01W
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:21:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200813012121epoutp01bef3c62ca13fdc8e848aa190cdd2dc8c~qrzn3CSLH1227012270epoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597281681;
-        bh=rIf2aP70tcoCuctATkuo4ryv929cSpVAnCs+GM8kOT4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=n/GFm0QoN+kqH1AnhI/9I8rbUfpGAZ4BLOCC2T0f6nuvwA/XumeusZgQ3GD80kiTt
-         aivLMTFxnOoGSSh1Kc+gS9m7g1EKQcAImZ+yLq38mzHoA24c3SlxRQdAuQZ6rQVbyh
-         Bt7kj3MsSkuHbgR1rJc++E809oAxbnX1eI6VvEko=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200813012120epcas5p285d4bb722d0c48a79842eec0cd9d012d~qrzm6eKtx2473924739epcas5p2R;
-        Thu, 13 Aug 2020 01:21:20 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C7.79.09475.095943F5; Thu, 13 Aug 2020 10:21:20 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200813012119epcas5p3c6bb1b51ff89ed57dc3c8eae7fe80888~qrzl1l6DG0125501255epcas5p3k;
-        Thu, 13 Aug 2020 01:21:19 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200813012119epsmtrp2db0dd40a660422b079a3feaab3ba0698~qrzl0pP9g1048610486epsmtrp2n;
-        Thu, 13 Aug 2020 01:21:19 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-96-5f3495904025
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.DA.08303.F85943F5; Thu, 13 Aug 2020 10:21:19 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200813012115epsmtip1dad765160f388deae709a79eaf3bc4ed~qrzijvUVK0847808478epsmtip1W;
-        Thu, 13 Aug 2020 01:21:15 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Eric Biggers'" <ebiggers@kernel.org>
-Cc:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <krzk@kernel.org>,
-        <avri.altman@wdc.com>, <martin.petersen@oracle.com>,
-        <kwmad.kim@samsung.com>, <stanley.chu@mediatek.com>,
-        <cang@codeaurora.org>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kishon@ti.com>
-In-Reply-To: <20200812002920.GA1352011@gmail.com>
-Subject: RE: [RESEND PATCH v10 04/10] scsi: ufs: introduce
- UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-Date:   Thu, 13 Aug 2020 06:51:13 +0530
-Message-ID: <000401d67110$0be2d9c0$23a88d40$@samsung.com>
+        Wed, 12 Aug 2020 21:21:29 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C06C061383;
+        Wed, 12 Aug 2020 18:21:29 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id x6so1972825pgx.12;
+        Wed, 12 Aug 2020 18:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lQIgWLskafx/ldXdduKgobildOhYZxik0ZHwho1Zfoo=;
+        b=mGN4/7qavgQWwG5YfUkeYeG0wYOtcBkAYp2bPdv6B36KhbQa9wrpecPbkjDWFoOW9L
+         JeE25dc4lsSrciIgNBYihQti5o9VWJxedN3krMCF85tLA7O96PgOvMkeen5dNdfXc7n3
+         j2PSPmE5MwIE3VKLLwZowwQtUX73oolFxjkmk4y2XXmvbOfELNdK/++VPg4E4mHz2Fed
+         qE51NDmggB+4+meJqc5PNTqDKFly23rsPUviIIr27sdvHwCqh61BgJx2F44kH3YjS10d
+         6bjf91qQeNf2vXIxXZfR8FG1mDbxUpIObEy3qkI1UxDWQTo/JhgYQeNx6yql7PO0U8kB
+         zNXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lQIgWLskafx/ldXdduKgobildOhYZxik0ZHwho1Zfoo=;
+        b=eLaA+VOkCvL+mAV30/AdWAAIXexBM6SVR/zD1HYUeHbv32tHeJcoy3MlqSZmiUMoNO
+         yrLyJLgT3lHCu82NfSXiyJxtWig1c3TclXj2lRo5HVEwClZS7TP7w5gEgJhrjcvNzjBw
+         0tl3RiEeJLVfYAJujkTtPOOpetaJTQiT4rNAhQ/658JxCUfBI2TByXD3K5/2XjG9XrDp
+         OC2lXSzCR9ZAl4F38O954Wl8D+3qOawVlYvVGVAO57LNvgqRqqPfnOw7yQwE/A29kxXB
+         JP6Den9eTSeiN8Mit0NBVQLmdPRFWYJSoZGAmqbXtuOb94uZHztKqserLZotqEMo9OsG
+         bDAg==
+X-Gm-Message-State: AOAM530VbIoJpKh+wJKov6dKfe7lvPfcpqhD3sg/z57Es2DHoY2W2XNp
+        2XejcG6DUa7icStej7YRsJQ=
+X-Google-Smtp-Source: ABdhPJwgpHzsTo8nz0kD/mHsAPY6qklFCQrg9J1XaxdO5YaRJOgQgPo0AsWWb4+Qp5+EfzyBbeCg+w==
+X-Received: by 2002:a62:7c09:: with SMTP id x9mr2004878pfc.229.1597281688701;
+        Wed, 12 Aug 2020 18:21:28 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id m22sm3346397pja.36.2020.08.12.18.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 18:21:27 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 18:21:25 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Raul Rangel <rrangel@google.com>
+Cc:     linux-input@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "S, Shirish" <Shirish.S@amd.com>
+Subject: Re: PS/2 + i8042 intermixing commands
+Message-ID: <20200813012125.GV1665100@dtor-ws>
+References: <CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQG4t7PjQZEdjsbMgiywO+bF2ZMTLwIzeQaKAlwJ5TgBughjDak+YmDg
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmhu6EqSbxBq3TeS1e/rzKZvFp/TJW
-        i/lHzrFarN3zh9niwtMeNovz5zewW9zccpTFYtPja6wWl3fNYbOYcX4fk0X39R1sFsuP/2Oy
-        +L9nB7vF0q03GR34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
-        H+hmCuCM4rJJSc3JLEst0rdL4MpY8OUzc8E5qYrvV16wNDC+Eu1i5OSQEDCRePG4mamLkYtD
-        SGA3o8Syn+tZIJxPjBK9U2awQjifGSUePPkFlOEAa9k2tQikW0hgF6PE+dVeEDVvGCX6uv+x
-        gyTYBHQldixuYwOxRQS0JHrnPAUbxCzwlkniwr9drCAJTgFDifcnN4E1CAvESdzdtBhsAYuA
-        qsSbHZUgYV4BS4n7/zuYIWxBiZMzn7CA2MwC8hLb385hhnhBQeLn02WsELvcJD6dO88KUSMu
-        cfRnDzPIXgmBNxwS1/+dZIdocJHYd2AqE4QtLPHq+BaouJTE53d72SCezJbo2WUMEa6RWDrv
-        GAuEbS9x4MocsDOZBTQl1u/Sh1jFJ9H7+wkTRCevREebEES1qkTzu6tQndISE7u7WSFsD4kH
-        C14wTmBUnIXksVlIHpuF5IFZCMsWMLKsYpRMLSjOTU8tNi0wzkst1ytOzC0uzUvXS87P3cQI
-        Tnda3jsYHz34oHeIkYmD8RCjBAezkggv82XjeCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Sj/O
-        xAkJpCeWpGanphakFsFkmTg4pRqYFov8zvkzg9d44rHcpuI9KhYntZffvZQ1Q+gm4+mLwZo+
-        +3681/gXcDtLt2hPjkW5V3vuXXGRCdcevD9l1bN+5f3GSfZ6l7Inbr+WobF05pLSl9Vr+xb9
-        MW1av4ONU6rzuMpmVpX/WXtNMrl3vZobZzn3e8KKrlXThZdEzuNYyDiv6uyVE+Vvr2+aw1Ee
-        eaFifpm4cMim1LpdumdbMvPXpZc5dceKzvyqVsqv6//sXu+GWbdtVErWzbb/c+Px00MLFshp
-        NGVui5K1aq3d/Uut3O1eY4rpqSDZW77ysWz3jEK3p7xeqfbh5K7pq9Of9t7wjvj0/38J64Si
-        8DM+ey5uePxklhp3XCdjevOSuBfLlJVYijMSDbWYi4oTAdGs8gbmAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsWy7bCSnG7/VJN4g0VX2Sxe/gQSn9YvY7WY
-        f+Qcq8XaPX+YLS487WGzOH9+A7vFzS1HWSw2Pb7GanF51xw2ixnn9zFZdF/fwWax/Pg/Jov/
-        e3awWyzdepPRgc/jcl8vk8emVZ1sHpuX1Hu0nNzP4vHx6S0Wj74tqxg9jt/YzuTxeZOcR/uB
-        bqYAzigum5TUnMyy1CJ9uwSujAVfPjMXnJOq+H7lBUsD4yvRLkYODgkBE4ltU4u6GLk4hAR2
-        MErM3rKAsYuREyguLXF94wR2CFtYYuW/5+wQRa8YJR4t/AiWYBPQldixuI0NxBYR0JLonfOU
-        FaSIWeA3k8ST+RuZITqeMEocXfgabCyngKHE+5ObwLqFBWIkuv8/YQU5g0VAVeLNjkqQMK+A
-        pcT9/x3MELagxMmZT1hASpgF9CTaNoJNYRaQl9j+dg4zxHEKEj+fLmOFuMFN4tO586wQNeIS
-        R3/2ME9gFJ6FZNIshEmzkEyahaRjASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M
-        4LjV0trBuGfVB71DjEwcjIcYJTiYlUR4mS8bxwvxpiRWVqUW5ccXleakFh9ilOZgURLn/Tpr
-        YZyQQHpiSWp2ampBahFMlomDU6qBqXK22dIv25pynHwEY9eLvFtU5mMSxZPREXg5IL/l5KxV
-        vkwp/H0tjzWsD9zZ5nqr1M/G5NiyTfOFZqk61U/vmXD+ZLPDn00FgosOPmz6/d4gzGYKx9mE
-        jULfXtxe9nHXix2SvZPjKiyXVaU8mxGaVnD6aGnHdAbOvB8iHVem5l4/tviL1qmu6b7HFgSf
-        SVe511G5Q+W+47v7kw9fu3qLxyHYIZpvt/Oyb7qWd6dwcHpyB/vNCA103bHdR//PL5aj6lXP
-        msRuLt+sk5S67tV/7fLNJ6OffQm58qltRbK6wdk/26+uO3HYg78g4o1oaq5YzvFFecFmfOoP
-        ku8037t85LS3sp/cotjfPmpJlXv+31ViKc5INNRiLipOBADF1RaBSgMAAA==
-X-CMS-MailID: 20200813012119epcas5p3c6bb1b51ff89ed57dc3c8eae7fe80888
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200613030445epcas5p4428da322cd9527d1075ff0f1ccc75d23
-References: <20200613024706.27975-1-alim.akhtar@samsung.com>
-        <CGME20200613030445epcas5p4428da322cd9527d1075ff0f1ccc75d23@epcas5p4.samsung.com>
-        <20200613024706.27975-5-alim.akhtar@samsung.com>
-        <20200812002920.GA1352011@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On Thu, Aug 06, 2020 at 09:28:41AM -0600, Raul Rangel wrote:
+> >
+> > <- atkbd_event_work->atkbd_set_leds
+> > [KB recv data: 0xed] # CMD 10
+> > <- Wait, where is the data?
+> >
+> > <- Continuation of i8042_port_close?
+> > [KB recv cmd: 0x60] # CMD #14
+> > [KB recv data: 0x43]
+> > [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
+> > [KB set CTR_RAM(0x00)=0x43 (old:0x41)]
+> > [AUX IRQ enable]
+> >
+> > <- Here is the data!
+> > [KB recv data: 0x00] # CMD 10 (data)
+> > [KB Unsupported i8042 data 0x00]
+> > [KB recv data: 0x00] <- Did the host retry?
+> > [KB Unsupported i8042 data 0x00]
+> >
+> > <- atkbd_event_work->atkbd_set_repeat_rate
+> > [KB recv data: 0xf3] # CMD #11
+> > [KB recv data: 0x00]
+> > [KB eaten by STATE_SETREP: 0x00]
+> >
+> > [KB recv cmd: 0xd4] # CMD #15
+> > [KB recv data: 0xf2]
+> > [STATE_SEND_TO_MOUSE: 0xf2]
+> 
+> As you can see CMD #10 starts between #13 and #14, and then completes
+> after #14. Is this expected behavior?
+> 
+> I'm not quite sure if #13 and #14 are coming from i8042_port_close. I
+> don't have a function trace available, but it seems to fit.
+> 
+> I found this comment:
+> /*
+>  * Writers to AUX and KBD ports as well as users issuing i8042_command
+>  * directly should acquire i8042_mutex (by means of calling
+>  * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
+>  * they do not disturb each other (unfortunately in many i8042
+>  * implementations write to one of the ports will immediately abort
+>  * command that is being processed by another port).
+>  */
+> static DEFINE_MUTEX(i8042_mutex);
+> 
+> Does that not mean that i8042_port_close, i8042_enable_kbd_port,
+> i8042_enable_aux_port, + any other function that calls i8042_command
+> should be taking the lock before calling i8042_command?
 
-> -----Original Message-----
-> From: Eric Biggers <ebiggers@kernel.org>
-> Sent: 12 August 2020 05:59
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: robh@kernel.org; devicetree@vger.kernel.org;
-linux-scsi@vger.kernel.org;
-> krzk@kernel.org; avri.altman@wdc.com; martin.petersen@oracle.com;
-> kwmad.kim@samsung.com; stanley.chu@mediatek.com;
-> cang@codeaurora.org; linux-samsung-soc@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; kishon@ti.com
-> Subject: Re: [RESEND PATCH v10 04/10] scsi: ufs: introduce
-> UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-> 
-> Hi Alim,
-> 
-> On Sat, Jun 13, 2020 at 08:17:00AM +0530, Alim Akhtar wrote:
-> > Some UFS host controllers like Exynos uses granularities of PRDT
-> > length and offset as bytes, whereas others uses actual segment count.
-> >
-> > Reviewed-by: Avri Altman <avri.altman@wdc.com>
-> > Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
-> > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > ---
-> >  drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
-> > drivers/scsi/ufs/ufshcd.h |  6 ++++++
-> >  2 files changed, 29 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> > index ee30ed6cc805..ba093d0d0942 100644
-> > --- a/drivers/scsi/ufs/ufshcd.c
-> > +++ b/drivers/scsi/ufs/ufshcd.c
-> > @@ -2151,8 +2151,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba,
-> struct ufshcd_lrb *lrbp)
-> >  		return sg_segments;
-> >
-> >  	if (sg_segments) {
-> > -		lrbp->utr_descriptor_ptr->prd_table_length =
-> > -			cpu_to_le16((u16)sg_segments);
-> > +
-> > +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
-> > +			lrbp->utr_descriptor_ptr->prd_table_length =
-> > +				cpu_to_le16((sg_segments *
-> > +					sizeof(struct ufshcd_sg_entry)));
-> > +		else
-> > +			lrbp->utr_descriptor_ptr->prd_table_length =
-> > +				cpu_to_le16((u16) (sg_segments));
-> >
-> >  		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
-> >
-> > @@ -3500,11 +3506,21 @@ static void
-> ufshcd_host_memory_configure(struct ufs_hba *hba)
-> >
-> 	cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
-> >
-> >  		/* Response upiu and prdt offset should be in double words
-*/
-> > -		utrdlp[i].response_upiu_offset =
-> > -			cpu_to_le16(response_offset >> 2);
-> > -		utrdlp[i].prd_table_offset = cpu_to_le16(prdt_offset >> 2);
-> > -		utrdlp[i].response_upiu_length =
-> > -			cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-> > +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN) {
-> > +			utrdlp[i].response_upiu_offset =
-> > +				cpu_to_le16(response_offset);
-> > +			utrdlp[i].prd_table_offset =
-> > +				cpu_to_le16(prdt_offset);
-> > +			utrdlp[i].response_upiu_length =
-> > +				cpu_to_le16(ALIGNED_UPIU_SIZE);
-> > +		} else {
-> > +			utrdlp[i].response_upiu_offset =
-> > +				cpu_to_le16(response_offset >> 2);
-> > +			utrdlp[i].prd_table_offset =
-> > +				cpu_to_le16(prdt_offset >> 2);
-> > +			utrdlp[i].response_upiu_length =
-> > +				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-> > +		}
-> >
-> >  		ufshcd_init_lrb(hba, &hba->lrb[i], i);
-> >  	}
-> 
-> Isn't this patch missing an update to ufshcd_print_trs()?  It uses
-> ->prd_table_length as the number of segments, not the number of bytes.
-> 
-prd_table_length will be populated before it reaches ufshcd_print_trs()
-based on UFSHCD_QUIRK_PRDT_BYTE_GRAN.
+Yeah, I think this is right. When I added the mutex it was because 2
+deices were clashing with each other and I did not consider that closing
+port in the i8042 driver itself may also disturb in-flight command.
 
-> - Eric
+Thanks.
 
+-- 
+Dmitry
