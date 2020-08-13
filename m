@@ -2,134 +2,107 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF72C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10177C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE8120771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xCWRXRnX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q2GiVcQN"
+	by mail.kernel.org (Postfix) with ESMTP id E3D402078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHMMPV (ORCPT
+        id S1726252AbgHMMVE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:15:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58334 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMMPS (ORCPT
+        Thu, 13 Aug 2020 08:21:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58628 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgHMMVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:15:18 -0400
-Date:   Thu, 13 Aug 2020 12:15:15 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597320916;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MKkEG/5K5y7F2Yw2IcGjRVzdQIU/oD6i7aVmBszFYnA=;
-        b=xCWRXRnXiOoWcHAZcgC3/FjAuA1dycfTMIhZasTk/qcBKwmMxH7nI1DZXkefX3QX/TdCXZ
-        2IMmjMZ5aZzMP5qr6jCzy6f+207Yk/97fhZTuSqo+To2FSKrwkAOYvwCPfPvdT7X1DWMNs
-        r+UZBGfWpBPKLpSfmSBcvlqUEjEBfRXw+tsKw6z/HG1CZtLmbShA68BEjrj8idBI6DGbU2
-        j1g2qQaaY/WcnhT8MaPW2bvAaFJsixNWjKmzdnIjwaBBztn2y7xeZchqXUCZ4B390cZbys
-        tpKh4si6sQ+GoKXjkbb1Z2pxEFRka2z6ZUU0pG94nYLT6NEmJDPfb1MN95Q6TQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597320916;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MKkEG/5K5y7F2Yw2IcGjRVzdQIU/oD6i7aVmBszFYnA=;
-        b=q2GiVcQNMFken73bLIu8FQGR6L9R1cSiqjRyel5CyzEUDzb1HDaMhyJeqJqej35ZZSF6eu
-        OaM5nwrNmy2MxADQ==
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/alternatives: Acquire pte lock with interrupts enabled
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200813105026.bvugytmsso6muljw@linutronix.de>
-References: <20200813105026.bvugytmsso6muljw@linutronix.de>
+        Thu, 13 Aug 2020 08:21:02 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 1197F299E38
+Received: by earth.universe (Postfix, from userid 1000)
+        id 42CA73C0C80; Thu, 13 Aug 2020 14:20:59 +0200 (CEST)
+Date:   Thu, 13 Aug 2020 14:20:59 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCHv4 4/4] Input: EXC3000: Add support to query model and
+ fw_version
+Message-ID: <20200813122059.hhf5qjnbwiyh2exg@earth.universe>
+References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+ <20200805160520.456570-5-sebastian.reichel@collabora.com>
+ <20200807003901.GQ1665100@dtor-ws>
 MIME-Version: 1.0
-Message-ID: <159732091559.3192.7404769548939834518.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200807003901.GQ1665100@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi Dmitry,
 
-Commit-ID:     a6d996cbd38b42341ad3fce74506b9fdc280e395
-Gitweb:        https://git.kernel.org/tip/a6d996cbd38b42341ad3fce74506b9fdc280e395
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Thu, 13 Aug 2020 12:50:26 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 13 Aug 2020 14:11:54 +02:00
+On Thu, Aug 06, 2020 at 05:39:01PM -0700, Dmitry Torokhov wrote:
+> Hi Sebastian,
+> 
+> On Wed, Aug 05, 2020 at 06:05:20PM +0200, Sebastian Reichel wrote:
+> >  
+> > +static int exc3000_query_interrupt(struct exc3000_data *data)
+> > +{
+> > +	u8 *buf = data->buf;
+> > +	int err;
+> > +
+> > +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	if (buf[0] != 0x42)
+> 
+> I changed this to 'B' to match the rest of the function.
 
-x86/alternatives: Acquire pte lock with interrupts enabled
+OK. I assumed this to be a easter egg reference to the Answer to
+the Ultimate Question of Life, the Universe, and Everything from
+the Hitchhiker's Guide, so I left it as a number. I might be totally
+wrong on that one, so fine with me.
 
-pte lock is never acquired in-IRQ context so it does not require interrupts
-to be disabled. The lock is a regular spinlock which cannot be acquired
-with interrupts disabled on RT.
+> > +		return -EPROTO;
+> > +
+> > +	if (buf[4] == 'E')
+> > +		strlcpy(data->model, buf+5, sizeof(data->model));
+> > +	else if (buf[4] == 'D')
+> > +		strlcpy(data->fw_version, buf+5, sizeof(data->fw_version));
+> > +	else
+> > +		return -EPROTO;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +	error = sysfs_create_group(&client->dev.kobj, &exc3000_attribute_group);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	error = devm_add_action_or_reset(&client->dev, exc3000_unregister_sysfs, &client->dev);
+> > +	if (error)
+> > +		return error;
+> 
+> Replaced 2 calls with devm_device_add_group().
 
-RT complains about pte_lock() in __text_poke() because it's invoked after
-disabling interrupts.
+ah, I missed that because it does not have sysfs in its name and its
+not in the <linux/sysfs.h>.
 
-__text_poke() has to disable interrupts as use_temporary_mm() expects
-interrupts to be off because it invokes switch_mm_irqs_off() and uses
-per-CPU (current active mm) data.
+> Please yell if I managed to break it...
 
-Move the PTE lock handling outside the interrupt disabled region.
+The touchscreen works as expected, sysfs files are created and
+removed correctly and also work as expected. All looks good.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by; Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200813105026.bvugytmsso6muljw@linutronix.de
-
----
- arch/x86/kernel/alternative.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index c826cdd..34a1b85 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -874,8 +874,6 @@ static void *__text_poke(void *addr, const void *opcode, size_t len)
- 	 */
- 	BUG_ON(!pages[0] || (cross_page_boundary && !pages[1]));
- 
--	local_irq_save(flags);
--
- 	/*
- 	 * Map the page without the global bit, as TLB flushing is done with
- 	 * flush_tlb_mm_range(), which is intended for non-global PTEs.
-@@ -892,6 +890,8 @@ static void *__text_poke(void *addr, const void *opcode, size_t len)
- 	 */
- 	VM_BUG_ON(!ptep);
- 
-+	local_irq_save(flags);
-+
- 	pte = mk_pte(pages[0], pgprot);
- 	set_pte_at(poking_mm, poking_addr, ptep, pte);
- 
-@@ -941,8 +941,8 @@ static void *__text_poke(void *addr, const void *opcode, size_t len)
- 	 */
- 	BUG_ON(memcmp(addr, opcode, len));
- 
--	pte_unmap_unlock(ptep, ptl);
- 	local_irq_restore(flags);
-+	pte_unmap_unlock(ptep, ptl);
- 	return addr;
- }
- 
+-- Sebastian
