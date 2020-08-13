@@ -2,52 +2,53 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D586C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6C1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5392074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC5B2074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMJr2 (ORCPT
+        id S1726615AbgHMJre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:47:28 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39085 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMJr1 (ORCPT
+        Thu, 13 Aug 2020 05:47:34 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:49543 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgHMJr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Aug 2020 05:47:27 -0400
-Received: by mail-il1-f197.google.com with SMTP id i66so3922720ile.6
+Received: by mail-il1-f200.google.com with SMTP id b18so3896170ilh.16
         for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:47:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gFVHgzil7w64tQYvr3B4qI+8MO/FB2UDkU12jeaufKs=;
-        b=S74KMO/6pabxtZOUU8hhchYji3As2fMjz4ct5ByUGGYcZt9vfT/ORaCSCD2wWjhrII
-         8jlUjOEkMlXDva4hI07NYj9O4QfTdrbgkTH/XgzRwZ2mFn8Yb5SMT5A5XvMyyotxWsBV
-         NVqTWVaS109eb3lgD7QvC7HdowECFSN6oeKtC+wJuqQXJ3Kzh4D9UIRwSdu488+f0q3f
-         BfeA+kioyQoDUl0buAPHwI2Z1D5EevxWRDWk/LZqD2N4gmYB3TyjH0/YwwXRqolWSDvc
-         oiJhyUeXX6VknMUsy6vXrRv4xgQamj90SuaJhNFfUBG3v4eXT85zTJYPkpbxeYUPKmUJ
-         WlMw==
-X-Gm-Message-State: AOAM531HkARj55EuP0PxoCmGTzgYyb4ZsVw/4OAm7LjQvyz5WqcHNKGq
-        W0YdQjidJgWnWWdLL6a8v7ZrnCy631E2WXxgz9V0h387s9za
-X-Google-Smtp-Source: ABdhPJyDPoDHfmgFx8qDc8OwEDNO1gGdgfLeSY09YArIT7vY7qn1d2KoFbZ+2A/346TnoSNMeN4MRvH9pbunS8D5pgFQnnroI2Qy
+        bh=9Dlz59NWZ1Pt0j6oxZ7rlutFZtxOxRW52eAAmLe4yhU=;
+        b=YJtVSnJDXs6OLeNTjorluEfBzaLLpr+zVvfoiyTqywJgoHNMrgF2x6g0e+3GId3TBR
+         y3Pk5JaQWzm/CuGkgunQJXypERaDQepWikGRI4wv2tFGrM70NDihUO5Td/7ceDtaDWpn
+         KeKNDoCDcDYaT/FjVsXQNVxk9dDvoJF+t8GjcG6sVs+JlYN4nk2bj3B7xHnCQ+Eem6VM
+         mwRBvbuKKSdvRZMPq+2NmUmkKCPQUst5xngo9qxwTPKV7OMh/Se1zUz+EueiOsBGNOxr
+         I/i94FSXsStb3N6Cl/WdhQLpmWLEFf/srPTA4xyVNH2nYSbqLkiNDzcABRYZonNmYfLz
+         H3/g==
+X-Gm-Message-State: AOAM530MK2LagI3GZvsOJkcPlVBEx6318MorGyVtRUR0GBf/KfP64qin
+        L2gcM4omz7WBP7XtPBzQcEsJ7aAQyBhU/f+fKwOLiRLdUeE2
+X-Google-Smtp-Source: ABdhPJxAdxBg2PCfzqxKDb9uJ/FqI62zx/scKeu/gYbyeE2wehZKlTYjqh7jAud1uZ0jJLwLBtyxlnFRbB4E9Fy3wsNYrRhX7xH/
 MIME-Version: 1.0
-X-Received: by 2002:a92:c848:: with SMTP id b8mr3991461ilq.79.1597312046017;
+X-Received: by 2002:a6b:ba03:: with SMTP id k3mr3995605iof.72.1597312046218;
  Thu, 13 Aug 2020 02:47:26 -0700 (PDT)
 Date:   Thu, 13 Aug 2020 02:47:26 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000019317f05acbf31bd@google.com>
-Subject: upstream boot error: WARNING in mem_cgroup_css_alloc
-From:   syzbot <syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com>
+Message-ID: <0000000000001c467c05acbf3196@google.com>
+Subject: linux-next boot error: WARNING in mem_cgroup_css_alloc
+From:   syzbot <syzbot+f96cbc69d9803e663664@syzkaller.appspotmail.com>
 To:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
         hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mhocko@kernel.org,
-        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        vdavydov.dev@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,18 +59,18 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    dc06fe51 Merge tag 'rtc-5.9' of git://git.kernel.org/pub/s..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12d34bd6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9c89856ae5fc8b6
-dashboard link: https://syzkaller.appspot.com/bug?extid=35d35ef677516d65bdda
+HEAD commit:    e6d113ac Add linux-next specific files for 20200813
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11db9fd6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
+dashboard link: https://syzkaller.appspot.com/bug?extid=f96cbc69d9803e663664
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com
+Reported-by: syzbot+f96cbc69d9803e663664@syzkaller.appspotmail.com
 
 mem auto-init: stack:off, heap alloc:on, heap free:off
-Memory: 6461180K/7863916K available (116743K kernel code, 17665K rwdata, 21624K rodata, 2792K init, 23940K bss, 1402480K reserved, 0K cma-reserved)
+Memory: 6458876K/7863916K available (116743K kernel code, 18258K rwdata, 21644K rodata, 2812K init, 25364K bss, 1404784K reserved, 0K cma-reserved)
 Running RCU self tests
 rcu: Preemptible hierarchical RCU implementation.
 rcu: 	RCU lockdep checking is enabled.
@@ -122,7 +123,7 @@ Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, vmalloc)
 WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 memalloc_unuse_memcg include/linux/sched/mm.h:331 [inline]
 WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5285
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-syzkaller #0
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-next-20200813-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
@@ -135,13 +136,13 @@ Call Trace:
  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
 RIP: 0010:mem_cgroup_alloc mm/memcontrol.c:5226 [inline]
 RIP: 0010:mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5284
-Code: 01 00 48 8d bb 28 14 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 74 81 e8 e0 00 c2 f9 e9 77 ff ff ff <0f> 0b e9 21 fc ff ff 48 89 ef e8 bc 28 c7 f9 48 b8 00 00 00 00 00
+Code: 01 00 48 8d bb 48 14 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 74 81 e8 a0 79 c0 f9 e9 77 ff ff ff <0f> 0b e9 21 fc ff ff 48 89 ef e8 3c af c5 f9 48 b8 00 00 00 00 00
 RSP: 0000:ffffffff89a07e20 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffffff89a99dc0 RCX: 1ffff110152b2028
-RDX: 1ffffffff135363d RSI: ffffffff83b0f2c2 RDI: ffffffff89a9b1e8
-RBP: ffff8880a9590000 R08: 0000000000000001 R09: ffff88821b801aef
-R10: 0000000000000000 R11: ffffffff810000d4 R12: ffffffff8ab224b4
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff8ab224d0
+RAX: dffffc0000000000 RBX: ffffffff89a99dc0 RCX: 1ffff110436f4c28
+RDX: 1ffffffff1353641 RSI: ffffffff83b2f532 RDI: ffffffff89a9b208
+RBP: ffff88821b7a6000 R08: 0000000000000001 R09: ffff8880a9c06b6f
+R10: 0000000000000000 R11: ffffffff810000d4 R12: ffffffff8abb6bb4
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff8abb6bd0
  cgroup_init_subsys+0x215/0x4d7 kernel/cgroup/cgroup.c:5587
  cgroup_init+0x359/0xa63 kernel/cgroup/cgroup.c:5713
  start_kernel+0x426/0x46a init/main.c:1035
