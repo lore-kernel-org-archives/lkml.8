@@ -2,84 +2,116 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A2BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F86B20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03CC20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VnEuwXkh"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="g9q7mJIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgHMLOf (ORCPT
+        id S1726723AbgHMLOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 13 Aug 2020 07:14:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2831 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726568AbgHMLO3 (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgHMLOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:14:29 -0400
-X-UUID: 5e35a78db22944ffbaf6613ebd1cd735-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+eK+7a9oUt+gCi+OClb3sCo/w04UAPvGt6ggiOIBy5Y=;
-        b=VnEuwXkh79pfUlcx6QEk2FIj88mSm5hdziv6mkeygQiB9bXlCyXME1pJMWX5Bqj7+lvioWeZoJTzQ4jV2u9qfnpBL21qZd6omRiraFQt9+UYUIRLnKRUkFIHlP3m1c8OBRltSC2z+R/A/tvSMfdEo8s7yFOBDC4IyLKBdbbs9XU=;
-X-UUID: 5e35a78db22944ffbaf6613ebd1cd735-20200813
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1151618276; Thu, 13 Aug 2020 19:14:25 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 19:14:22 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 19:14:23 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
-        sin_jieyang <sin_jieyang@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH] pinctrl: mediatek: check mtk_is_virt_gpio input parameter
-Date:   Thu, 13 Aug 2020 19:14:20 +0800
-Message-ID: <1597317260-24348-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 13 Aug 2020 07:14:31 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FDBC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:14:29 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p13so5200511ilh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Drw0mASaMxjwlc+v1sEJiZJDPjdekVV/QXUc/HktK+E=;
+        b=g9q7mJIbn3hrQSrv9YwGoI4XhEzdCzVWGnEUw5xoILnYYN3Ttz7J/Q62eH435j0rzE
+         n958oIBgnA7/jlXprmT92J8OOROvm+Z2jYMbl5NJonSzQILJVQ5B1JeO2JJFyTFJXVS5
+         NjPgUvdEK48UsonLlcxIxMB35ZnY+YYMa8Tci/vKsSKvMirvq/t/YdYOuQtcW9J8W8RF
+         PR4JNyv9rgtvMd6rpEaipaiK6f4h5sCCeHB4UNbItLmioP2wFoGiAT8WslEGljc8FfyZ
+         iiaYUVD7oqYxf3v4JynFgR/Zxwwx7v0GDs59u4Qein+KaBaDBp4ELWuF/Xu7N6xqIulE
+         8gOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Drw0mASaMxjwlc+v1sEJiZJDPjdekVV/QXUc/HktK+E=;
+        b=rsFomv9a2QvQs3KqOid5hoxlJJ04ZeNzPhtWRgvqYmkBYSaCqr84YVTBj5cCb7AD0M
+         WC5l1e6cAsfsFyMyykQGp/gKJT3JfV8KKb9QAnAK7W4MQlE3IqlHuKmbwR0rQcP+mKWz
+         9dkS2niVn+wDsspOyLZPgpuAjRKQZ8M8ceVRsc2U0FqokmM40JUDsLsNZcbqpbxoTlqT
+         Cr9LWht/Xx6VTw89M5482Ehtl1MUT5F+/8vMjWXKYO14dqSqzMQIl2sq7LXQ9sOIiDeP
+         6SSJW+odobHb0a6gKWyvPu1fBUI//WI6WgOJhJo5BJtbWxAc4uVDf1rkzJJVct+gqIKZ
+         vMgg==
+X-Gm-Message-State: AOAM532Gtt5B4EzwdEAq8nnTlqehEXb+cuL/gWio3lydLgqO7R/eWlfx
+        bAvPoSwQAWurpwmX6nJ5qIQr6gb25zF31TDbzS3Ckw==
+X-Google-Smtp-Source: ABdhPJxQJaTwk24Deg909+rNRs4gJtrwkVRx3wGKds6s8xZVwl91JieQoWJUaqj7PAbFGBdU34jMZlWE+yz6FKL/xug=
+X-Received: by 2002:a92:cb12:: with SMTP id s18mr4341576ilo.13.1597317268867;
+ Thu, 13 Aug 2020 04:14:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-4-cmo@melexis.com>
+ <CAHp75VfNwb5uBp=H0295LEJjXy1+=V5yvSN1PHbtMYzgg=_EAA@mail.gmail.com>
+In-Reply-To: <CAHp75VfNwb5uBp=H0295LEJjXy1+=V5yvSN1PHbtMYzgg=_EAA@mail.gmail.com>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Thu, 13 Aug 2020 13:13:53 +0200
+Message-ID: <CAKv63uv=b60B9RXBJF4HEhMOowu-qbGrv7LsmJVvkkERSida-A@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] iio:temperature:mlx90632: Convert polling while
+ loop to do-while
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Y2hlY2sgbXRrX2lzX3ZpcnRfZ3BpbyBpbnB1dCBwYXJhbWV0ZXIsDQp2aXJ0dWFsIGdwaW8gbmVl
-ZCB0byBzdXBwb3J0IGVpbnQgbW9kZS4NCg0KYWRkIGVycm9yIGhhbmRsZXIgZm9yIHRoZSBrbyBj
-YXNlDQp0byBmaXggdGhpcyBib290IGZhaWw6DQpwYyA6IG10a19pc192aXJ0X2dwaW8rMHgyMC8w
-eDM4IFtwaW5jdHJsX210a19jb21tb25fdjJdDQpsciA6IG10a19ncGlvX2dldF9kaXJlY3Rpb24r
-MHg0NC8weGIwIFtwaW5jdHJsX3BhcmlzXQ0KDQpGaXhlczogZWRkNTQ2NDY1MDAyICgicGluY3Ry
-bDogbWVkaWF0ZWs6IGF2b2lkIHZpcnR1YWwgZ3BpbyB0cnlpbmcgdG8gc2V0IHJlZyIpDQpTaW5n
-ZWQtb2ZmLWJ5OiBzaW5famlleWFuZyA8c2luX2ppZXlhbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVk
-LW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2
-ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCA0ICsrKysNCiAx
-IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Bp
-bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwv
-bWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGM1M2UyYzM5MWUzMi4uMjdh
-YjljNTEyYWUxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
-bXRrLWNvbW1vbi12Mi5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1t
-dGstY29tbW9uLXYyLmMNCkBAIC0yNTksNiArMjU5LDEwIEBAIGJvb2wgbXRrX2lzX3ZpcnRfZ3Bp
-byhzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCB1bnNpZ25lZCBpbnQgZ3Bpb19uKQ0KIA0KIAlkZXNj
-ID0gKGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvX25dOw0K
-IA0KKwkvKiBpZiB0aGUgR1BJTyBpcyBub3Qgc3VwcG9ydGVkIGZvciBlaW50IG1vZGUgKi8NCisJ
-aWYgKGRlc2MtPmVpbnQuZWludF9tID09IEVJTlRfTkEpDQorCQlyZXR1cm4gdmlydF9ncGlvOw0K
-Kw0KIAlpZiAoZGVzYy0+ZnVuY3MgJiYgIWRlc2MtPmZ1bmNzW2Rlc2MtPmVpbnQuZWludF9tXS5u
-YW1lKQ0KIAkJdmlydF9ncGlvID0gdHJ1ZTsNCiANCi0tIA0KMi4xOC4wDQo=
+On Thu, 13 Aug 2020 at 13:03, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
+> >
+> > Reduce number of lines and improve readability to convert polling while
+> > loops to do-while. The iopoll.h interface was not used, because we
+> > require more than 20ms timeout, because time for sensor to perform a
+> > measurement is around 10ms and it needs to perform measurements for each
+> > channel (which currently is 3).
+>
+> I don't see how it prevents using iopoll.h. It uses usleep_range()
+> under the hood in the same way you did here, but open coded.
+>
 
+One loop is indeed 10ms and that is not the problem, the problem is
+that timeout is at least 3 calls of this data ready (3 channels), so
+that is at minimum 30ms of timeout, or it could even be 4 in worse
+case scenario and that is outside of the range for usleep to measure.
+So in case of the other loop, where we wait 200ms for channel refresh
+it is also out of scope. Timeout should be in number of tries or in
+msleep range if you ask me.
+
+> ...
+>
+> > -       while (tries-- > 0) {
+> > +       do {
+> >                 ret = regmap_read(data->regmap, MLX90632_REG_STATUS,
+> >                                   &reg_status);
+> >                 if (ret < 0)
+> >                         return ret;
+> > -               if (reg_status & MLX90632_STAT_DATA_RDY)
+> > -                       break;
+> >                 usleep_range(10000, 11000);
+> > -       }
+> > +       } while (!(reg_status & MLX90632_STAT_DATA_RDY) && tries--);
+> >
+> >         if (tries < 0) {
+> >                 dev_err(&data->client->dev, "data not ready");
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
