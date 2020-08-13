@@ -2,142 +2,196 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B1C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B53C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9680B20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5F920771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597334134;
+	bh=f4VtwjKJr7WhsTI66Z2TOQQnMaQfTOJ9L1ZG29Tkjj0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=YURRIyAdDUod6SXUwOFQZxP1hrrMd3sGnxMXj4C1G421+lEGXOH6jvLDYEkG/MvNe
+	 JadTGcU5u76NorI0pC6fwIt4KIA4AAGzCTIV5OXNXCz8cOB/VfuZ/Lh1pOYnQILiAa
+	 iF54lhez8Q5E1ynB1wXV4QILu3U3OkoyEsTl5hOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHMPyQ (ORCPT
+        id S1726792AbgHMPzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:54:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55666 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 11:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgHMPyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:54:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DEECBB5F7;
-        Thu, 13 Aug 2020 15:54:35 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 17:54:12 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813155412.GP9477@dhcp22.suse.cz>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <20200813154159.GR4295@paulmck-ThinkPad-P72>
+        id S1726131AbgHMPzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:55:31 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63AB20771;
+        Thu, 13 Aug 2020 15:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597334129;
+        bh=f4VtwjKJr7WhsTI66Z2TOQQnMaQfTOJ9L1ZG29Tkjj0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=1agIIfmslQV3/n11Q32ZeIz+KiXpg+0gpYNfrRfeNAJNcdfTwYObEx0mWRpHdpxvD
+         nKcWS1AbnlRC30MBd4RCh2JCbYEnpXfYVYfmi6cW/qFtZkxoBPqpcizrImVG1zG8Sz
+         6vazImklhVZG5XSVs2fM/BPdoo7FUshoLM+or5h4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 61745352279C; Thu, 13 Aug 2020 08:55:29 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 08:55:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.08.11a 110/112] ERROR: modpost:
+ "rcu_read_unlock_strict" undefined!
+Message-ID: <20200813155529.GU4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202008131232.tDOTOabp%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200813154159.GR4295@paulmck-ThinkPad-P72>
+In-Reply-To: <202008131232.tDOTOabp%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 08:41:59, Paul E. McKenney wrote:
-> On Thu, Aug 13, 2020 at 04:53:35PM +0200, Michal Hocko wrote:
-> > On Thu 13-08-20 16:34:57, Thomas Gleixner wrote:
-> > > Michal Hocko <mhocko@suse.com> writes:
-> > > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
-> > > >> It basically requires to convert the wait queue to something else. Is
-> > > >> the waitqueue strict single waiter?
-> > > >
-> > > > I would have to double check. From what I remember only kswapd should
-> > > > ever sleep on it.
-> > > 
-> > > That would make it trivial as we could simply switch it over to rcu_wait.
-> > > 
-> > > >> So that should be:
-> > > >> 
-> > > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
-> > > >> 
-> > > >> which is limiting the damage to those callers which hand in
-> > > >> GFP_RT_NOWAIT.
-> > > >> 
-> > > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
-> > > >> zone->lock in the wrong context. And we want to know about that so we
-> > > >> can look at the caller and figure out how to solve it.
-> > > >
-> > > > Yes, that would have to somehow need to annotate the zone_lock to be ok
-> > > > in those paths so that lockdep doesn't complain.
-> > > 
-> > > That opens the worst of all cans of worms. If we start this here then
-> > > Joe programmer and his dog will use these lockdep annotation to evade
-> > > warnings and when exposed to RT it will fall apart in pieces. Just that
-> > > at that point Joe programmer moved on to something else and the usual
-> > > suspects can mop up the pieces. We've seen that all over the place and
-> > > some people even disable lockdep temporarily because annotations don't
-> > > help.
-> > 
-> > Hmm. I am likely missing something really important here. We have two
-> > problems at hand:
-> > 1) RT will become broken as soon as this new RCU functionality which
-> > requires an allocation from inside of raw_spinlock hits the RT tree
-> > 2) lockdep splats which are telling us that early because of the
-> > raw_spinlock-> spin_lock dependency.
+On Thu, Aug 13, 2020 at 12:17:34PM +0800, kernel test robot wrote:
+> Hi Paul,
 > 
-> That is a reasonable high-level summary.
+> First bad commit (maybe != root cause):
 > 
-> > 1) can be handled by handled by the bailing out whenever we have to use
-> > zone->lock inside the buddy allocator - essentially even more strict
-> > NOWAIT semantic than we have for RT tree - proposed (pseudo) patch is
-> > trying to describe that.
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.08.11a
+> head:   9030fc13639a71b15466520f09ca07b80fc30ed1
+> commit: 601cd69fa4bb0127bb774cc852203fd9fdf5e269 [110/112] rcuperf: Change rcuperf to rcuscale
+> config: riscv-allmodconfig (attached as .config)
+> compiler: riscv64-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 601cd69fa4bb0127bb774cc852203fd9fdf5e269
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=riscv 
 > 
-> Unless I am missing something subtle, the problem with this approach
-> is that in production-environment CONFIG_PREEMPT_NONE=y kernels, there
-> is no way at runtime to distinguish between holding a spinlock on the
-> one hand and holding a raw spinlock on the other.  Therefore, without
-> some sort of indication from the caller, this approach will not make
-> CONFIG_PREEMPT_NONE=y users happy.
-
-If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
-check then there is no functional problem - GFP_RT_SAFE would still be
-GFP_NOWAIT so functional wise the allocator will still do the right
-thing.
-
-[...]
-
-> > That would require changing NOWAIT/ATOMIC allocations semantic quite
-> > drastically for !RT kernels as well. I am not sure this is something we
-> > can do. Or maybe I am just missing your point.
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 > 
-> Exactly, and avoiding changing this semantic for current users is
-> precisely why we are proposing some sort of indication to be passed
-> into the allocation request.  In Uladzislau's patch, this was the
-> __GFP_NO_LOCKS flag, but whatever works.
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-As I've tried to explain already, I would really hope we can do without
-any new gfp flags. We are running out of them and they tend to generate
-a lot of maintenance burden. There is a lot of abuse etc. We should also
-not expose such an implementation detail of the allocator to callers
-because that would make future changes even harder. The alias, on the
-othere hand already builds on top of existing NOWAIT semantic and it
-just helps the allocator to complain about a wrong usage while it
-doesn't expose any internals.
+Good catch, forgot the EXPORT_SYMBOL_GPL(), will fix, thank you!
 
--- 
-Michal Hocko
-SUSE Labs
+							Thanx, Paul
+
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/intel/iwlegacy/iwl4965.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/intel/iwlegacy/iwlegacy.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/ath11k/ath11k.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/wcn36xx/wcn36xx.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/ath10k/ath10k_core.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/carl9170/carl9170.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/ath9k/ath9k_htc.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/ath9k/ath9k_hw.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wireless/ath/ath9k/ath9k.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wan/lapbether.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/wan/hdlc_cisco.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/hamradio/bpqether.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/via/via-velocity.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/socionext/netsec.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/sfc/sfc.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/qlogic/qede/qede.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/qlogic/netxen/netxen_nic.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/qlogic/qlcnic/qlcnic.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/netronome/nfp/nfp.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mscc/mscc_ocelot_common.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mellanox/mlxsw/mlxsw_core.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mellanox/mlx4/mlx4_en.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/mellanox/mlx4/mlx4_core.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/marvell/mvneta.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/ice/ice.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/fm10k/fm10k.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/iavf/iavf.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/i40e/i40e.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/ixgbevf/ixgbevf.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/ixgbe/ixgbe.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/igc/igc.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/intel/igb/igb.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/chelsio/cxgb3/cxgb3.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/cavium/thunder/nicvf.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/broadcom/bnxt/bnxt_en.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/broadcom/bnx2x/bnx2x.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/broadcom/cnic.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/broadcom/bnx2.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/net/ethernet/amazon/ena/ena.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/nvme/target/nvmet.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/cxgbi/cxgb3i/cxgb3i.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/cxgbi/libcxgbi.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/qedf/qedf.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/bnx2fc/bnx2fc.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/fcoe/fcoe.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/libfc/libfc.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/scsi_mod.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/device_handler/scsi_dh_alua.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/scsi/device_handler/scsi_dh_rdac.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/dma-buf/dmabuf_selftests.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/mfd/dln2.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/block/drbd/drbd.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/block/loop.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/block/brd.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/block/rnbd/rnbd-server.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/panfrost/panfrost.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/etnaviv/etnaviv.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/qxl/qxl.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/ttm/ttm.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/drm.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/gpu/drm/drm_kms_helper.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/dma/plx_dma.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/dma/sh/shdma.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [drivers/char/ipmi/ipmi_msghandler.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/objagg.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/crc-t10dif.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/test_lockup.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/test_meminit.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/test_xarray.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/test_rhashtable.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [lib/math/prime_numbers.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [block/bfq.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [crypto/af_alg.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/erofs/erofs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/ceph/ceph.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/gfs2/gfs2.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/btrfs/btrfs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/afs/kafs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/xfs/xfs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/fuse/fuse.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/autofs/autofs4.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/cifs/cifs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/lockd/lockd.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfsd/nfsd.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfs/flexfilelayout/nfs_layout_flexfiles.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfs/blocklayout/blocklayoutdriver.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfs/nfsv4.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfs/nfs.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/jbd2/jbd2.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/ext4/ext4.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/fscache/fscache.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [fs/nfs_common/grace.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [kernel/rcu/refscale.ko] undefined!
+> >> ERROR: modpost: "rcu_read_unlock_strict" [kernel/rcu/rcuscale.ko] undefined!
+> ERROR: modpost: "rcu_read_unlock_strict" [kernel/rcu/rcutorture.ko] undefined!
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
