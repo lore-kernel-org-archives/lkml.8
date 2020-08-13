@@ -2,112 +2,94 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB20C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3A8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7825920768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D3A20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fEl/Jq/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgHMFKD (ORCPT
+        id S1726081AbgHMFLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:10:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29664 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgHMFKC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:10:02 -0400
-IronPort-SDR: xsCJkt/aB6L36/8H9GSRVmhT+64sAFXOlGYoPds4G34A4lTVhFEHE9O0OWmWcifr7tf+8jIauT
- vaI0mTrS1Y6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="153382616"
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="153382616"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 22:10:01 -0700
-IronPort-SDR: piAiiNtZ08YVQ9/zVmG4fdTu9qJTNw2tgwLmbSDi1eOQtOuVESiP2QBqNveViVCSGTbwrH3fac
- ZxXCbulBF+Kg==
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="470088631"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 22:09:59 -0700
-Subject: Re: [PATCH] perf parse-events: Set exclude_guest for user-space
- counting
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        like.xu@linux.intel.com
-References: <20200812065953.22143-1-yao.jin@linux.intel.com>
- <20200812121504.GE13995@kernel.org> <20200812125526.GM13995@kernel.org>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <c4d7bdd9-5869-d2ff-16be-548fbc8da6a5@linux.intel.com>
-Date:   Thu, 13 Aug 2020 13:09:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 13 Aug 2020 01:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgHMFLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:11:00 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3A5C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:11:00 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id i92so3778554pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xPZ6SG/zYPhOh4F1hrC3AfjzUbgPD+IZVvEp6h306j8=;
+        b=fEl/Jq/IgbTmIkW1eFw7j5PmpSOA8UBiPp5t3w904WZTHkDJEq/ZZ70kMgDTGl8a0r
+         SwlJ3GCcXfKEBKDCanVitTiE3DrwVmGy6PQpol/PJAUKrkGRDX6+8JyqzOZmQJJwH9gG
+         YCcys+vF7D+sRiPBBbE619Go7a0cY/tLQYkf8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xPZ6SG/zYPhOh4F1hrC3AfjzUbgPD+IZVvEp6h306j8=;
+        b=AB5bBEVmp9tGuLTwCEXInI6BQ7ukACq6ZwKVbrD5onoLwcSt7Nw5QQE9f+J7LXo0T4
+         KZfDtbjs4H4om/TEB5SY0KZuPIcZx557gzhLtGkE2jgygT8RlqFqEtULSapJ8IzAzPSM
+         JvIjjHvO84cRNPmQe4hxko0NSiOvSvhLJf3vE3C5ZKftV246OafxWYF9fh8BYr7dUK2J
+         UIoCuDC/iFkYyAEfO6c4Ad3/tc1YOLOu/ncminT+bEWpfplYt7jx/60ClfEtplXUkYF7
+         2oqDQpnNJZ5x6y7UzmuFgnxTRxW+/HU2G0p7DErP+r7g6gRmfzQp+Jq5fwU7Ith4LisT
+         YM4A==
+X-Gm-Message-State: AOAM5310cWz8C7zjj4fKpxDz91XrgUIUGhzx3e7fPWwHfBMOVSJnXBbF
+        Cwj4gsNIHwniGQMvkL363ME1DA==
+X-Google-Smtp-Source: ABdhPJyJ84Z1Cr6z9ApwODz+2nouy9c+f2cgePFP3YjXMx7fv4qXRXtOiQNR2ld5kJT4Ti8CYyBWZA==
+X-Received: by 2002:a17:902:b193:: with SMTP id s19mr2445834plr.72.1597295459232;
+        Wed, 12 Aug 2020 22:10:59 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
+        by smtp.gmail.com with ESMTPSA id fh14sm3720153pjb.38.2020.08.12.22.10.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 22:10:58 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, drinkcat@chromium.org,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v3 0/2] power: supply: sbs-battery: fix presence check
+Date:   Thu, 13 Aug 2020 13:10:06 +0800
+Message-Id: <20200813051008.3461515-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+In-Reply-To: <0200811065307.2094930-1-ikjn@chromium.org>
+References: <0200811065307.2094930-1-ikjn@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200812125526.GM13995@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+When gpio detection is not supplied, presence state transitions depend
+on every smbus transfer result from get_property(). This patch tries to
+check battery presence again with well supported command before
+state transition.
 
-On 8/12/2020 8:55 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 12, 2020 at 09:15:04AM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Wed, Aug 12, 2020 at 02:59:53PM +0800, Jin Yao escreveu:
->>> Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
->>>
->>> But it doesn't make sense that we request for user-space counting
->>> but we also get the guest report.
->>>
->>> To keep perf semantics consistent and clear, this patch sets
->>> exclude_guest for user-space counting.
->>
->> Applied, and also added this, that you should consider doing in the
->> future (modulo the "Committer testing:" header :) ):
->>
->> Committer testing:
->>
->> Before:
->>
->>    # perf record -e cycles:u
->>    ^C[ perf record: Woken up 1 times to write data ]
->>    [ perf record: Captured and wrote 1.231 MB perf.data (91 samples) ]
->>    #
->>    # perf evlist -v
->>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
->>    <SNIP>
->>    #
->>
->> After:
->>
->>    # perf record -e cycles:u
->>    ^C[ perf record: Woken up 1 times to write data ]
->>    [ perf record: Captured and wrote 1.263 MB perf.data (403 samples) ]
->>    #
->>    # perf evlist -v
->>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1, exclude_guest: 1
->>    #
-> 
-> Also, please run 'perf test', as this will require changes to some
-> expected perf_event_attr setups:
-> 
-> [root@quaco ~]# perf test "event definition"
->   6: Parse event definition strings                        : FAILED!
-> [root@quaco ~]#
-> 
-> - Arnaldo
-> 
+Changes:
+v3: check return value of get_presence_and_health()
+v2: combine get_presence_and_health functions to reuse
 
-Sorry for the perf test failure! I will post v2 to fix this issue.
+Ikjoon Jang (2):
+  power: supply: sbs-battery: combine get_presence_and_health
+  power: supply: sbs-battery: don't assume i2c errors as battery
+    disconnect
 
-Thanks
-Jin Yao
+ drivers/power/supply/sbs-battery.c | 98 ++++++++++++++++--------------
+ 1 file changed, 53 insertions(+), 45 deletions(-)
+
+-- 
+2.28.0.236.gb10cc79966-goog
+
