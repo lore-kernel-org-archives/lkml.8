@@ -2,203 +2,201 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3426FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1800AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07CD52078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83A720656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBn3svWx"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DCEMUVX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHMGCf (ORCPT
+        id S1726596AbgHMGDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 02:02:35 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26929 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725954AbgHMGCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 02:02:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597298553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vY8vnehO56XjlQrEEeygaT/MkeY3wULexFdzVU37Xfc=;
-        b=SBn3svWxWbOCBrlMr13GaI7flx1Z0hcyrjttXFSWjvnzWMXrS6HMtNYGNFNt5sC/y318jV
-        DTCquGERuMUZ2UBBI3YWRI1iWGBj2UxBmndnPyo3mEemTLKGyDWk7DYuTSSGkiwM2iJQo/
-        3SGG+0mWn/Wk8uJD+R2zc/ZW+QZGUUo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-iMb9FvaNOg2PnYpJQ4BiPA-1; Thu, 13 Aug 2020 02:02:31 -0400
-X-MC-Unique: iMb9FvaNOg2PnYpJQ4BiPA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3A591005504;
-        Thu, 13 Aug 2020 06:02:27 +0000 (UTC)
-Received: from [10.72.13.44] (ovpn-13-44.pek2.redhat.com [10.72.13.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A26415D9E8;
-        Thu, 13 Aug 2020 06:02:00 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Thu, 13 Aug 2020 02:03:18 -0400
+Received: from mail-eopbgr30089.outbound.protection.outlook.com ([40.107.3.89]:8773
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726249AbgHMGDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 02:03:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FCa0yOI3nhQ/9tnHtWQOmK3MS0XMOb4mz3utBOrqZT8D4hGcR1a6z9Lb8bGvf8ypXf9d7RhCJu+DpVIGSxpzUPuWoFJ0kadBQEWPSNWekNj1Smb6HnNcnO1/XirwtUFIm0JaLsNTn9v6a4xCQnaDFWEN/r69oWmPGUsCdntGc3+qGGLMF0Nv0IUhbbu5NuaSHwkwjx42iBeAuIlWohoIJmmW7wpoR+xxEZTBs7nznXF2AjZ8JnonlysWcW7vtOQQ2r4X7XBrjVfolwShiadFhs7E1NBwNpYwYl4WcMgSv7SX/lbwlJnBMQEoG1HBpx1Z5syyr2CQxVyAYI9TNTBthQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toDH1hd+puHF7bRmC91/5vX5y2gg7cCwI3Tq7tli1po=;
+ b=SHgm5fz3hyKoD4+UsO3OHvrIRFSZfriPoRxOvb1v3tk2tjODtHRW/yAdPnalmVjEqjBElyFYaml40xISYmT2qfoOvQFrimq+OLgfQE2srr0zOF7B943fz6MKxbM5Ch0QvG1ZXp4Nm5JnGBMa7BUdaeLFASjuhPOtQym5ZMWnoIT+GY9RywObjBRoOf2IMFYyW74I2DGVzToor2l+LPTJT7xn8SOaHWcWM2nJDKAw396VDV788Z/fg/4v144XLKVh2y7P+4bEQgqDGEH5ZRU6ZjhZmbz9t/fF+2wC1F5zPxikdPLSVwF/x/etvCUS+QJljHGE96sIpxpvfKqeerJ7Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=toDH1hd+puHF7bRmC91/5vX5y2gg7cCwI3Tq7tli1po=;
+ b=DCEMUVX/8fYthcIM2LQ3SflydsKxlfRYFIbcDuEd21XL40D+bSvd136UdG3zgcWGPVDGYpxOc1PXetLExod6QwlTfcNnN6pIfbppLAGmHwVGEcGmUoJVDh8CCmWdpBsaFO/3g8uwAK5/hkV79NHwhrxVAni3WQoJ7oDBEBRv6uA=
+Received: from VI1PR0402MB3824.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::18) by VI1PR0402MB3598.eurprd04.prod.outlook.com
+ (2603:10a6:803:a::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.24; Thu, 13 Aug
+ 2020 06:03:13 +0000
+Received: from VI1PR0402MB3824.eurprd04.prod.outlook.com
+ ([fe80::5045:2f5a:2c65:c38c]) by VI1PR0402MB3824.eurprd04.prod.outlook.com
+ ([fe80::5045:2f5a:2c65:c38c%5]) with mapi id 15.20.3283.015; Thu, 13 Aug 2020
+ 06:03:13 +0000
+From:   Jason Liu <jason.hui.liu@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Sudeep Holla <sudeep.holla@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
- <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
- <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
- <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
- <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
-Date:   Thu, 13 Aug 2020 14:01:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
+ already masked
+Thread-Topic: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
+ already masked
+Thread-Index: AQHWaj3ZMAA/XWH8SkmG3qCWNnZEoaknx/iAgAALMQCAAQxYoIAATcYAgAGqTLCAAC1PgIAKk02g
+Date:   Thu, 13 Aug 2020 06:03:13 +0000
+Message-ID: <VI1PR0402MB3824B4D3BF37335FE48A12F1AE430@VI1PR0402MB3824.eurprd04.prod.outlook.com>
+References: <20200804085657.10776-1-jason.hui.liu@nxp.com>
+ <b4444c737f9d6fd8fd99dbb809d35a0f@kernel.org> <20200804113850.GB15199@bogus>
+ <VI1PR0402MB38243230C51FDB1C3F490853AE4B0@VI1PR0402MB3824.eurprd04.prod.outlook.com>
+ <3c63ae0cc3a7b5bad5d4638a9870340e@kernel.org>
+ <VI1PR0402MB38249815EA37338953E8AAC1AE480@VI1PR0402MB3824.eurprd04.prod.outlook.com>
+ <1e4496c263e486be3438f2797630164a@kernel.org>
+In-Reply-To: <1e4496c263e486be3438f2797630164a@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f928ba6e-84af-46b4-f232-08d83f4e9097
+x-ms-traffictypediagnostic: VI1PR0402MB3598:
+x-microsoft-antispam-prvs: <VI1PR0402MB3598D03E800E82EDA31CC683AE430@VI1PR0402MB3598.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1265;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FvHbKXrEVh76iZgq6wCnZA9Bmt9jAb9SH28vifvpZei7ok2Do4dbgS9xbfnlf9V/3Z4eFZRMYJO/LhR8iXffS2vM1+/K2fSxyXOadSORYQQrIMhkwFKhsrlfd/TAcDN8/x7vL295s5B0lXMREAZjLU0cK4/vkT0Yx3r0C7nm4zG1oGdehTcSHQToxcoGX5qpclDmzpAlpiiciOm81KVc1H99IQ1eyGOaJ78ttB05wXYy9/zesZGS1tuJhkTyOCPo8kr5hExYSZJzJlpWrJPiULSgG+DxgH9R+pXUlD6qONpDMI65gmaih99U2L6uSCbgYUkiBe0DDAr8bXgBkuSoBQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3824.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(5660300002)(4326008)(86362001)(52536014)(8676002)(71200400001)(26005)(6916009)(6506007)(53546011)(83380400001)(186003)(64756008)(66476007)(66556008)(66446008)(7696005)(33656002)(2906002)(66946007)(9686003)(316002)(478600001)(55016002)(54906003)(76116006)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: PzgmTkjKxlNqE2WXRY1inpdZecyzf96wwHniDlWVaxbLVfSRil0BFV9hpJQrAfTj3jvJPqywgtsEdCpKdtAPJTRBExskiegXD+YJCplZgUOEVCozzokcPn0W1sg7YepoxwhEMfu9eSqVCxWfr7CSDUCWtyPeEvlwDb2s05LFOX523hoMFGj5ekMuJ8LhaWjL5ggcnLnK5Un8Npyy/7ANKytzzEmJpLh2pRLk0b/G9Q+eXN0OsHemr7BLZMjAOOEjL6IVQdkGTvjjZTYVhOaMjs4qJwl4+f82Yp4+yyTH9JYlw+J0HGTBddWncRTEg4kj0c+Gdr2aS/5u0mdp2aFx+AGSioeewezxA1PptCG//QdQnqgFb64jzOb7r+lmxwVFzPMTcBn7ll+g9xv7jaGJE2wB1dxS7BQ1qfkWf8akHwlH4gR7bq6IpEIkZcpxluzZOL2BIVOdXfe55NIYTlwfCQY37xfmNVgarHT6/O1gC/d1CEaF5AEBmLyAtOSfad+ua1/R1BHxCaCDq3DBntoetsWJ+Ji8FOOD2tg/7Lwlnhg+9txw8VbxQ8FfVi4p5MiKMs9CNrDet8Kx2GP2qbI2CFs25giAi2K3pbR9HyGlurGM8bhOdq+rq5cM7oHnxdL6x68bU6K2peVchqaJZdgbfw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3824.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f928ba6e-84af-46b4-f232-08d83f4e9097
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 06:03:13.7671
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QBwELqBt7Oarl9XgtALNqrQ46Iyc2Q4rELL2QGEGUJwow35Dd/L07Ne2K3SPIkoMz48WUvYv87maPSjRmTB9fQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3598
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/8/13 下午1:26, Tian, Kevin wrote:
->> From: Jason Wang <jasowang@redhat.com>
->> Sent: Thursday, August 13, 2020 12:34 PM
->>
->>
->> On 2020/8/12 下午12:05, Tian, Kevin wrote:
->>>> The problem is that if we tie all controls via VFIO uAPI, the other
->>>> subsystem like vDPA is likely to duplicate them. I wonder if there is a
->>>> way to decouple the vSVA out of VFIO uAPI?
->>> vSVA is a per-device (either pdev or mdev) feature thus naturally should
->>> be managed by its device driver (VFIO or vDPA). From this angle some
->>> duplication is inevitable given VFIO and vDPA are orthogonal passthrough
->>> frameworks. Within the kernel the majority of vSVA handling is done by
->>> IOMMU and IOASID modules thus most logic are shared.
->>
->> So why not introduce vSVA uAPI at IOMMU or IOASID layer?
-> One may ask a similar question why IOMMU doesn't expose map/unmap
-> as uAPI...
 
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: Thursday, August 6, 2020 8:26 PM
+> To: Jason Liu <jason.hui.liu@nxp.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>; catalin.marinas@arm.com;
+> will@kernel.org; sashal@kernel.org; linux-kernel@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask i=
+f it
+> already masked
+>=20
+> On 2020-08-06 11:05, Jason Liu wrote:
+> >> -----Original Message-----
+> >> From: Marc Zyngier <maz@kernel.org>
+>=20
+> [...]
+>=20
+> >> > No, this patch is not papering over a much deeper issue in the drive=
+r.
+> >> > This is just to make things better for the ARM64 kexec.
+> >>
+> >> Yes, I'm sure it is... However:
+> >>
+> >> request_irq()
+> >> <goes into suspend, panic somewhere after having turned the irqchip
+> >> clock off> if (chip->irq_mask && !irqd_irq_masked(&desc->irq_data))
+> >>      <explodes, as the interrupt isn't masked>
+> >>
+> >> This is because the PM in the irqsteer driver is completely busted:
+> >> request_irq() should get a reference on the driver to prevent it from
+> >> being suspended. Since you don't implement it correctly, this doesn't
+> >> happen and your "improvement" doesn't help at all.
+> >
+> > The request_irq will get a reference to prevent the irqchip from being
+> > suspended due to it call irq_chip_pm_get(). I am pretty sure we have
+> > implemented correctly and that is also the common Linux code.
+>=20
+> Then it seems you cannot read your own driver. At no point do you set the
+> parent_device that would give you a fighting chance to get the device clo=
+cked
+> and powered on. How does it work? Magic?
+>=20
+> > In order to save power and let the irqchip enter into runtime SUSPEND
+> > mode, the driver will call free_irq() When it was not used(idle). Then
+> > free_irq() will decrease the reference and let the irqchip enter
+> > suspend state.
+>=20
+> The reference count on *what*? There is nothing to take a reference on. S=
+o yes,
+> you understand how the core kernel works. But you don't seem to notice th=
+at
+> there is no link between the irq and the device that implements the contr=
+oller.
 
-I think this is probably a good idea as well. If there's anything missed 
-in the infrastructure, we can invent. Besides vhost-vDPA, there are 
-other subsystems that relaying their uAPI to IOMMU API. Duplicating 
-uAPIs is usually a hint of the codes duplication. Simple map/unmap could 
-be easy but vSVA uAPI is much more complicated.
+See the code, it will call irq_chip_pm_put(&desc->irq_data)
 
+/*
+ * Internal function to unregister an irqaction - used to free
+ * regular and special interrupts that are part of the architecture.
+ */
+static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
+{
+..
+        irq_chip_pm_put(&desc->irq_data);
+        module_put(desc->owner);
+        kfree(action->secondary);
+        return action;
+}
 
->
->>
->>>>>     If an userspace DMA interface can be easily
->>>>> adapted to be a passthrough one, it might be the choice.
->>>> It's not that easy even for VFIO which requires a lot of new uAPIs and
->>>> infrastructures(e.g mdev) to be invented.
->>>>
->>>>
->>>>> But for idxd,
->>>>> we see mdev a much better fit here, given the big difference between
->>>>> what userspace DMA requires and what guest driver requires in this hw.
->>>> A weak point for mdev is that it can't serve kernel subsystem other than
->>>> VFIO. In this case, you need some other infrastructures (like [1]) to do
->>>> this.
->>> mdev is not exclusive from kernel usages. It's perfectly fine for a driver
->>> to reserve some work queues for host usages, while wrapping others
->>> into mdevs.
->>
->> I meant you may want slices to be an independent device from the kernel
->> point of view:
->>
->> E.g for ethernet devices, you may want 10K mdevs to be passed to guest.
->>
->> Similarly, you may want 10K net devices which is connected to the kernel
->> networking subsystems.
->>
->> In this case it's not simply reserving queues but you need some other
->> type of device abstraction. There could be some kind of duplication
->> between this and mdev.
->>
-> yes, some abstraction required but isn't it what the driver should
-> care about instead of mdev framework itself?
+>=20
+> > So, when the irqchip entered suspend, which means there is no user for
+> > the irqchip and all the irqs were DISABLED + MASKED.
+> > Due to the runtimePM support for the irqchip, when kexec runs, it will
+> > sometimes meet the situation that the irqchip is suspend due to no
+> > users for it. So from either the performance(time cost) or coding
+> > logic, the machine_kexec_mask_interrupts() should not do double mask
+> > for the irqs which already masked.
+>=20
+> I strongly suggest you start by fixing the damn driver first.
 
+Our driver does not have issue at all. What to fix?
 
-With mdev you present a "PCI" device, but what's kind of device it tries 
-to present to kernel? If it's still PCI, there's duplication with mdev, 
-if it's something new, maybe we can switch to that API.
+>=20
+> In the meantime, NAK to this patch.
 
+Anyway, it seems don't really understand this issue and you just simply rej=
+ect one reasonable fix. Sounds not good at all.
 
-> If the driver reports
-> the same set of resource to both mdev and networking, it needs to
-> make sure when the resource is claimed in one interface then it
-> should be marked in-use in another. e.g. each mdev includes a
-> available_intances attribute. the driver could report 10k available
-> instances initially and then update it to 5K when another 5K is used
-> for net devices later.
-
-
-Right but this probably means you need another management layer under mdev.
-
-
->
-> Mdev definitely has its usage limitations. Some may be improved
-> in the future, some may not. But those are distracting from the
-> original purpose of this thread (mdev vs. userspace DMA) and better
-> be discussed in other places e.g. LPC...
-
-
-Ok.
-
-Thanks
-
-
->
-> Thanks
-> Kevin
-
+>=20
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
