@@ -2,287 +2,130 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7756B206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93F4206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Im2DwbtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHMDxQ (ORCPT
+        id S1726648AbgHMDzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:53:16 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:37965 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726334AbgHMDxQ (ORCPT
+        Wed, 12 Aug 2020 23:55:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38446 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726334AbgHMDzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:53:16 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5c8daw_1597290787;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5c8daw_1597290787)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Aug 2020 11:53:08 +0800
-Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in
- compaction
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
- <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com>
- <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
- <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
- <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
- <d9818e06-95f1-9f21-05c0-98f29ea96d89@linux.alibaba.com>
- <CAKgT0Ues0ShkSbb1XtA7z7EYB8NCPgLGq8zZUjrXK_jcWn8mDQ@mail.gmail.com>
- <9581db48-cef3-788a-7f5a-8548fee56c13@linux.alibaba.com>
- <CAKgT0UeuuQqpYRXXAs_YurWyDOtqx4y3sx7e4Xi2TE6s_7++Fg@mail.gmail.com>
- <3828d045-17e4-16aa-f0e6-d5dda7ad6b1b@linux.alibaba.com>
- <CAKgT0Ud6ZQ4ZTm1cAUKCdb8FMu0fk9vXgf-bnmb0aY5ndDHwyA@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <3d224c35-a53d-3daa-4c76-026d1f2b2656@linux.alibaba.com>
-Date:   Thu, 13 Aug 2020 11:52:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 12 Aug 2020 23:55:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597290931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tQVpSBd8H4mxwa7+/E4VYo7bjaBiT+FzyTgSS58XOy4=;
+        b=Im2DwbtFzyfMe5bKGxHxJHOQqK39nergYst+OJJVmwT+ONkdiMhzE53BBFsgv6+57Wvx2f
+        /YXNWzJTSTLvyBhDqeLzfHlxjOTWB6OC8zBZNX00p9K/5iioz62uCcUo5fh8i/4oK+Y79A
+        tdBJtfi7sENtaqB5Y0r2reiLmYsmfl0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-105-cGpmWOrCOKuNoqayZYf34Q-1; Wed, 12 Aug 2020 23:55:29 -0400
+X-MC-Unique: cGpmWOrCOKuNoqayZYf34Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA0BE79EC0;
+        Thu, 13 Aug 2020 03:55:27 +0000 (UTC)
+Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4697B100AE52;
+        Thu, 13 Aug 2020 03:55:24 +0000 (UTC)
+From:   Jarod Wilson <jarod@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH net] bonding: show saner speed for broadcast mode
+Date:   Wed, 12 Aug 2020 23:55:09 -0400
+Message-Id: <20200813035509.739-1-jarod@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ud6ZQ4ZTm1cAUKCdb8FMu0fk9vXgf-bnmb0aY5ndDHwyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+all interfaces, so the "speed" of the bond isn't really the aggregate of
+all interfaces, but rather, the speed of the lowest active interface.
 
+Also, the type of the speed field is u32, not unsigned long, so adjust
+that accordingly, as required to make min() function here without
+complaining about mismatching types.
 
-在 2020/8/13 上午10:17, Alexander Duyck 写道:
->> zone lock is probability better. you can try and test.
-> So I spent a good chunk of today looking the code over and what I
-> realized is that we probably don't even really need to have this code
-> protected by the zone lock since the LRU bit in the pageblock should
-> do most of the work for us. In addition we can get rid of the test
-> portion of this and just make it a set only operation if I am not
-> mistaken.
-> 
->>>>> the LRU flag is cleared then you are creating a situation where
->>>>> multiple processes will be stomping all over each other as you can
->>>>> have each thread essentially take a page via the LRU flag, but only
->>>>> one thread will process a page and it could skip over all other pages
->>>>> that preemptively had their LRU flag cleared.
->>>> It increase a bit crowd here, but lru_lock do reduce some them, and skip_bit
->>>> could stop each other in a array check(bitmap). So compare to whole node
->>>> lru_lock, the net profit is clear in patch 17.
->>> My concern is that what you can end up with is multiple threads all
->>> working over the same pageblock for isolation. With the old code the
->>> LRU lock was used to make certain that test_and_set_skip was being
->>> synchronized on the first page in the pageblock so you would only have
->>> one thread going through and working a single pageblock. However after
->>> your changes it doesn't seem like the test_and_set_skip has that
->>> protection since only one thread will ever be able to successfully
->>> call it for the first page in the pageblock assuming that the LRU flag
->>> is set on the first page in the pageblock block.
->>>
->>>>> If you take a look at the test_and_set_skip the function only acts on
->>>>> the pageblock aligned PFN for a given range. WIth the changes you have
->>>>> in place now that would mean that only one thread would ever actually
->>>>> call this function anyway since the first PFN would take the LRU flag
->>>>> so no other thread could follow through and test or set the bit as
->>>> Is this good for only one process could do test_and_set_skip? is that
->>>> the 'skip' meaning to be?
->>> So only one thread really getting to fully use test_and_set_skip is
->>> good, however the issue is that there is nothing to synchronize the
->>> testing from the other threads. As a result the other threads could
->>> have isolated other pages within the pageblock before the thread that
->>> is calling test_and_set_skip will get to complete the setting of the
->>> skip bit. This will result in isolation failures for the thread that
->>> set the skip bit which may be undesirable behavior.
->>>
->>> With the old code the threads were all synchronized on testing the
->>> first PFN in the pageblock while holding the LRU lock and that is what
->>> we lost. My concern is the cases where skip_on_failure == true are
->>> going to fail much more often now as the threads can easily interfere
->>> with each other.
->> I have a patch to fix this, which is on
->>         https://github.com/alexshi/linux.git lrunext
-> I don't think that patch helps to address anything. You are now
-> failing to set the bit in the case that something modifies the
-> pageblock flags while you are attempting to do so. I think it would be
-> better to just leave the cmpxchg loop as it is.
+Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-It do increae the case-lru-file-mmap-read in vm-scalibity about 3% performance.
-Yes, I am glad to see it can be make better.
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 5ad43aaf76e5..c853ca67058c 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4552,13 +4552,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return ret;
+ }
+ 
++static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
++{
++	if (speed == 0 || speed == SPEED_UNKNOWN)
++		speed = slave->speed;
++	else
++		speed = min(speed, slave->speed);
++
++	return speed;
++}
++
+ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 					   struct ethtool_link_ksettings *cmd)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	unsigned long speed = 0;
+ 	struct list_head *iter;
+ 	struct slave *slave;
++	u32 speed = 0;
+ 
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
+@@ -4570,8 +4580,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 	 */
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		if (bond_slave_can_tx(slave)) {
+-			if (slave->speed != SPEED_UNKNOWN)
+-				speed += slave->speed;
++			if (slave->speed != SPEED_UNKNOWN) {
++				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
++					speed = bond_mode_bcast_speed(slave,
++								      speed);
++				else
++					speed += slave->speed;
++			}
+ 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
+ 			    slave->duplex != DUPLEX_UNKNOWN)
+ 				cmd->base.duplex = slave->duplex;
+-- 
+2.20.1
 
-
-> 
->>>>> well. The expectation before was that all threads would encounter this
->>>>> test and either proceed after setting the bit for the first PFN or
->>>>> abort after testing the first PFN. With you changes only the first
->>>>> thread actually runs this test and then it and the others will likely
->>>>> encounter multiple failures as they are all clearing LRU bits
->>>>> simultaneously and tripping each other up. That is why the skip bit
->>>>> must have a test and set done before you even get to the point of
->>>>> clearing the LRU flag.
->>>> It make the things warse in my machine, would you like to have a try by yourself?
->>> I plan to do that. I have already been working on a few things to
->>> clean up and optimize your patch set further. I will try to submit an
->>> RFC this evening so we can discuss.
->>>
->> Glad to see your new code soon. Would you like do it base on
->>                 https://github.com/alexshi/linux.git lrunext
-> I can rebase off of that tree. It may add another half hour or so. I
-> have barely had any time to test my code. When I enabled some of the
-> debugging features in the kernel related to using the vm-scalability
-> tests the boot time became incredibly slow so I may just make certain
-> I can boot and not mess the system up before submitting my patches as
-> an RFC. I can probably try testing them more tomorrow.
-> 
->>>>>>> The point I was getting at with the PageCompound check is that instead
->>>>>>> of needing the LRU lock you should be able to look at PageCompound as
->>>>>>> soon as you call get_page_unless_zero() and preempt the need to set
->>>>>>> the LRU bit again. Instead of trying to rely on the LRU lock to
->>>>>>> guarantee that the page hasn't been merged you could just rely on the
->>>>>>> fact that you are holding a reference to it so it isn't going to
->>>>>>> switch between being compound or order 0 since it cannot be freed. It
->>>>>>> spoils the idea I originally had of combining the logic for
->>>>>>> get_page_unless_zero and TestClearPageLRU into a single function, but
->>>>>>> the advantage is you aren't clearing the LRU flag unless you are
->>>>>>> actually going to pull the page from the LRU list.
->>>>>> Sorry, I still can not follow you here. Compound code part is unchanged
->>>>>> and follow the original logical. So would you like to pose a new code to
->>>>>> see if its works?
->>>>> No there are significant changes as you reordered all of the
->>>>> operations. Prior to your change the LRU bit was checked, but not
->>>>> cleared before testing for PageCompound. Now you are clearing it
->>>>> before you are testing if it is a compound page. So if compaction is
->>>>> running we will be seeing the pages in the LRU stay put, but the
->>>>> compound bit flickering off and on if the compound page is encountered
->>>>> with the wrong or NULL lruvec. What I was suggesting is that the
->>>> The lruvec could be wrong or NULL here, that is the base stone of whole
->>>> patchset.
->>> Sorry I had a typo in my comment as well as it is the LRU bit that
->>> will be flickering, not the compound. The goal here is to avoid
->>> clearing the LRU bit unless we are sure we are going to take the
->>> lruvec lock and pull the page from the list.
->>>
->>>>> PageCompound test probably doesn't need to be concerned with the lock
->>>>> after your changes. You could test it after you call
->>>>> get_page_unless_zero() and before you call
->>>>> __isolate_lru_page_prepare(). Instead of relying on the LRU lock to
->>>>> protect us from the page switching between compound and not we would
->>>>> be relying on the fact that we are holding a reference to the page so
->>>>> it should not be freed and transition between compound or not.
->>>>>
->>>> I have tried the patch as your suggested, it has no clear help on performance
->>>> on above vm-scaliblity case. Maybe it's due to we checked the same thing
->>>> before lock already.
->>>>
->>>> diff --git a/mm/compaction.c b/mm/compaction.c
->>>> index b99c96c4862d..cf2ac5148001 100644
->>>> --- a/mm/compaction.c
->>>> +++ b/mm/compaction.c
->>>> @@ -985,6 +985,16 @@ static bool too_many_isolated(pg_data_t *pgdat)
->>>>                 if (unlikely(!get_page_unless_zero(page)))
->>>>                         goto isolate_fail;
->>>>
->>>> +                       /*
->>>> +                        * Page become compound since the non-locked check,
->>>> +                        * and it's on LRU. It can only be a THP so the order
->>>> +                        * is safe to read and it's 0 for tail pages.
->>>> +                        */
->>>> +                       if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
->>>> +                               low_pfn += compound_nr(page) - 1;
->>>> +                               goto isolate_fail_put;
->>>> +                       }
->>>> +
->>>>                 if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
->>>>                         goto isolate_fail_put;
->>>>
->>>> @@ -1013,16 +1023,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
->>>>                                         goto isolate_abort;
->>>>                         }
->>>>
->>>> -                       /*
->>>> -                        * Page become compound since the non-locked check,
->>>> -                        * and it's on LRU. It can only be a THP so the order
->>>> -                        * is safe to read and it's 0 for tail pages.
->>>> -                        */
->>>> -                       if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
->>>> -                               low_pfn += compound_nr(page) - 1;
->>>> -                               SetPageLRU(page);
->>>> -                               goto isolate_fail_put;
->>>> -                       }
->>>>                 } else
->>>>                         rcu_read_unlock();
->>>>
->>> So actually there is more we could do than just this. Specifically a
->>> few lines below the rcu_read_lock there is yet another PageCompound
->>> check that sets low_pfn yet again. So in theory we could combine both
->>> of those and modify the code so you end up with something more like:
->>> @@ -968,6 +974,16 @@ isolate_migratepages_block(struct compact_control
->>> *cc, unsigned long low_pfn,
->>>                 if (unlikely(!get_page_unless_zero(page)))
->>>                         goto isolate_fail;
->>>
->>> +               if (PageCompound(page)) {
->>> +                       const unsigned int order = compound_order(page);
->>> +
->>> +                       if (likely(order < MAX_ORDER))
->>> +                               low_pfn += (1UL << order) - 1;
->>> +
->>> +                       if (unlikely(!cc->alloc_contig))
->>> +                               goto isolate_fail_put;
->>>
->> The current don't check this unless locked changed. But anyway check it
->> every page may have no performance impact.
-> Yes and no. The same code is also ran outside the lock and that is why
-> I suggested merging the two and creating this block of logic. It will
-> be clearer once I have done some initial smoke testing and submitted
-> my patch.
-> 
->> +               }
->>> +
->>>                 if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
->>>                         goto isolate_fail_put;
->>>
->>> Doing this you would be more likely to skip over the entire compound
->>> page in a single jump should you not be able to either take the LRU
->>> bit or encounter a busy page in __isolate_Lru_page_prepare. I had
->>> copied this bit from an earlier check and modified it as I was not
->>> sure I can guarantee that this is a THP since we haven't taken the LRU
->>> lock yet. However I believe the page cannot be split up while we are
->>> holding the extra reference so the PageCompound flag and order should
->>> not change until we call put_page.
->>>
->> It looks like the lock_page protect this instead of get_page that just works
->> after split func called.
-> So I thought that the call to page_ref_freeze that is used in
-> functions like split_huge_page_to_list is meant to address this case.
-> What it is essentially doing is setting the reference count to zero if
-> the count is at the expected value. So with the get_page_unless_zero
-> it would either fail because the value is already zero, or the
-> page_ref_freeze would fail because the count would be one higher than
-> the expected value. Either that or I am still missing another piece in
-> the understanding of this.
-
-Uh, the front xa_lock or anon_vma lock guard the -refcount, so long locking path...
-
-Thanks
-Alex
