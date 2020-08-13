@@ -2,346 +2,263 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9236AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273DB20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541AA207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SIJallBy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cE9ovcxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHMAL3 (ORCPT
+        id S1726632AbgHMAMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 20:11:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        Wed, 12 Aug 2020 20:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgHMAL2 (ORCPT
+        with ESMTP id S1726518AbgHMAMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 20:11:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6966C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g33so1903304pgb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
+        Wed, 12 Aug 2020 20:12:46 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC45C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:12:46 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t11so1842257plr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2ZSpDsjubOiBkkOQ9eS3CYhctg8r1GfBee84kS+qmng=;
-        b=SIJallBysGyfZ7n0GHovzdGj+ek1aOP7s/lvFc94+KQIWLuXIPQfT8slVouDNk1JGW
-         953UCzRfduzYNq+bGrNGmj4M3beqM7xm3hbus2/Bqi6WAxX4prmdOg6pg4X8abg2Fvy1
-         wlRhVrcilxzv2aTj00whhjAXbkgmuL5khZCQjnSfdstnIn/3MU3eveZloWlNxmFlgS7/
-         tIN9lKmNgRzFrYq/mNdGPlKS/acnePkgN2HEWPy2qISkcf3dUJhXKmwzNXuX6/pL6itb
-         U2lr07Tl5GSMh0uVYBpliQa6z7hENZRv/5ydmkTJ6niZD9zY6hKAd7Qs03Ot63kvNAqB
-         gJHw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rQ8RM01rFuZ8r/9BI4QTmJ2mrQfdhz3BxI3jO3ju76Q=;
+        b=cE9ovcxBiRGz0uXy2XKVJmWc7XIlmD45kR5rrmAxADG7T4zw7CkmABVyuazB0+QHRd
+         t9xqJoxRoO5wSiQE9v06cB4f2zMx3PUz2tZ/idxeuwk46j78tailuIybnOIJM8NenufU
+         1p6haO7msyzgULG05Ko2R6OSMVorHq5A+ntwDm6dBwr69H7Q4vv/GsALei+dt7k7mkKh
+         0B7mZgBhsQfTHtg4+t6bhnL7fqaYhFYwh5O2LasArHY4yurENVwCHknsmbe5Ni4nSWoU
+         5sygthBh4LfS+K7RmfSjftviv2dceJZllWrliH99Fi9JFhLM7H70ZP0vCQM4eu6614yx
+         3eMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2ZSpDsjubOiBkkOQ9eS3CYhctg8r1GfBee84kS+qmng=;
-        b=JbhTqW60384VJGBFscgxKmd9WYVDYdOdv2sk1XrON8sPfSigYHGuTGC9r7Vz0L3y6m
-         aDetr+FXs+7WPYcloW2o6e7HRSFVF0YzHl+mP1UGOOzurEolwmz4X8y8VjJa0/9tvtaB
-         szfOh8QPQL9Z05r/vcbKfG6PC8IL8EzmKYHh25Og8qb849maHKmmaQNwlJnY0S/JCBn/
-         r1Cp6iV01een/HKhkz0bOTIS84UzyHip5FZTFSTYYi0x+CV/VKjb9cGNTjYSMi1Q352P
-         qu1kmFS4/OoWhQt6PwQBAOjsZEZvLSUW0Gv+/znaDl7Ziv5euRwdJeLjVzmvtF/UzQou
-         +htQ==
-X-Gm-Message-State: AOAM531Mt9XJ/6WWR2BCiV1vCmwBVWKHDp34r+3fHViEQY51+YipxcxP
-        fTHpn40llqxJtkpMhvhlKaFVpg==
-X-Google-Smtp-Source: ABdhPJwcAhbH3HWpE9v4PGGbjXySJNWXJ7SlSSLlQYMmW/hrGQjYhOvimGNzwvtRAEXDr+ixOiAiNQ==
-X-Received: by 2002:aa7:84d4:: with SMTP id x20mr1842223pfn.96.1597277488005;
-        Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id ez7sm3139142pjb.10.2020.08.12.17.11.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Aug 2020 17:11:27 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 08:11:21 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     acme@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf test: Introduce script for Arm CoreSight testing
-Message-ID: <20200813001121.GB16667@leoy-ThinkPad-X240s>
-References: <20200806070213.7386-1-leo.yan@linaro.org>
- <cf57e876-3645-53f0-6333-ecb6ce3597d5@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rQ8RM01rFuZ8r/9BI4QTmJ2mrQfdhz3BxI3jO3ju76Q=;
+        b=ZdbSwJH0genVfDGwA95GxjRKN5Nsjpkci38Y8AjLBFB2OWp3Bpih2Fr/9V03xxIV/Q
+         8GULm0F+HgiDy7+ruNPrOLnxHNra5/p/WbsW1B0uDvt75Ur1cPjYJ7A3wcXzp4FNO+ql
+         +arCStBc8tk7Xbsi5JJvwQRQaBEz3Ir1ItGbNdcD0WdcD07O4C0B0Q3GHLYjrRFJ2fCc
+         E6oifm7tFAXsFzpZmbqsDkH4/s3us57fnhVqvAfK1yAAkkduXEXfXDNwpVyTB38uWjje
+         FKPailwJG0mxdGYjrFOgjejsJnHCiWhcjgSRpWgs2dLNCnE0JSEiqV4DX7lYkiYscqPs
+         ynFg==
+X-Gm-Message-State: AOAM530O41RwCnMSA0JHHYdNaukmTBt1IsU8JxAF9bpnrUtETIIBt+VG
+        FpSD4j0rphCECKnit6/8TbV3QdUW4LqOzJ0R0RXc5g==
+X-Google-Smtp-Source: ABdhPJwRZ0UP26/3ePd4nNlPoGIzSsfqNzNfqQ2ZOAr7dDUNAwmhf0ZlexWKbxA24bkpPFoA1CKn6IKF/RlfOyKUVdI=
+X-Received: by 2002:a17:90a:3ad1:: with SMTP id b75mr2316606pjc.25.1597277565702;
+ Wed, 12 Aug 2020 17:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf57e876-3645-53f0-6333-ecb6ce3597d5@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200527135329.1172644-1-arnd@arndb.de> <878serh1b9.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <878serh1b9.fsf@nanos.tec.linutronix.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 12 Aug 2020 17:12:34 -0700
+Message-ID: <CAKwvOdnOh3H3ga2qpTktywvcgfXW5QJaB7r4XMhigmDzLhDNeA@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Thu, Aug 6, 2020 at 3:11 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Arnd Bergmann <arnd@arndb.de> writes:
+> > When using the clang integrated assembler, we get a reference
+> > to __force_order that should normally get ignored in a few
+> > rare cases:
+> >
+> > ERROR: modpost: "__force_order" [drivers/cpufreq/powernow-k6.ko] undefined!
+> >
+> > Add a 'static' definition so any file in which this happens can
+> > have a local copy.
+>
+> That's a horrible hack.
 
-On Wed, Aug 12, 2020 at 05:59:55PM +0100, Suzuki Kuruppassery Poulose wrote:
-> Hi Leo,
-> 
-> On 08/06/2020 08:02 AM, Leo Yan wrote:
-> > We need a simple method to test Perf with Arm CoreSight drivers, this
-> > could be used for smoke testing when new patch is coming for perf or
-> > CoreSight drivers, and we also can use the test to confirm if the
-> > CoreSight has been enabled successfully on new platforms.
-> > 
-> > This patch introduces the shell script test_arm_coresight.sh which is
-> > under the 'pert test' framework.  This script provides three testing
-> > scenarios:
-> 
-> Thank you for this testcase. It is a very good tool for people
-> check their system for CoreSight driver functionality.
+Agreed.  And static means everyone gets their own copy, rather than
+sharing one memory address.  I guess no one actually writes to it, so
+it doesn't really matter, but __force_order just seems so strange to
+me.
 
-My pleasure!  This patch is except for ourselves testing, one main
-purpose is to integrate Perf testing with LKFT [1] for Arm related
-PMU events.
+> And the only reason why it does not trigger -Wunused-variable warnings
+> all over the place is because it's "referenced" in unused inline
+> functions and then optimized out along with the unused inlines.
+>
+> >   * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+> >   * due to an undefined symbol. Define it to make these ancient GCCs
+> >   work.
+>
+> Bah, we really should have moved straight to GCC5 instead of upping it
+> just to 4.9
+>
+> > + *
+> > + * Clang sometimes fails to kill the reference to the dummy variable, so
+> > + * provide an actual copy.
+>
+> Can that compiler be fixed instead?
 
-[1] https://lkft.linaro.org/tests/
+I don't think so. The logic in the compiler whether to emit an
+"address is significant" assembler directive is based on whether the
+variable is "used."  The "use" of `__force_order` is as output of all
+of these control register read/write functions' inline asm, even
+though the inline asm doesn't actually write to them.  We'd have to
+peek inside of the inline asm and build "use/def chains" for the
+inline asm, to see that you don't actually use the output variable.
+Best we can do is see it listed as an output to the inline asm
+statement.  And if you reference an `extern` variable, it should be no
+wonder that you can get undefined symbol linkage failures.
 
-> > Test scenario 1: traverse all possible paths between source and sink
-> > 
-> > For traversing possible paths, simply to say, the testing rationale
-> > is source oriented testing, it traverses every source (now only refers
-> > to ETM device) and test its all possible sinks.  To search the complete
-> > paths from one specific source to its sinks, this patch relies on the
-> > sysfs '/sys/bus/coresight/devices/devX/out:Y' for depth-first search
-> > (DFS) for iteration connected device nodes, if the output device is
-> > detected as one of ETR, ETF, or ETB types then it will test trace data
-> 
-> Please see my suggestion below, to use "enable_sink" as an indicator
-> for a sink device.
-> 
-> > recording and decoding for this PMU device.
-> > 
-> > The script runs three output testings for every trace data:
-> > - Test branch samples dumping with 'perf script' command;
-> > - Test branch samples reporting with 'perf report' command;
-> > - Use option '--itrace=i1000i' to insert synthesized instructions events
-> >    and the script will check if perf can output the percentage value
-> >    successfully based on the instruction samples.
-> > 
-> > Test scenario 2: CPU wide mode test
-> >  > For CPU wide mode testing, it passes option '-a' to perf tool to enable
-> > tracing on all CPUs, so it's hard to say which program will be traced.
-> 
-> Isn't this system-wide, when you trace all CPUs ? In CPU wide mode,
-> you specify a list of CPUs (-C ?). I always get confused here.
+I'd much rather remove all of __force_order.
 
-Agree, it is system-wide tracing.  Will fix.
+>
+> Aside of that is there a reason to make this 'static' thing wrapped in
+> #ifdeffery? A quick check with GCC8.3 just works. But maybe 4.9 gets
+> unhappy. Can't say due to: -ENOANCIENTCOMPILER :)
 
-> > But perf tool itself contributes much overload in this case, so it will
-> > parse trace data and check if process 'perf' can be detected or not.
-> > 
-> > diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-> > new file mode 100755
-> > index 000000000000..73b973bada26
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/test_arm_coresight.sh
-> > @@ -0,0 +1,172 @@
-> > +#!/bin/sh
-> > +# Check Arm CoreSight trace data recording and branch samples
-> > +
-> > +# Uses the 'perf record' to record trace data with Arm CoreSight sinks;
-> > +# then verify if there have any branch samples and instruction samples
-> > +# are generated by CoreSight with 'perf script' and 'perf report'
-> > +# commands.
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Leo Yan <leo.yan@linaro.org>, 2020
-> > +
-> > +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> > +file=$(mktemp /tmp/temporary_file.XXXXX)
-> > +
-> > +skip_if_no_cs_etm_event() {
-> > +	perf list | grep -q 'cs_etm//' && return 0
-> > +
-> > +	# cs_etm event doesn't exist
-> > +	return 2
-> > +}
-> > +
-> > +skip_if_no_cs_etm_event || exit 2
-> > +
-> > +record_touch_file() {
-> > +	echo "Recording trace (only user mode) with path: CPU$2 => $1"
-> > +	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
-> > +		-- taskset -c $2 touch $file
-> > +}
-> > +
-> > +perf_script_branch_samples() {
-> > +	echo "Looking at perf.data file for dumping branch samples:"
-> > +
-> > +	# Below is an example of the branch samples dumping:
-> > +	#   touch  6512          1         branches:u:      ffffb220824c strcmp+0xc (/lib/aarch64-linux-gnu/ld-2.27.so)
-> > +	#   touch  6512          1         branches:u:      ffffb22082e0 strcmp+0xa0 (/lib/aarch64-linux-gnu/ld-2.27.so)
-> > +	#   touch  6512          1         branches:u:      ffffb2208320 strcmp+0xe0 (/lib/aarch64-linux-gnu/ld-2.27.so)
-> > +	perf script -F,-time -i ${perfdata} | \
-> > +		egrep " +$1 +[0-9]+ .* +branches:([u|k]:)? +"
-> > +}
-> > +
-> > +perf_report_branch_samples() {
-> > +	echo "Looking at perf.data file for reporting branch samples:"
-> > +
-> > +	# Below is an example of the branch samples reporting:
-> > +	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
-> > +	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
-> > +	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
-> > +	perf report --stdio -i ${perfdata} | \
-> > +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 "
-> > +}
-> > +
-> > +perf_report_instruction_samples() {
-> > +	echo "Looking at perf.data file for instruction samples:"
-> > +
-> > +	# Below is an example of the instruction samples reporting:
-> > +	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
-> > +	#    5.80%  touch    libc-2.27.so   [.] getenv
-> > +	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
-> > +	perf report --itrace=i1000i --stdio -i ${perfdata} | \
-> > +		egrep " +[0-9]+\.[0-9]+% +$1"
-> > +}
-> > +
-> > +arm_cs_iterate_devices() {
-> > +	for dev in $1/connections/out\:*; do
-> > +
-> > +		# Skip testing if it's not a directory
-> > +		! [ -d $dev ] && continue;
-> > +
-> > +		# Read out its symbol link file name
-> > +		path=`readlink -f $dev`
-> > +
-> > +		# Extract device name from path, e.g.
-> > +		#   path = '/sys/devices/platform/20010000.etf/tmc_etf0'
-> > +		#     `> device_name = 'tmc_etf0'
-> > +		device_name=`echo $path | awk -F/ '{print $(NF)}'`
-> > +
-> > +		echo $device_name | egrep -q "etr|etb|etf"
-> 
-> Could we check for the existence of "enable_sink" instead, for detecting
-> if this is a sink device ? That way, we are covered for future cases of
-> a new sink type, and is more reliable.
+From the comment in arch/x86/boot/compressed/pgtable_64.c, there's a
+hint that maybe gcc < 5 and -pie (CONFIG_RANDOMIZE_BASE?) would fail
+due to undefined symbol, though I'm not sure which symbol the comment
+is referring to.  If it's __force_order, then removing outright likely
+fixes that issue.
 
-Good suggestion, will fix.
+Not sure about the comment in arch/x86/include/asm/special_insns.h
+either; smells fishy like a bug with a compiler from a long time ago.
+It looks like it was introduced in:
+commit d3ca901f94b32 ("x86: unify paravirt parts of system.h")
+Lore has this thread:
+https://lore.kernel.org/lkml/4755A809.4050305@qumranet.com/
+Patch 4: https://lore.kernel.org/lkml/11967844071346-git-send-email-gcosta@redhat.com/
+It seems like there was a discussion about %cr8, but no one asked
+"what's going on here with __force_order, is that right?"
+Latest GCC release on December 4 2007 would have been GCC 4.2.2 according to:
+https://gcc.gnu.org/releases.html
 
-> > +
-> > +		# Only test if the output device is ETR/ETB/ETF
-> > +		if [ $? -eq 0 ]; then
-> > +
-> > +			pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$device_name"
-> > +
-> > +			# Exit if PMU device node doesn't exist
-> > +			if ! [ -f $pmu_dev ]; then
-> > +				echo "PMU device $pmu_dev doesn't exist"
-> 
-> Misleading output. $pmu_dev is not a PMU device. Instead, it is one of
-> the supported sinks by the PMU.
+Quick boot test of the below works for me, though I should probably
+test hosting a virtualized guest since d3ca901f94b32 refers to
+paravirt.  Thoughts?
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -5,15 +5,6 @@
+ #include "pgtable.h"
+ #include "../string.h"
 
-Will fix.
+-/*
+- * __force_order is used by special_insns.h asm code to force instruction
+- * serialization.
+- *
+- * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+- * due to an undefined symbol. Define it to make these ancient GCCs work.
+- */
+-unsigned long __force_order;
+-
+ #define BIOS_START_MIN         0x20000U        /* 128K, less than
+this is insane */
+ #define BIOS_START_MAX         0x9f000U        /* 640K, absolute maximum */
 
-> > +				exit 1
-> > +			fi
-> > +
-> > +			record_touch_file $device_name $2 &&
-> > +				perf_script_branch_samples touch &&
-> > +				perf_report_branch_samples touch &&
-> > +				perf_report_instruction_samples touch
-> > +
-> > +			err=$?
-> > +
-> > +			# Exit when find failure
-> > +			[ $err != 0 ] && exit $err
-> > +
-> > +			rm -f ${perfdata}
-> > +			rm -f ${file}
-> > +		fi
-> > +
-> > +		arm_cs_iterate_devices $dev $2
-> > +	done
-> > +}
-> > +
-> > +arm_cs_etm_traverse_path_test() {
-> > +	# Iterate for every ETM device
-> > +	for dev in /sys/bus/coresight/devices/etm*; do
-> > +
-> > +		# Find the ETM device belonging to which CPU
-> > +		cpu=`cat $dev/cpu`
-> > +
-> > +		echo $dev
-> > +		echo $cpu
-> > +
-> > +		# Use depth-first search (DFS) to iterate outputs
-> > +		arm_cs_iterate_devices $dev $cpu
-> > +	done
-> > +}
-> > +
-> > +arm_cs_etm_cpu_wide_test() {
-> > +	echo "Recording trace with CPU wide mode"
-> > +	perf record -o ${perfdata} -e cs_etm// -a -- ls
-> > +
-> > +	perf_script_branch_samples perf &&
-> > +	perf_report_branch_samples perf &&
-> > +	perf_report_instruction_samples perf
-> > +
-> > +	err=$?
-> > +
-> > +	# Exit when find failure
-> > +	[ $err != 0 ] && exit $err
-> > +
-> > +	rm -f ${perfdata}
-> > +	rm -f ${file}
-> > +}
-> > +
-> > +arm_cs_etm_snapshot_test() {
-> > +	echo "Recording trace with snapshot mode"
-> > +	perf record -o ${perfdata} -e cs_etm// -S --per-thread \
-> > +		-- dd if=/dev/zero of=/dev/null &
-> 
-> As far as I understand, --per-thread option is not needed anymore
-> for normal tracing (irrespective of whether your application is
-> multi-threaded or not)
+diff --git a/arch/x86/include/asm/special_insns.h
+b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..d2e0d53b0f69 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -10,46 +10,37 @@
+ #include <linux/irqflags.h>
+ #include <linux/jump_label.h>
 
-I noted before you had some discussion with Mathieu for AUX buffer :)
-will remove --per-thread option.
+-/*
+- * Volatile isn't enough to prevent the compiler from reordering the
+- * read/write functions for the control registers and messing everything up.
+- * A memory clobber would solve the problem, but would prevent reordering of
+- * all loads stores around it, which can hurt performance. Solution is to
+- * use a variable and mimic reads and writes to it to enforce serialization
+- */
+-extern unsigned long __force_order;
+-
+ void native_write_cr0(unsigned long val);
 
-> > +	PERFPID=$!
-> > +
-> > +	# Wait for perf program
-> > +	sleep 1
-> > +
-> > +	# Send signal to snapshot trace data
-> > +	kill -USR2 $PERFPID
-> > +
-> > +	# Stop perf program
-> > +	kill $PERFPID
-> > +	wait $PERFPID
-> > +
-> > +	perf_script_branch_samples dd &&
-> > +	perf_report_branch_samples dd &&
-> > +	perf_report_instruction_samples dd
-> > +
-> > +	err=$?
-> > +
-> > +	# Exit when find failure
-> > +	[ $err != 0 ] && exit $err
-> > +
-> > +	rm -f ${perfdata}
-> > +	rm -f ${file}
-> > +}
-> > +
-> > +arm_cs_etm_traverse_path_test
-> > +arm_cs_etm_cpu_wide_test
-> > +arm_cs_etm_snapshot_test
-> > +exit 0
-> > 
-> 
-> 
-> Rest looks OK to me.
+ static inline unsigned long native_read_cr0(void)
+ {
+        unsigned long val;
+-       asm volatile("mov %%cr0,%0\n\t" : "=r" (val), "=m" (__force_order));
++       asm volatile("mov %%cr0,%0\n\t" : "=r" (val));
+        return val;
+ }
 
-Thanks a lot for your reviewing.
+ static __always_inline unsigned long native_read_cr2(void)
+ {
+        unsigned long val;
+-       asm volatile("mov %%cr2,%0\n\t" : "=r" (val), "=m" (__force_order));
++       asm volatile("mov %%cr2,%0\n\t" : "=r" (val));
+        return val;
+ }
 
-Leo
+ static __always_inline void native_write_cr2(unsigned long val)
+ {
+-       asm volatile("mov %0,%%cr2": : "r" (val), "m" (__force_order));
++       asm volatile("mov %0,%%cr2": : "r" (val));
+ }
+
+ static inline unsigned long __native_read_cr3(void)
+ {
+        unsigned long val;
+-       asm volatile("mov %%cr3,%0\n\t" : "=r" (val), "=m" (__force_order));
++       asm volatile("mov %%cr3,%0\n\t" : "=r" (val));
+        return val;
+ }
+
+ static inline void native_write_cr3(unsigned long val)
+ {
+-       asm volatile("mov %0,%%cr3": : "r" (val), "m" (__force_order));
++       asm volatile("mov %0,%%cr3": : "r" (val));
+ }
+
+ static inline unsigned long native_read_cr4(void)
+@@ -64,10 +55,10 @@ static inline unsigned long native_read_cr4(void)
+        asm volatile("1: mov %%cr4, %0\n"
+                     "2:\n"
+                     _ASM_EXTABLE(1b, 2b)
+-                    : "=r" (val), "=m" (__force_order) : "0" (0));
++                    : "=r" (val) : "0" (0));
+ #else
+        /* CR4 always exists on x86_64. */
+-       asm volatile("mov %%cr4,%0\n\t" : "=r" (val), "=m" (__force_order));
++       asm volatile("mov %%cr4,%0\n\t" : "=r" (val));
+ #endif
+        return val;
+ }
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 965474d78cef..ba9b5234cf44 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -358,7 +358,7 @@ void native_write_cr0(unsigned long val)
+        unsigned long bits_missing = 0;
+
+ set_register:
+-       asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
++       asm volatile("mov %0,%%cr0": "+r" (val));
+
+        if (static_branch_likely(&cr_pinning)) {
+                if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+-- 
+Thanks,
+~Nick Desaulniers
