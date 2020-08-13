@@ -2,110 +2,120 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3100CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4E820715
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1FC20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597317526;
+	bh=7bP+WASRwWMl9CKAiOD+Bh8wlRVHiP3hbBmd+hvq9Gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GMpyOfjhC76bgfO2F/6uUirQ788SM5D6hVaWnz6hb6qRwN8D1OmI6l1T7YPRz4UpB
+	 pkRuTXjr/8BgZvB2+X95z9ZPePkUnz+rkeAECoyMRt08Oo9uAjKUwe6H+SR1roX0eB
+	 9iLgyldsb8fFUbBDdL/JfAFALoxJBPcx9RT4WwzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHMLRj (ORCPT
+        id S1726696AbgHMLSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:17:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33268 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 07:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgHMLRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:17:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3EC8BB6F5;
-        Thu, 13 Aug 2020 11:17:53 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 13:17:30 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Doug Berger <opendmb@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: include CMA pages in lowmem_reserve at boot
-Message-ID: <20200813111730.GH9477@dhcp22.suse.cz>
-References: <1597290698-24266-1-git-send-email-opendmb@gmail.com>
+        id S1726100AbgHMLSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:18:41 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B75F20715;
+        Thu, 13 Aug 2020 11:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597317520;
+        bh=7bP+WASRwWMl9CKAiOD+Bh8wlRVHiP3hbBmd+hvq9Gw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b3MYPTLonWpH1ZQAmeKqRJwjvD3JKpPlsR0lU7b6hqk2iIJXj7Ewn3myCzXCWLUTF
+         iWHbTlHJUCYuSPKOAbK81QAjkPeTAHFKQmXa5I1M/eb4utd2IOWDRypQC7Xfc8u9NK
+         2jbDREpzW6Y8dnCsjtoMFJ5eOY9xATPi+rVVrbgA=
+Date:   Thu, 13 Aug 2020 12:18:34 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        James Clark <james.clark@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        john.garry@huawei.com
+Subject: Re: [PATCH v2 0/4] Perf tool: Enable Arm arch timer counter and
+ arm-spe's timestamp
+Message-ID: <20200813111833.GA10098@willie-the-truck>
+References: <20200807071620.11907-1-leo.yan@linaro.org>
+ <CANLsYkzR+DSrss0dzPjMPKW+4ZGMbD9V23PLDSZAJM1-SQU0CQ@mail.gmail.com>
+ <20200812185334.GN13995@kernel.org>
+ <20200813095901.GB9894@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597290698-24266-1-git-send-email-opendmb@gmail.com>
+In-Reply-To: <20200813095901.GB9894@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-08-20 20:51:38, Doug Berger wrote:
-> The lowmem_reserve arrays provide a means of applying pressure
-> against allocations from lower zones that were targeted at
-> higher zones. Its values are a function of the number of pages
-> managed by higher zones and are assigned by a call to the
-> setup_per_zone_lowmem_reserve() function.
-> 
-> The function is initially called at boot time by the function
-> init_per_zone_wmark_min() and may be called later by accesses
-> of the /proc/sys/vm/lowmem_reserve_ratio sysctl file.
-> 
-> The function init_per_zone_wmark_min() was moved up from a
-> module_init to a core_initcall to resolve a sequencing issue
-> with khugepaged. Unfortunately this created a sequencing issue
-> with CMA page accounting.
-> 
-> The CMA pages are added to the managed page count of a zone
-> when cma_init_reserved_areas() is called at boot also as a
-> core_initcall. This makes it uncertain whether the CMA pages
-> will be added to the managed page counts of their zones before
-> or after the call to init_per_zone_wmark_min() as it becomes
-> dependent on link order. With the current link order the pages
-> are added to the managed count after the lowmem_reserve arrays
-> are initialized at boot.
-> 
-> This means the lowmem_reserve values at boot may be lower than
-> the values used later if /proc/sys/vm/lowmem_reserve_ratio is
-> accessed even if the ratio values are unchanged.
-> 
-> In many cases the difference is not significant, but in others
-> it may have an affect.
+[ Adding John, as I only just realised he wasn't on CC and we were talking
+  about him! ]
 
-Could you be more specific please?
-
-> This commit breaks the link order dependency by invoking
-> init_per_zone_wmark_min() as a postcore_initcall so that the
-> CMA pages have the chance to be properly accounted in their
-> zone(s) and allowing the lowmem_reserve arrays to receive
-> consistent values.
+On Thu, Aug 13, 2020 at 10:59:01AM +0100, Will Deacon wrote:
+> On Wed, Aug 12, 2020 at 03:53:34PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Aug 12, 2020 at 10:06:53AM -0600, Mathieu Poirier escreveu:
+> > > The ARM SPE perf tools code is orphan and I don't have the cycles to
+> > > pick it up.  Leo has spent a lot of time in that code and as such I
+> > > suggest that he starts maintaining it, probably following the same
+> > > kind of arrangement you and I have for coresight.
+> > 
+> > Thats ok with me, I think we should reflect that on the MAINTAINERS
+> > file, right?
+> > 
+> > We have this already:
+> > 
+> > PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
+> > R:      John Garry <john.garry@huawei.com>
+> > R:      Will Deacon <will@kernel.org>
+> > L:      linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > S:      Supported
+> > F:      tools/perf/pmu-events/arch/arm64/
+> > 
+> > I think we should have entries for CoreSight and ARM SPE, one listing
+> > you as the maintainer and the other listing Leo, right?
 > 
-> Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Fine by me. I'll continue to maintain the in-kernel SPE driver, but I'd love
+> to see somebody step up to looking after the userspace code. It's seriously
+> unloved on arm64 :(
 > 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 8b7d0ecf30b1..f3e340ec2b6b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -7887,7 +7887,7 @@ int __meminit init_per_zone_wmark_min(void)
->  
->  	return 0;
->  }
-> -core_initcall(init_per_zone_wmark_min)
-> +postcore_initcall(init_per_zone_wmark_min)
->  
->  /*
->   * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
-> -- 
-> 2.7.4
+> I'd even be happy to see one or two M: entries added for
+> tools/perf/pmu-events/arch/arm64/. I realistically don't have the time to
+> take that on, but I'd be thrilled if any/all of John, Mathieu and Leo were
+> to be listed there if they are willing to do so and can spare the time to
+> look after it. Even just silly things like making sure the thing
+> cross-compiles have been broken in the recent past, so it's not necessarily
+> about handling huge amounts of incoming patches.
 > 
-
--- 
-Michal Hocko
-SUSE Labs
+> In other words, rather than slice up the arm64 parts of the perf tool, I'd
+> argue in favour of a joint maintainership model for all the arm64 bits, if
+> we have a few willing volunteers.
+> 
+> Will
