@@ -2,128 +2,72 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F80AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F13E20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9203A20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgHMO4s (ORCPT
+        id S1726724AbgHMO51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49752 "EHLO mail.kernel.org"
+        Thu, 13 Aug 2020 10:57:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63083 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgHMO4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:56:47 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C2420781;
-        Thu, 13 Aug 2020 14:56:46 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 10:56:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jiafei Pan <jiafei.pan@nxp.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "romain.perier@gmail.com" <romain.perier@gmail.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH] softirq: add irq off checking for
- __raise_softirq_irqoff
-Message-ID: <20200813105644.1eb6f2cd@oasis.local.home>
-In-Reply-To: <AM0PR04MB4772B1B6D3391BAEAD4411808A430@AM0PR04MB4772.eurprd04.prod.outlook.com>
-References: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
-        <AM0PR04MB4772B1B6D3391BAEAD4411808A430@AM0PR04MB4772.eurprd04.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726131AbgHMO51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:57:27 -0400
+IronPort-SDR: 7WWvrclkTV4CVr52TPwTIsFUYsfokfOtzzwophr6YfGNzqPKSCqSz5zX9flxYdD/aMB5qP0m5X
+ DfKEWKSkAPzw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="142070131"
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="142070131"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:57:26 -0700
+IronPort-SDR: Ig6SZEbpML6NTOhKkMh3YZi+L12EGG8odysHxz3Wm6CdjlIGgiKKklKItAPYMIQhUki+AjDnwT
+ Lm6J7+49jrMA==
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="470236490"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:57:25 -0700
+Date:   Thu, 13 Aug 2020 07:57:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 1/2] KVM: LAPIC: Return 0 when getting the tscdeadline
+ timer if the lapic is hw disabled
+Message-ID: <20200813145724.GE29439@linux.intel.com>
+References: <1597213838-8847-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597213838-8847-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 03:03:46 +0000
-Jiafei Pan <jiafei.pan@nxp.com> wrote:
-
-> Any comments? Thanks.
+On Wed, Aug 12, 2020 at 02:30:37PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> @Steven Rostedt, I thinks irq off checking is necessary especially
+> Return 0 when getting the tscdeadline timer if the lapic is hw disabled.
 
-This is probably more for Thomas Gleixner.
+It'd be helpful to reference the SDM for the general behavior of the MSR.
 
-> for Preempt-RT kernel, because some context may be changed from irq
-> off to irq on when enable Preempt RT, I once met a issue that hrtimer
-> soft irq is lost when enabled Preempt RT, finally I found
-> napi_schedule_irqoff is called in hardware interrupt handler, there
-> maybe no issue for non RT kernel, but for Preempt RT, interrupt is
-> threaded, so irq is on in interrupt handler, the result is
-> __raise_softirq_irqoff is called in irq on context, so that per-CPU
-> softirq masking is corrupted because of the process of updating of
-> soft irq masking is interrupted and not a atomic operation , and then
-> caused hrtimer soft irq is lost. So I think adding irq status
-> checking in __raise_softirq_irqoff can report such issue directly and
-> help us to find the root cause of such issue.
-> 
-> I know that there may be performance impaction to add extra checking
-> here, if it is the case, how about to include it in some debug
-> configuration items? Such as CONFIG_DEBUG_PREEMPT or other debug
-> items?
-> 
+  In other timer modes (LVT bit 18 = 0), the IA32_TSC_DEADLINE MSR reads
+  zero and writes are ignored.
 
+I'd also vote to squash the two patches together, they really are paired
+changes to match the architectural behavior.
 
-> Best Regards,
-> Jiafei.
-> 
-> -----Original Message-----
-> From: Jiafei Pan <Jiafei.Pan@nxp.com> 
-> Sent: Thursday, August 6, 2020 12:07 PM
-> To: peterz@infradead.org; mingo@kernel.org; tglx@linutronix.de; rostedt@goodmis.org; romain.perier@gmail.com; will@kernel.org
-> Cc: linux-kernel@vger.kernel.org; linux-rt-users@vger.kernel.org; Jiafei Pan <jiafei.pan@nxp.com>; Leo Li <leoyang.li@nxp.com>; Vladimir Oltean <vladimir.oltean@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>
-> Subject: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
-> 
-> __raise_softirq_irqoff will update per-CPU mask of pending softirqs, it need to be called in irq disabled context in order to keep it atomic operation, otherwise it will be interrupted by hardware interrupt, and per-CPU softirqs pending mask will be corrupted, the result is there will be unexpected issue, for example hrtimer soft irq will be losed and soft hrtimer will never be expire and handled.
-
-Please wrap your change logs.
-
-> 
-> Adding irqs disabled checking here to provide warning in irqs enabled context.
-> 
-> Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
-> ---
->  kernel/softirq.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/softirq.c b/kernel/softirq.c index bf88d7f62433..11f61e54a3ae 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
-> @@ -481,6 +481,11 @@ void raise_softirq(unsigned int nr)
->  
->  void __raise_softirq_irqoff(unsigned int nr)  {
-> +	/* This function can only be called in irq disabled context,
-> +	 * otherwise or_softirq_pending will be interrupted by hardware
-> +	 * interrupt, so that there will be unexpected issue.
-> +	 */
-> +	WARN_ON_ONCE(!irqs_disabled());
-
-Perhaps: lockdep_assert_irqs_disabled() is more appropriate, and
-doesn't add extra overhead on production systems.
-
--- Steve
-
-
->  	trace_softirq_raise(nr);
->  	or_softirq_pending(1UL << nr);
->  }
-> --
-> 2.17.1
-
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
