@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE1020716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AC620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="CxvhhQpn"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="qwW6bn2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHMHxS (ORCPT
+        id S1726702AbgHMHxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
+        Thu, 13 Aug 2020 03:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgHMHxQ (ORCPT
+        with ESMTP id S1726526AbgHMHx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:53:16 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E381FC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:53:15 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a26so5175216ejc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:53:15 -0700 (PDT)
+        Thu, 13 Aug 2020 03:53:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BF1C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:53:28 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id qc22so5158434ejb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=melexis.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/CQP6Mp+jMuAdeJV/E9lJgqu50DuZ6HxUkaNbDh+BH8=;
-        b=CxvhhQpnl8Zz78ssZKplng7mcCGn29a0e98wO5QTm5UK5IHfxeGDRdmMBYo180yOLi
-         djviL7cjNEjZXa/r7cEeLIgKks/vKd3yh+3p1OK3ZHzBlkRINLp7ryDBsV8HKHhjDnHu
-         eYC24ttssWTiQS1pjsDwKLf6pCU0gMbR3FoHb17dPRIBPH1Cx8ifQGCduomNd/h9QVHI
-         UhUnLvax9JG4yZjrpPHcktdWyhT65wq/93FCC32QeTW1hMuajWBzkxi+eUn8cwJ60QyI
-         mbvXXNYURCAO6rk+GJHyIjdTkQnIZTG6wqZWKRx/88g2sdvMU9J5rGruHsx574ihP+df
-         9Lrw==
+        bh=b3SRzmR77BhVenou1yvCnpNBppbK1FtB0xdOMAqxSE8=;
+        b=qwW6bn2TiHt4FsYBMX23jSvyyN8awZ36xC7SYf0U0c8+eWMd7beq5KONEbDQnN46eG
+         c0UFQMTq9kKlR+0uemeS9v2Hx4aq72VCiI0+gwoXHwDYE2OETkb6EzZapz03w0TqV/Mu
+         e0AwbiDyW1uPFWQkruDjpNNXTGpVcrDqhgBwt6rn6ePEGjFGdtNsKVufXtOOw8VSo8tO
+         SUp9e4hOTckJKLpO1hcOX0WgdhverW6D8W3UYN5I4UDQvrfAQ0In6wKW8LPM/DFB1BR0
+         SurQaA5Svt88U/tl0juJSYKhYvwr0v2i2SGu2AkOJgyc0j7Z0vOfHnHMdbQEropRHusE
+         gsTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/CQP6Mp+jMuAdeJV/E9lJgqu50DuZ6HxUkaNbDh+BH8=;
-        b=e3OhGNuEjJnICKcxdlE8rSBw29OC34wLDjMRzn1YtrmsVRrQIgHkbN4FbZALWF4kcO
-         S8tAQAoMBt0KnzuE65JcP9NAqzI2qNxoD6dPPHUHg9bOXMNs/bH11TT8bo3/ntdQ53nP
-         kcPh7azrH6MRPOCyYPTO3ZYLwDCMzz+zIZeUMYEYxWVweKN5UBdBCPKS3mUfd4hOzxP/
-         xefOh9odhhdhHTnmRnHLdZtvmSLUZgg+CoNFNBQr/g5yPun3QQkoIySO1FsO0GrEJutM
-         pFFCZU40CIP0f5j8eHmzWUvZ2+q16U8fK5MU/fVt0gy1mJCyBCWDAjwlwq0aIrhPoScF
-         7Lyw==
-X-Gm-Message-State: AOAM532HnZAcLthbhDILgVQ12atd26/MhO6bCLoyDQ2wLVz65I8aI4qp
-        1dnu0RaX7iTVP/mtrpkETf2KGA==
-X-Google-Smtp-Source: ABdhPJzGeyLzQ1C+boYWENTUuWFerXsIp9+BXxBuZxvnJDfIdRX2XeZ0VmMgR65jaK61G2ew0ZPPFQ==
-X-Received: by 2002:a17:906:4007:: with SMTP id v7mr2787076ejj.197.1597305194613;
-        Thu, 13 Aug 2020 00:53:14 -0700 (PDT)
+        bh=b3SRzmR77BhVenou1yvCnpNBppbK1FtB0xdOMAqxSE8=;
+        b=SXspcqyRntV/5roRCiNtlMAlm8QzzLYgGMgU0KN/AuSix90Fcu8y4vgFVwcJ9Vp5R3
+         Il8I66D8Gim34KrNnTaxZr9Yv62u1Gv3ssnkhhhQAnXvtmYBYPA82iWcBUkSWH9C5lk0
+         ZhzI4g0ueU7X1Mwcl/Owc+sYG8jw99TGhf0pNrEfECyrI+Zf5IpDDejWN09fPCJ5Ro3I
+         1YwKlmhWESPusk6/hDajxv+buvVE4OUHzwGgrxan+R232V5h5mkocM+KuiwwCqJCS8Gg
+         SesHELBExN6MNC1qUnovF5jhdR7HKSTV9vjwHjslPgvsAQqbD4VUylVE+MEW9Vz8al8E
+         e9ow==
+X-Gm-Message-State: AOAM531q5HYEDqtMGavx3vH9v1znxHnMv2GsGu+iFCYb0+NZLzrc36tc
+        M3UcK3BelrCNmgCY/HYeajwS63ag5QkO8w==
+X-Google-Smtp-Source: ABdhPJw8LM/IpHM0qmcOGio9AVXPGq0fsKQtQGvTSBavvy88/Lcmw1BJ/eTh/vgEVzcTH1ObrnMgIw==
+X-Received: by 2002:a17:906:b5a:: with SMTP id v26mr3752056ejg.515.1597305206858;
+        Thu, 13 Aug 2020 00:53:26 -0700 (PDT)
 Received: from localhost.localdomain (ptr-4xajgyw9mz6ybkfgzn4.18120a2.ip6.access.telenet.be. [2a02:1810:a421:dd00:8d0a:592c:7d6d:8770])
-        by smtp.gmail.com with ESMTPSA id br25sm3363449ejb.25.2020.08.13.00.53.13
+        by smtp.gmail.com with ESMTPSA id br25sm3363449ejb.25.2020.08.13.00.53.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 00:53:13 -0700 (PDT)
+        Thu, 13 Aug 2020 00:53:26 -0700 (PDT)
 From:   Crt Mori <cmo@melexis.com>
 To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Crt Mori <cmo@melexis.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v5 1/5] iio:temperature:mlx90632: Reduce number of equal calulcations
-Date:   Thu, 13 Aug 2020 09:51:21 +0200
-Message-Id: <20200813075125.4949-2-cmo@melexis.com>
+Subject: [PATCH v5 2/5] iio:temperature:mlx90632: Add kerneldoc to the internal struct
+Date:   Thu, 13 Aug 2020 09:51:22 +0200
+Message-Id: <20200813075125.4949-3-cmo@melexis.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200813075125.4949-1-cmo@melexis.com>
 References: <20200813075125.4949-1-cmo@melexis.com>
@@ -77,77 +77,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TAdut4 was calculated each iteration although it did not change. In light
-of near future additions of the Extended range DSP calculations, this
-function refactoring will help reduce unrelated changes in that series as
-well as reduce the number of new functions needed.
+Document internal/private struct for mlx90632 device.
 
 Signed-off-by: Crt Mori <cmo@melexis.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/iio/temperature/mlx90632.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ drivers/iio/temperature/mlx90632.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
-index 51b812bcff2e..c3de10ba5b1e 100644
+index c3de10ba5b1e..ce75f5a3486b 100644
 --- a/drivers/iio/temperature/mlx90632.c
 +++ b/drivers/iio/temperature/mlx90632.c
-@@ -374,11 +374,11 @@ static s32 mlx90632_calc_temp_ambient(s16 ambient_new_raw, s16 ambient_old_raw,
- }
+@@ -89,9 +89,16 @@
+ #define MLX90632_MAX_MEAS_NUM	31 /**< Maximum measurements in list */
+ #define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
  
- static s32 mlx90632_calc_temp_object_iteration(s32 prev_object_temp, s64 object,
--					       s64 TAdut, s32 Fa, s32 Fb,
-+					       s64 TAdut, s64 TAdut4, s32 Fa, s32 Fb,
- 					       s32 Ga, s16 Ha, s16 Hb,
- 					       u16 emissivity)
- {
--	s64 calcedKsTO, calcedKsTA, ir_Alpha, TAdut4, Alpha_corr;
-+	s64 calcedKsTO, calcedKsTA, ir_Alpha, Alpha_corr;
- 	s64 Ha_customer, Hb_customer;
- 
- 	Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
-@@ -393,30 +393,35 @@ static s32 mlx90632_calc_temp_object_iteration(s32 prev_object_temp, s64 object,
- 	Alpha_corr = emissivity * div64_s64(Alpha_corr, 100000LL);
- 	Alpha_corr = div64_s64(Alpha_corr, 1000LL);
- 	ir_Alpha = div64_s64((s64)object * 10000000LL, Alpha_corr);
--	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
--		(div64_s64(TAdut, 10000LL) + 27315) *
--		(div64_s64(TAdut, 10000LL)  + 27315) *
--		(div64_s64(TAdut, 10000LL) + 27315);
- 
- 	return (int_sqrt64(int_sqrt64(ir_Alpha * 1000000000000LL + TAdut4))
- 		- 27315 - Hb_customer) * 10;
- }
- 
-+static s64 mlx90632_calc_ta4(s64 TAdut, s64 scale)
-+{
-+	return (div64_s64(TAdut, scale) + 27315) *
-+		(div64_s64(TAdut, scale) + 27315) *
-+		(div64_s64(TAdut, scale) + 27315) *
-+		(div64_s64(TAdut, scale) + 27315);
-+}
-+
- static s32 mlx90632_calc_temp_object(s64 object, s64 ambient, s32 Ea, s32 Eb,
- 				     s32 Fa, s32 Fb, s32 Ga, s16 Ha, s16 Hb,
- 				     u16 tmp_emi)
- {
--	s64 kTA, kTA0, TAdut;
-+	s64 kTA, kTA0, TAdut, TAdut4;
- 	s64 temp = 25000;
- 	s8 i;
- 
- 	kTA = (Ea * 1000LL) >> 16LL;
- 	kTA0 = (Eb * 1000LL) >> 8LL;
- 	TAdut = div64_s64(((ambient - kTA0) * 1000000LL), kTA) + 25 * 1000000LL;
-+	TAdut4 = mlx90632_calc_ta4(TAdut, 10000LL);
- 
- 	/* Iterations of calculation as described in datasheet */
- 	for (i = 0; i < 5; ++i) {
--		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut,
-+		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut, TAdut4,
- 							   Fa, Fb, Ga, Ha, Hb,
- 							   tmp_emi);
- 	}
++/**
++ * struct mlx90632_data - private data for the MLX90632 device
++ * @client: I2C client of the device
++ * @lock: Internal mutex for multiple reads for single measurement
++ * @regmap: Regmap of the device
++ * @emissivity: Object emissivity from 0 to 1000 where 1000 = 1.
++ */
+ struct mlx90632_data {
+ 	struct i2c_client *client;
+-	struct mutex lock; /* Multiple reads for single measurement */
++	struct mutex lock;
+ 	struct regmap *regmap;
+ 	u16 emissivity;
+ };
 -- 
 2.25.1
 
