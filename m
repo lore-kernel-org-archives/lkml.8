@@ -2,157 +2,139 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F9BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8928A20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933CD20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Af27m4tR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHMLbI (ORCPT
+        id S1726593AbgHMLb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:31:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9279 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgHMLbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:31:06 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E96D9C49CF1BCE701B31;
-        Thu, 13 Aug 2020 19:31:02 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.211) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
- 19:30:56 +0800
-Subject: Re: [PATCH 4.19 016/133] cgroup: fix cgroup_sk_alloc() for
- sk_clone_lock()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, Cameron Berkenpas <cam@neo-zeon.de>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
-        =?UTF-8?Q?Dani=c3=abl_Sonck?= <dsonck92@gmail.com>,
-        Zhang Qiang <qiang.zhang@windriver.com>,
-        Thomas Lamprecht <t.lamprecht@proxmox.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Zefan Li <lizefan@huawei.com>, "Tejun Heo" <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200720152803.732195882@linuxfoundation.org>
- <20200720152804.513188610@linuxfoundation.org>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <e6d703e7-2cbb-f77e-413f-523aa0706542@huawei.com>
-Date:   Thu, 13 Aug 2020 19:30:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 13 Aug 2020 07:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgHMLb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:31:59 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADBAC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:31:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id kr4so2644489pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TdxvYAjwHYBqX28RZ+WzNUpjs3QbINtn5/MRyyS8TLo=;
+        b=Af27m4tRbZiKQS9zEInh/cKxpGWSJD1wgUrpOo5G0oLOElEFVrOLsUX9sVA5J2UGOH
+         4LyRrSz+9a63Niw44hGv8m7iRFZScwB381gbrBzxwMcvHFBkfM+49Rfvshvkzit9+wz5
+         Lpv9KC6Eg/WWEV42aS2o5jtEJiE2GBX85cnLWSIadobWwJJjvkES9NatQ2T/GoMjiUlf
+         lv+20AvFvJP7qsv19Ma5hYDm2G7GgaiK9eddERpGH3lGiZMyPJt84FInkqG1d/YKh1+M
+         UkW47z5HuZnPZDTPomajhatqxwFGwML9BU55CHkScLu3W/oeuXKVnaG2OZStAhyTtGN9
+         3k+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TdxvYAjwHYBqX28RZ+WzNUpjs3QbINtn5/MRyyS8TLo=;
+        b=mQDrN3JeCNLH8gNtVIsdvBLiyS9rIeEaYBfqO9aW/8AaoNiFwCFTkrXzSdm25bIE7r
+         0EYB9EvlvuqJzWjSPd/8O4ip8gCqsx6mf4JpTk9BSy5vs8cAVItesb31+lu+HPZuemNH
+         CZFtElz7B+6R8+fLyQPdyFTHPXQVsj1tspUBbrvlXkXKfjgw+e0vKeNifxo4MiOTVljE
+         DMxMGD7EkLoP9PkwZJ93zXhOaOGCbDVQlF6R/h682Xb5R6KQiLuqnTjGnEZubrKAleZV
+         fCTMKlcdNZWy125YNIunX6XJPtio4iPKPCFI531PoICOomMesTcMFjICjgzIfzW2OezS
+         Xlgg==
+X-Gm-Message-State: AOAM531WoBOG0yunmTggPEvZgixDxsv6H351B3qcNWh7UYuv4YiZh/SA
+        rjCHm6SJbKlU443iad1+Z9U=
+X-Google-Smtp-Source: ABdhPJxa5aZAJ/Gekwq4D8YGUYdMsa4IUsup7BXdrpnf/npn/T7/PejRDXRAWvZ+Jl5PU+BSK2nCVQ==
+X-Received: by 2002:a17:90a:9b88:: with SMTP id g8mr4586084pjp.143.1597318318744;
+        Thu, 13 Aug 2020 04:31:58 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id a24sm5611736pfg.113.2020.08.13.04.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 04:31:57 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 20:31:55 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, zhang.lyra@gmail.com,
+        ruifeng.zhang1@unisoc.com, cixi.geng1@unisoc.com,
+        Orson Zhai <orson.zhai@unisoc.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jon DeVree <nuxi@vault24.org>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
+ and real
+Message-ID: <20200813113155.GA483@jagdpanzerIV.localdomain>
+References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
+ <20200811094413.GA12903@alley>
+ <87zh7175hj.fsf@nanos.tec.linutronix.de>
+ <20200811130218.GI6215@alley>
+ <20200813015500.GC2020879@jagdpanzerIV.localdomain>
+ <20200813102258.GL12903@alley>
 MIME-Version: 1.0
-In-Reply-To: <20200720152804.513188610@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.174.176.211]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813102258.GL12903@alley>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On (20/08/13 12:22), Petr Mladek wrote:
+>
+>   + would take more space (prefix + text vs. binary representation)
 
-On 2020/7/20 23:36, Greg Kroah-Hartman wrote:
-> From: Cong Wang <xiyou.wangcong@gmail.com>
->
-> [ Upstream commit ad0f75e5f57ccbceec13274e1e242f2b5a6397ed ]
->
-> When we clone a socket in sk_clone_lock(), its sk_cgrp_data is
-> copied, so the cgroup refcnt must be taken too. And, unlike the
-> sk_alloc() path, sock_update_netprioidx() is not called here.
-> Therefore, it is safe and necessary to grab the cgroup refcnt
-> even when cgroup_sk_alloc is disabled.
->
-> sk_clone_lock() is in BH context anyway, the in_interrupt()
-> would terminate this function if called there. And for sk_alloc()
-> skcd->val is always zero. So it's safe to factor out the code
-> to make it more readable.
->
-> The global variable 'cgroup_sk_alloc_disabled' is used to determine
-> whether to take these reference counts. It is impossible to make
-> the reference counting correct unless we save this bit of information
-> in skcd->val. So, add a new bit there to record whether the socket
-> has already taken the reference counts. This obviously relies on
-> kmalloc() to align cgroup pointers to at least 4 bytes,
-> ARCH_KMALLOC_MINALIGN is certainly larger than that.
->
-> This bug seems to be introduced since the beginning, commit
-> d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
-> tried to fix it but not compeletely. It seems not easy to trigger until
-> the recent commit 090e28b229af
-> ("netprio_cgroup: Fix unlimited memory leak of v2 cgroups") was merged.
->
-> Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
-> Reported-by: Cameron Berkenpas <cam@neo-zeon.de>
-> Reported-by: Peter Geis <pgwipeout@gmail.com>
-> Reported-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
-> Reported-by: Daniël Sonck <dsonck92@gmail.com>
-> Reported-by: Zhang Qiang <qiang.zhang@windriver.com>
-> Tested-by: Cameron Berkenpas <cam@neo-zeon.de>
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Tested-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Zefan Li <lizefan@huawei.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Roman Gushchin <guro@fb.com>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-[...]
->   
-> +void cgroup_sk_clone(struct sock_cgroup_data *skcd)
-> +{
-> +	/* Socket clone path */
-> +	if (skcd->val) {
+Dict buffer is allocated regardless of how we use it, and only printks
+from drivers/* (dev_printk*) add dict payload. It might be the case
+that on some (if not most) systems dict pages are not used 90% of times
+(if not 99%).
 
-Compare to mainline patch, it's missing *if (skcd->no_refcnt)* check here.
+>   + not reliable because dict is currently dropped when no space
 
-Is it a mistake here ?
+Well, in the perfect world this is a problem, but "maybe not having
+alternative timestamps sometimes" can be OK approach for people who
+wants to use those triplet timestamps.
 
-Thanks,
+But, in general, how real this problem is? What I sae so far (on my boxes)
+was that printk messages are longer than dict payload.
 
-Yang
+Example:
 
-> +		/*
-> +		 * We might be cloning a socket which is left in an empty
-> +		 * cgroup and the cgroup might have already been rmdir'd.
-> +		 * Don't use cgroup_get_live().
-> +		 */
-> +		cgroup_get(sock_cgroup_ptr(skcd));
-> +	}
-> +}
-> +
->   void cgroup_sk_free(struct sock_cgroup_data *skcd)
->   {
-> +	if (skcd->no_refcnt)
-> +		return;
-> +
->   	cgroup_put(sock_cgroup_ptr(skcd));
->   }
->   
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -1694,7 +1694,7 @@ struct sock *sk_clone_lock(const struct
->   		/* sk->sk_memcg will be populated at accept() time */
->   		newsk->sk_memcg = NULL;
->   
-> -		cgroup_sk_alloc(&newsk->sk_cgrp_data);
-> +		cgroup_sk_clone(&newsk->sk_cgrp_data);
->   
->   		rcu_read_lock();
->   		filter = rcu_dereference(sk->sk_filter);
->
->
-> .
+6,223,93298,-,caller=T1;acpi PNP0A08:00: _OSC: OS supports [Segments MSI HPX-Type3]
+ SUBSYSTEM=acpi
+ DEVICE=+acpi:PNP0A08:00
+6,224,93413,-,caller=T1;acpi PNP0A08:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+ SUBSYSTEM=acpi
+ DEVICE=+acpi:PNP0A08:00
+6,225,93540,-,caller=T1;PCI host bridge to bus 0000:00
+6,226,93541,-,caller=T1;pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+ SUBSYSTEM=pci_bus
+ DEVICE=+pci_bus:0000:00
 
+It might be the case, that overflowing dict buffer, without first overflowing
+printk buffer, can be rather challenging.
+
+>   + it would make the controversial dictionary feature more important
+
+Yes. But, for the time being, this controversial dict feature allocates
+pages for dict buffer anyway.
+
+	-ss
