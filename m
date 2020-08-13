@@ -2,105 +2,98 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6F62184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB8F22B45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fpbp/T4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgHMBqW (ORCPT
+        id S1726784AbgHMBq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 21:46:27 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13847 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbgHMBp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:45:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726334AbgHMBqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 21:46:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597283181; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=CoDSX1WVNXx5nXCgug4IsyfF6ELMQT26b+TEZuwyeg8=; b=fpbp/T4eldfJ9m+wqSMmBPsc4kKHBJ5mK0gognbQXPcDC9TJIUUrry0pIhfQv4cnz27tILmn
+ 1sdwc0HG2G3yyEw6r1XzVQOLC7EbcBYTV7lpWxaOfDzU1t0UIPohL3d9Hgj/1HCzalnk1mmB
+ wt2kdYdnh5o1gNrpqzTTJopyJgI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f349b5e46ed9966745143c2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 01:46:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3821CC433C6; Thu, 13 Aug 2020 01:46:06 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C4F20756;
-        Thu, 13 Aug 2020 01:45:56 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.94)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1k62JX-0074zW-Go; Wed, 12 Aug 2020 21:45:55 -0400
-Message-ID: <20200813014555.384329363@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Wed, 12 Aug 2020 21:45:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Matt Fleming <matt@codeblueprint.co.uk>
-Subject: [PATCH RT 1/6] signal: Prevent double-free of user struct
-References: <20200813014534.833107526@goodmis.org>
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FADCC433CA;
+        Thu, 13 Aug 2020 01:46:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FADCC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org
+Subject: [PATCH v3 1/6] stm class: ftrace: change dependency to TRACING
+Date:   Thu, 13 Aug 2020 09:45:47 +0800
+Message-Id: <20200813014552.23539-2-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200813014552.23539-1-tingwei@codeaurora.org>
+References: <20200813014552.23539-1-tingwei@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.4.54-rt33-rc1 stable review patch.
-If anyone has any objections, please let me know.
+We will support copying event trace to STM. Change
+STM_SOURCE_FTRACE to depend on TRACING since we will
+support multiple tracers.
 
-------------------
-
-From: Matt Fleming <matt@codeblueprint.co.uk>
-
-The way user struct reference counting works changed significantly with,
-
-  fda31c50292a ("signal: avoid double atomic counter increments for user accounting")
-
-Now user structs are only freed once the last pending signal is
-dequeued. Make sigqueue_free_current() follow this new convention to
-avoid freeing the user struct multiple times and triggering this
-warning:
-
- refcount_t: underflow; use-after-free.
- WARNING: CPU: 0 PID: 6794 at lib/refcount.c:288 refcount_dec_not_one+0x45/0x50
- Call Trace:
-  refcount_dec_and_lock_irqsave+0x16/0x60
-  free_uid+0x31/0xa0
-  __dequeue_signal+0x17c/0x190
-  dequeue_signal+0x5a/0x1b0
-  do_sigtimedwait+0x208/0x250
-  __x64_sys_rt_sigtimedwait+0x6f/0xd0
-  do_syscall_64+0x72/0x200
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Reported-by: Daniel Wagner <wagi@monom.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hwtracing/stm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index def2e8e37f1f..aa924f0141cf 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -494,8 +494,8 @@ static void sigqueue_free_current(struct sigqueue *q)
+diff --git a/drivers/hwtracing/stm/Kconfig b/drivers/hwtracing/stm/Kconfig
+index d0e92a8a045c..aad594fe79cc 100644
+--- a/drivers/hwtracing/stm/Kconfig
++++ b/drivers/hwtracing/stm/Kconfig
+@@ -71,7 +71,7 @@ config STM_SOURCE_HEARTBEAT
  
- 	up = q->user;
- 	if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
--		atomic_dec(&up->sigpending);
--		free_uid(up);
-+		if (atomic_dec_and_test(&up->sigpending))
-+			free_uid(up);
- 	} else
- 		  __sigqueue_free(q);
- }
+ config STM_SOURCE_FTRACE
+ 	tristate "Copy the output from kernel Ftrace to STM engine"
+-	depends on FUNCTION_TRACER
++	depends on TRACING
+ 	help
+ 	  This option can be used to copy the output from kernel Ftrace
+ 	  to STM engine. Enabling this option will introduce a slight
 -- 
-2.28.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
