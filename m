@@ -2,163 +2,231 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB32C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B469C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76E20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZc9ySxO"
+	by mail.kernel.org (Postfix) with ESMTP id 2F1C720866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHMN5K (ORCPT
+        id S1726518AbgHMOAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:57:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMN5J (ORCPT
+        Thu, 13 Aug 2020 10:00:53 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:16111 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726053AbgHMOAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:57:09 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 459FFC061757;
-        Thu, 13 Aug 2020 06:57:09 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 184so5148260wmb.0;
-        Thu, 13 Aug 2020 06:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZL42NDAwRyqFSgHd9+LPNZsn853QbpqMscEZvhiYWzM=;
-        b=DZc9ySxOXmzqhLq8wmbQNIP8qC3GDOlMAZXwH7T9qCDObVYdxITsnlnU7bMMNL0I2v
-         8lwS7+qRhmzNhfUwwC0kNFVA8VZtzhOKjDROTB3vtPBcNcTcYjxuoURPglFJn45b2mgn
-         dnUGwPgc6LU4AEVPxf/jffEers4VwtF2ItE5gO9UUBy6QeE3kRF9mgP8QaLA6zi5aNj8
-         qbn1Q9yNmgEcfilN2hl4qfiHdQKqYejDnn/EhxGdOJL6+bOTWQiKbknzYBcjQnLzS6Vp
-         Q1q+E+nufJFqn8GO5egocKKELypeNx1wr8X2QMpEra5OR1Ndc0rUl/zoTuqIXLLdF5fN
-         V51g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZL42NDAwRyqFSgHd9+LPNZsn853QbpqMscEZvhiYWzM=;
-        b=gSrlB0FcPa1fsKpSv/CD+cuX/ebAK6DdP946YBlkY0WpjxML6rDS3UKFBKhvSsC98R
-         cSebHRYpjjFbSNOnakJ54Xl2NUz74ZnHFYEEv4dl/sLHDh4uMP5UyunLAW4V1Fm/zENb
-         gd+u/xg2h6pBSdh/dDR2UctDnv415FCAri9k1lKfFmzx/iG8uGYdh3B6GIZMWi+wN87w
-         VQQ3NtF1C647zoChBiRuLK3XtbL9gCyzLgoIurS4z2pGTw9THuK9giSYqULXCjvrAHzB
-         +dTAJ3G0YYgqNhYfnJC0UZwQ8FzBohS3WlLULSwSgtl8gBbCWHSOxH8PyXBMurKVGvzj
-         VO5A==
-X-Gm-Message-State: AOAM5335jSLV/EhsHbyoYcdhAMjHA4qU4tT/hcRZUoyG/ELD2xQHY0F6
-        lDK9QYrIh6EKRquhFp1mSg2apLn2QRs=
-X-Google-Smtp-Source: ABdhPJxZvSJM5CEE+rwyY2plMtVpFbesLgpk5SnfITkTmQSlBIrtVpTBoa601/n+g2520vvERC4vGw==
-X-Received: by 2002:a1c:1b93:: with SMTP id b141mr4598606wmb.150.1597327027636;
-        Thu, 13 Aug 2020 06:57:07 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.117.232])
-        by smtp.gmail.com with ESMTPSA id n11sm5016409wmi.15.2020.08.13.06.57.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 06:57:06 -0700 (PDT)
-Subject: Re: [RESEND,v4,3/3] mmc: mediatek: add optional module reset property
-To:     Wenbin Mei <wenbin.mei@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thu, 13 Aug 2020 10:00:47 -0400
+X-IronPort-AV: E=Sophos;i="5.76,308,1592838000"; 
+   d="scan'208";a="54305209"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 13 Aug 2020 23:00:45 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0634B4004CF4;
+        Thu, 13 Aug 2020 23:00:42 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, stable@vger.kernel.org
-References: <20200813093811.28606-1-wenbin.mei@mediatek.com>
- <20200813093811.28606-4-wenbin.mei@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <7337a174-169d-2dd1-ed91-f05291d4f3a6@gmail.com>
-Date:   Thu, 13 Aug 2020 15:57:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200813093811.28606-4-wenbin.mei@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+Date:   Thu, 13 Aug 2020 15:00:41 +0100
+Message-Id: <20200813140041.5082-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The iwg21d comes with a 7" capacitive touch screen, therefore
+add support for it.
 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+v1->v2
+* This patch is part of series [1] (rest of the patches have be accepted
+  by Geert [2]).
+* Added regulator for lvds
+* Added reset pin for touchpanel
+* This patch is based on series [3]
 
-On 13/08/2020 11:38, Wenbin Mei wrote:
-> This patch fixs eMMC-Access on mt7622/Bpi-64.
-> Before we got these Errors on mounting eMMC ion R64:
-> [   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
-> flags 0x800 phys_seg 1 prio class 0
-> [   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
-> 
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
-> 
-> Cc: <stable@vger.kernel.org> # v5.4+
-> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/
+    ?series=330277
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+    renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+[3] https://patchwork.kernel.org/project/linux-renesas-soc/list/
+    ?series=330957
+---
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 99 +++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-I think you missed to add Philipp Zabels Reviewed-by tag.
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+index b3461a61a4bf..9bf4fbd9c736 100644
+--- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+@@ -30,6 +30,7 @@
+ 
+ /dts-v1/;
+ #include "r8a7742-iwg21m.dtsi"
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+@@ -52,6 +53,51 @@
+ 		clock-frequency = <26000000>;
+ 	};
+ 
++	lcd_backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&tpu 2 5000000 0>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		pinctrl-0 = <&backlight_pins>;
++		pinctrl-names = "default";
++		default-brightness-level = <7>;
++		enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
++	};
++
++	lvds-receiver {
++		compatible = "ti,ds90cf384a", "lvds-decoder";
++		vcc-supply = <&vcc_3v3_tft1>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				lvds_receiver_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				lvds_receiver_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
++
++	panel {
++		compatible = "edt,etm0700g0dh6";
++		backlight = <&lcd_backlight>;
++		power-supply = <&vcc_3v3_tft1>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds_receiver_out>;
++			};
++		};
++	};
++
+ 	reg_1p5v: 1p5v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "1P5V";
+@@ -75,6 +121,17 @@
+ 		};
+ 	};
+ 
++	vcc_3v3_tft1: regulator-panel {
++		compatible = "regulator-fixed";
++
++		regulator-name = "vcc-3v3-tft1";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		startup-delay-us = <500>;
++		gpio = <&gpio5 28 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	vcc_sdhi2: regulator-vcc-sdhi2 {
+ 		compatible = "regulator-fixed";
+ 
+@@ -129,12 +186,34 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 		VDDD-supply = <&reg_1p5v>;
+ 	};
++
++	touch: touchpanel@38 {
++		compatible = "edt,edt-ft5406";
++		reg = <0x38>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
++		/* GP1_29 is also shared with audio codec reset pin */
++		reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&vcc_3v3_tft1>;
++	};
+ };
+ 
+ &cmt0 {
+ 	status = "okay";
+ };
+ 
++&du {
++	status = "okay";
++};
++
++&gpio0 {
++	touch-interrupt {
++		gpio-hog;
++		gpios = <24 GPIO_ACTIVE_LOW>;
++		input;
++	};
++};
++
+ &hsusb {
+ 	pinctrl-0 = <&usb0_pins>;
+ 	pinctrl-names = "default";
+@@ -165,6 +244,11 @@
+ 		function = "avb";
+ 	};
+ 
++	backlight_pins: backlight {
++		groups = "tpu0_to2";
++		function = "tpu0";
++	};
++
+ 	i2c2_pins: i2c2 {
+ 		groups = "i2c2_b";
+ 		function = "i2c2";
+@@ -208,6 +292,17 @@
+ 	};
+ };
+ 
++&lvds0 {
++	status = "okay";
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&lvds_receiver_in>;
++			};
++		};
++	};
++};
++
+ &rcar_sound {
+ 	pinctrl-0 = <&sound_pins>;
+ 	pinctrl-names = "default";
+@@ -261,6 +356,10 @@
+ 	shared-pin;
+ };
+ 
++&tpu {
++	status = "okay";
++};
++
+ &usbphy {
+ 	status = "okay";
+ };
+-- 
+2.17.1
 
-Regards,
-Matthias
-
-
-> ---
->   drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 39e7fc54c438..fc97d5bf3a20 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -22,6 +22,7 @@
->   #include <linux/slab.h>
->   #include <linux/spinlock.h>
->   #include <linux/interrupt.h>
-> +#include <linux/reset.h>
->   
->   #include <linux/mmc/card.h>
->   #include <linux/mmc/core.h>
-> @@ -434,6 +435,7 @@ struct msdc_host {
->   	struct msdc_save_para save_para; /* used when gate HCLK */
->   	struct msdc_tune_para def_tune_para; /* default tune setting */
->   	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> +	struct reset_control *reset;
->   };
->   
->   static const struct mtk_mmc_compatible mt8135_compat = {
-> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
->   	u32 val;
->   	u32 tune_reg = host->dev_comp->pad_tune_reg;
->   
-> +	if (host->reset) {
-> +		reset_control_assert(host->reset);
-> +		usleep_range(10, 50);
-> +		reset_control_deassert(host->reset);
-> +	}
-> +
->   	/* Configure to MMC/SD mode, clock free running */
->   	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
->   
-> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
->   	if (IS_ERR(host->src_clk_cg))
->   		host->src_clk_cg = NULL;
->   
-> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-> +								"hrst");
-> +	if (IS_ERR(host->reset))
-> +		return PTR_ERR(host->reset);
-> +
->   	host->irq = platform_get_irq(pdev, 0);
->   	if (host->irq < 0) {
->   		ret = -EINVAL;
-> 
