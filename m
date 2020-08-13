@@ -2,190 +2,159 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C88EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77222076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5402076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V9t5rsR5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YZOkuBJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHMEDf (ORCPT
+        id S1725972AbgHMEGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 00:03:35 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:18301 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgHMEDf (ORCPT
+        Thu, 13 Aug 2020 00:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgHMEGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 00:03:35 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200813040331epoutp049cfcefff66193c8a1b7d340d4a175922~quBOK0xH61071410714epoutp04g
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:03:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200813040331epoutp049cfcefff66193c8a1b7d340d4a175922~quBOK0xH61071410714epoutp04g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597291411;
-        bh=gB+8yUlFrkMvVf09surihHyhYTCjSfRF7gIP4ew9+og=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=V9t5rsR5eoslynQVzZ91PEpNf74mdqJSfcmZJ0a2faq+ux8sEHvx/1lCoEgRXOqa2
-         /y6lsu71fLEi/e2Yni9xf/Yh26WwXQRCQHu1KhGtzJoDhXHL3cJKQ5SAhQy/tWfCli
-         2mL/6l4xNbuA3XL0UH31u/MJUNKeBCFNC05JuHsM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200813040331epcas1p15c253a9f0888ea029a451b7e5464c6a2~quBNlY8t30383703837epcas1p1k;
-        Thu, 13 Aug 2020 04:03:31 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BRtGV1MKrzMqYkk; Thu, 13 Aug
-        2020 04:03:30 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E4.EC.18978.19BB43F5; Thu, 13 Aug 2020 13:03:29 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200813040329epcas1p3019e96dba8ac8592dbb2dec1c7120a57~quBLohVhR2391823918epcas1p3J;
-        Thu, 13 Aug 2020 04:03:29 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200813040329epsmtrp27845189943a832cab6dac23a4aee1a6b~quBLizr7W3111331113epsmtrp20;
-        Thu, 13 Aug 2020 04:03:29 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-ba-5f34bb913685
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.99.08303.09BB43F5; Thu, 13 Aug 2020 13:03:28 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200813040328epsmtip2a6e865257b153c0d0200232f9df3ecaa~quBLW6E_i0336303363epsmtip2Z;
-        Thu, 13 Aug 2020 04:03:28 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>
-In-Reply-To: <490837eb-6765-c7be-bb80-b30fe34adb55@gmail.com>
-Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
-Date:   Thu, 13 Aug 2020 13:03:28 +0900
-Message-ID: <001501d67126$b3976df0$1ac649d0$@samsung.com>
+        Thu, 13 Aug 2020 00:06:15 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A57C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 21:06:15 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id n4so2222366vsl.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 21:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uFADKmKh7X3diP0daFq4Uh/PnuNyIFdsVOnr2X8DxEQ=;
+        b=YZOkuBJsgTHvjSG9g5a/xPxSZTOJqLyRy5QvKnBhTb1LmpDhPoDH0G+SwUIP8hDuPC
+         Kd6o2Vn2ksK+EGfYUQO1sKlBCj1lPLSED3wGvd6pb/aR0VOGkNhNHXM0bodOhZpy1LQH
+         NehGXzZu+3AQNedbVRYBnAW25PW3VOvt+hfpY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uFADKmKh7X3diP0daFq4Uh/PnuNyIFdsVOnr2X8DxEQ=;
+        b=ipQ+gVgD2HgZpCNNfsWnebH4KBxZu64x+rynzkAFggQZvrnBzHI33FJ+xeXsVE1AXi
+         YLNYC/WOPD5A8RBZm5D22/jZibjvmXW4HWOlyFW+QvJdjqTXqVqmt0inpbptZNKzs/HR
+         DfQo/rYNRctZup3Sch9EFGKEgctcl4jwE71+fJxxIr5jj+Fr5uKkUD1QTScfsFHeYqIG
+         BCVuJniKcvWDLRo/pvBkG61h6iQ2UxLL05kfurUhe5fsFLufl/Nixj0aCT+TPFi2Gl3K
+         z3+3dRNfeaiKPb8iFPV1QLEgdZFcXezsAcsgeYNxudIgpCdrByraPrW94/Jg9KITuKgk
+         QI5g==
+X-Gm-Message-State: AOAM530BqHIemrd5lUVqA5LXIORO53LLxbqDEru+q4YMQ2LWSwLc1vAS
+        8F6ChXZGcEidpT1tfei0nFN6eVUFmt80KQB9WYynUQ==
+X-Google-Smtp-Source: ABdhPJxOLU/xPfybMFGa215m/YHXhxhvxAG948nEvYLq+qYAi4i1/TNCntTeQOm53HE/NsCM/5k/TRa7EtCXCzZwwLs=
+X-Received: by 2002:a05:6102:85:: with SMTP id t5mr1848857vsp.1.1597291574574;
+ Wed, 12 Aug 2020 21:06:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQF0BoMPlscPSpT3Th8lCwQKqdMbhQJGtMGMAcFEUC0CM27r7AJXiyRiAvP59PwCFflaTAKXbWa7qXiTdBA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmge7E3SbxBm/2m1r8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
-        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
-        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
-        oYGBkSlQZUJOxtljggUHhSsmr57A2MC4j7+LkZNDQsBE4vnO2yxdjFwcQgI7GCX2/jzMDuF8
-        YpRY/+sflPOZUWLj2bXsMC1rN1xnBbGFBHYxSsy4FAhR9JJR4vfb52wgCTYBXYl/f/aD2SIC
-        ehInT15nAyliFmhkkphwvQcswSlgKzH7xCOgSRwcwgKWEguvK4OEWQRUJRbMuQVWwgsUvt+3
-        jxXCFpQ4OfMJC4jNLCAvsf3tHGaIgxQkfj5dBjZGRCBJ4sSsLIgSEYnZnW3MIGslBBZySKzp
-        mQb1gItE4/zvbBC2sMSr41ug4lISn9/tZQOZIyFQLfFxP9T4DkaJF99tIWxjiZvrN4CtYhbQ
-        lFi/Sx8irCix8/dcRoi1fBLvvvawQkzhlehoE4IoUZXou3SYCcKWluhq/8A+gVFpFpK/ZiH5
-        axaSB2YhLFvAyLKKUSy1oDg3PbXYsMAQOaY3MYITqZbpDsaJbz/oHWJk4mA8xCjBwawkwst8
-        2TheiDclsbIqtSg/vqg0J7X4EKMpMKQnMkuJJucDU3leSbyhqZGxsbGFiZm5mamxkjjvw1sK
-        8UIC6YklqdmpqQWpRTB9TBycUg1MC1K/7AkLXGTF0RG0V/eks1Tu1vJw1XjfSP/FkV+zLp5r
-        Yrkk8UZ4t7hruEqAcM/itXEfHkdffH1r9sJgy08qbk2dhadl5TUaZAU3aB1dr/ThTe2M3Fl7
-        Yv9cKOAw7IiXKn6VEizHZqf7dqrpc6ejEr8eb5k0P1DO6+wps4STt1S8vrPuu/lgvZZL65vC
-        B10qy/gV/fp2rVIo8l5swqgZrC4iwfX9/wl3FV4XZ9eyg2sVS/fLyX9Sen7zvNRl35a5zZ/m
-        cE6unPKWJU1Q/fS2mwLP5yf8+OPlcPrHBvdNBmmVAtzXIn2ObBV7vNL6Wuju3f9tepdUT0gQ
-        EJ1gGb5pYvH2c52XudfmZhUzapYrsRRnJBpqMRcVJwIAUTPvXi0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJXnfibpN4g8PJFj/m3maxeHNyKovF
-        nr0nWSwu75rDZnH5/ycWi2VfJrNYbPl3hNWB3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
-        PT5vkgtgi+KySUnNySxLLdK3S+DKOHtMsOCgcMXk1RMYGxj38XcxcnJICJhIrN1wnbWLkYtD
-        SGAHo0THy3ssEAlpiWMnzjB3MXIA2cIShw8Xg4SFBJ4zSnz4wwhiswnoSvz7s58NxBYR0JM4
-        efI6G8gcZoFmJonPe2+zQwxdxizRf/ITK0gVp4CtxOwTj1hBhgoLWEosvK4MEmYRUJVYMOcW
-        2CBeoPD9vn2sELagxMmZT8DuYRbQluh92MoIYctLbH87hxniTgWJn0+XgY0UEUiSODErC6JE
-        RGJ2ZxvzBEbhWUgmzUIyaRaSSbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7
-        iREcUVpaOxj3rPqgd4iRiYPxEKMEB7OSCC/zZeN4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxf
-        Zy2MExJITyxJzU5NLUgtgskycXBKNTBtuMPEeiEqtkiCQfGB06qXizgX8nMnKt6/XzPpmqnY
-        XOPfLnw72i9P+9Xt1r1y9fY/F9a5uUl+FgqsMnl7IHXmw41tjHu7dM6ZxaRkrS40nBfBkdQu
-        u68luMg032PxuyNN/WsePzVNllnVbl7yfbfgBs0+qxnK7tPMFR5L1EckFTAuPzc59Mzx3g+x
-        3/b3L47SOvTyUefhtQYzhHbEWX4LOft1stXmf826czK82oMmMe85uC+Nw0H/33KTI3OlPnQU
-        LLs35d/+CNa3ruotT+3S5xhIxMwOv8oc/ndbuvPMeLOvDQvO3Drl9kSNvUtr4+GbXE1flCPP
-        39FaIXVUW2rv489fn4i+2JYf1FHySqJWiaU4I9FQi7moOBEANTYHrxcDAAA=
-X-CMS-MailID: 20200813040329epcas1p3019e96dba8ac8592dbb2dec1c7120a57
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3
-References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
-        <20200616021808.5222-1-kohada.t2@gmail.com>
-        <414101d64477$ccb661f0$662325d0$@samsung.com>
-        <aac9d6c7-1d62-a85d-9bcb-d3c0ddc8fcd6@gmail.com>
-        <500801d64572$0bdd2940$23977bc0$@samsung.com>
-        <c635e965-6b78-436a-3959-e4777e1732c1@gmail.com>
-        <000301d66dac$07b9fc00$172df400$@samsung.com>
-        <490837eb-6765-c7be-bb80-b30fe34adb55@gmail.com>
+References: <20200811065902.2100551-1-ikjn@chromium.org>
+In-Reply-To: <20200811065902.2100551-1-ikjn@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 13 Aug 2020 12:06:03 +0800
+Message-ID: <CANMq1KDzDGJiRDQSPAvdXEt5iDCggZyjQkmUKoY4huYQu3UDeg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] power: supply: sbs-battery: don't assume every i2c
+ errors as battery disconnect
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Thanks for thinking on this complicated issue.
-> 
-> 
-> > Most of the NAND flash devices and HDDs have wear leveling and bad sector replacement algorithms
-> applied.
-> > So I think that the life of the boot sector will not be exhausted first.
-> 
-> I'm not too worried about the life of the boot-sector.
-> I'm worried about write failures caused by external factors.
-> (power failure/system down/vibration/etc. during writing) They rarely occur on SD cards, but occur on
-> many HDDs, some SSDs and USB storages by 0.1% or more.
-Hard disk and SSD do not guarantee atomic write of a sector unit?
+On Tue, Aug 11, 2020 at 2:59 PM Ikjoon Jang <ikjn@chromium.org> wrote:
+>
+> Current sbs-battery considers all smbus errors as diconnection events
 
-> Especially with AFT-HDD, not only boot-sector but also the following multiple sectors become
-> unreadable.
-Other file systems will also be unstable on a such HW.
+disconnection
 
-> It is not possible to completely solve this problem, as long as writing to the boot-sector.
-> (I think it's a exFAT's specification defect) The only effective way to reduce this problem is to
-> reduce writes to the boot-sector.
-exFAT's specification defect... Well..
-Even though the boot sector is corrupted, It can be recovered using the backup boot sector
-through fsck.
-> 
-> 
-> > Currently the volume dirty/clean policy of exfat-fs is not perfect,
-> 
-> Thank you for sharing the problem with you.
-> 
-> 
-> > but I think it behaves similarly to the policy of MS Windows.
-> 
-> On Windows10, the dirty flag is cleared after more than 15 seconds after all write operations are
-> completed.
-> (dirty-flag is never updated during the write operation continues)
-> 
-> 
-> > Therefore,
-> > I think code improvements should be made to reduce volume flag records while maintaining the current
-> policy.
-> 
-> Current policy is inconsistent.
-> As I wrote last mail, the problem with the current implementation is that the dirty-flag may not be
-> cleared after the write operation.(even if sync is enabled or disabled) Because, some write operations
-> clear the dirty-flag but some don't clear.
-> Unmount or sync command is the only way to ensure that the dirty-flag is cleared.
-> This has no effect on clearing the dirty-flag after a write operations, it only increases risk of
-> destroying the boot-sector.
->   - Clear the dirty-flag after every write operation.
->   - Never clear the dirty-flag after every write operation.
-> Unless unified to either one,  I think that sync policy cannot be consistent.
-> 
-> How do you think?
-> 
-> 
-> BR
+> when battery-detect pin isn't supplied, and restored to present state back
+> on any successful transaction were made.
+
+when any... is made
+
+>
+> This can leads
+
+lead
+
+> to unlimited state changes between present and !present
+> when one unsupported command was requested and other following commands
+> were successful, e.g. udev rules tries to read multiple properties.
+>
+> This patch checks battery presence by reading known good command to
+> check battery existence.
+>
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
 > ---
-> etsuhiro Kohada <kohada.t2@gmail.com>
+> v2: fix return value checking of sbs_get_battery_presence_and_health()
+> ---
+>  drivers/power/supply/sbs-battery.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+> index 6acb4ea25d2a..db964a470ebc 100644
+> --- a/drivers/power/supply/sbs-battery.c
+> +++ b/drivers/power/supply/sbs-battery.c
+> @@ -878,10 +878,17 @@ static int sbs_get_property(struct power_supply *psy,
+>         if (!chip->enable_detection)
+>                 goto done;
+>
+> -       if (!chip->gpio_detect &&
+> -               chip->is_present != (ret >= 0)) {
+> -               sbs_update_presence(chip, (ret >= 0));
+> -               power_supply_changed(chip->power_supply);
+> +       if (!chip->gpio_detect && chip->is_present != (ret >=0)) {
+> +               bool old_present = chip->is_present;
+> +               union power_supply_propval val;
+> +
+> +               sbs_get_battery_presence_and_health(
+> +                               client, POWER_SUPPLY_PROP_PRESENT, &val);
+> +
+> +               sbs_update_presence(chip, val.intval);
 
+I don't think you can/should assume that val.intval will be set
+correctly if the return value is negative (even if that's what the
+functions currently do, it'd be too easy to accidentally change them).
 
+So I still think you need to have:
+
+ret = sbs_get_battery_presence_and_health...
+
+sbs_update_presence(chip, !ret && val.intval);
+
+> +
+> +               if (old_present != chip->is_present)
+> +                       power_supply_changed(chip->power_supply);
+>         }
+>
+>  done:
+> @@ -1067,11 +1074,12 @@ static int sbs_probe(struct i2c_client *client)
+>          * to the battery.
+>          */
+>         if (!(force_load || chip->gpio_detect)) {
+> -               rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
+> -
+> -               if (rc < 0) {
+> -                       dev_err(&client->dev, "%s: Failed to get device status\n",
+> -                               __func__);
+> +               union power_supply_propval val;
+> +               sbs_get_battery_presence_and_health(
+> +                               client, POWER_SUPPLY_PROP_PRESENT, &val);
+> +               if (!val.intval) {
+> +                       dev_err(&client->dev, "Failed to get present status\n");
+> +                       rc = -ENODEV;
+>                         goto exit_psupply;
+>                 }
+>         }
+> --
+> 2.28.0.236.gb10cc79966-goog
+>
