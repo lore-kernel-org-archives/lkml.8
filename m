@@ -2,161 +2,162 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43637C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C313C20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597281952;
-	bh=qIzZXfltMZ2c8wweV3aCSivjOgKWA6wcnMyMvK5rvOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BLyvgfZYf9iGKKF9Cueq2okD+Zkgca0KOgSWMAUZE7UebzsSC2aQ+gp3szPG102qz
-	 oFpzFk0YTXDCIIaE68zJgF0PV6d2bDv1/Z0ceBAnXtKQOFq0JIyww8AC/D9SwAoPAM
-	 QMCstUX/U9BezXl1u4D0Bk2rUyv0Tj4AmpcUlAHQ=
+	by mail.kernel.org (Postfix) with ESMTP id ECB5E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="loqmWX2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgHMBZw (ORCPT
+        id S1726499AbgHMB2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgHMBZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:25:51 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6056A205CB;
-        Thu, 13 Aug 2020 01:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597281950;
-        bh=qIzZXfltMZ2c8wweV3aCSivjOgKWA6wcnMyMvK5rvOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xzxPv8NhPd3bdEBw0WOvPDRCmOSCtSWI/RjMbtBdB9WqYX1VHf7qKA+3I7/8/HKp/
-         E/Hfu5DlQH6KVIGGgAyIu5w6dq8GfBfYYh9dcLMoxRSZ5e/p0776Ji/dZ0foJKbhfg
-         R0nX1GNIG3+sILDhplnkvtvcE1+Ox6ynJPuJZEWM=
-Date:   Wed, 12 Aug 2020 18:25:48 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
-        martin.petersen@oracle.com, kwmad.kim@samsung.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com
-Subject: Re: [RESEND PATCH v10 04/10] scsi: ufs: introduce
- UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-Message-ID: <20200813012548.GA1782889@gmail.com>
-References: <20200613024706.27975-1-alim.akhtar@samsung.com>
- <CGME20200613030445epcas5p4428da322cd9527d1075ff0f1ccc75d23@epcas5p4.samsung.com>
- <20200613024706.27975-5-alim.akhtar@samsung.com>
- <20200812002920.GA1352011@gmail.com>
- <000401d67110$0be2d9c0$23a88d40$@samsung.com>
+        Wed, 12 Aug 2020 21:28:40 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:37991 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgHMB2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 21:28:40 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200813012838epoutp042fbeed82971fc49d6ff6a084ea7ef9a9~qr5_v_kGI0336503365epoutp04Y
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:28:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200813012838epoutp042fbeed82971fc49d6ff6a084ea7ef9a9~qr5_v_kGI0336503365epoutp04Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597282118;
+        bh=mcUxxV3dAIau4GRPJWDThSa0iYsiNlZ8SxzqqAUzmsE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=loqmWX2ELfddHT7GLK3rhejxS1K6Q/vfF80hpogKvkK2Y+rPwt64t4XDwO6BVoXB3
+         J6NhIs3rHXsP+ItvcKCrQGNnPjhgtggZaTDcRMk2LTpTzBJHE93I/SbV+y4jESRHDr
+         AozA3TAu310XrHQztFrp5SCMTFAOOy7cVkemWrGM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200813012837epcas1p15ea9d4a74ca0c3a777b0f3ba52197eac~qr5_SJn4-0053400534epcas1p1F;
+        Thu, 13 Aug 2020 01:28:37 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BRpqm4p1GzMqYlv; Thu, 13 Aug
+        2020 01:28:36 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3C.9E.28581.347943F5; Thu, 13 Aug 2020 10:28:35 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200813012834epcas1p2ca9a4e0f74353f7f3359a46b5acc5e39~qr57mj4XQ2480424804epcas1p2z;
+        Thu, 13 Aug 2020 01:28:34 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200813012834epsmtrp191676a049a699546e880dea78a535ca4~qr57l7ugx0054900549epsmtrp1T;
+        Thu, 13 Aug 2020 01:28:34 +0000 (GMT)
+X-AuditID: b6c32a38-2cdff70000006fa5-38-5f3497433cc5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0D.E0.08382.247943F5; Thu, 13 Aug 2020 10:28:34 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200813012834epsmtip14308fc1cbbe10feadbf539e1d98a7fb9~qr57cwEOb0753207532epsmtip1h;
+        Thu, 13 Aug 2020 01:28:34 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Linus Torvalds'" <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] exfat update for 5.9-rc1
+Date:   Thu, 13 Aug 2020 10:28:34 +0900
+Message-ID: <000001d67111$0fc882f0$2f5988d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000401d67110$0be2d9c0$23a88d40$@samsung.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdZwbbLDTFjjj9dGQe2aT3FnLiDp/g==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsWy7bCmvq7zdJN4g45+bovLu+awWTzqe8vu
+        wORxYsZvFo/Pm+QCmKJybDJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1Nt
+        lVx8AnTdMnOAxisplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCgwNCvSKE3OLS/PS
+        9ZLzc60MDQyMTIEqE3IyZk4/yl7wmrdi+8J+lgbGFdxdjJwcEgImEk/2LWLtYuTiEBLYwShx
+        8vUHZgjnE6PE+74pbBDON0aJH2cesMG0zDsxASqxl1Givf8NC4TzklHi7f8mZpAqNgFdiX9/
+        9gNVcXCICJhJfFviCGIyCyhJXD0lB2IKC+hI7FolD2KyCKhKbG93AunjFbCUeDd/KjOELShx
+        cuYTFhCbWUBeYvvbOcwQFyhI/Hy6jBVitp7EnWYNiBIRidmdbVAl+9glPj4Sh7BdJD7svMsC
+        YQtLvDq+hR3ClpJ42d/GDjJGQqBa4uN+qNYORokX320hbGOJm+s3sEKcrimxfpc+RFhRYufv
+        uYwQW/kk3n3tYYWYwivR0SYEUaIq0XfpMBOELS3R1f4BaqmHxJOtcxgnMCrOQvLiLCQvzkLy
+        yyyExQsYWVYxiqUWFOempxYbFpggR/MmRnCi07LYwTj37Qe9Q4xMHIyHGCU4mJVEeJkvG8cL
+        8aYkVlalFuXHF5XmpBYfYjQFhvlEZinR5Hxgqs0riTc0NTI2NrYwMTM3MzVWEud9eEshXkgg
+        PbEkNTs1tSC1CKaPiYNTqoFJ8BrHZon093Mrzhlt6qz8UXVzSkbfEe1WMbbA7QFXWd/H+LB+
+        Cpr3uMVTcyqj0l79a88j1hbJWN66XR/mun3q1tO8DV9EN/vahptFt0pkmTu3/pm3J0/c/tXD
+        VlNO2SCpLXs1S/P5THawnis6vyfm+emD4ne3G5cYSP69sZM1IYTxxtQ3BY6pN35fObPdjf/3
+        CX7GxTv4HuUe1gw1TP/+vvlF753zEvKnjPcs07nkGtC2Jr4lhWfVp48nC35wT93XLh7086Hv
+        20XsjJdE0294PA5+78bKUc1wuN3f3zPg67yQI0ufdnNVnzqV9Oi3fZ+LbMsrA+eLSb7P1Gc+
+        F/WX15qbxvtk5/Qe5prDV3WUWIozEg21mIuKEwEr3pL3/QMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsWy7bCSnK7TdJN4g5vP9S0u75rDZvGo7y27
+        A5PHiRm/WTw+b5ILYIrisklJzcksSy3St0vgypg5/Sh7wWveiu0L+1kaGFdwdzFyckgImEjM
+        OzGBrYuRi0NIYDejxPEz15kgEtISx06cYe5i5ACyhSUOHy6GqHnOKLF78UZGkBo2AV2Jf3/2
+        s4HUiAiYSXxb4ghiMgsoSVw9JQdiCgvoSOxaJQ9isgioSmxvdwLp4xWwlHg3fyozhC0ocXLm
+        ExaIRj2JNojRzALyEtvfzmGGOEVB4ufTZawQa/Qk7jRrQJSISMzubGOewCg4C8mgWQiDZiEZ
+        NAtJxwJGllWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMHhq6W5g3H7qg96hxiZOBgP
+        MUpwMCuJ8DJfNo4X4k1JrKxKLcqPLyrNSS0+xCjNwaIkznujcGGckEB6YklqdmpqQWoRTJaJ
+        g1Oqgalnm5PTlRjTtxMKFbM6vxbIn9Ds59q81fKTN4OUHqPc5KTrxs+OfjkXU6X/2Fcjv3Oa
+        j9kS/f4/xmJOe7Y4xlruSN/p3/szsSjys0bY3+Nesv3+y1i3NM4V7rD+bv5oc6rKPud9E/9d
+        l7gcvaNFZ4PUk92Z/i/ck97I2HU3NR++b8MYH5JT4Hp/4f3U858rrbY4Tjsx55+exI9dO2U4
+        1+SEta25MbG6nX++9KqnSx8mJR/7/i88XpND86JXmNWabiExN+u1X2ZJ5/tH3gk+/H7qCaWz
+        0vpTr3i6HC27eKmB9xEv3/qVgjMlKxeprPykHRh9zKz5xHGrWtnpBq/Ut69QT9e6dPq88BKx
+        cy83LFRiKc5INNRiLipOBAAc/roEzgIAAA==
+X-CMS-MailID: 20200813012834epcas1p2ca9a4e0f74353f7f3359a46b5acc5e39
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200813012834epcas1p2ca9a4e0f74353f7f3359a46b5acc5e39
+References: <CGME20200813012834epcas1p2ca9a4e0f74353f7f3359a46b5acc5e39@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 06:51:13AM +0530, Alim Akhtar wrote:
-> Hi Eric,
-> 
-> > -----Original Message-----
-> > From: Eric Biggers <ebiggers@kernel.org>
-> > Sent: 12 August 2020 05:59
-> > To: Alim Akhtar <alim.akhtar@samsung.com>
-> > Cc: robh@kernel.org; devicetree@vger.kernel.org;
-> linux-scsi@vger.kernel.org;
-> > krzk@kernel.org; avri.altman@wdc.com; martin.petersen@oracle.com;
-> > kwmad.kim@samsung.com; stanley.chu@mediatek.com;
-> > cang@codeaurora.org; linux-samsung-soc@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; kishon@ti.com
-> > Subject: Re: [RESEND PATCH v10 04/10] scsi: ufs: introduce
-> > UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-> > 
-> > Hi Alim,
-> > 
-> > On Sat, Jun 13, 2020 at 08:17:00AM +0530, Alim Akhtar wrote:
-> > > Some UFS host controllers like Exynos uses granularities of PRDT
-> > > length and offset as bytes, whereas others uses actual segment count.
-> > >
-> > > Reviewed-by: Avri Altman <avri.altman@wdc.com>
-> > > Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
-> > > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > > ---
-> > >  drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
-> > > drivers/scsi/ufs/ufshcd.h |  6 ++++++
-> > >  2 files changed, 29 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> > > index ee30ed6cc805..ba093d0d0942 100644
-> > > --- a/drivers/scsi/ufs/ufshcd.c
-> > > +++ b/drivers/scsi/ufs/ufshcd.c
-> > > @@ -2151,8 +2151,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba,
-> > struct ufshcd_lrb *lrbp)
-> > >  		return sg_segments;
-> > >
-> > >  	if (sg_segments) {
-> > > -		lrbp->utr_descriptor_ptr->prd_table_length =
-> > > -			cpu_to_le16((u16)sg_segments);
-> > > +
-> > > +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
-> > > +			lrbp->utr_descriptor_ptr->prd_table_length =
-> > > +				cpu_to_le16((sg_segments *
-> > > +					sizeof(struct ufshcd_sg_entry)));
-> > > +		else
-> > > +			lrbp->utr_descriptor_ptr->prd_table_length =
-> > > +				cpu_to_le16((u16) (sg_segments));
-> > >
-> > >  		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
-> > >
-> > > @@ -3500,11 +3506,21 @@ static void
-> > ufshcd_host_memory_configure(struct ufs_hba *hba)
-> > >
-> > 	cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
-> > >
-> > >  		/* Response upiu and prdt offset should be in double words
-> */
-> > > -		utrdlp[i].response_upiu_offset =
-> > > -			cpu_to_le16(response_offset >> 2);
-> > > -		utrdlp[i].prd_table_offset = cpu_to_le16(prdt_offset >> 2);
-> > > -		utrdlp[i].response_upiu_length =
-> > > -			cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-> > > +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN) {
-> > > +			utrdlp[i].response_upiu_offset =
-> > > +				cpu_to_le16(response_offset);
-> > > +			utrdlp[i].prd_table_offset =
-> > > +				cpu_to_le16(prdt_offset);
-> > > +			utrdlp[i].response_upiu_length =
-> > > +				cpu_to_le16(ALIGNED_UPIU_SIZE);
-> > > +		} else {
-> > > +			utrdlp[i].response_upiu_offset =
-> > > +				cpu_to_le16(response_offset >> 2);
-> > > +			utrdlp[i].prd_table_offset =
-> > > +				cpu_to_le16(prdt_offset >> 2);
-> > > +			utrdlp[i].response_upiu_length =
-> > > +				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-> > > +		}
-> > >
-> > >  		ufshcd_init_lrb(hba, &hba->lrb[i], i);
-> > >  	}
-> > 
-> > Isn't this patch missing an update to ufshcd_print_trs()?  It uses
-> > ->prd_table_length as the number of segments, not the number of bytes.
-> > 
-> prd_table_length will be populated before it reaches ufshcd_print_trs()
-> based on UFSHCD_QUIRK_PRDT_BYTE_GRAN.
-> 
+Hi Linus,
 
-Yes, which is why it seems ufshcd_print_trs() needs to be updated to take
-UFSHCD_QUIRK_PRDT_BYTE_GRAN into account.
+This is exfat update pull request for v5.9-rc1. I add description of
+this pull request on below. Please pull exfat with following ones.
 
-- Eric
+Thanks!
+
+The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
+
+  Linux 5.8 (2020-08-02 14:21:45 -0700)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git tags/exfat-for-5.9-rc1
+
+for you to fetch changes up to 7018ec68f08249de17cb131b324d5a48e89ed898:
+
+  exfat: retain 'VolumeFlags' properly (2020-08-12 08:31:13 +0900)
+
+----------------------------------------------------------------
+Description for this pull request:
+ - Don't clear MediaFailure and VolumeDirty bit in volume flags
+   if these were already set before mounting.
+ - Write multiple dirty buffers at once in sync mode.
+ - Remove unneeded EXFAT_SB_DIRTY bit set.
+
+----------------------------------------------------------------
+Tetsuhiro Kohada (5):
+      exfat: remove EXFAT_SB_DIRTY flag
+      exfat: write multiple sectors at once
+      exfat: add error check when updating dir-entries
+      exfat: optimize exfat_zeroed_cluster()
+      exfat: retain 'VolumeFlags' properly
+
+ fs/exfat/balloc.c    |  4 ++--
+ fs/exfat/dir.c       | 32 ++++++++++++++++-------------
+ fs/exfat/exfat_fs.h  | 14 ++++++-------
+ fs/exfat/exfat_raw.h |  5 ++---
+ fs/exfat/fatent.c    | 58 ++++++++++------------------------------------------
+ fs/exfat/file.c      |  9 +++++---
+ fs/exfat/inode.c     | 13 ++++++------
+ fs/exfat/misc.c      | 22 ++++++++++++++++++--
+ fs/exfat/namei.c     | 32 ++++++++++++++---------------
+ fs/exfat/super.c     | 48 ++++++++++++++++++++++++++++---------------
+ 10 files changed, 121 insertions(+), 116 deletions(-)
+
