@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B0320774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9548720774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgHMA5J (ORCPT
+        id S1726670AbgHMA5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 20:57:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22625 "EHLO mga17.intel.com"
+        Wed, 12 Aug 2020 20:57:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26628 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgHMA5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726526AbgHMA5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 20:57:06 -0400
-IronPort-SDR: k8QbWiKsX4f+Z0/SywXUlPlbIkIbvLKgA0y2iFCORx0ufmyVzDWFQAmcPEMrlYnGu6N951hblr
- xgc5V+fcG5UA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="134187941"
+IronPort-SDR: M8q/IO+NYGuRIFOwh7a+PIITodGNmJ7oqlPKBvDIur9QW6ET80D24yFiAqSE1+5Kjm5n2sVVUy
+ YWQLUtEnatTA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133660926"
 X-IronPort-AV: E=Sophos;i="5.76,306,1592895600"; 
-   d="scan'208";a="134187941"
+   d="scan'208";a="133660926"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 17:57:05 -0700
-IronPort-SDR: N8WknwYBhVYVYxyPM4dGFRkynYOOKCseddCByMvJs370fQ002BU4h9YH+RYj5TVi6MDvyAvz5D
- JHy9qYi40Qag==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 17:57:06 -0700
+IronPort-SDR: Vuu1xzqSFi1GuJUOwruU1Di5VRmhOxOGs7vffLvc1YkTppnVdXeZJEZNv9WtDvlo6sdP93hRRe
+ gy0JHu2z0oVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,306,1592895600"; 
-   d="scan'208";a="308897167"
+   d="scan'208";a="291217990"
 Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 12 Aug 2020 17:57:04 -0700
+  by orsmga003.jf.intel.com with ESMTP; 12 Aug 2020 17:57:04 -0700
 Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1k61YF-0000Lc-CE; Thu, 13 Aug 2020 00:57:03 +0000
-Date:   Thu, 13 Aug 2020 08:56:14 +0800
+        id 1k61YF-0000La-Bk; Thu, 13 Aug 2020 00:57:03 +0000
+Date:   Thu, 13 Aug 2020 08:56:11 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
         Julia Lawall <Julia.Lawall@lip6.fr>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>,
         Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-input@vger.kernel.org
 Subject: [PATCH] coccinelle: api: fix device_attr_show.cocci warnings
-Message-ID: <20200813005614.GA85482@8851f5375e5a>
+Message-ID: <20200813005611.GA85221@8851f5375e5a>
 References: <202008130840.TWLDLwLA%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -63,9 +64,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: kernel test robot <lkp@intel.com>
 
-drivers/hid/hid-sony.c:611:8-16: WARNING: use scnprintf or sprintf
-drivers/hid/hid-sony.c:648:8-16: WARNING: use scnprintf or sprintf
-drivers/hid/hid-sony.c:660:8-16: WARNING: use scnprintf or sprintf
+drivers/hid/hid-roccat-koneplus.c:247:8-16: WARNING: use scnprintf or sprintf
+drivers/hid/hid-roccat-koneplus.c:314:8-16: WARNING: use scnprintf or sprintf
 
 
  From Documentation/filesystems/sysfs.txt:
@@ -87,35 +87,26 @@ commit: abfc19ff202d287742483e15fd478ddd6ada2187 coccinelle: api: add device_att
 
 Please take the patch only if it's a positive warning. Thanks!
 
- hid-sony.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ hid-roccat-koneplus.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -608,7 +608,7 @@ static ssize_t ds4_show_poll_interval(st
- 	struct hid_device *hdev = to_hid_device(dev);
- 	struct sony_sc *sc = hid_get_drvdata(hdev);
- 
--	return snprintf(buf, PAGE_SIZE, "%i\n", sc->ds4_bt_poll_interval);
-+	return scnprintf(buf, PAGE_SIZE, "%i\n", sc->ds4_bt_poll_interval);
+--- a/drivers/hid/hid-roccat-koneplus.c
++++ b/drivers/hid/hid-roccat-koneplus.c
+@@ -244,7 +244,7 @@ static ssize_t koneplus_sysfs_show_actua
+ {
+ 	struct koneplus_device *koneplus =
+ 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
+-	return snprintf(buf, PAGE_SIZE, "%d\n", koneplus->actual_profile);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", koneplus->actual_profile);
  }
  
- static ssize_t ds4_store_poll_interval(struct device *dev,
-@@ -645,7 +645,7 @@ static ssize_t sony_show_firmware_versio
- 	struct hid_device *hdev = to_hid_device(dev);
- 	struct sony_sc *sc = hid_get_drvdata(hdev);
+ static ssize_t koneplus_sysfs_set_actual_profile(struct device *dev,
+@@ -311,7 +311,7 @@ static ssize_t koneplus_sysfs_show_firmw
+ 			&info, KONEPLUS_SIZE_INFO);
+ 	mutex_unlock(&koneplus->koneplus_lock);
  
--	return snprintf(buf, PAGE_SIZE, "0x%04x\n", sc->fw_version);
-+	return scnprintf(buf, PAGE_SIZE, "0x%04x\n", sc->fw_version);
+-	return snprintf(buf, PAGE_SIZE, "%d\n", info.firmware_version);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", info.firmware_version);
  }
- 
- static DEVICE_ATTR(firmware_version, 0444, sony_show_firmware_version, NULL);
-@@ -657,7 +657,7 @@ static ssize_t sony_show_hardware_versio
- 	struct hid_device *hdev = to_hid_device(dev);
- 	struct sony_sc *sc = hid_get_drvdata(hdev);
- 
--	return snprintf(buf, PAGE_SIZE, "0x%04x\n", sc->hw_version);
-+	return scnprintf(buf, PAGE_SIZE, "0x%04x\n", sc->hw_version);
- }
- 
- static DEVICE_ATTR(hardware_version, 0444, sony_show_hardware_version, NULL);
+ static DEVICE_ATTR(firmware_version, 0440,
+ 		   koneplus_sysfs_show_firmware_version, NULL);
