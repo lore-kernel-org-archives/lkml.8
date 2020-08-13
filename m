@@ -2,142 +2,176 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D505C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741BD20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179D1208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7KGzsT1"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="19xIPU0M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHunRBTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgHMLzv (ORCPT
+        id S1726647AbgHML6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46628 "EHLO
+        Thu, 13 Aug 2020 07:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMLzd (ORCPT
+        with ESMTP id S1726419AbgHMLzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:55:33 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554BBC061384
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:54:39 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p37so2702092pgl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6TUg3OqVgwPUQPxxlDPJAnVvD/b4nl9aq+UQKwnVlcQ=;
-        b=W7KGzsT1W+1I4nEf9dSr4Rb2Al6uyVtrIYFegz9QH2PUdL4l5phEMJJiXc2gDPebi1
-         1hLnaVwc52kkz0KQ6fKQNjhZOaxgHHzdw1Euip6gpxDlniZKfwq2HRwP15dqJuz54gBx
-         1U18Ei0FeO97sRofUHQjp4RfE9hHb+0dVI4sF/IdjM9tIf8RP3RSXQ+HjQt3zbt+mH8W
-         6E7s5MNKR0jfRKJhRpHd4TIyVfdWrua9gzzlm7Cst2XSe7bsvYpSb6WVWKr982wuDnVC
-         gbZWo3R1TttYbo/abE64BAybhcVecArX/SIsTfe8h7qQyaMFETOhnn6ViF7vTP3yBw35
-         3qZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6TUg3OqVgwPUQPxxlDPJAnVvD/b4nl9aq+UQKwnVlcQ=;
-        b=Y+ms7g7AD/ILb7zeTnQdANADbbmXB0ZIMbnoIfYXo7eYyDgMLy0l89mbT6xRKSdpte
-         Hy23DZuM3MKnjGDFv0ih3smh50MW63RfvaHwISIXm9cpidAcdadI79BmyfCMnh7uEE1R
-         VCPtKgYWliWbUWofVG8h4J0D/+/O1v5gvGUZ/EFHXcjJtfJga4RxJHnJwt4FOxiZ91eg
-         WLo1ly/jVtnN+kJ5m643iMxD+cXENECD+cWyepdmUzGjSlK4EFh8hphg7v5trGpMXIIQ
-         Wg15nmELEFN+ekyD4sGCTJqDhJrhOd0nzW/igUMgZot3Sc5KZRhCjo3A6dVo2WEkZeOO
-         t3YQ==
-X-Gm-Message-State: AOAM5304yQ1tYyr74lUpKYMh8WEipRu5ONU/gMJfPQr6MeiZpm69uR+L
-        J5e4PGmJm7grU/se0bSvC3P+C40T
-X-Google-Smtp-Source: ABdhPJyc89SG6w0uXT54MOk2TmujM6CGfkss+meq1shT/JfMlmW1qipWykw1LDWpkARv48b2+V4KJA==
-X-Received: by 2002:aa7:9386:: with SMTP id t6mr4153429pfe.220.1597319678782;
-        Thu, 13 Aug 2020 04:54:38 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id m23sm5035651pgv.43.2020.08.13.04.54.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 04:54:37 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 20:54:35 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Message-ID: <20200813115435.GB483@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
- <20200811160551.GC12903@alley>
- <20200812163908.GH12903@alley>
- <87v9hn2y1p.fsf@jogness.linutronix.de>
- <20200813051853.GA510@jagdpanzerIV.localdomain>
- <875z9nvvl2.fsf@jogness.linutronix.de>
- <20200813084136.GK12903@alley>
+        Thu, 13 Aug 2020 07:55:39 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEB9C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:49:20 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597319290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZlgM8Obqrq40lXXZU4JOaZIlny7V1P2EsiDmKMcB++g=;
+        b=19xIPU0MprratrQ8DWWKKPXdeF1YeDe/0fGmScmgOSPwt0ygGapx9nJcuiYZjZeeQ3u03v
+        fCBh9RQEd9XQrAmxLF7AYmb9pxFaG/UjkfSeslA+UEj0aPzMoRFhaN/01fpeW+WRKKQ0ZK
+        wdhNisGNFEJsNMTkJQYZSClR1XOiRFz8mPB47b3QioYJR8Xq41mN/ZYUrs+jxRj15YgibI
+        DsRCR0YsA30xHD4mTpRlxwnV1Yv4mombKxHVOFtfO316Yor1i0cQDiKvARQiJ/ZbOCPrQj
+        /yQebkqX3gC6BiugKhKvJxNOKi5U0TLxPuvDuZ/U6Ul2YtwCxulF/ZDC3U6YBQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597319290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZlgM8Obqrq40lXXZU4JOaZIlny7V1P2EsiDmKMcB++g=;
+        b=aHunRBTHEwQleDYARlcD8oyakuVrUCLzsIwEZGv3n4EZ/4ZQapihc74hfKAQVmrDAjgeuk
+        OyTARcn3Ve9ep6DA==
+To:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: Re: [PATCH 1/5] timer: kasan: record and print timer stack
+In-Reply-To: <20200810072313.529-1-walter-zh.wu@mediatek.com>
+References: <20200810072313.529-1-walter-zh.wu@mediatek.com>
+Date:   Thu, 13 Aug 2020 13:48:10 +0200
+Message-ID: <87d03ulqbp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813084136.GK12903@alley>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/08/13 10:41), Petr Mladek wrote:
-> > My concerns about this idea:
-> > 
-> > - What if the printk user does not correctly terminate the cont message?
-> >   There is no mechanism to allow that open record to be force-finalized
-> >   so that readers can read newer records.
-> 
-> This is a real problem. And it is the reason why the cont buffer is
-> currently flushed (finalized) by the next message from another context.
+Walter,
 
-I understand that you think that this should be discussed and addressed
-later in a separate patch, but, since we are on pr_cont topic right now,
-can we slow down and maybe re-think what is actually expected from
-pr_cont()? IOW, have the "what is expect from this feature" thread?
+Walter Wu <walter-zh.wu@mediatek.com> writes:
+> This patch records the last two timer queueing stacks and prints
 
-For instance, is missing \n the one and only reason why printk-s from
-another context flush cont buffer now? Because I can see some more reasons
-for current behaviour and I'd like to question those reasons.
+"This patch" is useless information as we already know from the subject
+line that this is a patch.
 
-I think what Linus said a long time ago was that the initial purpose of
-pr_cont was
+git grep 'This patch' Documentation/process/
 
-	pr_info("Initialize feature foo...");
-	if (init_feature_foo() == 0)
-		pr_cont("ok\n");
-	else
-		pr_cont("not ok\n");
+> up to 2 timer stacks in KASAN report. It is useful for programmers
+> to solve use-after-free or double-free memory timer issues.
+>
+> When timer_setup() or timer_setup_on_stack() is called, then it
+> prepares to use this timer and sets timer callback, we store
+> this call stack in order to print it in KASAN report.
 
-	And if init_feature_foo() crashes the kernel then the first printk()
-	form panic() will flush the cont buffer.
+we store nothing. Don't impersonate code please.
 
-We can handle this by realizing that new printk() message has LOG_NEWLINE
-and has different log_level (not pr_cont), maybe.
+Also please structure the changelog in a way that it's easy to
+understand what this is about instead of telling first what the patch
+does and then some half baken information why this is useful followed by
+more information about what it does.
 
-Let's look at the more general case:
+Something like this:
 
-CPU0					.. CPU255
-pr_info("text");
-					pr_alert("boom\n");
-pr_cont("1);
-pr_cont("2\n");
+  For analysing use after free or double free of objects it is helpful
+  to preserve usage history which potentially gives a hint about the
+  affected code.
 
-Do we really need to preliminary flush CPU0 pr_cont buffer in this
-case? There is no connection between messages from CPU0 and CPU255.
-Maybe (maybe!) what matters here is keeping the order of messages
-per-context rather than globally system-wide?
+  For timers it has turned out to be useful to record the stack trace
+  of the timer init call. <ADD technical explanation why this is useful>
+ 
+  Record the most recent two timer init calls in KASAN which are printed
+  on failure in the KASAN report.
 
-	-ss
+See, this gives a clear context, an explanation why it is useful and a
+high level description of what it does. The details are in the patch
+ifself and do not have to be epxlained in the changelog.
+
+For the technical explanation which you need to add, you really need to
+tell what's the advantage or additional coverage vs. existing debug
+facilities like debugobjects. Just claiming that it's useful does not
+make an argument.
+
+The UAF problem with timers is nasty because if you free an active timer
+then either the softirq which expires the timer will corrupt potentially
+reused memory or the reuse will corrupt the linked list which makes the
+softirq or some unrelated code which adds/removes a different timer
+explode in undebuggable ways. debugobject prevents that because it
+tracks per timer state and invokes the fixup function which keeps the
+system alive and also tells you exactly where the free of the active
+object happens which is the really interesting place to look at. The
+init function is pretty uninteresting in that case because you really
+want to know where the freeing of the active object happens.
+
+So if KASAN detects UAF in the timer softirq then the init trace is not
+giving any information especially not in cases where the timer is part
+of a common and frequently allocated/freed other data structure.
+
+>  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+>  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+>  static inline void kasan_record_aux_stack(void *ptr) {}
+> +static inline void kasan_record_tmr_stack(void *ptr) {}
+
+Duh, so you are adding per object type functions and storage? That's
+going to be a huge copy and pasta orgy as every object requires the same
+code and extra storage space.
+
+Why not just using kasan_record_aux_stack() for all of this?
+
+The 'call_rcu' 'timer' 'whatever next' printout is not really required
+because the stack trace already tells you the function which was
+invoked. If TOS is call_rcu() or do_timer_init() then it's entirely
+clear which object is affected. If the two aux records are not enough
+then making the array larger is not the end of the world.
+
+>  #endif /* CONFIG_KASAN_GENERIC */
+>  
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index a5221abb4594..ef2da9ddfac7 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -783,6 +783,8 @@ static void do_init_timer(struct timer_list *timer,
+>  	timer->function = func;
+>  	timer->flags = flags | raw_smp_processor_id();
+>  	lockdep_init_map(&timer->lockdep_map, name, key, 0);
+> +
+> +	kasan_record_tmr_stack(timer);
+>  }
+
+Are you sure this is correct for all timers?
+
+This is also called for timers which are temporarily allocated on stack
+and for timers which are statically allocated at compile time. How is
+that supposed to work?
+
+These kind of things want to be explained upfront an not left to the
+reviewer as an exercise.
+
+Thanks,
+
+        tglx
