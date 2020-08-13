@@ -2,187 +2,170 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EF520866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A8820774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="at7yFz7p"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ombdm1Br"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMMdi (ORCPT
+        id S1726578AbgHMMed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:33:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:10240 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgHMMdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:33:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597322016; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=NHAel5cgb6f8M+e3OQZd8eSD87RIzUytJn54ONLHhBc=;
- b=at7yFz7pHZcrrsQ9SI8eBKY0DmCb4Ynxtv5GDwTK797vccFQXwheYo14h+6uYkFD2R3jthQI
- qJpeDmkmdv9092EjmhxFS7as7jCnmX8Reerk6bnycchVo31YqFoJBL/bWchIUAVuMzL5pv3J
- U1EWOUqMl7nDpmUcEBUUac2GsTM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f35331085672017517b34d6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 12:33:20
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2D988C43395; Thu, 13 Aug 2020 12:33:20 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EBCEC433C6;
-        Thu, 13 Aug 2020 12:33:19 +0000 (UTC)
+        Thu, 13 Aug 2020 08:34:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgHMMeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:34:25 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DCWu5j083663;
+        Thu, 13 Aug 2020 08:34:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=+O4EkHoBTvbZ+GO2QHDX1q51uq8lakUAqvSItKU1TuU=;
+ b=Ombdm1BrFU8/Lhbxdo2H88IY1DjQ6ALaX5O1exQ9LIdu+jy0arZgB3xUTDpHCB4+I8d8
+ zciFUerf3HLGgnWsnczkpJ4ZwoB8jYRvwXTWIKyne+kbT5fuuOuetANJLLkpR7seP7yB
+ ckffGN+Nbv0LyWRmFRI4i0Ufsl6htk7uSuvhOcwFUYK8RTUkGCpcOgBL6nErBK5v3nrB
+ yIm8j8yMGnPwQnHrNNtdrBVIZxL8q4HxbcoikgHscoRpzzCeMrDh01+ZBXT8wuyBbD17
+ BkdPNfCn8x3I34XnmHTZi7r1ynbyKhn7gnIIxuuhPoV02m3qnTTWaPuhPAOnL83RVXuu sA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcpq4jg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 08:34:20 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DCXAaZ084909;
+        Thu, 13 Aug 2020 08:34:19 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcpq4h5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 08:34:19 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DCLTax018223;
+        Thu, 13 Aug 2020 12:34:16 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 32skahdhyv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 12:34:16 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DCYDMd26018300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Aug 2020 12:34:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE8354C052;
+        Thu, 13 Aug 2020 12:34:13 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC1324C04A;
+        Thu, 13 Aug 2020 12:34:12 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Aug 2020 12:34:12 +0000 (GMT)
+Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-s390@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
+ <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
+ <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
+ <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
+ <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
+ <dc79c8a9-1bbc-380f-741f-bca270a34483@linux.ibm.com>
+Message-ID: <17be8c41-8989-f1da-a843-30f0761f42de@linux.ibm.com>
+Date:   Thu, 13 Aug 2020 14:34:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <dc79c8a9-1bbc-380f-741f-bca270a34483@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Aug 2020 18:03:19 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
-In-Reply-To: <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
-References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
- <20200813090324.GB9829@willie-the-truck>
- <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
- <20200813094041.GA9894@willie-the-truck>
- <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
-Message-ID: <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_10:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13 16:09, Marc Zyngier wrote:
-> On 2020-08-13 10:40, Will Deacon wrote:
->> On Thu, Aug 13, 2020 at 02:49:37PM +0530, Sai Prakash Ranjan wrote:
->>> On 2020-08-13 14:33, Will Deacon wrote:
->>> > On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
->>> > > KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
->>> > > bits set and are spectre-v2 safe. But on big.LITTLE systems where
->>> > > they are coupled with other CPU cores such as the KRYO4XX silver
->>> > > based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
->>> > > bits set, the system wide safe value will be set to the lowest value
->>> > > of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
->>> > > ID_AA64PFR0_EL1.
->>> > >
->>> > > This is a problem when booting a guest kernel on gold CPU cores
->>> > > where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
->>> > > and consider them as vulnerable for Spectre variant 2 due to system
->>> > > wide safe value which is used in kvm emulation code when reading id
->>> > > registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
->>> > > for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
->>> > > list which will be consulted even when the sanitised read reports
->>> > > that CSV2 bits are not set for KRYO4XX gold cores.
->>> > >
->>> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
->>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> > > ---
->>> > >  arch/arm64/kernel/cpu_errata.c | 1 +
->>> > >  1 file changed, 1 insertion(+)
->>> > >
->>> > > diff --git a/arch/arm64/kernel/cpu_errata.c
->>> > > b/arch/arm64/kernel/cpu_errata.c
->>> > > index 6bd1d3ad037a..6cbdd2d98a2a 100644
->>> > > --- a/arch/arm64/kernel/cpu_errata.c
->>> > > +++ b/arch/arm64/kernel/cpu_errata.c
->>> > > @@ -545,6 +545,7 @@ static const struct midr_range
->>> > > spectre_v2_safe_list[] = {
->>> > >  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
->>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
->>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
->>> > > +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
->>> >
->>> > We shouldn't be putting CPUs in the safe list when they have CSV2
->>> > reporting
->>> > that they are mitigated in hardware, so I don't think this is the right
->>> > approach.
->>> >
->>> 
->>> Ok but the only thing I find wrong in this approach is that it is a
->>> redundant
->>> information because CSV2 is already advertising the mitigation, but 
->>> again
->>> CSV2 check is done first so it doesn't really hurt to add it to the 
->>> safe
->>> list because we already know that it is safe.
->> 
->> It simply doesn't scale. That's why CSV2 exists in the first place, so 
->> we
->> don't have to modify the kernel everytime a new CPU is invented.
->> 
->>> > Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
->>> > physical CPUs without CSV2 set are on the safe list. But then again, KVM
->>> > has always been slightly in denial about big.LITTLE because you can't
->>> > sensibly expose it to a guest if there are detectable differences...
->>> >
->>> 
->>> Sorry but I don't see how the guest kernel will see the CSV2 bits set 
->>> for
->>> gold CPU cores without actually adding them to the safe list or 
->>> reading the
->>> not sanitised value of ID_AA64PFR0_EL1 ?
->> 
->> Well that's for somebody to figure out in the patch. I'm just saying 
->> that
->> adding cores to the safe list when they already have a CSV2 field 
->> conveying
->> the same information is the wrong approach. The right appproach is for 
->> KVM
->> to expose CSV2 as set when the system is not affected by the erratum.
+
+
+On 8/13/20 12:40 PM, Niklas Schnelle wrote:
 > 
-> A sensible way to fix this would be with something like that:
 > 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 077293b5115f..2735db21ff0d 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1131,6 +1131,9 @@ static u64 read_id_reg(const struct kvm_vcpu 
-> *vcpu,
->  		if (!vcpu_has_sve(vcpu))
->  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
->  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
-> +		if (!(val & (0xfUL << ID_AA64PFR0_CSV2_SHIFT)) &&
-> +		    get_spectre_v2_workaround_state() == 
-> ARM64_BP_HARDEN_NOT_REQUIRED)
-> +			val |= (1UL << ID_AA64PFR0_CSV2_SHIFT);
->  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
->  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
->  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+> On 8/13/20 11:59 AM, Oliver O'Halloran wrote:
+>> On Thu, Aug 13, 2020 at 7:00 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+>>>
+>>>
+>>> On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
+>>>> On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+>>>>> *snip*
+>>>>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+>>>>> index 3902c9f..04ac76d 100644
+>>>>> --- a/arch/s390/pci/pci.c
+>>>>> +++ b/arch/s390/pci/pci.c
+>>>>> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
+>>>>>  {
+>>>>>         struct zpci_dev *zdev = to_zpci(pdev);
+>>>>>
+>>>>> +       /*
+>>>>> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
+>>>>> +        * detached from its parent PF.  We rely on firmware emulation to
+>>>>> +        * provide underlying PF details.
+>>>>> +        */
+>>>>> +       if (zdev->vfn && !zdev->zbus->multifunction)
+>>>>> +               pdev->detached_vf = 1;
+>>>>
+>>>> The enable hook seems like it's a bit too late for this sort of
+>>>> screwing around with the pci_dev. Anything in the setup path that
+>>>> looks at ->detached_vf would see it cleared while anything that looks
+>>>> after the device is enabled will see it set. Can this go into
+>>>> pcibios_add_device() or a fixup instead?
+>>>>
+>>>
+>>> This particular check could go into pcibios_add_device() yes.
+>>> We're also currently working on a slight rework of how
+>>> we establish the VF to parent PF linking including the sysfs
+>>> part of that. The latter sadly can only go after the sysfs
+>>> for the virtfn has been created and that only happens
+>>> after all fixups. We would like to do both together because
+>>> the latter sets pdev->is_virtfn which I think is closely related.
+>>>
+>>> I was thinking of starting another discussion
+>>> about adding a hook that is executed just after the sysfs entries
+>>> for the PCI device are created but haven't yet.
+>>
+>> if all you need is sysfs then pcibios_bus_add_device() or a bus
+>> notifier should work
 > 
+> So this might go a bit off track but the problem is that
+> on s390 a VF can be disabled and reenabled with disable_slot()/enable_slot().
+> In this case pcibios_bus_add_device() is not called again but
+> the PF/VF link needs to be reestablished.
 
-Thanks Marc, I gave this a go on SC7180 where the issue was seen and 
-this fix is good.
+Scratch that I must have made some stupid mistake last time I tried
+this, with your suggestion I tried again and it works perfectly
+moving the setup into pcibios_bus_add_device().
+Thank you, this is actually much nicer!
 
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> ... snip ...
+> 
