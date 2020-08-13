@@ -2,161 +2,67 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F317C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3E2204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7365B204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgHMIVk (ORCPT
+        id S1726334AbgHMIZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:21:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:51548 "EHLO foss.arm.com"
+        Thu, 13 Aug 2020 04:25:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2378 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMIVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:21:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F95F113E;
-        Thu, 13 Aug 2020 01:21:39 -0700 (PDT)
-Received: from [192.168.1.179] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DCB63F70D;
-        Thu, 13 Aug 2020 01:21:37 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mm: proc: smaps_rollup: do not stall write
- attempts on mmap_lock
-To:     Chinwen Chang <chinwen.chang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Song Liu <songliubraving@fb.com>,
-        Jimmy Assarsson <jimmyassarsson@gmail.com>,
-        Huang Ying <ying.huang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-References: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com>
- <1597284810-17454-3-git-send-email-chinwen.chang@mediatek.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3558246d-429e-5054-1bb1-c21e3b94817d@arm.com>
-Date:   Thu, 13 Aug 2020 09:21:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726048AbgHMIZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 04:25:11 -0400
+IronPort-SDR: sEri0CE3jVZZhTZqbOhCj87L6x/yspkIQeeYi5SZ6dxnlA7XgjCDgqIqxIej6Fl7pKj9BW6rHN
+ dWNo6HicqbRQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="218518149"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="218518149"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 01:25:10 -0700
+IronPort-SDR: xlUF/TAZonNcLBa+JoHxeygpJGso829xFRvjOe8/7yMFDcx6zB5SSApLBjksHOtzBujYdWdJph
+ 9IAZvUASYVrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="399096643"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 13 Aug 2020 01:25:08 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 13 Aug 2020 11:25:07 +0300
+Date:   Thu, 13 Aug 2020 11:25:07 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2 v3] tcpm: During PR_SWAP, source caps should be sent
+ only after tSwapSourceStart
+Message-ID: <20200813082507.GE1169992@kuha.fi.intel.com>
+References: <20200812022934.568134-1-badhri@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1597284810-17454-3-git-send-email-chinwen.chang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812022934.568134-1-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/08/2020 03:13, Chinwen Chang wrote:
-> smaps_rollup will try to grab mmap_lock and go through the whole vma
-> list until it finishes the iterating. When encountering large processes,
-> the mmap_lock will be held for a longer time, which may block other
-> write requests like mmap and munmap from progressing smoothly.
-> 
-> There are upcoming mmap_lock optimizations like range-based locks, but
-> the lock applied to smaps_rollup would be the coarse type, which doesn't
-> avoid the occurrence of unpleasant contention.
-> 
-> To solve aforementioned issue, we add a check which detects whether
-> anyone wants to grab mmap_lock for write attempts.
-> 
-> Change since v1:
-> - If current VMA is freed after dropping the lock, it will return
-> - incomplete result. To fix this issue, refine the code flow as
-> - suggested by Steve. [1]
-> 
-> [1] https://lore.kernel.org/lkml/bf40676e-b14b-44cd-75ce-419c70194783@arm.com/
-> 
-> Signed-off-by: Chinwen Chang <chinwen.chang@mediatek.com>
+Hi,
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+> This fixes TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 failures
 
-> ---
->   fs/proc/task_mmu.c | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index dbda449..23b3a447 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -853,9 +853,63 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
->   
->   	hold_task_mempolicy(priv);
->   
-> -	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
-> +	for (vma = priv->mm->mmap; vma;) {
->   		smap_gather_stats(vma, &mss);
->   		last_vma_end = vma->vm_end;
-> +
-> +		/*
-> +		 * Release mmap_lock temporarily if someone wants to
-> +		 * access it for write request.
-> +		 */
-> +		if (mmap_lock_is_contended(mm)) {
-> +			mmap_read_unlock(mm);
-> +			ret = mmap_read_lock_killable(mm);
-> +			if (ret) {
-> +				release_task_mempolicy(priv);
-> +				goto out_put_mm;
-> +			}
-> +
-> +			/*
-> +			 * After dropping the lock, there are three cases to
-> +			 * consider. See the following example for explanation.
-> +			 *
-> +			 *   +------+------+-----------+
-> +			 *   | VMA1 | VMA2 | VMA3      |
-> +			 *   +------+------+-----------+
-> +			 *   |      |      |           |
-> +			 *  4k     8k     16k         400k
-> +			 *
-> +			 * Suppose we drop the lock after reading VMA2 due to
-> +			 * contention, then we get:
-> +			 *
-> +			 *	last_vma_end = 16k
-> +			 *
-> +			 * 1) VMA2 is freed, but VMA3 exists:
-> +			 *
-> +			 *    find_vma(mm, 16k - 1) will return VMA3.
-> +			 *    In this case, just continue from VMA3.
-> +			 *
-> +			 * 2) VMA2 still exists:
-> +			 *
-> +			 *    find_vma(mm, 16k - 1) will return VMA2.
-> +			 *    Iterate the loop like the original one.
-> +			 *
-> +			 * 3) No more VMAs can be found:
-> +			 *
-> +			 *    find_vma(mm, 16k - 1) will return NULL.
-> +			 *    No more things to do, just break.
-> +			 */
-> +			vma = find_vma(mm, last_vma_end - 1);
-> +			/* Case 3 above */
-> +			if (!vma)
-> +				break;
-> +
-> +			/* Case 1 above */
-> +			if (vma->vm_start >= last_vma_end)
-> +				continue;
-> +		}
-> +		/* Case 2 above */
-> +		vma = vma->vm_next;
->   	}
->   
->   	show_vma_header_prefix(m, priv->mm->mmap->vm_start,
-> 
+I'm sorry, but that statement is way too cryptic. You really need to
+explain what those are.
 
+thanks,
+
+-- 
+heikki
