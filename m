@@ -2,86 +2,130 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0983CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFEE20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AF020829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHMPlV (ORCPT
+        id S1726901AbgHMPl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:41:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:46775 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHMPlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:41:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 402BC68AFE; Thu, 13 Aug 2020 17:41:18 +0200 (CEST)
-Date:   Thu, 13 Aug 2020 17:41:17 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Christoph Hellwig <hch@lst.de>, viro@ZenIV.linux.org.uk,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@fb.com, willy@infradead.org
-Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
-Message-ID: <20200813154117.GA14149@lst.de>
-References: <20200813145305.805730-1-josef@toxicpanda.com> <20200813153356.857625-1-josef@toxicpanda.com> <20200813153722.GA13844@lst.de> <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
+        Thu, 13 Aug 2020 11:41:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:48215 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgHMPl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:41:28 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MLz3R-1kNV7k1PST-00I0Ew for <linux-kernel@vger.kernel.org>; Thu, 13 Aug
+ 2020 17:41:25 +0200
+Received: by mail-qt1-f173.google.com with SMTP id v22so4676395qtq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:41:25 -0700 (PDT)
+X-Gm-Message-State: AOAM53023WOGA20bLKlx8JzwlZi4H5vsQEziMk+7XuJPCb8Xla85bUfB
+        5fXQpCFBzAg1bhq/3K2EJUkbi4mmNxK2zoyiw1U=
+X-Google-Smtp-Source: ABdhPJwBmHbur4R9QAEADlY4bGOU5Jt/LG8dUKhZzbWmRZKmKNVU9XmwD/IPUYWNtlm4yEdoEp1pVW6E6FaFtYVihzs=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr5976151qtq.7.1597333284188;
+ Thu, 13 Aug 2020 08:41:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
+ <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
+ <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com>
+ <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
+ <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
+ <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com> <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+In-Reply-To: <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 13 Aug 2020 17:41:07 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a13N_wNORz_3cYHTN8t29pPrY+dJ+g+1Ga_MmG1TmrUQw@mail.gmail.com>
+Message-ID: <CAK8P3a13N_wNORz_3cYHTN8t29pPrY+dJ+g+1Ga_MmG1TmrUQw@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash
+ chip writable
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yYRwo/T7qD5jYkdy4a4BA5kceI6rHyB7iJnj7QET+1JZfQPqIPd
+ whRpw9kNzk9hZ5+4NwVVu2HnQpEwj8xJLMnPiw/SSjE8dBLdYzpyUoGy/E+zBFb6SQTxqX/
+ A1uSgaWhBWkAv3RcF78ImeaGfX3pDuDvn+eA3GZTE3CADBSfFvn5QvCOS7TbC5bY+qxl2Y5
+ cGQUYladuMXCxqBxnAUpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PHUbVkQMu1o=:i1hoozi4LG1fQla+wh3QmW
+ X6USbcd9AVhYFb+er0NiUG3zvfC4MeR6bpFXc8cZBwDqVYFpm3WMiMuTLV5G1p5prKxPc0Cwe
+ FJfDNTj0B1GVvIlsZP3TjQrwmj2fLWKOlEWTWRfFsmt9P+yP2yseeI0x9EZVLwo9Cxre+Kuht
+ csmdtRzXEmrni8cY6oUaQ0piNPsUnMhOQrD0UA5yk10wU5/5cRFbqx1PUgEPqxDVrHMoCauXg
+ skHScRMZpQSs1+kf6D02r1F6iq4/ZzAbJxVXLlxFWN2eiZB0q9ltMhkTyPqlf1dJ+txezHc6F
+ jlVtpYmwKCX/YgUhCcXi5Q2/y2afUkTqi/16N/zDwktUn06MINUzMzr6xBqFHSikN1NQDXxkt
+ w702iE/n10S2BvSbBDeZz75S+zJ3eeUh+I6TRvZZEsYLyWajngPw60jvk2ZcCT+e1NV+d6vTx
+ a8K+E9+fDb8Y+VZIysEKB/shAfyDgYr6d3ns07kR7KQnbLaZ3I9IC93VP9ogG5c/6tx6Rza5H
+ 4MJcxTa/u7ECUAsylVWzGO5OLg3DRiUvGfWF4pVcHilaopwqSD4Z9bfd41987LHFGKhLZrAsU
+ NTJynTBo03ZDgrItL/Mx5C/E14graWqeShHvbMU7Dz7FDfro5+e1ggl5eVpcwgBDXEb7EGje6
+ aBFGr39V2F3SoPFUej9yay7nvEi3We+MrrAXD5Wz1PUqB8PwHlrp/PewQ6LP8ixgRuEmB2BXl
+ 76DyX3rUv8NkdndPet6scXAn9jIzAY3E8b2xZklGFt0Ahyh6fDsybfbIAmWtxFkRa9tZ9yq35
+ OJl41cm9IaC4cY7qc+HO7l20kElgvzWeUk+wERJHfPHTtf3Y81xyLX5m6GebdVvMNrAh/aG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 11:40:00AM -0400, Josef Bacik wrote:
-> On 8/13/20 11:37 AM, Christoph Hellwig wrote:
->> On Thu, Aug 13, 2020 at 11:33:56AM -0400, Josef Bacik wrote:
->>> Since
->>>
->>>    sysctl: pass kernel pointers to ->proc_handler
->>>
->>> we have been pre-allocating a buffer to copy the data from the proc
->>> handlers into, and then copying that to userspace.  The problem is this
->>> just blind kmalloc()'s the buffer size passed in from the read, which in
->>> the case of our 'cat' binary was 64kib.  Order-4 allocations are not
->>> awesome, and since we can potentially allocate up to our maximum order,
->>> use vmalloc for these buffers.
->>>
->>> Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
->>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->>> ---
->>> v1->v2:
->>> - Make vmemdup_user_nul actually do the right thing...sorry about that.
->>>
->>>   fs/proc/proc_sysctl.c  |  6 +++---
->>>   include/linux/string.h |  1 +
->>>   mm/util.c              | 27 +++++++++++++++++++++++++++
->>>   3 files changed, 31 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->>> index 6c1166ccdaea..207ac6e6e028 100644
->>> --- a/fs/proc/proc_sysctl.c
->>> +++ b/fs/proc/proc_sysctl.c
->>> @@ -571,13 +571,13 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
->>>   		goto out;
->>>     	if (write) {
->>> -		kbuf = memdup_user_nul(ubuf, count);
->>> +		kbuf = vmemdup_user_nul(ubuf, count);
->>
->> Given that this can also do a kmalloc and thus needs to be paired
->> with kvfree shouldn't it be kvmemdup_user_nul?
->>
+On Tue, Aug 4, 2020 at 11:26 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> On Tue, Aug 4, 2020 at 5:46 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > But wait, Mika, the author of the file, asked earlier not to remove
+> > > the module parameter of intel-spi, and just remove the unconditional
+> > > attempt to turn the chip writable in intle-spi-pci.
+> >
+> > Yes, and I think that is fine (aside from the inconsistency with bay trail
+> > that you have not commented on),
 >
-> There's an existing vmemdup_user that does kvmalloc, so I followed the 
-> existing naming convention.  Do you want me to change them both?  Thanks,
+> There are two inconsistencies before any of my patches:
+> 1) in intel-spi.c: uses the module parameter only for bay trail.
+> 2) intel-spi.c uses a module parameter whereas intel-spi-pci doesn't
 
-I personally would, and given that it only has a few users it might
-even be feasible.
+Neither of these matches what I see in the source code. Please
+check again.
+
+Once more: intel-spi.c has a module parameter that controls writing
+to the device regardless of the back-end (platform or pci), purely
+in software. The hardware write-protect setting where available
+works in addition that and prevents writing even if the module
+parameter is set to writeable.
+
+> > but that only touches the hardware
+> > write-protection, which doesn't really have any effect unless user
+> > space also configures the driver module to allow writing to the
+> > mtd device.
+> >
+> > > So I'm not touching intel-pci, just removing that code from
+> > > intel-spi-pci without adding a new module parameter.
+> > >
+> > > Are you aligned on this?
+> >
+> > One of us is still very confused about what the driver does.
+> > You seem to have gone back to saying that without the
+> > change a user could just write to the device even without
+> > passing the module parameter to intel-spi.ko?
+>
+> What I'm trying to say is that, if the BIOS is unlocked
+> (no driver involvement here), the intel-spi-pci turns the
+> chip writable even without changing the module parameter of intel-spi.
+> This is because the attempt to turn the chip writable occurs in
+> the probing of intel-spi-pci, that is, earlier than the intel-spi
+> initialization.
+
+My question was why you even care whether the hardware
+bit is set to writeable if the driver disallows writing. I think the
+answer is that you misread the driver.
+
+       Arnd
