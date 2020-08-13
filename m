@@ -2,133 +2,158 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09202C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D8C2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB12220756
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="dGYY8yWl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qea7J4Md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHMB6Z (ORCPT
+        id S1726670AbgHMB7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:58:25 -0400
-Received: from mail-dm6nam12on2042.outbound.protection.outlook.com ([40.107.243.42]:49376
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726155AbgHMB6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:58:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UnJJ3+CfcNPcTaNATSwpaDvVHcPP9dwk76XvtvL+yhiJnsZVLGJXe8fQxQ1+4rVC9lq15KRTQr3srCGCsAV0Aq5tU9TZrsiQKRZdJV/cwwlYlS91EtH0U2EcSzwwHNivtclG2empTiZRPtrwk6yeg/wvYWalhHzhqzo3v33jxUcNsNSyVADNU3lDva7bvFP55tFfX7uXeZJjXSZGUtZ5ECzgdRFC7uyyxLODxI9ZsfyF/dV0YdzkLDL6u5pVW8f1f5WcLJ1UN6KFwljuZj+MqPq15S7SqjkGopkPLdnTMV8TCQ8B/OwJ2MYpL18YUc/sJH+ke8qmplsYZt4Ragl9pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h/vRPa5N6kHPQPSAiUYGEeG+cEWYVpZiAWAfcJilOYg=;
- b=Cn/rQTMHFs0BFL1A3Y1d8bXx23ft1h9fVDsXm4KF5QEGi21eDo0ou0OF3hkbFi7RkgFmGYbCLDYnatKrzOeDVOtXaAm4E6nOW2WEs3ZHswIXYvQrGBtOwjkF86AiZGy39zFauVqGdlRC28p9344rIVZLNf0N50I8jK+Tfh7PW+rCp2JAbg/BtJSuvxFYRjjNrwg45oNBoNZGd28u+35cR175lN/P/Km8r6pIK7JFzFCA08uUgwp4m/4dfey6uaCfTZ7d/OoZwZIpXGDRd47nFrYaQzbVCT0bLtL0bg1s6ePCNN5FVAKNw3WQxe3qzotFD0aWZnyZ9Pc++MUEohesPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Wed, 12 Aug 2020 21:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgHMB7w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 21:59:52 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E247DC061383;
+        Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g19so5644375ioh.8;
+        Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h/vRPa5N6kHPQPSAiUYGEeG+cEWYVpZiAWAfcJilOYg=;
- b=dGYY8yWlisc8kR990KrF604vTgDakVa5ItqfIgfMWut+iMRVDsiBmxVK2MSOWnFk4cUKiXblvfcDDpPP72iynTDr1fPbxpBZojew8IuGbgiutPBNyPXsleROTNgXONr95HGfHRLIpMpzSKMLitnzWTfeM2x+o0ZZS3FZulDCAbg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from BYAPR11MB3190.namprd11.prod.outlook.com (2603:10b6:a03:7b::17)
- by BY5PR11MB4323.namprd11.prod.outlook.com (2603:10b6:a03:1c2::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Thu, 13 Aug
- 2020 01:58:21 +0000
-Received: from BYAPR11MB3190.namprd11.prod.outlook.com
- ([fe80::5500:d278:6406:ccbf]) by BYAPR11MB3190.namprd11.prod.outlook.com
- ([fe80::5500:d278:6406:ccbf%3]) with mapi id 15.20.3261.024; Thu, 13 Aug 2020
- 01:58:20 +0000
-Subject: Re: [PATCH linux-5.2.y-rt only] hrtimer: correct the logic for grab
- expiry lock
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-rt-users@vger.kernel.org
-References: <20200812105053.602-1-zhantao.tang@windriver.com>
- <86790e56-9cec-5cea-8387-f7010b88708b@prevas.dk>
-From:   Zhantao Tang <zhantao.tang@windriver.com>
-Message-ID: <05700b0e-1edf-ab5c-ea81-4d4f8f2c20b6@windriver.com>
-Date:   Thu, 13 Aug 2020 09:57:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.1
-In-Reply-To: <86790e56-9cec-5cea-8387-f7010b88708b@prevas.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: BYAPR11CA0039.namprd11.prod.outlook.com
- (2603:10b6:a03:80::16) To BYAPR11MB3190.namprd11.prod.outlook.com
- (2603:10b6:a03:7b::17)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AWlgNe2+Iuz2XZY+IWyCSEAywNgsaZh/vBUAUBWEudE=;
+        b=Qea7J4MdsvRPrHK6vTNWamS8TgqAEQ6cKstvXGPzmsMiUHwANlkDob7c9pZbOtmMYw
+         ZwFbcxqH4sPVaixbvycEnZk5pasYJl1YY9RbUy9OPesAHl4PfkcvvfWQbY0/0oFxc0DC
+         HmzVWYyUrTOlIZBtm7mt+Em+7pZ3e/NRvy09Zv3bK37DizNvYxT3npc+CaL/WzUMIg8w
+         BvMJ0mJBOc6IpxJCV1SanMXijeM7gVs0JVM98GYV3wcZOVpLgCviSf5rCDKoqWXNpBkD
+         2twh1f5Ui4A5Wo4cY9JUKY7wWaVZcjeEklH91fStzkysVrmhietZ+hGYc62Lp1aN55RJ
+         O96g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AWlgNe2+Iuz2XZY+IWyCSEAywNgsaZh/vBUAUBWEudE=;
+        b=muD7aJPLAYcDt9MfF0ddEja+yUB3d4dew2+sL2oI7RVo45gRA8P90+IrytnFM9b7GI
+         +miEPvX3Eu7Gy4Z9u/QA0mUIwSY7Of8bCAb4O5GE46zYTBiwPpqlnlFLT7bpGLC+vZ6M
+         v5Gzp0xBc/O9vyyFM8PfFDvDwdiKVHggEFX4eUMEkXKapwsR7D48ds/Tv9WXdMRohDmA
+         EkDX3Ikqj091TLCyZNw7SGYjqfLx6fNOa85PpasEeU1oGs1hYQJ7rhN318XWy4mj1DsF
+         oBxXFhgdHCiJ1/VyMJYoFOl5EZRRZ1T2fhA2Wo6NhUyJv576rpZUqSQkXqIrGIzTBGyy
+         vWBw==
+X-Gm-Message-State: AOAM533enrEdVFs457UzqcVNOLPVBA1lxd80q85egp9UGt/1UFsjesQW
+        Aw1CPGSU3N63kva4Zm867jcI+6uU3bV4/Fe9SJQ=
+X-Google-Smtp-Source: ABdhPJwiyW9N2P4bEdzpAt0SnW2GcUA7DC9arjWeKmn0pLfqFHuvzaNC3wHKUia8DJmWLIkGq1LuuNacL7O0TGkylMs=
+X-Received: by 2002:a5e:db0d:: with SMTP id q13mr2552009iop.87.1597283991322;
+ Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.245] (60.247.85.82) by BYAPR11CA0039.namprd11.prod.outlook.com (2603:10b6:a03:80::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Thu, 13 Aug 2020 01:58:18 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 98aabbe9-7789-460d-7adc-08d83f2c5a97
-X-MS-TrafficTypeDiagnostic: BY5PR11MB4323:
-X-Microsoft-Antispam-PRVS: <BY5PR11MB43235E85468CBBBA20FC7D578E430@BY5PR11MB4323.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WVcCAvrx6tnXXEaujAESfNs9EZZqZe69gjz+tZE0cloyrvfRulY97OMe8CddhJHUNX0EpYjuePo/iEIsFCb+wZgfLyc78tQsBfUmuqYlnPP4Xm7WSnVHTFDTvagzWuuRWQeJbQLQ77J3EXlPwY6wSHZHvbURteewyFZnwDlpp1HITbURGanvNNpMcaMAdW483yucj9G0DLXSjS3oQ2mBr7yKHkrh+dmyVaEfHXXnYZzKNtib/jTM5/WNxVg33pnnZOCvegd8XSV+ZfQ2ugd+veIregUugNuph1vgi3uPu0z4PoIMrhupgaUe8OYJseSEVq8mKuwjkSKofd61tI6ccuzpR/LvYj7mfTXzx6p2UcYzQJtxyGcw99AYZKgYJfuL38BfnVCXllL/PTfp1aL/Z+H0Ri/6Bwhn8cz2QstfMgR5x4eC1v7CgiH71zuPZd8rexG5Hx5vQxGuz0XHYtMXu7dZOOcAJcoVBddHMSSRc3M=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3190.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(39850400004)(366004)(346002)(396003)(376002)(136003)(16576012)(4326008)(186003)(8936002)(6706004)(6486002)(31696002)(44832011)(966005)(316002)(2616005)(4744005)(83380400001)(2906002)(956004)(66946007)(86362001)(66476007)(31686004)(52116002)(36756003)(16526019)(5660300002)(26005)(478600001)(8676002)(66556008)(78286006)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: QoaJqrKdNuhRPOX6UFju6cf3hly4BsfiykTstT7vGGm7j7lp0Y+idAf9ATdJNEV44zNxZej0WESXvYiL7+O8UF/my4JB70apDIRqN1VvD3K4c/iD0cjrV6CUWzdMPCUVvblA9uAf/OEfFyaXjX2cF6lA5FrUspo/onEBiKyTXgdsLPpcqFtxp6u7QBMdPJ6N+r7YMKYE/x3cYzE32wmLGyOVOIGTGz+JB22vXgsFhY6GapKYyk6xAl1Z7CQ1Y6TxkX1YFx/neMgtaFktayUINC4AlpcDUtGTlZNlMyiLZ/6xarrE9uPwzbt9HMNp36rRrfOsN5vZMsGRluCs9Y+dgaMp1AzMVJd4baFso3NzX+Ie3SPD3vyui/rK1zZ48NHPsB3b7g3a8/dS4kKfZXfSglAhayT5RXtzI6oQAR/8gpnploZk+otx4XIMHgEe9AuaZ/bU59ytA122gGEDLpdHhat544s/jhOvym2pvkNy9P5kNmp3Nrkoceyzl5/F/Chr7dFcgvw87b13a8f/YCXUM5dwnF7Jo0s8V5M6JhJLHLB9zol8DP67s6caAZ1aevUhELD+YQXoeUGkovPV3/+fTmP3LmCaqvKmJmLHpg/NkonFYEYXlvdBUV3v5S2X9M86hCzwI2EtzRkJnl7yOGR28A==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98aabbe9-7789-460d-7adc-08d83f2c5a97
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3190.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2020 01:58:20.6431
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wfzj910sgiNjeMOZIQ+u8wvSPgz7vPrgRJ34MZMuBcfWBRZD6Y6d4/YReVabJ1LwVIHtKRjW/1kPuc7OFCvT7RjarUeM+ivXSoC15e/vLAU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4323
+References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
+ <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com> <20200812143254.2f080c38@x1.home>
+In-Reply-To: <20200812143254.2f080c38@x1.home>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Thu, 13 Aug 2020 11:59:40 +1000
+Message-ID: <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>,
+        linux-s390@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2020/8/12 下午7:45, Rasmus Villemoes 写道:
-> On 12/08/2020 12.50, zhantao.tang@windriver.com wrote:
->> From: Zhantao Tang <zhantao.tang@windriver.com>
->>
->> In commit: 47b6de0b7f22 ("hrtimer: Add a missing bracket and hide `migration_base' on !SMP")
->> a inline function is_migration_base() is introduced. But
->> the logic of the hrtimer_grab_expiry_lock was changed.
->>
->> This patch is to correct it.
->>
-> Yup, same patch sent back in April, which also had a fixes tag for 5.2.
+On Thu, Aug 13, 2020 at 6:33 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
 >
-> https://lore.kernel.org/lkml/20200428144026.5882-1-rasmus.villemoes@prevas.dk/
+> On Wed, 12 Aug 2020 15:21:11 -0400
+> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 >
-> It got picked up for 4.19-rt, dunno why it wasn't for 5.2-rt.
-
-Yes， currently 5.2 rt kernel not fix the issue.
-
-And I checked the 4.19 rt kernel, but  did not find the implementation 
-of hrtimer_grab_expiry_lock().
-
-It used hrtimer_wait_for_timer() and the logic is OK.
-
-
-Thanks,
-
-Zhantao
-
+> > @@ -521,7 +522,8 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
+> >       count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
+> >
+> >       /* Mask in virtual memory enable for SR-IOV devices */
+> > -     if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
+> > +     if ((offset == PCI_COMMAND) &&
+> > +         (vdev->pdev->is_virtfn || vdev->pdev->detached_vf)) {
+> >               u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+> >               u32 tmp_val = le32_to_cpu(*val);
+> >
+> > @@ -1734,7 +1736,8 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+> >                                vconfig[PCI_INTERRUPT_PIN]);
+> >
+> >               vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
+> > -
+> > +     }
+> > +     if (pdev->is_virtfn || pdev->detached_vf) {
+> >               /*
+> >                * VFs do no implement the memory enable bit of the COMMAND
+> >                * register therefore we'll not have it set in our initial
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 8355306..23a6972 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -445,6 +445,7 @@ struct pci_dev {
+> >       unsigned int    is_probed:1;            /* Device probing in progress */
+> >       unsigned int    link_active_reporting:1;/* Device capable of reporting link active */
+> >       unsigned int    no_vf_scan:1;           /* Don't scan for VFs after IOV enablement */
+> > +     unsigned int    detached_vf:1;          /* VF without local PF access */
 >
-> Rasmus
+> Is there too much implicit knowledge in defining a "detached VF"?  For
+> example, why do we know that we can skip the portion of
+> vfio_config_init() that copies the vendor and device IDs from the
+> struct pci_dev into the virtual config space?  It's true on s390x, but
+> I think that's because we know that firmware emulates those registers
+> for us.
+>
+> We also skip the INTx pin register sanity checking.  Do we do
+> that because we haven't installed the broken device into an s390x
+> system?  Because we know firmware manages that for us too?  Or simply
+> because s390x doesn't support INTx anyway, and therefore it's another
+> architecture implicit decision?
+
+Agreed. Any hacks we put in for normal VFs are going to be needed for
+the passed-though VF case. Only applying the memory space enable
+workaround doesn't make sense to me either.
+
+> If detached_vf is really equivalent to is_virtfn for all cases that
+> don't care about referencing physfn on the pci_dev, then we should
+> probably have a macro to that effect.
+
+A pci_is_virtfn() helper would be better than open coding both checks
+everywhere. That said, it might be solving the wrong problem. The
+union between ->physfn and ->sriov has always seemed like a footgun to
+me so we might be better off switching the users who want a physfn to
+a helper instead. i.e.
+
+struct pci_dev *pci_get_vf_physfn(struct pci_dev *vf)
+{
+        if (!vf->is_virtfn)
+                return NULL;
+
+        return vf->physfn;
+}
+
+...
+
+pf = pci_get_vf_physfn(vf)
+if (pf)
+    /* do pf things */
+
+Then we can just use ->is_virtfn for the normal and detached cases.
+
+Oliver
