@@ -2,537 +2,179 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9783C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F5120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4BD2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="OQSc7Heu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHMHWF (ORCPT
+        id S1726747AbgHMHWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:22:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:3421 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMHWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:22:05 -0400
-IronPort-SDR: P/UlSy0GaYbvmd6UIQLPL2flTndJsYn3E0wUHRi4MzyQHjxn8WWH1JFYplV6d3V8LrBhvnfll6
- MZNV01b7Ep1g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="239010528"
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="239010528"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:49 -0700
-IronPort-SDR: X/54ItYypI0K9IMFlbIGy88IU0h99by8FEHBMmd+dSplZSsX99L6fB2XERM6PNXhtTHw7Z7p6J
- dkB/48iR7E8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="439679754"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 13 Aug 2020 00:21:46 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH v5 2/3] fpga: dfl: create a dfl bus type to support DFL devices
-Date:   Thu, 13 Aug 2020 15:17:59 +0800
-Message-Id: <1597303080-30640-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597303080-30640-1-git-send-email-yilun.xu@intel.com>
-References: <1597303080-30640-1-git-send-email-yilun.xu@intel.com>
+        Thu, 13 Aug 2020 03:22:12 -0400
+Received: from mx0a-0039f301.pphosted.com ([148.163.133.242]:49860 "EHLO
+        mx0a-0039f301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726048AbgHMHWM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:22:12 -0400
+X-Greylist: delayed 2966 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 03:22:10 EDT
+Received: from pps.filterd (m0174677.ppops.net [127.0.0.1])
+        by mx0a-0039f301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07D7LUqM030618;
+        Thu, 13 Aug 2020 07:21:59 GMT
+Received: from eur02-he1-obe.outbound.protection.outlook.com (mail-he1eur02lp2052.outbound.protection.outlook.com [104.47.5.52])
+        by mx0a-0039f301.pphosted.com with ESMTP id 32vy84871m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 07:21:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JlWUUw+yFwRwg/mHRP0iN/K+iIuJWgitnrUR0gqoNgPHYynRe8l1gnq6ckHkj1afXROynKVhI+AHlVKFWnWZVam9CB8WPNBpW2YVkbgZYnCYfLHNp8rbEJ04ClGTKIzs0OSGJhjNEhaJKbpHZQnsr46vuYbtomn+QvToosE+7LH703lS7Bk1QPdP2LRKmSujMLacarRWlt0xJ2ea5M/46eJK2b823pK/eZKBwoQv4bS0JmVPlfMo+jMYHOqIZhPVt0bU63oWS0vKLJhHT/8SdFPLdW9R8fscZBqe7OjZ1cSOzW5Y3Pv0QfQS6l0OpuKNBETj2qCnJlBcOLqiQpOOzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VyN6lBIyNBOfl6gd1fx12weEEOyzGG41gNvVMJVwv/w=;
+ b=Ypj6kNQoGXoacnlDH4bOfiebyseyZDRUmIfCeLoh8be5LjqfD9MR7e4lQ0B/eZPbp5eIegSYjURiQ0NV99COfNxUKea4sW4diJSHhzxibl20geEcnRbc8H+dmAFa3XT5d2HrjVcdjv4ouYz9McBfUtKNx75TbjefaYfjgbUJEVsbuv0JuJBCdSnxYvXljJXlv38UK/Uqfv9v01Ln7Seji2g7I+vXP/MypqouMDPPFgPDfF+dPmIhdmDgxxBq3klDQmVhp8bSEYDP2ae/KZ8M4nQSKxE6ZgD67Z2Qfv/yzdhoLf4Y37Kn40kAS6wdzc+YV/3PBD1Ys34gL2QzQF6qCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VyN6lBIyNBOfl6gd1fx12weEEOyzGG41gNvVMJVwv/w=;
+ b=OQSc7HeukW4HzcHfnV6gKdNF/iw3+6T94Or7Cjmc93qkcnpY5V6Uc9GIklF90ta24pJordYJn19PY7ZftLxw3zddyanyogcJs7P37+ngU9TajX1N9lIGQZ7zJIwR+EUzoW+2JWBaiajqHCWELdgBYOJPQr8kK6J7dcKFWH1TqomJ6/ZbvwuHMmEB/K9tRu8Pc4f71gY+rFhw8SC4RW+kIn7BMhromWqxJKaRrS28QErvKIQD3fcMZp9P6SdYvnDAMaOvLdblrjvMgNC2vp34y5ARtpVWpUCHo8aNXMKaxWLFcdGX3FYFesjPEu0IlvCDgZ4ob34EkCyvV9QECInxFw==
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com (2603:10a6:20b:153::17)
+ by AM0PR03MB4882.eurprd03.prod.outlook.com (2603:10a6:208:fb::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Thu, 13 Aug
+ 2020 07:21:56 +0000
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::21e5:6d27:5ba0:f508]) by AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::21e5:6d27:5ba0:f508%9]) with mapi id 15.20.3261.026; Thu, 13 Aug 2020
+ 07:21:56 +0000
+From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>
+CC:     Oleksandr Andrushchenko <andr2000@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v2 0/5] Fixes and improvements for Xen pvdrm
+Thread-Topic: [PATCH v2 0/5] Fixes and improvements for Xen pvdrm
+Thread-Index: AQHWcTn137mCP9TL7kicuRLSt2qi/qk1lI+AgAAJOgCAAASbgA==
+Date:   Thu, 13 Aug 2020 07:21:56 +0000
+Message-ID: <b4069b96-477b-e507-e20c-9cb25376c40d@epam.com>
+References: <20200813062113.11030-1-andr2000@gmail.com>
+ <7c8cb6e9-8270-d27a-6480-793ef5599d09@epam.com>
+ <231ee1e7-c2fa-3c2a-f444-f9f813fc906d@suse.com>
+In-Reply-To: <231ee1e7-c2fa-3c2a-f444-f9f813fc906d@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=epam.com;
+x-originating-ip: [185.199.97.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3c5e9864-6f78-446b-b0f4-08d83f598f6c
+x-ms-traffictypediagnostic: AM0PR03MB4882:
+x-microsoft-antispam-prvs: <AM0PR03MB4882EB8719486E501690B8D6E7430@AM0PR03MB4882.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lpj0gJuGFffuzE2Q58RzUT3pG4zKIQTMJJwDDizYCBGCn7BIRRzvIeM7sr9TKnnUR0jVw47upoG7NUO4yUnFpGjXPTC+HBFMAi54HQf7KaEbjP39KdnFepgOcqk4IK05puk3fz3pOCT/tRT4PfV0nUKEBzS1oMiZcjqws1CpQQg7o6OrcwFJgXNmCl7xIx7J//J99MM1aFeu73AuTGfYbh6JX6pMhgU4tl3LtmKFrT//3HbrnPdiv2T6Bdl/1SisU+AB94XV3t6mcPCDDIao3ts0Uw6ZczwPLCD+aRm8/AtxAvaqiWhUsPylpYTgLvNi3jeJOO3TRB2jf8plrkUr808/t5zXx9iiAcGCONlN78daWGkyHSq6nzEUIxx32E4iKlQ4CHHM7PaYYqbNa20bhpZWfjxxfr2Ys4hdab9Uq1/0m6zzxCslJwilhXCe1IMLHS0tNd/Rqid22yh8X/N5Jw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR03MB6324.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(316002)(8936002)(110136005)(5660300002)(26005)(54906003)(6512007)(31696002)(186003)(8676002)(7416002)(53546011)(83380400001)(2616005)(66574015)(6506007)(86362001)(966005)(2906002)(76116006)(66446008)(64756008)(91956017)(6486002)(66476007)(478600001)(4326008)(31686004)(36756003)(71200400001)(66556008)(66946007)(17423001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: MNaRtTqtK+azzqNg7uvmA8+aQ9tU1NBetWBHFoi3kVEumFQDAnqYu4UzATW1Hjnt03OmJAnxtIYaaYL91TQSvKxoLz5lTLqpz6/ARGXPHEiA0fH0DZQF7ehHg5dkdEb5qD800RYNuc1IEaKy6YCGMmUBLdYTFQW9rEyKuLN2V4OVCx9FT3MNPSQGnEAi4eQyRObE3IODkxHa/dKrltPx5VtK2SbfgVzRnRCIQ4weCrkcrrJcVbuvf0LAY4PITokcqw7sAOqdH5Kso1KpavwZdMAUpEvmu0TxjEMrOZbvyALjxoHjOUZ0tSHP50/YVD2DYDkehLiveJEhAoV8Jz8YEBlQOF/A07QISYruoSKRRvnSEeOuQ9aXv1H9hW86+6g7TaNJ33ovnAcUXhVChChS87L9U5lreasJcXdSN0HUDyuOe8zJgayjOWpANr8RwuF5rFdBoCEZ1zwbracm12kQjSCctg1b88NaryoEcY+ZyDcIpSA9ekBpr1KVk0a1tod4qQgezdihqL/xYPbdm7tl8+EeDkrzpBQbft9CdRXCgyDUJGiZHWmoIxiZD3bV2Z6up7b8k7pzoN/foHAN1a808HTwAWZ1RFIK6jfcgodspR1R7yxPfhPZa1qtYXCcZ8QEQkQj3mDCI9rRpRSwQwriLw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <427E0699961EF346958FF0D1F3CA223B@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR03MB6324.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c5e9864-6f78-446b-b0f4-08d83f598f6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 07:21:56.3222
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XA/YQAE5b9pLMOXLKRFrFDsxEisbPyc+VuKB/E/TEdxptKHTwl6RHxQWGdZ2QhOgo/NlVfYSrDvbeY45kg5ngE2xrW0zi1XGU5ViuV6N6opg5xrcK8xhlDQdTsKEibhL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB4882
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_04:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 bulkscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008130056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new bus type "dfl" is introduced for private features which are not
-initialized by DFL feature drivers (dfl-fme & dfl-afu drivers). So these
-private features could be handled by separate driver modules.
-
-DFL feature drivers (dfl-fme, dfl-port) will create DFL devices on
-enumeration. DFL drivers could be registered on this bus to match these
-DFL devices. They are matched by dfl type & feature_id.
-
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-Reviewed-by: Tom Rix <trix@redhat.com>
----
-v2: change the bus uevent format.
-    change the dfl device's sysfs name format.
-    refactor dfl_dev_add().
-    minor fixes for comments from Hao and Tom.
-v3: no change.
-v4: improve the uevent format, 4 bits for type & 12 bits for id.
-    change dfl_device->type to u8.
-    A dedicate field in struct dfl_feature for dfl device instance.
-    error out if dfl_device already exist on dfl_devs_init().
-v5: minor fixes for Hao's comments
----
- Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
- drivers/fpga/dfl.c                      | 263 +++++++++++++++++++++++++++++++-
- drivers/fpga/dfl.h                      |  86 +++++++++++
- 3 files changed, 356 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-dfl b/Documentation/ABI/testing/sysfs-bus-dfl
-new file mode 100644
-index 0000000..23543be
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-dfl
-@@ -0,0 +1,15 @@
-+What:		/sys/bus/dfl/devices/dfl_dev.X/type
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns type of DFL FIU of the device. Now DFL
-+		supports 2 FIU types, 0 for FME, 1 for PORT.
-+		Format: 0x%x
-+
-+What:		/sys/bus/dfl/devices/dfl_dev.X/feature_id
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns feature identifier local to its DFL FIU
-+		type.
-+		Format: 0x%x
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 52cafa2..1a9ad7e 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -30,12 +30,6 @@ static DEFINE_MUTEX(dfl_id_mutex);
-  * index to dfl_chardevs table. If no chardev support just set devt_type
-  * as one invalid index (DFL_FPGA_DEVT_MAX).
-  */
--enum dfl_id_type {
--	FME_ID,		/* fme id allocation and mapping */
--	PORT_ID,	/* port id allocation and mapping */
--	DFL_ID_MAX,
--};
--
- enum dfl_fpga_devt_type {
- 	DFL_FPGA_DEVT_FME,
- 	DFL_FPGA_DEVT_PORT,
-@@ -250,6 +244,245 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
- 
-+static DEFINE_IDA(dfl_device_ida);
-+
-+static const struct dfl_device_id *
-+dfl_match_one_device(const struct dfl_device_id *id, struct dfl_device *ddev)
-+{
-+	if (id->type == ddev->type && id->feature_id == ddev->feature_id)
-+		return id;
-+
-+	return NULL;
-+}
-+
-+static int dfl_bus_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(drv);
-+	const struct dfl_device_id *id_entry = ddrv->id_table;
-+
-+	if (id_entry) {
-+		while (id_entry->feature_id) {
-+			if (dfl_match_one_device(id_entry, ddev)) {
-+				ddev->id_entry = id_entry;
-+				return 1;
-+			}
-+			id_entry++;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_probe(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+
-+	return ddrv->probe(ddev);
-+}
-+
-+static int dfl_bus_remove(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+
-+	if (ddrv->remove)
-+		ddrv->remove(ddev);
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	/* The type has 4 valid bits and feature_id has 12 valid bits */
-+	return add_uevent_var(env, "MODALIAS=dfl:t%01Xf%03X",
-+			      ddev->type, ddev->feature_id);
-+}
-+
-+/* show dfl info fields */
-+#define dfl_info_attr(field, format_string)				\
-+static ssize_t								\
-+field##_show(struct device *dev, struct device_attribute *attr,		\
-+	     char *buf)							\
-+{									\
-+	struct dfl_device *ddev = to_dfl_dev(dev);			\
-+									\
-+	return sprintf(buf, format_string, ddev->field);		\
-+}									\
-+static DEVICE_ATTR_RO(field)
-+
-+dfl_info_attr(type, "0x%x\n");
-+dfl_info_attr(feature_id, "0x%x\n");
-+
-+static struct attribute *dfl_dev_attrs[] = {
-+	&dev_attr_type.attr,
-+	&dev_attr_feature_id.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(dfl_dev);
-+
-+static struct bus_type dfl_bus_type = {
-+	.name		= "dfl",
-+	.match		= dfl_bus_match,
-+	.probe		= dfl_bus_probe,
-+	.remove		= dfl_bus_remove,
-+	.uevent		= dfl_bus_uevent,
-+	.dev_groups	= dfl_dev_groups,
-+};
-+
-+static void release_dfl_dev(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	if (ddev->mmio_res.parent)
-+		release_resource(&ddev->mmio_res);
-+
-+	ida_simple_remove(&dfl_device_ida, ddev->id);
-+	kfree(ddev->irqs);
-+	kfree(ddev);
-+}
-+
-+static struct dfl_device *
-+dfl_dev_add(struct dfl_feature_platform_data *pdata,
-+	    struct dfl_feature *feature)
-+{
-+	struct platform_device *pdev = pdata->dev;
-+	struct resource *parent_res;
-+	struct dfl_device *ddev;
-+	int id, i, ret;
-+
-+	ddev = kzalloc(sizeof(*ddev), GFP_KERNEL);
-+	if (!ddev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	id = ida_simple_get(&dfl_device_ida, 0, 0, GFP_KERNEL);
-+	if (id < 0) {
-+		dev_err(&pdev->dev, "unable to get id\n");
-+		kfree(ddev);
-+		return ERR_PTR(id);
-+	}
-+
-+	/* freeing resources by put_device() after device_initialize() */
-+	device_initialize(&ddev->dev);
-+	ddev->dev.parent = &pdev->dev;
-+	ddev->dev.bus = &dfl_bus_type;
-+	ddev->dev.release = release_dfl_dev;
-+	ddev->id = id;
-+	ret = dev_set_name(&ddev->dev, "dfl_dev.%d", id);
-+	if (ret)
-+		goto put_dev;
-+
-+	ddev->type = feature_dev_id_type(pdev);
-+	ddev->feature_id = feature->id;
-+	ddev->cdev = pdata->dfl_cdev;
-+
-+	/* add mmio resource */
-+	parent_res = &pdev->resource[feature->resource_index];
-+	ddev->mmio_res.flags = IORESOURCE_MEM;
-+	ddev->mmio_res.start = parent_res->start;
-+	ddev->mmio_res.end = parent_res->end;
-+	ddev->mmio_res.name = dev_name(&ddev->dev);
-+	ret = insert_resource(parent_res, &ddev->mmio_res);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s failed to claim resource: %pR\n",
-+			dev_name(&ddev->dev), &ddev->mmio_res);
-+		goto put_dev;
-+	}
-+
-+	/* then add irq resource */
-+	if (feature->nr_irqs) {
-+		ddev->irqs = kcalloc(feature->nr_irqs,
-+				     sizeof(*ddev->irqs), GFP_KERNEL);
-+		if (!ddev->irqs) {
-+			ret = -ENOMEM;
-+			goto put_dev;
-+		}
-+
-+		for (i = 0; i < feature->nr_irqs; i++)
-+			ddev->irqs[i] = feature->irq_ctx[i].irq;
-+
-+		ddev->num_irqs = feature->nr_irqs;
-+	}
-+
-+	ret = device_add(&ddev->dev);
-+	if (ret)
-+		goto put_dev;
-+
-+	dev_info(&pdev->dev, "add dfl_dev: %s\n", dev_name(&ddev->dev));
-+	return ddev;
-+
-+put_dev:
-+	/* calls release_dfl_dev() which does the clean up  */
-+	put_device(&ddev->dev);
-+	return ERR_PTR(ret);
-+}
-+
-+static void dfl_devs_remove(struct dfl_feature_platform_data *pdata)
-+{
-+	struct dfl_feature *feature;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ddev) {
-+			device_unregister(&feature->ddev->dev);
-+			feature->ddev = NULL;
-+		}
-+	}
-+}
-+
-+static int dfl_devs_add(struct platform_device *pdev)
-+{
-+	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct dfl_feature *feature;
-+	struct dfl_device *ddev;
-+	int ret;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ioaddr)
-+			continue;
-+
-+		if (feature->ddev) {
-+			ret = -EEXIST;
-+			goto err;
-+		}
-+
-+		ddev = dfl_dev_add(pdata, feature);
-+		if (IS_ERR(ddev)) {
-+			ret = PTR_ERR(ddev);
-+			goto err;
-+		}
-+
-+		feature->ddev = ddev;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dfl_devs_remove(pdata);
-+	return ret;
-+}
-+
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner)
-+{
-+	if (!dfl_drv || !dfl_drv->probe || !dfl_drv->id_table)
-+		return -EINVAL;
-+
-+	dfl_drv->drv.owner = owner;
-+	dfl_drv->drv.bus = &dfl_bus_type;
-+
-+	return driver_register(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(__dfl_driver_register);
-+
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv)
-+{
-+	driver_unregister(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(dfl_driver_unregister);
-+
- #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
- 
- /**
-@@ -261,12 +494,15 @@ void dfl_fpga_dev_feature_uinit(struct platform_device *pdev)
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct dfl_feature *feature;
- 
--	dfl_fpga_dev_for_each_feature(pdata, feature)
-+	dfl_devs_remove(pdata);
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
- 		if (feature->ops) {
- 			if (feature->ops->uinit)
- 				feature->ops->uinit(pdev, feature);
- 			feature->ops = NULL;
- 		}
-+	}
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_dev_feature_uinit);
- 
-@@ -347,6 +583,10 @@ int dfl_fpga_dev_feature_init(struct platform_device *pdev,
- 		drv++;
- 	}
- 
-+	ret = dfl_devs_add(pdev);
-+	if (ret)
-+		goto exit;
-+
- 	return 0;
- exit:
- 	dfl_fpga_dev_feature_uinit(pdev);
-@@ -1284,11 +1524,17 @@ static int __init dfl_fpga_init(void)
- {
- 	int ret;
- 
-+	ret = bus_register(&dfl_bus_type);
-+	if (ret)
-+		return ret;
-+
- 	dfl_ids_init();
- 
- 	ret = dfl_chardev_init();
--	if (ret)
-+	if (ret) {
- 		dfl_ids_destroy();
-+		bus_unregister(&dfl_bus_type);
-+	}
- 
- 	return ret;
- }
-@@ -1626,6 +1872,7 @@ static void __exit dfl_fpga_exit(void)
- {
- 	dfl_chardev_uinit();
- 	dfl_ids_destroy();
-+	bus_unregister(&dfl_bus_type);
- }
- 
- module_init(dfl_fpga_init);
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 5973769..fd93f08 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -236,6 +236,7 @@ struct dfl_feature_irq_ctx {
-  * @irq_ctx: interrupt context list.
-  * @nr_irqs: number of interrupt contexts.
-  * @ops: ops of this sub feature.
-+ * @ddev: ptr to the dfl device of this sub feature.
-  * @priv: priv data of this feature.
-  */
- struct dfl_feature {
-@@ -246,6 +247,7 @@ struct dfl_feature {
- 	struct dfl_feature_irq_ctx *irq_ctx;
- 	unsigned int nr_irqs;
- 	const struct dfl_feature_ops *ops;
-+	struct dfl_device *ddev;
- 	void *priv;
- };
- 
-@@ -514,4 +516,88 @@ long dfl_feature_ioctl_set_irq(struct platform_device *pdev,
- 			       struct dfl_feature *feature,
- 			       unsigned long arg);
- 
-+/**
-+ * enum dfl_id_type - define the DFL FIU types
-+ */
-+enum dfl_id_type {
-+	FME_ID,
-+	PORT_ID,
-+	DFL_ID_MAX,
-+};
-+
-+/**
-+ * struct dfl_device_id -  dfl device identifier
-+ * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-+ * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-+ * @driver_data: Driver specific data
-+ */
-+struct dfl_device_id {
-+	u8 type;
-+	u16 feature_id;
-+	unsigned long driver_data;
-+};
-+
-+/**
-+ * struct dfl_device - represent an dfl device on dfl bus
-+ *
-+ * @dev: Generic device interface.
-+ * @id: id of the dfl device
-+ * @type: Type of DFL FIU of the device. See enum dfl_id_type.
-+ * @feature_id: 16 bits feature identifier local to its DFL FIU type.
-+ * @mmio_res: MMIO resource of this dfl device.
-+ * @irqs: List of Linux IRQ numbers of this dfl device.
-+ * @num_irqs: number of IRQs supported by this dfl device.
-+ * @cdev: pointer to DFL FPGA container device this dfl device belongs to.
-+ * @id_entry: matched id entry in dfl driver's id table.
-+ */
-+struct dfl_device {
-+	struct device dev;
-+	int id;
-+	u8 type;
-+	u16 feature_id;
-+	struct resource mmio_res;
-+	int *irqs;
-+	unsigned int num_irqs;
-+	struct dfl_fpga_cdev *cdev;
-+	const struct dfl_device_id *id_entry;
-+};
-+
-+/**
-+ * struct dfl_driver - represent an dfl device driver
-+ *
-+ * @drv: Driver model structure.
-+ * @id_table: Pointer to table of device IDs the driver is interested in.
-+ *	      { } member terminated.
-+ * @probe: Mandatory callback for device binding.
-+ * @remove: Callback for device unbinding.
-+ */
-+struct dfl_driver {
-+	struct device_driver drv;
-+	const struct dfl_device_id *id_table;
-+
-+	int (*probe)(struct dfl_device *dfl_dev);
-+	void (*remove)(struct dfl_device *dfl_dev);
-+};
-+
-+#define to_dfl_dev(d) container_of(d, struct dfl_device, dev)
-+#define to_dfl_drv(d) container_of(d, struct dfl_driver, drv)
-+
-+/*
-+ * use a macro to avoid include chaining to get THIS_MODULE
-+ */
-+#define dfl_driver_register(drv) \
-+	__dfl_driver_register(drv, THIS_MODULE)
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner);
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv);
-+
-+/*
-+ * module_dfl_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit()
-+ */
-+#define module_dfl_driver(__dfl_driver) \
-+	module_driver(__dfl_driver, dfl_driver_register, \
-+		      dfl_driver_unregister)
-+
- #endif /* __FPGA_DFL_H */
--- 
-2.7.4
-
+DQpPbiA4LzEzLzIwIDEwOjA1IEFNLCBKw7xyZ2VuIEdyb8OfIHdyb3RlOg0KPiBPbiAxMy4wOC4y
+MCAwODozMiwgT2xla3NhbmRyIEFuZHJ1c2hjaGVua28gd3JvdGU6DQo+PiBKdWVyZ2VuLCBCb3Jp
+cywNCj4+DQo+PiBjYW4gd2UgcGxlYXNlIG1lcmdlIHRoZXNlIHZpYSBYZW4gTGludXggdHJlZSBh
+cyBJIGhhdmUgY29sbGVjdGVkIGVub3VnaCBBY2svUi1iPw0KPj4NCj4+IFRoZSBzZXJpZXMgaGFz
+IERSTSBwYXRjaGVzLCBidXQgdGhvc2UgYW55d2F5IGFyZSBYZW4gcmVsYXRlZCwgc28gSSB0aGlu
+aw0KPj4NCj4+IHRoaXMgc2hvdWxkIGJlIGZpbmUgZnJvbSBEUkkgcG9pbnQgb2Ygdmlldy4NCj4N
+Cj4gWWVzLCBmaW5lIHdpdGggbWUuDQpHcmVhdCwgdGhhbmsgeW91DQo+DQo+DQo+IEp1ZXJnZW4N
+Cj4NCj4+DQo+PiBUaGFuayB5b3UsDQo+Pg0KPj4gT2xla3NhbmRyDQo+Pg0KPj4gT24gOC8xMy8y
+MCA5OjIxIEFNLCBPbGVrc2FuZHIgQW5kcnVzaGNoZW5rbyB3cm90ZToNCj4+PiBGcm9tOiBPbGVr
+c2FuZHIgQW5kcnVzaGNoZW5rbyA8b2xla3NhbmRyX2FuZHJ1c2hjaGVua29AZXBhbS5jb20+DQo+
+Pj4NCj4+PiBIZWxsbywNCj4+Pg0KPj4+IFRoaXMgc2VyaWVzIGNvbnRhaW5zIGFuIGFzc29ydGVk
+IHNldCBvZiBmaXhlcyBhbmQgaW1wcm92ZW1lbnRzIGZvcg0KPj4+IHRoZSBYZW4gcGFyYS12aXJ0
+dWFsaXplZCBkaXNwbGF5IGRyaXZlciBhbmQgZ3JhbnQgZGV2aWNlIGRyaXZlciB3aGljaA0KPj4+
+IEkgaGF2ZSBjb2xsZWN0ZWQgb3ZlciB0aGUgbGFzdCBjb3VwbGUgb2YgbW9udGhzOg0KPj4+DQo+
+Pj4gMS4gTWlub3IgZml4ZXMgdG8gZ3JhbnQgZGV2aWNlIGRyaXZlciBhbmQgZHJtL3hlbi1mcm9u
+dC4NCj4+Pg0KPj4+IDIuIE5ldyBmb3JtYXQgKFlVWVYpIGFkZGVkIHRvIHRoZSBsaXN0IG9mIHRo
+ZSBQViBEUk0gc3VwcG9ydGVkIGZvcm1hdHMNCj4+PiB3aGljaCBhbGxvd3MgdGhlIGRyaXZlciB0
+byBiZSB1c2VkIGluIHplcm8tY29weWluZyB1c2UtY2FzZXMgd2hlbg0KPj4+IGEgY2FtZXJhIGRl
+dmljZSBpcyB0aGUgc291cmNlIG9mIHRoZSBkbWEtYnVmcy4NCj4+Pg0KPj4+IDMuIFN5bmNocm9u
+aXphdGlvbiB3aXRoIHRoZSBsYXRlc3QgcGFyYS12aXJ0dWFsaXplZCBwcm90b2NvbCBkZWZpbml0
+aW9uDQo+Pj4gaW4gWGVuIFsxXS4NCj4+Pg0KPj4+IDQuIFNHVCBvZmZzZXQgaXMgbm93IHByb3Bh
+Z2F0ZWQgdG8gdGhlIGJhY2tlbmQ6IHdoaWxlIGltcG9ydGluZyBhIGRtYWJ1Zg0KPj4+IGl0IGlz
+IHBvc3NpYmxlIHRoYXQgdGhlIGRhdGEgb2YgdGhlIGJ1ZmZlciBpcyBwdXQgd2l0aCBvZmZzZXQg
+d2hpY2ggaXMNCj4+PiBpbmRpY2F0ZWQgYnkgdGhlIFNHVCBvZmZzZXQuIFRoaXMgaXMgbmVlZGVk
+IGZvciBzb21lIEdQVXMgd2hpY2ggaGF2ZQ0KPj4+IG5vbi16ZXJvIG9mZnNldC4NCj4+Pg0KPj4+
+IFRoYW5rIHlvdSwNCj4+PiBPbGVrc2FuZHIgQW5kcnVzaGNoZW5rbw0KPj4+DQo+Pj4gWzFdIGh0
+dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL3hlbmJpdHMueGVuLm9yZy9naXR3ZWIv
+P3A9eGVuLmdpdDthPWNvbW1pdDtoPWMyN2ExODQyMjVlYWI1NGQyMDQzNWM4Y2FiNWFkMGVmMzg0
+ZGMyYzBfXzshIUdGXzI5ZGJjUUlVQlBBIWlBSE9kazRNMTY3Vk5NMUF5cE1HVm15S0p1LWlxQzll
+NWNYeXU2TjU5NU5wM2l5SVpEblpsME1JQlgzSVJPSlNEMUdTTVhfR2ZRJCBbeGVuYml0c1suXXhl
+blsuXW9yZ10NCj4+Pg0KPj4+IENoYW5nZXMgc2luY2UgdjE6DQo+Pj4gPT09PT09PT09PT09PT09
+PT0NCj4+Pg0KPj4+IDEuIFJlbW92ZWQgcGF0Y2ggd2hpY2ggYWRkcyBFRElEIHRvIFBWIERSTSBh
+cyBpdCBuZWVkcyBtb3JlIHRpbWUgZm9yIHJldmlldzoNCj4+PiAiNS4gVmVyc2lvbiAyIG9mIHRo
+ZSBYZW4gZGlzcGxpZiBwcm90b2NvbCBhZGRzIFhFTkRJU1BMX09QX0dFVF9FRElEDQo+Pj4gcmVx
+dWVzdCB3aGljaCBhbGxvd3MgZnJvbnRlbmRzIHRvIHJlcXVlc3QgRURJRCBzdHJ1Y3R1cmUgcGVy
+DQo+Pj4gY29ubmVjdG9yLiBUaGlzIHJlcXVlc3QgaXMgb3B0aW9uYWwgYW5kIGlmIG5vdCBzdXBw
+b3J0ZWQgYnkgdGhlDQo+Pj4gYmFja2VuZCB0aGVuIHZpc2libGUgYXJlYSBpcyBzdGlsbCBkZWZp
+bmVkIGJ5IHRoZSByZWxldmFudA0KPj4+IFhlblN0b3JlJ3MgInJlc29sdXRpb24iIHByb3BlcnR5
+Lg0KPj4+IElmIGJhY2tlbmQgcHJvdmlkZXMgRURJRCB3aXRoIFhFTkRJU1BMX09QX0dFVF9FRElE
+IHJlcXVlc3QgdGhlbg0KPj4+IGl0cyB2YWx1ZXMgbXVzdCB0YWtlIHByZWNlZGVuY2Ugb3ZlciB0
+aGUgcmVzb2x1dGlvbnMgZGVmaW5lZCBpbg0KPj4+IFhlblN0b3JlLiINCj4+PiBJIHdpbGwgc2Vu
+ZCB0aGlzIGFzIGEgZGVkaWNhdGVkIHBhdGNoLg0KPj4+DQo+Pj4gMi4gQWRkZWQgbWlzc2luZyBD
+QyBzdGFibGUgZm9yIHRoZSBwYXRjaGVzIHdpdGggZml4ZXMNCj4+Pg0KPj4+IE9sZWtzYW5kciBB
+bmRydXNoY2hlbmtvICg1KToNCj4+PiDCoMKgwqAgeGVuL2dudGRldjogRml4IGRtYWJ1ZiBpbXBv
+cnQgd2l0aCBub24temVybyBzZ3Qgb2Zmc2V0DQo+Pj4gwqDCoMKgIGRybS94ZW4tZnJvbnQ6IEZp
+eCBtaXN1c2VkIElTX0VSUl9PUl9OVUxMIGNoZWNrcw0KPj4+IMKgwqDCoCBkcm0veGVuLWZyb250
+OiBBZGQgWVVZViB0byBzdXBwb3J0ZWQgZm9ybWF0cw0KPj4+IMKgwqDCoCB4ZW46IFN5bmMgdXAg
+d2l0aCB0aGUgY2Fub25pY2FsIHByb3RvY29sIGRlZmluaXRpb24gaW4gWGVuDQo+Pj4gwqDCoMKg
+IGRybS94ZW4tZnJvbnQ6IFBhc3MgZHVtYiBidWZmZXIgZGF0YSBvZmZzZXQgdG8gdGhlIGJhY2tl
+bmQNCj4+Pg0KPj4+IMKgwqAgZHJpdmVycy9ncHUvZHJtL3hlbi94ZW5fZHJtX2Zyb250LmPCoMKg
+wqDCoMKgIHwgMTAgKy0tDQo+Pj4gwqDCoCBkcml2ZXJzL2dwdS9kcm0veGVuL3hlbl9kcm1fZnJv
+bnQuaMKgwqDCoMKgwqAgfMKgIDIgKy0NCj4+PiDCoMKgIGRyaXZlcnMvZ3B1L2RybS94ZW4veGVu
+X2RybV9mcm9udF9jb25uLmMgfMKgIDEgKw0KPj4+IMKgwqAgZHJpdmVycy9ncHUvZHJtL3hlbi94
+ZW5fZHJtX2Zyb250X2dlbS5jwqAgfCAxMSArLS0NCj4+PiDCoMKgIGRyaXZlcnMvZ3B1L2RybS94
+ZW4veGVuX2RybV9mcm9udF9rbXMuY8KgIHzCoCAyICstDQo+Pj4gwqDCoCBkcml2ZXJzL3hlbi9n
+bnRkZXYtZG1hYnVmLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgOCArKysNCj4+PiDC
+oMKgIGluY2x1ZGUveGVuL2ludGVyZmFjZS9pby9kaXNwbGlmLmjCoMKgwqDCoMKgwqAgfCA5MSAr
+KysrKysrKysrKysrKysrKysrKysrKy0NCj4+PiDCoMKgIDcgZmlsZXMgY2hhbmdlZCwgMTExIGlu
+c2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPj4+DQo+Pg0KPg==
