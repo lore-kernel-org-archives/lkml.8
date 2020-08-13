@@ -2,101 +2,203 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED34C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3426FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9CC520768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CD52078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="esifnW1s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBn3svWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHMF6h (ORCPT
+        id S1726131AbgHMGCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgHMF6h (ORCPT
+        Thu, 13 Aug 2020 02:02:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26929 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725954AbgHMGCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:58:37 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC14CC061757;
-        Wed, 12 Aug 2020 22:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=A2tIL3lRKqt3QhjARTkmfIICANxslC8SgzyYivoY1jI=; b=esifnW1ssdRYcS8qFCosQ3I/yv
-        b/byejn2cSb+i3bwvW+nJbT8jThfqBrPUol4ISi7/M8kQ9FqIAH9blMrJZFsCYbPrg9DSYojg8EV+
-        xSfG+zzUy7qo2QHi91KM3vmNAs/EAHLychpHou7Tl38bA5ym+Hwf9VHmpTVnNS+LXWT8SMm+FYLOJ
-        vhWStCFq1L6Auyv+P4mAp9j+7w44JNc82kI1yZcqCVuvmz690fma3Dnmr2omi+PaG1ISpjis60MdN
-        GPJps4VefW5qGIqKDCrSTiQ8rBmTi4ZV/PfbWP3clFuB+RnlDdAbbymiIEYoASiMb7UeT6uuS6U6w
-        BMVN/uoA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k66Fr-000368-Uc; Thu, 13 Aug 2020 05:58:24 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3C7BB980C8B; Thu, 13 Aug 2020 07:58:22 +0200 (CEST)
-Date:   Thu, 13 Aug 2020 07:58:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiafei Pan <Jiafei.Pan@nxp.com>
-Cc:     mingo@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-        romain.perier@gmail.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com
-Subject: Re: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
-Message-ID: <20200813055822.GC3982@worktop.programming.kicks-ass.net>
-References: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
+        Thu, 13 Aug 2020 02:02:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597298553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vY8vnehO56XjlQrEEeygaT/MkeY3wULexFdzVU37Xfc=;
+        b=SBn3svWxWbOCBrlMr13GaI7flx1Z0hcyrjttXFSWjvnzWMXrS6HMtNYGNFNt5sC/y318jV
+        DTCquGERuMUZ2UBBI3YWRI1iWGBj2UxBmndnPyo3mEemTLKGyDWk7DYuTSSGkiwM2iJQo/
+        3SGG+0mWn/Wk8uJD+R2zc/ZW+QZGUUo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-84-iMb9FvaNOg2PnYpJQ4BiPA-1; Thu, 13 Aug 2020 02:02:31 -0400
+X-MC-Unique: iMb9FvaNOg2PnYpJQ4BiPA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3A591005504;
+        Thu, 13 Aug 2020 06:02:27 +0000 (UTC)
+Received: from [10.72.13.44] (ovpn-13-44.pek2.redhat.com [10.72.13.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A26415D9E8;
+        Thu, 13 Aug 2020 06:02:00 +0000 (UTC)
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
+ <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
+ <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
+Date:   Thu, 13 Aug 2020 14:01:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:07:29PM +0800, Jiafei Pan wrote:
-> __raise_softirq_irqoff will update per-CPU mask of pending softirqs,
-> it need to be called in irq disabled context in order to keep it atomic
-> operation, otherwise it will be interrupted by hardware interrupt,
-> and per-CPU softirqs pending mask will be corrupted, the result is
-> there will be unexpected issue, for example hrtimer soft irq will
-> be losed and soft hrtimer will never be expire and handled.
-> 
-> Adding irqs disabled checking here to provide warning in irqs enabled
-> context.
-> 
-> Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
-> ---
->  kernel/softirq.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/softirq.c b/kernel/softirq.c
-> index bf88d7f62433..11f61e54a3ae 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
-> @@ -481,6 +481,11 @@ void raise_softirq(unsigned int nr)
->  
->  void __raise_softirq_irqoff(unsigned int nr)
->  {
-> +	/* This function can only be called in irq disabled context,
-> +	 * otherwise or_softirq_pending will be interrupted by hardware
-> +	 * interrupt, so that there will be unexpected issue.
-> +	 */
 
-Comment style is wrong, also I'm not sure the comment is really
-helpfull.
+On 2020/8/13 下午1:26, Tian, Kevin wrote:
+>> From: Jason Wang <jasowang@redhat.com>
+>> Sent: Thursday, August 13, 2020 12:34 PM
+>>
+>>
+>> On 2020/8/12 下午12:05, Tian, Kevin wrote:
+>>>> The problem is that if we tie all controls via VFIO uAPI, the other
+>>>> subsystem like vDPA is likely to duplicate them. I wonder if there is a
+>>>> way to decouple the vSVA out of VFIO uAPI?
+>>> vSVA is a per-device (either pdev or mdev) feature thus naturally should
+>>> be managed by its device driver (VFIO or vDPA). From this angle some
+>>> duplication is inevitable given VFIO and vDPA are orthogonal passthrough
+>>> frameworks. Within the kernel the majority of vSVA handling is done by
+>>> IOMMU and IOASID modules thus most logic are shared.
+>>
+>> So why not introduce vSVA uAPI at IOMMU or IOASID layer?
+> One may ask a similar question why IOMMU doesn't expose map/unmap
+> as uAPI...
 
-> +	WARN_ON_ONCE(!irqs_disabled());
 
-	lockdep_assert_irqs_disabled();
+I think this is probably a good idea as well. If there's anything missed 
+in the infrastructure, we can invent. Besides vhost-vDPA, there are 
+other subsystems that relaying their uAPI to IOMMU API. Duplicating 
+uAPIs is usually a hint of the codes duplication. Simple map/unmap could 
+be easy but vSVA uAPI is much more complicated.
 
->  	trace_softirq_raise(nr);
->  	or_softirq_pending(1UL << nr);
->  }
+
+>
+>>
+>>>>>     If an userspace DMA interface can be easily
+>>>>> adapted to be a passthrough one, it might be the choice.
+>>>> It's not that easy even for VFIO which requires a lot of new uAPIs and
+>>>> infrastructures(e.g mdev) to be invented.
+>>>>
+>>>>
+>>>>> But for idxd,
+>>>>> we see mdev a much better fit here, given the big difference between
+>>>>> what userspace DMA requires and what guest driver requires in this hw.
+>>>> A weak point for mdev is that it can't serve kernel subsystem other than
+>>>> VFIO. In this case, you need some other infrastructures (like [1]) to do
+>>>> this.
+>>> mdev is not exclusive from kernel usages. It's perfectly fine for a driver
+>>> to reserve some work queues for host usages, while wrapping others
+>>> into mdevs.
+>>
+>> I meant you may want slices to be an independent device from the kernel
+>> point of view:
+>>
+>> E.g for ethernet devices, you may want 10K mdevs to be passed to guest.
+>>
+>> Similarly, you may want 10K net devices which is connected to the kernel
+>> networking subsystems.
+>>
+>> In this case it's not simply reserving queues but you need some other
+>> type of device abstraction. There could be some kind of duplication
+>> between this and mdev.
+>>
+> yes, some abstraction required but isn't it what the driver should
+> care about instead of mdev framework itself?
+
+
+With mdev you present a "PCI" device, but what's kind of device it tries 
+to present to kernel? If it's still PCI, there's duplication with mdev, 
+if it's something new, maybe we can switch to that API.
+
+
+> If the driver reports
+> the same set of resource to both mdev and networking, it needs to
+> make sure when the resource is claimed in one interface then it
+> should be marked in-use in another. e.g. each mdev includes a
+> available_intances attribute. the driver could report 10k available
+> instances initially and then update it to 5K when another 5K is used
+> for net devices later.
+
+
+Right but this probably means you need another management layer under mdev.
+
+
+>
+> Mdev definitely has its usage limitations. Some may be improved
+> in the future, some may not. But those are distracting from the
+> original purpose of this thread (mdev vs. userspace DMA) and better
+> be discussed in other places e.g. LPC...
+
+
+Ok.
+
+Thanks
+
+
+>
+> Thanks
+> Kevin
+
