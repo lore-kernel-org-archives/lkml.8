@@ -2,198 +2,185 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C963C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F31C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D8A20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B665720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:52:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zR2+V6k5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHMGwO (ORCPT
+        id S1726522AbgHMGwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 02:52:14 -0400
-Received: from comms.puri.sm ([159.203.221.185]:53966 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgHMGwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 02:52:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id EC249E11D5;
-        Wed, 12 Aug 2020 23:51:39 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XEzlUbUYA5KO; Wed, 12 Aug 2020 23:51:38 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH v5 1/3] arm64: dts: Add a device tree for the Librem 5
- phone
-To:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca, broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-References: <20200731082725.21878-1-martin.kepplinger@puri.sm>
-Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
- 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
- ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
-Message-ID: <fd45ba07-56dc-f918-469d-d620d375058e@puri.sm>
-Date:   Thu, 13 Aug 2020 08:51:32 +0200
+        Thu, 13 Aug 2020 02:52:21 -0400
+Received: from mail-bn7nam10on2085.outbound.protection.outlook.com ([40.107.92.85]:43361
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbgHMGwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 02:52:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AjPkTQrWzPmLsd+XwZ9UNOFvMCREQ5kGY6SB0cw8MWoIfDv4YnMNdgJU205enyIpqQvzPzoCDt3wdi+ORNJjyK4qzA5NXIPXUT2UZb/BCDvy5utLpSatrAQ3UR6MT6NN380jNxxLt9pJ6XZZQt87X8vpHXNjHzer5y5vObN6hmrzDD1JYduwfRBfEu5wHnZbytfUFZFrTDM4PGNWIjAfLunH5qQ0wZp9om1V1mlSB23Y5yRZINw851/OFpHSgnDsXu8mXgp8EcEOgydmRXBLYhqvYKStxlGriaPEa85InIiQBm+Bhj4+vyAGDn9QrKnBaSXBMVYiakVvhRo1gkc5TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WQyYbddJcbaAJotwqUdcIQNKNUPPxaWAlM9co7i7KMo=;
+ b=P2Momxa3MvVVzgZbvEtd7srztUuJJWVvESDRc2v17oadFv5i6/+u+ekpWbnGbgz36oHMRVX6iLaVcZVf1eemCjvsEKhvgMjeeHaY+Tys7x97HK4QMK9dFakMztyyi++4FwYs4UhISS/P2G+tQ/lMCXcb8F1m/VLmcWln3Erh7+H7msdexJBsxBJAWgLY5X6wZvk09KX4bjlB0rgx7xR1YDw0YWc3utCVW2sTqxWiVx1bkZF26f5oj/+aIscInNxn9q4AyoddtHeZr6c9zmfHQdwrchP8rqyDvQ1POQbcT/jXc9miDAo2WSYR+dCxW+v4oRZvyTIRWybYZ6uSinnGWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WQyYbddJcbaAJotwqUdcIQNKNUPPxaWAlM9co7i7KMo=;
+ b=zR2+V6k5e3nvYStrXSTwmMl16ZDY02W3VXvtTbZuY3KRRUiCzEGMPbyHdrOVCSHyMnuhvIcQ17SA7/myracxlPQUcQrWInVrCSaZcpsqlWd5yJEVAZzJJYwENs6CuDoQ8OcAEkz54sXV5m7eC6X5MhS/bS2EXMxh8CeIfKEQBOs=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB3936.namprd12.prod.outlook.com (2603:10b6:208:16a::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20; Thu, 13 Aug
+ 2020 06:52:17 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.015; Thu, 13 Aug 2020
+ 06:52:17 +0000
+Subject: Re: [RFC PATCH v1] dma-fence-array: Deal with sub-fences that are
+ signaled late
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     Gustavo Padovan <gustavo@padovan.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20200812235544.2289895-1-jcrouse@codeaurora.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <439ba3f1-0b0b-7417-f306-c10935dbdb16@amd.com>
+Date:   Thu, 13 Aug 2020 08:52:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-In-Reply-To: <20200731082725.21878-1-martin.kepplinger@puri.sm>
-Content-Type: text/plain; charset=utf-8
+ Thunderbird/68.10.0
+In-Reply-To: <20200812235544.2289895-1-jcrouse@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::42) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Thu, 13 Aug 2020 06:52:15 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ea82b92e-6024-44f7-8403-08d83f556aa6
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3936:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3936B49437503FBEC247805983430@MN2PR12MB3936.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9djE00l/vB12ayBykUVyI09oIjuz7A1eU/jfm5locqXLWlDEkYqLKWJWuCQqvZxogbQ5VtyyE99niYa/JXhnqvFv0Lq7V8XNqONl/CseW5MLMu3iFv6qgI+4FU0KF+SEaLxoQlNi9L7Z1CC0o4ciSkWYg/SjxhACOGirVIPuIqSWubXkWCnvCjwYwTHR98UtIlJDLOU59uu/ozHpDhKLKKaL32oZNfEOkiGV484rgTuFErq5o85P6AP+2RDgXvQ1TazB3db3Nq9pq4ncoNq5SwtuUofOCzP+YT9NmrMOzMUy69Yc2To8Wbd3gg2lHVjF8IN8BAtzR+k6qPkYTDIAjo0QBGRAmZ3Ya5H2zcdC/E2lAUlrQassnGkjCf+RIkZ2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(8676002)(66946007)(316002)(186003)(8936002)(86362001)(83380400001)(54906003)(66476007)(16526019)(2616005)(52116002)(66556008)(478600001)(2906002)(31686004)(4326008)(31696002)(6666004)(36756003)(5660300002)(6486002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: PwCKQd2l3q7SKebLip+4ghTfyz4h1A2hAmd1EvLmQP+9c9i8qyz+kDBFi6hEL3IGFHe6Wqmd8uVfBHCFC2h+PHgR+QP6mYMXT0pHDfTlTZoesOb2+0UvWv6vJpwdHoC2Mzp6DdVUcc8U008gWsXdhyr5DG4Fm+blA9mPtcg4fuVi2C2vk/AGc6sWKp0hJJeb+JQBoSWOFxVwpvQN/Ojba5lxva8yO9+E0orNsN7gyXVS3WOtu+RwFfew7OMQXBz5odmszjPCn/xvboBdjSqdXyYyvFa1UIVsfksU6wj+pSym06shmT2QMZBK7Xq1kuZTXXWconKVl9CtIetf76RcASRb3gaLo0HT397SMCh5Luw3xOb239zkcFjvKX6K6z+tstC6umUtRG6zcoI0OyAKXa1w3s+M9qppL1R5tCOVQoMizL9kt7MSfhl4UlqXed/kAq+cFAKKXtHtT7UrGA4uK5ySK0kijBubi2SPBTtldVBbYa9May82+S+AkP5k3Y2+Fa90dKc1PmuaYNsveQsqqAfiFwDjYQUwDc8UJfKBnRSk+tw5jrtwrvh0Z+HgQsCXinyBqWCQ7bCcYEL6Qq3CRxog7ZQQGrips8vyoiegudfSOGNvwFrMcPQWUUavY5diTzgpdhtlVX7qyu9UU1xHZYPDHNSiYZtGu9NddWxdzKyergzumpB0KKpxZryq1EaVbJBpj2tBeEcDj66/i/JSXQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea82b92e-6024-44f7-8403-08d83f556aa6
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2020 06:52:17.1590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OGDsT0rbBApFGqB22UGCaH3BkSCvhv5jbKaDpI+U9D/E3cCOigA2l/yz1NhC6UK9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.20 10:27, Martin Kepplinger wrote:
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-> 
-> Add a devicetree description for the Librem 5 phone. 4 hardware revisions
-> have been available. Some revisions include changes that need different
-> software to be run. So far, r3 ("Dogwood") is one such example, see:
-> 
-> 	"Aspen"		r0	not supported (very few devices exist)
-> 	"Birch"		r1	supported by r2
-> 	"Chestnut"	r2	added by this patch
-> 	"Dogwood"	r3	added by this patch
-> 	"Evergreen"	r4	tba / most likely supported by r3
-> 
-> See https://puri.sm/products/librem-5/ for more information.
-> 
-> This boots to a working console with working WWAN modem, wifi usdhc,
-> IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LEDs.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> For audio related part:
-> Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Am 13.08.20 um 01:55 schrieb Jordan Crouse:
+> This is an RFC because I'm still trying to grok the correct behavior.
+>
+> Consider a dma_fence_array created two two fence and signal_on_any is true.
+> A reference to dma_fence_array is taken for each waiting fence.
+
+Ok, that sounds like you seem to mix a couple of things up here.
+
+A dma_fence_array takes the reference to the fences it contains on 
+creation. There is only one reference to the dma_fence_array even if it 
+contains N unsignaled fences.
+
+What we do is to grab a reference to the array in 
+dma_fence_array_enable_signaling(), but this is because we are 
+registering the callback here.
+
+> When the client calls dma_fence_wait() only one of the fences is signaled.
+> The client returns successfully from the wait and puts it's reference to
+> the array fence but the array fence still remains because of the remaining
+> un-signaled fence.
+
+If signaling was enabled then this is correct, because otherwise we 
+would crash when the other callbacks are called.
+
+> Now consider that the unsignaled fence is signaled while the timeline is being
+> destroyed much later. The timeline destroy calls dma_fence_signal_locked(). The
+> following sequence occurs:
+>
+> 1) dma_fence_array_cb_func is called
+>
+> 2) array->num_pending is 0 (because it was set to 1 due to signal_on_any) so the
+> callback function calls dma_fence_put() instead of triggering the irq work
+>
+> 3) The array fence is released which in turn puts the lingering fence which is
+> then released
+>
+> 4) deadlock with the timeline
+
+Why do we have a deadlock here? That doesn't seems to add up.
+
+Christian.
+
+>
+> I think that we can fix this with the attached patch. Once the fence is
+> signaled signaling it again in the irq worker shouldn't hurt anything. The only
+> gotcha might be how the error is propagated - I wasn't quite sure the intent of
+> clearing it only after getting to the irq worker.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
-> 
-> 
-> revision history
-> ----------------
-> v5:
-> thanks a lot Pavel for reviewing again
->  * remove pwmleds (no stable interface yet)
-> 
-> v4:
-> thanks a lot Shawn for reviewing
->  * rename to dtsi and split out r2 and r3 dts with revision specifics
->  * add the USB2642 hard-wired Hub
->  * fix charge controller boost-max-current
->  * disable pullup on CHRG_INT (not needed due to external one)
->  * add documentation for the boards' compatible strings
->  * fix led-backlight propery usage
->  * coding style fixes
-> https://lore.kernel.org/linux-devicetree/20200721153225.7593-1-martin.kepplinger@puri.sm/T/
-> 
-> v3:
-> thanks a lot Mark for reviewing! changes since v2:
->  * nicer audio cards names
->  * squash unneeded audio_pwr regulator
->  * remove the susphy_quirk from dwc3_1 after more testing
->  * add usdhc2 card detect via gpio
->  * add headphone detect for audio card
-> https://lore.kernel.org/linux-arm-kernel/20200617073821.16737-1-martin.kepplinger@puri.sm/T/
-> 
-> v2:
-> thanks a lot Marco, Daniel and Pavel for reviewing. changes since v1:
->  * alphabetical sortings / more consistent node names
->  * remove unused regulator and pinctrl descriptions
->  * generic labels for leds, backlight, flash and torch
->  * audio clk settings moved to sai2 node
-> https://lore.kernel.org/linux-arm-kernel/20200604084756.586-1-martin.kepplinger@puri.sm/T/
-> 
-> v1:
-> https://lore.kernel.org/linux-arm-kernel/20200514155737.12160-1-martin.kepplinger@puri.sm/
-> 
+>
+>   drivers/dma-buf/dma-fence-array.c | 10 ++++------
+>   1 file changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
+> index d3fbd950be94..b8829b024255 100644
+> --- a/drivers/dma-buf/dma-fence-array.c
+> +++ b/drivers/dma-buf/dma-fence-array.c
+> @@ -46,8 +46,6 @@ static void irq_dma_fence_array_work(struct irq_work *wrk)
+>   {
+>   	struct dma_fence_array *array = container_of(wrk, typeof(*array), work);
+>   
+> -	dma_fence_array_clear_pending_error(array);
+> -
+>   	dma_fence_signal(&array->base);
+>   	dma_fence_put(&array->base);
+>   }
+> @@ -61,10 +59,10 @@ static void dma_fence_array_cb_func(struct dma_fence *f,
+>   
+>   	dma_fence_array_set_pending_error(array, f->error);
+>   
+> -	if (atomic_dec_and_test(&array->num_pending))
+> -		irq_work_queue(&array->work);
+> -	else
+> -		dma_fence_put(&array->base);
+> +	if (!atomic_dec_and_test(&array->num_pending))
+> +		dma_fence_array_set_pending_error(array, f->error);
+> +
+> +	irq_work_queue(&array->work);
+>   }
+>   
+>   static bool dma_fence_array_enable_signaling(struct dma_fence *fence)
 
-hi Shawn, hi all,
-
-the merge window is basically over and maybe you'll then find time to
-review whether you still find problems with this addition. In case
-you've looked at an older version of this, all changes should be listed
-in the revision history above.
-
-thanks again,
-                                 martin
