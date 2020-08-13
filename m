@@ -2,223 +2,140 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9185AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA09C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B9120791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDjvd4jR"
+	by mail.kernel.org (Postfix) with ESMTP id 61DE020791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHMMzF (ORCPT
+        id S1726546AbgHMM5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMMzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:55:02 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E34C061757;
-        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id x2so3225762ybf.12;
-        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
-        b=CDjvd4jRQ4l4RbEGS7kLoVz83KH2o2s7f6rdC0YEkG0f8Va0KUGU5njmNmvWD0j9O2
-         RfANcDqb2X+yWziaXZEzlqOWhHgeTL5f/SXl5lb/HJJBolKmL8PtCbAybApFYU+4oNy+
-         lnxF35PhN+5FMSGJj7yvZ7+IaMhqk+Zr8Er4UrJAtC1B6RMdi44Rt0whIC9p5hiRDI5t
-         RfaFR/cw7Y4b7tmBtWDoizH2xMs4738luDMcpqysPS53DKQksGYxvXrMEIOO6EKOPvsf
-         ii3XQiL+ZlfdLla0STQiINsAwKKJAMkoTsBMKTHQiS4jiBtGJI7vp72c0zujwo8S7HEC
-         Lxdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
-        b=pQ3fxRiFz/MNTGAP4wzAT1dLR12EBDDoDzr1Xn13iatBmTT7Kc8N0iXbdQ/5pmxIWA
-         Q232MDbEPhWLndhwp3Hx1NVilBSzpsCgTIl2wZPP0Qut35qY1MEyCb3M3a6ilNA+jAlV
-         sqbZ4XmpNurUON0t39OBzOpBd87/16GTZqY+DCDu5LO73A5g8crgZGmD1NGhGF8toKs6
-         kEyQ0fyheNpnNPXBk8tzoZRM90YfI0AuOVjkgrjqP/h24oyVNN16ZDUocKjo6q2At/bo
-         3LTy6Q9PWyplTaAqYtAlhjK4SF11KBMxF/ieQ2huj7f9uEIyanJxf3ohYcd4XRJYnB6k
-         XrEA==
-X-Gm-Message-State: AOAM530oeceWO/0FA1vHeHY5fZT1xeIRTZfQ0XqClBt1UA6KJCTBnyRg
-        jLEx+BcX2PYRwPsTVoY2RBC82UVl36ZPrKgpisjf2krQ
-X-Google-Smtp-Source: ABdhPJyorRbchJgGCyTLDbB3eJQXWKepkgtINQSgf1E6LPJzQ0rtraBZ92Kn14p9F4+c7jW6VIEg4dj5p7BbrEEtpHs=
-X-Received: by 2002:a25:6ad6:: with SMTP id f205mr6436845ybc.76.1597323301408;
- Thu, 13 Aug 2020 05:55:01 -0700 (PDT)
+        Thu, 13 Aug 2020 08:57:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30638 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgHMM5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:57:38 -0400
+IronPort-SDR: XMbXD5wOjMy9ylOIT79c5GULY32En/0TbSGuDlH2t3NjxCfD0ZjSbEkYXIkyifrbEQuuicv/L2
+ 1KQmnGV6YK0g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="134262895"
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="134262895"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 05:57:38 -0700
+IronPort-SDR: 4TbxNK5/QPQDHXXHIJNqMc9bTYRc/awbplus0DHvOH1EX6V8zHMPTO2JPHWk16GPlh3qi1OJok
+ zcLByXumFfhA==
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="333100702"
+Received: from jsdraege-mobl1.amr.corp.intel.com (HELO [10.209.128.166]) ([10.209.128.166])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 05:57:36 -0700
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+To:     Takashi Iwai <tiwai@suse.de>, Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+ <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+ <20200811172209.GM6967@sirena.org.uk>
+ <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
+ <s5hr1scz908.wl-tiwai@suse.de>
+ <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
+ <s5hlfikz6y8.wl-tiwai@suse.de>
+ <CAGvk5Pq3rEGJX=WjriPfWg_sEAVWHGZ9S=4iySNfYaHX7Xcw0g@mail.gmail.com>
+ <s5h8sekz4ox.wl-tiwai@suse.de>
+ <e4cc6231-8b19-c145-1b18-91d3a00131d3@linux.intel.com>
+ <s5hv9hnx6am.wl-tiwai@suse.de>
+ <be45d821-57c6-6ca5-0864-ac3aa521d82e@linux.intel.com>
+ <DM6PR11MB364242D3652EDC2F9B8B214897420@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <0714b222-d3fc-5744-1147-bfac7df2651e@linux.intel.com>
+ <CAGvk5Pqg000SnrRhVD+8cOtAVokomRSa6MLdaKKnY2P6R_ruGA@mail.gmail.com>
+ <DM6PR11MB364285D8B21B723EB88915CB97430@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <CAGvk5PpvhjyvETcGS0212XnLPaL71A8D2qMW55rSQZxseOffmw@mail.gmail.com>
+ <s5h8sejvsrs.wl-tiwai@suse.de>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <e836596b-8ed8-d85f-8226-a471ab4c23d3@linux.intel.com>
+Date:   Thu, 13 Aug 2020 07:57:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200811112638.GF6054@pendragon.ideasonboard.com>
-In-Reply-To: <20200811112638.GF6054@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 13 Aug 2020 13:54:35 +0100
-Message-ID: <CA+V-a8sVA9r3_yrM6z7EX-XGp1d6Wy-6LjWsO7Td93C-236jvg@mail.gmail.com>
-Subject: Re: [PATCH 7/7] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <s5h8sejvsrs.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
 
-Thank you for the review.
 
-On Tue, Aug 11, 2020 at 12:26 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Fri, Aug 07, 2020 at 06:49:54PM +0100, Lad Prabhakar wrote:
-> > The iwg21d comes with a 7" capacitive touch screen, therefore
-> > add support for it.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > ---
-> >  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 84 +++++++++++++++++++++++++
-> >  1 file changed, 84 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > index b3461a61a4bf..cf59fd61e422 100644
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > @@ -30,6 +30,7 @@
-> >
-> >  /dts-v1/;
-> >  #include "r8a7742-iwg21m.dtsi"
-> > +#include <dt-bindings/pwm/pwm.h>
-> >
-> >  / {
-> >       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
-> > @@ -52,6 +53,50 @@
-> >               clock-frequency = <26000000>;
-> >       };
-> >
-> > +     lcd_backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             pwms = <&tpu 2 5000000 0>;
-> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +             pinctrl-0 = <&backlight_pins>;
-> > +             pinctrl-names = "default";
-> > +             default-brightness-level = <7>;
-> > +             enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
->
-> It's actually a power supply, not an enable GPIO, but it doesn't matter
-> much, I don't think there's a need to declare a regulator just for the
-> sake of it.
->
-Agreed will leave it as is.
+On 8/13/20 3:45 AM, Takashi Iwai wrote:
+> On Thu, 13 Aug 2020 10:36:57 +0200,
+> Yu-Hsuan Hsu wrote:
+>>
+>> Lu, Brent <brent.lu@intel.com> 於 2020年8月13日 週四 下午3:55寫道：
+>>>
+>>>>>>
+>>>>>> CRAS calls snd_pcm_hw_params_set_buffer_size_max() to use as large
+>>>>>> buffer as possible. So the period size is an arbitrary number in
+>>>>>> different platforms. Atom SST platform happens to be 256, and CML
+>>>>>> SOF platform is 1056 for example.
+>>>>>
+>>>>> ok, but earlier in this thread it was mentioned that values such as
+>>>>> 432 are not suitable. the statement above seems to mean the period
+>>>>> actual value is a "don't care", so I don't quite see why this specific
+>>>>> patch2 restricting the value to 240 is necessary. Patch1 is needed for
+>>>>> sure,
+>>>>> Patch2 is where Takashi and I are not convinced.
+>>>>
+>>>> I have downloaded the patch1 but it does not work. After applying patch1,
+>>>> the default period size changes to 320. However, it also has the same issue
+>>>> with period size 320. (It can be verified by aplay.)
+>>>
+>>> The period_size is related to the audio latency so it's decided by application
+>>> according to the use case it's running. That's why there are concerns about
+>>> patch 2 and also you cannot find similar constraints in other machine driver.
+>> You're right. However, the problem here is the provided period size
+>> does not work. Like 256, setting the period size to 320 also makes
+>> users have big latency in the DSP ring buffer.
+>>
+>> localhost ~ # aplay -Dhw:1,0 --period-size=320 --buffer-size=640
+>> /dev/zero -d 1 -f dat --test-position
+>> Playing raw data '/dev/zero' : Signed 16 bit Little Endian, Rate 48000
+>> Hz, Stereo
+>> Suspicious buffer position (1 total): avail = 0, delay = 2640, buffer = 640
+>> Suspicious buffer position (2 total): avail = 0, delay = 2640, buffer = 640
+>> Suspicious buffer position (3 total): avail = 0, delay = 2720, buffer = 640
+>> ...
+> 
+> It means that the delay value returned from the driver is bogus.
+> I suppose it comes pcm_delay value calculated in sst_calc_tstamp(),
+> but haven't followed the code closely yet.  Maybe checking the debug
+> outputs can help to trace what's going wrong.
 
-> > +     };
-> > +
-> > +     lvds-receiver {
-> > +             compatible = "ti,ds90cf384a", "lvds-decoder";
-> > +             powerdown-gpios = <&gpio5 28 GPIO_ACTIVE_LOW>;
->
-> This should be handled as a shared power supply, as it's also needed for
-> the touch screen. Biju has sent patches for the iwg20d that fixes a
-> probe issue due to that problem, I think you can just copy the fix.
->
-Done.
+the problem is really that we add a constraint that the period size be a 
+multiple of 1ms, and it's not respected. 320 samples is not a valid 
+choice, I don't get how it ends-up being selected? there's a glitch in 
+the matrix here.
 
-> > +
-> > +             ports {
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <0>;
-> > +
-> > +                     port@0 {
-> > +                             reg = <0>;
-> > +                             lvds_receiver_in: endpoint {
-> > +                                     remote-endpoint = <&lvds0_out>;
-> > +                             };
-> > +                     };
-> > +                     port@1 {
-> > +                             reg = <1>;
-> > +                             lvds_receiver_out: endpoint {
-> > +                                     remote-endpoint = <&panel_in>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     panel {
-> > +             compatible = "edt,etm0700g0dh6";
-> > +             backlight = <&lcd_backlight>;
-> > +
-> > +             port {
-> > +                     panel_in: endpoint {
-> > +                             remote-endpoint = <&lvds_receiver_out>;
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> >       reg_1p5v: 1p5v {
-> >               compatible = "regulator-fixed";
-> >               regulator-name = "1P5V";
-> > @@ -129,12 +174,31 @@
-> >               VDDIO-supply = <&reg_3p3v>;
-> >               VDDD-supply = <&reg_1p5v>;
-> >       };
-> > +
-> > +     touch: touchpanel@38 {
-> > +             compatible = "edt,edt-ft5406";
-> > +             reg = <0x38>;
-> > +             interrupt-parent = <&gpio0>;
-> > +             interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
->
-> Should the reset GPIO also be wired ? It seems to be shared with the
-> audio codec though, which is annoying.
->
-Done.
 
-> > +     };
-> >  };
-> >
-> >  &cmt0 {
-> >       status = "okay";
-> >  };
-> >
-> > +&du {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&gpio0 {
-> > +     touch-interrupt {
-> > +             gpio-hog;
-> > +             gpios = <24 GPIO_ACTIVE_LOW>;
-> > +             input;
-> > +     };
->
-> Is this needed, or does requesting the interrupt in the touch screen
-> driver configured the GPIO to an input automatically ?
->
-Yes this is needed, the touch driver does not configure the pin as
-GPIO input without this touch doesn't work.
-
-Cheers,
-Prabhakar
