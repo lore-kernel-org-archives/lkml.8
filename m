@@ -2,168 +2,281 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377D9C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111D020791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OIXZj9FL"
+	by mail.kernel.org (Postfix) with ESMTP id 140312074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHMJAn (ORCPT
+        id S1726611AbgHMJAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:00:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726048AbgHMJAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:00:40 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07D8X4sf187654;
-        Thu, 13 Aug 2020 05:00:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=RNVxaGhJE62uYyK1T5cbH64KJh6t1reKdoD/1B05iHs=;
- b=OIXZj9FLA7fXm9rXKu+Wu03qld/AJtDoOsL02Ihi6rtiu+w/iyf42OElVlWTob4N3t+T
- WFw+a6J0wEENbxJ00i+w/KYR5uwcW4rIzLRtSlx4lW8XiPcqRZAG1MfSvQVclfBBFfrI
- zIfHVktbIPFbNjEt0k43JkWI+vGXq1Li3/jwzVbiDBpdgpbxo50p9orHHUWmqbXstO8R
- QMgs+czR1aAkkd8U8I5Sz7lN6djBHIs0H7H1unggzV5sRDO8cRmyqcG9hQrX+P5KKgT0
- oGDtE+O4SfW4r6D6dtnQhWoJ0FSLTSy/TdYlHTxZ1Q5F295vhcJZdTVqxtNi3eT1xCg3 1A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32vcsyp7uu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 05:00:32 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07D8XEdF188447;
-        Thu, 13 Aug 2020 05:00:32 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32vcsyp7s9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 05:00:32 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07D8uPhb012111;
-        Thu, 13 Aug 2020 09:00:29 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 32skp83a2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 09:00:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07D90QHx61669846
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 09:00:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81ADD4C059;
-        Thu, 13 Aug 2020 09:00:25 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA2264C076;
-        Thu, 13 Aug 2020 09:00:24 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 09:00:24 +0000 (GMT)
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
- <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
-Date:   Thu, 13 Aug 2020 11:00:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 13 Aug 2020 05:00:46 -0400
+Received: from mailout11.rmx.de ([94.199.88.76]:55934 "EHLO mailout11.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgHMJAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:00:44 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout11.rmx.de (Postfix) with ESMTPS id 4BS0sL0SHbz3yh7;
+        Thu, 13 Aug 2020 11:00:38 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BS0rx2VMHz2TTPD;
+        Thu, 13 Aug 2020 11:00:17 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.79) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 13 Aug
+ 2020 11:00:17 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh@kernel.org>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH v3] dt-bindings: at25: convert the binding document to yaml
+Date:   Thu, 13 Aug 2020 10:59:59 +0200
+Message-ID: <20200813085959.15946-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200812200602.GA2612803@bogus>
+References: <20200812200602.GA2612803@bogus>
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_06:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 adultscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130060
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.79]
+X-RMX-ID: 20200813-110017-4BS0rx2VMHz2TTPD-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the binding document for at25 EEPROMs from txt to yaml.
 
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+On Wednesday, 12 August 2020, 22:06:02 CEST, Rob Herring wrote:
+> > +This file has been moved to at25.yaml.
+> 
+> We only do this to save updating a bunch of references and there aren't
+> any, so just remove the file.
+file removed.
 
-On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
-> On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>
->> s390x has the notion of providing VFs to the kernel in a manner
->> where the associated PF is inaccessible other than via firmware.
->> These are not treated as typical VFs and access to them is emulated
->> by underlying firmware which can still access the PF.  After
->> abafbc55 however these detached VFs were no longer able to work
->> with vfio-pci as the firmware does not provide emulation of the
->> PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
->> these detached VFs so that vfio-pci can allow memory access to
->> them again.
-> 
-> Hmm, cool. I think we have a similar feature on pseries so that's
-> probably broken too.
-> 
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>  arch/s390/pci/pci.c                |  8 ++++++++
->>  drivers/vfio/pci/vfio_pci_config.c | 11 +++++++----
->>  include/linux/pci.h                |  1 +
->>  3 files changed, 16 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
->> index 3902c9f..04ac76d 100644
->> --- a/arch/s390/pci/pci.c
->> +++ b/arch/s390/pci/pci.c
->> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
->>  {
->>         struct zpci_dev *zdev = to_zpci(pdev);
->>
->> +       /*
->> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
->> +        * detached from its parent PF.  We rely on firmware emulation to
->> +        * provide underlying PF details.
->> +        */
->> +       if (zdev->vfn && !zdev->zbus->multifunction)
->> +               pdev->detached_vf = 1;
-> 
-> The enable hook seems like it's a bit too late for this sort of
-> screwing around with the pci_dev. Anything in the setup path that
-> looks at ->detached_vf would see it cleared while anything that looks
-> after the device is enabled will see it set. Can this go into
-> pcibios_add_device() or a fixup instead?
-> 
+> I'd just fix it up, but this wouldn't apply for me on Linus' current
+> master. Please rebase and resend (You can want til rc1 if you want
+> because that's what I'll ultimately apply it too).
+This was my fault. I forgot to revert my previous patch ("dt-bindings: at25: fix
+syntax error in example code"). So v2 was created from a wrong base.
 
-This particular check could go into pcibios_add_device() yes.
-We're also currently working on a slight rework of how
-we establish the VF to parent PF linking including the sysfs
-part of that. The latter sadly can only go after the sysfs
-for the virtfn has been created and that only happens
-after all fixups. We would like to do both together because
-the latter sets pdev->is_virtfn which I think is closely related.
+I'll be unavailable until August, 23.
 
-I was thinking of starting another discussion
-about adding a hook that is executed just after the sysfs entries
-for the PCI device are created but haven't yet.
-That said pcibios_enable_device() is called before drivers
-like vfio-pci are enabled and so as long as all uses of pdev->detached_vf
-are in drivers it should be early enough. AFAIK almost everything
-dealing with VFs before that is already skipped with pdev->no_vf_scan
-though.
+regards
+Christian
+
+ .../devicetree/bindings/eeprom/at25.txt       |  45 ------
+ .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
+ 2 files changed, 129 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/eeprom/at25.txt
+ create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
+
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+deleted file mode 100644
+index fcacd97abd0a..000000000000
+--- a/Documentation/devicetree/bindings/eeprom/at25.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-EEPROMs (SPI) compatible with Atmel at25.
+-
+-Required properties:
+-- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+-  Example "<vendor>,<type>" values:
+-    "anvo,anv32e61w"
+-    "microchip,25lc040"
+-    "st,m95m02"
+-    "st,m95256"
+-
+-- reg : chip select number
+-- spi-max-frequency : max spi frequency to use
+-- pagesize : size of the eeprom page
+-- size : total eeprom size in bytes
+-- address-width : number of address bits (one of 8, 9, 16, or 24).
+-  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
+-  byte, before the address byte.
+-
+-Optional properties:
+-- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
+-- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
+-- read-only : this parameter-less property disables writes to the eeprom
+-- wp-gpios : GPIO to which the write-protect pin of the chip is connected
+-
+-Obsolete legacy properties can be used in place of "size", "pagesize",
+-"address-width", and "read-only":
+-- at25,byte-len : total eeprom size in bytes
+-- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
+-- at25,page-size : size of the eeprom page
+-
+-Additional compatible properties are also allowed.
+-
+-Example:
+-	eeprom@0 {
+-		compatible = "st,m95256", "atmel,at25";
+-		reg = <0>
+-		spi-max-frequency = <5000000>;
+-		spi-cpha;
+-		spi-cpol;
+-		wp-gpios = <&gpio1 3 0>;
+-
+-		pagesize = <64>;
+-		size = <32768>;
+-		address-width = <16>;
+-	};
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.yaml b/Documentation/devicetree/bindings/eeprom/at25.yaml
+new file mode 100644
+index 000000000000..9810619a2b5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/eeprom/at25.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/eeprom/at25.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: SPI EEPROMs compatible with Atmel's AT25
++
++maintainers:
++  - Christian Eggers <ceggers@arri.de>
++
++properties:
++  $nodename:
++    pattern: "^eeprom@[0-9a-f]{1,2}$"
++
++  # There are multiple known vendors who manufacture EEPROM chips compatible
++  # with Atmel's AT25. The compatible string requires two items where the
++  # 'vendor' and 'model' parts of the first are the actual chip and the second
++  # item is fixed to "atmel,at25". Some existing bindings only have the
++  # "atmel,at25" part and should be fixed by somebody who knows vendor and
++  # product.
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - anvo,anv32e61w
++              - atmel,at25256B
++              - fujitsu,mb85rs1mt
++              - fujitsu,mb85rs64
++              - microchip,at25160bn
++              - microchip,25lc040
++              - st,m95m02
++              - st,m95256
++
++          - const: atmel,at25
++
++      # Please don't use this alternative for new bindings.
++      - items:
++          - const: atmel,at25
++
++  reg:
++    description:
++      Chip select number.
++
++  spi-max-frequency: true
++
++  pagesize:
++    $ref: /schemas/types.yaml#definitions/uint32
++    enum: [1, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
++    description:
++      Size of the eeprom page.
++
++  size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Total eeprom size in bytes.
++
++  address-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 8, 9, 16, 24 ]
++    description:
++      Number of address bits.
++      For 9 bits, the MSB of the address is sent as bit 3 of the instruction
++      byte, before the address byte.
++
++  spi-cpha: true
++
++  spi-cpol: true
++
++  read-only:
++    description:
++      Disable writes to the eeprom.
++    type: boolean
++
++  wp-gpios:
++    maxItems: 1
++    description:
++      GPIO to which the write-protect pin of the chip is connected.
++
++  # Deprecated: at25,byte-len, at25,addr-mode, at25,page-size
++  at25,byte-len:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++       Total eeprom size in bytes. Deprecated, use "size" property instead.
++    deprecated: true
++
++  at25,addr-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++       Addr-mode flags, as defined in include/linux/spi/eeprom.h.
++       Deprecated, use "address-width" property instead.
++    deprecated: true
++
++  at25,page-size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Size of the eeprom page. Deprecated, use "pagesize" property instead.
++    deprecated: true
++
++required:
++  - compatible
++  - reg
++  - spi-max-frequency
++  - pagesize
++  - size
++  - address-width
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        eeprom@0 {
++            compatible = "st,m95256", "atmel,at25";
++            reg = <0>;
++            spi-max-frequency = <5000000>;
++            spi-cpha;
++            spi-cpol;
++            wp-gpios = <&gpio1 3 0>;
++
++            pagesize = <64>;
++            size = <32768>;
++            address-width = <16>;
++        };
++    };
+-- 
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
