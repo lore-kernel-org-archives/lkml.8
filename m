@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA54422B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6F62184D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgHMBqC (ORCPT
+        id S1726745AbgHMBqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33196 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 21:46:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbgHMBp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726078AbgHMBp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 21:45:57 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164BA2177B;
-        Thu, 13 Aug 2020 01:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75C4F20756;
+        Thu, 13 Aug 2020 01:45:56 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.94)
         (envelope-from <rostedt@goodmis.org>)
-        id 1k62JY-00751e-3P; Wed, 12 Aug 2020 21:45:56 -0400
-Message-ID: <20200813014555.980104906@goodmis.org>
+        id 1k62JX-0074zW-Go; Wed, 12 Aug 2020 21:45:55 -0400
+Message-ID: <20200813014555.384329363@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Wed, 12 Aug 2020 21:45:39 -0400
+Date:   Wed, 12 Aug 2020 21:45:35 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -38,8 +38,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: [PATCH RT 5/6] rwsem: Provide down_read_non_owner() and up_read_non_owner() for -RT
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Subject: [PATCH RT 1/6] signal: Prevent double-free of user struct
 References: <20200813014534.833107526@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -53,57 +54,52 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Matt Fleming <matt@codeblueprint.co.uk>
 
-The rwsem implementation on -RT allows multiple reader and there is no
-owner tracking anymore.
-We can provide down_read_non_owner() and up_read_non_owner() by skipping
-the owner check bits which are only available in the !RT implementation.
+The way user struct reference counting works changed significantly with,
 
+  fda31c50292a ("signal: avoid double atomic counter increments for user accounting")
+
+Now user structs are only freed once the last pending signal is
+dequeued. Make sigqueue_free_current() follow this new convention to
+avoid freeing the user struct multiple times and triggering this
+warning:
+
+ refcount_t: underflow; use-after-free.
+ WARNING: CPU: 0 PID: 6794 at lib/refcount.c:288 refcount_dec_not_one+0x45/0x50
+ Call Trace:
+  refcount_dec_and_lock_irqsave+0x16/0x60
+  free_uid+0x31/0xa0
+  __dequeue_signal+0x17c/0x190
+  dequeue_signal+0x5a/0x1b0
+  do_sigtimedwait+0x208/0x250
+  __x64_sys_rt_sigtimedwait+0x6f/0xd0
+  do_syscall_64+0x72/0x200
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Reported-by: Daniel Wagner <wagi@monom.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/locking/rwsem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/signal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 0d11ba11a32a..0325c721f9b3 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -1616,15 +1616,15 @@ void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *nest)
- }
- EXPORT_SYMBOL(_down_write_nest_lock);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index def2e8e37f1f..aa924f0141cf 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -494,8 +494,8 @@ static void sigqueue_free_current(struct sigqueue *q)
  
--#ifndef CONFIG_PREEMPT_RT
- void down_read_non_owner(struct rw_semaphore *sem)
- {
- 	might_sleep();
- 	__down_read(sem);
-+#ifndef CONFIG_PREEMPT_RT
- 	__rwsem_set_reader_owned(sem, NULL);
-+#endif
+ 	up = q->user;
+ 	if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
+-		atomic_dec(&up->sigpending);
+-		free_uid(up);
++		if (atomic_dec_and_test(&up->sigpending))
++			free_uid(up);
+ 	} else
+ 		  __sigqueue_free(q);
  }
- EXPORT_SYMBOL(down_read_non_owner);
--#endif
- 
- void down_write_nested(struct rw_semaphore *sem, int subclass)
- {
-@@ -1649,13 +1649,13 @@ int __sched down_write_killable_nested(struct rw_semaphore *sem, int subclass)
- }
- EXPORT_SYMBOL(down_write_killable_nested);
- 
--#ifndef CONFIG_PREEMPT_RT
- void up_read_non_owner(struct rw_semaphore *sem)
- {
-+#ifndef CONFIG_PREEMPT_RT
- 	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
-+#endif
- 	__up_read(sem);
- }
- EXPORT_SYMBOL(up_read_non_owner);
--#endif
- 
- #endif
 -- 
 2.28.0
 
