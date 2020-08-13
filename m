@@ -2,145 +2,223 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3453C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 864FC21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF9420768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="s/s9gcdD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgHMKRQ (ORCPT
+        id S1726529AbgHMKS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:17:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:52938 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgHMKRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:17:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A8B931B;
-        Thu, 13 Aug 2020 03:17:14 -0700 (PDT)
-Received: from [10.37.8.11] (unknown [10.37.8.11])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE62A3F70D;
-        Thu, 13 Aug 2020 03:17:02 -0700 (PDT)
-Subject: Re: [PATCH] coresight: fix offset by one error in counting ports
-To:     ykaukab@suse.de, linux-arm-kernel@lists.infradead.org,
-        mathieu.poirier@linaro.org
-Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        mike.leach@linaro.org, gregkh@linuxfoundation.org,
-        tingwei@codeaurora.org, ro@suse.com, jeremy.linton@arm.com
-References: <20200813100456.11803-1-ykaukab@suse.de>
- <20200813100456.11803-2-ykaukab@suse.de>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <213e9d02-b945-1317-bc54-83b64ac376cf@arm.com>
-Date:   Thu, 13 Aug 2020 11:22:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 13 Aug 2020 06:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgHMKS1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:18:27 -0400
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515FCC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:18:26 -0700 (PDT)
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id BD8457FA229;
+        Thu, 13 Aug 2020 12:18:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1597313892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oqJo//NoneW7PkB46Igg0Y4AUGFkiADCr7vVI5rxrdU=;
+        b=s/s9gcdDebHxarumTc0n3bOWyHVafTpurL4mfVvIaiZwNZX4qcCSrOIAi+3L6b0OgF9Ci3
+        M7LtKypclvN1rktNfdy/ITQcPpoKmOrnjtlQ0mysqulfcpbS6xzwkyh0lC6zxB49HP0dA9
+        RI8YTUlYnqrllmtSoDRM6d6zH77NtTE=
 MIME-Version: 1.0
-In-Reply-To: <20200813100456.11803-2-ykaukab@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Date:   Thu, 13 Aug 2020 12:18:12 +0200
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        axboe@kernel.dk, paolo.valente@linaro.org
+Subject: Re: [PATCH] bfq: fix blkio cgroup leakage v4
+In-Reply-To: <20200811064340.31284-1-dmtrmonakhov@yandex-team.ru>
+References: <20200811064340.31284-1-dmtrmonakhov@yandex-team.ru>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <8b435dd48d245afe2fda82ee711f9457@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/13/2020 11:04 AM, Mian Yousaf Kaukab wrote:
-> Since port-numbers start from 0, add 1 to port-number to get the port
-> count.
-> 
-> Fix following crash when Coresight is enabled on ACPI based systems:
-> 
-> [   61.061736] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-> ...
-> [   61.135494] pc : acpi_coresight_parse_graph+0x1c4/0x37c
-> [   61.140705] lr : acpi_coresight_parse_graph+0x160/0x37c
-> [   61.145915] sp : ffff800012f4ba40
-> [   61.145917] x29: ffff800012f4ba40 x28: ffff00becce62f98
-> [   61.159896] x27: 0000000000000005 x26: ffff00becd8a7c88
-> [   61.165195] x25: ffff00becd8a7d88 x24: ffff00becce62f80
-> [   61.170492] x23: ffff800011ef99c0 x22: ffff009efb8bc010
-> [   61.175790] x21: 0000000000000018 x20: 0000000000000005
-> [   61.181087] x19: ffff00becce62e80 x18: 0000000000000020
-> [   61.186385] x17: 0000000000000001 x16: 00000000000002a8
-> [   61.191682] x15: ffff000838648550 x14: ffffffffffffffff
-> [   61.196980] x13: 0000000000000000 x12: ffff00becce62d87
-> [   61.202277] x11: 00000000ffffff76 x10: 000000000000002e
-> [   61.207575] x9 : ffff8000107e1a68 x8 : ffff00becce63000
-> [   61.212873] x7 : 0000000000000018 x6 : 000000000000003f
-> [   61.218170] x5 : 0000000000000000 x4 : 0000000000000000
-> [   61.223467] x3 : 0000000000000000 x2 : 0000000000000000
-> [   61.228764] x1 : ffff00becce62f80 x0 : 0000000000000000
-> [   61.234062] Call trace:
-> [   61.236497]  acpi_coresight_parse_graph+0x1c4/0x37c
-> [   61.241361]  coresight_get_platform_data+0xdc/0x130
-> [   61.246225]  tmc_probe+0x138/0x2dc
-> [   61.246227]  amba_probe+0xdc/0x220
-> [   61.255779]  really_probe+0xe8/0x49c
-> [   61.255781]  driver_probe_device+0xec/0x140
-> [   61.255782]  device_driver_attach+0xc8/0xd0
-> [   61.255785]  __driver_attach+0xac/0x180
-> [   61.265857]  bus_for_each_dev+0x78/0xcc
-> [   61.265859]  driver_attach+0x2c/0x40
-> [   61.265861]  bus_add_driver+0x150/0x244
-> [   61.265863]  driver_register+0x80/0x13c
-> [   61.273591]  amba_driver_register+0x60/0x70
-> [   61.273594]  tmc_driver_init+0x20/0x2c
-> [   61.281582]  do_one_initcall+0x50/0x230
-> [   61.281585]  do_initcalls+0x104/0x144
-> [   61.291831]  kernel_init_freeable+0x168/0x1dc
-> [   61.291834]  kernel_init+0x1c/0x120
-> [   61.299215]  ret_from_fork+0x10/0x18
-> [   61.299219] Code: b9400022 f9400660 9b277c42 8b020000 (f9400404)
-> [   61.307381] ---[ end trace 63c6c3d7ec6a9b7c ]---
-> [   61.315225] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-> 
-> Fixes: d375b356e687 ("coresight: Fix support for sparsely populated ports")
-> Reported-by: Ruediger Oertel <ro@suse.com>
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+Hello.
 
-
+On 11.08.2020 08:43, Dmitry Monakhov wrote:
+> Changes from v1:
+>     - update commit description with proper ref-accounting 
+> justification
+> 
+> commit db37a34c563b ("block, bfq: get a ref to a group when adding it
+> to a service tree")
+> introduce leak forbfq_group and blkcg_gq objects because of get/put
+> imbalance.
+> In fact whole idea of original commit is wrong because bfq_group entity
+> can not dissapear under us because it is referenced by child 
+> bfq_queue's
+> entities from here:
+>  -> bfq_init_entity()
+>     ->bfqg_and_blkg_get(bfqg);
+>     ->entity->parent = bfqg->my_entity
+> 
+>  -> bfq_put_queue(bfqq)
+>     FINAL_PUT
+>     ->bfqg_and_blkg_put(bfqq_group(bfqq))
+>     ->kmem_cache_free(bfq_pool, bfqq);
+> 
+> So parent entity can not disappear while child entity is in tree,
+> and child entities already has proper protection.
+> This patch revert commit db37a34c563b ("block, bfq: get a ref to a
+> group when adding it to a service tree")
+> 
+> 
+> bfq_group leak trace caused by bad commit:
+> -> blkg_alloc
+>    -> bfq_pq_alloc
+>      -> bfqg_get (+1)
+> ->bfq_activate_bfqq
+>   ->bfq_activate_requeue_entity
+>     -> __bfq_activate_entity
+>        ->bfq_get_entity
+>          ->bfqg_and_blkg_get (+1)  <==== : Note1
+> ->bfq_del_bfqq_busy
+>   ->bfq_deactivate_entity+0x53/0xc0 [bfq]
+>     ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
+>       -> bfq_forget_entity(is_in_service = true)
+> 	 entity->on_st_or_in_serv = false   <=== :Note2
+> 	 if (is_in_service)
+> 	     return;  ==> do not touch reference
+> -> blkcg_css_offline
+>  -> blkcg_destroy_blkgs
+>   -> blkg_destroy
+>    -> bfq_pd_offline
+>     -> __bfq_deactivate_entity
+>          if (!entity->on_st_or_in_serv) /* true, because (Note2)
+> 		return false;
+>  -> bfq_pd_free
+>     -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
+> So bfq_group and blkcg_gq  will leak forever, see test-case below.
+> 
+> 
+> ##TESTCASE_BEGIN:
+> #!/bin/bash
+> 
+> max_iters=${1:-100}
+> #prep cgroup mounts
+> mount -t tmpfs cgroup_root /sys/fs/cgroup
+> mkdir /sys/fs/cgroup/blkio
+> mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+> 
+> # Prepare blkdev
+> grep blkio /proc/cgroups
+> truncate -s 1M img
+> losetup /dev/loop0 img
+> echo bfq > /sys/block/loop0/queue/scheduler
+> 
+> grep blkio /proc/cgroups
+> for ((i=0;i<max_iters;i++))
+> do
+>     mkdir -p /sys/fs/cgroup/blkio/a
+>     echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
+>     dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> 
+> /dev/null
+>     echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
+>     rmdir /sys/fs/cgroup/blkio/a
+>     grep blkio /proc/cgroups
+> done
+> ##TESTCASE_END:
+> 
+> Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 > ---
->   drivers/hwtracing/coresight/coresight-platform.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
+>  block/bfq-cgroup.c  |  2 +-
+>  block/bfq-iosched.h |  1 -
+>  block/bfq-wf2q.c    | 12 ++----------
+>  3 files changed, 3 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index bfd44231d7ad..227e234a2470 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -711,11 +711,11 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
->   			return dir;
->   
->   		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
-> -			if (ptr->outport > pdata->nr_outport)
-> -				pdata->nr_outport = ptr->outport;
-> +			if (ptr->outport >= pdata->nr_outport)
-> +				pdata->nr_outport = ptr->outport + 1;
->   			ptr++;
->   		} else {
-> -			WARN_ON(pdata->nr_inport == ptr->child_port);
-> +			WARN_ON(pdata->nr_inport == ptr->child_port + 1);
->   			/*
->   			 * We do not track input port connections for a device.
->   			 * However we need the highest port number described,
-> @@ -723,8 +723,8 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
->   			 * record for an output connection. Hence, do not move
->   			 * the ptr for input connections
->   			 */
-> -			if (ptr->child_port > pdata->nr_inport)
-> -				pdata->nr_inport = ptr->child_port;
-> +			if (ptr->child_port >= pdata->nr_inport)
-> +				pdata->nr_inport = ptr->child_port + 1;
->   		}
->   	}
+> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+> index 68882b9..b791e20 100644
+> --- a/block/bfq-cgroup.c
+> +++ b/block/bfq-cgroup.c
+> @@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+>  		kfree(bfqg);
+>  }
+> 
+> -void bfqg_and_blkg_get(struct bfq_group *bfqg)
+> +static void bfqg_and_blkg_get(struct bfq_group *bfqg)
+>  {
+>  	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+>  	bfqg_get(bfqg);
+> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+> index cd224aa..7038952 100644
+> --- a/block/bfq-iosched.h
+> +++ b/block/bfq-iosched.h
+> @@ -986,7 +986,6 @@ struct bfq_group *bfq_find_set_group(struct 
+> bfq_data *bfqd,
+>  struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+>  struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+>  struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, 
+> int node);
+> -void bfqg_and_blkg_get(struct bfq_group *bfqg);
+>  void bfqg_and_blkg_put(struct bfq_group *bfqg);
+> 
+>  #ifdef CONFIG_BFQ_GROUP_IOSCHED
+> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+> index eb0e2a6..26776bd 100644
+> --- a/block/bfq-wf2q.c
+> +++ b/block/bfq-wf2q.c
+> @@ -533,9 +533,7 @@ static void bfq_get_entity(struct bfq_entity 
+> *entity)
+>  		bfqq->ref++;
+>  		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+>  			     bfqq, bfqq->ref);
+> -	} else
+> -		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
+> -					       entity));
+> +	}
+>  }
+> 
+>  /**
+> @@ -649,14 +647,8 @@ static void bfq_forget_entity(struct 
+> bfq_service_tree *st,
+> 
+>  	entity->on_st_or_in_serv = false;
+>  	st->wsum -= entity->weight;
+> -	if (is_in_service)
+> -		return;
+> -
+> -	if (bfqq)
+> +	if (bfqq && !is_in_service)
+>  		bfq_put_queue(bfqq);
+> -	else
+> -		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
+> -					       entity));
+>  }
+> 
+>  /**
 
+No crashes reported this time, at least so far.
 
+Thanks.
 
-I was about to post a similar fix following a report from
-Jeremy. This looks fine to me.
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+-- 
+   Oleksandr Natalenko (post-factum)
