@@ -2,337 +2,346 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9C020774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273DB20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 00:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D6RUqChe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SIJallBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHMAIo (ORCPT
+        id S1726591AbgHMAL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 20:08:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        Wed, 12 Aug 2020 20:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgHMAIn (ORCPT
+        with ESMTP id S1726518AbgHMAL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 20:08:43 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F54C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:08:43 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id a1so2037571vsp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:08:43 -0700 (PDT)
+        Wed, 12 Aug 2020 20:11:28 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6966C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g33so1903304pgb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ceUtlC6MwMGrTyun60sqF99SKDJbWcXggrKlx7677S4=;
-        b=D6RUqChe/YBfnLLPy8n91WVpiwoeMX2S/KZsoS6uhmTVHOWCqH78TLtXUojHwHRONo
-         eFshRZnXFOwrUDBMHS4C8vETplXnvtXsbaZifZjYrNAKcHcZ8C3yc2x79D/XZ9CSkgqF
-         zeSNgiDAqnjky+Pb6dpc/OLwyXZsgiRBIKD4U=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2ZSpDsjubOiBkkOQ9eS3CYhctg8r1GfBee84kS+qmng=;
+        b=SIJallBysGyfZ7n0GHovzdGj+ek1aOP7s/lvFc94+KQIWLuXIPQfT8slVouDNk1JGW
+         953UCzRfduzYNq+bGrNGmj4M3beqM7xm3hbus2/Bqi6WAxX4prmdOg6pg4X8abg2Fvy1
+         wlRhVrcilxzv2aTj00whhjAXbkgmuL5khZCQjnSfdstnIn/3MU3eveZloWlNxmFlgS7/
+         tIN9lKmNgRzFrYq/mNdGPlKS/acnePkgN2HEWPy2qISkcf3dUJhXKmwzNXuX6/pL6itb
+         U2lr07Tl5GSMh0uVYBpliQa6z7hENZRv/5ydmkTJ6niZD9zY6hKAd7Qs03Ot63kvNAqB
+         gJHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ceUtlC6MwMGrTyun60sqF99SKDJbWcXggrKlx7677S4=;
-        b=sChI6F7vzfM6WiYOf0YkEm+QpKJBSKLiEmDWmMM633AeYths2K75hmIOyHrRKiUj2q
-         LpQo0FxxwC9bO3p0BrtMUNtWLfSItzJw4NdPRkVoYL2yRM3wlif2t2fTbO7e09voVdrJ
-         u11P9jwTplS/ZcrnFrUjnsu6lcN67+dbIdHSu6I3fd/e7L00QgXPYwOaieeHb3TL9Y71
-         MtQiCAYTvSfZ0zuTWWdmvGobg2GSkUybuLqHqZCjdcwbNW2tPAbUqCCVbeX7nHiZJV0e
-         krrg9hpnd8E+FwlJfKZrxP4pPDW/rqi+fQO5ix4GfY6ah0g3pQ116YcBBXO24GXGUXUX
-         KMig==
-X-Gm-Message-State: AOAM530v+tP83TuPmVR8U+QEN6xyaC7qJTbF70Btf4nzd26/V8OnKHbl
-        Rzq6+dvU9pwbA/jTuawOnEfVE834QRI=
-X-Google-Smtp-Source: ABdhPJwhNCcRFdqrSnLXn6cs421X5RtCN45JHgqrcJxD8IXqKOdjxQlPL4lj7g5ofHGrsoRkFNGeBQ==
-X-Received: by 2002:a67:3349:: with SMTP id z70mr1282180vsz.93.1597277321754;
-        Wed, 12 Aug 2020 17:08:41 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id 67sm487650vsl.13.2020.08.12.17.08.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 17:08:40 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id v20so1133553ual.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 17:08:40 -0700 (PDT)
-X-Received: by 2002:a9f:2966:: with SMTP id t93mr1514582uat.90.1597277319479;
- Wed, 12 Aug 2020 17:08:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2ZSpDsjubOiBkkOQ9eS3CYhctg8r1GfBee84kS+qmng=;
+        b=JbhTqW60384VJGBFscgxKmd9WYVDYdOdv2sk1XrON8sPfSigYHGuTGC9r7Vz0L3y6m
+         aDetr+FXs+7WPYcloW2o6e7HRSFVF0YzHl+mP1UGOOzurEolwmz4X8y8VjJa0/9tvtaB
+         szfOh8QPQL9Z05r/vcbKfG6PC8IL8EzmKYHh25Og8qb849maHKmmaQNwlJnY0S/JCBn/
+         r1Cp6iV01een/HKhkz0bOTIS84UzyHip5FZTFSTYYi0x+CV/VKjb9cGNTjYSMi1Q352P
+         qu1kmFS4/OoWhQt6PwQBAOjsZEZvLSUW0Gv+/znaDl7Ziv5euRwdJeLjVzmvtF/UzQou
+         +htQ==
+X-Gm-Message-State: AOAM531Mt9XJ/6WWR2BCiV1vCmwBVWKHDp34r+3fHViEQY51+YipxcxP
+        fTHpn40llqxJtkpMhvhlKaFVpg==
+X-Google-Smtp-Source: ABdhPJwcAhbH3HWpE9v4PGGbjXySJNWXJ7SlSSLlQYMmW/hrGQjYhOvimGNzwvtRAEXDr+ixOiAiNQ==
+X-Received: by 2002:aa7:84d4:: with SMTP id x20mr1842223pfn.96.1597277488005;
+        Wed, 12 Aug 2020 17:11:28 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id ez7sm3139142pjb.10.2020.08.12.17.11.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Aug 2020 17:11:27 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 08:11:21 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     acme@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] perf test: Introduce script for Arm CoreSight testing
+Message-ID: <20200813001121.GB16667@leoy-ThinkPad-X240s>
+References: <20200806070213.7386-1-leo.yan@linaro.org>
+ <cf57e876-3645-53f0-6333-ecb6ce3597d5@arm.com>
 MIME-Version: 1.0
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
- <20200811135801.GA416071@kroah.com> <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
- <20200811145816.GA424033@kroah.com> <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
- <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com> <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
-In-Reply-To: <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 12 Aug 2020 17:08:28 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
-Message-ID: <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
-Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf57e876-3645-53f0-6333-ecb6ce3597d5@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Suzuki,
 
+On Wed, Aug 12, 2020 at 05:59:55PM +0100, Suzuki Kuruppassery Poulose wrote:
+> Hi Leo,
+> 
+> On 08/06/2020 08:02 AM, Leo Yan wrote:
+> > We need a simple method to test Perf with Arm CoreSight drivers, this
+> > could be used for smoke testing when new patch is coming for perf or
+> > CoreSight drivers, and we also can use the test to confirm if the
+> > CoreSight has been enabled successfully on new platforms.
+> > 
+> > This patch introduces the shell script test_arm_coresight.sh which is
+> > under the 'pert test' framework.  This script provides three testing
+> > scenarios:
+> 
+> Thank you for this testcase. It is a very good tool for people
+> check their system for CoreSight driver functionality.
 
-On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Wed, Aug 12, 2020 at 7:53 AM Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Hi Doug,
-> >
-> > On Tue, 11 Aug 2020 at 22:46, Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Tue, Aug 11, 2020 at 7:58 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Aug 11, 2020 at 07:59:24PM +0530, Sumit Garg wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > Thanks for your comments.
-> > > > >
-> > > > > On Tue, 11 Aug 2020 at 19:27, Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > On Tue, Aug 11, 2020 at 07:20:26PM +0530, Sumit Garg wrote:
-> > > > > > > On Tue, 21 Jul 2020 at 17:40, Sumit Garg <sumit.garg@linaro.org> wrote:
-> > > > > > > >
-> > > > > > > > Make it possible for UARTs to trigger magic sysrq from an NMI. With the
-> > > > > > > > advent of pseudo NMIs on arm64 it became quite generic to request serial
-> > > > > > > > device interrupt as an NMI rather than IRQ. And having NMI driven serial
-> > > > > > > > RX will allow us to trigger magic sysrq as an NMI and hence drop into
-> > > > > > > > kernel debugger in NMI context.
-> > > > > > > >
-> > > > > > > > The major use-case is to add NMI debugging capabilities to the kernel
-> > > > > > > > in order to debug scenarios such as:
-> > > > > > > > - Primary CPU is stuck in deadlock with interrupts disabled and hence
-> > > > > > > >   doesn't honor serial device interrupt. So having magic sysrq triggered
-> > > > > > > >   as an NMI is helpful for debugging.
-> > > > > > > > - Always enabled NMI based magic sysrq irrespective of whether the serial
-> > > > > > > >   TTY port is active or not.
-> > > > > > > >
-> > > > > > > > Currently there is an existing kgdb NMI serial driver which provides
-> > > > > > > > partial implementation in upstream to have a separate ttyNMI0 port but
-> > > > > > > > that remained in silos with the serial core/drivers which made it a bit
-> > > > > > > > odd to enable using serial device interrupt and hence remained unused. It
-> > > > > > > > seems to be clearly intended to avoid almost all custom NMI changes to
-> > > > > > > > the UART driver.
-> > > > > > > >
-> > > > > > > > But this patch-set allows the serial core/drivers to be NMI aware which
-> > > > > > > > in turn provides NMI debugging capabilities via magic sysrq and hence
-> > > > > > > > there is no specific reason to keep this special driver. So remove it
-> > > > > > > > instead.
-> > > > > > > >
-> > > > > > > > Approach:
-> > > > > > > > ---------
-> > > > > > > >
-> > > > > > > > The overall idea is to intercept serial RX characters in NMI context, if
-> > > > > > > > those are specific to magic sysrq then allow corresponding handler to run
-> > > > > > > > in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
-> > > > > > > > work queue in order to run those in normal interrupt context.
-> > > > > > > >
-> > > > > > > > This approach is demonstrated using amba-pl011 driver.
-> > > > > > > >
-> > > > > > > > Patch-wise description:
-> > > > > > > > -----------------------
-> > > > > > > >
-> > > > > > > > Patch #1 prepares magic sysrq handler to be NMI aware.
-> > > > > > > > Patch #2 adds NMI framework to serial core.
-> > > > > > > > Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
-> > > > > > > > Patch #5 removes kgdb NMI serial driver.
-> > > > > > > >
-> > > > > > > > Goal of this RFC:
-> > > > > > > > -----------------
-> > > > > > > >
-> > > > > > > > My main reason for sharing this as an RFC is to help decide whether or
-> > > > > > > > not to continue with this approach. The next step for me would to port
-> > > > > > > > the work to a system with an 8250 UART.
-> > > > > > > >
-> > > > > > >
-> > > > > > > A gentle reminder to seek feedback on this series.
-> > >
-> > > It's been on my list for a while.  I started it Friday but ran out of
-> > > time.  This week hasn't been going as smoothly as I hoped but I'll
-> > > prioritize this since it's been too long.
-> > >
-> >
-> > No worries and thanks for your feedback.
-> >
-> > >
-> > > > > > It's the middle of the merge window, and I can't do anything.
-> > > > > >
-> > > > > > Also, I almost never review RFC patches as I have have way too many
-> > > > > > patches that people think are "right" to review first...
-> > > > > >
-> > > > >
-> > > > > Okay, I understand and I can definitely wait for your feedback.
-> > > >
-> > > > My feedback here is this:
-> > > >
-> > > > > > I suggest you work to flesh this out first and submit something that you
-> > > > > > feels works properly.
-> > > >
-> > > > :)
-> > > >
-> > > > > IIUC, in order to make this approach substantial I need to make it
-> > > > > work with 8250 UART (major serial driver), correct? As currently it
-> > > > > works properly for amba-pl011 driver.
-> > > >
-> > > > Yes, try to do that, or better yet, make it work with all serial drivers
-> > > > automatically.
-> > >
-> > > A bit of early feedback...
-> > >
-> > > Although I'm not sure we can do Greg's "make it work everywhere
-> > > automatically", it's possible you could get half of your patch done
-> > > automatically.  Specifically, your patch really does two things:
-> > >
-> > > a) It leaves the serial port "active" all the time to look for sysrq.
-> > > In other words even if there is no serial client it's always reading
-> > > the port looking for characters.  IMO this concept should be separated
-> > > out from the NMI concept and _could_ automatically work for all serial
-> > > drivers.  You'd just need something in the serial core that acted like
-> > > a default client if nobody else opened the serial port.  The nice
-> > > thing here is that we go through all the normal code paths and don't
-> > > need special cases in the driver.
-> >
-> > Okay, will try to explore this option to have default serial port
-> > client. Would this client be active in normal serial operation or only
-> > active when we have kgdb active? One drawback I see for normal
-> > operation could be power management as if user is not using serial
-> > port and would like to disable corresponding clock in order to reduce
-> > power consumption.
->
-> If I could pick the ideal, I'd say we'd do it any time the console is
-> configured for that port and magic sysrq is enabled.  Presumably if
-> they're already choosing to output kernel log messages to the serial
-> port and they've enabled magic sysrq they're in a state where they'd
-> be OK with the extra power of also listening for characters?
->
->
-> > > b) It enables NMI for your particular serial driver.  This seems like
-> > > it'd be hard to do automatically because you can't do the same things
-> > > at NMI that you could do in a normal interrupt handler.
-> >
-> > Agree.
-> >
-> > >
-> > > NOTE: to me, a) is more important than b) (though it'd be nice to have
-> > > both).  This would be especially true the earlier you could make a)
-> > > work since the main time when an "agetty" isn't running on my serial
-> > > port to read characters is during bootup.
-> > >
-> > > Why is b) less important to me? Sure, it would let you drop into the
-> > > debugger in the case where the CPU handling serial port interrupts is
-> > > hung with IRQs disabled, but it _woudln't_ let you drop into the
-> > > debugger in the case where a different CPU is hung with IRQs disabled.
-> > > To get that we need NMI roundup (which, I know, you are also working
-> > > on for arm64).  ...and, if we've got NMI roundup, presumably we can
-> > > find our way into the debugger by either moving the serial interrupt
-> > > to a different CPU ahead of time or using some type of lockup detector
-> > > (which I know you are also working on for arm64).
-> > >
-> >
-> > Thanks for sharing your preferences. I will try to get a) sorted out first.
-> >
-> > Overall I agree with your approaches to debug hard-lockup scenarios
-> > but they might not be so trivial for kernel engineers who doesn't
-> > posses kernel debugging experience as you do. :)
-> >
-> > And I still think NMI aware magic sysrq is useful for scenarios such as:
-> > - Try to get system information during hard-lockup rather than just
-> > panic via hard-lockup detection.
-> > - Do normal start/stop debugger activity on a core which was stuck in
-> > hard-lockup.
-> > - Random boot freezes which are not easily reproducible.
->
-> Don't get me wrong.  Having sysrq from NMI seems like a good feature
-> to me.  That being said, it will require non-trivial changes to each
-> serial driver to support it and that means that not all serial drivers
-> will support it.  It also starts requiring knowledge of how NMIs work
-> (what's allowed in NMI mode / not allowed / how to avoid races) for
-> authors of serial drivers.  I have a bit of a worry that the benefit
-> won't outweigh the extra complexity, but I guess time will tell.  One
-> last worry is that I assume that most people testing (and even
-> automated testing labs) will either always enable NMI or won't enable
-> NMI.  That means that everyone will be only testing one codepath or
-> the other and (given the complexity) the non-tested codepath will
-> break.
->
-> Hrm.  Along the lines of the above, though: almost no modern systems
-> are uniprocessor.  That means that even if one CPU is stuck with IRQs
-> off it's fairly likely that some other CPU is OK.  Presumably you'd
-> get almost as much benefit as your patch but with more done
-> automatically if you could figure out how to detect that the serial
-> interrupt isn't being serviced and re-route it to a different CPU.
-> ...or possibly you could use some variant of the hard lockup detector
-> and move all interrupts off a locked up CPU?  You could make this an
-> option that's "default Y" when kgdb is turned on or something?
+My pleasure!  This patch is except for ourselves testing, one main
+purpose is to integrate Perf testing with LKFT [1] for Arm related
+PMU events.
 
-One other idea occurred to me that's maybe simpler.  You could in
-theory just poll the serial port periodically to accomplish.  It would
-actually probably even work to call the normal serial port interrupt
-routine from any random CPU.  On many serial drivers the entire
-interrupt handler is wrapped with:
+[1] https://lkft.linaro.org/tests/
 
-spin_lock_irqsave(&uap->port.lock, flags);
-...
-spin_unlock_irqrestore(&uap->port.lock, flags);
+> > Test scenario 1: traverse all possible paths between source and sink
+> > 
+> > For traversing possible paths, simply to say, the testing rationale
+> > is source oriented testing, it traverses every source (now only refers
+> > to ETM device) and test its all possible sinks.  To search the complete
+> > paths from one specific source to its sinks, this patch relies on the
+> > sysfs '/sys/bus/coresight/devices/devX/out:Y' for depth-first search
+> > (DFS) for iteration connected device nodes, if the output device is
+> > detected as one of ETR, ETF, or ETB types then it will test trace data
+> 
+> Please see my suggestion below, to use "enable_sink" as an indicator
+> for a sink device.
+> 
+> > recording and decoding for this PMU device.
+> > 
+> > The script runs three output testings for every trace data:
+> > - Test branch samples dumping with 'perf script' command;
+> > - Test branch samples reporting with 'perf report' command;
+> > - Use option '--itrace=i1000i' to insert synthesized instructions events
+> >    and the script will check if perf can output the percentage value
+> >    successfully based on the instruction samples.
+> > 
+> > Test scenario 2: CPU wide mode test
+> >  > For CPU wide mode testing, it passes option '-a' to perf tool to enable
+> > tracing on all CPUs, so it's hard to say which program will be traced.
+> 
+> Isn't this system-wide, when you trace all CPUs ? In CPU wide mode,
+> you specify a list of CPUs (-C ?). I always get confused here.
 
-And a few (the ones I was involved in fixing) have the similar pattern
-of using uart_unlock_and_check_sysrq().
+Agree, it is system-wide tracing.  Will fix.
 
-Any serial drivers following this pattern could have their interrupt
-routine called periodically just to poll for characters and it'd be
-fine, right?  ...and having it take a second before a sysrq comes in
-this case is probably not the end of the world?
+> > But perf tool itself contributes much overload in this case, so it will
+> > parse trace data and check if process 'perf' can be detected or not.
+> > 
+> > diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+> > new file mode 100755
+> > index 000000000000..73b973bada26
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> > @@ -0,0 +1,172 @@
+> > +#!/bin/sh
+> > +# Check Arm CoreSight trace data recording and branch samples
+> > +
+> > +# Uses the 'perf record' to record trace data with Arm CoreSight sinks;
+> > +# then verify if there have any branch samples and instruction samples
+> > +# are generated by CoreSight with 'perf script' and 'perf report'
+> > +# commands.
+> > +
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Leo Yan <leo.yan@linaro.org>, 2020
+> > +
+> > +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> > +file=$(mktemp /tmp/temporary_file.XXXXX)
+> > +
+> > +skip_if_no_cs_etm_event() {
+> > +	perf list | grep -q 'cs_etm//' && return 0
+> > +
+> > +	# cs_etm event doesn't exist
+> > +	return 2
+> > +}
+> > +
+> > +skip_if_no_cs_etm_event || exit 2
+> > +
+> > +record_touch_file() {
+> > +	echo "Recording trace (only user mode) with path: CPU$2 => $1"
+> > +	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
+> > +		-- taskset -c $2 touch $file
+> > +}
+> > +
+> > +perf_script_branch_samples() {
+> > +	echo "Looking at perf.data file for dumping branch samples:"
+> > +
+> > +	# Below is an example of the branch samples dumping:
+> > +	#   touch  6512          1         branches:u:      ffffb220824c strcmp+0xc (/lib/aarch64-linux-gnu/ld-2.27.so)
+> > +	#   touch  6512          1         branches:u:      ffffb22082e0 strcmp+0xa0 (/lib/aarch64-linux-gnu/ld-2.27.so)
+> > +	#   touch  6512          1         branches:u:      ffffb2208320 strcmp+0xe0 (/lib/aarch64-linux-gnu/ld-2.27.so)
+> > +	perf script -F,-time -i ${perfdata} | \
+> > +		egrep " +$1 +[0-9]+ .* +branches:([u|k]:)? +"
+> > +}
+> > +
+> > +perf_report_branch_samples() {
+> > +	echo "Looking at perf.data file for reporting branch samples:"
+> > +
+> > +	# Below is an example of the branch samples reporting:
+> > +	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
+> > +	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
+> > +	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
+> > +	perf report --stdio -i ${perfdata} | \
+> > +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 "
+> > +}
+> > +
+> > +perf_report_instruction_samples() {
+> > +	echo "Looking at perf.data file for instruction samples:"
+> > +
+> > +	# Below is an example of the instruction samples reporting:
+> > +	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
+> > +	#    5.80%  touch    libc-2.27.so   [.] getenv
+> > +	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
+> > +	perf report --itrace=i1000i --stdio -i ${perfdata} | \
+> > +		egrep " +[0-9]+\.[0-9]+% +$1"
+> > +}
+> > +
+> > +arm_cs_iterate_devices() {
+> > +	for dev in $1/connections/out\:*; do
+> > +
+> > +		# Skip testing if it's not a directory
+> > +		! [ -d $dev ] && continue;
+> > +
+> > +		# Read out its symbol link file name
+> > +		path=`readlink -f $dev`
+> > +
+> > +		# Extract device name from path, e.g.
+> > +		#   path = '/sys/devices/platform/20010000.etf/tmc_etf0'
+> > +		#     `> device_name = 'tmc_etf0'
+> > +		device_name=`echo $path | awk -F/ '{print $(NF)}'`
+> > +
+> > +		echo $device_name | egrep -q "etr|etb|etf"
+> 
+> Could we check for the existence of "enable_sink" instead, for detecting
+> if this is a sink device ? That way, we are covered for future cases of
+> a new sink type, and is more reliable.
 
+Good suggestion, will fix.
 
-One nice benefit of this is that it would actually work _better_ on
-SMP systems for any sysrqs that aren't NMI safe.  Specifically with
-your patch series those would be queued with irq_work_queue() which
-means they'd be blocked if the CPU processing the NMI is stuck with
-IRQs disabled.  With the polling mechanism they'd nicely just run on a
-different CPU.
+> > +
+> > +		# Only test if the output device is ETR/ETB/ETF
+> > +		if [ $? -eq 0 ]; then
+> > +
+> > +			pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$device_name"
+> > +
+> > +			# Exit if PMU device node doesn't exist
+> > +			if ! [ -f $pmu_dev ]; then
+> > +				echo "PMU device $pmu_dev doesn't exist"
+> 
+> Misleading output. $pmu_dev is not a PMU device. Instead, it is one of
+> the supported sinks by the PMU.
 
+Will fix.
 
-> > > One last bit of feedback is that I noticed that you didn't try to
-> > > implement the old "knock" functionality of the old NMI driver that's
-> > > being deleted.  That is: your new patches don't provide an alternate
-> > > way to drop into the debugger for systems where BREAK isn't hooked up.
-> > > That's not a hard requirement, but I was kinda hoping for it since I
-> > > have some systems that haven't routed BREAK properly.  ;-)
-> > >
-> >
-> > Yeah, this is on my TODO list to have a kgdb "knock" functionality to
-> > be implemented via a common hook in serial core.
-> >
-> > >
-> > > I'll try to get some more detailed feedback in the next few days.
-> >
-> > Thanks. I do look forward to your feedback.
-> >
-> > -Sumit
-> >
-> > >
-> > > -Doug
+> > +				exit 1
+> > +			fi
+> > +
+> > +			record_touch_file $device_name $2 &&
+> > +				perf_script_branch_samples touch &&
+> > +				perf_report_branch_samples touch &&
+> > +				perf_report_instruction_samples touch
+> > +
+> > +			err=$?
+> > +
+> > +			# Exit when find failure
+> > +			[ $err != 0 ] && exit $err
+> > +
+> > +			rm -f ${perfdata}
+> > +			rm -f ${file}
+> > +		fi
+> > +
+> > +		arm_cs_iterate_devices $dev $2
+> > +	done
+> > +}
+> > +
+> > +arm_cs_etm_traverse_path_test() {
+> > +	# Iterate for every ETM device
+> > +	for dev in /sys/bus/coresight/devices/etm*; do
+> > +
+> > +		# Find the ETM device belonging to which CPU
+> > +		cpu=`cat $dev/cpu`
+> > +
+> > +		echo $dev
+> > +		echo $cpu
+> > +
+> > +		# Use depth-first search (DFS) to iterate outputs
+> > +		arm_cs_iterate_devices $dev $cpu
+> > +	done
+> > +}
+> > +
+> > +arm_cs_etm_cpu_wide_test() {
+> > +	echo "Recording trace with CPU wide mode"
+> > +	perf record -o ${perfdata} -e cs_etm// -a -- ls
+> > +
+> > +	perf_script_branch_samples perf &&
+> > +	perf_report_branch_samples perf &&
+> > +	perf_report_instruction_samples perf
+> > +
+> > +	err=$?
+> > +
+> > +	# Exit when find failure
+> > +	[ $err != 0 ] && exit $err
+> > +
+> > +	rm -f ${perfdata}
+> > +	rm -f ${file}
+> > +}
+> > +
+> > +arm_cs_etm_snapshot_test() {
+> > +	echo "Recording trace with snapshot mode"
+> > +	perf record -o ${perfdata} -e cs_etm// -S --per-thread \
+> > +		-- dd if=/dev/zero of=/dev/null &
+> 
+> As far as I understand, --per-thread option is not needed anymore
+> for normal tracing (irrespective of whether your application is
+> multi-threaded or not)
+
+I noted before you had some discussion with Mathieu for AUX buffer :)
+will remove --per-thread option.
+
+> > +	PERFPID=$!
+> > +
+> > +	# Wait for perf program
+> > +	sleep 1
+> > +
+> > +	# Send signal to snapshot trace data
+> > +	kill -USR2 $PERFPID
+> > +
+> > +	# Stop perf program
+> > +	kill $PERFPID
+> > +	wait $PERFPID
+> > +
+> > +	perf_script_branch_samples dd &&
+> > +	perf_report_branch_samples dd &&
+> > +	perf_report_instruction_samples dd
+> > +
+> > +	err=$?
+> > +
+> > +	# Exit when find failure
+> > +	[ $err != 0 ] && exit $err
+> > +
+> > +	rm -f ${perfdata}
+> > +	rm -f ${file}
+> > +}
+> > +
+> > +arm_cs_etm_traverse_path_test
+> > +arm_cs_etm_cpu_wide_test
+> > +arm_cs_etm_snapshot_test
+> > +exit 0
+> > 
+> 
+> 
+> Rest looks OK to me.
+
+Thanks a lot for your reviewing.
+
+Leo
