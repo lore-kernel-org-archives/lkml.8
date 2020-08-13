@@ -2,350 +2,381 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0171BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E1E20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55AC20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="P0vxc039"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eabUjEWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgHMI6S (ORCPT
+        id S1726522AbgHMI62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        Thu, 13 Aug 2020 04:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMI6R (ORCPT
+        with ESMTP id S1726053AbgHMI61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:58:17 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A79DC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:58:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g8so4015881wmk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:58:16 -0700 (PDT)
+        Thu, 13 Aug 2020 04:58:27 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1836EC061757;
+        Thu, 13 Aug 2020 01:58:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id c16so5306769ejx.12;
+        Thu, 13 Aug 2020 01:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ejOXH1LQTXrGTOxhVaMU2TYELrccVatdEWcGAK3Sjw=;
-        b=P0vxc039Nc76V/6Rh0lKYHO+QHOD59pM77+iDKGJHEdV1gXadGYcNlamm6GJok7Lcx
-         erNEgkh194Mu2P90joK7JlyIHPQxnUZW8mDcF2HS6T+L45gkx1fqoPO/GvKZ3D2yFBSc
-         kBnDZh31uDw6IJCEf9aP89Ee6TwK0F7xVcrUWFWeHGmk7BibunPOcqRp7ddlTdcbsEPp
-         uWeYrjGmuC3umaZYRvPVjAmViw67Fs8d1CUOuZnpGVyCZD8Po+bcK9HV7xqyAEATcXFy
-         HOTJ7a+qFjtIE3/Ldo5+Z1Yox4Y5EFnDve9qnTUVQ54+7jO7PfJHuhI4cb0dQn/Y7Aic
-         3qOA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sJq2bJZJVAv38PUDY/kn6nMzmALr7+D0J2holnZdUPw=;
+        b=eabUjEWZVUjDlZEiSdqLsVtFwlrAKO2TC6lot5iXzFwtwZm9mypf1bTscyMIbIlwzQ
+         6B2577Bp0yRpb+KFyNfbi0jTIuJorbJglTurffHmI6fHJ3IBCtwmfi52Gu8L6OX5KmJK
+         anSXdgndLUemoovz+5nXmJ1t7YC3tC1sPfMHU0Hw9hEGEwZJ2OFCh2M9x2kDbYwMEroe
+         0TCTmgecGG1GhQ4K4tPrfp+kUvh7DqWbMiKeEV3GTzETv2I2aLLq0sujT33ILDA3h5As
+         HhpjIDGNl9ZekNAFcoG12m76n2skyZapvODuo6tVPtlpShp6MaE/XgYUgevMYqkgDCkJ
+         /dDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ejOXH1LQTXrGTOxhVaMU2TYELrccVatdEWcGAK3Sjw=;
-        b=TacbtGe1Vh42zseciWnDEB6US7v6c9Atn9idK+5y2zXcDfEtoWoeKewe47MAzhIcPo
-         +pe4eFRf5oMEI8AsANVbyNwlVXQFn/yCVJqtFMJpOu3k/x29hRCwCK178xpW5sc7edZn
-         dGLfXxSQ8/VwShl4HqxZtW+t/68B8PdSPAuZRU7G5smXlQubGR5ah7Vzi8qRrAraZzMx
-         b+qZJeFZDPg2qTutDofxWm5gt+U6YFWzY6ksYz9rYheNkNFLjH/38CD2rSst7NHFHm7z
-         vUBFE2qzAaRkNmF4hkPC/CEqJ96GHwjDeUsb9W6jP6mLK/IREqI8LgqTS3tW60Hhs+X4
-         YV3w==
-X-Gm-Message-State: AOAM531+9sOEx3LNZjjkUS6Sqm0NExkK7LcrjYpgyY34+1++IWbghrzS
-        iHnQkXUDNVq9hEC3kFCVMFGegt5J7/9j+Ibq+Y4ZBA==
-X-Google-Smtp-Source: ABdhPJydHDppTz/E+mk7vmLwdcwMEGXhikXzJOI8CfN3YTccGMRBhG08jWr2bhSuzMpdsnC0rgQs2DRZ3VOpfnSt+N0=
-X-Received: by 2002:a7b:c4d5:: with SMTP id g21mr3596831wmk.185.1597309095228;
- Thu, 13 Aug 2020 01:58:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sJq2bJZJVAv38PUDY/kn6nMzmALr7+D0J2holnZdUPw=;
+        b=KatCgeBnn4oZ1yTXP6xo0SMnJgQ+aHW+lF+IODV51zkymaVsFv72ahH1l1T2igTtpj
+         NckJWxAFPMhhGEd+huRuJEyftFoyAG35znRmFu7Gx7E8WPC7njTNwmHAKlHgs2f1xwfS
+         fM+VDpqpGXEkVvAq+0LtB2EDhiJ9qdXoKMfbju+kxIs3oXZO6FHdNLVUUpUMNAis7uga
+         XTtfSSrEmewUa79tlUy6iSMt428G05WIXcYe+Ffr7+0vPsUxvORlZFGXeBlUIu7K1sQY
+         GCgMNNCzfhIi/KFuKjektEil1r4vN5MrhHtocnMSNeOjE2BKEaEKpgyTx0e4x+EOQies
+         VHHA==
+X-Gm-Message-State: AOAM533PFloCHAKRQOZNyVdGyp5tWuhgYetAIwajlD2BsV1vCLN/aS7k
+        T5oKbId9JGhkHItbyg+MblY=
+X-Google-Smtp-Source: ABdhPJybp7ey6pANRZ8RPt1pPlzPz0bYzygcBfM9Wzxo6RK+Z129KPtLirWbgDQwhMPXllAyWizhbQ==
+X-Received: by 2002:a17:906:ce39:: with SMTP id sd25mr4003327ejb.80.1597309105699;
+        Thu, 13 Aug 2020 01:58:25 -0700 (PDT)
+Received: from BV030612LT ([86.121.43.21])
+        by smtp.gmail.com with ESMTPSA id t18sm3376220ejf.38.2020.08.13.01.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 01:58:25 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 11:58:22 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add bindings for Actions
+ S500 SoC
+Message-ID: <20200813085822.GA1705514@BV030612LT>
+References: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+ <7abf618c446b7b648f512afe72e46704156e9912.1596461275.git.cristian.ciocaltea@gmail.com>
+ <20200812195651.GA2594940@bogus>
 MIME-Version: 1.0
-References: <20200812234758.3563-1-atish.patra@wdc.com> <20200812234758.3563-4-atish.patra@wdc.com>
-In-Reply-To: <20200812234758.3563-4-atish.patra@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 13 Aug 2020 14:28:03 +0530
-Message-ID: <CAAhSdy3AuDi=JZN9beo5rhNnUD+bng+7t9qVTNNLZY8Yr2+Qhg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/9] RISC-V: Implement late mapping page table
- allocation functions
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        fwts-devel@lists.ubuntu.com, Mao Han <han_mao@c-sky.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Steven Price <steven.price@arm.com>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Daniel Schaefer <daniel.schaefer@hpe.com>,
-        "abner.chang@hpe.com" <abner.chang@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812195651.GA2594940@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 5:19 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> Currently, page table setup is done during setup_va_final where fixmap can
-> be used to create the temporary mappings. The physical frame is allocated
-> from memblock_alloc_* functions. However, this won't work if page table
-> mapping needs to be created for a different mm context (i.e. efi mm) at
-> a later point of time.
->
-> Use generic kernel page allocation function & macros for any mapping
-> after setup_vm_final.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/mm/init.c | 130 ++++++++++++++++++++++++++++++++-----------
->  1 file changed, 99 insertions(+), 31 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index b75ebe8e7a92..d238cdc501ee 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -32,6 +32,17 @@ extern char _start[];
->  void *dtb_early_va __initdata;
->  uintptr_t dtb_early_pa __initdata;
->
-> +struct pt_alloc_ops {
-> +       pte_t *(*get_pte_virt)(phys_addr_t pa);
-> +       phys_addr_t (*alloc_pte)(uintptr_t va);
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +       pmd_t *(*get_pmd_virt)(phys_addr_t pa);
-> +       phys_addr_t (*alloc_pmd)(uintptr_t va);
-> +#endif
-> +};
-> +
-> +struct pt_alloc_ops pt_ops;
-> +
->  static void __init zone_sizes_init(void)
->  {
->         unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -211,7 +222,6 @@ EXPORT_SYMBOL(pfn_base);
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
-> -static bool mmu_enabled;
->
->  #define MAX_EARLY_MAPPING_SIZE SZ_128M
->
-> @@ -234,27 +244,46 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->         }
->  }
->
-> -static pte_t *__init get_pte_virt(phys_addr_t pa)
-> +static inline pte_t *__init get_pte_virt_early(phys_addr_t pa)
->  {
-> -       if (mmu_enabled) {
-> -               clear_fixmap(FIX_PTE);
-> -               return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
-> -       } else {
-> -               return (pte_t *)((uintptr_t)pa);
-> -       }
-> +       return (pte_t *)((uintptr_t)pa);
->  }
->
-> -static phys_addr_t __init alloc_pte(uintptr_t va)
-> +static inline pte_t *__init get_pte_virt_fixmap(phys_addr_t pa)
-> +{
-> +       clear_fixmap(FIX_PTE);
-> +       return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
-> +}
-> +
-> +static inline pte_t *get_pte_virt_late(phys_addr_t pa)
-> +{
-> +       return (pte_t *) __va(pa);
-> +}
-> +
-> +static inline phys_addr_t __init alloc_pte_early(uintptr_t va)
->  {
->         /*
->          * We only create PMD or PGD early mappings so we
->          * should never reach here with MMU disabled.
->          */
-> -       BUG_ON(!mmu_enabled);
-> +       BUG();
-> +}
->
-> +static inline phys_addr_t __init alloc_pte_fixmap(uintptr_t va)
-> +{
->         return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->  }
->
-> +static phys_addr_t alloc_pte_late(uintptr_t va)
-> +{
-> +       unsigned long vaddr;
-> +
-> +       vaddr = __get_free_page(GFP_KERNEL);
-> +       if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
-> +               BUG();
-> +       return __pa(vaddr);
-> +}
-> +
->  static void __init create_pte_mapping(pte_t *ptep,
->                                       uintptr_t va, phys_addr_t pa,
->                                       phys_addr_t sz, pgprot_t prot)
-> @@ -279,28 +308,46 @@ pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
->  #endif
->  pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
->
-> -static pmd_t *__init get_pmd_virt(phys_addr_t pa)
-> +static pmd_t *__init get_pmd_virt_early(phys_addr_t pa)
->  {
-> -       if (mmu_enabled) {
-> -               clear_fixmap(FIX_PMD);
-> -               return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
-> -       } else {
-> -               return (pmd_t *)((uintptr_t)pa);
-> -       }
-> +       /* Before MMU is enabled */
-> +       return (pmd_t *)((uintptr_t)pa);
->  }
->
-> -static phys_addr_t __init alloc_pmd(uintptr_t va)
-> +static pmd_t *__init get_pmd_virt_fixmap(phys_addr_t pa)
->  {
-> -       uintptr_t pmd_num;
-> +       clear_fixmap(FIX_PMD);
-> +       return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
-> +}
-> +
-> +static pmd_t *get_pmd_virt_late(phys_addr_t pa)
-> +{
-> +       return (pmd_t *) __va(pa);
-> +}
->
-> -       if (mmu_enabled)
-> -               return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-> +static phys_addr_t __init alloc_pmd_early(uintptr_t va)
-> +{
-> +       uintptr_t pmd_num;
->
->         pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
->         BUG_ON(pmd_num >= NUM_EARLY_PMDS);
->         return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
->  }
->
-> +static phys_addr_t __init alloc_pmd_fixmap(uintptr_t va)
-> +{
-> +       return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-> +}
-> +
-> +static phys_addr_t alloc_pmd_late(uintptr_t va)
-> +{
-> +       unsigned long vaddr;
-> +
-> +       vaddr = __get_free_page(GFP_KERNEL);
-> +       BUG_ON(!vaddr);
-> +       return __pa(vaddr);
-> +}
-> +
->  static void __init create_pmd_mapping(pmd_t *pmdp,
->                                       uintptr_t va, phys_addr_t pa,
->                                       phys_addr_t sz, pgprot_t prot)
-> @@ -316,28 +363,28 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
->         }
->
->         if (pmd_none(pmdp[pmd_idx])) {
-> -               pte_phys = alloc_pte(va);
-> +               pte_phys = pt_ops.alloc_pte(va);
->                 pmdp[pmd_idx] = pfn_pmd(PFN_DOWN(pte_phys), PAGE_TABLE);
-> -               ptep = get_pte_virt(pte_phys);
-> +               ptep = pt_ops.get_pte_virt(pte_phys);
->                 memset(ptep, 0, PAGE_SIZE);
->         } else {
->                 pte_phys = PFN_PHYS(_pmd_pfn(pmdp[pmd_idx]));
-> -               ptep = get_pte_virt(pte_phys);
-> +               ptep = pt_ops.get_pte_virt(pte_phys);
->         }
->
->         create_pte_mapping(ptep, va, pa, sz, prot);
->  }
->
->  #define pgd_next_t             pmd_t
-> -#define alloc_pgd_next(__va)   alloc_pmd(__va)
-> -#define get_pgd_next_virt(__pa)        get_pmd_virt(__pa)
-> +#define alloc_pgd_next(__va)   pt_ops.alloc_pmd(__va)
-> +#define get_pgd_next_virt(__pa)        pt_ops.get_pmd_virt(__pa)
->  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
->         create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
->  #define fixmap_pgd_next                fixmap_pmd
->  #else
->  #define pgd_next_t             pte_t
-> -#define alloc_pgd_next(__va)   alloc_pte(__va)
-> -#define get_pgd_next_virt(__pa)        get_pte_virt(__pa)
-> +#define alloc_pgd_next(__va)   pt_ops.alloc_pte(__va)
-> +#define get_pgd_next_virt(__pa)        pt_ops.get_pte_virt(__pa)
->  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
->         create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
->  #define fixmap_pgd_next                fixmap_pte
-> @@ -421,6 +468,12 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->         BUG_ON((load_pa % map_size) != 0);
->         BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
->
-> +       pt_ops.alloc_pte = alloc_pte_early;
-> +       pt_ops.get_pte_virt = get_pte_virt_early;
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +       pt_ops.alloc_pmd = alloc_pmd_early;
-> +       pt_ops.get_pmd_virt = get_pmd_virt_early;
-> +#endif
->         /* Setup early PGD for fixmap */
->         create_pgd_mapping(early_pg_dir, FIXADDR_START,
->                            (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
-> @@ -497,9 +550,16 @@ static void __init setup_vm_final(void)
->         phys_addr_t pa, start, end;
->         struct memblock_region *reg;
->
-> -       /* Set mmu_enabled flag */
-> -       mmu_enabled = true;
-> -
-> +       /**
-> +        * MMU is enabled at this point. But page table setup is not complete yet.
-> +        * fixmap page table alloc functions should be used at this point
-> +        */
-> +       pt_ops.alloc_pte = alloc_pte_fixmap;
-> +       pt_ops.get_pte_virt = get_pte_virt_fixmap;
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +       pt_ops.alloc_pmd = alloc_pmd_fixmap;
-> +       pt_ops.get_pmd_virt = get_pmd_virt_fixmap;
-> +#endif
->         /* Setup swapper PGD for fixmap */
->         create_pgd_mapping(swapper_pg_dir, FIXADDR_START,
->                            __pa_symbol(fixmap_pgd_next),
-> @@ -533,6 +593,14 @@ static void __init setup_vm_final(void)
->         /* Move to swapper page table */
->         csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->         local_flush_tlb_all();
-> +
-> +       /* generic page allocation functions must be used to setup page table */
-> +       pt_ops.alloc_pte = alloc_pte_late;
-> +       pt_ops.get_pte_virt = get_pte_virt_late;
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +       pt_ops.alloc_pmd = alloc_pmd_late;
-> +       pt_ops.get_pmd_virt = get_pmd_virt_late;
-> +#endif
->  }
->  #else
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> --
-> 2.24.0
->
+On Wed, Aug 12, 2020 at 01:56:51PM -0600, Rob Herring wrote:
+> On Mon, Aug 03, 2020 at 05:20:54PM +0300, Cristian Ciocaltea wrote:
+> > Add pinctrl and gpio bindings for Actions Semi S500 SoC.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> > Changes in v2:
+> >  - Added myself to the list of maintainers, per Mani's suggestion
+> >  - Added a description item for each of the four register ranges,
+> >    per Rob's feedback
+> >  - Renamed the pin nodes and got rid of the if/then hack in the
+> >    patternProperties,according to Rob's suggestion
+> >  - Added a missing 'additionalProperties: false' line
+> >  - Updated the example with the new node names and the split
+> >    register range
+> > 
+> >  .../pinctrl/actions,s500-pinctrl.yaml         | 240 ++++++++++++++++++
+> >  1 file changed, 240 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..33391d30c00c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > @@ -0,0 +1,240 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Actions Semi S500 SoC pinmux & GPIO controller
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > +
+> > +description: |
+> > +  Pinmux & GPIO controller manages pin multiplexing & configuration including
+> > +  GPIO function selection & GPIO attributes configuration. Please refer to
+> > +  pinctrl-bindings.txt in this directory for common binding part and usage.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: actions,s500-pinctrl
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: GPIO Output + GPIO Input + GPIO Data
+> > +      - description: Multiplexing Control
+> > +      - description: PAD Pull Control + PAD Schmitt Trigger Enable + PAD Control
+> > +      - description: PAD Drive Capacity Select
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> > +
+> > +  '#gpio-cells':
+> > +    description:
+> > +      Specifies the pin number and flags, as defined in
+> > +      include/dt-bindings/gpio/gpio.h
+> > +    const: 2
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  '#interrupt-cells':
+> > +    description:
+> > +      Specifies the pin number and flags, as defined in
+> > +      include/dt-bindings/interrupt-controller/irq.h
+> > +    const: 2
+> > +
+> > +  interrupts:
+> > +    description:
+> > +      One interrupt per each of the 5 GPIO ports supported by the controller,
+> > +      sorted by port number ascending order.
+> > +    minItems: 5
+> > +    maxItems: 5
+> > +
+> > +patternProperties:
+> > +  '-pins$':
+> > +    type: object
+> > +    patternProperties:
+> > +      '^(.*-)?pinmux$':
+> > +        type: object
+> > +        description:
+> > +          Pinctrl node's client devices specify pin muxes using subnodes,
+> > +          which in turn use the standard properties below.
+> > +        $ref: pinmux-node.yaml#
+> > +
+> > +        properties:
+> > +          groups:
+> > +            description:
+> > +              List of gpio pin groups affected by the functions specified in
+> > +              this subnode.
+> > +            items:
+> > +              oneOf:
+> 
+> You don't need oneOf with only 1 entry.
+> 
+> With that and the other 2 cases fixed,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+ 
+Hi Rob,
 
-Looks good to me.
+Thanks for reviewing!
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+I tried to drop the first occurrence of the indicated 'oneOf' nodes,
+but I get the following error when checking the example:
 
-Regards,
-Anup
+actions,s500-pinctrl.example.dt.yaml: pinctrl@b01b0000: mmc0-pins:pinmux:groups: 
+ Additional items are not allowed ('sd0_d1_mfp', 'sd0_d2_d3_mfp', 
+ 'sd0_cmd_mfp', 'sd0_clk_mfp' were unexpected)
+
+It seems this only allows one value item to be provided:
+  groups = "sd0_d0_mfp";
+
+instead of the required:
+  groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
+           "sd0_cmd_mfp", "sd0_clk_mfp";
+
+Kind regards,
+Cristi
+
+> > +                - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp, rmii_txd0_mfp,
+> > +                    rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp, rmii_rxd1_mfp,
+> > +                    rmii_rxd0_mfp, rmii_ref_clk_mfp, i2s_d0_mfp, i2s_pcm1_mfp,
+> > +                    i2s0_pcm0_mfp, i2s1_pcm0_mfp, i2s_d1_mfp, ks_in2_mfp,
+> > +                    ks_in1_mfp, ks_in0_mfp, ks_in3_mfp, ks_out0_mfp,
+> > +                    ks_out1_mfp, ks_out2_mfp, lvds_o_pn_mfp, dsi_dn0_mfp,
+> > +                    dsi_dp2_mfp, lcd0_d17_mfp, dsi_dp3_mfp, dsi_dn3_mfp,
+> > +                    dsi_dp0_mfp, lvds_ee_pn_mfp, spi0_i2c_pcm_mfp,
+> > +                    spi0_i2s_pcm_mfp, dsi_dnp1_cp_mfp, lvds_e_pn_mfp,
+> > +                    dsi_dn2_mfp, uart2_rtsb_mfp, uart2_ctsb_mfp, uart3_rtsb_mfp,
+> > +                    uart3_ctsb_mfp, sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp,
+> > +                    sd1_d0_d3_mfp, sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp,
+> > +                    uart0_rx_mfp, clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
+> > +                    uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp, sen0_pclk_mfp,
+> > +                    pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp, pcm1_out_mfp,
+> > +                    dnand_data_wr_mfp, dnand_acle_ce0_mfp, nand_ceb2_mfp,
+> > +                    nand_ceb3_mfp]
+> > +            minItems: 1
+> > +            maxItems: 32
+> > +
+> > +          function:
+> > +            description:
+> > +              Specify the alternative function to be configured for the
+> > +              given gpio pin groups.
+> > +            enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3, sens0,
+> > +              sens1, uart0, uart1, uart2, uart3, uart4, uart5, uart6, i2s0,
+> > +              i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5,
+> > +              p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30, clko_25m,
+> > +              mipi_csi, nand, spdif, ts, lcd0]
+> > +
+> > +        required:
+> > +          - groups
+> > +          - function
+> > +
+> > +        additionalProperties: false
+> > +
+> > +      '^(.*-)?pinconf$':
+> > +        type: object
+> > +        description:
+> > +          Pinctrl node's client devices specify pin configurations using
+> > +          subnodes, which in turn use the standard properties below.
+> > +        $ref: pincfg-node.yaml#
+> > +
+> > +        properties:
+> > +          groups:
+> > +            description:
+> > +              List of gpio pin groups affected by the drive-strength property
+> > +              specified in this subnode.
+> > +            items:
+> > +              oneOf:
+> > +                - enum: [sirq_drv, rmii_txd01_txen_drv, rmii_rxer_drv,
+> > +                    rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
+> > +                    smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv, i2s3_drv,
+> > +                    i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv, lvds_all_drv,
+> > +                    lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv, sd1_d0_d3_drv,
+> > +                    sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv, sd1_clk_drv,
+> > +                    spi0_all_drv, uart0_rx_drv, uart0_tx_drv, uart2_all_drv,
+> > +                    i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
+> > +                    sens0_ckout_drv, uart3_all_drv]
+> > +            minItems: 1
+> > +            maxItems: 32
+> > +
+> > +          pins:
+> > +            description:
+> > +              List of gpio pins affected by the bias-pull-* and
+> > +              input-schmitt-* properties specified in this subnode.
+> > +            items:
+> > +              oneOf:
+> > +                - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1, eth_txen,
+> > +                    eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0, eth_ref_clk,
+> > +                    eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0, i2s_bclk0,
+> > +                    i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1, i2s_lrclk1,
+> > +                    i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3, ks_out0, ks_out1,
+> > +                    ks_out2, lvds_oep, lvds_oen, lvds_odp, lvds_odn, lvds_ocp,
+> > +                    lvds_ocn, lvds_obp, lvds_obn, lvds_oap, lvds_oan, lvds_eep,
+> > +                    lvds_een, lvds_edp, lvds_edn, lvds_ecp, lvds_ecn, lvds_ebp,
+> > +                    lvds_ebn, lvds_eap, lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3,
+> > +                    dsi_dn3, dsi_dp1, dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0,
+> > +                    dsi_dp2, dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0,
+> > +                    sd1_d1, sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd, sd1_clk,
+> > +                    spi0_sclk, spi0_ss, spi0_miso, spi0_mosi, uart0_rx,
+> > +                    uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
+> > +                    sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0, dnand_ceb1,
+> > +                    dnand_ceb2, dnand_ceb3, uart2_rx, uart2_tx, uart2_rtsb,
+> > +                    uart2_ctsb, uart3_rx, uart3_tx, uart3_rtsb, uart3_ctsb,
+> > +                    pcm1_in, pcm1_clk, pcm1_sync, pcm1_out, i2c1_sclk,
+> > +                    i2c1_sdata, i2c2_sclk, i2c2_sdata, csi_dn0, csi_dp0,
+> > +                    csi_dn1, csi_dp1, csi_dn2, csi_dp2, csi_dn3, csi_dp3,
+> > +                    csi_cn, csi_cp, dnand_d0, dnand_d1, dnand_d2, dnand_d3,
+> > +                    dnand_d4, dnand_d5, dnand_d6, dnand_d7, dnand_rb, dnand_rdb,
+> > +                    dnand_rdbn, dnand_wrb, porb, clko_25m, bsel, pkg0, pkg1,
+> > +                    pkg2, pkg3]
+> > +            minItems: 1
+> > +            maxItems: 64
+> > +
+> > +          bias-pull-up: true
+> > +          bias-pull-down: true
+> > +
+> > +          drive-strength:
+> > +            description:
+> > +              Selects the drive strength for the specified pins, in mA.
+> > +            enum: [2, 4, 8, 12]
+> > +
+> > +          input-schmitt-enable: true
+> > +          input-schmitt-disable: true
+> > +
+> > +        additionalProperties: false
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - gpio-controller
+> > +  - gpio-ranges
+> > +  - '#gpio-cells'
+> > +  - interrupt-controller
+> > +  - '#interrupt-cells'
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    pinctrl: pinctrl@b01b0000 {
+> > +        compatible = "actions,s500-pinctrl";
+> > +        reg = <0xb01b0000 0x40>, <0xb01b0040 0x10>,
+> > +              <0xb01b0060 0x18>, <0xb01b0080 0xc>;
+> > +        clocks = <&cmu 55>;
+> > +        gpio-controller;
+> > +        gpio-ranges = <&pinctrl 0 0 132>;
+> > +        #gpio-cells = <2>;
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <2>;
+> > +        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +        mmc0_pins: mmc0-pins {
+> > +            pinmux {
+> > +                groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
+> > +                         "sd0_cmd_mfp", "sd0_clk_mfp";
+> > +                function = "sd0";
+> > +            };
+> > +
+> > +            drv-pinconf {
+> > +                groups = "sd0_d0_d3_drv", "sd0_cmd_drv", "sd0_clk_drv";
+> > +                drive-strength = <8>;
+> > +            };
+> > +
+> > +            bias-pinconf {
+> > +                pins = "sd0_d0", "sd0_d1", "sd0_d2",
+> > +                       "sd0_d3", "sd0_cmd";
+> > +                bias-pull-up;
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.28.0
+> > 
