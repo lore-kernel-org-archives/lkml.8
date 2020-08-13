@@ -2,208 +2,121 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D0BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9DB20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BF620771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJLPTTsG"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JDgXNAvB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rWwIStof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHMHmn (ORCPT
+        id S1726427AbgHMHo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        Thu, 13 Aug 2020 03:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgHMHml (ORCPT
+        with ESMTP id S1726048AbgHMHo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:42:41 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D08C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:42:41 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 140so2536092lfi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=P04R74Xbuv3cjdfHATnoRpjk3qHslmzAs9Kz3QNkQfc=;
-        b=oJLPTTsGxz6PnYmSrTJva2uVysQlnxV9bp3OQUJKGqPQ1gMXfxSew4bgkYa1Drn+2x
-         SfvkM9bonbTUWPkibOQVvSlbcpC2WlV8XlUeZ3vcqPGcIPPtIn1nueL2T6P18F9tKsMn
-         g0gGu4+ykbU4iUs3u6LXFo95K3g3erlC77e8KGyze7XXEoIwDKWagbsXVHjvWB0CpVhz
-         HLlzU+n8PW7cbV1cSU4hTUNUNfvaymmYLy0E9Y8Mmekqg2cUkOKzg4vYOpS/BtRCyTtT
-         5Ynen2DYuRpFVieJN3FIT8jNy7xHNYcv5n7gFIghbDkHpwc+V9N8jQmqoU4zDy93eyjD
-         u0Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=P04R74Xbuv3cjdfHATnoRpjk3qHslmzAs9Kz3QNkQfc=;
-        b=OnM5iS3FejvwX3FjAo6Xn6IHfe0A5dNOAB28m574ychoVEjlr+9z0rvPi6G+LAuFjs
-         QTKIZTrdwZHDf3tVEmQTUx3jTEXIVKK3DFqAOLRA0UDBxwiRutXK379wm8qj/dHsBgbQ
-         kfom/jRdo7T75gt/nuiTH/Yg+qE6Wgfx8tc9H+iEcwySR30odMLYoK0emuy60giNcwJC
-         kef93MxwGz+KRkBJ8Ce4EHryymZwUv2kVMDIvlyG7d8RbAAuem54A61FNate4esE8/Cp
-         GkeEw5cdIUD+IVLP0MUTeg+50ZLfIwToY8XFnginH/i8iMugebyE0WXg4OsSS/VfR9aA
-         RhYA==
-X-Gm-Message-State: AOAM5315oK6285K/2kpNLQ2/bZui6yVKp/5DERJZi8xIPvX+JaSss4Cb
-        lHpdXUisamh4/W+V8Cs4Yfs=
-X-Google-Smtp-Source: ABdhPJzkuy63Zsi7uwX6mtGwERx8H1BUWVdZaS3r4t8+xoqlBet6sAex+uApJPa7nzeYe/6nmRK5+Q==
-X-Received: by 2002:a05:6512:3317:: with SMTP id k23mr1577737lfe.111.1597304559520;
-        Thu, 13 Aug 2020 00:42:39 -0700 (PDT)
-Received: from eldfell ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id h13sm801102lji.134.2020.08.13.00.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 00:42:38 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 10:42:28 +0300
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     crj <algea.cao@rock-chips.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
-        jonas@kwiboo.se, airlied@linux.ie, kuankuan.y@gmail.com,
-        narmstrong@baylibre.com, hjc@rock-chips.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        a.hajda@samsung.com, tzimmermann@suse.de, jbrunet@baylibre.com,
-        linux-rockchip@lists.infradead.org, darekm@google.com,
-        sam@ravnborg.org, linux-arm-kernel@lists.infradead.org,
-        cychiang@chromium.org
-Subject: Re: [PATCH 4/6] drm/rockchip: dw_hdmi: Add vendor hdmi properties
-Message-ID: <20200813104228.096179e7@eldfell>
-In-Reply-To: <20200812133017.GJ6057@pendragon.ideasonboard.com>
-References: <20200812083120.743-1-algea.cao@rock-chips.com>
-        <20200812083543.4231-1-algea.cao@rock-chips.com>
-        <20200812093315.GE6057@pendragon.ideasonboard.com>
-        <52cca26d-b2b3-22b2-f371-a8086f2e6336@rock-chips.com>
-        <20200812133017.GJ6057@pendragon.ideasonboard.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 13 Aug 2020 03:44:28 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A021C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:44:28 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597304666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xwAqU//1A3R+DJkuFK8D981mTCm47eLPJEs5PgpmP9k=;
+        b=JDgXNAvBhNk7sR7EzwEc33vq9Lw8Usil2bJSf+xGy78xRTZa1mb7JbaUerHQlJvov8bdiW
+        7FY0pDMbtSdFEjk3GLTa/ou1+hf29dbq583M+dLloPbI/AihV1u/ft57SFze7ndul95X6R
+        tulbwjxr3i+dl0kpLQe1OMtq0t/Q4gTIb1sZBiG/pLPGlaVTxvLIUlOdYPIefin43DKhsp
+        jTFELLi3TP6UuqLwZ7T7JnWMbYh3bibtSWwgS6+yVxz0imH+XtvLauLgEpQa/mtv6WmEUV
+        xWRJN80hCA9Lu/ZOYfAsfjKHG30ilXoEc2+GfXowupqNIkmFw748kYfx5G/B8w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597304666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xwAqU//1A3R+DJkuFK8D981mTCm47eLPJEs5PgpmP9k=;
+        b=rWwIStofMz+NLlwO+Tl2ilc3Yyj+GtzqpIP8SXEkLp3BQ0QflC7HoMs0sV6IjEhJcAa0KJ
+        iKD/3V2YvH11FiCg==
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
+In-Reply-To: <20200813051853.GA510@jagdpanzerIV.localdomain>
+References: <20200717234818.8622-1-john.ogness@linutronix.de> <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com> <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley> <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de> <20200813051853.GA510@jagdpanzerIV.localdomain>
+Date:   Thu, 13 Aug 2020 09:50:25 +0206
+Message-ID: <875z9nvvl2.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=OONQgpVWkCqhFkncTg66Ye"; protocol="application/pgp-signature"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=OONQgpVWkCqhFkncTg66Ye
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 2020-08-13, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+> This is not an unseen pattern, I'm afraid. And the problem here can
+> be more general:
+>
+> 	pr_info("text");
+> 	pr_cont("1");
+> 	exception/IRQ/NMI
+> 		pr_alert("text\n");
+> 	pr_cont("2");
+> 	pr_cont("\n");
+>
+> I guess the solution would be to store "last log_level" in task_struct
+> and get current (new) timestamp for broken cont line?
 
-On Wed, 12 Aug 2020 16:30:17 +0300
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+(Warning: new ideas ahead)
 
-> Hi Algea,
->=20
-> On Wed, Aug 12, 2020 at 07:08:10PM +0800, crj wrote:
-> > =E5=9C=A8 2020/8/12 17:33, Laurent Pinchart =E5=86=99=E9=81=93: =20
-> > > On Wed, Aug 12, 2020 at 04:35:43PM +0800, Algea Cao wrote: =20
-> > >> Introduce struct dw_hdmi_property_ops in plat_data to support
-> > >> vendor hdmi property.
-> > >>
-> > >> Implement hdmi vendor properties color_depth_property and
-> > >> hdmi_output_property to config hdmi output color depth and
-> > >> color format.
-> > >>
-> > >> The property "hdmi_output_format", the possible value
-> > >> could be:
-> > >>           - RGB
-> > >>           - YCBCR 444
-> > >>           - YCBCR 422
-> > >>           - YCBCR 420
-> > >>
-> > >> Default value of the property is set to 0 =3D RGB, so no changes if =
-you
-> > >> don't set the property.
-> > >>
-> > >> The property "hdmi_output_depth" possible value could be
-> > >>           - Automatic
-> > >>             This indicates prefer highest color depth, it is
-> > >>             30bit on rockcip platform.
-> > >>           - 24bit
-> > >>           - 30bit
-> > >> The default value of property is 24bit.
-> > >>
-> > >> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> > >> ---
-> > >>
-> > >>   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 174 ++++++++++++++++=
-++++
-> > >>   include/drm/bridge/dw_hdmi.h                |  22 +++
-> > >>   2 files changed, 196 insertions(+)
-> > >>
-> > >> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/g=
-pu/drm/rockchip/dw_hdmi-rockchip.c
-> > >> index 23de359a1dec..8f22d9a566db 100644
-> > >> --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> > >> +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> > >> @@ -52,6 +52,27 @@
-> > >>  =20
-> > >>   #define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
-> > >>  =20
-> > >> +/* HDMI output pixel format */
-> > >> +enum drm_hdmi_output_type {
-> > >> +	DRM_HDMI_OUTPUT_DEFAULT_RGB, /* default RGB */
-> > >> +	DRM_HDMI_OUTPUT_YCBCR444, /* YCBCR 444 */
-> > >> +	DRM_HDMI_OUTPUT_YCBCR422, /* YCBCR 422 */
-> > >> +	DRM_HDMI_OUTPUT_YCBCR420, /* YCBCR 420 */
-> > >> +	DRM_HDMI_OUTPUT_YCBCR_HQ, /* Highest subsampled YUV */
-> > >> +	DRM_HDMI_OUTPUT_YCBCR_LQ, /* Lowest subsampled YUV */
-> > >> +	DRM_HDMI_OUTPUT_INVALID, /* Guess what ? */
-> > >> +}; =20
-> > >
-> > > Vendor-specific properties shouldn't use names starting with drm_ or
-> > > DRM_, that's for the DRM core. But this doesn't seem specific to
-> > > Rockchip at all, it should be a standard property. Additionally, new
-> > > properties need to come with a userspace implementation showing their
-> > > usage, in X.org, Weston, the Android DRM/KMS HW composer, or another
-> > > relevant upstream project (a test tool is usually not enough). =20
-> >=20
-> > We use these properties only in Android HW composer, But we can't upstr=
-eam
-> >=20
-> > our HW composer code right now.=C2=A0 Can we use this properties as pri=
-vate=20
-> > property
-> >=20
-> > and do not upstream HW composer for the time being? =20
->=20
-> It's not my decision, it's a policy of the DRM subsystem to require an
-> open implementation in userspace to validate all API additions.
+The fundamental problem is that there is no real association between
+the cont parts. So any interruption results in a broken record. If we
+really want to do this correctly, we need real association.
 
-Also read
-https://www.kernel.org/doc/html/latest/gpu/drm-uapi.html#open-source-usersp=
-ace-requirements
-very carefully: it calls for a FOSS userspace project's proper upstream
-to have reviewed and accepted the patches to use the new UAPI, but
-those patches must NOT be MERGED at that time yet.
+With the new finalize flag for records, I thought about perhaps adding
+support for chaining data blocks.
 
+A data block currently stores an unsigned long for the ID of the
+associated descriptor. But it could optionally include a second unsigned
+long, which is the lpos of the next text part. All the data blocks of a
+chain would point back to the same descriptor. The descriptor would only
+point to the first data block of the chain and include a flag that it is
+using chained data blocks.
 
-Thanks,
-pq
+Then we would only need to track the sequence number of the open record
+and new data blocks could be added to the data block chain of the
+correct record. Readers cannot see the record until it is finalized.
 
---Sig_/=OONQgpVWkCqhFkncTg66Ye
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Also, since only finalized records can be invalidated, there are no
+races of chains becoming invalidated while being appended.
 
------BEGIN PGP SIGNATURE-----
+My concerns about this idea:
 
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl807uQACgkQI1/ltBGq
-qqd/Qg/5AYqVDsoWf/fmcGp7z7OgfKXZM7+iILaEYS5vRXwgTYMG5BWpKlR+fOAn
-Umgvjqhnc6GGFaB5S3vZALd7cCMYBoLdaNJ4oR566IjDpXbFl8bagZW3fD8Aaqix
-9PzC80muZLPEEKy9zTqLSq2zfiZX41J7lMGTNMSQBpnGfB3YWxKqnKKlVMYtG8sL
-mpMq4KfdNLh443IMiu+s4ZkVAPQxj++Bu1BeJnz5Puy1iKY4Wup76tipgNXNHNiG
-eHj2hkHrzcXMjPF4JCrPra9OBHhiiv6IxP3fyF0dvfaou+mGzIOeJF5fV3Msna9J
-4mYVcEE516sDuUZ8xmUOzwMMPPxqhOqZ/0DQSpU0NP3uevMVJQmcmitNFZMzDFtO
-6jXTz7k554GJxrJo9XfSx/QKZPNtCIbQsxW6TKU2ShOCJFs55fO+seOCojaHnr5R
-Z0zUzapzyYbmiG1UHjjnyzOVIrQb2Bj2+6NxkQdAdXltKQym1GhdWHE3D/LzhS4R
-PZnFJxSU+MMrienr6daNiMfdfSl2vHgfd83qOCeQRXfYlJdzkKktsZfD2YUH0SY3
-rq1pHw+5srdW0rKjct15/euFyiH3SUHF88rHYa4MzEC/3z+VASRUwWZ/ThWrRhjb
-fajX3c1qqlldIcxv+TknqkFrVuOUV8O9mxP18N4EL4uYCmTlDIc=
-=7IHY
------END PGP SIGNATURE-----
+- What if the printk user does not correctly terminate the cont message?
+  There is no mechanism to allow that open record to be force-finalized
+  so that readers can read newer records.
 
---Sig_/=OONQgpVWkCqhFkncTg66Ye--
+- For tasks, the sequence number of the open record could be stored on
+  the task_struct. For non-tasks, we could use a global per-cpu variable
+  where each CPU stores 2 sequence numbers: the sequence number of the
+  open record for the non-task and the sequence number of the open
+  record for an interrupting NMI. Is that sufficient?
+
+John Ogness
