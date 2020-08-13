@@ -2,322 +2,181 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A077FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65AEC20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5677A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="JlBUfoFO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cuHLptR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMN2S (ORCPT
+        id S1726627AbgHMN3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgHMN2O (ORCPT
+        Thu, 13 Aug 2020 09:29:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37692 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgHMN3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:28:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AD5C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:28:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l2so5277444wrc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uBROLMHeoGTEwY2TO05pBSVi0pDnF8JEtl1FXcW9nZw=;
-        b=JlBUfoFOT+0f5lEkuRSUpXKd89R75VtGyxTsIICqAhatND/BsO+UDg1l5kwNNrtHY1
-         9vwF+Bo9/AbLdNErzEKy8l+u/WzSFmB9bJ2FYOEJ5bklGYL9YCi9kWgxCXITLPTuh6vM
-         zj1u/byeXdQ71KGkn1HvN+pgsVDFg0NUgwv0L4feWVwhyYz7mriV1FhnfZccrHqloZJY
-         jHYH73JSkFH6zvFX1AtfoViNt4Ol2f5R9LnZ7bM0xeyOPJl2zjjRMX+Nk98TDSYxeCP7
-         nF+y1/7y5Opy3WSSHeW/9KwPCDIm3HxKXTEezFJjv0kArhuo5x15vQ6m06TXLfP3E8Us
-         7USw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uBROLMHeoGTEwY2TO05pBSVi0pDnF8JEtl1FXcW9nZw=;
-        b=IPhkxwlDcXVkIE8Jh392AOmILda7gGhmko72PZv0dc1Asx/4OBXgwdJGJc+27nkLRx
-         Y1ozKL8al7bZBNMIOopXtN4uG/IfGMDjWl4GPs0IJe90D8aRCQlLAPOGZ5kSwLCaB45L
-         zVkajaLo/Oo7eU31e4lerRF+Ef128YPuh7sx14PXY74ntyfAqWT8e04N+d8oX/omEh/I
-         peiCBjPxej6RaV7c/hC3UWYys8xE8tSwgddTh17gI91XSGn81Cs5dn7k3zeRrZrgCvyb
-         Lm1AcICg0vzBqdLVvT8uydO4iPxQfmVx6a4u8k9WyEY5OQlS2ez01VfEqa+x+B1DbfMw
-         zg/Q==
-X-Gm-Message-State: AOAM533uqNj+2OwcP5R0tTO6o9/tpCPxac9l9FX5Ym3nJvEamBC2YubX
-        CTEvyUR7idHcs9EACzRtXJHSjQ==
-X-Google-Smtp-Source: ABdhPJzn89xoxT+OG+s2vCxhgGquEIJ/eC7HnYdeJ6JRhLQJTGLYfXfAAsBu+Sq7RK64c1WIf9GErA==
-X-Received: by 2002:adf:a106:: with SMTP id o6mr4073706wro.1.1597325291327;
-        Thu, 13 Aug 2020 06:28:11 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:7220:84ff:fe09:7d5c])
-        by smtp.gmail.com with ESMTPSA id i14sm12581252wrc.19.2020.08.13.06.28.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 06:28:10 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 14:28:09 +0100
-From:   Alessio Balsini <balsini@android.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Miklos Szeredi <miklos@szeredi.hu>,
-        Nikhilesh Reddy <reddyn@codeaurora.org>,
-        Akilesh Kailash <akailash@google.com>,
-        David Anderson <dvander@google.com>,
-        Eric Yan <eric.yan@oneplus.com>,
-        Martijn Coenen <maco@android.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Lawrence <paullawrence@google.com>,
-        Stefano Duo <stefanoduo@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>,
-        kernel-team <kernel-team@android.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
-Message-ID: <20200813132809.GA3414542@google.com>
-References: <20200812161452.3086303-1-balsini@android.com>
- <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+        Thu, 13 Aug 2020 09:29:03 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DD3HWE185766;
+        Thu, 13 Aug 2020 09:28:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=EjBWs1XLXJ3XQrKu6R6+m8xBwYJxjpkGFS0zt7Y9MQk=;
+ b=cuHLptR3OwTZ/jcxf1v7/aa/uRrD1tF926Rklm7GH6fXQ5ZvejHEtb90xZrUkOosl+s+
+ SYj6HcKYK5y8PQ9s4Hcihjvs+ZLfYMxBJVyyHzTfjaBhZCDN27ThBBUzMr4GroV30y0t
+ A0cDrT9EKfo07as8ZyAQhzy68WXHeB7fypC7dbhFmLDuFo/VCGXwSpBAah+4IJ6r1qpU
+ Py9Jq4TOYIHIxDmx+mA+t6rdSGc0qcF76t263TBrRHd/uwhFpnRx/5I2JCodPWrhyHJK
+ RjRiN0NXifKy/QiAOn5xqnjR644usyPgAZKHCu9Vy8a87oj63ltB8ACvxM4cPwv/jCP2 bQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcprv2j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 09:28:58 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DD3SNk186940;
+        Thu, 13 Aug 2020 09:28:58 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcprv18-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 09:28:57 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DDR2TP032580;
+        Thu, 13 Aug 2020 13:28:55 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 32skp83eg7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 13:28:55 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DDSqdE64750054
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Aug 2020 13:28:52 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 937FB4C04A;
+        Thu, 13 Aug 2020 13:28:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E369B4C046;
+        Thu, 13 Aug 2020 13:28:51 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Aug 2020 13:28:51 +0000 (GMT)
+Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
+To:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-s390@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
+ <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
+ <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
+ <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
+ <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
+ <dc79c8a9-1bbc-380f-741f-bca270a34483@linux.ibm.com>
+ <17be8c41-8989-f1da-a843-30f0761f42de@linux.ibm.com>
+ <6ffa5f39-3607-88c7-81f9-dc97d12d09df@linux.ibm.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <f862f188-1f4d-d83d-452e-7fbda55426c7@linux.ibm.com>
+Date:   Thu, 13 Aug 2020 15:28:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+In-Reply-To: <6ffa5f39-3607-88c7-81f9-dc97d12d09df@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_10:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jann,
 
-Thank you for looking into this.
 
-On Wed, Aug 12, 2020 at 08:29:58PM +0200, 'Jann Horn' via kernel-team wrote:
-> [+Jens: can you have a look at that ->ki_filp switcheroo in
-> fuse_passthrough_read_write_iter() and help figure out whether that's
-> fine? This seems like your area of expertise.]
+On 8/13/20 3:11 PM, Matthew Rosato wrote:
+> On 8/13/20 8:34 AM, Niklas Schnelle wrote:
+>>
+>>
+>> On 8/13/20 12:40 PM, Niklas Schnelle wrote:
+>>>
+>>>
+>>> On 8/13/20 11:59 AM, Oliver O'Halloran wrote:
+>>>> On Thu, Aug 13, 2020 at 7:00 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
+>>>>>> On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+>>>>>>> *snip*
+>>>>>>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+>>>>>>> index 3902c9f..04ac76d 100644
+>>>>>>> --- a/arch/s390/pci/pci.c
+>>>>>>> +++ b/arch/s390/pci/pci.c
+>>>>>>> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
+>>>>>>>   {
+>>>>>>>          struct zpci_dev *zdev = to_zpci(pdev);
+>>>>>>>
+>>>>>>> +       /*
+>>>>>>> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
+>>>>>>> +        * detached from its parent PF.  We rely on firmware emulation to
+>>>>>>> +        * provide underlying PF details.
+>>>>>>> +        */
+>>>>>>> +       if (zdev->vfn && !zdev->zbus->multifunction)
+>>>>>>> +               pdev->detached_vf = 1;
+>>>>>>
+>>>>>> The enable hook seems like it's a bit too late for this sort of
+>>>>>> screwing around with the pci_dev. Anything in the setup path that
+>>>>>> looks at ->detached_vf would see it cleared while anything that looks
+>>>>>> after the device is enabled will see it set. Can this go into
+>>>>>> pcibios_add_device() or a fixup instead?
+>>>>>>
+>>>>>
+>>>>> This particular check could go into pcibios_add_device() yes.
+>>>>> We're also currently working on a slight rework of how
+>>>>> we establish the VF to parent PF linking including the sysfs
+>>>>> part of that. The latter sadly can only go after the sysfs
+>>>>> for the virtfn has been created and that only happens
+>>>>> after all fixups. We would like to do both together because
+>>>>> the latter sets pdev->is_virtfn which I think is closely related.
+>>>>>
+>>>>> I was thinking of starting another discussion
+>>>>> about adding a hook that is executed just after the sysfs entries
+>>>>> for the PCI device are created but haven't yet.
+>>>>
+>>>> if all you need is sysfs then pcibios_bus_add_device() or a bus
+>>>> notifier should work
+>>>
+>>> So this might go a bit off track but the problem is that
+>>> on s390 a VF can be disabled and reenabled with disable_slot()/enable_slot().
+>>> In this case pcibios_bus_add_device() is not called again but
+>>> the PF/VF link needs to be reestablished.
+>>
+>> Scratch that I must have made some stupid mistake last time I tried
+>> this, with your suggestion I tried again and it works perfectly
+>> moving the setup into pcibios_bus_add_device().
+>> Thank you, this is actually much nicer!
+>>
 > 
-> On Wed, Aug 12, 2020 at 6:15 PM Alessio Balsini <balsini@android.com> wrote:
-> > Add support for filesystem passthrough read/write of files when enabled in
-> > userspace through the option FUSE_PASSTHROUGH.
+> OK, and I can likewise relocate the setting of detached_vf to pcibios_bus_add_device().
 > 
-> Oh, I remember this old series... v5 was from 2016? Nice to see
-> someone picking this up again, I liked the idea quite a bit.
-> 
-
-Yes, it's been a while since the last iteration.
-The idea of the original series is as interesting as simple and I think is
-a good tradeoff between the flexibility of FUSE and the speed performance
-of SDCardFS, that Android has been using for a few years.
-
-> [...]
-> Unfortunately, this step isn't really compatible with how the current
-> FUSE API works. Essentially, the current FUSE API is reached via
-> operations like the write() syscall, and reaches FUSE through either
-> ->write_iter or ->splice_write in fuse_dev_operations. In that
-> context, operations like fget_raw() that operate on the calling
-> process are unsafe.
-> 
-> The reason why operations like fget() are unsafe in this context is
-> that the security model of Linux fundamentally assumes that if you get
-> a file descriptor from an untrusted process, and you write stuff into
-> it, anything that happens will be limited to things that the process
-> that gave you the file descriptor would've been able to do on its own.
-> Or in other words, an attacker shouldn't be able to gain anything by
-> convincing a privileged process to write attacker-controlled data into
-> an attacker-supplied file descriptor. With the current design, an
-> attacker may be able to trick a privileged process into installing one
-> of its FDs as a passthrough FD into an attacker-controlled FUSE
-> instance (while the privileged process thinks that it's just writing
-> some opaque data into some file), and thereby make it possible for an
-> attacker to indirectly gain the ability to read/write that FD.
-> 
-
-This is a great explanation.
-
-I've been thinking about this before posting the patch and my final thought
-was that being the FUSE daemon already responsible for handling file ops
-coming from untrusted processes, and the privileges of these ops are anyway
-escalated to the daemon's, if the FUSE daemon has vulnerabilities to
-exploit, there's not much we can do to avoid an attacker to mess with files
-at the same permission level as the FUSE daemon. And this is true also
-without this patch, right?
-IOW, the feature introduced here is something that I agree should be
-handled with care, but is there something that can go wrong if the FUSE
-daemon is written properly? If we cannot trust the FUSE daemon, then we
-should also not trust what it would be able to access, so isn't it enough
-to prove that an attacker wouldn't be able to get more privileges than the
-FUSE daemon? Sorry if I missed something.
-
-> The only way I see to fix this somewhat cleanly would be to add a new
-> command to fuse_dev_ioctl() that can be used to submit replies as an
-> alternative to the write()-based interface. (That should probably be a
-> separate patch in this patch series.) Then, you could have a flag
-> argument to fuse_dev_do_write() that tells it whether the ioctl
-> interface was used, and use that information to decide whether
-> fuse_setup_passthrough() is allowed.
-> (An alternative approach would be to require userspace to set some
-> flag on the write operation that says "I am intentionally performing
-> an operation that depends on caller identity" and pass that through -
-> e.g. by using pwritev2()'s flags argument. But I think historically
-> the stance has been that stuff like write() simply should not be
-> looking at the calling process.)
-> 
-
-I'm not sure I got it right. Could you please elaborate on what is the
-purpose of the new fuse_dev_ioctl() command?
-Do you mean letting the kernel decide whether a FUSE daemon is allowed to
-run fuse_setup_passthrough() or to decide if passthrough should be allowed
-on a specific file?
-In general, I prefer to avoid as much as I can API changes, let's see if
-there is a way to leave them untouched. :)
-What do you think about adding some extra checkings in
-fuse_setup_passthrough() to let the kernel decide if passthrough is doable?
-Do you think this would make things better regarding what you mentioned?
-
-> > +       if (open_out->fd < 0)
-> > +               return;
-> 
-> What is the intent here? fget() will fail anyway if the fd is invalid.
-
-Right, I think I forgot this extra check when I was still unsure about how
-to communicate from the FUSE daemon that something was wrong with the given
-fd, but you are right, I'll remove this useless check.
-
-> > +       passthrough_filp = fget_raw(open_out->fd);
-> 
-> This should probably be a normal fget()? fget_raw() is just necessary
-> if you want to permit using O_PATH file descriptors, and read/write
-> operations don't work on those.
-> 
-
-Fair enough. Testing and adding to v7.
-
-> > +       if (!passthrough_filp)
-> > +               return;
-> 
-> This error path can only be reached if the caller supplied invalid
-> data. IMO this should bail out with an error.
-
-As you can see I switched from the BUG_ON() approach of the previous patch
-to the extreme opposite of transparent, graceful error handling.
-Do you think we should abort the whole open operation, or adding a few
-warning messages may suffice?
-
-> 
-> > +       passthrough_inode = file_inode(passthrough_filp);
-> > +       passthrough_sb = passthrough_inode->i_sb;
-> > +       fs_stack_depth = passthrough_sb->s_stack_depth + 1;
-> > +       if (fs_stack_depth > FILESYSTEM_MAX_STACK_DEPTH) {
-> > +               fput(passthrough_filp);
-> > +               return;
-> > +       }
-> 
-> This is an error path that silently ignores the error and continues to
-> open the file normally as if FOPEN_PASSTHROUGH hadn't been set. Is
-> this an intentional fallback? If so, maybe you could add a comment on
-> top of fuse_setup_passthrough() like: "If setting up passthrough fails
-> due to incompatibility, we ignore the error and continue setting up
-> the file as normal."
-
-This is intentional behavior, but I'll be glad to add _at least_ a comment,
-or as before, a warning message.
-
-> 
-> > +       req->passthrough_filp = passthrough_filp;
-> > +}
-> > +
-> > +static inline ssize_t fuse_passthrough_read_write_iter(struct kiocb *iocb,
-> > +                                                      struct iov_iter *iter,
-> > +                                                      bool write)
-> > +{
-> > +       struct file *fuse_filp = iocb->ki_filp;
-> > +       struct fuse_file *ff = fuse_filp->private_data;
-> > +       struct file *passthrough_filp = ff->passthrough_filp;
-> > +       struct inode *passthrough_inode;
-> > +       struct inode *fuse_inode;
-> > +       ssize_t ret = -EIO;
-> > +
-> > +       fuse_inode = fuse_filp->f_path.dentry->d_inode;
-> 
-> I think this could just use file_inode(fuse_filp)?
-
-Nice catch! I think I lost this bit in a rebase, thanks!
-
-> 
-> 
-> > +       passthrough_inode = file_inode(passthrough_filp);
-> > +
-> > +       iocb->ki_filp = passthrough_filp;
-> 
-> Hmm... so we're temporarily switching out the iocb's ->ki_filp here? I
-> wonder whether it is possible for some other code to look at ->ki_filp
-> concurrently... maybe Jens Axboe knows whether that could plausibly
-> happen?
-> 
-> Second question about this switcheroo below...
-> 
-> > +       if (write) {
-> > +               if (!passthrough_filp->f_op->write_iter)
-> > +                       goto out;
-> > +
-> > +               ret = call_write_iter(passthrough_filp, iocb, iter);
-> 
-> Hmm, I don't think we can just invoke
-> call_write_iter()/call_read_iter() like this. If you look at something
-> like vfs_writev(), you can see that normally, there are a bunch of
-> other things that happen:
-> 
->  - file_start_write() before the write
->  - check whether the file's ->f_mode permits writing with FMODE_WRITE
-> and FMODE_CAN_WRITE
->  - rw_verify_area() for stuff like mandatory locking and LSM security
-> checks (although admittedly this LSM security check is pretty useless)
->  - fsnotify_modify() to trigger inotify watches and such that notify
-> userspace of file modifications
->  - file_end_write() after the write
-> 
-> You should probably try to use vfs_iocb_iter_write() here, and figure
-> out how to properly add file_start_write()/file_end_write() calls
-> around this. Perhaps ovl_write_iter() from fs/overlayfs/file.c can
-> help with this? Note that you can't always just call file_end_write()
-> synchronously, since the request may complete asynchronously.
-
-Answering here both the two previous questions, that are strictly related.
-I couldn't find any racy path for a specific iocp->ki_filp. Glad to be
-proven wrong, let's see if Jens can bring some light here.
-
-Jumping back to vfs with call_{read,write}_iter(), this looked to me as the
-most elegant solution, and I find it handy that they also perform extra
-checks on the target file. I was worried at the beginning about this vfs
-nesting weirdness, but the nesting unrolls just fine, and with visual
-inspection I couldn't spot any dangerous situations.
-Are you just worried about write operations or reads as well? Maybe Jens
-can give some extra advice here too.
-
-> > +out:
-> > +       iocb->ki_filp = fuse_filp;
-> 
-> Also a question that I hope Jens can help with: If this is an
-> asynchronous request, would something bad happen if the request
-> completes before we reach that last ->ki_filp write (if that is even
-> possible)? Or could an asynchronous request blow up because this
-> ->ki_filp write happens before the request has completed?
-
-I cannot think of a scenario where we don't complete the request before
-restoring the original ki_filp. Jens again to prove me wrong.
-
-> Overall, I wonder whether it would be better to copy overlayfs'
-> approach of creating a new iocb instead of trying to switch out parts
-> of the existing iocb (see ovl_write_iter()). That would simplify this
-> weirdness a lot, at the cost of having to allocate slab memory to
-> store the copied iocb.
-
-I'm not familiar with the internals of overlayfs, I will surely give it a
-look, seeking for ideas.
-
-Thanks a lot for all the hints!
-
-Cheers,
-Alessio
-
+Yes and I would suggest we add it in arch/s390/pci_bus.c just
+after the the setup_virtfn stuff, then that can stay static
+and the fix minimal.
+I'll send a new version of my patches internally later, still
+running it on the different configurations.
