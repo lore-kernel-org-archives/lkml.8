@@ -2,512 +2,163 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093DA20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A6E20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Gxjxl4Kp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BOIL1Rth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgHMMtG (ORCPT
+        id S1726683AbgHMMtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:49:06 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:44491 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMMsx (ORCPT
+        Thu, 13 Aug 2020 08:49:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45107 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726658AbgHMMtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:48:53 -0400
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7B08523076;
-        Thu, 13 Aug 2020 14:48:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1597322927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s57IfPlBMyINQlbwHMgny+vsDjYIv28EbdU1BRx0tM4=;
-        b=Gxjxl4KpuLKVYGwaodCWI+oNCg1+PJK9iPUlIw8JLQrrKzsUZQ+W5IPK/o8EeeC/cnH2Py
-        TQwuYxm3vaRLQWTGSyOZpUWqTZdSZUAs6uahFfNZoM/Q3Jd1u4JGff7GujvWbei+BFHyVp
-        GskiZ7UP+TYrJ6Eor/3p5JRHC4fHSlw=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v8 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Date:   Thu, 13 Aug 2020 14:48:21 +0200
-Message-Id: <20200813124832.17349-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200813124832.17349-1-michael@walle.cc>
-References: <20200813124832.17349-1-michael@walle.cc>
+        Thu, 13 Aug 2020 08:49:04 -0400
+X-UUID: f4c7400723df461b99ba43db2a1c039f-20200813
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=aaE6HcSMNBLCW8HhXQtINfxBXNzqkMSqUtGQrGAVPSM=;
+        b=BOIL1Rthkq9dh/cIjPy+2394BryYEPZfVPl/p+WsDexLcm3qgQzNuBPsL0vAbg37mWo9/dLo2BbPnRGsW8DFgSdQLfM7yeckhVTy/TqVPueTsFo02M+ubzkfdnErZR0RGBMNia4m2X8yPfKS1hN2oImOc4oPWc9W6sKsqNaEzNA=;
+X-UUID: f4c7400723df461b99ba43db2a1c039f-20200813
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 388844126; Thu, 13 Aug 2020 20:48:58 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 13 Aug 2020 20:48:55 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 13 Aug 2020 20:48:57 +0800
+Message-ID: <1597322937.9999.42.camel@mtksdccf07>
+Subject: Re: [PATCH 1/5] timer: kasan: record and print timer stack
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 13 Aug 2020 20:48:57 +0800
+In-Reply-To: <87d03ulqbp.fsf@nanos.tec.linutronix.de>
+References: <20200810072313.529-1-walter-zh.wu@mediatek.com>
+         <87d03ulqbp.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a device tree bindings for the board management controller found on
-the Kontron SMARC-sAL28 board.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v7:
- - none
-
-Changes since v6:
- - renamed "sl28cpld-r1" to "sl28cpld"
- - made paths relative
- - moved "reg" and "compatible" to the top of a node
-
-Changes since v5:
- - none
-
-Changes since v4:
- - fix the regex of the unit-address
-
-Changes since v3:
- - see cover letter
-
- .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
- .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
- .../kontron,sl28cpld-intc.yaml                |  54 +++++++
- .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
- .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
- .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
- 6 files changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
- create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-new file mode 100644
-index 000000000000..e2d2c10e536a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  There are three flavors of the GPIO controller, one full featured
-+  input/output with interrupt support (kontron,sl28cpld-gpio), one
-+  output-only (kontron,sl28-gpo) and one input-only (kontron,sl28-gpi).
-+
-+  Each controller supports 8 GPIO lines.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-gpio
-+      - kontron,sl28cpld-gpi
-+      - kontron,sl28cpld-gpo
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+      minItems: 1
-+      maxItems: 8
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-new file mode 100644
-index 000000000000..010333cb25c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Hardware monitoring driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-fan
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
-new file mode 100644
-index 000000000000..e8dfa6507f64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/kontron,sl28cpld-intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Interrupt controller driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  The following interrupts are available. All types and levels are fixed
-+  and handled by the board management controller.
-+
-+  ==== ============= ==================================
-+   IRQ line/device   description
-+  ==== ============= ==================================
-+    0  RTC_INT#      Interrupt line from on-board RTC
-+    1  SMB_ALERT#    Event on SMB_ALERT# line (P1)
-+    2  ESPI_ALERT0#  Event on ESPI_ALERT0# line (S43)
-+    3  ESPI_ALERT1#  Event on ESPI_ALERT1# line (S44)
-+    4  PWR_BTN#      Event on PWR_BTN# line (P128)
-+    5  SLEEP#        Event on SLEEP# line (S149)
-+    6  watchdog      Interrupt of the internal watchdog
-+    7  n/a           not used
-+  ==== ============= ==================================
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-intc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - "#interrupt-cells"
-+  - interrupt-controller
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-new file mode 100644
-index 000000000000..eb3b43547cb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Kontron's sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  The board management controller may contain different IP blocks like
-+  watchdog, fan monitoring, PWM controller, interrupt controller and a
-+  GPIO controller.
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld
-+
-+  reg:
-+    description:
-+      I2C device address.
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+patternProperties:
-+  "^gpio(@[0-9a-f]+)?$":
-+    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
-+
-+  "^hwmon(@[0-9a-f]+)?$":
-+    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
-+
-+  "^interrupt-controller(@[0-9a-f]+)?$":
-+    $ref: ../interrupt-controller/kontron,sl28cpld-intc.yaml
-+
-+  "^pwm(@[0-9a-f]+)?$":
-+    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
-+
-+  "^watchdog(@[0-9a-f]+)?$":
-+    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        sl28cpld@4a {
-+            compatible = "kontron,sl28cpld";
-+            reg = <0x4a>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            watchdog@4 {
-+                compatible = "kontron,sl28cpld-wdt";
-+                reg = <0x4>;
-+                kontron,assert-wdt-timeout-pin;
-+            };
-+
-+            hwmon@b {
-+                compatible = "kontron,sl28cpld-fan";
-+                reg = <0xb>;
-+            };
-+
-+            pwm@c {
-+                compatible = "kontron,sl28cpld-pwm";
-+                reg = <0xc>;
-+                #pwm-cells = <2>;
-+            };
-+
-+            pwm@e {
-+                compatible = "kontron,sl28cpld-pwm";
-+                reg = <0xe>;
-+                #pwm-cells = <2>;
-+            };
-+
-+            gpio@10 {
-+                compatible = "kontron,sl28cpld-gpio";
-+                reg = <0x10>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                gpio-line-names = "a", "b", "c";
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+
-+            gpio@15 {
-+                compatible = "kontron,sl28cpld-gpio";
-+                reg = <0x15>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+
-+            gpio@1a {
-+                compatible = "kontron,sl28cpld-gpo";
-+                reg = <0x1a>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+            };
-+
-+            gpio@1b {
-+                compatible = "kontron,sl28cpld-gpi";
-+                reg = <0x1b>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+            };
-+
-+            interrupt-controller@1c {
-+                compatible = "kontron,sl28cpld-intc";
-+                reg = <0x1c>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
-new file mode 100644
-index 000000000000..981cfec53f37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/kontron,sl28cpld-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PWM driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  The controller supports one PWM channel and supports only four distinct
-+  frequencies (250Hz, 500Hz, 1kHz, 2kHz).
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-new file mode 100644
-index 000000000000..179272f74de5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/kontron,sl28cpld-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Watchdog driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+allOf:
-+  - $ref: watchdog.yaml#
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  kontron,assert-wdt-timeout-pin:
-+    description: The SMARC standard defines a WDT_TIME_OUT# pin. If this
-+      property is set, this output will be pulsed when the watchdog bites
-+      and the system resets.
-+    type: boolean
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
--- 
-2.20.1
+SGkgVGhvbWFzLA0KDQpQbGVhc2UgaWdub3JlIG15IHByZXZpb3VzIG1haWwuIFRoYW5rcy4NCg0K
+DQpPbiBUaHUsIDIwMjAtMDgtMTMgYXQgMTM6NDggKzAyMDAsIFRob21hcyBHbGVpeG5lciB3cm90
+ZToNCj4gV2FsdGVyLA0KPiANCj4gV2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29t
+PiB3cml0ZXM6DQo+ID4gVGhpcyBwYXRjaCByZWNvcmRzIHRoZSBsYXN0IHR3byB0aW1lciBxdWV1
+ZWluZyBzdGFja3MgYW5kIHByaW50cw0KPiANCj4gIlRoaXMgcGF0Y2giIGlzIHVzZWxlc3MgaW5m
+b3JtYXRpb24gYXMgd2UgYWxyZWFkeSBrbm93IGZyb20gdGhlIHN1YmplY3QNCj4gbGluZSB0aGF0
+IHRoaXMgaXMgYSBwYXRjaC4NCj4gDQo+IGdpdCBncmVwICdUaGlzIHBhdGNoJyBEb2N1bWVudGF0
+aW9uL3Byb2Nlc3MvDQo+IA0KDQpUaGFua3MgZm9yIHlvdXIgaW5mb3JtYXRpb24uDQoNCj4gPiB1
+cCB0byAyIHRpbWVyIHN0YWNrcyBpbiBLQVNBTiByZXBvcnQuIEl0IGlzIHVzZWZ1bCBmb3IgcHJv
+Z3JhbW1lcnMNCj4gPiB0byBzb2x2ZSB1c2UtYWZ0ZXItZnJlZSBvciBkb3VibGUtZnJlZSBtZW1v
+cnkgdGltZXIgaXNzdWVzLg0KPiA+DQo+ID4gV2hlbiB0aW1lcl9zZXR1cCgpIG9yIHRpbWVyX3Nl
+dHVwX29uX3N0YWNrKCkgaXMgY2FsbGVkLCB0aGVuIGl0DQo+ID4gcHJlcGFyZXMgdG8gdXNlIHRo
+aXMgdGltZXIgYW5kIHNldHMgdGltZXIgY2FsbGJhY2ssIHdlIHN0b3JlDQo+ID4gdGhpcyBjYWxs
+IHN0YWNrIGluIG9yZGVyIHRvIHByaW50IGl0IGluIEtBU0FOIHJlcG9ydC4NCj4gDQo+IHdlIHN0
+b3JlIG5vdGhpbmcuIERvbid0IGltcGVyc29uYXRlIGNvZGUgcGxlYXNlLg0KPiANCj4gQWxzbyBw
+bGVhc2Ugc3RydWN0dXJlIHRoZSBjaGFuZ2Vsb2cgaW4gYSB3YXkgdGhhdCBpdCdzIGVhc3kgdG8N
+Cj4gdW5kZXJzdGFuZCB3aGF0IHRoaXMgaXMgYWJvdXQgaW5zdGVhZCBvZiB0ZWxsaW5nIGZpcnN0
+IHdoYXQgdGhlIHBhdGNoDQo+IGRvZXMgYW5kIHRoZW4gc29tZSBoYWxmIGJha2VuIGluZm9ybWF0
+aW9uIHdoeSB0aGlzIGlzIHVzZWZ1bCBmb2xsb3dlZCBieQ0KPiBtb3JlIGluZm9ybWF0aW9uIGFi
+b3V0IHdoYXQgaXQgZG9lcy4NCj4gDQo+IFNvbWV0aGluZyBsaWtlIHRoaXM6DQo+IA0KPiAgIEZv
+ciBhbmFseXNpbmcgdXNlIGFmdGVyIGZyZWUgb3IgZG91YmxlIGZyZWUgb2Ygb2JqZWN0cyBpdCBp
+cyBoZWxwZnVsDQo+ICAgdG8gcHJlc2VydmUgdXNhZ2UgaGlzdG9yeSB3aGljaCBwb3RlbnRpYWxs
+eSBnaXZlcyBhIGhpbnQgYWJvdXQgdGhlDQo+ICAgYWZmZWN0ZWQgY29kZS4NCj4gDQo+ICAgRm9y
+IHRpbWVycyBpdCBoYXMgdHVybmVkIG91dCB0byBiZSB1c2VmdWwgdG8gcmVjb3JkIHRoZSBzdGFj
+ayB0cmFjZQ0KPiAgIG9mIHRoZSB0aW1lciBpbml0IGNhbGwuIDxBREQgdGVjaG5pY2FsIGV4cGxh
+bmF0aW9uIHdoeSB0aGlzIGlzIHVzZWZ1bD4NCj4gIA0KPiAgIFJlY29yZCB0aGUgbW9zdCByZWNl
+bnQgdHdvIHRpbWVyIGluaXQgY2FsbHMgaW4gS0FTQU4gd2hpY2ggYXJlIHByaW50ZWQNCj4gICBv
+biBmYWlsdXJlIGluIHRoZSBLQVNBTiByZXBvcnQuDQo+IA0KPiBTZWUsIHRoaXMgZ2l2ZXMgYSBj
+bGVhciBjb250ZXh0LCBhbiBleHBsYW5hdGlvbiB3aHkgaXQgaXMgdXNlZnVsIGFuZCBhDQo+IGhp
+Z2ggbGV2ZWwgZGVzY3JpcHRpb24gb2Ygd2hhdCBpdCBkb2VzLiBUaGUgZGV0YWlscyBhcmUgaW4g
+dGhlIHBhdGNoDQo+IGlmc2VsZiBhbmQgZG8gbm90IGhhdmUgdG8gYmUgZXB4bGFpbmVkIGluIHRo
+ZSBjaGFuZ2Vsb2cuDQo+IA0KDQpUaGFua3MgZm9yIHlvdXIgZXhwbGFuYXRpb24sIE91ciBwYXRj
+aCB3aWxsIHVzZSB0aGlzIGFzIGEgdGVtcGxhdGUgZnJvbQ0Kbm93IG9uLg0KDQo+IEZvciB0aGUg
+dGVjaG5pY2FsIGV4cGxhbmF0aW9uIHdoaWNoIHlvdSBuZWVkIHRvIGFkZCwgeW91IHJlYWxseSBu
+ZWVkIHRvDQo+IHRlbGwgd2hhdCdzIHRoZSBhZHZhbnRhZ2Ugb3IgYWRkaXRpb25hbCBjb3ZlcmFn
+ZSB2cy4gZXhpc3RpbmcgZGVidWcNCj4gZmFjaWxpdGllcyBsaWtlIGRlYnVnb2JqZWN0cy4gSnVz
+dCBjbGFpbWluZyB0aGF0IGl0J3MgdXNlZnVsIGRvZXMgbm90DQo+IG1ha2UgYW4gYXJndW1lbnQu
+DQo+IA0KDQpXZSBvcmlnaW5hbGx5IHdhbnRlZCBoaW0gdG8gaGF2ZSBzaW1pbGFyIGZ1bmN0aW9u
+cy4gTWF5YmUgaGUgY2FuJ3QNCmNvbXBsZXRlbHkgcmVwbGFjZSwgYnV0IEtBU0FOIGNhbiBhdmUg
+dGhpcyBhYmlsaXR5Lg0KDQo+IFRoZSBVQUYgcHJvYmxlbSB3aXRoIHRpbWVycyBpcyBuYXN0eSBi
+ZWNhdXNlIGlmIHlvdSBmcmVlIGFuIGFjdGl2ZSB0aW1lcg0KPiB0aGVuIGVpdGhlciB0aGUgc29m
+dGlycSB3aGljaCBleHBpcmVzIHRoZSB0aW1lciB3aWxsIGNvcnJ1cHQgcG90ZW50aWFsbHkNCj4g
+cmV1c2VkIG1lbW9yeSBvciB0aGUgcmV1c2Ugd2lsbCBjb3JydXB0IHRoZSBsaW5rZWQgbGlzdCB3
+aGljaCBtYWtlcyB0aGUNCj4gc29mdGlycSBvciBzb21lIHVucmVsYXRlZCBjb2RlIHdoaWNoIGFk
+ZHMvcmVtb3ZlcyBhIGRpZmZlcmVudCB0aW1lcg0KPiBleHBsb2RlIGluIHVuZGVidWdnYWJsZSB3
+YXlzLiBkZWJ1Z29iamVjdCBwcmV2ZW50cyB0aGF0IGJlY2F1c2UgaXQNCj4gdHJhY2tzIHBlciB0
+aW1lciBzdGF0ZSBhbmQgaW52b2tlcyB0aGUgZml4dXAgZnVuY3Rpb24gd2hpY2gga2VlcHMgdGhl
+DQo+IHN5c3RlbSBhbGl2ZSBhbmQgYWxzbyB0ZWxscyB5b3UgZXhhY3RseSB3aGVyZSB0aGUgZnJl
+ZSBvZiB0aGUgYWN0aXZlDQo+IG9iamVjdCBoYXBwZW5zIHdoaWNoIGlzIHRoZSByZWFsbHkgaW50
+ZXJlc3RpbmcgcGxhY2UgdG8gbG9vayBhdC4gVGhlDQo+IGluaXQgZnVuY3Rpb24gaXMgcHJldHR5
+IHVuaW50ZXJlc3RpbmcgaW4gdGhhdCBjYXNlIGJlY2F1c2UgeW91IHJlYWxseQ0KPiB3YW50IHRv
+IGtub3cgd2hlcmUgdGhlIGZyZWVpbmcgb2YgdGhlIGFjdGl2ZSBvYmplY3QgaGFwcGVucy4NCj4g
+DQo+IFNvIGlmIEtBU0FOIGRldGVjdHMgVUFGIGluIHRoZSB0aW1lciBzb2Z0aXJxIHRoZW4gdGhl
+IGluaXQgdHJhY2UgaXMgbm90DQo+IGdpdmluZyBhbnkgaW5mb3JtYXRpb24gZXNwZWNpYWxseSBu
+b3QgaW4gY2FzZXMgd2hlcmUgdGhlIHRpbWVyIGlzIHBhcnQNCj4gb2YgYSBjb21tb24gYW5kIGZy
+ZXF1ZW50bHkgYWxsb2NhdGVkL2ZyZWVkIG90aGVyIGRhdGEgc3RydWN0dXJlLg0KPiANCg0KSSBk
+b24ndCBoYXZlIGV4cGVyaWVuY2UgdXNpbmcgdGhpcyB0b29sLCBidXQgSSB3aWxsIHN1cnZleSBp
+dC4NCg0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5rKHN0cnVjdCBr
+bWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiAgc3RhdGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hl
+X3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiAgc3RhdGljIGlubGlu
+ZSB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKSB7fQ0KPiA+ICtzdGF0aWMg
+aW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX3Rtcl9zdGFjayh2b2lkICpwdHIpIHt9DQo+IA0KPiBE
+dWgsIHNvIHlvdSBhcmUgYWRkaW5nIHBlciBvYmplY3QgdHlwZSBmdW5jdGlvbnMgYW5kIHN0b3Jh
+Z2U/IFRoYXQncw0KPiBnb2luZyB0byBiZSBhIGh1Z2UgY29weSBhbmQgcGFzdGEgb3JneSBhcyBl
+dmVyeSBvYmplY3QgcmVxdWlyZXMgdGhlIHNhbWUNCj4gY29kZSBhbmQgZXh0cmEgc3RvcmFnZSBz
+cGFjZS4NCj4gDQo+IFdoeSBub3QganVzdCB1c2luZyBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKCkg
+Zm9yIGFsbCBvZiB0aGlzPw0KPiANCj4gVGhlICdjYWxsX3JjdScgJ3RpbWVyJyAnd2hhdGV2ZXIg
+bmV4dCcgcHJpbnRvdXQgaXMgbm90IHJlYWxseSByZXF1aXJlZA0KPiBiZWNhdXNlIHRoZSBzdGFj
+ayB0cmFjZSBhbHJlYWR5IHRlbGxzIHlvdSB0aGUgZnVuY3Rpb24gd2hpY2ggd2FzDQo+IGludm9r
+ZWQuIElmIFRPUyBpcyBjYWxsX3JjdSgpIG9yIGRvX3RpbWVyX2luaXQoKSB0aGVuIGl0J3MgZW50
+aXJlbHkNCj4gY2xlYXIgd2hpY2ggb2JqZWN0IGlzIGFmZmVjdGVkLiBJZiB0aGUgdHdvIGF1eCBy
+ZWNvcmRzIGFyZSBub3QgZW5vdWdoDQo+IHRoZW4gbWFraW5nIHRoZSBhcnJheSBsYXJnZXIgaXMg
+bm90IHRoZSBlbmQgb2YgdGhlIHdvcmxkLg0KPiANCg0KTXkgcHJldmlvdXMgbWFpbCBzYXkgdGhh
+dCB3ZSB3aWxsIHJlLXVzZSBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKCkgYW5kDQpvbmx5IGhhdmUg
+YXV4X3N0YWNrLg0KDQo+ID4gICNlbmRpZiAvKiBDT05GSUdfS0FTQU5fR0VORVJJQyAqLw0KPiA+
+ICANCj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL3RpbWUvdGltZXIuYyBiL2tlcm5lbC90aW1lL3Rp
+bWVyLmMNCj4gPiBpbmRleCBhNTIyMWFiYjQ1OTQuLmVmMmRhOWRkZmFjNyAxMDA2NDQNCj4gPiAt
+LS0gYS9rZXJuZWwvdGltZS90aW1lci5jDQo+ID4gKysrIGIva2VybmVsL3RpbWUvdGltZXIuYw0K
+PiA+IEBAIC03ODMsNiArNzgzLDggQEAgc3RhdGljIHZvaWQgZG9faW5pdF90aW1lcihzdHJ1Y3Qg
+dGltZXJfbGlzdCAqdGltZXIsDQo+ID4gIAl0aW1lci0+ZnVuY3Rpb24gPSBmdW5jOw0KPiA+ICAJ
+dGltZXItPmZsYWdzID0gZmxhZ3MgfCByYXdfc21wX3Byb2Nlc3Nvcl9pZCgpOw0KPiA+ICAJbG9j
+a2RlcF9pbml0X21hcCgmdGltZXItPmxvY2tkZXBfbWFwLCBuYW1lLCBrZXksIDApOw0KPiA+ICsN
+Cj4gPiArCWthc2FuX3JlY29yZF90bXJfc3RhY2sodGltZXIpOw0KPiA+ICB9DQo+IA0KPiBBcmUg
+eW91IHN1cmUgdGhpcyBpcyBjb3JyZWN0IGZvciBhbGwgdGltZXJzPw0KPiANCj4gVGhpcyBpcyBh
+bHNvIGNhbGxlZCBmb3IgdGltZXJzIHdoaWNoIGFyZSB0ZW1wb3JhcmlseSBhbGxvY2F0ZWQgb24g
+c3RhY2sNCj4gYW5kIGZvciB0aW1lcnMgd2hpY2ggYXJlIHN0YXRpY2FsbHkgYWxsb2NhdGVkIGF0
+IGNvbXBpbGUgdGltZS4gSG93IGlzDQo+IHRoYXQgc3VwcG9zZWQgdG8gd29yaz8NCj4gDQoNCklm
+IEkgdW5kZXJzdGFuZCBjb3JyZWN0bHksIEtBU0FOIHJlcG9ydCBoYXZlIHRoaXMgcmVjb3JkIG9u
+bHkgZm9yIHNsdWINCnZhcmlhYmxlLiBTbyB3aGF0IHlvdSBzYWlkIHNob3VsZG4ndCBiZSBhIHBy
+b2JsZW0uDQoNCj4gVGhlc2Uga2luZCBvZiB0aGluZ3Mgd2FudCB0byBiZSBleHBsYWluZWQgdXBm
+cm9udCBhbiBub3QgbGVmdCB0byB0aGUNCj4gcmV2aWV3ZXIgYXMgYW4gZXhlcmNpc2UuDQo+IA0K
+DQpTb3JyeSwgTXkgZmF1bHQuIExhdGVyIHdlIHdpbGwgYmUgbW9yZSBjYXV0aW91cyB0byBzZW5k
+IHBhdGNoLg0KDQo+IFRoYW5rcywNCj4gDQo+ICAgICAgICAgdGdseA0KDQo=
 
