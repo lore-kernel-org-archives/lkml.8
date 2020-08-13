@@ -2,158 +2,120 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE720C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7106C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C2120771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26102078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Ad03R5Sa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZbUslsAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHMIt6 (ORCPT
+        id S1726244AbgHMIxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgHMIt6 (ORCPT
+        Thu, 13 Aug 2020 04:53:08 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54104 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726081AbgHMIxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:49:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA87C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:49:57 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so4489519wrm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gA5BB/+6xQCvX9+gmlnfVRPEcDMzoMSPM6EjTizB38A=;
-        b=Ad03R5Saypn6P9X1Gr8J7GfoCKcFVoej6TsnRSjGxd8U5Rb4uTQzTPkd2xMUsQ4B/4
-         cGfkleKDShOLTjij8QNOz6l/eTLDiOW7q4MbS9NzEHqQrVMO3jxSN9d2FnZPmTH18HHt
-         PoYaCyaGChM2zHe9Mrt2JYvs18uJTD0vQm3dsVJg2+7lZ2g7DH1XwAf53jE8TJS6OXZ5
-         mRL7xgMNinPPWL8xTtd7Pu9+Gl4xBZvBp+eZ2HSI9Twh1TtF2EYflORFuhGTi1ucT4LZ
-         jpxhIWNex1+8aKVw/jNtVKafF1ogzF/Yg08k9X7fa0SAS85DxQggL5YeaHvmG0DnwRxj
-         Rmrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gA5BB/+6xQCvX9+gmlnfVRPEcDMzoMSPM6EjTizB38A=;
-        b=i5A1q/uPZ/YS19cZShSg4UmDtdpCoRlE8Y4LiLUmEkqOHqNMKlyQxKckAv+0xGP0fz
-         T/1pYBY9xCAMdnsXR7krQQxdsvWkEjPy9TVtJgivAaOqh98yBtbQITLg3EiX/SIU3NAV
-         vlsERzeLePpUsoySiDflv647oe/9qutR7HlbtDl97utLB2ZhZQKB5h5T+BHZALcrNUzA
-         R5oDZc2zFFftvE2ePQffUTDsOVS1Njekgn01zNbq0yKS9HDvsVYXPUXywnddrQ3C3vNj
-         aCY/LkAEOMFfZPWBA0m03SDBdhhig4Ac2DYjDOFl/CGvOSmAoEEHPDthCyQxtAbjJrn2
-         duWg==
-X-Gm-Message-State: AOAM533L3h/VMq0RTX5y/kO5FPFicC9sTFEKbE6gsdzzzN/exefyPmG7
-        Tpmt25hnua8KP67vOl9ijX9EXl0HsivJqNWOtDhjhw==
-X-Google-Smtp-Source: ABdhPJxe9m0zrVq6TFy9qvEwk+3us03Rs+PvTuX4Rhtblh9UKM18MT2x1MkvcTf3UnJJL0vy7PaKOK69M0GNn/+fsp8=
-X-Received: by 2002:adf:f247:: with SMTP id b7mr3217109wrp.128.1597308596480;
- Thu, 13 Aug 2020 01:49:56 -0700 (PDT)
+        Thu, 13 Aug 2020 04:53:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597308786;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bHxBlhSxxa/67DKNkFk3S3CDohJlBQmN8kkHMo7F2jw=;
+        b=ZbUslsAHu3sgveWvWXm2hALTSdsK9dX/3JkGXB4b+UCMKx822LO3HPQV9I4yGSxgUF9euO
+        bo5LAD/dXjbcOct/IgncvqNQanaouLkcjbWY1RvKP/LVCCQecivyu46ZbAUQU4wRzHYklM
+        ee7FHFmRuas+pu7o89+BI6yeugZGu+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-g7xpvjS9Pg-ZPkk-XNFWnQ-1; Thu, 13 Aug 2020 04:53:01 -0400
+X-MC-Unique: g7xpvjS9Pg-ZPkk-XNFWnQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D1BF80046F;
+        Thu, 13 Aug 2020 08:52:59 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.193.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FE145D9F3;
+        Thu, 13 Aug 2020 08:52:55 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 10:52:52 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API
+Message-ID: <20200813085252.ezwd46ahyjiz4flh@ws.net.home>
+References: <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk>
+ <CAJfpegt=cQ159kEH9zCYVHV7R_08jwMxF0jKrSUV5E=uBg4Lzw@mail.gmail.com>
+ <98802.1597220949@warthog.procyon.org.uk>
+ <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com>
+ <d2d179c7-9b60-ca1a-0c9f-d308fc7af5ce@redhat.com>
+ <CAJfpeguMjU+n-JXE6aUQQGeMpCS4bsy4HQ37NHJ8aD8Aeg2qhA@mail.gmail.com>
+ <20200812112825.b52tqeuro2lquxlw@ws.net.home>
+ <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200813033807.19556-1-qiuwenbo@phytium.com.cn>
-In-Reply-To: <20200813033807.19556-1-qiuwenbo@phytium.com.cn>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 13 Aug 2020 14:19:44 +0530
-Message-ID: <CAAhSdy1hLAVEHohtuZ6XYxOjWgUmZPXah=tJFrb6tWoRyEiRgA@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Setup exception vector for nommu platform
-To:     Qiu Wenbo <qiuwenbo@phytium.com.cn>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Atish Patra <atishp@atishpatra.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 9:10 AM Qiu Wenbo <qiuwenbo@phytium.com.cn> wrote:
->
-> Exception vector is missing on nommu platform and that is an issue.
-> This patch is tested in Sipeed Maix Bit Dev Board.
->
-> Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
-> Suggested-by: Anup Patel <anup@brainfault.org>
-> Suggested-by: Atish Patra <atishp@atishpatra.org>
-> Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-> ---
->  arch/riscv/kernel/head.S | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index d0c5c316e9bb..0a4e81b8dc79 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -77,16 +77,10 @@ relocate:
->         csrw CSR_SATP, a0
->  .align 2
->  1:
-> -       /* Set trap vector to exception handler */
-> -       la a0, handle_exception
-> +       /* Set trap vector to spin forever to help debug */
-> +       la a0, .Lsecondary_park
->         csrw CSR_TVEC, a0
->
-> -       /*
-> -        * Set sup0 scratch register to 0, indicating to exception vector that
-> -        * we are presently executing in kernel.
-> -        */
-> -       csrw CSR_SCRATCH, zero
-> -
->         /* Reload the global pointer */
->  .option push
->  .option norelax
-> @@ -144,9 +138,23 @@ secondary_start_common:
->         la a0, swapper_pg_dir
->         call relocate
->  #endif
-> +       call setup_trap_vector
->         tail smp_callin
->  #endif /* CONFIG_SMP */
->
-> +.align 2
-> +setup_trap_vector:
-> +       /* Set trap vector to exception handler */
-> +       la a0, handle_exception
-> +       csrw CSR_TVEC, a0
-> +
-> +       /*
-> +        * Set sup0 scratch register to 0, indicating to exception vector that
-> +        * we are presently executing in kernel.
-> +        */
-> +       csrw CSR_SCRATCH, zero
-> +       ret
-> +
->  .Lsecondary_park:
->         /* We lack SMP support or have too many harts, so park this hart */
->         wfi
-> @@ -240,6 +248,7 @@ clear_bss_done:
->         call relocate
->  #endif /* CONFIG_MMU */
->
-> +       call setup_trap_vector
->         /* Restore C environment */
->         la tp, init_task
->         sw zero, TASK_TI_CPU(tp)
-> --
-> 2.28.0
->
+On Wed, Aug 12, 2020 at 02:43:32PM +0200, Miklos Szeredi wrote:
+> On Wed, Aug 12, 2020 at 1:28 PM Karel Zak <kzak@redhat.com> wrote:
+> 
+> > The proposal is based on paths and open(), how do you plan to deal
+> > with mount IDs? David's fsinfo() allows to ask for mount info by mount
+> > ID and it works well with mount notification where you get the ID. The
+> > collaboration with notification interface is critical for our use-cases.
+> 
+> One would use the notification to keep an up to date set of attributes
+> for each watched mount, right?
+> 
+> That presumably means the mount ID <-> mount path mapping already
+> exists, which means it's just possible to use the open(mount_path,
+> O_PATH) to obtain the base fd.
 
-Looks good to me.
+The notification also reports new mount nodes, so we have no mount ID
+<-> mount path mapping in userspace yet.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+The another problem is that open(path) cannot be used if you have multiple
+filesystems on the same mount point -- in this case (at least in theory)
+you can get ID for by-path inaccessible filesystem.
 
-Regards,
-Anup
+> A new syscall that returns an fd pointing to the root of the mount
+> might be the best solution:
+> 
+>    int open_mount(int root_fd, u64 mntid, int flags);
+
+Yes, something like this is necessary. You do not want to depend
+on paths if you want to read information about mountpoints.
+
+ Karel
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
