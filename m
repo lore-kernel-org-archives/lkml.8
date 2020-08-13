@@ -2,145 +2,230 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4157C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC0BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8605320838
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0096820781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsbARyz+"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="UhwAC7eU";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="KCkoWCBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgHMIDe (ORCPT
+        id S1726663AbgHMIEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgHMIDb (ORCPT
+        Thu, 13 Aug 2020 04:04:47 -0400
+Received: from mx0a-00328301.pphosted.com ([148.163.145.46]:29370 "EHLO
+        mx0a-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbgHMIEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:03:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD1DC061383;
-        Thu, 13 Aug 2020 01:03:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so2424471pfn.0;
-        Thu, 13 Aug 2020 01:03:30 -0700 (PDT)
+        Thu, 13 Aug 2020 04:04:46 -0400
+Received: from pps.filterd (m0156134.ppops.net [127.0.0.1])
+        by mx0a-00328301.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 07D7uES0012591;
+        Thu, 13 Aug 2020 01:04:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=0T6ScFGZJquDGNXVoTyK8o0aeMmiyPboQoBzjWN/BIE=;
+ b=UhwAC7eUp1ccZ/9gBgbqAx/aMCuV/21H/wwHd4yT603jw4t156KMIxRjqsmcQ3/p57aF
+ nZ6jMKeN3W1Aw7VCYftsMQBzkMBpo2NSxeDOsc+wGfMSbF65YO3GgICb6yavs4zA5YKy
+ HdgAlGz1K6laEqV9zKO4nDbtGkV/U1DNtqu2DTsgHeUuwicwsdhsiz/5fgiIvb7unhat
+ EySDF0tUSGF6BtT1ZOccW1OgADd+hFxNyD/toVevyQVfvbqmlr7vqkjPpsD6/xJljHDV
+ pJNTqiy51eEHSENEP9wg4l3zukeTA4+TOfdwToUrxjoT1hBZ0uBdqAg2CSEte/ab2I/W JQ== 
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2047.outbound.protection.outlook.com [104.47.73.47])
+        by mx0a-00328301.pphosted.com with ESMTP id 32vc63rfpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 01:04:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4Z1LPSM2dgSF7EJ6lGHKUKAk1LcQRj11fUcRmhtxz+I2ITkgQgq21vfJD6DAML6cVg5d0iPuA0iUdck3DcMx5TboNmomUHpLPIce/NogIz2OjS/fQOYNxdB4N5ZdHHtaVLzcs5EaubKdD3b47GgiVPms/Re9UaampvZ9NCVSJdQitG/C04AGqLHoQg+CDyt0+aq9djc5aKK35mYufj/AWy1J4M2kXIlTQowPKr6RNiZ8dtveIo/gmw0zQNm3xgleXDd++D/Hwy59tZisHFCX2FXUGQI6hd33mEbYFBfAPgHVnNbJI9R9i+V4t414tlsptvyINbd+R6Ggfev6jru3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0T6ScFGZJquDGNXVoTyK8o0aeMmiyPboQoBzjWN/BIE=;
+ b=I5okiefCwQQdyikNTXMciCo6diT+ONJek71zouPlquiML6mMIjpeclXvptanJfz0I1r4kMw0wnDiKZZyUKcDb7VhX+P/u8+/md8YSKw7NbNhtBHARfW3ZylLHBXlY6zK8y1LtHZVUhRfLEqxJ8CZ91Q3kt3usx6PFq9wMwHQI7CEkVh43A9hr0XN6+FbCNeyDXP7ZZ4hdVjiigG3Jc7fnpVpGagHtKkT76+XCCX/SPdZrXkV0tydfwZURuLCCHOpluMOx4b21JRZan7e6bcDDoKRDxFNfgu+gfiAB8WiDckEVfpJTu1lG2pIv895mW3JyF3UDHDPp4poSktf8iE1EA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RqsifCiAhji+v9/0Nl+nveB8RvYggbiLA9HaPT9XDH8=;
-        b=AsbARyz+knnSACtM8aRkLPjNd4S/nV+k0AShaCEGBLWY/jo72IAfjEnVDHd9ysj6r7
-         RHPe9bfx/Xh1C3tgU+7GP1zKZlIf+kvqtG9EygSWxVM4wvzw43pyThM2feSG3hrBGsfg
-         YBuY89woq8SiubLQtduQnGjmt/qa1D4FkQ0pX8c0oMqXkgKtGzjqJBDpz00ogwtea9aY
-         /nVu2jmtfxscPkwYi22s50/eVPsiCJ+aOfw9W/EBXbtAhpY8RISVdNlpTX+oLwV6p1lW
-         /dXpSADelHBEJZ33Wqt1rLMu6akKQoOIb2PZ+RAPUQAtMM5S+8i7FCwf4NfNoiJafPSE
-         926Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RqsifCiAhji+v9/0Nl+nveB8RvYggbiLA9HaPT9XDH8=;
-        b=EMJOIN9BWyzk9z4cIln3PbM0a4uTIrubI49vuduKz9/st8MPrras9Z7Qgd5Z77ify+
-         qDHV4iT+pb5q3hg10LF1YBDNW09AUbX2fcBpYXwzmGO+H2emF/vGaFNkGIlLEndhFUuQ
-         WLrPRzxN4gT1IKqbcU+VrrVLIz/i1qZWpPWij1sWr8wEWRcg6k9fGFGHRvDsEwME4+tF
-         gi4HSRSnmA+VzEIUwaaq02Ec7wSKELSs0cFGyis6JUKlPqnYmmyDFbl/HWTfvJNysvty
-         LPBnVdSicHq7Ez7xlKY2oeBb8+HO7HAgcgFGKzMHv+j0dqzjPjW8WH96Z/fG8XcllmgI
-         Iz5Q==
-X-Gm-Message-State: AOAM5302hw4PXeHKG5bS8f1nKnUICQBANvZM/lPnt6YBWEyhxtVOyOf1
-        bk/TspQuPZCmh1yhMkuFJvM=
-X-Google-Smtp-Source: ABdhPJzRvg3H9q4IYOWoBtnFcsengARDJyvb7kUC8e0uTFifBPP/wD09bBVmUMrs3lsSb5BfaezT5A==
-X-Received: by 2002:a05:6a00:22cc:: with SMTP id f12mr3125096pfj.42.1597305809910;
-        Thu, 13 Aug 2020 01:03:29 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id e125sm4868483pfh.69.2020.08.13.01.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 01:03:29 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 01:03:27 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Eugene Lubarsky <elubarsky.linux@gmail.com>,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adobriyan@gmail.com
-Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
- processes
-Message-ID: <20200813080327.GA604888@gmail.com>
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
- <20200812075135.GA191218@gmail.com>
- <ffc908a7-c94b-56e6-8bb6-c47c52747d77@gmail.com>
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0T6ScFGZJquDGNXVoTyK8o0aeMmiyPboQoBzjWN/BIE=;
+ b=KCkoWCBtidybWCJIxWzbgbs75C5GIMXq5S5tOiX7qyL6CCJQ7Ac2Cn0OwgJ7S3kVn317+Rd+CYhWWXx2QTd4yKV+vHTSv2QA1RBVl1PrJo79xt41Psujah0Fbn+ch+DPVi6dj17Xx1HVUR4aJpJt6h9VbK5xlAE/s4lXU5h10UY=
+Received: from MN2PR12MB4390.namprd12.prod.outlook.com (2603:10b6:208:26e::21)
+ by MN2PR12MB3901.namprd12.prod.outlook.com (2603:10b6:208:16c::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20; Thu, 13 Aug
+ 2020 08:04:07 +0000
+Received: from MN2PR12MB4390.namprd12.prod.outlook.com
+ ([fe80::2c88:e0b6:478:a6e8]) by MN2PR12MB4390.namprd12.prod.outlook.com
+ ([fe80::2c88:e0b6:478:a6e8%5]) with mapi id 15.20.3261.026; Thu, 13 Aug 2020
+ 08:04:06 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "trix@redhat.com" <trix@redhat.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable
+Thread-Topic: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable
+Thread-Index: AQHWbmYc4AO8xECcpUKzCKFLtz5s/qkw/HaAgAS0usg=
+Date:   Thu, 13 Aug 2020 08:04:06 +0000
+Message-ID: <MN2PR12MB43905A48FB51A0B33198CC56C4430@MN2PR12MB4390.namprd12.prod.outlook.com>
+References: <20200809155936.16898-1-trix@redhat.com>,<CAHp75VdEBjxYS_4g2j=ofjFWuGyTK5Me=9mMNcy5ienUUs67Ag@mail.gmail.com>
+In-Reply-To: <CAHp75VdEBjxYS_4g2j=ofjFWuGyTK5Me=9mMNcy5ienUUs67Ag@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=invensense.com;
+x-originating-ip: [2a01:e0a:393:a700:a0a4:9403:1f03:6e16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb7bcae4-5e28-4d99-50cb-08d83f5f73c5
+x-ms-traffictypediagnostic: MN2PR12MB3901:
+x-microsoft-antispam-prvs: <MN2PR12MB39013BA755931508A274050BC4430@MN2PR12MB3901.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: chfSRGlv3mr8L2Ha/oKISyuo5xr810P3OqNquQM6uYpCmOr7lxe8CmnXfxP55Co5AHCv8rD7RTLwXtry0eENcT1Pe2sAr6cMa/AbuKI5BeOHkfvL//NT6aooJXwFhmE4hPICPi+mAUadC2n7FvhF8rUUwiQJIqc9zV3cR/WhsbByCiuFt8MbH284N46JMLIEpFrRphNtnbdMnAE6MupYci2I2ixTbIbzHxP8yM8S5SlXjjn6GNCo4a1l4Rbssn6aj7E39crGQF0WaEajheaMp9rN3Nk3OXHFZ2WBjsHE2/RjkzxEhRiQl/DsppGZuPcp
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(136003)(396003)(39850400004)(366004)(7416002)(9686003)(186003)(86362001)(6506007)(71200400001)(8676002)(7696005)(8936002)(4326008)(53546011)(5660300002)(91956017)(66574015)(83380400001)(478600001)(2906002)(33656002)(76116006)(52536014)(54906003)(110136005)(316002)(64756008)(66476007)(66446008)(66556008)(66946007)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 65n80ZC1ePfuCzKA+/OBitQ55gllygaKuPjImy088y/qgpt3T6p/WUsi3rNPc74m5vkjFmDb107mIWvlOsHOR3A/1AokwJ3KEfdeglGFihoGXBDXIeCtmLjOo0VjmCgXRLTiyJPmf6EDu2v8rPNnsc7IM2VYZdiRsyLgylXTT00ozB2YNWr6CpIk1q4DtphdWHzQzIPNufc9bLPqd7b6GlgeJ3gyYLdjK+HwFui6PtnnGgXNy6CxJu8/FhbOEQne1ft88xC9JyF7EkApJ885PpgwmEWOpRTtdJMQFkQv0uzM6nqH4tgGn48f3+CbL4UcIaPfQ2l11LNSI0vIxitWK6/7vLP5fd7wnt0DcZdT4gXfsdCP1dUXObOI/oVOOyjhh50hHe9nfRzMirAALqc871rh5c4m65qScTWHismlYlqdLBELHzPTmK55AwQoTwDiqJ9BsT2IZsnovZaa0D740LbmDpk/5a9us/Fc+885ZDhJWxNL3gU6Job5PauPG20p59wChjVTASGqm68kh/jpgAEVzj3dwpV3elpSnCrV27YvhiNWv2WCkLd0oIUsVkS3XSCfxFz7b8sRmUEVVfE2oPK0JJMN8NY2txq5RnCViIcnLC6NSbplhHAXXo2LELtGMTk/6fC+BM5kB7BGG/ZILqEwjYyvlb8XshZfuWqF5rUiNZabgiIXX1zwEDUbrYGFmNkO/GE67e9yItgwGPo4yA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <ffc908a7-c94b-56e6-8bb6-c47c52747d77@gmail.com>
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb7bcae4-5e28-4d99-50cb-08d83f5f73c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 08:04:06.7339
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EKK0WNxv4T4hS5Cn6oZRqwJaJj0baWwfflm5Z9NHyghG2STKpG9Rha+BE7ACI+acsXW8mWqGpX7pqn5anQbX3UplipeEiPatqzOgBErPI7Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3901
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_05:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 clxscore=1011 priorityscore=1501 spamscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:47:32PM -0600, David Ahern wrote:
-> On 8/12/20 1:51 AM, Andrei Vagin wrote:
-> > 
-> > I rebased the task_diag patches on top of v5.8:
-> > https://github.com/avagin/linux-task-diag/tree/v5.8-task-diag
-> 
-> Thanks for updating the patches.
-> 
-> > 
-> > /proc/pid files have three major limitations:
-> > * Requires at least three syscalls per process per file
-> >   open(), read(), close()
-> > * Variety of formats, mostly text based
-> >   The kernel spent time to encode binary data into a text format and
-> >   then tools like top and ps spent time to decode them back to a binary
-> >   format.
-> > * Sometimes slow due to extra attributes
-> >   For example, /proc/PID/smaps contains a lot of useful informations
-> >   about memory mappings and memory consumption for each of them. But
-> >   even if we don't need memory consumption fields, the kernel will
-> >   spend time to collect this information.
-> 
-> that's what I recall as well.
-> 
-> > 
-> > More details and numbers are in this article:
-> > https://avagin.github.io/how-fast-is-procfs
-> > 
-> > This new interface doesn't have only one of these limitations, but
-> > task_diag doesn't have all of them.
-> > 
-> > And I compared how fast each of these interfaces:
-> > 
-> > The test environment:
-> > CPU: Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-> > RAM: 16GB
-> > kernel: v5.8 with task_diag and /proc/all patches.
-> > 100K processes:
-> > $ ps ax | wc -l
-> > 10228
-> 
-> 100k processes but showing 10k here??
-
-I'm sure that one zero has been escaped from here. task_proc_all shows
-a number of tasks too and it shows 100230.
-
-> 
-> > 
-> > $ time cat /proc/all/status > /dev/null
-> > 
-> > real	0m0.577s
-> > user	0m0.017s
-> > sys	0m0.559s
-> > 
-> > task_proc_all is used to read /proc/pid/status for all tasks:
-> > https://github.com/avagin/linux-task-diag/blob/master/tools/testing/selftests/task_diag/task_proc_all.c
-> > 
-> > $ time ./task_proc_all status
-> > tasks: 100230
-> > 
-
-Thanks,
-Andrei
+Hello,=0A=
+=0A=
+this is a case that should never be happening since available scan mask onl=
+y advertise Accel + Temp, Gyro + Temp, or Accel + Gyro + Temp.=0A=
+More than that, temperature sensor is not working when MEMS engine is off. =
+(it's only purpose it to measure temperature of the MEMS to do data tempera=
+ture compensation).=0A=
+=0A=
+So I think we can let this check as it is currently, since this is not a su=
+pported configuration.=0A=
+=0A=
+Best regards,=0A=
+JB=0A=
+=0A=
+=0A=
+From: Andy Shevchenko <andy.shevchenko@gmail.com>=0A=
+Sent: Monday, August 10, 2020 10:02=0A=
+To: trix@redhat.com <trix@redhat.com>=0A=
+Cc: Jonathan Cameron <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; =
+Lars-Peter Clausen <lars@metafoo.de>; Peter Meerwald <pmeerw@pmeerw.net>; J=
+ean-Baptiste Maneyrol <JManeyrol@invensense.com>; Micha=B3 Miros=B3aw <mirq=
+-linux@rere.qmqm.pl>; Lee Jones <lee.jones@linaro.org>; linux-iio <linux-ii=
+o@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org=
+>=0A=
+Subject: Re: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable =0A=
+=A0=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+On Sun, Aug 9, 2020 at 7:00 PM <trix@redhat.com> wrote:=0A=
+>=0A=
+> From: Tom Rix <trix@redhat.com>=0A=
+>=0A=
+> clang static analysis reports this problem=0A=
+>=0A=
+> inv_mpu_ring.c:181:18: warning: Division by zero=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 nb =3D fifo_count / bytes_per_datum;=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ~~~~~~~~~~~^~~~~~~~~~~~~~~~~=0A=
+>=0A=
+> This is a false positive.=0A=
+> Dividing by 0 is protected by this check=0A=
+>=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 if (!(st->chip_config.accl_fifo_enable |=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->chip_config.gyro_fifo=
+_enable |=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->chip_config.magn_fifo=
+_enable))=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto end_session;=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 bytes_per_datum =3D 0;=0A=
+>=0A=
+> But there is another fifo, temp_fifo=0A=
+>=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 if (st->chip_config.temp_fifo_enable)=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 bytes_per_datum +=3D INV_=
+MPU6050_BYTES_PER_TEMP_SENSOR;=0A=
+>=0A=
+> Which would be skipped if it was the only enabled fifo.=0A=
+> So add to the check.=0A=
+>=0A=
+=0A=
+> Fixes: 2e4c0a5e2576 ("iio: imu: inv_mpu6050: add fifo temperature data su=
+pport")=0A=
+>=0A=
+> Signed-off-by: Tom Rix <trix@redhat.com>=0A=
+=0A=
+There shouldn't be a blank line in between.=0A=
+=0A=
+Other than that,=0A=
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>=0A=
+=0A=
+=0A=
+=0A=
+> ---=0A=
+>=A0 drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 1 +=0A=
+>=A0 1 file changed, 1 insertion(+)=0A=
+>=0A=
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu=
+/inv_mpu6050/inv_mpu_ring.c=0A=
+> index b533fa2dad0a..5240a400dcb4 100644=0A=
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c=0A=
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c=0A=
+> @@ -141,6 +141,7 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)=
+=0A=
+>=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 if (!(st->chip_config.accl_fifo_enable |=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->chip_config.gyro_fifo=
+_enable |=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->chip_config.temp_fifo_ena=
+ble |=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 st->chip_config.magn_fifo=
+_enable))=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto end_session;=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0 bytes_per_datum =3D 0;=0A=
+> --=0A=
+> 2.18.1=0A=
+>=0A=
+=0A=
+=0A=
+--=0A=
+With Best Regards,=0A=
+Andy Shevchenko=
