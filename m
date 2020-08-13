@@ -2,199 +2,449 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6006C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7FB62078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2D720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vzk+YeoE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b9PXrdqW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XAhB5q+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgHMJ3W (ORCPT
+        id S1726574AbgHMJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMJ3W (ORCPT
+        Thu, 13 Aug 2020 05:31:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50692 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726224AbgHMJbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:29:22 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8910BC061757;
-        Thu, 13 Aug 2020 02:29:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597310959;
+        Thu, 13 Aug 2020 05:31:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597311062;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
-        b=Vzk+YeoEP4LH28amktQIViJ8D9qMr/DHRfX/C89rl4+p8WIQ7HxIwKIZi1GnX9ILYvvox7
-        ikl+xVRjiDXBraLXEcZqYAKR+G0Vpg5CBw7Iskmlslxe70tBQ+95nKOHzjvpjGFagzxS4B
-        TFAKUTKl5Yt9PN9e0M7DLx2ak/iQoS6hrCwcMnsPeEhoLAYDEHYOYs19nZJUzAUcd+jVHG
-        4ypxj9WucKRV6r6CFoguKAjXQcZCZVllHyd9ZkIis4O4hUsISUcEYxXvLLW68jFPAsYpcj
-        wjgTJ6Q5/xzow0FdoX9MRoFoxAbfh1hGMftqFhkqCGRgt8evsh/XPFeHx1slgg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597310959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
-        b=b9PXrdqWDzOqx5rZ1FfLBRohEdSAf3TXIS2lBOlq7JURbLGYkOh1eSvgitaTkmQyNf/VvX
-        bnbJBkyqO+25WDCw==
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-In-Reply-To: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-Date:   Thu, 13 Aug 2020 11:29:18 +0200
-Message-ID: <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
+        bh=1lxntSpI6BaDRBMsiVMpFCRTagjBSFYYwLlxyWOSChs=;
+        b=XAhB5q+spyZh6cuqU0fSVHmev9v6aldeVtxkaNVk3t4iAr2G8msrhosYV95D65YcYtrEFP
+        poS/cBaTyg/WW6jTJpC62FrHQewgqwnqTwf9RHEexwX3YITMXUGO/cKMPmPATaSbz1Ih9Q
+        wDe23ZpoF60dkkCZUdnVtI6qNZ1tsN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-464-UZHsFqspPDCZplC3AOfK0Q-1; Thu, 13 Aug 2020 05:31:00 -0400
+X-MC-Unique: UZHsFqspPDCZplC3AOfK0Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 758EF10066FA;
+        Thu, 13 Aug 2020 09:30:58 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 76E615FC1B;
+        Thu, 13 Aug 2020 09:30:52 +0000 (UTC)
+Subject: Re: [PATCH v7 6/7] iommu/uapi: Handle data and argsz filled by users
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1596068467-49322-7-git-send-email-jacob.jun.pan@linux.intel.com>
+ <ee61f1d1-f581-e35f-c50a-80e10b1dd06c@redhat.com>
+ <DM5PR11MB14358D98D56B22307F712D47C3430@DM5PR11MB1435.namprd11.prod.outlook.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <55dc3e4c-2717-2c96-d676-708b94e8cf1f@redhat.com>
+Date:   Thu, 13 Aug 2020 11:30:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <DM5PR11MB14358D98D56B22307F712D47C3430@DM5PR11MB1435.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maulik Shah <mkshah@codeaurora.org> writes:
-> From: Douglas Anderson <dianders@chromium.org>
->
-> The "struct irq_chip" has two callbacks in it: irq_suspend() and
-> irq_resume().  These two callbacks are interesting because sometimes
-> an irq chip needs to know about suspend/resume, but they are a bit
-> awkward because:
-> 1. They are called once for the whole irq_chip, not once per IRQ.
->    It's passed data for one of the IRQs enabled on that chip.  That
->    means it's up to the irq_chip driver to aggregate.
-> 2. They are only called if you're using "generic-chip", which not
->    everyone is.
-> 3. The implementation uses syscore ops, which apparently have problems
->    with s2idle.
+Hi Yi,
 
-The main point is that these callbacks are specific to generic chip and
-not used anywhere else.
+On 8/13/20 11:25 AM, Liu, Yi L wrote:
+> Hi Eric,
+> 
+> 
+>> From: Auger Eric <eric.auger@redhat.com>
+>> Sent: Thursday, August 13, 2020 5:12 PM
+>>
+>> Hi Jacob,
+>>
+>> On 7/30/20 2:21 AM, Jacob Pan wrote:
+>>> IOMMU user APIs are responsible for processing user data. This patch
+>>> changes the interface such that user pointers can be passed into IOMMU
+>>> code directly. Separate kernel APIs without user pointers are introduced
+>>> for in-kernel users of the UAPI functionality.
+>> This is just done for a single function, ie. iommu_sva_unbind_gpasid.
+>>
+>> If I am not wrong there is no user of this latter after applying the
+>> whole series? If correct you may remove it at this stage?
+> 
+> the user of this function is in vfio. And it is the same with
+> iommu_uapi_sva_bind/unbind_gpasid() and iommu_uapi_cache_invalidate().
+> 
+> https://lore.kernel.org/kvm/1595917664-33276-11-git-send-email-yi.l.liu@intel.com/
+> https://lore.kernel.org/kvm/1595917664-33276-12-git-send-email-yi.l.liu@intel.com/
+Yep I know ;-) But this series mostly deals with iommu uapi rework.
+That's not a big deal though.
 
-> Probably the old irq_suspend() and irq_resume() callbacks should be
-> deprecated.
+Thanks
 
-You need to analyze first what these callbacks actually do. :)
+Eric
+> 
+> Regards,
+> Yi Liu
+> 
+>>>
+>>> IOMMU UAPI data has a user filled argsz field which indicates the data
+>>> length of the structure. User data is not trusted, argsz must be
+>>> validated based on the current kernel data size, mandatory data size,
+>>> and feature flags.
+>>>
+>>> User data may also be extended, resulting in possible argsz increase.
+>>> Backward compatibility is ensured based on size and flags (or
+>>> the functional equivalent fields) checking.
+>>>
+>>> This patch adds sanity checks in the IOMMU layer. In addition to argsz,
+>>> reserved/unused fields in padding, flags, and version are also checked.
+>>> Details are documented in Documentation/userspace-api/iommu.rst
+>>>
+>>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> ---
+>>>  drivers/iommu/iommu.c | 201
+>> ++++++++++++++++++++++++++++++++++++++++++++++++--
+>>>  include/linux/iommu.h |  28 ++++---
+>>>  2 files changed, 212 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>> index 3a913ce94a3d..1ee55c4b3a3a 100644
+>>> --- a/drivers/iommu/iommu.c
+>>> +++ b/drivers/iommu/iommu.c
+>>> @@ -1950,33 +1950,218 @@ int iommu_attach_device(struct iommu_domain
+>> *domain, struct device *dev)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(iommu_attach_device);
+>>>
+>>> +/*
+>>> + * Check flags and other user provided data for valid combinations. We also
+>>> + * make sure no reserved fields or unused flags are set. This is to ensure
+>>> + * not breaking userspace in the future when these fields or flags are used.
+>>> + */
+>>> +static int iommu_check_cache_invl_data(struct iommu_cache_invalidate_info
+>> *info)
+>>> +{
+>>> +	u32 mask;
+>>> +	int i;
+>>> +
+>>> +	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	mask = (1 << IOMMU_CACHE_INV_TYPE_NR) - 1;
+>>> +	if (info->cache & ~mask)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (info->granularity >= IOMMU_INV_GRANU_NR)
+>>> +		return -EINVAL;
+>>> +
+>>> +	switch (info->granularity) {
+>>> +	case IOMMU_INV_GRANU_ADDR:
+>>> +		if (info->cache & IOMMU_CACHE_INV_TYPE_PASID)
+>>> +			return -EINVAL;
+>>> +
+>>> +		mask = IOMMU_INV_ADDR_FLAGS_PASID |
+>>> +			IOMMU_INV_ADDR_FLAGS_ARCHID |
+>>> +			IOMMU_INV_ADDR_FLAGS_LEAF;
+>>> +
+>>> +		if (info->granu.addr_info.flags & ~mask)
+>>> +			return -EINVAL;
+>>> +		break;
+>>> +	case IOMMU_INV_GRANU_PASID:
+>>> +		mask = IOMMU_INV_PASID_FLAGS_PASID |
+>>> +			IOMMU_INV_PASID_FLAGS_ARCHID;
+>>> +		if (info->granu.pasid_info.flags & ~mask)
+>>> +			return -EINVAL;
+>>> +
+>>> +		break;
+>>> +	case IOMMU_INV_GRANU_DOMAIN:
+>>> +		if (info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB)
+>>> +			return -EINVAL;
+>>> +		break;
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	/* Check reserved padding fields */
+>>> +	for (i = 0; i < sizeof(info->padding); i++) {
+>>> +		if (info->padding[i])
+>>> +			return -EINVAL;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  int iommu_uapi_cache_invalidate(struct iommu_domain *domain, struct device
+>> *dev,
+>>> -				struct iommu_cache_invalidate_info *inv_info)
+>>> +				void __user *uinfo)
+>>>  {
+>>> +	struct iommu_cache_invalidate_info inv_info = { 0 };
+>>> +	u32 minsz;
+>>> +	int ret = 0;
+>>> +
+>>>  	if (unlikely(!domain->ops->cache_invalidate))
+>>>  		return -ENODEV;
+>>>  > -	return domain->ops->cache_invalidate(domain, dev, inv_info);
+>>> +	/*
+>>> +	 * No new spaces can be added before the variable sized union, the
+>>> +	 * minimum size is the offset to the union.
+>>> +	 */
+>>> +	minsz = offsetof(struct iommu_cache_invalidate_info, granu);
+>>> +
+>>> +	/* Copy minsz from user to get flags and argsz */
+>>> +	if (copy_from_user(&inv_info, uinfo, minsz))
+>>> +		return -EFAULT;
+>>> +
+>>> +	/* Fields before variable size union is mandatory */
+>>> +	if (inv_info.argsz < minsz)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* PASID and address granu require additional info beyond minsz */
+>>> +	if (inv_info.argsz == minsz &&
+>>> +	    ((inv_info.granularity == IOMMU_INV_GRANU_PASID) ||
+>>> +		    (inv_info.granularity == IOMMU_INV_GRANU_ADDR)))
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
+>>> +	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info,
+>> granu.pasid_info))
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
+>>> +	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info,
+>> granu.addr_info))
+>>> +		return -EINVAL;
+>>> +
+>>> +	/*
+>>> +	 * User might be using a newer UAPI header which has a larger data
+>>> +	 * size, we shall support the existing flags within the current
+>>> +	 * size. Copy the remaining user data _after_ minsz but not more
+>>> +	 * than the current kernel supported size.
+>>> +	 */
+>>> +	if (copy_from_user((void *)&inv_info + minsz, uinfo + minsz,
+>>> +			   min_t(u32, inv_info.argsz, sizeof(inv_info)) - minsz))
+>>> +		return -EFAULT;
+>>> +
+>>> +	/* Now the argsz is validated, check the content */
+>>> +	ret = iommu_check_cache_invl_data(&inv_info);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	return domain->ops->cache_invalidate(domain, dev, &inv_info);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(iommu_uapi_cache_invalidate);
+>>>
+>>> -int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+>>> -			       struct device *dev, struct iommu_gpasid_bind_data
+>> *data)
+>>> +static int iommu_check_bind_data(struct iommu_gpasid_bind_data *data)
+>>> +{
+>>> +	u32 mask;
+>>> +	int i;
+>>> +
+>>> +	if (data->version != IOMMU_GPASID_BIND_VERSION_1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* Check the range of supported formats */
+>>> +	if (data->format >= IOMMU_PASID_FORMAT_LAST)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* Check all flags */
+>>> +	mask = IOMMU_SVA_GPASID_VAL;
+>>> +	if (data->flags & ~mask)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* Check reserved padding fields */
+>>> +	for (i = 0; i < sizeof(data->padding); i++) {
+>>> +		if (data->padding[i])
+>>> +			return -EINVAL;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int iommu_sva_prepare_bind_data(void __user *udata,
+>>> +				       struct iommu_gpasid_bind_data *data)
+>>>  {
+>>> +	u32 minsz;
+>>> +
+>>> +	/*
+>>> +	 * No new spaces can be added before the variable sized union, the
+>>> +	 * minimum size is the offset to the union.
+>>> +	 */
+>>> +	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
+>>> +
+>>> +	/* Copy minsz from user to get flags and argsz */
+>>> +	if (copy_from_user(data, udata, minsz))
+>>> +		return -EFAULT;
+>>> +
+>>> +	/* Fields before variable size union is mandatory */
+>>> +	if (data->argsz < minsz)
+>>> +		return -EINVAL;
+>>> +	/*
+>>> +	 * User might be using a newer UAPI header, we shall let IOMMU vendor
+>>> +	 * driver decide on what size it needs. Since the guest PASID bind data
+>>> +	 * can be vendor specific, larger argsz could be the result of extension
+>>> +	 * for one vendor but it should not affect another vendor.
+>>> +	 * Copy the remaining user data _after_ minsz
+>>> +	 */
+>>> +	if (copy_from_user((void *)data + minsz, udata + minsz,
+>>> +			   min_t(u32, data->argsz, sizeof(*data)) - minsz))
+>>> +		return -EFAULT;
+>>> +
+>>> +	return iommu_check_bind_data(data);
+>>> +}
+>>> +
+>>> +int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain, struct device
+>> *dev,
+>>> +			       void __user *udata)
+>>> +{
+>>> +	struct iommu_gpasid_bind_data data = { 0 };
+>>> +	int ret;
+>>> +
+>>>  	if (unlikely(!domain->ops->sva_bind_gpasid))
+>>>  		return -ENODEV;
+>>>
+>>> -	return domain->ops->sva_bind_gpasid(domain, dev, data);
+>>> +	ret = iommu_sva_prepare_bind_data(udata, &data);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	return domain->ops->sva_bind_gpasid(domain, dev, &data);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(iommu_uapi_sva_bind_gpasid);
+>>>
+>>> -int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device
+>> *dev,
+>>> -				 ioasid_t pasid)
+>>> +int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+>>> +			    struct iommu_gpasid_bind_data *data)
+>>>  {
+>>>  	if (unlikely(!domain->ops->sva_unbind_gpasid))
+>>>  		return -ENODEV;
+>>>
+>>> -	return domain->ops->sva_unbind_gpasid(dev, pasid);
+>>> +	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+>>> +
+>>> +int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device
+>> *dev,
+>>> +				 void __user *udata)
+>>> +{
+>>> +	struct iommu_gpasid_bind_data data = { 0 };
+>>> +	int ret;
+>>> +
+>>> +	if (unlikely(!domain->ops->sva_bind_gpasid))
+>>> +		return -ENODEV;
+>>> +
+>>> +	ret = iommu_sva_prepare_bind_data(udata, &data);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	return iommu_sva_unbind_gpasid(domain, dev, &data);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(iommu_uapi_sva_unbind_gpasid);
+>>>
+>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>> index 2dcc1a33f6dc..4a02c9e09048 100644
+>>> --- a/include/linux/iommu.h
+>>> +++ b/include/linux/iommu.h
+>>> @@ -432,11 +432,14 @@ extern void iommu_detach_device(struct
+>> iommu_domain *domain,
+>>>  				struct device *dev);
+>>>  extern int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+>>>  				       struct device *dev,
+>>> -				       struct iommu_cache_invalidate_info *inv_info);
+>>> +				       void __user *uinfo);
+>>> +
+>>>  extern int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+>>> -				      struct device *dev, struct
+>> iommu_gpasid_bind_data *data);
+>>> +				      struct device *dev, void __user *udata);
+>>>  extern int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> -					struct device *dev, ioasid_t pasid);
+>>> +					struct device *dev, void __user *udata);
+>>> +extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> +				   struct device *dev, struct
+>> iommu_gpasid_bind_data *data);
+>>>  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>>>  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+>>>  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+>>> @@ -1054,22 +1057,29 @@ static inline int iommu_sva_get_pasid(struct
+>> iommu_sva *handle)
+>>>  	return IOMMU_PASID_INVALID;
+>>>  }
+>>>
+>>> -static inline int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+>>> -					      struct device *dev,
+>>> -					      struct iommu_cache_invalidate_info
+>> *inv_info)
+>>> +static inline int
+>>> +iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+>>> +			    struct device *dev,
+>>> +			    struct iommu_cache_invalidate_info *inv_info)
+>>>  {
+>>>  	return -ENODEV;
+>>>  }
+>>>
+>>>  static inline int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+>>> -					     struct device *dev,
+>>> -					     struct iommu_gpasid_bind_data *data)
+>>> +					     struct device *dev, void __user *udata)
+>>>  {
+>>>  	return -ENODEV;
+>>>  }
+>>>
+>>>  static inline int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> -					       struct device *dev, int pasid)
+>>> +					       struct device *dev, void __user *udata)
+>>> +{
+>>> +	return -ENODEV;
+>>> +}
+>>> +
+>>> +static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> +					  struct device *dev,
+>>> +					  struct iommu_gpasid_bind_data *data)
+>>>  {
+>>>  	return -ENODEV;
+>>>  }
+>>>
+>> Otherwise looks good to me
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> Thanks
+>>
+>> Eric
+> 
 
-> Let's introcuce a nicer API that works for all irq_chip devices.
-
-s/Let's intro/Intro/
-
-Let's is pretty useless in a changelog especially if you read it some
-time after the patch got applied.
-
-> This will be called by the core and is called once per IRQ.  The core
-> will call the suspend callback after doing its normal suspend
-> operations and the resume before its normal resume operations.
-
-Will be? You are adding the code which calls that unconditionally even.
-
-> +void suspend_one_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = desc->irq_data.chip;
-> +
-> +	if (chip->irq_suspend_one)
-> +		chip->irq_suspend_one(&desc->irq_data);
-> +}
-> +
-> +void resume_one_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = desc->irq_data.chip;
-> +
-> +	if (chip->irq_resume_one)
-> +		chip->irq_resume_one(&desc->irq_data);
-> +}
-
-There not much of a point to have these in chip.c. The functionality is
-clearly pm.c only.
-
->  static bool suspend_device_irq(struct irq_desc *desc)
->  {
-> +	bool sync = false;
-> +
->  	if (!desc->action || irq_desc_is_chained(desc) ||
->  	    desc->no_suspend_depth)
-> -		return false;
-> +		goto exit;
-
-What?
-
-If no_suspend_depth is > 0 why would you try to tell the irq chip
-that this line needs to be suspended?
-
-If there is no action, then the interrupt line is in shut down
-state. What's the point of suspending it?
-
-Chained interrupts are special and you really have to think hard whether
-calling suspend for them unconditionally is a good idea. What if a
-wakeup irq is connected to this chained thing?
-
->  	if (irqd_is_wakeup_set(&desc->irq_data)) {
->  		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
-> +
->  		/*
->  		 * We return true here to force the caller to issue
->  		 * synchronize_irq(). We need to make sure that the
->  		 * IRQD_WAKEUP_ARMED is visible before we return from
->  		 * suspend_device_irqs().
->  		 */
-> -		return true;
-> +		sync = true;
-> +		goto exit;
-
-So again. This interrupt is a wakeup source. What's the point of
-suspending it unconditionally.
-
->  	}
->  
->  	desc->istate |= IRQS_SUSPENDED;
-> @@ -95,7 +99,10 @@ static bool suspend_device_irq(struct irq_desc *desc)
->  	 */
->  	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
->  		mask_irq(desc);
-> -	return true;
-> +
-> +exit:
-> +	suspend_one_irq(desc);
-> +	return sync;
-
-So what happens in this case:
-
-   CPU0                         CPU1
-   interrupt                    suspend_device_irq()
-     handle()                     chip->suspend_one()
-       action()                 ...              
-       chip->fiddle();
-
-????
-
-What is the logic here and how is this going to work under all
-circumstances without having magic hacks in the irq chip to handle all
-the corner cases?
-
-This needs way more thoughts vs. the various states and sync
-requirements. Just adding callbacks, invoking them unconditionally, not
-giving any rationale how the whole thing is supposed to work and then
-let everyone figure out how to deal with the state and corner case
-handling at the irq chip driver level does not cut it, really.
-
-State handling is core functionality and if irq chip drivers have
-special requirements then they want to be communicated with flags and/or
-specialized callbacks.
-
-Thanks,
-
-        tglx
