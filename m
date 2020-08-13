@@ -2,190 +2,151 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFDEC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D04C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20B220791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E025207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ad0MW8Dg"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FmmVucEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHMPHT (ORCPT
+        id S1726703AbgHMPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:07:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49356 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726334AbgHMPHO (ORCPT
+        Thu, 13 Aug 2020 11:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgHMPHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597331233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k1/COf1rYZPBo+t1nqm+FQLIB91ekTH/x8nDL3/8R0g=;
-        b=ad0MW8Dg7hddkj/YkxukfzSgqXmI/rLo9BpAVhA1Nt88+VQQl5vkLoKLMcg2yERnAu4JgK
-        khuIr4gTH3uJA1Y1Eh4mYtHK2QNasGEMTxJa+qi/CZ6hTILN3qhX6WSPJ0gByypHa1aiJe
-        8y61wCJlWeAXsW8fUuSSokEV6yqtJ+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-JpFIrVg6ObCUBU0HBSwDUQ-1; Thu, 13 Aug 2020 11:07:10 -0400
-X-MC-Unique: JpFIrVg6ObCUBU0HBSwDUQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A00A9100CA88;
-        Thu, 13 Aug 2020 15:07:08 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD7745C1A3;
-        Thu, 13 Aug 2020 15:06:57 +0000 (UTC)
-Subject: Re: [PATCH v6 06/15] iommu/vt-d: Support setting ioasid set to domain
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
- <1595917664-33276-7-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <ae43dda5-01aa-adb1-d21d-2525cf4f4d95@redhat.com>
-Date:   Thu, 13 Aug 2020 17:06:56 +0200
+        Thu, 13 Aug 2020 11:07:16 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F63C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:07:15 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a5so7530889ioa.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=/YTl5Y05aq7UDbYAfUoIvy9c2eHnrqw43JiYTVbNYGI=;
+        b=FmmVucEmFmLF79LSOv72FcJjGhjUtCpG8E+YnVoqfP+0S3sMBXadxBLRhIA9AVTv2u
+         5gFyz/TWmP63wXJB9jSnJUQXtAkAJTnffteOjsGhN/3BiCESvnQc5GPw5rcKXXIfzEK7
+         cNLwcOtPDlZL9sRwKiborUaOwHVKOCFGIK1pr1Keu0gaSePS2SDIROuVMVAU6AIpmDFZ
+         gppOaBc8I7EHnx7lPt7AW1VEVH0srkyOF0LVyjv8+wpCVXA5KiQ4qUFpWh+xf30E0PeU
+         vV/0UUqR9RGfjL5AfPBZK0jqdFdVZk6rBALZ72NYJiHeSZB+QwbIQd95updF/u1+7oex
+         IMVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=/YTl5Y05aq7UDbYAfUoIvy9c2eHnrqw43JiYTVbNYGI=;
+        b=cQnTwFsgFfTX5PDHDM49Kp0FKO4e4fMZ/hOPbeYarKNe3NoZ1narAoBsQHNSsYQ5Ao
+         T/FiOQa/aO8feRh+tuAbudXnveTSPudVb+9/Bhqcid7qy7tsJ8mgZuLFGErHYqdWppVT
+         VqlIQLr174+9WOJHeO0HEcaCz4sGfEqg7pdpCDow/V0zn1occ/+7z0NrWyQOiebO3yhE
+         NiGZpPXZOfoytZPPyaIJvjGUIhT8eK7LMCgtdFbm1zzaaGZBypIblsnYAOwjaFnjSYRY
+         TnbE26Sjx3KfXxKXfNmQm9X2K9Qq4yY8CXObzDq6ZjP3yC8Vr7oFtH5+vOgrgLDUZflS
+         OzvQ==
+X-Gm-Message-State: AOAM533XP0UaUrz2NAGHCofSsW9gz31VAHj54WTmywTF+nytwg30fAKU
+        RrV+Cj6UfO8mCwU45n1kl1VIHYr6zEw=
+X-Google-Smtp-Source: ABdhPJykBTgvyIjEsO5moU59AhcGyjN78RVonsS/VZ0v1PrxDsVjv70w8As0ZgbLR1exaRaDxAWirQ==
+X-Received: by 2002:a6b:7a41:: with SMTP id k1mr5021158iop.92.1597331235071;
+        Thu, 13 Aug 2020 08:07:15 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p77sm2943083ill.39.2020.08.13.08.07.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 08:07:14 -0700 (PDT)
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] task_work: only grab task signal lock when needed
+Message-ID: <90d18cac-019e-eb49-8b33-32066d4e24aa@kernel.dk>
+Date:   Thu, 13 Aug 2020 09:07:13 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595917664-33276-7-git-send-email-yi.l.liu@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+If JOBCTL_TASK_WORK is already set on the targeted task, then we need
+not go through {lock,unlock}_task_sighand() to set it again and queue
+a signal wakeup. This is safe as we're checking it _after_ adding the
+new task_work with cmpxchg().
 
-On 7/28/20 8:27 AM, Liu Yi L wrote:
-> From IOMMU p.o.v., PASIDs allocated and managed by external components
-> (e.g. VFIO) will be passed in for gpasid_bind/unbind operation. IOMMU
-> needs some knowledge to check the PASID ownership, hence add an interface
-> for those components to tell the PASID owner.
-> 
-> In latest kernel design, PASID ownership is managed by IOASID set where
-> the PASID is allocated from. This patch adds support for setting ioasid
-> set ID to the domains used for nesting/vSVA. Subsequent SVA operations
-> will check the PASID against its IOASID set for proper ownership.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> v5 -> v6:
-> *) address comments against v5 from Eric Auger.
-> 
-> v4 -> v5:
-> *) address comments from Eric Auger.
-> ---
->  drivers/iommu/intel/iommu.c | 23 +++++++++++++++++++++++
->  include/linux/intel-iommu.h |  4 ++++
->  include/linux/iommu.h       |  1 +
->  3 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index ed4b71c..b2fe54e 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -1793,6 +1793,7 @@ static struct dmar_domain *alloc_domain(int flags)
->  	if (first_level_by_default())
->  		domain->flags |= DOMAIN_FLAG_USE_FIRST_LEVEL;
->  	domain->has_iotlb_device = false;
-> +	domain->ioasid_sid = INVALID_IOASID_SET;
->  	INIT_LIST_HEAD(&domain->devices);
->  
->  	return domain;
-> @@ -6040,6 +6041,28 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
->  		}
->  		spin_unlock_irqrestore(&device_domain_lock, flags);
->  		break;
-> +	case DOMAIN_ATTR_IOASID_SID:
-> +	{
-> +		int sid = *(int *)data;
+The ordering is as follows:
 
-> +
-> +		spin_lock_irqsave(&device_domain_lock, flags);
-> +		if (!(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE)) {
-> +			ret = -ENODEV;
-> +			spin_unlock_irqrestore(&device_domain_lock, flags);
-> +			break;
-> +		}
-> +		if (dmar_domain->ioasid_sid != INVALID_IOASID_SET &&
-> +		    dmar_domain->ioasid_sid != sid) {
-> +			pr_warn_ratelimited("multi ioasid_set (%d:%d) setting",
-> +					    dmar_domain->ioasid_sid, sid);
-> +			ret = -EBUSY;
-> +			spin_unlock_irqrestore(&device_domain_lock, flags);
-> +			break;
-> +		}
-> +		dmar_domain->ioasid_sid = sid;
-> +		spin_unlock_irqrestore(&device_domain_lock, flags);
-> +		break;
-nit: Adding a small helper
-int__set_ioasid_sid(struct dmar_domain *dmar_domain, int sid_id)
+task_work_add()                         get_signal()
+--------------------------------------------------------------
+STORE(task->task_works, new_work);      STORE(task->jobctl);
+mb();                                   mb();
+LOAD(task->jobctl);                     LOAD(task->task_works);
 
-may simplify the lock handling
+This speeds up TWA_SIGNAL handling quite a bit, which is important now
+that io_uring is relying on it for all task_work deliveries.
 
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-> +	}
->  	default:
->  		ret = -EINVAL;
->  		break;
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 3f23c26..0d0ab32 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -549,6 +549,10 @@ struct dmar_domain {
->  					   2 == 1GiB, 3 == 512GiB, 4 == 1TiB */
->  	u64		max_addr;	/* maximum mapped address */
->  
-> +	int		ioasid_sid;	/*
-> +					 * the ioasid set which tracks all
-id of the ioasid set?
-> +					 * PASIDs used by the domain.
-> +					 */
->  	int		default_pasid;	/*
->  					 * The default pasid used for non-SVM
->  					 * traffic on mediated devices.
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 4a02c9e..b1ff702 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -124,6 +124,7 @@ enum iommu_attr {
->  	DOMAIN_ATTR_FSL_PAMUV1,
->  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
->  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
-> +	DOMAIN_ATTR_IOASID_SID,
->  	DOMAIN_ATTR_MAX,
->  };
->  
-> 
-Besides
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+---
 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 6f16f7c5d375..42b67d2cea37 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2541,7 +2541,21 @@ bool get_signal(struct ksignal *ksig)
+ 
+ relock:
+ 	spin_lock_irq(&sighand->siglock);
+-	current->jobctl &= ~JOBCTL_TASK_WORK;
++	/*
++	 * Make sure we can safely read ->jobctl() in task_work add. As Oleg
++	 * states:
++	 *
++	 * It pairs with mb (implied by cmpxchg) before READ_ONCE. So we
++	 * roughly have
++	 *
++	 *	task_work_add:				get_signal:
++	 *	STORE(task->task_works, new_work);	STORE(task->jobctl);
++	 *	mb();					mb();
++	 *	LOAD(task->jobctl);			LOAD(task->task_works);
++	 *
++	 * and we can rely on STORE-MB-LOAD [ in task_work_add].
++	 */
++	smp_store_mb(current->jobctl, current->jobctl & ~JOBCTL_TASK_WORK);
+ 	if (unlikely(current->task_works)) {
+ 		spin_unlock_irq(&sighand->siglock);
+ 		task_work_run();
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 5c0848ca1287..613b2d634af8 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -42,7 +42,13 @@ task_work_add(struct task_struct *task, struct callback_head *work, int notify)
+ 		set_notify_resume(task);
+ 		break;
+ 	case TWA_SIGNAL:
+-		if (lock_task_sighand(task, &flags)) {
++		/*
++		 * Only grab the sighand lock if we don't already have some
++		 * task_work pending. This pairs with the smp_store_mb()
++		 * in get_signal(), see comment there.
++		 */
++		if (!(READ_ONCE(task->jobctl) & JOBCTL_TASK_WORK) &&
++		    lock_task_sighand(task, &flags)) {
+ 			task->jobctl |= JOBCTL_TASK_WORK;
+ 			signal_wake_up(task, 0);
+ 			unlock_task_sighand(task, &flags);
 
-Eric
+-- 
+Jens Axboe
 
