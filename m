@@ -2,81 +2,108 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B18FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7492078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469E72078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="C3buRZWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHMNLn convert rfc822-to-8bit (ORCPT
+        id S1726703AbgHMNMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:11:43 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:33621 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMNLl (ORCPT
+        Thu, 13 Aug 2020 09:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgHMNML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:11:41 -0400
-Received: by mail-ej1-f65.google.com with SMTP id jp10so6132017ejb.0;
-        Thu, 13 Aug 2020 06:11:40 -0700 (PDT)
+        Thu, 13 Aug 2020 09:12:11 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2986DC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:12:11 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 77so5471446ilc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 06:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kgbv9YB1y3fE/nDDgJaA6swPPpZ0EmrDwIVpE0CkUgg=;
+        b=C3buRZWdsYcNqI4jadY6OAqYyUHidQT7+V3ZH/7k7Lf+6i36DQpzZi9G4QzmOjrTpB
+         ZUFJvwCBcbSJDeyYvnUZzJCJH6QP+tTAwBrE/eKDB9VjsdZuR4481un4Slp5FxtF1QX/
+         6OH5do1MRZZksHLsw/CqC+p4paKDcID004QWw9HYycLmaVASKYiLfZg+4Op8C/A4LlOH
+         fBz49l+G1071dyRxJOhiL0SeUeB1csu7e+oRa9MTfe4r3RbwvDhRGO+TwJ29Xq3R41IQ
+         A512gMgnm9fBvmLVadxdgZuYbAOoc9PcCeYmuvcaAa1QANLKlgdNsej9bKmnZ7ZHdASY
+         JDTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CSRMWQrpbXjKiPmzSjMTrmXNs7M8tA2lIbZDv/L+QPI=;
-        b=H/1WDeMHs15XP7/pXqKxXtVeqlMiHuboH0i/e7fBVD3/2LGzMayi3j13rAKGq76O7B
-         LqBBrb8J1DoQQOxIkE3mTnr5HhwH/clqCEQiAi3mJnzWeRV/Fuysy/5O4WEPn8z1k4Se
-         XPirIi/gWwUoPMx4YGFwavblyqw6/pPNIzc1w+7BGFCSVt7qDJ4M83UlK80Fj+WBR4nk
-         oLFQxoVx0BJcAWv9jhFNY/GicDaS/TgkNbzXxCqpn+d433V8od9NP/Zxt4gNbxhyhh5R
-         bEb7EYJYlU0OCyhdJoBY/GKMGQ4Q1oIdqFTLEbJ5O4/RqTvuBV/myuGHTqYmUkv95CRF
-         mjvQ==
-X-Gm-Message-State: AOAM533ixxpAoZGTkjJQWRUU5FEbbyYbe6KEwab6Gc06+FuW9R5EZXvW
-        kUsolBM9u9/O2GtDz6o8pS0vBlajHNdAYbPM1K8=
-X-Google-Smtp-Source: ABdhPJyH9IJflC8Pr6xOJ+m0fQElASfLaLPfCdY1NQ/X3OFyzv/3zAxtfhjpJUzt7CibwdDKFGMd+ZgLiyLFG6gCoXA=
-X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr4927681ejb.8.1597324299611;
- Thu, 13 Aug 2020 06:11:39 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Kgbv9YB1y3fE/nDDgJaA6swPPpZ0EmrDwIVpE0CkUgg=;
+        b=hUqxSd69WvxO6xFAYmgHeIt0xFzyDYJvw2Cw6ZIC0mBEQy4gs47PttdIdziYhH5SNJ
+         RXSi5KpCeEdI290KtRTM9RXh2a/fP1w87SSsRcLu+YoBiFIXcUmBcaaNWJw2udCESwh2
+         04Xip+i85OFHijM9NbPLRlUzlqfQnfoKZlvCK51rwQeTZZIw5tpG8dS5y5bDdSLlV4pe
+         ii1AWfK0kVo4WhgcT4IfdE6r4mSIjl4uvqg91UyXTRXrM3hLqrnESMQq7QLGN9baWNAM
+         a4S7M2RHUoAL/NYFbtCKJGSEsvkSL1XkwYcYEHmRTKLl/68P1mNlawX1IrtoXJQS7GN2
+         z80A==
+X-Gm-Message-State: AOAM53343RjkTE3iz+gL8XcAMl63LXOsXVBUMj2EZAJIwudDm/twWbRa
+        bIfb2up5QCJ/AFE6DGeF1rtjWbgbQwR9XVhrL8CzvA==
+X-Google-Smtp-Source: ABdhPJxzCbr3874CCoMv3jd9cPHc5jl4QIrNWFGyuutdwUmixrM2MRv12IEFnN3FXc5OeOa60bZATyUIkxpFHSmtems=
+X-Received: by 2002:a92:cf09:: with SMTP id c9mr4832246ilo.38.1597324329610;
+ Thu, 13 Aug 2020 06:12:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200812075235.366864-1-noltari@gmail.com> <20200812075235.366864-5-noltari@gmail.com>
-In-Reply-To: <20200812075235.366864-5-noltari@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Thu, 13 Aug 2020 15:11:28 +0200
-Message-ID: <CAAdtpL5z0FsbWpkmRvUAPN13XRKu=H20VMsZ1+py9LkEcz7PJw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] MIPS: BCM63xx: refactor board declarations
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-6-cmo@melexis.com>
+ <CAHp75Vd0D_jq7S=ANLJ-JSTb6iD1vHVRs2cN25Y3sNWCC9L2Xw@mail.gmail.com>
+In-Reply-To: <CAHp75Vd0D_jq7S=ANLJ-JSTb6iD1vHVRs2cN25Y3sNWCC9L2Xw@mail.gmail.com>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Thu, 13 Aug 2020 15:11:32 +0200
+Message-ID: <CAKv63uvrrc6Qfr2FjzgnNsHC0maZWT1Zpo=WQZvMmGgtYL6-tw@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] iio:temperature:mlx90632: Some stylefixing leftovers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 9:53 AM Álvaro Fernández Rojas
-<noltari@gmail.com> wrote:
+On Thu, 13 Aug 2020 at 13:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 >
-> Current board declarations are a mess. Let's put some order and make them
-> follow the same structure.
-
-What a mess indeed. Patch easier to review using 'git-diff --ignore-all-space'.
-
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-
+> On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
+> >
+> > There is some inconsistency and whitespace cleanup performed in this
+> > patch. It was done on top of my other patches, but I can rebase to head
+> > of the togreg branch if it would go in sooner.
 >
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  v4: split license change to a new patch.
->  v3: no changes.
->  v2: switch to SPDX license identifier.
+> ...
 >
->  arch/mips/bcm63xx/boards/board_bcm963xx.c | 615 +++++++++++-----------
->  1 file changed, 305 insertions(+), 310 deletions(-)
+> > -#define MLX90632_REF_12                12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
+> > -#define MLX90632_REF_3         12LL /**< ResCtrlRef value of Channel 3 */
+> > -#define MLX90632_MAX_MEAS_NUM  31 /**< Maximum measurements in list */
+> > -#define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
+>
+>
+> > +#define MLX90632_REF_12        12LL /* ResCtrlRef value of Ch 1 or Ch 2 */
+> > +#define MLX90632_REF_3         12LL /* ResCtrlRef value of Channel 3 */
+> > +#define MLX90632_MAX_MEAS_NUM  31 /* Maximum measurements in list */
+> > +#define MLX90632_SLEEP_DELAY_MS 3000 /* Autosleep delay */
+> >  #define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
+>
+> This was actually in doxy (perhaps kernel doc also understands this)
+> format of description.
+> Can you double check that the kernel doc is okay / not okay with it?
+>
+> If it is okay, perhaps it's better to convert others to that format
+> rather than dropping it.
+>
+It is indeed from doxygen and looking at other drivers it should not
+be OK. I checked the docs and it does not say in fact. Maybe Jonathan
+knows, but he was already OK with these changes in v1.
+> --
+> With Best Regards,
+> Andy Shevchenko
