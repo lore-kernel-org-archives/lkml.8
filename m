@@ -2,93 +2,84 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D39D20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B66D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MYo8X8/X";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UaBJ5EdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHMHd2 (ORCPT
+        id S1726612AbgHMHde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:33:28 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:49787 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMHd2 (ORCPT
+        Thu, 13 Aug 2020 03:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMHde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:33:28 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 62C16C0005;
-        Thu, 13 Aug 2020 07:33:25 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 09:33:25 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Victor Ding <victording@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH] rtc: cmos: initialize rtc time when reading alarm
-Message-ID: <20200813073325.GK3480@piout.net>
-References: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+        Thu, 13 Aug 2020 03:33:34 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042B2C061757;
+        Thu, 13 Aug 2020 00:33:33 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597304012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tbGNOc0NhQlgScUYSHrpvG2LTitDuXz5jjuVBcU84Wc=;
+        b=MYo8X8/Xl6Ybn21MrKqRt2x/2iGXEIdOdn+XjOMISckOyfKjX53VuCyTi9+U0TGwR+xVk8
+        seFBtglj+BaBCmu0nBdIV3emZyRDJvJ3rEbSWpctdqv5jCFoQx8D9xgDMiVVNPLNpmN++I
+        7SbIDDv2IYtRi29Qgv0969DVrzRoLqmHjmYIHun+SYfqK1B0sdBYiX3SIyzcrOFOeAAabQ
+        gVCdPq9cw5xSKGJz8TF7UMp0GQubj3MYRwUWdOFsYSNMrYbrUWkF+mdWb2vJKTRfdLKjVz
+        ZV7T6bO7ONOfrArRbHNSYA1YDq5aURtZdxJZsCJSBTzqfNsBrYHtl45dRtA5zA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597304012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tbGNOc0NhQlgScUYSHrpvG2LTitDuXz5jjuVBcU84Wc=;
+        b=UaBJ5EdU4jb/ZnyCzVoPqLjNPUCod5irswDdXHkG9POUhIu54M4g8cGlmipQFdxUfKC5cm
+        4/rgvcPU+Eo3wtBQ==
+To:     Jiafei Pan <Jiafei.Pan@nxp.com>, peterz@infradead.org,
+        mingo@kernel.org, rostedt@goodmis.org, romain.perier@gmail.com,
+        will@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        jiafei.pan@nxp.com, leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        Jiafei Pan <Jiafei.Pan@nxp.com>
+Subject: Re: [PATCH] softirq: add irq off checking for __raise_softirq_irqoff
+In-Reply-To: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
+References: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
+Date:   Thu, 13 Aug 2020 09:33:31 +0200
+Message-ID: <87bljf57as.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Jiafei Pan <Jiafei.Pan@nxp.com> writes:
+> __raise_softirq_irqoff will update per-CPU mask of pending softirqs,
 
-On 13/08/2020 15:41:34+1000, Victor Ding wrote:
-> cmos_read_alarm() may leave certain fields of a struct rtc_time
-> untouched; therefore, these fields contain garbage if not properly
-> initialized, leading to inconsistent values when converting into
-> time64_t.
-> This patch to set all fields of a struct rtc_time to -1 before calling
-> cmos_read_alarm().
-> 
+Please write __raise_softirq_irqoff() so it's clear that this is about a
+function.
 
-I don't think this actually helps with the conversion as mktime64
-is taking unsigned int so I would think you need the whole logic that is
-in __rtc_read_alarm
+>  void __raise_softirq_irqoff(unsigned int nr)
+>  {
+> +	/* This function can only be called in irq disabled context,
+> +	 * otherwise or_softirq_pending will be interrupted by hardware
+> +	 * interrupt, so that there will be unexpected issue.
+> +	 */
+> +	WARN_ON_ONCE(!irqs_disabled());
 
-> Signed-off-by: Victor Ding <victording@google.com>
-> ---
-> 
->  drivers/rtc/rtc-cmos.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-> index bcc96ab7793f..c99af567780d 100644
-> --- a/drivers/rtc/rtc-cmos.c
-> +++ b/drivers/rtc/rtc-cmos.c
-> @@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
->  			enable_irq_wake(cmos->irq);
->  	}
->  
-> +	memset(&cmos->saved_wkalrm.time, -1, sizeof(struct rtc_time));
->  	cmos_read_alarm(dev, &cmos->saved_wkalrm);
->  
->  	dev_dbg(dev, "suspend%s, ctrl %02x\n",
-> @@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
->  		return;
->  	}
->  
-> +	memset(&current_alarm.time, -1, sizeof(struct rtc_time));
->  	cmos_read_alarm(dev, &current_alarm);
->  	t_current_expires = rtc_tm_to_time64(&current_alarm.time);
->  	t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
-> -- 
-> 2.28.0.236.gb10cc79966-goog
-> 
+Please use lockdep_assert_irqs_disabled() instead.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+
+        tglx
