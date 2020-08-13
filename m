@@ -2,91 +2,141 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA51C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0A72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5381420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgHMICY (ORCPT
+        id S1726568AbgHMIDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:02:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:1026 "EHLO mga17.intel.com"
+        Thu, 13 Aug 2020 04:03:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57326 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgHMICX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:02:23 -0400
-IronPort-SDR: FvJyKvEI+LuaPQH9GVrSHekS475EqymQ4AEuOW9554K3K9y00XkIi+ZKSNdqq/LckZVws4XDtk
- csllVd5ghcaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="134233758"
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="134233758"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 01:02:22 -0700
-IronPort-SDR: hJHa6EByCKTPb/7dOEd3VrOHj+BBMkOiYAJrta41XHoD6PhjJMy/hLxs4lKYdonvAHaMwNAsqi
- A8JdD0AzJxFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="318434407"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2020 01:02:21 -0700
-Date:   Thu, 13 Aug 2020 15:58:43 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Moritz Fischer' <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>
-Subject: Re: [PATCH v4 1/4] fpga: dfl: change data type of feature id to u16
-Message-ID: <20200813075843.GB7383@yilunxu-OptiPlex-7050>
-References: <1597027273-25288-1-git-send-email-yilun.xu@intel.com>
- <1597027273-25288-2-git-send-email-yilun.xu@intel.com>
- <20200812035604.GA2544@epycbox.lan>
- <3810fb75b42e45928a39a97449a01520@AcuMS.aculab.com>
+        id S1726044AbgHMIDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 04:03:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 85F89AF82;
+        Thu, 13 Aug 2020 08:03:44 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: Fix build error of no type of module_init
+To:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1597289955-27381-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <5e7ed4d6-8961-bdd0-6698-47571066357a@suse.de>
+Date:   Thu, 13 Aug 2020 10:03:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3810fb75b42e45928a39a97449a01520@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1597289955-27381-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="PViowPfbaTjNTU6mKv6gbP9xhigU5xjHJ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 08:52:39AM +0000, David Laight wrote:
-> From: Moritz Fischer
-> > Sent: 12 August 2020 04:56
-> > 
-> > On Mon, Aug 10, 2020 at 10:41:10AM +0800, Xu Yilun wrote:
-> > > The feature id is stored in a 12 bit field in DFH. So a u16 variable is
-> > > enough for feature id.
-> > >
-> > > This patch changes all feature id related places to fit u16.
-> 
-> How much bigger does it make the kernel?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--PViowPfbaTjNTU6mKv6gbP9xhigU5xjHJ
+Content-Type: multipart/mixed; boundary="DZf0ynl3KQRcR4aueZHBhokv6F5d3B8Fx";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie, daniel@ffwll.ch,
+ kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <5e7ed4d6-8961-bdd0-6698-47571066357a@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: Fix build error of no type of module_init
+References: <1597289955-27381-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1597289955-27381-1-git-send-email-tiantao6@hisilicon.com>
 
-The patch changes the definition of feature id from u64 to u16, and will
-make the kernel slightly smaller.
+--DZf0ynl3KQRcR4aueZHBhokv6F5d3B8Fx
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Actually it is not the main purpose of this change. In the following
-patches we will put the feature_id definiton in mod_devicetable.h in
-order to support MODULE_DEVICE_TABLE(). The modpost will also use the
-definitions in mod_devicetable.h but seems it doesn't support u64 now.
-So we reduced the unnecessary bits definition in feature_id to fit
-modpost.
+Hi
 
-Thanks,
-Yilun
+Am 13.08.20 um 05:39 schrieb Tian Tao:
+> Add missing include to fix build error:
+> hibmc_drm_drv.c:385:1: warning: data definition has no type or storage
+> class [enabled by default]
+> hibmc_drm_drv.c:385:1: error: type defaults to =E2=80=98int=E2=80=99 in=
+ declaration
+> of =E2=80=98module_init=E2=80=99 [-Werror=3Dimplicit-int]
+> hibmc_drm_drv.c:385:1: warning: parameter names (without types) in func=
+tion
+> of =E2=80=98module_exit=E2=80=99 [-Werror=3Dimplicit-int]
+> hibmc_drm_drv.c:385:292:1: warning: parameter names (without types) in
+> function declaration [enabled by default]
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Reported-by: kernel test robot <lkp@intel.com>
 
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+I pushed the patch to drm-misc-next, but forgot to add my R-b tag. If
+anyone complains, it's my fault.
+
+Best regards
+Thomas
+
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
+gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index 1ae360d..2b4f821 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -11,6 +11,7 @@
+>   *	Jianhua Li <lijianhua@huawei.com>
+>   */
+> =20
+> +#include <linux/module.h>
+>  #include <linux/pci.h>
+> =20
+>  #include <drm/drm_atomic_helper.h>
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--DZf0ynl3KQRcR4aueZHBhokv6F5d3B8Fx--
+
+--PViowPfbaTjNTU6mKv6gbP9xhigU5xjHJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8088kUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiNqzAgArHim/VrpwqUX42uX6B5W6rBex4/V
+RoHBJMg8n9IEPDN5Bc8jtambx64LixZjCGPMIudkUCpcCuXr7NMPMAEz4/00btSu
+b4MLSv6k0pZM1BoIsvaAqzetDYS3J/JFY4a53gEgWA3vMj18490rXuyqpt/wcr7N
+lFiQfx0Qaf2uCI5/xBe0y0HIvRj/JXlTUeIAlsvKvDnnNq2ElSIqpe94BrR4qQEV
+tpf2QLovX7emOFlPho0TVsQvVTlvbxykVnNIZxWSPwUy+os85gUJOxIH/YvI5mg4
+QagqAlBDsIiZd5PcdEiF+O0VSvz2JRSjq4oaxWEh7YScArmvovGaeR6XAQ==
+=7zSe
+-----END PGP SIGNATURE-----
+
+--PViowPfbaTjNTU6mKv6gbP9xhigU5xjHJ--
