@@ -2,178 +2,154 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2773206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:40:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gu3mxTb1"
+	by mail.kernel.org (Postfix) with ESMTP id 79B3821775
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHMKkk (ORCPT
+        id S1726557AbgHMKoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:40:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726053AbgHMKkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:40:35 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DAWUc8140539;
-        Thu, 13 Aug 2020 06:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=9Y6zJ5iz4XY9CB5ki6Ae2+U6glmm4dUOE9fxaYR++uk=;
- b=Gu3mxTb1OQA01VEUmu2HyY7vCRaCmlHqWduPbXvyhJQ25zsv84rxYndW17z787yPHYGS
- B3BZs2pVWTkbMP1Hb1RkWSroCN62yvVAS7SB+QxMvfANkdL3UO13m/fXtZFl1n88xb1q
- ra0BCog/nLP4kQDkH7I+XlNkCi2039bZJ5s85o8TDV83ZpQO0G+vMgZrq+lOZYpOjOo7
- 8ciyQJY40SD4OP0JFzs23NL8G4hLEO457o2eu1EvjLKB/6+VVVDftGrIH1Sz23c7lchH
- oBOr91EqbFL0ZA1Ogm5Vx1ROYNHF/lEuE7lI4KOHb8t0UFpBpBiCfm5NGdJNO4/eXl1O 6A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32v7uuwwhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 06:40:26 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DAWiJd141601;
-        Thu, 13 Aug 2020 06:40:26 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32v7uuwwgv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 06:40:25 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DAeO8N014636;
-        Thu, 13 Aug 2020 10:40:24 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 32skp7uc13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 10:40:23 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DAeLWd22086032
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 10:40:21 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14B004C050;
-        Thu, 13 Aug 2020 10:40:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65DD84C040;
-        Thu, 13 Aug 2020 10:40:20 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 10:40:20 +0000 (GMT)
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
- <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
- <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
- <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <dc79c8a9-1bbc-380f-741f-bca270a34483@linux.ibm.com>
-Date:   Thu, 13 Aug 2020 12:40:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 13 Aug 2020 06:44:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46628 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgHMKoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:44:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F0B85ABCE;
+        Thu, 13 Aug 2020 10:44:38 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 12:44:16 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     syzbot <syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
+        vdavydov.dev@gmail.com
+Subject: Re: upstream boot error: WARNING in mem_cgroup_css_alloc
+Message-ID: <20200813104416.GE9477@dhcp22.suse.cz>
+References: <00000000000019317f05acbf31bd@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_06:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 malwarescore=0 adultscore=0 phishscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130076
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000019317f05acbf31bd@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This smells like 3e38e0aaca9e ("mm: memcg: charge memcg percpu memory to
+the parent cgroup"). 
 
-
-On 8/13/20 11:59 AM, Oliver O'Halloran wrote:
-> On Thu, Aug 13, 2020 at 7:00 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
->>
->>
->> On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
->>> On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>>> *snip*
->>>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
->>>> index 3902c9f..04ac76d 100644
->>>> --- a/arch/s390/pci/pci.c
->>>> +++ b/arch/s390/pci/pci.c
->>>> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
->>>>  {
->>>>         struct zpci_dev *zdev = to_zpci(pdev);
->>>>
->>>> +       /*
->>>> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
->>>> +        * detached from its parent PF.  We rely on firmware emulation to
->>>> +        * provide underlying PF details.
->>>> +        */
->>>> +       if (zdev->vfn && !zdev->zbus->multifunction)
->>>> +               pdev->detached_vf = 1;
->>>
->>> The enable hook seems like it's a bit too late for this sort of
->>> screwing around with the pci_dev. Anything in the setup path that
->>> looks at ->detached_vf would see it cleared while anything that looks
->>> after the device is enabled will see it set. Can this go into
->>> pcibios_add_device() or a fixup instead?
->>>
->>
->> This particular check could go into pcibios_add_device() yes.
->> We're also currently working on a slight rework of how
->> we establish the VF to parent PF linking including the sysfs
->> part of that. The latter sadly can only go after the sysfs
->> for the virtfn has been created and that only happens
->> after all fixups. We would like to do both together because
->> the latter sets pdev->is_virtfn which I think is closely related.
->>
->> I was thinking of starting another discussion
->> about adding a hook that is executed just after the sysfs entries
->> for the PCI device are created but haven't yet.
+On Thu 13-08-20 02:47:26, syzbot wrote:
+> Hello,
 > 
-> if all you need is sysfs then pcibios_bus_add_device() or a bus
-> notifier should work
-
-So this might go a bit off track but the problem is that
-on s390 a VF can be disabled and reenabled with disable_slot()/enable_slot().
-In this case pcibios_bus_add_device() is not called again but
-the PF/VF link needs to be reestablished.
-
+> syzbot found the following issue on:
 > 
->> That said pcibios_enable_device() is called before drivers
->> like vfio-pci are enabled
+> HEAD commit:    dc06fe51 Merge tag 'rtc-5.9' of git://git.kernel.org/pub/s..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12d34bd6900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9c89856ae5fc8b6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=35d35ef677516d65bdda
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
 > 
-> Hmm, is that an s390 thing? I was under the impression that drivers
-> handled enabling the device rather than assuming the platform did it
-> for them. Granted it's usually one of the first things a driver does,
-> but there's still scope for surprising behaviour.
-
-No you're absolutely right I formulated this wrong, pcibios_enable_device()
-is called by the drivers but before they can really use the device.
-
-But yes I'm not super happy with this either and I
-agree for this patch series we should move the check to pcibios_add_device()
-and thinking about it more I think I'll really have to find a better
-place for our linking as well, pcibios_enable_device() does work
-nicely in practice buy it indeed poses room for surprising behavior.
-
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com
 > 
-... snip ...
+> mem auto-init: stack:off, heap alloc:on, heap free:off
+> Memory: 6461180K/7863916K available (116743K kernel code, 17665K rwdata, 21624K rodata, 2792K init, 23940K bss, 1402480K reserved, 0K cma-reserved)
+> Running RCU self tests
+> rcu: Preemptible hierarchical RCU implementation.
+> rcu: 	RCU lockdep checking is enabled.
+> rcu: 	RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=2.
+> rcu: 	RCU callback double-/use-after-free debug enabled.
+> rcu: 	RCU debug extended QS entry/exit.
+> 	All grace periods are expedited (rcu_expedited).
+> 	Trampoline variant of Tasks RCU enabled.
+> rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+> rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+> NR_IRQS: 4352, nr_irqs: 440, preallocated irqs: 16
+> random: get_random_bytes called from boot_init_stack_canary arch/x86/include/asm/stackprotector.h:80 [inline] with crng_init=0
+> random: get_random_bytes called from start_kernel+0x23b/0x46a init/main.c:957 with crng_init=0
+> Console: colour VGA+ 80x25
+> printk: console [ttyS0] enabled
+> printk: console [ttyS0] enabled
+> printk: bootconsole [earlyser0] disabled
+> printk: bootconsole [earlyser0] disabled
+> Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
+> ... MAX_LOCKDEP_SUBCLASSES:  8
+> ... MAX_LOCK_DEPTH:          48
+> ... MAX_LOCKDEP_KEYS:        8192
+> ... CLASSHASH_SIZE:          4096
+> ... MAX_LOCKDEP_ENTRIES:     32768
+> ... MAX_LOCKDEP_CHAINS:      65536
+> ... CHAINHASH_SIZE:          32768
+>  memory used by lock dependency info: 6301 kB
+>  memory used for stack traces: 4224 kB
+>  per task-struct memory footprint: 1920 bytes
+> mempolicy: Enabling automatic NUMA balancing. Configure with numa_balancing= or the kernel.numa_balancing sysctl
+> ACPI: Core revision 20200717
+> APIC: Switch to symmetric I/O mode setup
+> x2apic enabled
+> Switched APIC routing to physical x2apic.
+> ..TIMER: vector=0x30 apic1=0 pin1=0 apic2=-1 pin2=-1
+> clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x212735223b2, max_idle_ns: 440795277976 ns
+> Calibrating delay loop (skipped) preset value.. 4600.00 BogoMIPS (lpj=23000000)
+> pid_max: default: 32768 minimum: 301
+> LSM: Security Framework initializing
+> LSM: security= is ignored because it is superseded by lsm=
+> Yama: becoming mindful.
+> TOMOYO Linux initialized
+> AppArmor: AppArmor initialized
+> LSM support for eBPF active
+> Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, vmalloc)
+> Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, vmalloc)
+> Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, vmalloc)
+> Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, vmalloc)
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 memalloc_unuse_memcg include/linux/sched/mm.h:331 [inline]
+> WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5285
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x4a kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+> RIP: 0010:mem_cgroup_alloc mm/memcontrol.c:5226 [inline]
+> RIP: 0010:mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5284
+> Code: 01 00 48 8d bb 28 14 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 74 81 e8 e0 00 c2 f9 e9 77 ff ff ff <0f> 0b e9 21 fc ff ff 48 89 ef e8 bc 28 c7 f9 48 b8 00 00 00 00 00
+> RSP: 0000:ffffffff89a07e20 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffffffff89a99dc0 RCX: 1ffff110152b2028
+> RDX: 1ffffffff135363d RSI: ffffffff83b0f2c2 RDI: ffffffff89a9b1e8
+> RBP: ffff8880a9590000 R08: 0000000000000001 R09: ffff88821b801aef
+> R10: 0000000000000000 R11: ffffffff810000d4 R12: ffffffff8ab224b4
+> R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff8ab224d0
+>  cgroup_init_subsys+0x215/0x4d7 kernel/cgroup/cgroup.c:5587
+>  cgroup_init+0x359/0xa63 kernel/cgroup/cgroup.c:5713
+>  start_kernel+0x426/0x46a init/main.c:1035
+>  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+-- 
+Michal Hocko
+SUSE Labs
