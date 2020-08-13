@@ -2,127 +2,134 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3959C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE0C2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BA0206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ9PHLG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHMDpY (ORCPT
+        id S1726587AbgHMDwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:45:24 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38966 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgHMDpY (ORCPT
+        Wed, 12 Aug 2020 23:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgHMDwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:45:24 -0400
-Received: by mail-io1-f69.google.com with SMTP id v10so3171593iot.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:45:23 -0700 (PDT)
+        Wed, 12 Aug 2020 23:52:03 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A662C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:52:03 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so2042097pls.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VA5B9P3jl9Rwei4btklJKhUkayY4KVxIbC/8uysb2Ms=;
+        b=FJ9PHLG0g7f2Maa7cEQaeUtA3Ylx3IdGyk8cYMtQQU+98QK+IT2QqARjp/wBJnclBX
+         gh6+YGAnyaAijFJi1Sa+mALef97sfGBdvrTpPoi1Tx8/fcwx3zDq290YDgbx0QCLIx+Y
+         jGF0U0KLIzHVkBlpJBAd/BG1JF/1W6VfIMxDDa/lbXLKGWIH0+1lHKtpPgOmlAS68sBZ
+         qLoNgZSoLqdoYUfoKHkCGuNi1zx52XhloQWeVTec1kqBA+ao3SrUx63zekVagojb1lj2
+         Sy6ZYa/hOxGI0tm69Rqv5U/hZFdlQdoZYBCPKmJbHw1blMl9WYcv72/dlef9I24UTDcK
+         tf0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=5fOerBOgtCPzRD6DaJSK75fAycF0jkD27NVs0k5zNK8=;
-        b=chuGYUImxmv0zlOn8bEqMFJRL5nD8VDobkzURqkKtkgJ9xIaLXyEKpnyyQUTrh7tDg
-         uVtEG5tIXaFKvXAXBCeEe/WArDhgQokPhbUtuz+CW1n09yBVvxosjSeW4+/6JmMxWAqk
-         1yhHelDxqQj8PQo1g/XPftff+r8Cww3PObpJ7f1sKCHGsvs0a4REGQWVVemh3hZOPgck
-         Sia2ofnnxTHQOm6HGabl/9h1F4S0/4O0ihSrc8YdmGcEh+hPVQY2nBE1vx4WOhW7xiRZ
-         NeuIMGJSqU5ntDifnyiYqZAaKIBFjdiQ8M1ANZk4G7CncCe074Tvm4Ps6BulVnTCKGMi
-         qZrg==
-X-Gm-Message-State: AOAM532rhF8fqTCcU9r7aGhVdupqu90f72umWQDBdoRTq6z/Cei7b1ik
-        BfL9Wa1Wv5uhM8m7xSk7zDtDppJg7ezWTxIfLr/gT3Qu4vzo
-X-Google-Smtp-Source: ABdhPJxz4SQu4A4rdaQz1JJUS90biGgjK7Mm9sZZE4NzvdVqRmeRD40WWpsBvRjHG3bQJOxi3NZRYHnot5kBb62meeUF8lLcp2uq
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:42:: with SMTP id i2mr2552973ilr.184.1597290323164;
- Wed, 12 Aug 2020 20:45:23 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 20:45:23 -0700
-In-Reply-To: <000000000000ece9db05ac4054e8@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000050c61e05acba22b6@google.com>
-Subject: Re: WARNING in compat_do_ebt_get_ctl
-From:   syzbot <syzbot+5accb5c62faa1d346480@syzkaller.appspotmail.com>
-To:     bridge@lists.linux-foundation.org, coreteam@netfilter.org,
-        davem@davemloft.net, fw@strlen.de, kadlec@netfilter.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        nikolay@cumulusnetworks.com, pablo@netfilter.org,
-        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VA5B9P3jl9Rwei4btklJKhUkayY4KVxIbC/8uysb2Ms=;
+        b=Fb/yyaQgYnxTTy8uI3A9XhFDlHPikdTV521MUTJRyiwdGoo8jazU3WTAZHgXHjNKXm
+         6TjbceBCl2hEAg9VeoJGC47NJ/rjkejrFi+CUKjFtOLgFwmxCLoQFj8rxUNQMvMXi04u
+         E05qTJKvlCORWb4ixetwS8VXEypq0hZl5pxHrh606dqoUqPS4DdtybvcjSdeHPNOx7Xy
+         jgCTIP+VWJstY4N/7KTMMjM4Qu+1wOHT0xvaiC/BJ0qYmgKXDkBgwQy3V+3WPJhvr/Rm
+         s5G+BjQlqS4s3ba+AmF6+3zFrGaVvxlkQd+LjfGPcsWwpq5iwuphYkmgA6E5Cxbg+aqB
+         Tqsg==
+X-Gm-Message-State: AOAM532jefl4DWGgVStk2d8KiqCG6uDLf4/OkzwrgKvBmf7BsBd/f8m0
+        Vks3Mfbrzn6XbwbHVJ+pxHQT4NGG/OU=
+X-Google-Smtp-Source: ABdhPJyyBYECo8VpyG+iLLqstmWjZwM/PavaoCFYPLSee0oyVvu3TxY0sHJDPEst5m3pobV1uZahJQ==
+X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr2239283plq.135.1597290722526;
+        Wed, 12 Aug 2020 20:52:02 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id e7sm3630443pgn.64.2020.08.12.20.51.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Aug 2020 20:52:01 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Doug Berger <opendmb@gmail.com>
+Subject: [PATCH] mm: include CMA pages in lowmem_reserve at boot
+Date:   Wed, 12 Aug 2020 20:51:38 -0700
+Message-Id: <1597290698-24266-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+The lowmem_reserve arrays provide a means of applying pressure
+against allocations from lower zones that were targeted at
+higher zones. Its values are a function of the number of pages
+managed by higher zones and are assigned by a call to the
+setup_per_zone_lowmem_reserve() function.
 
-HEAD commit:    fb893de3 Merge tag 'tag-chrome-platform-for-v5.9' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1742b31c900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f1fedc63022bf07e
-dashboard link: https://syzkaller.appspot.com/bug?extid=5accb5c62faa1d346480
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13280fd6900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1409f4a6900000
+The function is initially called at boot time by the function
+init_per_zone_wmark_min() and may be called later by accesses
+of the /proc/sys/vm/lowmem_reserve_ratio sysctl file.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5accb5c62faa1d346480@syzkaller.appspotmail.com
+The function init_per_zone_wmark_min() was moved up from a
+module_init to a core_initcall to resolve a sequencing issue
+with khugepaged. Unfortunately this created a sequencing issue
+with CMA page accounting.
 
-------------[ cut here ]------------
-Buffer overflow detected (80 < 137)!
-WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 copy_overflow include/linux/thread_info.h:134 [inline]
-WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 check_copy_size include/linux/thread_info.h:143 [inline]
-WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 copy_to_user include/linux/uaccess.h:151 [inline]
-WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 compat_do_ebt_get_ctl+0x47e/0x500 net/bridge/netfilter/ebtables.c:2270
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6853 Comm: syz-executor171 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:copy_overflow include/linux/thread_info.h:134 [inline]
-RIP: 0010:check_copy_size include/linux/thread_info.h:143 [inline]
-RIP: 0010:copy_to_user include/linux/uaccess.h:151 [inline]
-RIP: 0010:compat_do_ebt_get_ctl+0x47e/0x500 net/bridge/netfilter/ebtables.c:2270
-Code: ba fd ff ff 4c 89 f7 e8 60 07 a2 fa e9 ad fd ff ff e8 36 18 62 fa 4c 89 e2 be 50 00 00 00 48 c7 c7 40 b9 0e 89 e8 94 1f 33 fa <0f> 0b e9 dc fd ff ff 41 bc f2 ff ff ff e9 4f fe ff ff e8 3b 07 a2
-RSP: 0018:ffffc90005667ae8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 1ffff92000accf5e RCX: 0000000000000000
-RDX: ffff88809458a280 RSI: ffffffff815dbce7 RDI: fffff52000accf4f
-RBP: ffffffff8a8faa60 R08: 0000000000000001 R09: ffff8880ae6318e7
-R10: 0000000000000000 R11: 0000000035383654 R12: 0000000000000089
-R13: 0000000020000000 R14: ffffc90005667d80 R15: ffffc90005667b20
- do_ebt_get_ctl+0x2b4/0x790 net/bridge/netfilter/ebtables.c:2317
- nf_getsockopt+0x72/0xd0 net/netfilter/nf_sockopt.c:116
- ip_getsockopt net/ipv4/ip_sockglue.c:1778 [inline]
- ip_getsockopt+0x164/0x1c0 net/ipv4/ip_sockglue.c:1757
- tcp_getsockopt+0x86/0xd0 net/ipv4/tcp.c:3884
- __sys_getsockopt+0x219/0x4c0 net/socket.c:2179
- __do_sys_getsockopt net/socket.c:2194 [inline]
- __se_sys_getsockopt net/socket.c:2191 [inline]
- __ia32_sys_getsockopt+0xb9/0x150 net/socket.c:2191
- do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
- __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
- do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f91569
-Code: 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffdae08c EFLAGS: 00000292 ORIG_RAX: 000000000000016d
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000082 RSI: 0000000020000000 RDI: 0000000020000100
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+The CMA pages are added to the managed page count of a zone
+when cma_init_reserved_areas() is called at boot also as a
+core_initcall. This makes it uncertain whether the CMA pages
+will be added to the managed page counts of their zones before
+or after the call to init_per_zone_wmark_min() as it becomes
+dependent on link order. With the current link order the pages
+are added to the managed count after the lowmem_reserve arrays
+are initialized at boot.
+
+This means the lowmem_reserve values at boot may be lower than
+the values used later if /proc/sys/vm/lowmem_reserve_ratio is
+accessed even if the ratio values are unchanged.
+
+In many cases the difference is not significant, but in others
+it may have an affect.
+
+This commit breaks the link order dependency by invoking
+init_per_zone_wmark_min() as a postcore_initcall so that the
+CMA pages have the chance to be properly accounted in their
+zone(s) and allowing the lowmem_reserve arrays to receive
+consistent values.
+
+Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 8b7d0ecf30b1..f3e340ec2b6b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7887,7 +7887,7 @@ int __meminit init_per_zone_wmark_min(void)
+ 
+ 	return 0;
+ }
+-core_initcall(init_per_zone_wmark_min)
++postcore_initcall(init_per_zone_wmark_min)
+ 
+ /*
+  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
+-- 
+2.7.4
 
