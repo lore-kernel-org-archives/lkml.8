@@ -2,88 +2,130 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54872C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C0920716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B25C20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H4oTw6Xt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M6n9gFHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHMSfk (ORCPT
+        id S1726664AbgHMSfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        Thu, 13 Aug 2020 14:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSfk (ORCPT
+        with ESMTP id S1726640AbgHMSfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:35:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFCDC061757;
-        Thu, 13 Aug 2020 11:35:40 -0700 (PDT)
+        Thu, 13 Aug 2020 14:35:43 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD436C061757;
+        Thu, 13 Aug 2020 11:35:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=R0TbUVnS+LBBcuAR5BFfn8q7iOgSSh24gcpRLah9OLo=; b=H4oTw6XtpdFTxq8jH4skOl/Obx
-        7T2pjjbWEHuXzIh6AneSVgk+JsCeOx0xxuyyOJYfF6gaq8PYVAQ7BZ61WmlbQuK4qvMJoHNdtk1jg
-        0zVgPF9bNw0X3pl5vmyCNlS4mF6hJio0o4xdaoWaHLs37972RVDYJLdOJTB9qZ4CeLofmJQso83pA
-        ouIZA9fms+mII3oTTo2TizKYpMPGggJB2uPpNS6FdRLuTwKaLwI0U7NbXFJWZ2SpTtitKheKXx1D6
-        RuaCHB/yWTgzIsMKuqxrSjnGMLTYoHhufSjtpd5iPQPhcwGpC/EoQjomZY+EfDkLWlxorTRuIanVY
-        d0/mtl+g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6I4c-0002EY-Od; Thu, 13 Aug 2020 18:35:35 +0000
-Subject: Re: linux-next: Tree for Aug 13 (drivers/media/i2c/max9286.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-References: <20200813165846.27887669@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
-Date:   Thu, 13 Aug 2020 11:35:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6WrnnviMlINCC/I1qJoE/0TrMdLOcpZu6CQan/DWMw0=; b=M6n9gFHrfiDJ9ToLAfdZGTAml3
+        g3rOaOp0rIofregmcedWd+v1nO/3x0JSV4g+UXWQUhQsVNM8Ibm778Rie2zREOhf22DkvHGUnP0w5
+        YTNqFa6Zh0VOQW8gkU09tpGDt45zQyfZ41eOSFCcl/EGpODmAoY+gMx0KzV92wsps0ziggaxVsPaw
+        RW/DGPKHrFuXADS3JLBRYNOJ3hjbzdUbfiGrJZk6KX+kzpEV6SWZpv4+eBeLaFY2Vl0x1lTiEYb9y
+        tEIrQdgHvyptNq3k7doNKCUwWqf+cXQxw/iL4kDQUlZIKTUVBQz3aBPXxuxC2VZAHCVXNSi1uV/ar
+        BmaExiPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6I4e-0001mq-7O; Thu, 13 Aug 2020 18:35:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 622FF3011F0;
+        Thu, 13 Aug 2020 20:35:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4E5542B929A4C; Thu, 13 Aug 2020 20:35:33 +0200 (CEST)
+Date:   Thu, 13 Aug 2020 20:35:33 +0200
+From:   peterz@infradead.org
+To:     Uriel Guajardo <urielguajardo@google.com>
+Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>, mingo@redhat.com,
+        will@kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kunit: added lockdep support
+Message-ID: <20200813183533.GZ2674@hirez.programming.kicks-ass.net>
+References: <20200812193332.954395-1-urielguajardojr@gmail.com>
+ <20200813103615.GT2674@hirez.programming.kicks-ass.net>
+ <CAG30Eec2w1zG7CEd=TVGoNssCZu49TBF+1xXPKrKh+d7hJZfsg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200813165846.27887669@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG30Eec2w1zG7CEd=TVGoNssCZu49TBF+1xXPKrKh+d7hJZfsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/20 11:58 PM, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Aug 13, 2020 at 08:15:27AM -0500, Uriel Guajardo wrote:
+> On Thu, Aug 13, 2020 at 5:36 AM <peterz@infradead.org> wrote:
+> >
+> > On Wed, Aug 12, 2020 at 07:33:32PM +0000, Uriel Guajardo wrote:
+> > > KUnit will fail tests upon observing a lockdep failure. Because lockdep
+> > > turns itself off after its first failure, only fail the first test and
+> > > warn users to not expect any future failures from lockdep.
+> > >
+> > > Similar to lib/locking-selftest [1], we check if the status of
+> > > debug_locks has changed after the execution of a test case. However, we
+> > > do not reset lockdep afterwards.
+> > >
+> > > Like the locking selftests, we also fix possible preemption count
+> > > corruption from lock bugs.
+> >
+> > > +static void kunit_check_locking_bugs(struct kunit *test,
+> > > +                                  unsigned long saved_preempt_count,
+> > > +                                  bool saved_debug_locks)
+> > > +{
+> > > +     preempt_count_set(saved_preempt_count);
+> > > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > > +     if (softirq_count())
+> > > +             current->softirqs_enabled = 0;
+> > > +     else
+> > > +             current->softirqs_enabled = 1;
+> > > +#endif
+> >
+> > Urgh, don't silently change these... if they're off that's a hard fail.
+> >
+> >         if (DEBUG_LOCKS_WARN_ON(preempt_count() != saved_preempt_count))
+> >                 preempt_count_set(saved_preempt_count);
+> >
+> > And by using DEBUG_LOCKS_WARN_ON() it will kill IRQ tracing and trigger
+> > the below fail.
 > 
-> News: The merge window has opened, so please do not add any v5.10
-> related material to your linux-next included branches until after the
-> merge window closes again.
-> 
-> Changes since 20200812:
-> 
+> Hmm, I see. My original assumption was that lock related bugs that
+> could corrupt preempt_count would always be intervened by lockdep
+> (resulting in debug_locks already being off). Is this not always true?
+> In any case, I think it's better to explicitly show the failure
+> associated with preemption count as you have done, but I'm still
+> curious.
 
-on x86_64:
+Code could have an unbalanced preempt_disable() unrelated to locks.
 
-# CONFIG_GPIOLIB is not set
+> Also, for further clarification: the check you have made on
+> preempt_count also covers softirq_count, right? 
 
-../drivers/media/i2c/max9286.c: In function 'max9286_register_gpio':
-../drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no member named 'of_node'
-  gpio->of_node = dev->of_node;
+Correct.
 
+> My understanding is
+> that softirqs are re-{enabled/disabled} due to the corruption of the
+> preemption count, so no changes should occur if the preemption count
+> remains the same. If it does change, we've already failed from
+> DEBUG_LOCKS_WARN_ON.
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+local_bh_enable() might call into softirq handling if it got raised
+while disabled, you'll miss that here. The next interrupt will likely
+run the softirq after that.
+
+This is best effort error recovery, you got a splat, all we aim for is
+living long enough to get the user to see it.
