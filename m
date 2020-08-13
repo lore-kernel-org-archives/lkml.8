@@ -2,202 +2,132 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C4CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE40CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF4720781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81A120791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LKuthNgy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6sWqj/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgHMPto (ORCPT
+        id S1726684AbgHMPtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
+        Thu, 13 Aug 2020 11:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMPtn (ORCPT
+        with ESMTP id S1726131AbgHMPtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:49:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07BC061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t11so2803663plr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
+        Thu, 13 Aug 2020 11:49:51 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298F0C061757;
+        Thu, 13 Aug 2020 08:49:51 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b14so5588539qkn.4;
+        Thu, 13 Aug 2020 08:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QisyeHY3ZHMM3TerX6llGGeWvEX6TJlY7NstZgbx+iA=;
-        b=LKuthNgyTESR2Nb5oycvHkDmSlKMH02vcClqoGbLB+Q3J0FfgdtV/KW/wYLum4WUiZ
-         OfVxpFSYY5d8YHZ3+iqoHu/a+DIQeHox5ug7EO6gbNtt/HujRCr9O0uZruzuirhrVqMC
-         7tXN7EGsBqpcLjldCm3M1WB/akMnXU8vn394U=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=IjouL40zx/qLWNtDPPiiySnfcdkb5vHL1eOLgjTXpyM=;
+        b=U6sWqj/i6i22WPrrm7NEadqRmm9hYSvkQwCq2mjwIs1i7KcZmVhWRUZueN6t2WNBbn
+         dCaYpjGArxUTEz65s7dgdSehLQTdQ7eh1PO0tVvffCeUNFls3ps2R5e0a+IAFl2YgGsO
+         /4aVZY8vmYktgPlhsgrg2uCrbgiPdpgglR4XBLObw3DnwiilD2z/grQRM/LRNu069J7V
+         01j5d6jYWWgcBpAi5lWmBYArYQuaqBGYw2x+AVofnlYHuVjcx/i5j+T4W0XmU9zvPaBH
+         AQ33ORKHDRteF/nctfVlUWE/3T+yfqWYZEbEz0NlVip13Oa8sparzJx7GpejSCzw8ilA
+         103g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QisyeHY3ZHMM3TerX6llGGeWvEX6TJlY7NstZgbx+iA=;
-        b=PazWt5gshbFHr7xuKWqX+G4g1lCIzgscDfl76rIBGdJueVb2N6OKGTKTsf7IKpoiR+
-         VAnDU8Osl28TaqiENkynXoVjCfCmC2YPXfR0eG+96DQnFJzxdZQhm3fGW0DC/R1QCtvT
-         DSH/PqhJ03byeOI3x96PCfyU0kQDYVj3QMrR70P8qYDK/+y8fWDfvtNWry7Nw3x05H8o
-         NBgKypL+g5eroJBz3jM4oZjwGnmlNZT1IORrI0lwM9eA7bxBJUaATvoE/e4GL/rYGoVq
-         7PLTcsUeu/AC9aFGY3Criv1d3Z8u9nby8fe4zcXSzEcIUSkUaPNcsb6/TXykEkst6lEu
-         kLbQ==
-X-Gm-Message-State: AOAM533SHp5lWwKrax6UajuP/nLeeHkiuP+O/DvjyJNPPsAkZ1EohgNi
-        eHas9vjIG4R8Eu9A/fKVcJd1og==
-X-Google-Smtp-Source: ABdhPJz1M1P1S51YzM2m55MEu1bwSyYnt8Ac/RYg3NEhBAQvrxXf7zaV/15+/gOI8U5pzir/Bpl51Q==
-X-Received: by 2002:a17:90a:6d96:: with SMTP id a22mr5449139pjk.165.1597333782100;
-        Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id b185sm6329480pfg.71.2020.08.13.08.49.39
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=IjouL40zx/qLWNtDPPiiySnfcdkb5vHL1eOLgjTXpyM=;
+        b=g5cebO87h/Q18nb+ZXzyrij9Y8/Lp4WT9Yzhxc5tSq2tiZ47dXZNP+ORPJlufQReAi
+         qqarA0kL4H54cmxrE8XtaZHmyhUPqp7aTBJjE4l1RV6ZQrDVIYW+a9nBp1nZ1pJOJjaS
+         GFJhCUAxO8QM1mrkgzL0LOcpc59kbGIXotxAhnQS/lK4vZFyPW9FtYeMjw0LvuGP6UMz
+         dIabRcYX+n0lEdmG5dm5ZxM5fUR/L4MIK70jE33YOKkVfvcC2PwvD/C5n00Xjfcb94Qp
+         KJn7TBoZvwMK5aO0ZsjpY1zsyDrQs0MD4PLPEPmby8LcedVygc5SeT5TsCqdpfcchiTA
+         0vVQ==
+X-Gm-Message-State: AOAM533yZsMgkrJpdUMyzGC0ycRgrXdspuxKbiS8GVcqO59IzzHOsxXP
+        7eospklVIfwgG2l40o8qU2JXtk8j
+X-Google-Smtp-Source: ABdhPJxLpPrwbBa1O/z54hHFSzdBBDsQqaenpO052OYr4U6cg/S8t4viqIQoACpb6X4J6+U/9CLNLg==
+X-Received: by 2002:a05:620a:98a:: with SMTP id x10mr5084190qkx.375.1597333790199;
+        Thu, 13 Aug 2020 08:49:50 -0700 (PDT)
+Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
+        by smtp.gmail.com with ESMTPSA id q7sm5805663qkf.35.2020.08.13.08.49.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 08:49:40 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 08:49:39 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] usb: dwc3: core: Host wake up support from system
- suspend
-Message-ID: <20200813154939.GB2995789@google.com>
-References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
- <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
+        Thu, 13 Aug 2020 08:49:49 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] selinux: add basic filtering for audit trace
+ events
+To:     peter enderborg <peter.enderborg@sony.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+References: <20200813144914.737306-1-tweek@google.com>
+ <20200813144914.737306-2-tweek@google.com>
+ <02c193e4-008a-5c3d-75e8-9be7bbcb941c@schaufler-ca.com>
+ <a82d50bd-a0ec-bd06-7a3a-c2696398c4c3@sony.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <c4424850-645f-5788-fb35-922c81eace6b@gmail.com>
+Date:   Thu, 13 Aug 2020 11:49:48 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <a82d50bd-a0ec-bd06-7a3a-c2696398c4c3@sony.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 12:40:15AM +0530, Sandeep Maheswaram wrote:
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Added need_phy_for_wakeup flag to distinugush resume path and hs_phy_flags
-> to check connection status and set phy mode and  configure interrupts.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
->  drivers/usb/dwc3/core.h |  2 ++
->  2 files changed, 42 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..eb7c225 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,12 +31,14 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
->  
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
->  
->  #include "debug.h"
-> +#include "../host/xhci.h"
->  
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
->  
-> @@ -1627,10 +1629,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
->  	return ret;
->  }
->  
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
-> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
-> +
-> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports = HCS_MAX_PORTS(reg);
-> +	for (i = 0; i < num_ports; i++) {
-> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i * 0x04);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-> +}
-> +
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->  	unsigned long	flags;
->  	u32 reg;
-> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
->  
->  	switch (dwc->current_dr_role) {
->  	case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1643,9 +1671,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  		dwc3_core_exit(dwc);
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
-> +		dwc3_set_phy_speed_flags(dwc);
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			dwc3_core_exit(dwc);
-> -			break;
-> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +				dwc->need_phy_for_wakeup = true;
-> +			else
-> +				dwc->need_phy_for_wakeup = false;
->  		}
->  
->  		/* Let controller to suspend HSPHY before PHY driver suspends */
-> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			ret = dwc3_core_init_for_resume(dwc);
-> -			if (ret)
-> -				return ret;
-> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> -			break;
-> +			if (!dwc->need_phy_for_wakeup) {
-> +				ret = dwc3_core_init_for_resume(dwc);
-> +				if (ret)
-> +					return ret;
-> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> +				break;
-> +			}
->  		}
->  		/* Restore GUSB2PHYCFG bits that were modified in suspend */
->  		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 013f42a..5367d510e 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -1094,6 +1094,8 @@ struct dwc3 {
->  	struct phy		*usb3_generic_phy;
->  
->  	bool			phys_ready;
-> +	bool                    need_phy_for_wakeup;
-> +	unsigned int            hs_phy_flags;
->  
->  	struct ulpi		*ulpi;
->  	bool			ulpi_ready;
+On 8/13/20 11:35 AM, peter enderborg wrote:
 
-Should this include a check for the 'wakeup-source' DT attribute as in
-xhci-mtk.c, to make wakeup support optional?
+> On 8/13/20 5:05 PM, Casey Schaufler wrote:
+>> On 8/13/2020 7:48 AM, Thiébaud Weksteen wrote:
+>>> From: Peter Enderborg <peter.enderborg@sony.com>
+>>>
+>>> This patch adds further attributes to the event. These attributes are
+>>> helpful to understand the context of the message and can be used
+>>> to filter the events.
+>>>
+>>> There are three common items. Source context, target context and tclass.
+>>> There are also items from the outcome of operation performed.
+>>>
+>>> An event is similar to:
+>>>             <...>-1309  [002] ....  6346.691689: selinux_audited:
+>>>         requested=0x4000000 denied=0x4000000 audited=0x4000000
+>>>         result=-13 ssid=315 tsid=61
+>> It may not be my place to ask, but *please please please* don't
+>> externalize secids. I understand that it's easier to type "42"
+>> than "system_r:cupsd_t:s0-s0:c0.c1023", and that it's easier for
+>> your tools to parse and store the number. Once you start training
+>> people that system_r:cupsd_t:s0-s0:c0.c1023 is secid 42 you'll
+>> never be able to change it. The secid will start showing up in
+>> scripts. Bad  Things  Will  Happen.
+> Ok, it seems to mostly against having this performance options.
+> Yes, it is a kernel internal data. So is most of the kernel tracing.
+> I see it is a primary tool for kernel debugging but than can also be
+> used for user-space debugging tools.  Hiding data for debuggers
+> does not make any sense too me.
+
+To be clear, userspace tools can't use fixed secid values because secids 
+are dynamically assigned by SELinux and thus secid 42 need not 
+correspond to the same security context across different boots even with 
+the same kernel and policy.  I wouldn't include them in the event unless 
+it is common practice to include fields that can only be interpreted if 
+you can debug the running kernel.  It would be akin to including kernel 
+pointers in the event (albeit without the KASLR ramifications).
+
