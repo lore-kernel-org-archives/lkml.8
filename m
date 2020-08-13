@@ -2,108 +2,137 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCEA20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D60620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jd6AZ/9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHMOJB (ORCPT
+        id S1726636AbgHMOJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:09:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13846 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgHMOI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:08:57 -0400
-IronPort-SDR: sHShGv06QUvYIugrdHcjVDwrIkhNjW1RErZg669+25WpmAthoFmV5Qb2z5UHMXJzSEqtyO1+MI
- IiPSaUtn+Qwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="154185340"
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="154185340"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:08:56 -0700
-IronPort-SDR: o0MhVUkf4xPzEwR7h5E3yQ59OcocB9KOzuxf7ng3Ug8K5sl+Cj+JJ+tAo2jwUPoy/mLQte8mva
- Q2GA2O+HUFrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="325420663"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2020 07:08:54 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k6Dm5-008SAB-PZ; Thu, 13 Aug 2020 17:00:09 +0300
-Date:   Thu, 13 Aug 2020 17:00:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Seungil Kang <sil.kang@samsung.com>
-Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] lib/cmdline: prevent unintented access to address
-Message-ID: <20200813140009.GX1891694@smile.fi.intel.com>
-References: <CGME20200813030810epcas1p39ad56c069ab4fa41312f91f994c17cac@epcas1p3.samsung.com>
- <20200813030741.6896-1-sil.kang@samsung.com>
+        Thu, 13 Aug 2020 10:09:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51228 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726102AbgHMOJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:09:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597327761;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ov9WwCk7+UWfHEP4xpuxzRaz3npe9xUOJK6D2NPqZEY=;
+        b=Jd6AZ/9PGhioc8GyPiPAbiwYlG/v3Jw5VZikJMVDnWnGIIiUd50GNzSafqyXrLn9De6Cne
+        m70i1BACvzswdLwmUoat0IySCxOK5nSuP3HKFcgAFwz5y5/F2zAYHkAyt4X3JNY2yY2eY8
+        ooM08mWcWr0gb73CQsEq+BB7FtGO7sc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-547-g_7Kdl7pME2wNP-Vh_37aw-1; Thu, 13 Aug 2020 10:09:19 -0400
+X-MC-Unique: g_7Kdl7pME2wNP-Vh_37aw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D0CF100CEC0;
+        Thu, 13 Aug 2020 14:09:18 +0000 (UTC)
+Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B5A1560D34;
+        Thu, 13 Aug 2020 14:09:14 +0000 (UTC)
+From:   Jarod Wilson <jarod@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH net v2] bonding: show saner speed for broadcast mode
+Date:   Thu, 13 Aug 2020 10:09:00 -0400
+Message-Id: <20200813140900.7246-1-jarod@redhat.com>
+In-Reply-To: <20200813035509.739-1-jarod@redhat.com>
+References: <20200813035509.739-1-jarod@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813030741.6896-1-sil.kang@samsung.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:07:41PM +0900, Seungil Kang wrote:
-> When args = "\"\0", "i" will be 0 and args[i-1] is used. (*lib/cmdline.c +238)
+Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+all interfaces, so the "speed" of the bond isn't really the aggregate of
+all interfaces, but rather, the speed of the slowest active interface.
 
-What I meant is to put hex dump of the args here in the parentheses, something like
+Also, the type of the speed field is u32, not unsigned long, so adjust
+that accordingly, as required to make min() function here without
+complaining about mismatching types.
 
-"When args = "... \"\0" (... 0x22 0x00), 'i' will be..."
+Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+v2: fix description to clarify speed == that of slowest active interface
 
-> Because of "i" is an unsigned int type, the function will access at args[0xFFFFFFFF].
-> It can make a crash.
+ drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-...
-
-> > Can you point out to the code that calls this and leads to a crash?
-> 
->  *lib/cmdlinc + 201 ~, next_arg function with args = "\"\0"
-
-Not the next_arg() code :-) The code which calls here...
-
-...
-
-> > Can you provide a KUnit test module which can check the case?
-> 
->  If necessary, I will make it and share it.
-
-Please, do as a separate patch in the series.
-
-...
-
-> --- a/lib/cmdline.c
-> +++ b/lib/cmdline.c
-> @@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
->   */
->  char *next_arg(char *args, char **param, char **val)
->  {
-> -	unsigned int i, equals = 0;
-> +	int i, equals = 0;
->  	int in_quote = 0, quoted = 0;
->  	char *next;
-
-At the first glance this is not correct fix for it: 0 - 1 is always 'all 1:s'
-independently on signedness, but I need to think about.
-
-And your test case / module would help a lot, if present.
-
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 5ad43aaf76e5..c853ca67058c 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4552,13 +4552,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return ret;
+ }
+ 
++static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
++{
++	if (speed == 0 || speed == SPEED_UNKNOWN)
++		speed = slave->speed;
++	else
++		speed = min(speed, slave->speed);
++
++	return speed;
++}
++
+ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 					   struct ethtool_link_ksettings *cmd)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	unsigned long speed = 0;
+ 	struct list_head *iter;
+ 	struct slave *slave;
++	u32 speed = 0;
+ 
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
+@@ -4570,8 +4580,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 	 */
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		if (bond_slave_can_tx(slave)) {
+-			if (slave->speed != SPEED_UNKNOWN)
+-				speed += slave->speed;
++			if (slave->speed != SPEED_UNKNOWN) {
++				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
++					speed = bond_mode_bcast_speed(slave,
++								      speed);
++				else
++					speed += slave->speed;
++			}
+ 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
+ 			    slave->duplex != DUPLEX_UNKNOWN)
+ 				cmd->base.duplex = slave->duplex;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
