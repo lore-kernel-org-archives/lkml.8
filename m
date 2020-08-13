@@ -2,56 +2,53 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579BF20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A76420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMS6O (ORCPT
+        id S1726641AbgHMS6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:58:14 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45324 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMS6N (ORCPT
+        Thu, 13 Aug 2020 14:58:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36157 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgHMS6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:58:13 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s23so5155026qtq.12;
+        Thu, 13 Aug 2020 14:58:14 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t23so5198599qto.3;
         Thu, 13 Aug 2020 11:58:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mMGEOs38oJF3yC1EryMyVjgRpVr9wn9qQ6Mpuxbj1sw=;
-        b=nNBR+GTRdFgpOsKjmydrkqdNYfIImCxxj9YoqQtGtSpVRLEKvhZZKiMEi0Gt0ojqDK
-         0f91QTR7qnaZPNMh/FYycBnAq/glDfl2d4Xrl3iVzl5A3gSQIBG/V0MyK+D58SUus43+
-         3Za+IrpsLYFEotXxqeIMHfDVHgJS2qN22/Co3/MN5xpCrg9Tk5eqvAdw2+bRKMdtw1tF
-         KtFpEvjvyfs+LpZXjCpXC4JpKjJYWm5bfTi3anFSSzq+fbOFHwaKoyZ+nXFQp7P5xe3y
-         0PmH3Lq0U4huXIMZcL26pTgxodZTTZVkh2k8kzROdpb94QMAKlorMnugIJyb/KFr6EtS
-         GD0g==
-X-Gm-Message-State: AOAM531hUNEQ5NpM4jfipx4d/FrcZeG8JraT5YafIlM8ulwjSn6a24b5
-        UZlX4u1s6aHkl08gUkO61fG4DUpv
-X-Google-Smtp-Source: ABdhPJyNRm6fmf11/k0P3n8jfBZGdQifveMIIj5ftrD4gHUbc+PGfg+WGVZlI2UlpmfxJVtFes6czg==
-X-Received: by 2002:ac8:754e:: with SMTP id b14mr6671942qtr.282.1597345092695;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0q3h4FnF2RC6T414mC+my3MOjYepZBJcgOxm130Jlyw=;
+        b=GTRFuZVwKk3A5hZ/QKK8V1PDGTaMzo8ww2pg1dDVLI11y2PFKKnigWBi1VPrhvO4wg
+         ftVKUuW8fkuHQ7XOAcnMe1uInEtpGJyXgXn4ThgSzSLTcgvFsNhtZbhQBOb/BBTWwAIo
+         8HVtxWIypXjpcpWsOUidFZAfQLypnl8t/Dogj4tIhCJlvFvjuftBYR2yO8KRfdHW08RF
+         EqI19wLuXM8zBRvbM0Yqjli8mAF5/0o/3fRqx/f2tmQeCnFEPrjdC+vW++yY0bxQ/pVd
+         idMZ8Q8SQUDDKsC33jJZK700+fYLZDe0KoZ4dbLZXgLiKYM0KqwWvBy23oVK722YeZfQ
+         umOQ==
+X-Gm-Message-State: AOAM533ozMozGA5YFMI+v8L1ZiHNQpH11LLLzqJgcRxeUoJyNZJyy90q
+        PSavTHC4VzUCtBIMcF7CL7A=
+X-Google-Smtp-Source: ABdhPJzP5fxOtzw2g+vN0oAwM7Y5ZqerxhEVMvQL/p3WECh/bp6faRUp1kTnlT43Cjl0GKzBzRjWIA==
+X-Received: by 2002:ac8:7152:: with SMTP id h18mr6674265qtp.44.1597345092079;
         Thu, 13 Aug 2020 11:58:12 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c9sm5994563qkm.44.2020.08.13.11.58.12
+        by smtp.gmail.com with ESMTPSA id c9sm5994563qkm.44.2020.08.13.11.58.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 11:58:12 -0700 (PDT)
+        Thu, 13 Aug 2020 11:58:11 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] efi/libstub: Stop parsing arguments at "--"
-Date:   Thu, 13 Aug 2020 14:58:09 -0400
-Message-Id: <20200813185811.554051-2-nivedita@alum.mit.edu>
+Subject: [PATCH 0/3] Three small fixes to cmdline parsing
+Date:   Thu, 13 Aug 2020 14:58:08 -0400
+Message-Id: <20200813185811.554051-1-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200813185811.554051-1-nivedita@alum.mit.edu>
-References: <20200813185811.554051-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,26 +56,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arguments after "--" are arguments for init, not for the kernel.
+First 2 are resends:
+https://lore.kernel.org/linux-efi/20200725155916.1376773-1-nivedita@alum.mit.edu/
+https://lore.kernel.org/linux-efi/20200729193300.598448-1-nivedita@alum.mit.edu/
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/efi-stub-helper.c | 2 ++
- 1 file changed, 2 insertions(+)
+Arvind Sankar (3):
+  efi/libstub: Stop parsing arguments at "--"
+  efi/libstub: Handle NULL cmdline
+  efi/libstub: Handle unterminated cmdline
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 6bca70bbb43d..37ff34e7b85e 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -201,6 +201,8 @@ efi_status_t efi_parse_options(char const *cmdline)
- 		char *param, *val;
- 
- 		str = next_arg(str, &param, &val);
-+		if (!val && !strcmp(param, "--"))
-+			break;
- 
- 		if (!strcmp(param, "nokaslr")) {
- 			efi_nokaslr = true;
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
 -- 
 2.26.2
 
