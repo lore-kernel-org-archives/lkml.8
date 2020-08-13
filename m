@@ -2,87 +2,117 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B31C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C358C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8EA520658
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D536320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597336146;
+	bh=mYx4fJshJRqk657Xt+birvf0tGGQwEtc93N+G1qkWY8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=tfmwwcMi5uXcpbqOhGSU99fq56fYlaaoUS9gr5CaPZpcgsIpJxdk47Y9JoAJz0t7D
+	 g1+PIJ1W58GeqRTRvaOs8lQKS4DG4ZZCCuBYsdNCQ8dflDNqbXw0mlQKjOTpWlRkYl
+	 djlVUjFbn/07LIxgSpdcNke8ZBi6WriipdGepaYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgHMQ2E (ORCPT
+        id S1726529AbgHMQ3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:28:04 -0400
-Received: from 14.mo6.mail-out.ovh.net ([46.105.56.113]:36299 "EHLO
-        14.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgHMQ2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:28:04 -0400
-Received: from player691.ha.ovh.net (unknown [10.108.35.197])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id A8046222F4F
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:10:21 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player691.ha.ovh.net (Postfix) with ESMTPSA id 352C3155163E0;
-        Thu, 13 Aug 2020 16:10:15 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-104R0051ed08ce6-8045-4efe-9ce6-aae512e6b7fc,
-                    E10370F5499BCD549250CF93A1A6372B2A4BB833) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] drivers/hwmon/adm1177.c: use simple i2c probe
-Date:   Thu, 13 Aug 2020 18:09:58 +0200
-Message-Id: <20200813160958.1506536-1-steve@sk2.org>
-X-Mailer: git-send-email 2.25.4
+        Thu, 13 Aug 2020 12:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbgHMQ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:29:05 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7AF20658;
+        Thu, 13 Aug 2020 16:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597336144;
+        bh=mYx4fJshJRqk657Xt+birvf0tGGQwEtc93N+G1qkWY8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=aLNRnS0+zf6iHufYdbxSvtDFlBhYmFBasFjQbTKkxOCe5q9tBY3BlWgS8OKyqfFMj
+         gYMUr65UldczOkQpIaIkjw1tbgcXPx3QRQl9I0fzEoO9OlvGbeZ2wz6mppnDd/rdxR
+         vQoJWdeuNGJ+1rVlp9BKSGoDEaUw3CL5N7ez0aEI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 74824352279C; Thu, 13 Aug 2020 09:29:04 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 09:29:04 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813162904.GX4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <20200813154159.GR4295@paulmck-ThinkPad-P72>
+ <20200813155412.GP9477@dhcp22.suse.cz>
+ <20200813160442.GV4295@paulmck-ThinkPad-P72>
+ <20200813161357.GQ9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7344526571069328700
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheiledurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813161357.GQ9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver doesn't use the id information provided by the old i2c
-probe function, so it can trivially be converted to the simple
-("probe_new") form.
+On Thu, Aug 13, 2020 at 06:13:57PM +0200, Michal Hocko wrote:
+> On Thu 13-08-20 09:04:42, Paul E. McKenney wrote:
+> > On Thu, Aug 13, 2020 at 05:54:12PM +0200, Michal Hocko wrote:
+> [...]
+> > > If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
+> > > check then there is no functional problem - GFP_RT_SAFE would still be
+> > > GFP_NOWAIT so functional wise the allocator will still do the right
+> > > thing.
+> > 
+> > Perhaps it was just me getting confused, early hour Pacific Time and
+> > whatever other excuses might apply.  But I thought that you still had
+> > an objection to GFP_RT_SAFE based on changes in allocator semantics for
+> > other users.
+> 
+> There is still that problem with lockdep complaining about raw->regular
+> spinlock on !PREEMPT_RT that would need to get resolved somehow. Thomas
+> is not really keen on adding some lockdep annotation mechanism and
+> unfortunatelly I do not have a different idea how to get rid of those.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- drivers/hwmon/adm1177.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+OK.  So the current situation requires a choice between these these
+alternatives, each of which has shortcomings that have been mentioned
+earlier in this thread:
 
-diff --git a/drivers/hwmon/adm1177.c b/drivers/hwmon/adm1177.c
-index d314223a404a..6e8bb661894b 100644
---- a/drivers/hwmon/adm1177.c
-+++ b/drivers/hwmon/adm1177.c
-@@ -196,8 +196,7 @@ static void adm1177_remove(void *data)
- 	regulator_disable(st->reg);
- }
- 
--static int adm1177_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int adm1177_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct device *hwmon_dev;
-@@ -277,7 +276,7 @@ static struct i2c_driver adm1177_driver = {
- 		.name = "adm1177",
- 		.of_match_table = adm1177_dt_ids,
- 	},
--	.probe = adm1177_probe,
-+	.probe_new = adm1177_probe,
- 	.id_table = adm1177_id,
- };
- module_i2c_driver(adm1177_driver);
--- 
-2.25.4
+1.	Prohibit invoking allocators from raw atomic context, such
+	as when holding a raw spinlock.
 
+2.	Adding a GFP_ flag.
+
+3.	Reusing existing GFP_ flags/values/whatever to communicate
+	the raw-context information that was to be communicated by
+	the new GFP_ flag.
+
+4.	Making lockdep forgive acquiring spinlocks while holding
+	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
+
+Am I missing anything?
+
+						Thanx, Paul
