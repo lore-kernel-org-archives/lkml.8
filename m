@@ -2,116 +2,219 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4421EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212C620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E6B20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="IaLkMwYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgHMFYV (ORCPT
+        id S1726546AbgHMF0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:24:21 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40381 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgHMFYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:24:20 -0400
-Received: by mail-io1-f69.google.com with SMTP id t22so3299303iob.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:24:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=MIGAdD8AV/NC1BP8vlLnD+v3sHhkKr3057HeKchSrxM=;
-        b=BXQ2cSXuFW+JpQ/WIZu8Z0wqejIOLa8L72XAPxPIwNoi7UHgkIexEbdfll6LX1+OI2
-         88VJkpZ5Sn8NHOO/PrMXm/akICjLHA/JyhQEtLjYHkILJWZUrVdHahenteHIPb/+E3UT
-         IRJDTgWOzW0ZhwskwcpQvk163RJJg2gkEduA80bI1jgI1DEqBsMD9bYsCkHPMYvSkCcF
-         AEZPIakyeNLNyo9lKCUbwncYSMQwCeH0zHwEdVSb7Cx9EmpsGefBXCNR/ApHr6TCbbYV
-         a6yttfCcycjCQ4elgC5AlTWznyxtVPb2lTCEqX1stsryYmM4HtSPyQKuWCwn2E3QXHfw
-         oSnw==
-X-Gm-Message-State: AOAM530oQj6rfxw5hzb6IhF8tEZl/BjbrpfqU6Y2v7a9rRGSKbP1tISy
-        A4DT64BPxapwXRIukCz5kKQqEEOzc/9rYRpXIOYBmq5da9Tx
-X-Google-Smtp-Source: ABdhPJxe/Y534Kujvl7uJwA40M2Jd7ICtQOtb+65Yk6LhxvJf9iNcev7hCxUSV5nArY+7yR3D+MdMzCJp8K5VbfJa70QRQfGBks0
+        Thu, 13 Aug 2020 01:26:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:48477 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgHMF0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:26:21 -0400
+IronPort-SDR: EOjheOyQ8iwMlbJszr1pCZnlwSSxyOW8McdLkp5v3ysl4EuZDIVHMcSCPwWAAOR+QsELBfXFme
+ W7dNU1APwz/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="134219555"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="134219555"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 22:26:18 -0700
+IronPort-SDR: CtQpoMJmcGliew/SsonhWiWtiy1DizG6KAa1hxtJGvXz5coZdIsRxhIzHZWOzXvTcHyzhR3w16
+ 53SGWX+XRGMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="278045982"
+Received: from fmsmsx603-2.cps.intel.com (HELO fmsmsx603.amr.corp.intel.com) ([10.18.84.213])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2020 22:26:18 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 12 Aug 2020 22:26:18 -0700
+Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 12 Aug 2020 22:26:18 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 12 Aug 2020 22:26:17 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Wed, 12 Aug 2020 22:26:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NS0XQ3go9nnB37288UMwdfu40oWp+DYGj6+yJQ3zdbM5w07zTKQyXeKFnRW3i+EUT0fTw2yAqKoLXsnOGDVsGKWUnHjDn0x5c6/l3L2GtFxCZuFGIF9k+1/0fU+2sm+uJqnMcTxkqSzIzqz6hf34HWJh4ZvQpnd+pst5uh6mx4rw5blR1CnNWg+GYlp6/PVaAoPaTQYOL4mk/yD3wilgsGtrCDfa9i0utoHH3Irrg2Gf9mVVYMsjXpUnCtjtmXuWDH0W0QRYE/PWn9HfAGs7Ph7zoqwH1e95PLLXnAFoz1IOv+/muzL4PLE64UB3//TLqYmq6CXu2x+g/Z/gkXcIEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cv40q4LjWP16p63WCM+cKQiA8AFO+FnISfACgSfSBTQ=;
+ b=HEy82rExZ+1MIrFBnBffSMaeWRjFHQSl8UbHR5xMAyN3hZIm4P7UDTcBM42TG5qPPD4q3xrVCapsQ/dixYRFMK9Tron4rEUrdw6MA5IM5znMgBb4luVNlg6zEOWK8V2v9iD2R29DhQmRMeuY6ugeYJ713oCmZo4p0HUX45ya+9iIQGD+b+GCCR2V2H0xPptz3v6xflp99iWfGwuwGl5z854OmGYO4pR6d1NuHM8HPrPvwg2ifG+8MRWES/0cW734/FnjtkkeO2UHsmHQZILjKWSGhzqgSqHwvmz/TTVIvjcsDNbftQu+/B/AzuUyZDKh/8P7uNsKGbmhaIJS4PkWWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cv40q4LjWP16p63WCM+cKQiA8AFO+FnISfACgSfSBTQ=;
+ b=IaLkMwYSVwRNkFlJcc9w9LOdGb3z/8H7d9yLRqjZfVaa6fx+rxIVA9qdV6DJhiz1lXA5z5K/pDjjTdgdLhj7QE450EnG5Pg04xlstgl9POmisCrAqAp/MNL1zn9LopyoCT5ClBgjHkEfqFbnE3DK73W38PmjTSgkooh7gtuUeUw=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MW3PR11MB4729.namprd11.prod.outlook.com (2603:10b6:303:5d::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Thu, 13 Aug
+ 2020 05:26:14 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3283.016; Thu, 13 Aug 2020
+ 05:26:14 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Wang <jasowang@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Thread-Topic: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Thread-Index: AQHWX3hut2htBlMVB0qfW0Pa+gZbC6kSPbuAgABwW8CAAzMrAIAUgAoAgAJJ4oCABDO9YIADE1sAgAACHkCAAaKQAIAACXXA
+Date:   Thu, 13 Aug 2020 05:26:14 +0000
+Message-ID: <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
+ <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
+In-Reply-To: <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4f2f96bf-f929-43d2-8e5a-08d83f4965c7
+x-ms-traffictypediagnostic: MW3PR11MB4729:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR11MB4729B8FD1B992648D76314DC8C430@MW3PR11MB4729.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L+b8pH8DOHdyROM2v0frOMe1M8oTRe9ZeFHBpfOjcLkG2wy0a2bmiazuCk65PHqP7AbSW6k530EtBWnAfWYZeOQcUlaQrLgZD92S20FxcBWF8MCYv7hj8oSTwEzfYck7k6zUDZGRtIUm4cSDM3gxOv1ob06K4um9s3LEjliig49tv9AeRuNHSwVguC8UpQDnB6MUei9LPmyo281jCzMX3HtACwSnFls9LbcIZkKUVSSnstq1BZBj4XHSLvKbcHGTzRmakILhnnwm74r43wG+8wGgXrvVM6vy1z9+ISvWPtqRW2LqAcYiCpypn+f8g2z9ohbAbInIsUUNefoB6T1MZg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(66556008)(7416002)(76116006)(66476007)(26005)(66446008)(186003)(64756008)(66946007)(4326008)(8936002)(478600001)(6506007)(86362001)(7696005)(71200400001)(316002)(8676002)(9686003)(2906002)(83380400001)(55016002)(52536014)(33656002)(5660300002)(110136005)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Bi1vQiqh7QdoyCo8egeKjxDEORdfkgp+43+HkTBgWNuIO16tzAzC88y9F+J1wUGsPSecOPjqiMVzIsMgR57WfN7QpBPJv4chJX+NJ/qHgm+wxLAHx7kmV37Y1xOvp/cF9sX3zi7Wor82yt3YuNjmif04EDAJsUqgbVRQdI4mrcmDCMMXvk8ucckeA2sac9YZ42gOc5q1kLmP8CIKYwUqu6yOF+Ua/ayzc2p3I9hTJ9f5u/PbY3lShPdvHpAIlUV+cN2iy+thcAbAcnsRM2ASCxQIbVKeYhTN7bfOs37plbYS8fgOedlx7g9v6v13Koqixry74RoxJks9+uInIXHImJZxisaxOl5UKiWsRlQdM3mVfqiGghdPi2Qbdomm2eECyycYdZ8rd8zqecF/sLEXjxWYO5AeBovTWjraCiwzxuiIoFWNWDwTVFcbKO95TYuxDu5wK+AAuojNMlQUoJplckrthtP5YOoD3aovsIelHy9+yHw910mySi2PXforCCSVjbUBxm5AO02f5gBrXg41rRrToYVfky0IStXrR4SPEOK1SOtb929p8HL11S1lR2qeiMS5xFPq1f5eVy9/GsCPmzTNNLLkDbf7SlwlyPKgcc+Tt3nYlrfYjtXS/ohkZ9pWKc1Lwg++VWb/9U1AirNrJQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a92:d9d1:: with SMTP id n17mr2940649ilq.182.1597296259060;
- Wed, 12 Aug 2020 22:24:19 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 22:24:19 -0700
-In-Reply-To: <00000000000042af6205ac444172@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001f5a1105acbb8483@google.com>
-Subject: Re: WARNING: locking bug in l2cap_chan_del
-From:   syzbot <syzbot+01d7fc00b2a0419d01cc@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f2f96bf-f929-43d2-8e5a-08d83f4965c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 05:26:14.2885
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pl7lJw3573ZAo1pkAvLSlDwuzarzQswOasVOjQeDuRgXmLht0UydYouDgn7C+c+u1s+UV/21rYEuLynfJT8O2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4729
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
-
-HEAD commit:    06a7a37b ipv4: tunnel: fix compilation on ARCH=um
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=115caa16900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7bb894f55faf8242
-dashboard link: https://syzkaller.appspot.com/bug?extid=01d7fc00b2a0419d01cc
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fb564a900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+01d7fc00b2a0419d01cc@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 0 PID: 5 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
-WARNING: CPU: 0 PID: 5 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:172 [inline]
-WARNING: CPU: 0 PID: 5 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4100 [inline]
-WARNING: CPU: 0 PID: 5 at kernel/locking/lockdep.c:183 __lock_acquire+0x1674/0x5640 kernel/locking/lockdep.c:4376
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:172 [inline]
-RIP: 0010:check_wait_context kernel/locking/lockdep.c:4100 [inline]
-RIP: 0010:__lock_acquire+0x1674/0x5640 kernel/locking/lockdep.c:4376
-Code: d2 0f 85 f1 36 00 00 44 8b 15 f0 8e 57 09 45 85 d2 0f 85 1c fa ff ff 48 c7 c6 80 af 4b 88 48 c7 c7 80 aa 4b 88 e8 ce 36 eb ff <0f> 0b e9 02 fa ff ff c7 44 24 38 fe ff ff ff 41 bf 01 00 00 00 c7
-RSP: 0018:ffffc90000cbf8e0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000000
-RDX: ffff8880a95a2140 RSI: ffffffff815d8eb7 RDI: fffff52000197f0e
-RBP: ffff8880a95a2ab0 R08: 0000000000000000 R09: ffffffff89bcb3c3
-R10: 00000000000007d2 R11: 0000000000000001 R12: 0000000000000000
-R13: 00000000000019a1 R14: ffff8880a95a2140 R15: 0000000000040000
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
- _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
- spin_lock_bh include/linux/spinlock.h:359 [inline]
- lock_sock_nested+0x3b/0x110 net/core/sock.c:3040
- l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
- l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
- l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+PiBGcm9tOiBKYXNvbiBXYW5nIDxqYXNvd2FuZ0ByZWRoYXQuY29tPg0KPiBTZW50OiBUaHVyc2Rh
+eSwgQXVndXN0IDEzLCAyMDIwIDEyOjM0IFBNDQo+IA0KPiANCj4gT24gMjAyMC84LzEyIOS4i+WN
+iDEyOjA1LCBUaWFuLCBLZXZpbiB3cm90ZToNCj4gPj4gVGhlIHByb2JsZW0gaXMgdGhhdCBpZiB3
+ZSB0aWUgYWxsIGNvbnRyb2xzIHZpYSBWRklPIHVBUEksIHRoZSBvdGhlcg0KPiA+PiBzdWJzeXN0
+ZW0gbGlrZSB2RFBBIGlzIGxpa2VseSB0byBkdXBsaWNhdGUgdGhlbS4gSSB3b25kZXIgaWYgdGhl
+cmUgaXMgYQ0KPiA+PiB3YXkgdG8gZGVjb3VwbGUgdGhlIHZTVkEgb3V0IG9mIFZGSU8gdUFQST8N
+Cj4gPiB2U1ZBIGlzIGEgcGVyLWRldmljZSAoZWl0aGVyIHBkZXYgb3IgbWRldikgZmVhdHVyZSB0
+aHVzIG5hdHVyYWxseSBzaG91bGQNCj4gPiBiZSBtYW5hZ2VkIGJ5IGl0cyBkZXZpY2UgZHJpdmVy
+IChWRklPIG9yIHZEUEEpLiBGcm9tIHRoaXMgYW5nbGUgc29tZQ0KPiA+IGR1cGxpY2F0aW9uIGlz
+IGluZXZpdGFibGUgZ2l2ZW4gVkZJTyBhbmQgdkRQQSBhcmUgb3J0aG9nb25hbCBwYXNzdGhyb3Vn
+aA0KPiA+IGZyYW1ld29ya3MuIFdpdGhpbiB0aGUga2VybmVsIHRoZSBtYWpvcml0eSBvZiB2U1ZB
+IGhhbmRsaW5nIGlzIGRvbmUgYnkNCj4gPiBJT01NVSBhbmQgSU9BU0lEIG1vZHVsZXMgdGh1cyBt
+b3N0IGxvZ2ljIGFyZSBzaGFyZWQuDQo+IA0KPiANCj4gU28gd2h5IG5vdCBpbnRyb2R1Y2UgdlNW
+QSB1QVBJIGF0IElPTU1VIG9yIElPQVNJRCBsYXllcj8NCg0KT25lIG1heSBhc2sgYSBzaW1pbGFy
+IHF1ZXN0aW9uIHdoeSBJT01NVSBkb2Vzbid0IGV4cG9zZSBtYXAvdW5tYXANCmFzIHVBUEkuLi4N
+Cg0KPiANCj4gDQo+ID4NCj4gPj4+ICAgIElmIGFuIHVzZXJzcGFjZSBETUEgaW50ZXJmYWNlIGNh
+biBiZSBlYXNpbHkNCj4gPj4+IGFkYXB0ZWQgdG8gYmUgYSBwYXNzdGhyb3VnaCBvbmUsIGl0IG1p
+Z2h0IGJlIHRoZSBjaG9pY2UuDQo+ID4+IEl0J3Mgbm90IHRoYXQgZWFzeSBldmVuIGZvciBWRklP
+IHdoaWNoIHJlcXVpcmVzIGEgbG90IG9mIG5ldyB1QVBJcyBhbmQNCj4gPj4gaW5mcmFzdHJ1Y3R1
+cmVzKGUuZyBtZGV2KSB0byBiZSBpbnZlbnRlZC4NCj4gPj4NCj4gPj4NCj4gPj4+IEJ1dCBmb3Ig
+aWR4ZCwNCj4gPj4+IHdlIHNlZSBtZGV2IGEgbXVjaCBiZXR0ZXIgZml0IGhlcmUsIGdpdmVuIHRo
+ZSBiaWcgZGlmZmVyZW5jZSBiZXR3ZWVuDQo+ID4+PiB3aGF0IHVzZXJzcGFjZSBETUEgcmVxdWly
+ZXMgYW5kIHdoYXQgZ3Vlc3QgZHJpdmVyIHJlcXVpcmVzIGluIHRoaXMgaHcuDQo+ID4+IEEgd2Vh
+ayBwb2ludCBmb3IgbWRldiBpcyB0aGF0IGl0IGNhbid0IHNlcnZlIGtlcm5lbCBzdWJzeXN0ZW0g
+b3RoZXIgdGhhbg0KPiA+PiBWRklPLiBJbiB0aGlzIGNhc2UsIHlvdSBuZWVkIHNvbWUgb3RoZXIg
+aW5mcmFzdHJ1Y3R1cmVzIChsaWtlIFsxXSkgdG8gZG8NCj4gPj4gdGhpcy4NCj4gPiBtZGV2IGlz
+IG5vdCBleGNsdXNpdmUgZnJvbSBrZXJuZWwgdXNhZ2VzLiBJdCdzIHBlcmZlY3RseSBmaW5lIGZv
+ciBhIGRyaXZlcg0KPiA+IHRvIHJlc2VydmUgc29tZSB3b3JrIHF1ZXVlcyBmb3IgaG9zdCB1c2Fn
+ZXMsIHdoaWxlIHdyYXBwaW5nIG90aGVycw0KPiA+IGludG8gbWRldnMuDQo+IA0KPiANCj4gSSBt
+ZWFudCB5b3UgbWF5IHdhbnQgc2xpY2VzIHRvIGJlIGFuIGluZGVwZW5kZW50IGRldmljZSBmcm9t
+IHRoZSBrZXJuZWwNCj4gcG9pbnQgb2YgdmlldzoNCj4gDQo+IEUuZyBmb3IgZXRoZXJuZXQgZGV2
+aWNlcywgeW91IG1heSB3YW50IDEwSyBtZGV2cyB0byBiZSBwYXNzZWQgdG8gZ3Vlc3QuDQo+IA0K
+PiBTaW1pbGFybHksIHlvdSBtYXkgd2FudCAxMEsgbmV0IGRldmljZXMgd2hpY2ggaXMgY29ubmVj
+dGVkIHRvIHRoZSBrZXJuZWwNCj4gbmV0d29ya2luZyBzdWJzeXN0ZW1zLg0KPiANCj4gSW4gdGhp
+cyBjYXNlIGl0J3Mgbm90IHNpbXBseSByZXNlcnZpbmcgcXVldWVzIGJ1dCB5b3UgbmVlZCBzb21l
+IG90aGVyDQo+IHR5cGUgb2YgZGV2aWNlIGFic3RyYWN0aW9uLiBUaGVyZSBjb3VsZCBiZSBzb21l
+IGtpbmQgb2YgZHVwbGljYXRpb24NCj4gYmV0d2VlbiB0aGlzIGFuZCBtZGV2Lg0KPiANCg0KeWVz
+LCBzb21lIGFic3RyYWN0aW9uIHJlcXVpcmVkIGJ1dCBpc24ndCBpdCB3aGF0IHRoZSBkcml2ZXIg
+c2hvdWxkDQpjYXJlIGFib3V0IGluc3RlYWQgb2YgbWRldiBmcmFtZXdvcmsgaXRzZWxmPyBJZiB0
+aGUgZHJpdmVyIHJlcG9ydHMNCnRoZSBzYW1lIHNldCBvZiByZXNvdXJjZSB0byBib3RoIG1kZXYg
+YW5kIG5ldHdvcmtpbmcsIGl0IG5lZWRzIHRvDQptYWtlIHN1cmUgd2hlbiB0aGUgcmVzb3VyY2Ug
+aXMgY2xhaW1lZCBpbiBvbmUgaW50ZXJmYWNlIHRoZW4gaXQNCnNob3VsZCBiZSBtYXJrZWQgaW4t
+dXNlIGluIGFub3RoZXIuIGUuZy4gZWFjaCBtZGV2IGluY2x1ZGVzIGENCmF2YWlsYWJsZV9pbnRh
+bmNlcyBhdHRyaWJ1dGUuIHRoZSBkcml2ZXIgY291bGQgcmVwb3J0IDEwayBhdmFpbGFibGUNCmlu
+c3RhbmNlcyBpbml0aWFsbHkgYW5kIHRoZW4gdXBkYXRlIGl0IHRvIDVLIHdoZW4gYW5vdGhlciA1
+SyBpcyB1c2VkDQpmb3IgbmV0IGRldmljZXMgbGF0ZXIuDQoNCk1kZXYgZGVmaW5pdGVseSBoYXMg
+aXRzIHVzYWdlIGxpbWl0YXRpb25zLiBTb21lIG1heSBiZSBpbXByb3ZlZCANCmluIHRoZSBmdXR1
+cmUsIHNvbWUgbWF5IG5vdC4gQnV0IHRob3NlIGFyZSBkaXN0cmFjdGluZyBmcm9tIHRoZQ0Kb3Jp
+Z2luYWwgcHVycG9zZSBvZiB0aGlzIHRocmVhZCAobWRldiB2cy4gdXNlcnNwYWNlIERNQSkgYW5k
+IGJldHRlcg0KYmUgZGlzY3Vzc2VkIGluIG90aGVyIHBsYWNlcyBlLmcuIExQQy4uLiANCg0KVGhh
+bmtzDQpLZXZpbg0K
