@@ -2,123 +2,96 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1461C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55A12078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597337384;
-	bh=tcyMeb4OzOXiwT2qraywmEy3Qy6EacAIJ4Q1CqHhgH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OOv+JGYxgoANrEAQUL5oCJQztBzZSQcHSk0BDs0bWQzDqvK0YsD5kTQnU9MsSL+WU
-	 /e4bt7Z0f+s7YuE/twgw+wizI7nNr8h00nX6v2/0NNrbQuvVd2aTGSRlWnGuGdN8qW
-	 TPWOcUN6w085ii2CPmUlMEGqKHMIESukLZgDyvdg=
+	by mail.kernel.org (Postfix) with ESMTP id 9D2E620774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoW/ZUUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHMQtn (ORCPT
+        id S1726419AbgHMQzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:49:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43066 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgHMQtl (ORCPT
+        Thu, 13 Aug 2020 12:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMQzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:49:41 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so7946750iom.10;
-        Thu, 13 Aug 2020 09:49:40 -0700 (PDT)
+        Thu, 13 Aug 2020 12:55:08 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6385EC061757;
+        Thu, 13 Aug 2020 09:55:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t6so3037499pjr.0;
+        Thu, 13 Aug 2020 09:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=o2XD1ciiB6iwDPUOkRnbFCRHBk6RWiKB7lZfaPUZ4wI=;
+        b=eoW/ZUUe+BSnLxPURAXSBeAAFZ6CRNXvj2/WrdFHl7vkZuHNs35rkY4Ks+gvo+cHJY
+         SeLycLwcuO4emt/PdyKZuVMigNpIynJ3u23d8qsGamSBRCOnPdvCu4g1D8HgBGjsiOpn
+         +LtpwK/rKLUB3Y1pqRMMTvFIq6qCJ0PyolVI0A8OgGucDdVrfwL07x6MI1MWiEXnjt2t
+         z6OjhpTc9082zdbIOMaxPSPNa0beiN9GY5MlS6jwFuIrZGBvhdxCzpysHqyLhwejJH20
+         ERczqSzee2Krfev+lpaF8hv+0bpQzehK0ol4FFBSJxa6a3iGcvVAvycnWqsSxYgdgu+l
+         HZGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oZ19wRQzUr4AIajJEmDg571mMOTdhTENNwtyK08+5cg=;
-        b=FK9VIY0Ayv6PUizRaDPyZVx4KLucmfY0aIt4WppXirWNvcNKkdO7qGdhE119vme7T0
-         XSsyB6wsUTbpz7qgkg+pnspxqOnM5titEpG7+vIIh9mz3+5YOHNsMeHiJ7bm28Pn3C8H
-         qlwHvEP4S2Xt1GpO6eOPDs2HZjHW8VvssZrfB7a9tRsykFmONvL7pc/CAgmOujSt+Xvj
-         PRAfdfiGBPfaMZQxuMo7kVZfDI79T5HiXtlG36G8MdICf+KgpSLtWmnG53AX3t1wLIkC
-         NqvgkaoHvfK3+GLUtndnLTNonP19w+CMHs3/zSxqHBvZB3ERg4KguVy/FCQFfvtCtB2p
-         H3pg==
-X-Gm-Message-State: AOAM530YchXWVPQLWzw1hupyE0OwB8l0octfhMLIjQVjhpP3AegFRdVY
-        XeloTJrmJO0b8y2KRXmns9k=
-X-Google-Smtp-Source: ABdhPJyK6lV5GsIYKeXz7YeFZNYInTHphj60xDI7tJFaCtsyu1+NskpY4ZE+xYBdPC2MbeoNR4o9bQ==
-X-Received: by 2002:a6b:b513:: with SMTP id e19mr5672184iof.167.1597337380470;
-        Thu, 13 Aug 2020 09:49:40 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id m13sm2899141iov.35.2020.08.13.09.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 09:49:39 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E29C7403DC; Thu, 13 Aug 2020 16:49:31 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 16:49:31 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        keescook@chromium.org, yzaikin@google.com, willy@infradead.org,
-        hch@lst.de
-Subject: Re: [PATCH -next] sysctl: fix memleak in proc_sys_call_handler()
-Message-ID: <20200813164931.GW4332@42.do-not-panic.com>
-References: <20200804154503.3863200-1-yangyingliang@huawei.com>
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o2XD1ciiB6iwDPUOkRnbFCRHBk6RWiKB7lZfaPUZ4wI=;
+        b=dmDkDR/CKudNUGkPWiGigm8LukeFfT+dX6QhR0/uuI+GQiXPsRPwpjJGxixEoXqOer
+         kPeYlV1e93f/4AX/MNIoE+UePCRlf/X6spdQgkoX1EO2nB109I+uoWg1PaJYJY2klepF
+         7R+jddivDBBTpHFa3NNOBfPbWwsuunIOjUTQhrNzzLLhsFMC5ZazE4R2/un9pJS+0yTL
+         QHmq+P3UsEwKnM+2cyCtLpZNSSWURSQ+jwZCzDypWZRJLpUhhToumJbw18/ygijIzdwE
+         LJUQ0+wED5UlserDNdjlZs7qXbQ4gNJrHdfC/enAa/PeBdupN7+9hNSJG7lILJjseDBe
+         QQuQ==
+X-Gm-Message-State: AOAM531y09BiFWAsPINv2r7RyMlVtKwSsJFzNDT9WowIqRPLsgGw0gOk
+        UNgHr8ezLj90BYYl3Pv7xIhaTcoP
+X-Google-Smtp-Source: ABdhPJxMPkV5VaA7NGqB+TNKD/dPV9Kt5tDjT2CQpuPqGmqILmIhYxPCXILWSF7FzGTNXpwLYPKQXg==
+X-Received: by 2002:a17:902:7b89:: with SMTP id w9mr4704147pll.175.1597337707472;
+        Thu, 13 Aug 2020 09:55:07 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j13sm6387086pfn.166.2020.08.13.09.55.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 09:55:06 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 01/14] mips: dts: brcm: allow including header files
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200812063129.361862-1-noltari@gmail.com>
+ <20200812063129.361862-2-noltari@gmail.com>
+Message-ID: <9db7f3b8-286e-6ca4-b0c0-0392a366c3ba@gmail.com>
+Date:   Thu, 13 Aug 2020 09:55:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804154503.3863200-1-yangyingliang@huawei.com>
+In-Reply-To: <20200812063129.361862-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 03:45:03PM +0000, Yang Yingliang wrote:
-> I got a memleak report when doing some fuzz test:
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888103f3da00 (size 64):
-> comm "syz-executor.0", pid 2270, jiffies 4295404698 (age 46.593s)
-> hex dump (first 32 bytes):
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> backtrace:
-> [<000000004f2c0607>] kmalloc include/linux/slab.h:559 [inline]
-> [<000000004f2c0607>] kzalloc include/linux/slab.h:666 [inline]
-> [<000000004f2c0607>] proc_sys_call_handler+0x1d4/0x480 fs/proc/proc_sysctl.c:574
-> [<000000005ec6a16b>] call_write_iter include/linux/fs.h:1876 [inline]
-> [<000000005ec6a16b>] new_sync_write+0x3c5/0x5b0 fs/read_write.c:515
-> [<00000000bbeebb83>] vfs_write+0x4e8/0x670 fs/read_write.c:595
-> [<000000009d967c93>] ksys_write+0x10c/0x220 fs/read_write.c:648
-> [<00000000139f6002>] do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
-> [<00000000b7d61f44>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Go to free buff when copy_from_iter_full() is failed.
-> 
-> Fixes: 1dea05cbc0d7 ("sysctl: Convert to iter interfaces")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Good catch.
+On 8/11/2020 11:31 PM, Álvaro Fernández Rojas wrote:
+> Change /include/ with #include in order to be able to include header files
+> from dt-bindings.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-  Luis
-> ---
->  fs/proc/proc_sysctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index 9f6b9c3e3fda..a4a3122f8a58 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -578,7 +578,7 @@ static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
->  	if (write) {
->  		error = -EFAULT;
->  		if (!copy_from_iter_full(kbuf, count, iter))
-> -			goto out;
-> +			goto out_free_buf;
->  		kbuf[count] = '\0';
->  	}
->  
-> -- 
-> 2.25.1
-> 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
