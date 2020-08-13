@@ -2,170 +2,142 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70224C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B1C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF7D20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:52:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JiLU3v+N"
+	by mail.kernel.org (Postfix) with ESMTP id 9680B20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgHMPwa (ORCPT
+        id S1726700AbgHMPyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:52:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55242 "EHLO m43-7.mailgun.net"
+        Thu, 13 Aug 2020 11:54:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55666 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHMPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:52:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597333948; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=nlXe8blpssYRBGBkCQVSrRhSb3O+xojKAuRLa7+Q7pM=; b=JiLU3v+NgUlXYPsIntLFUoO407MUBdhX0Blx8KrnNL6uVB6tGy1r5HfBLQTh5iEpeZow2gru
- wojdtOS3KgVHBid4+JM71QMjawyRCrwxpewTZQcyzBDop5vgmCVx1Z62qS37zLQWb/Kf5Syl
- pqpG5T2ISprEBkrP13n5BJKYdHA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f3561adba4c2cd36721efff (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 15:52:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6CDA7C43395; Thu, 13 Aug 2020 15:52:11 +0000 (UTC)
-Received: from asutoshd-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00551C433C6;
-        Thu, 13 Aug 2020 15:52:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00551C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Date:   Thu, 13 Aug 2020 08:52:03 -0700
-From:   Asutosh Das <asutoshd@codeaurora.org>
-To:     Bean Huo <huobean@gmail.com>
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] scsi: ufs: remove several redundant goto
- statements
-Message-ID: <20200813155203.GA25655@asutoshd-linux1.qualcomm.com>
-References: <20200812143704.30245-1-huobean@gmail.com>
- <20200812143704.30245-3-huobean@gmail.com>
+        id S1726249AbgHMPyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:54:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DEECBB5F7;
+        Thu, 13 Aug 2020 15:54:35 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 17:54:12 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813155412.GP9477@dhcp22.suse.cz>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <20200813154159.GR4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812143704.30245-3-huobean@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200813154159.GR4295@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12 2020 at 07:37 -0700, Bean Huo wrote:
->From: Bean Huo <beanhuo@micron.com>
->
->Signed-off-by: Bean Huo <beanhuo@micron.com>
->---
-> drivers/scsi/ufs/ufshcd.c | 26 +++++---------------------
-> 1 file changed, 5 insertions(+), 21 deletions(-)
->
->diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->index e3663b85e8ee..cd742c4f78b6 100644
->--- a/drivers/scsi/ufs/ufshcd.c
->+++ b/drivers/scsi/ufs/ufshcd.c
->@@ -4256,10 +4256,8 @@ int ufshcd_make_hba_operational(struct ufs_hba *hba)
-> 		dev_err(hba->dev,
-> 			"Host controller not ready to process requests");
-> 		err = -EIO;
->-		goto out;
-> 	}
->
->-out:
-> 	return err;
-> }
-> EXPORT_SYMBOL_GPL(ufshcd_make_hba_operational);
->@@ -5542,10 +5540,8 @@ static bool ufshcd_quirk_dl_nac_errors(struct ufs_hba *hba)
-> 			hba->saved_err &= ~UIC_ERROR;
-> 		/* clear NAC error */
-> 		hba->saved_uic_err &= ~UFSHCD_UIC_DL_NAC_RECEIVED_ERROR;
->-		if (!hba->saved_uic_err) {
->+		if (!hba->saved_uic_err)
-> 			err_handling = false;
->-			goto out;
->-		}
-> 	}
-> out:
-> 	spin_unlock_irqrestore(hba->host->host_lock, flags);
->@@ -7604,12 +7600,10 @@ static int ufshcd_config_vreg(struct device *dev,
-> 		if (vreg->min_uV && vreg->max_uV) {
-> 			min_uV = on ? vreg->min_uV : 0;
-> 			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
->-			if (ret) {
->+			if (ret)
-> 				dev_err(dev,
-> 					"%s: %s set voltage failed, err=%d\n",
-> 					__func__, name, ret);
->-				goto out;
->-			}
-> 		}
-> 	}
-> out:
->@@ -7672,8 +7666,6 @@ static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on)
-> 		goto out;
->
-> 	ret = ufshcd_toggle_vreg(dev, info->vccq2, on);
->-	if (ret)
->-		goto out;
->
-> out:
-> 	if (ret) {
->@@ -7719,10 +7711,8 @@ static int ufshcd_init_vreg(struct ufs_hba *hba)
-> 		goto out;
->
-> 	ret = ufshcd_get_vreg(dev, info->vccq);
->-	if (ret)
->-		goto out;
->-
->-	ret = ufshcd_get_vreg(dev, info->vccq2);
->+	if (!ret)
->+		ret = ufshcd_get_vreg(dev, info->vccq2);
-> out:
-> 	return ret;
-> }
->@@ -7866,12 +7856,7 @@ static int ufshcd_variant_hba_init(struct ufs_hba *hba)
->
-> 	err = ufshcd_vops_setup_regulators(hba, true);
-> 	if (err)
->-		goto out_exit;
->-
->-	goto out;
->-
->-out_exit:
->-	ufshcd_vops_exit(hba);
->+		ufshcd_vops_exit(hba);
-> out:
-> 	if (err)
-> 		dev_err(hba->dev, "%s: variant %s init failed err %d\n",
->@@ -8036,7 +8021,6 @@ static int ufshcd_set_dev_pwr_mode(struct ufs_hba *hba,
-> 	}
->
-> 	cmd[4] = pwr_mode << 4;
->-
-Change LGTM;
-Nit-pick, line removed here by mistake, perhaps?
+On Thu 13-08-20 08:41:59, Paul E. McKenney wrote:
+> On Thu, Aug 13, 2020 at 04:53:35PM +0200, Michal Hocko wrote:
+> > On Thu 13-08-20 16:34:57, Thomas Gleixner wrote:
+> > > Michal Hocko <mhocko@suse.com> writes:
+> > > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
+> > > >> It basically requires to convert the wait queue to something else. Is
+> > > >> the waitqueue strict single waiter?
+> > > >
+> > > > I would have to double check. From what I remember only kswapd should
+> > > > ever sleep on it.
+> > > 
+> > > That would make it trivial as we could simply switch it over to rcu_wait.
+> > > 
+> > > >> So that should be:
+> > > >> 
+> > > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
+> > > >> 
+> > > >> which is limiting the damage to those callers which hand in
+> > > >> GFP_RT_NOWAIT.
+> > > >> 
+> > > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
+> > > >> zone->lock in the wrong context. And we want to know about that so we
+> > > >> can look at the caller and figure out how to solve it.
+> > > >
+> > > > Yes, that would have to somehow need to annotate the zone_lock to be ok
+> > > > in those paths so that lockdep doesn't complain.
+> > > 
+> > > That opens the worst of all cans of worms. If we start this here then
+> > > Joe programmer and his dog will use these lockdep annotation to evade
+> > > warnings and when exposed to RT it will fall apart in pieces. Just that
+> > > at that point Joe programmer moved on to something else and the usual
+> > > suspects can mop up the pieces. We've seen that all over the place and
+> > > some people even disable lockdep temporarily because annotations don't
+> > > help.
+> > 
+> > Hmm. I am likely missing something really important here. We have two
+> > problems at hand:
+> > 1) RT will become broken as soon as this new RCU functionality which
+> > requires an allocation from inside of raw_spinlock hits the RT tree
+> > 2) lockdep splats which are telling us that early because of the
+> > raw_spinlock-> spin_lock dependency.
+> 
+> That is a reasonable high-level summary.
+> 
+> > 1) can be handled by handled by the bailing out whenever we have to use
+> > zone->lock inside the buddy allocator - essentially even more strict
+> > NOWAIT semantic than we have for RT tree - proposed (pseudo) patch is
+> > trying to describe that.
+> 
+> Unless I am missing something subtle, the problem with this approach
+> is that in production-environment CONFIG_PREEMPT_NONE=y kernels, there
+> is no way at runtime to distinguish between holding a spinlock on the
+> one hand and holding a raw spinlock on the other.  Therefore, without
+> some sort of indication from the caller, this approach will not make
+> CONFIG_PREEMPT_NONE=y users happy.
 
-> 	/*
-> 	 * Current function would be generally called from the power management
-> 	 * callbacks hence set the RQF_PM flag so that it doesn't resume the
->-- 
->2.17.1
->
+If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
+check then there is no functional problem - GFP_RT_SAFE would still be
+GFP_NOWAIT so functional wise the allocator will still do the right
+thing.
+
+[...]
+
+> > That would require changing NOWAIT/ATOMIC allocations semantic quite
+> > drastically for !RT kernels as well. I am not sure this is something we
+> > can do. Or maybe I am just missing your point.
+> 
+> Exactly, and avoiding changing this semantic for current users is
+> precisely why we are proposing some sort of indication to be passed
+> into the allocation request.  In Uladzislau's patch, this was the
+> __GFP_NO_LOCKS flag, but whatever works.
+
+As I've tried to explain already, I would really hope we can do without
+any new gfp flags. We are running out of them and they tend to generate
+a lot of maintenance burden. There is a lot of abuse etc. We should also
+not expose such an implementation detail of the allocator to callers
+because that would make future changes even harder. The alias, on the
+othere hand already builds on top of existing NOWAIT semantic and it
+just helps the allocator to complain about a wrong usage while it
+doesn't expose any internals.
+
+-- 
+Michal Hocko
+SUSE Labs
