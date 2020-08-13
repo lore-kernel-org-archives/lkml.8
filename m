@@ -2,150 +2,185 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7444C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ABEC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBCFC20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E75A20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t6gtUdPF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rFrWBs6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHMOWv (ORCPT
+        id S1726593AbgHMOZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        Thu, 13 Aug 2020 10:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgHMOWs (ORCPT
+        with ESMTP id S1726082AbgHMOZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:22:48 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B89C061757;
-        Thu, 13 Aug 2020 07:22:47 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c15so3142984lfi.3;
-        Thu, 13 Aug 2020 07:22:47 -0700 (PDT)
+        Thu, 13 Aug 2020 10:25:08 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D7EC061757;
+        Thu, 13 Aug 2020 07:25:07 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id p191so3424741ybg.0;
+        Thu, 13 Aug 2020 07:25:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w8+HCeEKYDSAzBIC/4Ytqu8YSMHhVGSgqY8osWVZbTo=;
-        b=t6gtUdPFyH90g0kuyxr8PAuQf/gGRlY1CSRb6+5HHZ4Z3A6sSM0v0Fh5I3HQ80FiiG
-         MnLOay61Va70sOQ8qRblYMrU9c8Dohz40DCeve+8nD53n25Ydx8IeAz1kxfVaK6eRoS2
-         HxjN7PZg+VY0rNR4kj5OQ3KYet4StJVgNappY8wNv6zQdnPzphhQ2xiO219Cv6nK6z6o
-         X9vEvIU+Wuol6s3FDeAeokbOeObxL6Ad+dNvGZjlCTCt3SG8C2PVgCWYjTueu7d70Vw7
-         /ukwwdLabgbTzZbvMUvl9Jbs5kkWPR8P5FKEGJquYPlEjHWzFxRHtrsaA7ukFvo2XfIa
-         qD/A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LxOS0yxf9O0+Zm/ztDeMxh4hKGod7IlFrT/bAFmH7TM=;
+        b=rFrWBs6tw/+UYBqTd1/CBkR7cdjKTuce7LNDUuhR7RUj961k9XTsbmkT5ugdDEFlyT
+         gVjVF06W3bIe2wlMpEAwRi3H9NUAqmMSVkwRuI1FDXvMnLSu8B7HCYvplcB94TNKU8lt
+         G8O7jjnk/1i5esft+Y9LgyCj6iCaxfCn+cYnI9e1MaOts7r1HotEpKETBXx8lzJoI8X0
+         /5/dPNMzCagxfJMnAhRGB7/C7qz+udqLp0dob5TCwJMo26WSb87SWGLvbWHKZZ/hwK15
+         aPm3LOnWEKybfhhQPWY+sPUr4OC95dOFHJd8UCReheiLTmyQqvWys7CpSeQ8zhp6YXWI
+         4bXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w8+HCeEKYDSAzBIC/4Ytqu8YSMHhVGSgqY8osWVZbTo=;
-        b=pv4WUC0hU2hzWDPK1yDbIuV/2kVJl9+iaebBzOK+xXGYBO9Vr4jQopyzQe+iG2SUv2
-         RXb0XbFmBAdntn49N0GNXShG8mHhSIZm/sQVlEDrwGok35aTbQ2Lv07FTduu+2xZOTjw
-         PLTtcQ5NyleOLOro9x40Rbv6E+98jcJnUbkdPvFhz9ObA0+NPVUBbKWI65JTMOoiKRdh
-         PRfNd96RSNlcG5L0x01rPP8nIJeaeOyXz19WrKO717HIEc/Uc1c/VayW1yc2Ez6J0ELm
-         R51dra2ap25g9Bs1P0aVxkFcD0G3XDAA4exs8alDXxGNFFVmJGwbEoPlWzCwak14j+QR
-         JZbA==
-X-Gm-Message-State: AOAM531+YjGNt8QklzVsojMFfSaUl2y3538wXYTvuFYVv5I4dtqIIC6H
-        fNw1erO3OroVUj314c4r/rw=
-X-Google-Smtp-Source: ABdhPJwkGpxkpofNQlm4NTGG260rebKIv4E7sq4PKxuhwxmvCnamsgWJnyNpnbHSWgBZU6c7um1cyA==
-X-Received: by 2002:a19:c3d0:: with SMTP id t199mr2331028lff.56.1597328566067;
-        Thu, 13 Aug 2020 07:22:46 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id x2sm1132506ljc.123.2020.08.13.07.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 07:22:45 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 13 Aug 2020 16:22:43 +0200
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813142243.GA26852@pc636>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <20200813132931.GA26290@pc636>
- <20200813134039.GL9477@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LxOS0yxf9O0+Zm/ztDeMxh4hKGod7IlFrT/bAFmH7TM=;
+        b=If5JcVHhYfsLmUGAjmUrLOBlf4u++48GNv31raqyXUrEWiu5XTK9oWvB25Ww9Lc2ma
+         gMVWhBPH2rweM0DvMxaA2ubyks5KxHNuQRN24WVXJ0RfA0CHrQIOfSh6NWjk3iX3MCVJ
+         waep0dk+psR0mS5N3emKVZDAvsCLloF/d2kj4wWeiPwSIzHVGUpVngEg10KOv95DvOlw
+         Xk5Hc4yVj1QCJVhER3MVJVqq19mEANjKsIFrNIvUKzKKeSNmrWbTDxDMpgDwBqt63TQH
+         EqsaPr7dbqiIeB93Ze3mBUFqMMppkNP+V4c69JU+R6BZaTnSfyRz0p7PHjXtlMb7nZ/o
+         A45A==
+X-Gm-Message-State: AOAM531ubftU4aDMXgv80AQ4S8KTQ2AyR9Wkp7iGUbplyNkwY7phOmxT
+        fvZdSgm/7g7rH/YL1fCiF1J/qxh3cw5Slh+ke5FmdVZK
+X-Google-Smtp-Source: ABdhPJwV6EyBG1sjrI53VK3nCnCvlShpks5x4dhz7OlOg/dHOZTrt+GfTsW54Gqq+ZNhR9dwj9H51mTTh2JvzRJFHz4=
+X-Received: by 2002:a25:b74b:: with SMTP id e11mr6889924ybm.395.1597328706845;
+ Thu, 13 Aug 2020 07:25:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813134039.GL9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200801090456.GB1379367@oden.dyn.berto.se> <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
+ <20200803192108.GB2297236@oden.dyn.berto.se>
+In-Reply-To: <20200803192108.GB2297236@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 15:24:40 +0100
+Message-ID: <CA+V-a8uqf33LXqnc-cV=UU_b1m0xKgrSUS9S8oYnYVz_nwSyUw@mail.gmail.com>
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 03:41:39PM +0200, Michal Hocko wrote:
-> On Thu 13-08-20 15:29:31, Uladzislau Rezki wrote:
-> [...]
-> > I was a bit out of focus and did not mention about one thing. Identifying the context
-> > type using preemtable() primitives looks a bit not suitable, IMHO. GFP_* flags are
-> > not supposed to identify a context type, because it is not possible for all cases.
-> 
-> Yes, GFP flags do not identify context and that is why my draft didn't
-> really consider gfp flags for anything but the retry logic which is
-> already gfp based already. The buddy allocator path simply always bails
-> out for those rt atomic paths whenever it gets close to zone->lock
-> 
-> > But that i
-> 
-> You meant to say more I guess
-> 
-Ahh. Right. It was not completed. The idea was that we do not really need 
-to identify preemptible we are or not. Unless we want to help RT to proceed 
-further, based on if "RT && preemtable()", allowing to take zone->lock and
-improve a chance of to be succeed with allocation. Basically not bail out.
+Hi Hans and Laurent,
 
-> > Also, to bail out based on a context's type will not allow to get a page from atomic
-> > contexts, what we try to achieve :)
-> 
-> Yes lockdep will need some special treatment but I suspect we want to
-> address the underlying problem first and only then take care of the
-> lockdep.
-> 
-> > Whereas, i mean, we do have possibility to do lock-less per-cpu-list allocation without
-> > touching any zone lock.
-> > 
-> > if (gfp_mask == 0) {
-> >    check_pcp_lists();
-> >       if (page)
-> >           return page;
-> > 
-> >     bail out here without doing farther logic, like pre-fetching.
-> >     return NULL;
-> > }
-> 
-> The existing code does that already. __rmqueue_pcplist will go
-> rmqueue_bulk only when pcp lists are empty. Or did I miss your point?
-> 
-Right. Probably we look at it from different angles :) Right, when
-pcp is empty the zone->lock is accessed. 
+On Mon, Aug 3, 2020 at 8:21 PM Niklas <niklas.soderlund@ragnatech.se> wrote=
+:
+>
+> Hi Lad, Hans,
+>
+> On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
+> > Hi Hans,
+> >
+> > On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> =
+wrote:
+> > >
+> > > Hi Lad,
+> > >
+> > > Thanks for your work.
+> > >
+> > > On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+> > > > The crop and compose settings for VIN in non mc mode werent updated
+> > > > in s_fmt call this resulted in captured images being clipped.
+> > > >
+> > > > With the below sequence on the third capture where size is set to
+> > > > 640x480 resulted in clipped image of size 320x240.
+> > > >
+> > > > high(640x480) -> low (320x240) -> high (640x480)
+> > > >
+> > > > This patch makes sure the VIN crop and compose settings are updated=
+.
+> > >
+> > > This is clearly an inconsistency in the VIN driver that should be fix=
+ed.
+> > > But I think the none-mc mode implements the correct behavior. That is
+> > > that S_FMT should not modify the crop/compose rectangles other then m=
+ake
+> > > sure they don't go out of bounds. This is an area we tried to clarify=
+ in
+> > > the past but I'm still not sure what the correct answer to.
+> > >
+> > What should be the exact behaviour of the bridge driver  for s_fmt
+> > call. Should the crop/compose settings be updated for every s_fmt
+> > callback or should they be only updated on s_selection callback.
+> > Currently the non-mc rcar-vin doesnt update the crop/compose setting
+> > in s_fmt callback due to which I see the above issue as mentioned.
+>
+> This is not entirely correct. It does update the crop and compose
+> rectangles on s_fmt, it makes sure they are not out-of-bounds for the
+> new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls
+> in the snippet bellow.
+>
+> That being said there is a difference how this is handled in the VIN
+> driver between it's MC and non-MC modes and I would love to learn the
+> correct mode of operation and seeing VIN being updated to doing it
+> correct in both cases. Thanks Lad for dealing with this!
+>
+Can I have your feedback on this please.
 
-I got the feeling that you want to bail out based on the if (RT && !preemptible()) -> bail out
-i.e. On RT below code will always return NULL:
-
-<snip>
-    raw_cpin_lock();
-    page_alloc();
-<snip>
-
-Thanks!
-
---
-Vlad Rezki
+Cheers,
+Prabhakar
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > > >
+> > > > Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and com=
+pose rectangles in s_fmt")
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
+om>
+> > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > ---
+> > > >  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/=
+media/platform/rcar-vin/rcar-v4l2.c
+> > > > index f421e25..a9b13d9 100644
+> > > > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > > > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > > > @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *fil=
+e, void *priv,
+> > > >       fmt_rect.width =3D vin->format.width;
+> > > >       fmt_rect.height =3D vin->format.height;
+> > > >
+> > > > +     vin->crop.top =3D 0;
+> > > > +     vin->crop.left =3D 0;
+> > > > +     vin->crop.width =3D vin->format.width;
+> > > > +     vin->crop.height =3D vin->format.height;
+> > > > +     vin->compose =3D vin->crop;
+> > > > +
+> > > >       v4l2_rect_map_inside(&vin->crop, &src_rect);
+> > > >       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+> > > >       vin->src_rect =3D src_rect;
+> > > > --
+> > > > 2.7.4
+> > > >
+> > >
+> > > --
+> > > Regards,
+> > > Niklas S=C3=B6derlund
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
