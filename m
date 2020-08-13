@@ -2,158 +2,91 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09202C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB12220756
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4B420771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qea7J4Md"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VA+uM4fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgHMB7x (ORCPT
+        id S1726621AbgHMCNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgHMB7w (ORCPT
+        Wed, 12 Aug 2020 22:13:49 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45595 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726167AbgHMCNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:59:52 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E247DC061383;
-        Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g19so5644375ioh.8;
-        Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AWlgNe2+Iuz2XZY+IWyCSEAywNgsaZh/vBUAUBWEudE=;
-        b=Qea7J4MdsvRPrHK6vTNWamS8TgqAEQ6cKstvXGPzmsMiUHwANlkDob7c9pZbOtmMYw
-         ZwFbcxqH4sPVaixbvycEnZk5pasYJl1YY9RbUy9OPesAHl4PfkcvvfWQbY0/0oFxc0DC
-         HmzVWYyUrTOlIZBtm7mt+Em+7pZ3e/NRvy09Zv3bK37DizNvYxT3npc+CaL/WzUMIg8w
-         BvMJ0mJBOc6IpxJCV1SanMXijeM7gVs0JVM98GYV3wcZOVpLgCviSf5rCDKoqWXNpBkD
-         2twh1f5Ui4A5Wo4cY9JUKY7wWaVZcjeEklH91fStzkysVrmhietZ+hGYc62Lp1aN55RJ
-         O96g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AWlgNe2+Iuz2XZY+IWyCSEAywNgsaZh/vBUAUBWEudE=;
-        b=muD7aJPLAYcDt9MfF0ddEja+yUB3d4dew2+sL2oI7RVo45gRA8P90+IrytnFM9b7GI
-         +miEPvX3Eu7Gy4Z9u/QA0mUIwSY7Of8bCAb4O5GE46zYTBiwPpqlnlFLT7bpGLC+vZ6M
-         v5Gzp0xBc/O9vyyFM8PfFDvDwdiKVHggEFX4eUMEkXKapwsR7D48ds/Tv9WXdMRohDmA
-         EkDX3Ikqj091TLCyZNw7SGYjqfLx6fNOa85PpasEeU1oGs1hYQJ7rhN318XWy4mj1DsF
-         oBxXFhgdHCiJ1/VyMJYoFOl5EZRRZ1T2fhA2Wo6NhUyJv576rpZUqSQkXqIrGIzTBGyy
-         vWBw==
-X-Gm-Message-State: AOAM533enrEdVFs457UzqcVNOLPVBA1lxd80q85egp9UGt/1UFsjesQW
-        Aw1CPGSU3N63kva4Zm867jcI+6uU3bV4/Fe9SJQ=
-X-Google-Smtp-Source: ABdhPJwiyW9N2P4bEdzpAt0SnW2GcUA7DC9arjWeKmn0pLfqFHuvzaNC3wHKUia8DJmWLIkGq1LuuNacL7O0TGkylMs=
-X-Received: by 2002:a5e:db0d:: with SMTP id q13mr2552009iop.87.1597283991322;
- Wed, 12 Aug 2020 18:59:51 -0700 (PDT)
+        Wed, 12 Aug 2020 22:13:49 -0400
+X-UUID: a777f65c715f4ccd9415858fbf170271-20200813
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=H0Ud4DxvbVD4jTTU4mw6Oz6ngOHpGn6wmSjAa92YZU4=;
+        b=VA+uM4fclnn9nBTQr8PYNOKLFPwMPEsx80vzCGjaB/z/mX2pTcXcDjvK+q3BDRjf18K8u1SDbLC/c1ZYVRcws+23rEz5BGcHW/3+Rk/e4c+ExKEyEiLUUEbpO5Je+n+n8jO0uw/mIPQaoVXEmTvQGJG0mXBdLfx7Unq0lT0xwg8=;
+X-UUID: a777f65c715f4ccd9415858fbf170271-20200813
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <chinwen.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1887441291; Thu, 13 Aug 2020 10:13:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 13 Aug 2020 10:13:45 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 13 Aug 2020 10:13:45 +0800
+From:   Chinwen Chang <chinwen.chang@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Chinwen Chang <chinwen.chang@mediatek.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Steven Price <steven.price@arm.com>,
+        Song Liu <songliubraving@fb.com>,
+        Jimmy Assarsson <jimmyassarsson@gmail.com>,
+        Huang Ying <ying.huang@intel.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v2 1/2] mmap locking API: add mmap_lock_is_contended()
+Date:   Thu, 13 Aug 2020 10:13:29 +0800
+Message-ID: <1597284810-17454-2-git-send-email-chinwen.chang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com>
+References: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com>
 MIME-Version: 1.0
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com> <20200812143254.2f080c38@x1.home>
-In-Reply-To: <20200812143254.2f080c38@x1.home>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Thu, 13 Aug 2020 11:59:40 +1000
-Message-ID: <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, schnelle@linux.ibm.com,
-        pmorel@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: C6E76BA24E484A018D7FFBB40DA687A95E28A506F0B8F380E813B836F11E605A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 6:33 AM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> On Wed, 12 Aug 2020 15:21:11 -0400
-> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->
-> > @@ -521,7 +522,8 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
-> >       count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
-> >
-> >       /* Mask in virtual memory enable for SR-IOV devices */
-> > -     if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-> > +     if ((offset == PCI_COMMAND) &&
-> > +         (vdev->pdev->is_virtfn || vdev->pdev->detached_vf)) {
-> >               u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-> >               u32 tmp_val = le32_to_cpu(*val);
-> >
-> > @@ -1734,7 +1736,8 @@ int vfio_config_init(struct vfio_pci_device *vdev)
-> >                                vconfig[PCI_INTERRUPT_PIN]);
-> >
-> >               vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-> > -
-> > +     }
-> > +     if (pdev->is_virtfn || pdev->detached_vf) {
-> >               /*
-> >                * VFs do no implement the memory enable bit of the COMMAND
-> >                * register therefore we'll not have it set in our initial
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 8355306..23a6972 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -445,6 +445,7 @@ struct pci_dev {
-> >       unsigned int    is_probed:1;            /* Device probing in progress */
-> >       unsigned int    link_active_reporting:1;/* Device capable of reporting link active */
-> >       unsigned int    no_vf_scan:1;           /* Don't scan for VFs after IOV enablement */
-> > +     unsigned int    detached_vf:1;          /* VF without local PF access */
->
-> Is there too much implicit knowledge in defining a "detached VF"?  For
-> example, why do we know that we can skip the portion of
-> vfio_config_init() that copies the vendor and device IDs from the
-> struct pci_dev into the virtual config space?  It's true on s390x, but
-> I think that's because we know that firmware emulates those registers
-> for us.
->
-> We also skip the INTx pin register sanity checking.  Do we do
-> that because we haven't installed the broken device into an s390x
-> system?  Because we know firmware manages that for us too?  Or simply
-> because s390x doesn't support INTx anyway, and therefore it's another
-> architecture implicit decision?
+QWRkIG5ldyBBUEkgdG8gcXVlcnkgaWYgc29tZW9uZSB3YW50cyB0byBhY3F1aXJlIG1tYXBfbG9j
+aw0KZm9yIHdyaXRlIGF0dGVtcHRzLg0KDQpVc2luZyB0aGlzIGluc3RlYWQgb2YgcndzZW1faXNf
+Y29udGVuZGVkIG1ha2VzIGl0IG1vcmUgdG9sZXJhbnQNCm9mIGZ1dHVyZSBjaGFuZ2VzIHRvIHRo
+ZSBsb2NrIHR5cGUuDQoNClNpZ25lZC1vZmYtYnk6IENoaW53ZW4gQ2hhbmcgPGNoaW53ZW4uY2hh
+bmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogaW5jbHVkZS9saW51eC9tbWFwX2xvY2suaCB8IDUgKysr
+KysNCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9pbmNs
+dWRlL2xpbnV4L21tYXBfbG9jay5oIGIvaW5jbHVkZS9saW51eC9tbWFwX2xvY2suaA0KaW5kZXgg
+MDcwNzY3MS4uMThlN2VhZSAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvbW1hcF9sb2NrLmgN
+CisrKyBiL2luY2x1ZGUvbGludXgvbW1hcF9sb2NrLmgNCkBAIC04Nyw0ICs4Nyw5IEBAIHN0YXRp
+YyBpbmxpbmUgdm9pZCBtbWFwX2Fzc2VydF93cml0ZV9sb2NrZWQoc3RydWN0IG1tX3N0cnVjdCAq
+bW0pDQogCVZNX0JVR19PTl9NTSghcndzZW1faXNfbG9ja2VkKCZtbS0+bW1hcF9sb2NrKSwgbW0p
+Ow0KIH0NCiANCitzdGF0aWMgaW5saW5lIGludCBtbWFwX2xvY2tfaXNfY29udGVuZGVkKHN0cnVj
+dCBtbV9zdHJ1Y3QgKm1tKQ0KK3sNCisJcmV0dXJuIHJ3c2VtX2lzX2NvbnRlbmRlZCgmbW0tPm1t
+YXBfbG9jayk7DQorfQ0KKw0KICNlbmRpZiAvKiBfTElOVVhfTU1BUF9MT0NLX0ggKi8NCi0tIA0K
+MS45LjENCg==
 
-Agreed. Any hacks we put in for normal VFs are going to be needed for
-the passed-though VF case. Only applying the memory space enable
-workaround doesn't make sense to me either.
-
-> If detached_vf is really equivalent to is_virtfn for all cases that
-> don't care about referencing physfn on the pci_dev, then we should
-> probably have a macro to that effect.
-
-A pci_is_virtfn() helper would be better than open coding both checks
-everywhere. That said, it might be solving the wrong problem. The
-union between ->physfn and ->sriov has always seemed like a footgun to
-me so we might be better off switching the users who want a physfn to
-a helper instead. i.e.
-
-struct pci_dev *pci_get_vf_physfn(struct pci_dev *vf)
-{
-        if (!vf->is_virtfn)
-                return NULL;
-
-        return vf->physfn;
-}
-
-...
-
-pf = pci_get_vf_physfn(vf)
-if (pf)
-    /* do pf things */
-
-Then we can just use ->is_virtfn for the normal and detached cases.
-
-Oliver
