@@ -2,200 +2,379 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C0B20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9572078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BpIXhj0w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yu+SbLup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHMJZZ (ORCPT
+        id S1726651AbgHMJZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:25:25 -0400
-Received: from mail-db8eur05on2066.outbound.protection.outlook.com ([40.107.20.66]:15602
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbgHMJZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:25:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DRX5u38IUv4oADks2rEn5TVaz778o4t9yH0r0uG/zRQbhF97YHC//1pSFt/bgdvmYQcY8g2L8cZ6X/CVWWFbprTzrSHyunbfkeKwmfOoyXmVkyQFRSDk0HPgiThAa+ZdSmBp24TL3OTJhpNDR9FKryDPLo0si21jOEi0RncNYf2AnEL8iwZR/RT1JSsaZjBSowM7XxkW8Y+twuW4Z93u9W+40OmwUZE2Rhe40/6UwnHx48nHobml03mY5ja4fJ86rCSXkL/ARLujvEffRNxtoQ6GEqNI6fAHz1mVoR2fVXrNNhV2AcMoct50mTPeUdRiPDUg6ATFdQQHqlpPkbrbKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n/nor7Ae7qwD7yTZm6g3LFn2ToCW1DvVnc/UzgwVSQo=;
- b=ExIUFyzA3+bCqm3Qc4oJ2Nn2zRlFQ332xi0dJgbjq8cC8fT3gGI+K+kKil3Z3FQaij8+zsf50a+KqVaXZewrGnuzBODAPJ3GWICDxArQDjIKmM40Rq2Lwqk0gkS+nP7kBIJqpY5ovLGM7VEpzxDsQaVbxdKlC79+sN+Ev8GbcXictlbKKRbuh6asdFtQhzbWQZCq5+fFrajO17rs6TpfNayzi7kshurnhT5LbFtb5DSVjqlWpPff2/y/6HYd5w0Hmr0tyxa+EyqWsnDQjLZYHOG7MxQ3cuRh0jpAc6u6d97SD0/SfOOYvTLn8SvHs2DGPL4yp+wpCkBMp91OOvxsRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n/nor7Ae7qwD7yTZm6g3LFn2ToCW1DvVnc/UzgwVSQo=;
- b=BpIXhj0wJx+V/FBYSDGWe+KvMZAMxIjAGszC7tRDwStvsrZK7+XAYCn/8YcIUCpNnNCq4d8duIPahrZFlrYbxLBATqtgERh2r1z7O6Vf6ybYchjW5v1iyt2ee9OH5X8g0i5Hx6avszoC9t4v1jt5AQrM3F4BwRq1AJ52LDrzDKY=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB4166.eurprd04.prod.outlook.com (2603:10a6:209:4b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Thu, 13 Aug
- 2020 09:25:21 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::ed7f:8755:5994:7fcf]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::ed7f:8755:5994:7fcf%5]) with mapi id 15.20.3261.026; Thu, 13 Aug 2020
- 09:25:21 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        "jpawar@cadence.com" <jpawar@cadence.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "sparmar@cadence.com" <sparmar@cadence.com>
-Subject: Re: [PATCH] usb: cdns3: Removes duplicated call to the
- cdns3_exit_roles function
-Thread-Topic: [PATCH] usb: cdns3: Removes duplicated call to the
- cdns3_exit_roles function
-Thread-Index: AQHWcUEJ2HYKtjM4M0WllTS952Uv86k1xJSA
-Date:   Thu, 13 Aug 2020 09:25:20 +0000
-Message-ID: <20200813092429.GA22195@b29397-desktop>
-References: <20200813071054.25837-1-pawell@cadence.com>
-In-Reply-To: <20200813071054.25837-1-pawell@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: cadence.com; dkim=none (message not signed)
- header.d=none;cadence.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2e0dc348-d883-4042-d89c-08d83f6acd02
-x-ms-traffictypediagnostic: AM6PR04MB4166:
-x-microsoft-antispam-prvs: <AM6PR04MB4166FEE4F0A15D448621E4A38B430@AM6PR04MB4166.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MhQ/cwmRskIfKf5qJ1FgjvbnWzIoERErsJOe0sXuWs6+q/IrCXsMceDsQ74q4GZr4TS27BBHGlwBY/sEPCnHxifMzo7TSK7U/IvtYmZWDDbHsaqlWHFhtYI7LQRPFr+UCTRFJrfswl2W0QL5gM/6OJ+koVFDfMFSyrEiju8pxPuz+/poRPG3yGZ1cjOyiNFX1BCi+R0HJQZCkk/QEgCBvHQVWNRggRaDhVaL+p92chKRuFcXh103zpkxRTBZyqjrIGKPJ7YqbAplCRwwcxNr8sWIt24cWUsvdsdSwSJ9VRlLoj6/GSR5rsaUxNaVQvkSpJivmtoUeWLEqBs4bVRAJQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(8936002)(8676002)(44832011)(6506007)(6512007)(71200400001)(7416002)(54906003)(33656002)(9686003)(316002)(53546011)(26005)(6916009)(186003)(66946007)(33716001)(66446008)(478600001)(91956017)(76116006)(83380400001)(6486002)(86362001)(66476007)(2906002)(66556008)(64756008)(5660300002)(4326008)(1076003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Vl6RF+7bOXsJTwiAnKY5YsTqScZn1UiBnsu8PFPWqpAJzmgtNUQBOyvpz6zOr4EwNxqiX8VYpfNGwYSMNe4WpmGb48JV7IdrtOOHTSMvy4YxHVGf1OmkiIhJDBgL2TOI+hnaJminlwN7gYiQbmYpkXe+0UFaUGrV28zpgl13xNfmEcTGvPOChqvn++AZVPwB7nDiXObTy7r+DYmrzuH0Gf/40TyTNVzA1WHBlkMjEo8GNoMMwBFwrrgyInPrO6b/ruM2X0s0YpvHd7NT+S26at2QOOECZsvr7Zt/Q19LYeJa15kYmZkb0dmenbBdmzhCUe9mvzozre2emy3Q6HYIh60V7SzZsFwWjjKGmvsZGz0FLjL3YQ8kJCvSAhpnxus/u1/Zh64lXAqLVzqZ9zl9xPWyyodWOl3oVuascUagl8uKUDAKpFq8Rj1mwYpp9xwF8bbpY+Uk/iYAWm8/ruWaHL0Rc8tzi/hfEtomrIegX8rKg3+j16JFeMQLCVx8WIcsrJD3m4UZCctJiLjxlHExJ5BAMr4pxdC8LQMgMw9cz8UzswIb+EU0bWT73T15owymoYQbSn+xpapD4J4nIDNzfzpvEJ0nilqjaP2DjckBa3EyMUgzjIQ5qX8ZeGb/zPx6ZAozNsS/NdBqh0KSnUC4yA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <949C84F919CAF14486D9A3FA45AC3F01@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Aug 2020 05:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMJZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:25:26 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A760C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:25:25 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t6so5388006ljk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=77hxUNMDXx1TkOETyYbeW1D4qmhSIYpoh1BsirngSVQ=;
+        b=yu+SbLupDZq0IXwtevl1p7b23YCume+VhpFVbBTYcNZv/vlx287qpNSmWjR8LHhuAe
+         zpgPXzPweDDJmlIogq6S6xphPDuAvuKNDqi+r4N0uzlSK/MwiuGJ+/h9T5GiVisMayGd
+         OrJvmjH8SVAZ47k+/Bf+HVbS3x6qYt9xspTwfpJyrt6YAqVPIPrYLZh+KfDwksV0gufd
+         bfiIpvHDcPBObpbt+50b0zr495HlbcH31LQ4alFHyUENdNvVIHlW7SJOed29HBnx/t/l
+         h9PyZ5CNnBIm+V+9XYZGbz0iqt0sewlAjCe/Th72gVgX87ODr8QCo+5r0fHWqw8m40Oh
+         VAxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=77hxUNMDXx1TkOETyYbeW1D4qmhSIYpoh1BsirngSVQ=;
+        b=hgC9PmJeWaXwt1CD+WZ8iuz2jLUYwFlWP3B3Py6f8FG0rSnqNKK3X2kRNpkGPPuEDZ
+         jngfJgIx1hScgBC8S5YE+6i+MXOYcL+bDV7oaErN9gA84m5Tdp5LXd5Nx3MDzN7koiCH
+         b1utSLclJ3nMkzYfP2Ro4LhedmYa3IX+s/NkRftQeyBEKG+rIHfqnInOI/9oQ/wAfZ6K
+         LFdkBzXRqabHMVHp0UdBTOQdxq8SYUbLTUdZlO7z0FcFuo76y6JuLG3bOe+uCghQyfy7
+         4wa/+OdGnqCVwJQRvkDd6zJcSeekPtPc02UBlmnKeh/5yIWye7QQ0chW6ZtRJJr4UgYF
+         +kvg==
+X-Gm-Message-State: AOAM533WM+eI92rxewmhcnflXbcp7Gs8P3uIPyYtblVMY3w4IAwn8Mr4
+        8FSDJA0191KgioSraF/62dUqSOxq1hvuG/dE/dbsBA==
+X-Google-Smtp-Source: ABdhPJyPK4DPHHD55S2xANgp+3FYQtyR1zzh/60AtAFyGOvgRV/WpDgK6NeD1rHR65oNWCNxdQz25TacXvWjM8amVpA=
+X-Received: by 2002:a2e:9550:: with SMTP id t16mr1503400ljh.372.1597310724016;
+ Thu, 13 Aug 2020 02:25:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e0dc348-d883-4042-d89c-08d83f6acd02
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 09:25:20.9990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ndbY2lE+kdWY/k+esyRkxarNwBkuMyi5Z4dbldMhd4hj166K58eDPP31Xr9WJnN1KtSsrPiguljE9uXGTs2hgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4166
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+ <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
+ <20200811135801.GA416071@kroah.com> <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
+ <20200811145816.GA424033@kroah.com> <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
+ <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
+ <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com> <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+In-Reply-To: <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 13 Aug 2020 14:55:12 +0530
+Message-ID: <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-13 09:10:54, Pawel Laszczak wrote:
-> To avoid double calling of function cdns3_exit_roles when initialization
-> failed
-need ","
+On Thu, 13 Aug 2020 at 05:38, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+>
+> On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Aug 12, 2020 at 7:53 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+> > >
+> > > Hi Doug,
+> > >
+> > > On Tue, 11 Aug 2020 at 22:46, Doug Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Aug 11, 2020 at 7:58 AM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Tue, Aug 11, 2020 at 07:59:24PM +0530, Sumit Garg wrote:
+> > > > > > Hi Greg,
+> > > > > >
+> > > > > > Thanks for your comments.
+> > > > > >
+> > > > > > On Tue, 11 Aug 2020 at 19:27, Greg Kroah-Hartman
+> > > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > >
+> > > > > > > On Tue, Aug 11, 2020 at 07:20:26PM +0530, Sumit Garg wrote:
+> > > > > > > > On Tue, 21 Jul 2020 at 17:40, Sumit Garg <sumit.garg@linaro.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Make it possible for UARTs to trigger magic sysrq from an NMI. With the
+> > > > > > > > > advent of pseudo NMIs on arm64 it became quite generic to request serial
+> > > > > > > > > device interrupt as an NMI rather than IRQ. And having NMI driven serial
+> > > > > > > > > RX will allow us to trigger magic sysrq as an NMI and hence drop into
+> > > > > > > > > kernel debugger in NMI context.
+> > > > > > > > >
+> > > > > > > > > The major use-case is to add NMI debugging capabilities to the kernel
+> > > > > > > > > in order to debug scenarios such as:
+> > > > > > > > > - Primary CPU is stuck in deadlock with interrupts disabled and hence
+> > > > > > > > >   doesn't honor serial device interrupt. So having magic sysrq triggered
+> > > > > > > > >   as an NMI is helpful for debugging.
+> > > > > > > > > - Always enabled NMI based magic sysrq irrespective of whether the serial
+> > > > > > > > >   TTY port is active or not.
+> > > > > > > > >
+> > > > > > > > > Currently there is an existing kgdb NMI serial driver which provides
+> > > > > > > > > partial implementation in upstream to have a separate ttyNMI0 port but
+> > > > > > > > > that remained in silos with the serial core/drivers which made it a bit
+> > > > > > > > > odd to enable using serial device interrupt and hence remained unused. It
+> > > > > > > > > seems to be clearly intended to avoid almost all custom NMI changes to
+> > > > > > > > > the UART driver.
+> > > > > > > > >
+> > > > > > > > > But this patch-set allows the serial core/drivers to be NMI aware which
+> > > > > > > > > in turn provides NMI debugging capabilities via magic sysrq and hence
+> > > > > > > > > there is no specific reason to keep this special driver. So remove it
+> > > > > > > > > instead.
+> > > > > > > > >
+> > > > > > > > > Approach:
+> > > > > > > > > ---------
+> > > > > > > > >
+> > > > > > > > > The overall idea is to intercept serial RX characters in NMI context, if
+> > > > > > > > > those are specific to magic sysrq then allow corresponding handler to run
+> > > > > > > > > in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
+> > > > > > > > > work queue in order to run those in normal interrupt context.
+> > > > > > > > >
+> > > > > > > > > This approach is demonstrated using amba-pl011 driver.
+> > > > > > > > >
+> > > > > > > > > Patch-wise description:
+> > > > > > > > > -----------------------
+> > > > > > > > >
+> > > > > > > > > Patch #1 prepares magic sysrq handler to be NMI aware.
+> > > > > > > > > Patch #2 adds NMI framework to serial core.
+> > > > > > > > > Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
+> > > > > > > > > Patch #5 removes kgdb NMI serial driver.
+> > > > > > > > >
+> > > > > > > > > Goal of this RFC:
+> > > > > > > > > -----------------
+> > > > > > > > >
+> > > > > > > > > My main reason for sharing this as an RFC is to help decide whether or
+> > > > > > > > > not to continue with this approach. The next step for me would to port
+> > > > > > > > > the work to a system with an 8250 UART.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > A gentle reminder to seek feedback on this series.
+> > > >
+> > > > It's been on my list for a while.  I started it Friday but ran out of
+> > > > time.  This week hasn't been going as smoothly as I hoped but I'll
+> > > > prioritize this since it's been too long.
+> > > >
+> > >
+> > > No worries and thanks for your feedback.
+> > >
+> > > >
+> > > > > > > It's the middle of the merge window, and I can't do anything.
+> > > > > > >
+> > > > > > > Also, I almost never review RFC patches as I have have way too many
+> > > > > > > patches that people think are "right" to review first...
+> > > > > > >
+> > > > > >
+> > > > > > Okay, I understand and I can definitely wait for your feedback.
+> > > > >
+> > > > > My feedback here is this:
+> > > > >
+> > > > > > > I suggest you work to flesh this out first and submit something that you
+> > > > > > > feels works properly.
+> > > > >
+> > > > > :)
+> > > > >
+> > > > > > IIUC, in order to make this approach substantial I need to make it
+> > > > > > work with 8250 UART (major serial driver), correct? As currently it
+> > > > > > works properly for amba-pl011 driver.
+> > > > >
+> > > > > Yes, try to do that, or better yet, make it work with all serial drivers
+> > > > > automatically.
+> > > >
+> > > > A bit of early feedback...
+> > > >
+> > > > Although I'm not sure we can do Greg's "make it work everywhere
+> > > > automatically", it's possible you could get half of your patch done
+> > > > automatically.  Specifically, your patch really does two things:
+> > > >
+> > > > a) It leaves the serial port "active" all the time to look for sysrq.
+> > > > In other words even if there is no serial client it's always reading
+> > > > the port looking for characters.  IMO this concept should be separated
+> > > > out from the NMI concept and _could_ automatically work for all serial
+> > > > drivers.  You'd just need something in the serial core that acted like
+> > > > a default client if nobody else opened the serial port.  The nice
+> > > > thing here is that we go through all the normal code paths and don't
+> > > > need special cases in the driver.
+> > >
+> > > Okay, will try to explore this option to have default serial port
+> > > client. Would this client be active in normal serial operation or only
+> > > active when we have kgdb active? One drawback I see for normal
+> > > operation could be power management as if user is not using serial
+> > > port and would like to disable corresponding clock in order to reduce
+> > > power consumption.
+> >
+> > If I could pick the ideal, I'd say we'd do it any time the console is
+> > configured for that port and magic sysrq is enabled.  Presumably if
+> > they're already choosing to output kernel log messages to the serial
+> > port and they've enabled magic sysrq they're in a state where they'd
+> > be OK with the extra power of also listening for characters?
+> >
 
-> patch removes invoking this function from cdns3_core_init_role.
-> This function is invoked again from cdns3_probe when
-> cdns3_core_init_role returns error code.
+Okay, sounds reasonable to me.
 
-If you delete the cdns3_exit_roles here, where it will be called again?
-I only see cdns3_exit_roles is called at .remove callback.
+> >
+> > > > b) It enables NMI for your particular serial driver.  This seems like
+> > > > it'd be hard to do automatically because you can't do the same things
+> > > > at NMI that you could do in a normal interrupt handler.
+> > >
+> > > Agree.
+> > >
+> > > >
+> > > > NOTE: to me, a) is more important than b) (though it'd be nice to have
+> > > > both).  This would be especially true the earlier you could make a)
+> > > > work since the main time when an "agetty" isn't running on my serial
+> > > > port to read characters is during bootup.
+> > > >
+> > > > Why is b) less important to me? Sure, it would let you drop into the
+> > > > debugger in the case where the CPU handling serial port interrupts is
+> > > > hung with IRQs disabled, but it _woudln't_ let you drop into the
+> > > > debugger in the case where a different CPU is hung with IRQs disabled.
+> > > > To get that we need NMI roundup (which, I know, you are also working
+> > > > on for arm64).  ...and, if we've got NMI roundup, presumably we can
+> > > > find our way into the debugger by either moving the serial interrupt
+> > > > to a different CPU ahead of time or using some type of lockup detector
+> > > > (which I know you are also working on for arm64).
+> > > >
+> > >
+> > > Thanks for sharing your preferences. I will try to get a) sorted out first.
+> > >
+> > > Overall I agree with your approaches to debug hard-lockup scenarios
+> > > but they might not be so trivial for kernel engineers who doesn't
+> > > posses kernel debugging experience as you do. :)
+> > >
+> > > And I still think NMI aware magic sysrq is useful for scenarios such as:
+> > > - Try to get system information during hard-lockup rather than just
+> > > panic via hard-lockup detection.
+> > > - Do normal start/stop debugger activity on a core which was stuck in
+> > > hard-lockup.
+> > > - Random boot freezes which are not easily reproducible.
+> >
+> > Don't get me wrong.  Having sysrq from NMI seems like a good feature
+> > to me.
 
-Peter
->=20
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  drivers/usb/cdns3/core.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-> index 5c1586ec7824..c22c7224642a 100644
-> --- a/drivers/usb/cdns3/core.c
-> +++ b/drivers/usb/cdns3/core.c
-> @@ -132,7 +132,7 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->  		if (ret) {
->  			dev_err(dev, "Host initialization failed with %d\n",
->  				ret);
-> -			goto err;
-> +			return ret;
->  		}
->  	}
-> =20
-> @@ -141,7 +141,7 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->  		if (ret) {
->  			dev_err(dev, "Device initialization failed with %d\n",
->  				ret);
-> -			goto err;
-> +			return ret;
->  		}
->  	}
-> =20
-> @@ -149,38 +149,34 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
-> =20
->  	ret =3D cdns3_drd_update_mode(cdns);
->  	if (ret)
-> -		goto err;
-> +		return ret;
-> =20
->  	/* Initialize idle role to start with */
->  	ret =3D cdns3_role_start(cdns, USB_ROLE_NONE);
->  	if (ret)
-> -		goto err;
-> +		return ret;
-> =20
->  	switch (cdns->dr_mode) {
->  	case USB_DR_MODE_OTG:
->  		ret =3D cdns3_hw_role_switch(cdns);
->  		if (ret)
-> -			goto err;
-> +			return ret;
->  		break;
->  	case USB_DR_MODE_PERIPHERAL:
->  		ret =3D cdns3_role_start(cdns, USB_ROLE_DEVICE);
->  		if (ret)
-> -			goto err;
-> +			return ret;
->  		break;
->  	case USB_DR_MODE_HOST:
->  		ret =3D cdns3_role_start(cdns, USB_ROLE_HOST);
->  		if (ret)
-> -			goto err;
-> +			return ret;
->  		break;
->  	default:
-> -		ret =3D -EINVAL;
-> -		goto err;
-> +		return -EINVAL;
->  	}
-> =20
->  	return 0;
-> -err:
-> -	cdns3_exit_roles(cdns);
-> -	return ret;
->  }
-> =20
->  /**
-> --=20
-> 2.17.1
->=20
+Yeah I understand what you meant but I was just trying to highlight
+additional benefits that sysrq from NMI provides.
 
---=20
+> > That being said, it will require non-trivial changes to each
+> > serial driver to support it and that means that not all serial drivers
+> > will support it.  It also starts requiring knowledge of how NMIs work
+> > (what's allowed in NMI mode / not allowed / how to avoid races) for
+> > authors of serial drivers.  I have a bit of a worry that the benefit
+> > won't outweigh the extra complexity, but I guess time will tell.
 
-Thanks,
-Peter Chen=
+Yes I understand these concerns as well. That's why I have tried to
+defer almost all of the work to the IRQ work queue apart from
+essential parsing of RX chars in NMI mode. Also, I tried to keep most
+of this code common in serial core.
+
+> > One
+> > last worry is that I assume that most people testing (and even
+> > automated testing labs) will either always enable NMI or won't enable
+> > NMI.  That means that everyone will be only testing one codepath or
+> > the other and (given the complexity) the non-tested codepath will
+> > break.
+> >
+
+The current patch-set only makes this NMI to work when debugger (kgdb)
+is enabled which I think is mostly suitable for development
+environments. So most people testing will involve existing IRQ mode
+only.
+
+However, it's very much possible to make NMI mode as default for a
+particular serial driver if the underlying irqchip supports it but it
+depends if we really see any production level usage of NMI debug
+feature.
+
+> > Hrm.  Along the lines of the above, though: almost no modern systems
+> > are uniprocessor.  That means that even if one CPU is stuck with IRQs
+> > off it's fairly likely that some other CPU is OK.  Presumably you'd
+> > get almost as much benefit as your patch but with more done
+> > automatically if you could figure out how to detect that the serial
+> > interrupt isn't being serviced and re-route it to a different CPU.
+> > ...or possibly you could use some variant of the hard lockup detector
+> > and move all interrupts off a locked up CPU?  You could make this an
+> > option that's "default Y" when kgdb is turned on or something?
+
+Yes we can reroute serial interrupts but what I meant to say is that
+we can at most get a backtrace of CPU stuck in hard-lockup whereas
+with NMI debugger entry on hard-lockup CPU, we can do normal
+start/stop/single-step debugging on that CPU.
+
+>
+> One other idea occurred to me that's maybe simpler.  You could in
+> theory just poll the serial port periodically to accomplish.  It would
+> actually probably even work to call the normal serial port interrupt
+> routine from any random CPU.  On many serial drivers the entire
+> interrupt handler is wrapped with:
+>
+> spin_lock_irqsave(&uap->port.lock, flags);
+> ...
+> spin_unlock_irqrestore(&uap->port.lock, flags);
+>
+> And a few (the ones I was involved in fixing) have the similar pattern
+> of using uart_unlock_and_check_sysrq().
+>
+> Any serial drivers following this pattern could have their interrupt
+> routine called periodically just to poll for characters and it'd be
+> fine, right?  ...and having it take a second before a sysrq comes in
+> this case is probably not the end of the world?
+>
+
+Are you proposing to have complete RX operation in polling mode with
+RX interrupt disabled (eg. using a kernel thread)?
+
+>
+> One nice benefit of this is that it would actually work _better_ on
+> SMP systems for any sysrqs that aren't NMI safe.  Specifically with
+> your patch series those would be queued with irq_work_queue() which
+> means they'd be blocked if the CPU processing the NMI is stuck with
+> IRQs disabled.
+
+Yes, the sysrq handlers which aren't NMI safe will behave similarly to
+existing IRQ based sysrq handlers.
+
+> With the polling mechanism they'd nicely just run on a
+> different CPU.
+
+It looks like polling would cause much CPU overhead. So I am not sure
+if that is the preferred approach.
+
+-Sumit
+
+>
+>
+> > > > One last bit of feedback is that I noticed that you didn't try to
+> > > > implement the old "knock" functionality of the old NMI driver that's
+> > > > being deleted.  That is: your new patches don't provide an alternate
+> > > > way to drop into the debugger for systems where BREAK isn't hooked up.
+> > > > That's not a hard requirement, but I was kinda hoping for it since I
+> > > > have some systems that haven't routed BREAK properly.  ;-)
+> > > >
+> > >
+> > > Yeah, this is on my TODO list to have a kgdb "knock" functionality to
+> > > be implemented via a common hook in serial core.
+> > >
+> > > >
+> > > > I'll try to get some more detailed feedback in the next few days.
+> > >
+> > > Thanks. I do look forward to your feedback.
+> > >
+> > > -Sumit
+> > >
+> > > >
+> > > > -Doug
