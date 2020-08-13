@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C20C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF64C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C450620791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCE020791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHMKMJ (ORCPT
+        id S1726636AbgHMKMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:12:09 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:24032 "EHLO pegase1.c-s.fr"
+        Thu, 13 Aug 2020 06:12:08 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:18231 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgHMKMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:12:07 -0400
+        id S1726252AbgHMKMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:12:06 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BS2Rl2n3cz9vD3t;
-        Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BS2Rk48prz9vD3n;
+        Thu, 13 Aug 2020 12:12:02 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zEDO2OUN0i-8; Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
+        with ESMTP id ylr619tKhbQO; Thu, 13 Aug 2020 12:12:02 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BS2Rl21lfz9vD3r;
-        Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BS2Rk3QNFz9vD3q;
+        Thu, 13 Aug 2020 12:12:02 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 957E28B788;
-        Thu, 13 Aug 2020 12:12:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B02FB8B788;
+        Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id f4zrRYUIq4JE; Thu, 13 Aug 2020 12:12:04 +0200 (CEST)
+        with ESMTP id dcKYEE7OyoXn; Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 72A3A8B783;
-        Thu, 13 Aug 2020 12:12:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 671E88B783;
+        Thu, 13 Aug 2020 12:12:03 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 463AD65C54; Thu, 13 Aug 2020 10:12:04 +0000 (UTC)
-Message-Id: <c71f337cc66f6faa05fd3e1495b04b037b716213.1597313510.git.christophe.leroy@csgroup.eu>
+        id 3A13A65C54; Thu, 13 Aug 2020 10:12:03 +0000 (UTC)
+Message-Id: <daa24ca138ee05c2c577e12f1ff48326f47c3de7.1597313510.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <11a330af231af22874c006302a945388846f8112.1597313510.git.christophe.leroy@csgroup.eu>
 References: <11a330af231af22874c006302a945388846f8112.1597313510.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 5/5] powerpc: Rewrite 4xx flush_cache_instruction() in C
+Subject: [PATCH 4/5] powerpc: Rewrite FSL_BOOKE flush_cache_instruction() in C
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Aug 2020 10:12:04 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 10:12:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,28 +62,30 @@ Do it to improve readability and maintainability.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/misc_32.S   | 13 -------------
- arch/powerpc/mm/nohash/4xx.c    | 15 +++++++++++++++
- arch/powerpc/mm/nohash/Makefile |  1 +
- 3 files changed, 16 insertions(+), 13 deletions(-)
- create mode 100644 arch/powerpc/mm/nohash/4xx.c
+ arch/powerpc/kernel/misc_32.S      | 17 -----------------
+ arch/powerpc/mm/nohash/fsl_booke.c | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
 diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index 4f4a31d9fdd0..87717966f5cd 100644
+index a8f6ef513115..4f4a31d9fdd0 100644
 --- a/arch/powerpc/kernel/misc_32.S
 +++ b/arch/powerpc/kernel/misc_32.S
-@@ -268,19 +268,6 @@ _ASM_NOKPROBE_SYMBOL(real_writeb)
+@@ -281,23 +281,6 @@ _GLOBAL(flush_instruction_cache)
+ EXPORT_SYMBOL(flush_instruction_cache)
+ #endif
  
- #endif /* CONFIG_40x */
- 
--
--/*
-- * Flush instruction cache.
-- */
--#ifdef CONFIG_4xx
+-#ifdef CONFIG_FSL_BOOKE
 -_GLOBAL(flush_instruction_cache)
--	lis	r3, KERNELBASE@h
--	iccci	0,r3
+-#ifdef CONFIG_E200
+-	mfspr   r3,SPRN_L1CSR0
+-	ori     r3,r3,L1CSR0_CFI|L1CSR0_CLFC
+-	/* msync; isync recommended here */
+-	mtspr   SPRN_L1CSR0,r3
+-#else
+-	mfspr	r3,SPRN_L1CSR1
+-	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
+-	mtspr	SPRN_L1CSR1,r3
+-#endif
 -	isync
 -	blr
 -EXPORT_SYMBOL(flush_instruction_cache)
@@ -92,39 +94,33 @@ index 4f4a31d9fdd0..87717966f5cd 100644
  /*
   * Copy a whole page.  We use the dcbz instruction on the destination
   * to reduce memory traffic (it eliminates the unnecessary reads of
-diff --git a/arch/powerpc/mm/nohash/4xx.c b/arch/powerpc/mm/nohash/4xx.c
-new file mode 100644
-index 000000000000..954c8aa42a32
---- /dev/null
-+++ b/arch/powerpc/mm/nohash/4xx.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * This file contains the routines for initializing the MMU
-+ * on the 4xx series of chips.
-+ */
-+
-+#include <asm/processor.h>
-+#include <asm/page.h>
-+#include <asm/cache.h>
-+
+diff --git a/arch/powerpc/mm/nohash/fsl_booke.c b/arch/powerpc/mm/nohash/fsl_booke.c
+index 0c294827d6e5..36bda962d3b3 100644
+--- a/arch/powerpc/mm/nohash/fsl_booke.c
++++ b/arch/powerpc/mm/nohash/fsl_booke.c
+@@ -219,6 +219,22 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 	return tlbcam_addrs[tlbcam_index - 1].limit - PAGE_OFFSET + 1;
+ }
+ 
 +void flush_instruction_cache(void)
 +{
-+	iccci((void*)KERNELBASE);
++	unsigned long tmp;
++
++	if (IS_ENABLED(CONFIG_E200)) {
++		tmp = mfspr(SPRN_L1CSR0);
++		tmp |= L1CSR0_CFI | L1CSR0_CLFC;
++		mtspr(SPRN_L1CSR0, tmp);
++	} else {
++		tmp = mfspr(SPRN_L1CSR1);
++		tmp |= L1CSR1_ICFI | L1CSR1_ICLFR;
++		mtspr(SPRN_L1CSR1, tmp);
++	}
 +	isync();
 +}
-diff --git a/arch/powerpc/mm/nohash/Makefile b/arch/powerpc/mm/nohash/Makefile
-index 0424f6ce5bd8..a7f7211b6373 100644
---- a/arch/powerpc/mm/nohash/Makefile
-+++ b/arch/powerpc/mm/nohash/Makefile
-@@ -4,6 +4,7 @@ ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
- 
- obj-y				+= mmu_context.o tlb.o tlb_low.o
- obj-$(CONFIG_PPC_BOOK3E_64)  	+= tlb_low_64e.o book3e_pgtable.o
-+obj-$(CONFIG_4xx)		+= 4xx.o
- obj-$(CONFIG_40x)		+= 40x.o
- obj-$(CONFIG_44x)		+= 44x.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx.o
++
+ /*
+  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
+  */
 -- 
 2.25.0
 
