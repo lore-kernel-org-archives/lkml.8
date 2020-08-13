@@ -2,110 +2,236 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9075CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92909C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3CA20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+LjHqds"
+	by mail.kernel.org (Postfix) with ESMTP id 65F0220781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMHVK (ORCPT
+        id S1726612AbgHMHVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMHVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:21:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1185C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:21:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id x6so2365259pgx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 00:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=Sb/qdUmtKdQcZzhXqvBHC/XQvL7lTUC7aHl/KOqJRQE=;
-        b=U+LjHqdsm2Fo1v2iltmwYb6XwNstuN6jBf9ShIKaaSZSsYSdoPLw48TdXRfbxT3G3Y
-         wQD4WcP1YNQXI5gbrKqNY4EL2Y+TNhEciZ/GLFlUFr0rgsFt4wQd35C+D2m0uUupNrHC
-         52z7YOrrDdtvC37nsKqD2bf3CbWxN8FBzyoFE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=Sb/qdUmtKdQcZzhXqvBHC/XQvL7lTUC7aHl/KOqJRQE=;
-        b=Xt3krtTz00wzVBVOlB2KYB+gTGjTBSVVoo1EwdwR7kicKQzof7jdYaPT4qfdo26lh1
-         7aKzn+jaohw4DxUAODOd7qxamMD6njPHiffsxhq0zSVCYx9QNAA12Kb2erYkkS4TLthW
-         nCZN4pIzyvTIKl76/PJp2pACsU7rhC3gVZZfeH+KwfQeNHVTZ6pJyIqnLAkoGK0b3WGP
-         4vuJfKj+aks4IWNzWqNhiiaWd6avdnWLVcwtm1IgfvqtgnV7zsZvZPt5dBKhnzN1NRew
-         UANiKbhuPLEvZeo9xU6S1MLKlTu18vNuGx/+R9+qTBcINUQIDpF41HT2SqvY8miL61Yo
-         jisw==
-X-Gm-Message-State: AOAM530KMoKR2KJgD75BgVoqReXWBDBOBuh5IrGo4ZFLovP6iiqvWFyA
-        Em3i1ws2KiP4xeoQg2NqioD1n3pccvQ=
-X-Google-Smtp-Source: ABdhPJy2w+s3WMM+RACGQk4X2svexIeUrVnHXOKY7zentF5GT3o4XhKrgauiSUlyuaaL3GLR2KfA6Q==
-X-Received: by 2002:a63:5613:: with SMTP id k19mr2638912pgb.424.1597303268734;
-        Thu, 13 Aug 2020 00:21:08 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id r28sm4575088pfg.158.2020.08.13.00.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 00:21:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 13 Aug 2020 03:21:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25170 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgHMHV3 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:21:29 -0400
+IronPort-SDR: ElKX/bRDka2N58uSNGMKwr5bpXpZU4CDTAIlhraweyddK+gQP/S+qQipkOfio5D2ZYmD+c6utl
+ 6JO7299yYRQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151820896"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="151820896"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:28 -0700
+IronPort-SDR: DlKZA5mkacYAKooiKsJRmSJoGC5l/xDHeTPUI+n5tVuqb/QSwonfNtbiWIt1ooh9XH7kvVs25F
+ Q62b1Df7WMRA==
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="495771769"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:25 -0700
+Subject: Re: [PATCH] perf parse-events: Set exclude_guest for user-space
+ counting
+To:     "Jin, Yao" <yao.jin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+References: <20200812065953.22143-1-yao.jin@linux.intel.com>
+ <20200812121504.GE13995@kernel.org>
+ <74097816-3f36-abea-1eaa-8942aedd7322@linux.intel.com>
+ <ab4ae047-ba0b-fed6-36e4-d667e3437e34@linux.intel.com>
+ <75360db6-0574-aef5-8c90-6eb8f2a6afb3@linux.intel.com>
+ <3341af83-c9f3-49c4-d54b-bf4d2a68e639@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <ae679ffb-c3ed-242e-cd6a-ed1d29fe0a38@linux.intel.com>
+Date:   Thu, 13 Aug 2020 15:21:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aa506a3d-3e89-08ed-2d66-7098f6e5af91@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-3-git-send-email-mkshah@codeaurora.org> <159717444178.1360974.6520145243224264090@swboyd.mtv.corp.google.com> <aa506a3d-3e89-08ed-2d66-7098f6e5af91@codeaurora.org>
-Subject: Re: [PATCH v4 2/7] pinctrl: qcom: Use return value from irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Thu, 13 Aug 2020 00:21:06 -0700
-Message-ID: <159730326694.33733.15791110829493100948@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+In-Reply-To: <3341af83-c9f3-49c4-d54b-bf4d2a68e639@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-08-13 00:17:18)
-> Hi,
->=20
-> On 8/12/2020 1:04 AM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-08-10 04:20:55)
-> >> msmgpio irqchip is not using return value of irq_set_wake call.
-> >> Start using it.
-> > Does this work when the irq parent isn't setup in a hierarchy?
-> yes it works fine even when parent isn't setup in hierarchy.
-> > I seem to
-> > recall that this was written this way because sometimes
-> > irq_set_irq_wake() would fail for the summary irq so it was a best
-> > effort setting of wake on the summary line.
-> Thanks for pointing this.
->=20
-> It was written this way since previously GIC driver neither had=20
-> IRQCHIP_SKIP_SET_WAKE flag nor it implemented .irq_set_wake callback,
->=20
-> so the call to irq_set_irq_wake() to set_irq_wake_real() used to return=20
-> error -ENXIO in past.
->=20
-> I see this is already taken care now in GIC drivers by adding=20
-> IRQCHIP_SKIP_SET_WAKE flag.
+On 2020/8/13 15:08, Jin, Yao wrote:
+> 
+> 
+> On 8/13/2020 2:57 PM, Like Xu wrote:
+>> Hi Yao,
+>>
+>> On 2020/8/13 11:11, Jin, Yao wrote:
+>>> Hi Like,
+>>>
+>>> On 8/12/2020 9:02 PM, Like Xu wrote:
+>>>> On 2020/8/12 20:15, Arnaldo Carvalho de Melo wrote:
+>>>>> Em Wed, Aug 12, 2020 at 02:59:53PM +0800, Jin Yao escreveu:
+>>>>>> Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
+>>>>>>
+>>>>>> But it doesn't make sense that we request for user-space counting
+>>>>>> but we also get the guest report.
+>>>>>>
+>>>>
+>>>> Please hold the horse and allow this possibility.
+>>>>
+>>>> Some authorized perf users on the host may
+>>>> only want to count (KVM) guest user space events.
+>>>>
+>>>> Thanks,
+>>>> Like Xu
+>>>>
+>>>
+>>> Without this patch, if we don't set the ":u" modifier, exclude_guest = 1.
+>>
+>> It's true for the non ":u" case.
+>>
+>>>
+>>> perf record -e cycles ./div
+>>> perf evlist -v
+>>> cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
+>>> IP|TID|TIME|PERIOD, read_format: ID, disabled: 1, inherit: 1, mmap: 1, 
+>>> comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, 
+>>> exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+>>>
+>>> So this patch doesn't change perf's original behavior.
+>>
+>> The patch changes the "perf kvm" original behavior.
+>>
+>> Testcase: perf kvm --host --guest --guestkallsyms=guest-kallsyms \
+>> --guestmodules=guest-modules record -e cycles:u ...
+>>
+>> From:
+>>
+>> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
+>> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, 
+>> exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
+>> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq 
+>> }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, 
+>> inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 
+>> 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+>>
+>> To:
+>>
+>> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
+>> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, 
+>> exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1,
+>>
+>> exclude_guest: 1
+>>
+>> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq 
+>> }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, 
+>> inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 
+>> 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+>>
+>> Thanks,
+>> Like Xu
+> 
+> The behavior is similar as native kernel. The change of exclude_guest (0 -> 
+> 1) is expected.
 
-Ok, great. Thanks for double checking.
+When we have 'exclude_guest: 1' for perf kvm usage,
+we may get nothing from guest events.
 
-Can you add those details to the commit message so we don't forget? And
-then I'm happy to see:=20
+The perf kvm user couldn't count (KVM) guest
+user space events only with your patch.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+It's unexpected from the pure ':u' semantics.
+
+> 
+> On native kernel,
+> 
+> Before:
+> 
+>    perf record -e cycles:u ./div
+>    perf evlist -v
+>    cycles:u: ..., exclude_kernel: 1, exclude_hv: 1, ...
+> 
+> After:
+> 
+>    perf record -e cycles:u ./div
+>    perf evlist -v
+>    cycles:u: ..., exclude_kernel: 1, exclude_hv: 1,  exclude_guest: 1, ...
+> 
+> Thanks
+> Jin Yao
+> 
+>>>
+>>> Thanks
+>>> Jin Yao
+>>>
+>>>>>> To keep perf semantics consistent and clear, this patch sets
+>>>>>> exclude_guest for user-space counting.
+>>>>>
+>>>>> Applied, and also added this, that you should consider doing in the
+>>>>> future (modulo the "Committer testing:" header :) ):
+>>>>>
+>>>>> Committer testing:
+>>>>>
+>>>>> Before:
+>>>>>
+>>>>>    # perf record -e cycles:u
+>>>>>    ^C[ perf record: Woken up 1 times to write data ]
+>>>>>    [ perf record: Captured and wrote 1.231 MB perf.data (91 samples) ]
+>>>>>    #
+>>>>>    # perf evlist -v
+>>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, 
+>>>>> sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, 
+>>>>> inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
+>>>>>    <SNIP>
+>>>>>    #
+>>>>>
+>>>>> After:
+>>>>>
+>>>>>    # perf record -e cycles:u
+>>>>>    ^C[ perf record: Woken up 1 times to write data ]
+>>>>>    [ perf record: Captured and wrote 1.263 MB perf.data (403 samples) ]
+>>>>>    #
+>>>>>    # perf evlist -v
+>>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, 
+>>>>> sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, 
+>>>>> inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 
+>>>>> 1, exclude_guest: 1
+>>>>>    #
+>>>>>
+>>>>> ----
+>>>>>
+>>>>> I.e. show actual command output before and after that demonstrates the
+>>>>> problem and then the solution.
+>>>>>
+>>>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>>>>>> ---
+>>>>>>   tools/perf/util/parse-events.c | 2 ++
+>>>>>>   1 file changed, 2 insertions(+)
+>>>>>>
+>>>>>> diff --git a/tools/perf/util/parse-events.c 
+>>>>>> b/tools/perf/util/parse-events.c
+>>>>>> index 9f7260e69113..4d809f1fe269 100644
+>>>>>> --- a/tools/perf/util/parse-events.c
+>>>>>> +++ b/tools/perf/util/parse-events.c
+>>>>>> @@ -1794,6 +1794,8 @@ static int get_event_modifier(struct 
+>>>>>> event_modifier *mod, char *str,
+>>>>>>           if (*str == 'u') {
+>>>>>>               if (!exclude)
+>>>>>>                   exclude = eu = ek = eh = 1;
+>>>>>> +            if (!exclude_GH)
+>>>>>> +                eG = 1;
+>>>>>>               eu = 0;
+>>>>>>           } else if (*str == 'k') {
+>>>>>>               if (!exclude)
+>>>>>> -- 
+>>>>>> 2.17.1
+>>>>>>
+>>>>>
+>>>>
+>>
+
