@@ -2,96 +2,137 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97923C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3320771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8459120771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597319067;
+	bh=fp5rvaq7NPsTUTrz3k3eLOHmPNbOzxflP+aP/tMnI8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XXrcx0ElW6hvXAbbzD33yNjgf0SUYmb+iDv3JGUvXzphRSzOevg8RVK734F7+TsSt
+	 LOiXjgSadsLGy9TOIVm6SfUxuRwLX57L4g1GitJGHMXWoRCLBlc1vMM8GXFUqd23mq
+	 H2CXLFJJgrfsHnld4eC8GQXP5hFr3VcAkBicXBNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgHMLng (ORCPT
+        id S1726660AbgHMLoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:43:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42854 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 07:44:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgHMLlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:41:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2ED8EB750;
-        Thu, 13 Aug 2020 11:41:33 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 13:41:05 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Charan Teja Reddy <charante@codeaurora.org>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, david@redhat.com,
-        rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
-Subject: Re: [PATCH V2] mm, page_alloc: fix core hung in free_pcppages_bulk()
-Message-ID: <20200813114105.GI9477@dhcp22.suse.cz>
-References: <1597150703-19003-1-git-send-email-charante@codeaurora.org>
+        id S1726192AbgHMLl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:41:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5328220771;
+        Thu, 13 Aug 2020 11:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597318888;
+        bh=fp5rvaq7NPsTUTrz3k3eLOHmPNbOzxflP+aP/tMnI8s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KYj7rXs19Lz6LH2TFh6PXdj7TqS4MstDRdvp0d0TGAc3vpZcsYajEQrthDRsHBuyP
+         NFeSg6VzPIr1KthHuXcB37fCPC/wslqBgQkZHM+IlhJKsxONjztCYDYdTz/SDNZGFs
+         oytpTvC6KNesg+zoic/2U0HkUP6A6wj2dYHXxaXo=
+Date:   Thu, 13 Aug 2020 13:41:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Cameron Berkenpas <cam@neo-zeon.de>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        =?iso-8859-1?Q?Dani=EBl?= Sonck <dsonck92@gmail.com>,
+        Zhang Qiang <qiang.zhang@windriver.com>,
+        Thomas Lamprecht <t.lamprecht@proxmox.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 4.19 016/133] cgroup: fix cgroup_sk_alloc() for
+ sk_clone_lock()
+Message-ID: <20200813114138.GA3754843@kroah.com>
+References: <20200720152803.732195882@linuxfoundation.org>
+ <20200720152804.513188610@linuxfoundation.org>
+ <e6d703e7-2cbb-f77e-413f-523aa0706542@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1597150703-19003-1-git-send-email-charante@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6d703e7-2cbb-f77e-413f-523aa0706542@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11-08-20 18:28:23, Charan Teja Reddy wrote:
-[...]
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index e4896e6..839039f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1304,6 +1304,11 @@ static void free_pcppages_bulk(struct zone *zone, int count,
->  	struct page *page, *tmp;
->  	LIST_HEAD(head);
->  
-> +	/*
-> +	 * Ensure proper count is passed which otherwise would stuck in the
-> +	 * below while (list_empty(list)) loop.
-> +	 */
-> +	count = min(pcp->count, count);
->  	while (count) {
->  		struct list_head *list;
+On Thu, Aug 13, 2020 at 07:30:55PM +0800, Yang Yingliang wrote:
+> Hi,
+> 
+> On 2020/7/20 23:36, Greg Kroah-Hartman wrote:
+> > From: Cong Wang <xiyou.wangcong@gmail.com>
+> > 
+> > [ Upstream commit ad0f75e5f57ccbceec13274e1e242f2b5a6397ed ]
+> > 
+> > When we clone a socket in sk_clone_lock(), its sk_cgrp_data is
+> > copied, so the cgroup refcnt must be taken too. And, unlike the
+> > sk_alloc() path, sock_update_netprioidx() is not called here.
+> > Therefore, it is safe and necessary to grab the cgroup refcnt
+> > even when cgroup_sk_alloc is disabled.
+> > 
+> > sk_clone_lock() is in BH context anyway, the in_interrupt()
+> > would terminate this function if called there. And for sk_alloc()
+> > skcd->val is always zero. So it's safe to factor out the code
+> > to make it more readable.
+> > 
+> > The global variable 'cgroup_sk_alloc_disabled' is used to determine
+> > whether to take these reference counts. It is impossible to make
+> > the reference counting correct unless we save this bit of information
+> > in skcd->val. So, add a new bit there to record whether the socket
+> > has already taken the reference counts. This obviously relies on
+> > kmalloc() to align cgroup pointers to at least 4 bytes,
+> > ARCH_KMALLOC_MINALIGN is certainly larger than that.
+> > 
+> > This bug seems to be introduced since the beginning, commit
+> > d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+> > tried to fix it but not compeletely. It seems not easy to trigger until
+> > the recent commit 090e28b229af
+> > ("netprio_cgroup: Fix unlimited memory leak of v2 cgroups") was merged.
+> > 
+> > Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
+> > Reported-by: Cameron Berkenpas <cam@neo-zeon.de>
+> > Reported-by: Peter Geis <pgwipeout@gmail.com>
+> > Reported-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+> > Reported-by: Daniël Sonck <dsonck92@gmail.com>
+> > Reported-by: Zhang Qiang <qiang.zhang@windriver.com>
+> > Tested-by: Cameron Berkenpas <cam@neo-zeon.de>
+> > Tested-by: Peter Geis <pgwipeout@gmail.com>
+> > Tested-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
+> > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > Cc: Zefan Li <lizefan@huawei.com>
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Roman Gushchin <guro@fb.com>
+> > Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> [...]
+> > +void cgroup_sk_clone(struct sock_cgroup_data *skcd)
+> > +{
+> > +	/* Socket clone path */
+> > +	if (skcd->val) {
+> 
+> Compare to mainline patch, it's missing *if (skcd->no_refcnt)* check here.
+> 
+> Is it a mistake here ?
 
+Possibly, it is in the cgroup_sk_free() call.  Can you send a patch to
+fix this up?
 
-How does this prevent the race actually? Don't we need something like
-the following instead?
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e028b87ce294..45bcc7ba37c4 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1317,9 +1317,16 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 		 * lists
- 		 */
- 		do {
-+			bool looped = false;
-+
- 			batch_free++;
--			if (++migratetype == MIGRATE_PCPTYPES)
-+			if (++migratetype == MIGRATE_PCPTYPES) {
-+				if (looped)
-+					goto free;
-+
- 				migratetype = 0;
-+				looped = true;
-+			}
- 			list = &pcp->lists[migratetype];
- 		} while (list_empty(list));
- 
-@@ -1352,6 +1359,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 		} while (--count && --batch_free && !list_empty(list));
- 	}
- 
-+free:
- 	spin_lock(&zone->lock);
- 	isolated_pageblocks = has_isolate_pageblock(zone);
- 
--- 
-Michal Hocko
-SUSE Labs
+thanks,
+
+greg k-h
