@@ -2,109 +2,120 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7797C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF97920791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC8B20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QN4Bkr8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHMKMG (ORCPT
+        id S1726174AbgHMKRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:12:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:5227 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgHMKMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:12:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BS2Rg4pnkz9vD3m;
-        Thu, 13 Aug 2020 12:11:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id XtOu-NNTzoQR; Thu, 13 Aug 2020 12:11:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BS2Rg2Nx9z9vD3l;
-        Thu, 13 Aug 2020 12:11:59 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D9538B783;
-        Thu, 13 Aug 2020 12:12:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gJ2HvN7P3JkR; Thu, 13 Aug 2020 12:12:00 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5146C8B78A;
-        Thu, 13 Aug 2020 12:12:00 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 1E9E865C54; Thu, 13 Aug 2020 10:12:00 +0000 (UTC)
-Message-Id: <11a330af231af22874c006302a945388846f8112.1597313510.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 1/5] powerpc: Remove flush_instruction_cache for book3s/32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Aug 2020 10:12:00 +0000 (UTC)
+        Thu, 13 Aug 2020 06:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgHMKRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:17:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62589C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:17:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so4780400wrw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2Jksw957ApTEUdNh+WJ+SMHxYZwMIbppobCvjvmWoFY=;
+        b=QN4Bkr8TeVYbJBa6MMwSkHdWx/riEzXkTnXVWpsIjsobcal0reicM/9cElmteR8CUR
+         /EeCa6G2bsbzJPjwoeml1DGIKdysExzQTvmpAO3tJxEadzy07Kyl0OrWt34BveGxpbIa
+         pJxzcHfIRsTVkG1AeW+Vxmp4nCikq3LLySOcccSgz2yn7d30CAQsRcq8i01d4yWQ8U80
+         h3DABNX66w5Kmr8cPnnwVn9nHK2hAjSE335SQ8hbx1k4xN57qxfTqt3H2PwK2waeOFQO
+         zyWA7aeBEYDhqELGCny4UBg58sTufYumo6cRL7pFiNZLNVueGYZunkoYIX1iD90FWO+7
+         6L0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2Jksw957ApTEUdNh+WJ+SMHxYZwMIbppobCvjvmWoFY=;
+        b=G99WMczolQRB+Ct803isKs8wUdDcBA4Bt+4ODOJ2vtEd/bp6GUBCNPqs09FthT7NQd
+         7IVeKSOJljN5Caxon5Ej5x7RxRJMj+ThinVkiUyEpJVHbzKZAvq4rmLjXjcIewp9l1K2
+         U0FkV4G7uwHaC8yFYLG+Mvm/9L6k7A9RWCM/cqyu1ORzSSi7Rca//yZsNzVrVrJugE92
+         6kVrhcxMDj3QjGNIaJaQN2QjGKYrLyEHNBIGzc1Q2YOQcSlnpCpmbbQHcwEJO7vt+7+c
+         UTFfv8dNK0o7px5qHCGANBk/DdHvmRAteg6BofjPgwiRf44tR89XRNTpNuvDiuIHTsgb
+         iKpw==
+X-Gm-Message-State: AOAM530EEbRGWPFUz8yPhBSOeC8X/vvx0ZgKAM/1t3KR3d/HLkSu/IDm
+        B4mXlzm+8xuLpP/YYC5Q+1iNkw==
+X-Google-Smtp-Source: ABdhPJz31vqukdsdocXiZ3R5woRV0W54AJOsLQCkCk6VzoTnkJcBkq16BiBZJAsfLjdST1/6ACkqhg==
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr3220762wrv.387.1597313826743;
+        Thu, 13 Aug 2020 03:17:06 -0700 (PDT)
+Received: from holly.lan (82-132-221-219.dab.02.net. [82.132.221.219])
+        by smtp.gmail.com with ESMTPSA id m1sm8647311wmc.28.2020.08.13.03.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 03:17:06 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 11:17:03 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+Message-ID: <20200813101703.566thqmnc2d7cb3n@holly.lan>
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+ <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
+ <20200811135801.GA416071@kroah.com>
+ <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
+ <20200811145816.GA424033@kroah.com>
+ <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
+ <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
+ <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
+ <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+ <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only callers of flush_instruction_cache() are:
+On Thu, Aug 13, 2020 at 02:55:12PM +0530, Sumit Garg wrote:
+> On Thu, 13 Aug 2020 at 05:38, Doug Anderson <dianders@chromium.org> wrote:
+> > On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > One
+> > > last worry is that I assume that most people testing (and even
+> > > automated testing labs) will either always enable NMI or won't enable
+> > > NMI.  That means that everyone will be only testing one codepath or
+> > > the other and (given the complexity) the non-tested codepath will
+> > > break.
+> > >
+> 
+> The current patch-set only makes this NMI to work when debugger (kgdb)
+> is enabled which I think is mostly suitable for development
+> environments. So most people testing will involve existing IRQ mode
+> only.
+> 
+> However, it's very much possible to make NMI mode as default for a
+> particular serial driver if the underlying irqchip supports it but it
+> depends if we really see any production level usage of NMI debug
+> feature.
 
-arch/powerpc/kernel/swsusp_booke.S:	bl flush_instruction_cache
-arch/powerpc/mm/nohash/40x.c:	flush_instruction_cache();
-arch/powerpc/mm/nohash/44x.c:	flush_instruction_cache();
-arch/powerpc/mm/nohash/fsl_booke.c:	flush_instruction_cache();
-arch/powerpc/platforms/44x/machine_check.c:			flush_instruction_cache();
-arch/powerpc/platforms/44x/machine_check.c:		flush_instruction_cache();
+The effect of this patch is not to make kgdb work from NMI it is to make
+(some) SysRqs work from NMI. I think that only allowing it to deploy for
+kgdb users is a mistake.
 
-This function is not used by book3s/32, drop it.
+Having it deploy automatically for kgdb users might be OK but it seems
+sensible to make this feature available for other users too.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/misc_32.S | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index b24f866fef81..bd870743c06f 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -271,9 +271,8 @@ _ASM_NOKPROBE_SYMBOL(real_writeb)
- 
- /*
-  * Flush instruction cache.
-- * This is a no-op on the 601.
-  */
--#ifndef CONFIG_PPC_8xx
-+#if !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC_BOOK3S_32)
- _GLOBAL(flush_instruction_cache)
- #if defined(CONFIG_4xx)
- 	lis	r3, KERNELBASE@h
-@@ -290,18 +289,11 @@ _GLOBAL(flush_instruction_cache)
- 	mfspr	r3,SPRN_L1CSR1
- 	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
- 	mtspr	SPRN_L1CSR1,r3
--#elif defined(CONFIG_PPC_BOOK3S_601)
--	blr			/* for 601, do nothing */
--#else
--	/* 603/604 processor - use invalidate-all bit in HID0 */
--	mfspr	r3,SPRN_HID0
--	ori	r3,r3,HID0_ICFI
--	mtspr	SPRN_HID0,r3
- #endif /* CONFIG_4xx */
- 	isync
- 	blr
- EXPORT_SYMBOL(flush_instruction_cache)
--#endif /* CONFIG_PPC_8xx */
-+#endif /* CONFIG_PPC_8xx || CONFIG_PPC_BOOK3S_32 */
- 
- /*
-  * Copy a whole page.  We use the dcbz instruction on the destination
--- 
-2.25.0
-
+Daniel.
