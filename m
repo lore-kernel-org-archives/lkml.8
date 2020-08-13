@@ -2,162 +2,85 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E4A20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OEs+ZoQn"
+	by mail.kernel.org (Postfix) with ESMTP id 0057B20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHMK7j (ORCPT
+        id S1726658AbgHMLBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:59:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37856 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMK71 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:59:27 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 83D07551;
-        Thu, 13 Aug 2020 12:59:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597316364;
-        bh=MkCO5WRnwp35q3JzVhLn32/9iCBNr/ShuvAxpwbx+0w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OEs+ZoQnEGKW2rKPrLo5ZB2ySsOpJ9yrxXrpapBX+kUbnKBvv70r3Vpd7R6fRFpsS
-         QJKuhIM+9V/ZzqJ1LP/wkLMTGhx8/NE9nz9F6nLZA5BuiHnSkavsxaC8VJvulh8ppE
-         /tEeOHeoESQX91aKUCO0J5nm9nRkgCTmbsdI3aTw=
-Date:   Thu, 13 Aug 2020 13:59:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1
- bindings
-Message-ID: <20200813105910.GB6057@pendragon.ideasonboard.com>
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
- <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
+        Thu, 13 Aug 2020 07:01:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51836 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgHMLBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:01:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9A84FB6A3;
+        Thu, 13 Aug 2020 11:01:25 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 13:01:02 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
+ page->mem_cgroup
+Message-ID: <20200813110102.GF9477@dhcp22.suse.cz>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
+ <20200811113008.GK4793@dhcp22.suse.cz>
+ <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
+ <20200811135626.GL4793@dhcp22.suse.cz>
+ <0b5e1ac3-c9c7-35e9-2661-b58430314d0a@linux.alibaba.com>
+ <20200813062049.GA9477@dhcp22.suse.cz>
+ <abd9276b-31f8-a51d-43d6-6c8ae93237dc@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <abd9276b-31f8-a51d-43d6-6c8ae93237dc@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, Aug 13, 2020 at 11:38:03AM +0100, Lad, Prabhakar wrote:
-> On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven wrote:
-> > On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar wrote:
-> > > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > >
-> > > Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
-> > >
-> > > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > index 51cd4d162770..67cded5ad827 100644
-> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > @@ -10,6 +10,7 @@ Required Properties:
-> > >      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
-> > >      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
-> > >      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
-> > > +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
-> > >      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
-> > >      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
-> > >      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
-> > > @@ -75,6 +76,7 @@ corresponding to each DU output.
-> > >   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
-> > >   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
-> > >   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
-> > > + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
-> >
-> > As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
-> > instead of port 2?
-> >
-> > I know we did it the same for R-Car M3-N and RZ/G2N.
-> > But my main worry is adding support for R-Car H3-N later.
-
-Why should we do so ? The port number here isn't tied to the DU channel
-number. It only identifies the output port. Many DUs can route DU
-channel outputs to different output ports.
-
-> I do agree too, with the below diff I tested the LVDS output on RZ/G2N
-> Rev2 board and things work fine. But only thing it doesn't explain is
-> why does LVDS work on DU2 for G2[H/N] boards :D
+On Thu 13-08-20 17:45:19, Alex Shi wrote:
 > 
-> Geert, Laurent, Kieran If you agree with the below changes I shall
-> post a proper patch fixing it for RZ/G2[HN]
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> index d661724fc28a..0b087d287202 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> @@ -2540,8 +2540,8 @@
->                                                 remote-endpoint =
-> <&dw_hdmi0_in>;
->                                         };
->                                 };
-> -                               port@2 {
-> -                                       reg = <2>;
-> +                               port@3 {
-> +                                       reg = <3>;
->                                         du_out_lvds0: endpoint {
->                                                 remote-endpoint = <&lvds0_in>;
->                                         };
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> index 3e67cf70f040..419d81c7763e 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> @@ -153,7 +153,7 @@ static const struct rcar_du_device_info
-> rcar_du_r8a774b1_info = {
->                 },
->                 [RCAR_DU_OUTPUT_LVDS0] = {
->                         .possible_crtcs = BIT(0),
-> -                       .port = 2,
-> +                       .port = 3,
->                 },
->         },
->         .num_lvds = 1,
+> 在 2020/8/13 下午2:20, Michal Hocko 写道:
+> > On Wed 12-08-20 11:25:53, Alex Shi wrote:
+> >> >From 999b0fe5fc65865c3b59ff28500d45572a4a9570 Mon Sep 17 00:00:00 2001
+> >> From: Alex Shi <alex.shi@linux.alibaba.com>
+> >> Date: Wed, 5 Aug 2020 21:02:30 +0800
+> >> Subject: [PATCH 2/6] mm/memcg: bail out early from swap accounting when memcg
+> >>  is disabled
+> >>
+> >> If we disabled memcg by cgroup_disable=memory, page->memcg will be NULL
+> >> and so the charge is skipped and that will trigger a warning like below.
+> >> Let's return from the funcs earlier.
+> >>
+> >>  ---[ end trace f1f34bfc3b32ed2f ]---
+> >>  anon flags:0x5005b48008000d(locked|uptodate|dirty|swapbacked)
+> >>  raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
+> >>  raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
+> >>  page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
+> > 
+> > Yes this is better. It would be even more informative if you added the
+> > backtrace.
 > 
-> > >   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
-> > >   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
-> > >   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
-> >
-> > Apart from that:
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> The stack is a bit long.
 
+This doesn't matter. It is informative and potentially useful for future
+reference.
+
+Thanks!
 -- 
-Regards,
-
-Laurent Pinchart
+Michal Hocko
+SUSE Labs
