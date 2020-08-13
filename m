@@ -2,96 +2,149 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A23C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2702078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78C120658
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QK+7kN6y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZK6Xnm68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHMRDA (ORCPT
+        id S1726648AbgHMRDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37876 "EHLO
+        Thu, 13 Aug 2020 13:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgHMRCt (ORCPT
+        with ESMTP id S1726384AbgHMRDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:02:49 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BADC061757;
-        Thu, 13 Aug 2020 10:02:49 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so2876534plb.12;
-        Thu, 13 Aug 2020 10:02:49 -0700 (PDT)
+        Thu, 13 Aug 2020 13:03:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5636C061757;
+        Thu, 13 Aug 2020 10:03:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so5972193wrw.1;
+        Thu, 13 Aug 2020 10:03:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=w0HX6Ms7J59aY7v+H6lsDXSO/qCU5OzjkYB+jXfYoQE=;
-        b=QK+7kN6y7ySnkdkMTMLiLdrZA7aKAudDtauIMVgYHTB0n2KN3padLuBo9edFkbl4Q4
-         fYffiFSUzbUv2Z81C1j8IC47C3r1o8gJIo7LcmRGIMGhHxDMdPzOmJC9msICB4IOfmV3
-         b1abdjmH6U6RYI0/Uxsz0I6/ebSXcfIiDi8/+WFcO4ZX85iz8BnecoYgOLPnv98kPsri
-         HJbHxpQpwdYMwOiu5Wots6k6KE2ji30cZsjHrGeodQl6Wj9tJfKJ3OzitmNaFl1GZJ1X
-         30dMHXtXskfq3/MFla1cYMwHfRgPUYlaYYjJGhTi/UzccmXCbe7Y+nyOme3hbms7kuUW
-         Lp6A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f2OcjbUQiolvvjtdbVSQNs7Tp8xSogd0JfYY2T8Mi5A=;
+        b=ZK6Xnm68XM2Weqtgt+oy3WcBDmBJh4lWuF7ScdBCNMZtV8MrK+cZ+1LJEGHPT2ytSK
+         tp/+w+gZYNpoViq7ImvjHNu8E7fY6uYz3Akw85Q3r0hc/J+QsRASf9v/kyU8jzmG5j2B
+         9nsKgs+z0spe3DYv+WKNqKQ7PfS15szCOW+9fYB5VdGm7W0WitS+HSAyudQvZVOOWFm+
+         /SWJGA27fdofLe5npVil/Q17mLoctp20Yq6pwOyU8qH91l8DLctei8TLNk3yrkPtfGvt
+         qq7SlDif8CyQDYsl5hNTWGFbzQDt3HFxHqMv6/x0PB6fuxphRpvHlnk9LPaAYLEfD9oY
+         Q1vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w0HX6Ms7J59aY7v+H6lsDXSO/qCU5OzjkYB+jXfYoQE=;
-        b=dbUtJK0jbGFsFTmYXH2REPk95XR2ppMAOnpsXi3OAePfWhD0PYmbQLJrGRBrDXiU/l
-         qLyXB5dNoP6fLWsB7qoejOJtr3I3jQR7tVf8eFG905pDXZpF+kfq1BNI6Tfao+uPK7if
-         ztGGfXieEb0sS2t6Qd7PbWe6nukVdWGGpDlcwq3Ww5P65o1LykRavWNkRmfNTW+EIa7M
-         SaTdnOLZZZeAN4SWpSE/ggwtLoiESNd8l9QHutc5XeEeszy4ERXlXmHQZYG2shuwerOL
-         KidEID8Y7KEonFNa73s3y3gDiVZ9IezpAmPnwnZd0F75EAsJBrnJWrRo1Ith166teFbs
-         daLg==
-X-Gm-Message-State: AOAM5322wLmwDtDcDREpGTI/sg+iaGho35NDBaA0KRbUd8owZ8hMiYad
-        H6Tv9FIf4fi6khdBUKQUlWwVnAkF
-X-Google-Smtp-Source: ABdhPJzJP/15Zem7Le6v8YgMOGYIN7zSd+czft4LonweRh71EHvEmXTaITMNh/3Tu8nIh8fAwf+H9Q==
-X-Received: by 2002:a17:902:8347:: with SMTP id z7mr4779952pln.20.1597338168631;
-        Thu, 13 Aug 2020 10:02:48 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s61sm6020005pjb.57.2020.08.13.10.02.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 10:02:48 -0700 (PDT)
-Subject: Re: [PATCH 08/14] mips: bmips: add BCM63268 irq definitions
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        robh+dt@kernel.org, tsbogend@alpha.franken.de,
-        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200812063129.361862-1-noltari@gmail.com>
- <20200812063129.361862-9-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <46445978-d169-87fb-bdf6-18c1c61f4d8f@gmail.com>
-Date:   Thu, 13 Aug 2020 10:02:39 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f2OcjbUQiolvvjtdbVSQNs7Tp8xSogd0JfYY2T8Mi5A=;
+        b=LuYRdyBgC0o8bAytK8rn7ffrOJly8LTlelBJ/1mwnMQprfC0MyrUTBoYHkn6X9zxQX
+         782EkX5vzax6LR6CMTbg1vkOegNm1iIqFlKFNoJr1u+qykQOgxQ5xPbeM/5p5r7mb0yi
+         0MapPalBR+k+EuGYuUyLiKZMuKOmJShxDsnN7pgITC3wBeuMOMUn8FkvRk3Ace8Apj8n
+         gTUN98cI9M8ApbTNjAFX2JkDnDz7wyc/cBoGHY4EvOBQFBvLb+t9KrZ2P3LCUKRvSiwq
+         GuwmVD+QGMvdlpK2j5OdCMZvreFQBtfYRE86D18kjDSzg4IfTl1qhg/CgZYmg/QM0ST0
+         CpVg==
+X-Gm-Message-State: AOAM532IWHXrB3NjZc6/dwrzRR2QAWXyn9fejg8l2GnNO84s9kgBgXx5
+        fXO7OpE3jfmWyVYvegbu24mOFScSAVpvST4guoB1j0iG
+X-Google-Smtp-Source: ABdhPJwPNi4Dk4hbn8MvomzE5XprOKkd1JdsgDq0RR0BsrBUKWcJC//EUB0I4UQXhY2gfAX3taxczNZaZKNnP7WG/N8=
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr5227777wrs.132.1597338199356;
+ Thu, 13 Aug 2020 10:03:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200812063129.361862-9-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org> <20200810222657.1841322-8-jcrouse@codeaurora.org>
+In-Reply-To: <20200810222657.1841322-8-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 13 Aug 2020 10:04:05 -0700
+Message-ID: <CAF6AEGv+X88Jrha7zhQ+78RbGqK78Ghi49a_V6zE-fmRDvcGFw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v12 07/13] drm/msm: Add a context pointer to
+ the submitqueue
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eric Anholt <eric@anholt.net>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sean Paul <sean@poorly.run>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 10, 2020 at 3:27 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Each submitqueue is attached to a context. Add a pointer to the
+> context to the submitqueue at create time and refcount it so
+> that it stays around through the life of the queue.
+>
+> GPU submissions can access the active context via the submitqueue
+> instead of requiring it to be passed around from function to
+> function.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 12 +++++-------
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  5 ++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c |  5 ++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +--
+>  drivers/gpu/drm/msm/msm_drv.c           |  3 ++-
+>  drivers/gpu/drm/msm/msm_drv.h           |  8 ++++++++
+>  drivers/gpu/drm/msm/msm_gem.h           |  1 +
+>  drivers/gpu/drm/msm/msm_gem_submit.c    |  8 ++++----
+>  drivers/gpu/drm/msm/msm_gpu.c           |  9 ++++-----
+>  drivers/gpu/drm/msm/msm_gpu.h           |  7 +++----
+>  drivers/gpu/drm/msm/msm_submitqueue.c   |  8 +++++++-
+>  11 files changed, 39 insertions(+), 30 deletions(-)
+>
 
+[snip]
 
-On 8/11/2020 11:31 PM, Álvaro Fernández Rojas wrote:
-> Add header with BCM63268 definitions in order to be able to include it from
-> device tree files.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
+> index a1d94be7883a..10f557225a3e 100644
+> --- a/drivers/gpu/drm/msm/msm_submitqueue.c
+> +++ b/drivers/gpu/drm/msm/msm_submitqueue.c
+> @@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
+>          * No lock needed in close and there won't
+>          * be any more user ioctls coming our way
+>          */
+> -       list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
+> +       list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
+> +               kref_put(&ctx->ref, msm_file_private_destroy);
+>                 msm_submitqueue_put(entry);
+> +       }
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+oh, this is the problem I mentioned in the last email.. we are
+dropping the queue's reference to the ctx, when the device file is
+closed, not on the last unref of the queue.  So the queue stays live
+until all associated submits are retired, but the ctx ref (and
+therefore the aspace) get destroyed earlier
+
+BR,
+-R
+
+>  }
+>
+>  int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
