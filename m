@@ -2,112 +2,113 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C4EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3C320791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8C720791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="j5tFYd0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgHMPHf (ORCPT
+        id S1726789AbgHMPIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:07:35 -0400
-Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:33688 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726727AbgHMPHW (ORCPT
+        Thu, 13 Aug 2020 11:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbgHMPIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:07:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 34F25180A9F42;
-        Thu, 13 Aug 2020 15:07:21 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: chin73_140509f26ff5
-X-Filterd-Recvd-Size: 3240
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 13 Aug 2020 15:07:19 +0000 (UTC)
-Message-ID: <6c0b063837a3a549389275c44e9512a1ffc36717.camel@perches.com>
-Subject: Re: [PATCH 35/44] staging: regulator: hi6421v600-regulator: add a
- driver-specific debug macro
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Date:   Thu, 13 Aug 2020 08:07:17 -0700
-In-Reply-To: <20200813121036.126c4797@coco.lan>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-         <7cb10b3910e9fa3e52d36e4e416030175cc761ab.1597247164.git.mchehab+huawei@kernel.org>
-         <6a424468eb61e2eb9b014817819dd4da61f2ada1.camel@perches.com>
-         <20200813121036.126c4797@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Thu, 13 Aug 2020 11:08:45 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA006C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:08:44 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 77so5452915qkm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TpPqrvEx4xHNdepObOT++ZGuQdpdQDmnw4mMGhCoSdw=;
+        b=j5tFYd0Cke7wCpz/RBUl63TsW/KeW2sBcGKKKs1j8bP+N/s9pC1fv8BV43lOW57uMG
+         CvJhu6WdBQN2/XSUUsH7Wm9VNKmUDojnwtmCrMzhc0dgkJ+JAVtPvXJ/v1FA+B7K/SGp
+         8Y10Esl8wz78DqSl2csvd2i0dSJWBKP9TWZzJ0CgquXx7CNptlpoRXcnPEUQs40VL8az
+         zWH26MV4K1cOXN0/l0RYDBDQpeAxglL1uYdXd7TZ945NlNIVz2wy4caEZ99C+lNj+ybK
+         stnMeJXGeEDZlHHlxgIDqt2TvDUTRUvVyE18UNJ4erGruWeho93gWKaB8U8dMNVOByg9
+         b2hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TpPqrvEx4xHNdepObOT++ZGuQdpdQDmnw4mMGhCoSdw=;
+        b=KHuJZdaYPlO/5jgp8zoyDlT72GSHYUNPyucSkweqCEkzKMwwEs0xpVMRbjRbRKq023
+         VuSoL3KJyvba6Vcq4IY001xMFg0sEc0tArZno+LN3OIpbZTVlLJIXHC3YQOxH9gN30IK
+         0dDiRY0CUumnJWIyyAAqcw8oGTwiNTg+AEBr36e3/kXO6+Iolnt5Z+5ZRMeAKNTRqHo3
+         ukwYybP205Vc5TR6G1uXxUZcj8TtbxTUDs1pbhsQdntVxrgYyYIeTCFPGfwoiXBUhObu
+         lxzFiFZ2RJimJK00FDM96uPjlkOl1xcUzmCd7p+rALXMsr/e9cnFwWSkufOKJy18JeU7
+         6tKQ==
+X-Gm-Message-State: AOAM531TPA5HC5nHK6V8+WdtFGD7fyNsZS6EdD6xzBIs9ABFyWfj16xX
+        m2euuv77znAFMHcH4GoK4D79OA==
+X-Google-Smtp-Source: ABdhPJxU5xv81Z8slBsIXbEz9xC3rOMSBeqzbXHaZyURciBgvMTJxYo2+91SFZkPPcaeGCbCJMJ9dw==
+X-Received: by 2002:a37:a45:: with SMTP id 66mr5214506qkk.435.1597331323806;
+        Thu, 13 Aug 2020 08:08:43 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:8f88])
+        by smtp.gmail.com with ESMTPSA id l1sm6540036qtp.96.2020.08.13.08.08.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 08:08:43 -0700 (PDT)
+Subject: Re: [PATCH] proc: use vmalloc for our kernel buffer
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     hch@lst.de, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+References: <20200813145305.805730-1-josef@toxicpanda.com>
+ <20200813145941.GJ17456@casper.infradead.org>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <3fad71b2-eda1-aca4-f421-41d2097e4769@toxicpanda.com>
+Date:   Thu, 13 Aug 2020 11:08:41 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200813145941.GJ17456@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-13 at 12:10 +0200, Mauro Carvalho Chehab wrote:
-> Em Wed, 12 Aug 2020 09:10:29 -0700
-> Joe Perches <joe@perches.com> escreveu:
+On 8/13/20 10:59 AM, Matthew Wilcox wrote:
+> On Thu, Aug 13, 2020 at 10:53:05AM -0400, Josef Bacik wrote:
+>> +/**
+>> + * vmemdup_user - duplicate memory region from user space and NUL-terminate
 > 
-> > On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
-> > > Using dev_dbg() is not too nice, as, instead of printing the
-> > > name of the regulator, it prints "regulator.<number>", making
-> > > harder to associate what is happening with each ldo line.
-> > > 
-> > > So, add a debug-specific macro, which will print the rdev's
-> > > name, just like the regulator core.  
-> > 
-> > Seems sensible, but trivially:
-> > 
-> > > diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c  
-> > []
-> > > @@ -209,10 +212,10 @@ static unsigned int hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev
-> > >  	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
-> > >  
-> > >  	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
-> > > -		dev_dbg(&rdev->dev, "%s: normal mode", __func__);
-> > > +		rdev_dbg(rdev, "normal mode");
-> > >  		return REGULATOR_MODE_NORMAL;
-> > >  	} else {
-> > > -		dev_dbg(&rdev->dev, "%s: idle mode", __func__);
-> > > +		rdev_dbg(rdev, "idle mode");  
-> > 
-> > missing terminating newlines
+> vmemdup_user_nul()
 > 
-> As per request from Jonathan, I ended dropping those rdev_dbg()
-> on a followup patch.
+>> +void *vmemdup_user_nul(const void __user *src, size_t len)
+>> +{
+>> +	void *p;
+>> +
+>> +	p = kvmalloc(len, GFP_USER);
 > 
-> Btw, after this changeset:
+> len+1, shirley?
 > 
-> 	commit 563873318d328d9bbab4b00dfd835ac7c7e28697
-> 	Merge: 24532f768121 bfd8d3f23b51
-> 	Author: Linus Torvalds <torvalds@linux-foundation.org>
-> 	Date:   Mon Oct 10 09:29:50 2016 -0700
+>> +	if (!p)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	if (copy_from_user(p, src, len)) {
+>> +		kvfree(p);
+>> +		return ERR_PTR(-EFAULT);
+>> +	}
 > 
-> 	    Merge branch 'printk-cleanups'
->     
-> 	    Merge my system logging cleanups, triggered by the broken '\n' patches.
+> I think you forgot
 > 
-> the printk lib will add a line feed if a "\n" is missing. I had
-> to get rid of pr_cont() & friends on that time on media, due to that. 
+>          p[len] = '\0';
+> 
 
-I know.
+Sweet lord I need more sleep, my bad.  Thanks,
 
-Message formats should still end in a newline.
-
-Any other subsystem could use a pr_cont and that
-could be added to any line without a terminating
-newline.
-
-Also any line without a newline will not be emitted
-until another message is emitted.
-
-
+Josef
