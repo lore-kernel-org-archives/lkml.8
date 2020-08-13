@@ -2,135 +2,124 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02978C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 164032078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C840A20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PZmnYyT6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cu9+tn5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHMUl4 (ORCPT
+        id S1726578AbgHMUpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 16:41:56 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55431 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgHMUl4 (ORCPT
+        Thu, 13 Aug 2020 16:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgHMUpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 16:41:56 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200813204153euoutp028fa78688f7f5aad53a9af1d16ce6a912~q7o51Yt5Z2354823548euoutp02S
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 20:41:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200813204153euoutp028fa78688f7f5aad53a9af1d16ce6a912~q7o51Yt5Z2354823548euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597351313;
-        bh=3nZADrUFUgfGPQxdSrhWsZX6s3iqEwBwc14jXbAEU28=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=PZmnYyT6XUGmRxe9UpnjPY7BkzuslvEkHUs0vsTfToXFuQS1Jvc15VaIYLyy0FZWH
-         fRv3vumQ/NbeplwCxDWRHqtOlCA1p0cZquds83sup6RBw15g/6+PD3V4UftWpFNVIc
-         HkxBv2oI6RKNZXfhWiq7mxLxyz0mc7IlZdTNm1/k=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200813204152eucas1p131a31edbcf91bd44cd4db544d617a3f8~q7o40NSWe1357313573eucas1p1l;
-        Thu, 13 Aug 2020 20:41:52 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 52.B1.05997.095A53F5; Thu, 13
-        Aug 2020 21:41:52 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200813204151eucas1p1c64a0880ba83013f87d0ca41242e533a~q7o4CdKQy0951509515eucas1p1t;
-        Thu, 13 Aug 2020 20:41:51 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200813204151eusmtrp1f40391b21178da748681535f7007829a~q7o4BtnFN2785827858eusmtrp1v;
-        Thu, 13 Aug 2020 20:41:51 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-4e-5f35a5908250
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id DF.C9.06314.F85A53F5; Thu, 13
-        Aug 2020 21:41:51 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200813204151eusmtip27cc4eb74b070be0244cd11152ea33af5~q7o34_tnp1027010270eusmtip2x;
-        Thu, 13 Aug 2020 20:41:51 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH] dmaengine: pl330: fix instruction dump formatting
-Date:   Thu, 13 Aug 2020 22:41:23 +0200
-Message-Id: <20200813204123.19044-1-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 13 Aug 2020 16:45:40 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3839AC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 13:45:40 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id b22so6255945oic.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 13:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yNNvJ2SAFqRHuwD/G5e2MKagg8MdQRQYf4wQID5n0pg=;
+        b=Cu9+tn5aum9zaW1fAqSiCYXZz7Roh6QpQEQdIlm7uDBjzwg3hK0OunMqgVXwtd7Gib
+         HmVG2zlVW8Mk65Dq500nyZ+vt8qbK7/uFaYCUctcCPRG/zCXGAPHpfnbErQ3e+ocrGDk
+         J+PqoMu2Gd3MALvuTtrrXv8BNRxK72O9y4TN6Es70Tehszoqty0GTCAF995mgl8iykDy
+         khue7Mu+1xAveulr4De3yXRACZ+AxGrkb2rrVxXj1EACjQC6AP4HEIE6/UXtVw2ynJWp
+         epFwA3FJdqjeUmJyhTp2PwchWqz4AmVBE1RmF8s7tgGtVCqN1cHKWIpcBNZogFTGPFMT
+         2eJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yNNvJ2SAFqRHuwD/G5e2MKagg8MdQRQYf4wQID5n0pg=;
+        b=bjXQ3UcEUeTYCIT0nX4HQkHr7OdhhRXvS0HZEpN9Ss08Bvl3lQxqkFxOEHCRe/fXHI
+         iWw5AV82FFxR2iuLIeFhOFEaID4OoCwkfnJlqqGiUGvwWXcnpEiwRKttesNtn6q5sh69
+         GHB0O31qdwmPYfhvf2m2hofq4g6rVXO9upOE9Zqd3UJ5/22y1qcIakHkNpRv3F2Ypd2f
+         9PUth1yZ4aOg/BfzhP/RT+ILLLXgWGB51FHTkKzI/gCqv6kAFsOtfhGwVl6y1VD5dHxm
+         xVGQsCTF4nXWsYJ4dh1Yb/rOK4+Y+dhrf4Jnnz0Zq2GOgF+XZtmae4ehtZCWXXUrCENL
+         tmJg==
+X-Gm-Message-State: AOAM530O/xD80OnaSILISFDNtrypGOx/aQuPMQpBaid93ymBxWK3Pzkv
+        1ywM+O+VzdgecV1IY7xIocHuKQ+nLGSA4xZjA6P/fxn8
+X-Google-Smtp-Source: ABdhPJxa2pZkSh2yo0esw2HFcUnCvXzYVTmf+2PaUJHQQCc72sYyhZ3qFrEI1V3lQKUF0CmdQ7SyViWcSK3s7H1ndxg=
+X-Received: by 2002:aca:3081:: with SMTP id w123mr4688524oiw.132.1597351539327;
+ Thu, 13 Aug 2020 13:45:39 -0700 (PDT)
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djPc7oTlprGG7xfJGaxccZ6VovpUy8w
-        Wqye+pfV4uahFYwWl3fNYbO4e+8Ei8XOOyeYHdg9Fu95yeSxaVUnm0f/XwOPvi2rGD0+b5IL
-        YI3isklJzcksSy3St0vgylh68zZ7wUvWis1rp7I1MF5g6WLk5JAQMJHonLadCcQWEljBKHHg
-        lm4XIxeQ/YVRYsr138wQic+MEgteOcM03J7ezQZRtJxR4vHqqcwQznNGiR/NnxhBqtgEHCX6
-        l55gBUmICKxnlNjZeQlsFLNAtETvlbdg+4QFnCS+/brKCmKzCKhKNG5cxw5i8wpYS2z7uI0Z
-        Yp28RPvy7WwQcUGJkzOfgN3NL6AlsabpOgvETHmJ5q2zoeqns0t0L7aGsF0k5vw9CvWnsMSr
-        41vYIWwZidOTe4DiHEB2vcTkSWYgd0oI9DBKbJvzA6reWuLOuV9sIDXMApoS63fpQ5Q7Sjxo
-        M4Aw+SRuvBWEOIBPYtK26cwQYV6JjjYhiBkqEuv690DNk5LofbWCEcL2kPh3cAvTBEbFWUje
-        moXklVkIaxcwMq9iFE8tLc5NTy02ykst1ytOzC0uzUvXS87P3cQITDGn/x3/soNx15+kQ4wC
-        HIxKPLwRDqbxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa7zo
-        ZayQQHpiSWp2ampBahFMlomDU6qBUeRgcneVhNhByT9JzBOXG7Z9c2M9eHJDfC5DoaHptSel
-        YoWT5M7ZHHMrCI45rOh4NuxaiPFX17VSxx7Ulgo8fK0f/f5Uwo15H21OMraWL1J7Gr3gaqal
-        9WmuVQvmF648ocC+/fUv5sq4/XlF3W5+CcwGsQvj5FtNO60nzBGT2HKuW4SF+WWAEktxRqKh
-        FnNRcSIA+AbSZi0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsVy+t/xe7r9S03jDc4vkbfYOGM9q8X0qRcY
-        LVZP/ctqcfPQCkaLy7vmsFncvXeCxWLnnRPMDuwei/e8ZPLYtKqTzaP/r4FH35ZVjB6fN8kF
-        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZSy9
-        eZu94CVrxea1U9kaGC+wdDFyckgImEjcnt7N1sXIxSEksJRR4tOcF0xdjBxACSmJlXPTIWqE
-        Jf5c62IDsYUEnjJKPNvNB2KzCThK9C89wQpiiwhsZpT4dTYcxGYWiJaY/Ws5WFxYwEni26+r
-        YDaLgKpE48Z17CA2r4C1xLaP25gh5stLtC/fzgYRF5Q4OfMJC8gJzALqEuvnCYGE+QW0JNY0
-        XWeBGC8v0bx1NvMERoFZSDpmIXTMQlK1gJF5FaNIamlxbnpusaFecWJucWleul5yfu4mRmCM
-        bDv2c/MOxksbgw8xCnAwKvHwRjiYxguxJpYVV+YeYpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0
-        J7X4EKMp0DsTmaVEk/OB8ZtXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaP
-        iYNTqoGxOm37kUiegH0LvhzY0VL66nx0wCuTdYJt0zZ7hz5KeKAhG/7klMPrrRfXz04Xf/g3
-        /u3foB8LI2671LMwZyTIz+HbUKh2n9vj9NXHn44Jvb6x8TJL1R0p8bBI5QMKO44mZTQvE/KZ
-        0jwhIvL8dneLK0kFr7Xe/X6h+MWMc57TQuNLy4VfZq3fqcRSnJFoqMVcVJwIADDQ6sunAgAA
-X-CMS-MailID: 20200813204151eucas1p1c64a0880ba83013f87d0ca41242e533a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200813204151eucas1p1c64a0880ba83013f87d0ca41242e533a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200813204151eucas1p1c64a0880ba83013f87d0ca41242e533a
-References: <CGME20200813204151eucas1p1c64a0880ba83013f87d0ca41242e533a@eucas1p1.samsung.com>
+References: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
+In-Reply-To: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Thu, 13 Aug 2020 13:45:28 -0700
+Message-ID: <CAJmaN=k+-KEyC3fvpMOVz6B6UZyQOuXEBkX6PKxqTUw64cCZ=w@mail.gmail.com>
+Subject: Re: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not enabled
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instruction dump uses two printk() in a row to print one instruction. Use
-KERN_CONT to prevent breaking the output in the middle.
+On Thu, Aug 13, 2020 at 12:58 PM Randy Dunlap <rdunlap@infradead.org> wrote=
+:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix build error when CONFIG_ACPI is not set/enabled by adding
+> the header file <asm/acpi.h> which contains a stub for the function
+> in the build error.
+>
+> ../arch/x86/pci/intel_mid_pci.c: In function =E2=80=98intel_mid_pci_init=
+=E2=80=99:
+> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of fun=
+ction =E2=80=98acpi_noirq_set=E2=80=99; did you mean =E2=80=98acpi_irq_get=
+=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+>   acpi_noirq_set();
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Jesse Barnes <jsbarnes@google.com>
+> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> Cc: linux-pci@vger.kernel.org
+> ---
+> Found in linux-next, but applies to/exists in mainline also.
+>
+> Alternative.1: X86_INTEL_MID depends on ACPI
+> Alternative.2: drop X86_INTEL_MID support
+>
+>  arch/x86/pci/intel_mid_pci.c |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
+> +++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
+> @@ -33,6 +33,7 @@
+>  #include <asm/hw_irq.h>
+>  #include <asm/io_apic.h>
+>  #include <asm/intel-mid.h>
+> +#include <asm/acpi.h>
+>
+>  #define PCIE_CAP_OFFSET        0x100
 
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
----
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Jesse Barnes <jsbarnes@google.com>
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 88b884cbb7c1..e1af6a470453 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -254,7 +254,7 @@ enum pl330_byteswap {
- static unsigned cmd_line;
- #define PL330_DBGCMD_DUMP(off, x...)	do { \
- 						printk("%x:", cmd_line); \
--						printk(x); \
-+						printk(KERN_CONT x); \
- 						cmd_line += off; \
- 					} while (0)
- #define PL330_DBGMC_START(addr)		(cmd_line = addr)
--- 
-2.26.2
+Thanks Randy. Another option is to remove the MID support entirely.
 
+Jesse
