@@ -2,129 +2,135 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D75C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F38206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF9A206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHnGjiSf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFOxOzMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgHMFS5 (ORCPT
+        id S1726427AbgHMFTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
+        Thu, 13 Aug 2020 01:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgHMFS4 (ORCPT
+        with ESMTP id S1725794AbgHMFTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:18:56 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB800C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:18:56 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id h12so2232949pgm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:18:56 -0700 (PDT)
+        Thu, 13 Aug 2020 01:19:37 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDFBC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:19:37 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id cq28so3207728edb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:19:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yAXoCZ+XEA3yt3zyCitojp+0S08f20bzr+BL+L7VJS4=;
-        b=KHnGjiSfHWioqZdEDRRuaXo8k8MJZG7uowIdWWNO9LRM+E0cFkVgb1XSBVsiZ45xJg
-         GKz2bgiUpf3j+DChfFupKb38XZ0TdcX7RWmq8hosjD/8dA5zMYqxlr27kdLfbQMy7YNB
-         7n5qunwWjxoRKo0epR/BtOCXLqVcZPz66mPgEdmHkiKpG0Hh8uiKx2/0/Z8n6BeZ8T8G
-         l8ctlbBdmN8m+PeEjSTPkWssx3Ds78mzRK9WF7dpubL7AiqJDJtMadeby1mKC4Nz2F1m
-         pTJU9owjSZOPUJI/GdZMCMMPZ4G8vGyZyPtDvkvamK5CaD10mudgTQB8glql+v+yWqnm
-         rEQQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c67l/Kh4PrxDU+p63GZTC7eyIKKS3Nmd1e/4JTBchUQ=;
+        b=CFOxOzMHsFHIuClJ7Zta78lgA88l2r2iwbskY7fQim0eEZPYIowmnsurp72VuktPH8
+         fOZOUOPclufD0ZeU68VhjMeG15uPxNmHYNVD4PEas4ZtBsv6hitG+i7Qa9KabQFtjjTE
+         8CfD2vYjPb6EQLvugzOTG6yVARndLkyIuEJ0N6avAVPo6obJK9Zu8kRgQ3p9MpnBXdfC
+         87gC+Q3ec2CG6HmoH1NQ32hP4IGjcmEB3N6j6r/5AcgGp30iaSHRkElLNCJmpe3OOkc0
+         3d/ueLu/zxnAAhDH4gfMvSa+0jSm/G79KBhqqTBRUfm4y1XJrAGVlGzei5s8gTDvxRD+
+         Xu5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yAXoCZ+XEA3yt3zyCitojp+0S08f20bzr+BL+L7VJS4=;
-        b=H7kKy+9kPqRyuARiAlZQ+qngsLFulmmD1oH3NuUPnHrhodbJuQYPQ2q+fXXZjLIPBv
-         Cc2Wyy/211MaSNNy5IvdEgU/igEGMiUz6Q9IWrIivc4md56bgvLZhzwTyvmNvDSSIxrh
-         OdvygRPaPHyckfk+U9Hel+8ooRgBDxhS5peS/zcG7KAP/Fjpfj15v9pdr46qE6Gx0Kcz
-         lGaBV3EaDwE0MRgd6LoWAlZNsUXZz5muX9qix6OFNyH433BURJrEstjygUkTJVaxMwxs
-         tLAKPVhFfMeIgNS5RIHXNfeDU+cHN960BMneLfknhPqer2aybTjZ9NvXOVcEbpYi+x+P
-         l+eQ==
-X-Gm-Message-State: AOAM5318LQdzuPsWI0CteN4pJtlPQdb2aBXvEMQuVJxodolieN3EQGzD
-        FQ2TR9qSjfIrzuo4jKdV7Wc=
-X-Google-Smtp-Source: ABdhPJwJWUrSepkhXvXKeqP5MXRf4uPZl9zin3pvRwhyv+6cVTTt+TDqQDkTst5Fz6ChTSmGxG2jDg==
-X-Received: by 2002:a62:7ac2:: with SMTP id v185mr2734062pfc.277.1597295936321;
-        Wed, 12 Aug 2020 22:18:56 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id o63sm173961pfb.190.2020.08.12.22.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 22:18:55 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 14:18:53 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Message-ID: <20200813051853.GA510@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
- <20200811160551.GC12903@alley>
- <20200812163908.GH12903@alley>
- <87v9hn2y1p.fsf@jogness.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c67l/Kh4PrxDU+p63GZTC7eyIKKS3Nmd1e/4JTBchUQ=;
+        b=kW5v5pW+xOI5V2X43aSVyz+1maIfLigcb2oPDZL5zseuKbef2hWOe0QbuYQljT7yiG
+         LpM2Pv6O5Ofh92PY6Msx3mi8TLowCYOpnnddIHJtTlOmUNdaT97aeHRoCE2zOq//ZLHH
+         dfKsFopKe2uh81SOCFUzWqbRaFkrqFroo67LpvrqOetTXrMzjelIaD9zE7Sn6v2ZVxOe
+         rnSOA/ssBzQYDM1UzGsvA/iwN30clSWcEQlsqJflgtjcDTYyjfyXeqoFe+Aei1smdgrB
+         ebhnEhw1c/rDfkXBf7f53C4B7eT9e/Qv051ZW12mc7dAZIBkYsD2w3hyPcRx7hvEEIjo
+         eoDw==
+X-Gm-Message-State: AOAM531T1imMbjdW6JAusgdiPjkbwqUmWgOXMbBr6EHGvh0ZbqBSZyTC
+        HEeamUESEC/tVLva8HhtF+vcsF8eECtFek/jEZg=
+X-Google-Smtp-Source: ABdhPJzUvmd5BZyQ3p133JmD0914kUtVo6A4n698OGvGsmcdjPh+owzaduroH3A/XF4aNic2WDuoOduAgYsi6JUcTtA=
+X-Received: by 2002:a05:6402:2038:: with SMTP id ay24mr3207332edb.200.1597295976320;
+ Wed, 12 Aug 2020 22:19:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v9hn2y1p.fsf@jogness.linutronix.de>
+References: <20200812040423.2707213-1-yuzhao@google.com>
+In-Reply-To: <20200812040423.2707213-1-yuzhao@google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 12 Aug 2020 22:19:24 -0700
+Message-ID: <CAHbLzkqE+i8Y+YQE-6DJgED6Hwpa4BftNdVHgpB1YT7sEcPVcw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] mm: don't call activate_page() on new ksm pages
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joonsoo Kim <js1304@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/08/13 02:30), John Ogness wrote:
-> 2. I haven't yet figured out how to preserve calling context when a
-> newline appears. For example:
-> 
-> pr_info("text");
-> pr_cont(" 1");
-> pr_cont(" 2\n");
-> pr_cont("3");
-> pr_cont(" 4\n");
+On Tue, Aug 11, 2020 at 9:04 PM Yu Zhao <yuzhao@google.com> wrote:
 >
-> For "3" the calling context (info, timestamp) is lost because with "2"
-> the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
+> lru_cache_add_active_or_unevictable() already adds new ksm pages to
+> active lru. Calling activate_page() isn't really necessary in this
+> case.
+>
+> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> ---
+>  mm/swapfile.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 6c26916e95fd..cf115ea26a20 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1913,16 +1913,16 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
+>                    pte_mkold(mk_pte(page, vma->vm_page_prot)));
+>         if (page == swapcache) {
+>                 page_add_anon_rmap(page, vma, addr, false);
+> +               /*
+> +                * Move the page to the active list so it is not
+> +                * immediately swapped out again after swapon.
+> +                */
+> +               activate_page(page);
 
-This is not an unseen pattern, I'm afraid. And the problem here can
-be more general:
+Actually I think we could just remove this activate_page() call with
+Joonsoo's anonymous page workingset series merged. The active bit will
+be taken care by workingset_refault().
 
-	pr_info("text");
-	pr_cont("1");
-	exception/IRQ/NMI
-		pr_alert("text\n");
-	pr_cont("2");
-	pr_cont("\n");
+>         } else { /* ksm created a completely new copy */
+>                 page_add_new_anon_rmap(page, vma, addr, false);
+>                 lru_cache_add_active_or_unevictable(page, vma);
 
-I guess the solution would be to store "last log_level" in task_struct
-and get current (new) timestamp for broken cont line?
+And it looks the latest linus's tree already changed this to
+lru_cache_add_inactive_or_unevictable() by commit b518154e59
+("mm/vmscan: protect the workingset on anonymous LRU")
 
-We have this problem now. E.g. early boot messages from one of my boxes:
+Added Joonsoo in this loop.
 
-6,173,41837,-;x86: Booting SMP configuration:
-6,174,41838,-;.... node  #0, CPUs:      #1 #2 #3 #4
-4,175,44993,-;MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/...
-4,176,44993,c; #5 #6 #7
-
-"CPUs: #1 #2 #3 #4 #5 #6 #7" is supposed to be one cont line with
-loglevel 6. But it gets interrupted and flushed so that "#5 #6 #7"
-appears with the different loglevel.
-
-	-ss
+>         }
+>         swap_free(entry);
+> -       /*
+> -        * Move the page to the active list so it is not
+> -        * immediately swapped out again after swapon.
+> -        */
+> -       activate_page(page);
+>  out:
+>         pte_unmap_unlock(pte, ptl);
+>         if (page != swapcache) {
+> --
+> 2.28.0.236.gb10cc79966-goog
+>
+>
