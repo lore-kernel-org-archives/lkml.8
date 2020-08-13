@@ -2,79 +2,85 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ABEC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E75A20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DDC2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rFrWBs6t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnrKUUml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHMOZL (ORCPT
+        id S1726570AbgHMO0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:25:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41740 "EHLO
+        Thu, 13 Aug 2020 10:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgHMOZI (ORCPT
+        with ESMTP id S1726142AbgHMO0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:25:08 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D7EC061757;
-        Thu, 13 Aug 2020 07:25:07 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id p191so3424741ybg.0;
-        Thu, 13 Aug 2020 07:25:07 -0700 (PDT)
+        Thu, 13 Aug 2020 10:26:54 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B36DC061757;
+        Thu, 13 Aug 2020 07:26:54 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g14so7574267iom.0;
+        Thu, 13 Aug 2020 07:26:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=LxOS0yxf9O0+Zm/ztDeMxh4hKGod7IlFrT/bAFmH7TM=;
-        b=rFrWBs6tw/+UYBqTd1/CBkR7cdjKTuce7LNDUuhR7RUj961k9XTsbmkT5ugdDEFlyT
-         gVjVF06W3bIe2wlMpEAwRi3H9NUAqmMSVkwRuI1FDXvMnLSu8B7HCYvplcB94TNKU8lt
-         G8O7jjnk/1i5esft+Y9LgyCj6iCaxfCn+cYnI9e1MaOts7r1HotEpKETBXx8lzJoI8X0
-         /5/dPNMzCagxfJMnAhRGB7/C7qz+udqLp0dob5TCwJMo26WSb87SWGLvbWHKZZ/hwK15
-         aPm3LOnWEKybfhhQPWY+sPUr4OC95dOFHJd8UCReheiLTmyQqvWys7CpSeQ8zhp6YXWI
-         4bXQ==
+        bh=GxNk6clU3GutwGWPMQKKGMAHcko+Fcxjva5mT8vHA9w=;
+        b=EnrKUUmlZEVpPRj/draNaTL+xj7fm12tnG8YBCxdMfhuuvKGGYpBM58nXaMgwUYS0H
+         ++sLe6PMR37iRjVJ9YGOAQJhCBN6fLW9aPvhTTug1Fih0dDBe26GPD0QdmwaT6BtFe4a
+         IR2hoWGPr1QfdsTD25jx+hdDhzKDyoGGwBKR6MnET80E6XiqZvOlhSw8Qt3OsCNYdNXw
+         UocKsYWZgRJNkRil0H4DBNH8LJosbla/DxOWE8WHdpNNYpHBnAPOlsr4ynWDRMp70cgj
+         qeHsS3xjFfClcd77lQGvsREAVwdnK1hgfIQ69ar2Qj0466wbosmB6wWo8Q50unI+H5XT
+         rt/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LxOS0yxf9O0+Zm/ztDeMxh4hKGod7IlFrT/bAFmH7TM=;
-        b=If5JcVHhYfsLmUGAjmUrLOBlf4u++48GNv31raqyXUrEWiu5XTK9oWvB25Ww9Lc2ma
-         gMVWhBPH2rweM0DvMxaA2ubyks5KxHNuQRN24WVXJ0RfA0CHrQIOfSh6NWjk3iX3MCVJ
-         waep0dk+psR0mS5N3emKVZDAvsCLloF/d2kj4wWeiPwSIzHVGUpVngEg10KOv95DvOlw
-         Xk5Hc4yVj1QCJVhER3MVJVqq19mEANjKsIFrNIvUKzKKeSNmrWbTDxDMpgDwBqt63TQH
-         EqsaPr7dbqiIeB93Ze3mBUFqMMppkNP+V4c69JU+R6BZaTnSfyRz0p7PHjXtlMb7nZ/o
-         A45A==
-X-Gm-Message-State: AOAM531ubftU4aDMXgv80AQ4S8KTQ2AyR9Wkp7iGUbplyNkwY7phOmxT
-        fvZdSgm/7g7rH/YL1fCiF1J/qxh3cw5Slh+ke5FmdVZK
-X-Google-Smtp-Source: ABdhPJwV6EyBG1sjrI53VK3nCnCvlShpks5x4dhz7OlOg/dHOZTrt+GfTsW54Gqq+ZNhR9dwj9H51mTTh2JvzRJFHz4=
-X-Received: by 2002:a25:b74b:: with SMTP id e11mr6889924ybm.395.1597328706845;
- Thu, 13 Aug 2020 07:25:06 -0700 (PDT)
+        bh=GxNk6clU3GutwGWPMQKKGMAHcko+Fcxjva5mT8vHA9w=;
+        b=cAylxknSOudkrPm6yp5JyB9996R0ih31BhsAEYPuTIvszijZUvmqUMK94k6WAXnHB+
+         M45pL+/yjPK7MKMUzOr6F3hxr7thTVeqgF4M9CNDY5Nh+EDksXrChF8biMZekAGzT4kq
+         0L4Av5nQES7g4fXsAkf2inl5Mg0DRjb2LUD9znD26hyQg+Fx8QoG1h9R4ohBBQ2u9lTr
+         7Y+yCDkXwMdSWEksI8ivaQOWABa5Yvj70vCzO9bOG0n1U6BBB7uQe1pYrDGjCY/QUcWQ
+         2IOStSA9fN/Xgsh+vORqub32xjA+PRkJe/T8Qj3PBCjFe7ZxqE8Mpf0YV3yCC42wNBIO
+         P2kg==
+X-Gm-Message-State: AOAM532gItTju3dly+D2Qe9dTYjFwmGt7WOdHLHEiNQ1ac+OX76h0FzD
+        zlrte13aM/nqlB3Ss6fsSL9H31kC3Gg98KQlde8=
+X-Google-Smtp-Source: ABdhPJwAjcnJnLIvqD6xalBjx2poeXgpGi+ipQtmatKYko58J3jdGJCaaIQoFz6Iz8L1aALp+dfVyRczxIcfl/cFt6c=
+X-Received: by 2002:a02:3311:: with SMTP id c17mr5127932jae.114.1597328813804;
+ Thu, 13 Aug 2020 07:26:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200801090456.GB1379367@oden.dyn.berto.se> <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
- <20200803192108.GB2297236@oden.dyn.berto.se>
-In-Reply-To: <20200803192108.GB2297236@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 13 Aug 2020 15:24:40 +0100
-Message-ID: <CA+V-a8uqf33LXqnc-cV=UU_b1m0xKgrSUS9S8oYnYVz_nwSyUw@mail.gmail.com>
-Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
- every s_fmt call
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040224.13054.96724.stgit@localhost.localdomain> <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
+In-Reply-To: <4403f572-03c3-3061-6fc4-f56e3b6d7b67@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 13 Aug 2020 07:26:42 -0700
+Message-ID: <CAKgT0UfO0j9yQCiQD+QDpNPCGncfH-+yP+qmEYGA_Fz=jmqAUQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kbuild test robot <lkp@intel.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,105 +88,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans and Laurent,
+On Thu, Aug 13, 2020 at 12:45 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
+e:
+>
+>
+>
+> =E5=9C=A8 2020/8/13 =E4=B8=8B=E5=8D=8812:02, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > -             rcu_read_lock();
+> > -             lruvec =3D mem_cgroup_page_lruvec(page, pgdat);
+> > -
+> >               /* If we already hold the lock, we can skip some rechecki=
+ng */
+> > -             if (lruvec !=3D locked) {
+> > -                     if (locked)
+> > -                             unlock_page_lruvec_irqrestore(locked, fla=
+gs);
+> > +             if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec))=
+ {
+>
+> Ops, lruvec_holds_page_lru_lock need rcu_read_lock.
 
-On Mon, Aug 3, 2020 at 8:21 PM Niklas <niklas.soderlund@ragnatech.se> wrote=
-:
->
-> Hi Lad, Hans,
->
-> On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
-> > Hi Hans,
-> >
-> > On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> =
-wrote:
-> > >
-> > > Hi Lad,
-> > >
-> > > Thanks for your work.
-> > >
-> > > On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
-> > > > The crop and compose settings for VIN in non mc mode werent updated
-> > > > in s_fmt call this resulted in captured images being clipped.
-> > > >
-> > > > With the below sequence on the third capture where size is set to
-> > > > 640x480 resulted in clipped image of size 320x240.
-> > > >
-> > > > high(640x480) -> low (320x240) -> high (640x480)
-> > > >
-> > > > This patch makes sure the VIN crop and compose settings are updated=
-.
-> > >
-> > > This is clearly an inconsistency in the VIN driver that should be fix=
-ed.
-> > > But I think the none-mc mode implements the correct behavior. That is
-> > > that S_FMT should not modify the crop/compose rectangles other then m=
-ake
-> > > sure they don't go out of bounds. This is an area we tried to clarify=
- in
-> > > the past but I'm still not sure what the correct answer to.
-> > >
-> > What should be the exact behaviour of the bridge driver  for s_fmt
-> > call. Should the crop/compose settings be updated for every s_fmt
-> > callback or should they be only updated on s_selection callback.
-> > Currently the non-mc rcar-vin doesnt update the crop/compose setting
-> > in s_fmt callback due to which I see the above issue as mentioned.
->
-> This is not entirely correct. It does update the crop and compose
-> rectangles on s_fmt, it makes sure they are not out-of-bounds for the
-> new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls
-> in the snippet bellow.
->
-> That being said there is a difference how this is handled in the VIN
-> driver between it's MC and non-MC modes and I would love to learn the
-> correct mode of operation and seeing VIN being updated to doing it
-> correct in both cases. Thanks Lad for dealing with this!
->
-Can I have your feedback on this please.
+How so? The reason I wrote lruvec_holds_page_lru_lock the way I did is
+that it is simply comparing the pointers held by the page and the
+lruvec. It is never actually accessing any of the values, just the
+pointers. As such we should be able to compare the two since the
+lruvec is still locked and the the memcg and pgdat held by the lruvec
+should not be changed. Likewise with the page pointers assuming the
+values match.
 
-Cheers,
-Prabhakar
+> > +                     if (lruvec)
+> > +                             unlock_page_lruvec_irqrestore(lruvec, fla=
+gs);
 > >
-> > Cheers,
-> > Prabhakar
+> > +                     lruvec =3D mem_cgroup_page_lruvec(page, pgdat);
+> >                       compact_lock_irqsave(&lruvec->lru_lock, &flags, c=
+c);
+> > -                     locked =3D lruvec;
+> >                       rcu_read_unlock();
 > >
-> > > >
-> > > > Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and com=
-pose rectangles in s_fmt")
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > ---
-> > > >  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >
-> > > > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/=
-media/platform/rcar-vin/rcar-v4l2.c
-> > > > index f421e25..a9b13d9 100644
-> > > > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > > @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *fil=
-e, void *priv,
-> > > >       fmt_rect.width =3D vin->format.width;
-> > > >       fmt_rect.height =3D vin->format.height;
-> > > >
-> > > > +     vin->crop.top =3D 0;
-> > > > +     vin->crop.left =3D 0;
-> > > > +     vin->crop.width =3D vin->format.width;
-> > > > +     vin->crop.height =3D vin->format.height;
-> > > > +     vin->compose =3D vin->crop;
-> > > > +
-> > > >       v4l2_rect_map_inside(&vin->crop, &src_rect);
-> > > >       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
-> > > >       vin->src_rect =3D src_rect;
-> > > > --
-> > > > 2.7.4
-> > > >
-> > >
-> > > --
-> > > Regards,
-> > > Niklas S=C3=B6derlund
 >
-> --
-> Regards,
-> Niklas S=C3=B6derlund
+> and some bugs:
+> [  534.564741] CPU: 23 PID: 545 Comm: kcompactd1 Kdump: loaded Tainted: G=
+ S      W         5.8.0-next-20200803-00028-g9a7ff2cd6e5c #85
+> [  534.577320] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS=
+, BIOS 1.0.PL.IP.P.027.02 05/29/2020
+> [  534.587693] Call Trace:
+> [  534.590522]  dump_stack+0x96/0xd0
+> [  534.594231]  ___might_sleep.cold.90+0xff/0x115
+> [  534.599102]  kcompactd+0x24b/0x370
+> [  534.602904]  ? finish_wait+0x80/0x80
+> [  534.606897]  ? kcompactd_do_work+0x3d0/0x3d0
+> [  534.611566]  kthread+0x14e/0x170
+> [  534.615182]  ? kthread_park+0x80/0x80
+> [  534.619252]  ret_from_fork+0x1f/0x30
+> [  535.629483] BUG: sleeping function called from invalid context at incl=
+ude/linux/freezer.h:57
+> [  535.638691] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 545=
+, name: kcompactd1
+> [  535.647601] INFO: lockdep is turned off.
+
+Ah, I see the bug now. It isn't the lruvec_holds_page_lru_lock that
+needs the LRU lock. This is an issue as a part of a merge conflict.
+There should have been an rcu_read_lock added before
+mem_cgroup_page_lruvec.
