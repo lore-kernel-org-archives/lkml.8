@@ -2,443 +2,109 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCFE20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597338712;
-	bh=mxdoxFWx6p7/gB/a7jlnbC/cQ1srgaC/PjVZ1ibAQ08=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rh9mRfjcSTIJEGTmjAod693zvSAfpCcm/BFTj2OepgPTY0H1nKzNnE9/vZlV5MxJN
-	 eDvJl3UIUONhSH74EdzpWzO6LaaS8LU6etp64tt3TWA8khpmr+aIicUX2xkMfya67b
-	 rlhOUb/yIWUl/pbhVi7dFby8PplMtH5oyK0/WhpY=
+	by mail.kernel.org (Postfix) with ESMTP id 7E9CF20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMRLv (ORCPT
+        id S1726600AbgHMRMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:11:51 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54392 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgHMRLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:11:51 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 07DHBO87002990;
-        Fri, 14 Aug 2020 02:11:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07DHBO87002990
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597338685;
-        bh=COmQxRVtKoK6go1MGbVESX1DsQBEwLsqKClULz5PF3M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j9c4vOj6nNYwKYFPcyeVHGYgAjqTRG/l/cCns12/4DVrDAKLzMyPmw+1m9wrzrLST
-         msfnfeg6ZqoRMNNrJn/pLUhwp/cDMnm89/fQoaFCi8gXt7h1gn4AORCLQ2BTCcKvC9
-         UEkyubfQKblXeFc3bDV3nd9pfudN5Z3c2tWGLSpEm4XazAKfi8MOZ7GXekeKjc95EB
-         IvzLzyriE+u51q4li2ID1FAMnd7oFWzYKwaqOq3lxvy4vEmeP34eFujQ9BmCJnbg5Q
-         EtMa7nRJQeDcfbON8YRu2f6iXjsYkIIbzEAeT9H8kuHOXsWz5dWFg9eh0++G28pC9/
-         domM8jZ1WnTFg==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id n4so3275966vsl.10;
-        Thu, 13 Aug 2020 10:11:24 -0700 (PDT)
-X-Gm-Message-State: AOAM531Rxqd0G6nZmr9h/JWcwh3F3Q99ujXk1zdGZy3SZ227V7D//k/Q
-        Mur+6kiS8PzM0KFc4cNHkEB//zol+AL6li5GGgo=
-X-Google-Smtp-Source: ABdhPJyDC9UzRdCf/p6CXXFIbYhGkUtEXhaydA1RkOHneEFYlCy+TTbVWtX0rFU4NmFgg1v8SWh9Rb1QTLBhuiIEAmA=
-X-Received: by 2002:a67:7c11:: with SMTP id x17mr4663305vsc.155.1597338683304;
- Thu, 13 Aug 2020 10:11:23 -0700 (PDT)
+        Thu, 13 Aug 2020 13:12:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60930 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbgHMRMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 13:12:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D9100AFBB;
+        Thu, 13 Aug 2020 17:12:34 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 19:12:11 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813171211.GT9477@dhcp22.suse.cz>
+References: <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <20200813154159.GR4295@paulmck-ThinkPad-P72>
+ <20200813155412.GP9477@dhcp22.suse.cz>
+ <20200813160442.GV4295@paulmck-ThinkPad-P72>
+ <20200813161357.GQ9477@dhcp22.suse.cz>
+ <20200813162904.GX4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200812173958.2307251-1-masahiroy@kernel.org>
- <20200812173958.2307251-3-masahiroy@kernel.org> <CAKwvOdkL=667+cw_Rxq_5zaOKeTTptsMaxkkSXBic9QxozOWVg@mail.gmail.com>
-In-Reply-To: <CAKwvOdkL=667+cw_Rxq_5zaOKeTTptsMaxkkSXBic9QxozOWVg@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 14 Aug 2020 02:10:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS4EjGchNzqhEcTPTU0mOUqAk8nF9QYW3qwfOp572uCHA@mail.gmail.com>
-Message-ID: <CAK7LNAS4EjGchNzqhEcTPTU0mOUqAk8nF9QYW3qwfOp572uCHA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gen_compile_commands: wire up build rule to Makefile
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813162904.GX4295@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 7:30 AM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> On Wed, Aug 12, 2020 at 10:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Currently, you need to explicitly run scripts/gen_compile_commands.py
-> > to create compile_commands.json. It traverses the object tree
-> > (you need to pass the -d option to deal with a separate output tree),
-> > and parses all the .*.cmd file found.
-> >
-> > If you rebuild the kernel over again without 'make clean', stale
-> > .*.cmd files from older builds will create invalid entries in
-> > compile_commands.json.
->
-> Definitely a problem; happy to see compile_commands.json added to
-> `make clean` target, too.
->
-> >
-> > This commit wires up the compile_commands.json rule to the top
-> > Makefile, and makes it parse .*.cmd files only from the current build
-> > to avoid stale entries.
-> >
-> > It is possible to extract only relevant .*.cmd files by checking
-> > $(KBUILD_VMLINUX_OBJS), $(KBUILD_VMLINUX_LIBS), and modules.order.
-> > The objects or archives linked to vmlinux are listed in
-> > $(KBUILD_VMLINUX_OBJS) or $(KBUILD_VMLINUX_LIBS). All the modules are
-> > listed in modules.order.
-> >
-> > You can create compile_commands.json from Make:
-> >
-> >   $ make -j$(nproc) CC=clang compile_commands.json
-> >
-> > Of course, you can build vmlinux, modules, and compile_commands.json
-> > all together in a single command:
-> >
-> >   $ make -j$(nproc) CC=clang all compile_commands.json
-> >
-> > It works also for M= builds. In this case, compile_commands.json
-> > is created in the top directory of the external module.
-> >
-> > I hope this will be overall improvements, but it has a drawback;
-> > the coverage of the compile_commands.json is reduced because only
-> > the objects linked to vmlinux or modules are handled. For example,
-> > the following C files are not included in compile_commands.json:
-> >
-> >  - Decompressor source files (arch/*/boot/compressed/)
-> >  - VDSO source files
-> >  - C files used to generate intermediates (e.g. kernel/bounds.c)
-> >  - standalone host programs
->
-> Oof, for an x86_64 defconfig, the difference in line count of
-> compile_commands.json
-> before: 12826
-
-
-I think some lines of 'before'
-are not so important.
-
-Files suffixed with *.mod.c
-are generated sources for modules.
-There is no point to check them by Clang tools.
-
-
-Some entries appear twice:
-
-For example, 'before' contains two entries of
-"file": "lib/cmdline.c"
-Which entry is used by 'clang-tidy lib/cmdline.c',
-the first one, the second one, or both?
-
-
-
-Having said that, there is still a loss of more than 3%, yes.
-
-
-> after: 12351
->
-> That's a loss of 475 (3.7% of 12826) coverage. Is there something more
-> we can do to preserve this functionality, while avoiding stale .cmd
-> files?
-
-
-I have no idea how to do this correctly.
-
-> Is it that those aren't specified by `$(KBUILD_VMLINUX_OBJS)
-> $(KBUILD_VMLINUX_LIBS)` ?
-
-These variables contain only objects and archives
-linked to vmlinux.
-
-
-
-
-For example, VDSO is built as a prerequisite of
-another object that wraps it.
-
-See line 61 of arch/arm64/kernel/vdso/Makefile:
-$(obj)/vdso.o : $(obj)/vdso.so
-
-
-I do not know how to get the full list of active objects,
-some of which are built on demand
-in the dependency chain.
-
-
-Idea 1)
-Merge this series, and accept the loss.
-
-
-Idea 2)
-Add Makefile targets,
-and also keep the previous work-flow.
-
-When you run it from Make,
-only objects for vmlinux and modules are handled.
-
-When you need the full coverage, including non-kernel-space
-sources, run scripts manually:
-
-$ scripts/clang-tools/gen_compile_commands.py
-$ scripts/clang-tools/run-clang-tools.py clang-tidy
-
-
-Idea 3)
-Give up supporting it from Makefile.
-Instead, improve gen_scripts_commands.py
-as a standalone program.
-
-
-Maybe we can check whether the compiler is Clang or not.
-We can run '<compiler> --version' and drop the
-entry if it is GCC.
-
-Usually, the compiler is the first word of
-the "command" field in compile_commands.json,
-but there are exceptions because
-people may do CC="ccache clang".
-
-
-If there are still stale entries causing troubles,
-you need to run 'make clean', and rebuild the tree.
-
-
-We were trying to have separate scripts,
-gen_compile_commands.py and run-clang-tools.py,
-and to add Makefile targets to run them in a row.
-
-I think unifying the two scripts
-might be handier.
-
-
-Add two options, -t, -a,
-to scripts/gen_compile_commands.py
-
-If they are given,
-scripts/gen_compilile_commands.py
-generates compile_commands.json,
-and immediately runs clang-tidy against it.
-
-
--t, --tidy
-   Run 'clang-tidy -checks=-*,linuxkernel-*' after generating
-compilation database
--a, --analyzer
-   Run 'clang-tidy -checks=-*,clang-analyzer-*' after generating
-compilation database
-
-
-Both -a and -t are given,
-it runs
-'clang-tidy -checks=-*,linuxkernel-*,clang-analyzer-*'
-
-This works more efficiently
-if you want to check everything.
-
-
-'make clang-tidy clang-analyzer'
-will invoke clang-tidy twice for each file,
-which is not very efficient.
-
-
-
-
-> >  clean-dirs := $(KBUILD_EXTMOD)
-> > -clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers $(KBUILD_EXTMOD)/modules.nsdeps
-> > +clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers $(KBUILD_EXTMOD)/modules.nsdeps \
-> > +       $(KBUILD_EXTMOD)/compile_commands.json
->
-> So the `clean` target doesn't make use of `CLEAN_FILES`? It looks like
-> there's some duplication there?  Oh, this is dependent on
-> !KBUILD_EXTMOD, and is a new `clean` target. Do I understand that
-> correctly?
-
-Correct.
-
-We can move CLEAN_FILES to a common part
-so external module builds can use it.
-
-> >      """
-> >      usage = 'Creates a compile_commands.json database from kernel .cmd files'
-> >      parser = argparse.ArgumentParser(description=usage)
-> >
-> > -    directory_help = ('Path to the kernel source directory to search '
-> > -                      '(defaults to the working directory)')
-> > -    parser.add_argument('-d', '--directory', type=str, help=directory_help)
-> > +    ar_help = 'command used for parsing .a archives'
-> > +    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
->
-> Might be nice to warn if run with no arguments? In case someone does:
-> $ ./scripts/clang-tools/gen_compile_commands.py
-
-Right.
-
-nargs='+' seems to work.
-
-
-
-> > +    # Collect objects compiled for vmlinux or modules
-> > +    objects = []
-> > +    for file in files:
-> > +        if file.endswith('.o'):
-> > +            # Some objects (head-y) are linked to vmlinux directly
-> > +            objects.append(file)
-> > +        elif file.endswith('.a'):
-> > +            # Most of built-in objects are linked via built-in.a or lib.a.
-> > +            # Use 'ar -t' to get the list of the contained objects.
-> > +            objects += subprocess.check_output([ar, '-t', file]).decode().split()
-> > +        elif file.endswith('modules.order'):
-> > +           # modules.order lists all the modules.
-> > +            with open(file) as f:
->
-> `file` is another builtin (or at least was in Python2), perhaps `filename`?
->
-> > +                for line in f:
-> > +                    ko = line.rstrip()
-> > +                    base, ext = os.path.splitext(ko)
-> > +                    if ext != '.ko':
-> > +                        sys.exit('{}: mobule path must end with .ko'.format(ko))
-> > +                    mod = base + '.mod'
-> > +                   # The first line of *.mod lists the objects that
-> > +                   # compose the module.
->
-> This comment and the one above it uses tabs for indentation vs spaces
-> for the rest of the file.  I use
-> https://github.com/nickdesaulniers/dotfiles/blob/a90865a9ea48bbefa0082f7508607fdeb361e801/.vimrc#L37-L43
-> to help me catch these.
-
-Awesome. Copied to mine.
-
-
-
-> > +                    with open(mod) as mod_f:
-> > +                        objects += mod_f.readline().split()
-> > +        else:
-> > +            sys.exit('{}: unknown file type'.format(file))
->
-> Consider breaking up this one long function into multiple, perhaps the
-> above could just return `objects`?
-
-
-
-I thought that returning a big list causes needless memory-copy.
-If we do not need to be worried too much,
-I can make it a helper function.
-
-
->
-> >
-> >      compile_commands = []
-> > -    for dirpath, _, filenames in os.walk(directory):
-> > -        for filename in filenames:
-> > -            if not filename_matcher.match(filename):
-> > -                continue
-> > -            filepath = os.path.join(dirpath, filename)
-> > -
-> > -            with open(filepath, 'rt') as f:
-> > -                line = f.readline()
-> > -                result = line_matcher.match(line)
-> > -                if result:
-> > -                    try:
-> > -                        entry = process_line(directory, dirpath,
-> > -                                             result.group(1), result.group(2))
-> > -                        compile_commands.append(entry)
-> > -                    except ValueError as err:
-> > -                        logging.info('Could not add line from %s: %s',
-> > -                                     filepath, err)
-> > +    cwd = os.getcwd()
-> > +    for object in objects:
-> > +        dir, notdir = os.path.split(object)
->
-> `object` is a builtin Class in python.  I'm not sure if it's quite
-> considered a keyword, but maybe a different identifier would be nicer,
-> like `object_file` or something?
-
-
-Not a keyword, but 'object' is a class, yes.
-Not sure about 'file'.
-
-
-$ python
-Python 3.8.2 (default, Jul 16 2020, 14:00:26)
-[GCC 9.3.0] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> import keyword
->>> keyword.iskeyword("import")
-True
->>> keyword.iskeyword("if")
-True
->>> keyword.iskeyword("file")
-False
->>> keyword.iskeyword("object")
-False
->>> object
-<class 'object'>
->>> file
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-NameError: name 'file' is not defined
->>>
-
-
-If this is a problem, I can rename it.
-
-
-
-
-> > +        cmd_file = os.path.join(dir, '.' + notdir + '.cmd')
-> > +        with open(cmd_file, 'rt') as f:
-> > +            line = f.readline()
-> > +            result = line_matcher.match(line)
->
-> ^ combine statements.
-
-OK.
-
-
-> > +            if result:
-> > +                entry = process_line(cwd, result.group(1), result.group(2))
-> > +                compile_commands.append(entry)
-> >
-> >      with open(output, 'wt') as f:
-> >          json.dump(compile_commands, f, indent=2, sort_keys=True)
-> >
-> > -    count = len(compile_commands)
-> > -    if count < _LOW_COUNT_THRESHOLD:
-> > -        logging.warning(
-> > -            'Found %s entries. Have you compiled the kernel?', count)
-> > -
-> > -
-> >  if __name__ == '__main__':
-> >      main()
-> > --
-> > 2.25.1
-> >
->
-> Thank you for your assistance and help enabling these tools.
->
-> --
-> Thanks,
-> ~Nick Desaulniers
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAKwvOdkL%3D667%2Bcw_Rxq_5zaOKeTTptsMaxkkSXBic9QxozOWVg%40mail.gmail.com.
-
-
-
---
-Best Regards
-Masahiro Yamada
+On Thu 13-08-20 09:29:04, Paul E. McKenney wrote:
+> On Thu, Aug 13, 2020 at 06:13:57PM +0200, Michal Hocko wrote:
+> > On Thu 13-08-20 09:04:42, Paul E. McKenney wrote:
+> > > On Thu, Aug 13, 2020 at 05:54:12PM +0200, Michal Hocko wrote:
+> > [...]
+> > > > If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
+> > > > check then there is no functional problem - GFP_RT_SAFE would still be
+> > > > GFP_NOWAIT so functional wise the allocator will still do the right
+> > > > thing.
+> > > 
+> > > Perhaps it was just me getting confused, early hour Pacific Time and
+> > > whatever other excuses might apply.  But I thought that you still had
+> > > an objection to GFP_RT_SAFE based on changes in allocator semantics for
+> > > other users.
+> > 
+> > There is still that problem with lockdep complaining about raw->regular
+> > spinlock on !PREEMPT_RT that would need to get resolved somehow. Thomas
+> > is not really keen on adding some lockdep annotation mechanism and
+> > unfortunatelly I do not have a different idea how to get rid of those.
+> 
+> OK.  So the current situation requires a choice between these these
+> alternatives, each of which has shortcomings that have been mentioned
+> earlier in this thread:
+> 
+> 1.	Prohibit invoking allocators from raw atomic context, such
+> 	as when holding a raw spinlock.
+> 
+> 2.	Adding a GFP_ flag.
+
+Which would implemente a completely new level atomic allocation for all
+preemption models
+
+> 
+> 3.	Reusing existing GFP_ flags/values/whatever to communicate
+> 	the raw-context information that was to be communicated by
+> 	the new GFP_ flag.
+
+this would have to be RT specific to not change the semantic for
+existing users. In other words make NOWAIT semantic working for
+RT atomic contexts.
+
+> 
+> 4.	Making lockdep forgive acquiring spinlocks while holding
+> 	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
+
+and this would have to go along with 3 to remove false positives on !RT.
+
+-- 
+Michal Hocko
+SUSE Labs
