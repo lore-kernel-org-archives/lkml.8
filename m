@@ -2,103 +2,70 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3270BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0156820771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3nhGCN9"
+	by mail.kernel.org (Postfix) with ESMTP id BB95720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgHMG4w (ORCPT
+        id S1726546AbgHMG5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 02:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbgHMG4w (ORCPT
+        Thu, 13 Aug 2020 02:57:11 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:41935 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725982AbgHMG5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 02:56:52 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00BE0C061757;
-        Wed, 12 Aug 2020 23:56:52 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id d4so2314865pjx.5;
-        Wed, 12 Aug 2020 23:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/ZXQiDU4LoOHXkIBxZCnA2u6rFmi9ElKGT6dxeDUOGg=;
-        b=J3nhGCN9Er4diiB+NQx/QwgQQ8DiZa8+oNuDbBkzJpeZUKy9fExMpuyOK4x57VbA1G
-         CqGccmUrvyrnoSLJl8j6jW9D+cdCju1+mHw4aiSc+dqiZ5U7EGDVmSAUX/ZzWxJm97VV
-         z31CaibZpbeck1mc1y6MLGbRhRY70sFpojzGgWRkFOTW1+3lLV7N0oxDlPXAqvBZ4CJd
-         VbDKv+F4OT/kD1tFKCU4KpREhuP9b11zDQhyUnBoRTC51B4m0gbxCnhc4Y9eccwvAn8R
-         dZn28WWqV9kpfDeWrjtvQOn2dpSv1ugLIS6OkjBQBFYGuT+xWi/0YMSXfGS9UV7p+Gd4
-         Iuwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/ZXQiDU4LoOHXkIBxZCnA2u6rFmi9ElKGT6dxeDUOGg=;
-        b=iVMy+9Uf0J/kiBYrPG2QdFqtn4QfTof9jEAKEUCXWOuutLtvyPtdBG2//pvRj5gUIo
-         ZTcSMcm4Sxa+hGAwu0z3IiKut5OftvFgWmN/e7Ef5LNlQnG1SZU7BuTKzW1m7ARqTRqx
-         chmTCBrSGw+J5qqskgmvsHaxyoL4jLOm+UwI8KEqa6OejLSc7PT+wTNfDGOo+n+isGnU
-         z7Ry/7LyIopJfJEHOIu/XFgL5dyOqckZstWkg7KQp76s5f34KI1I9BiG99S1gydRtO/g
-         waGvn2beBVAYYC1LMXm34AdkPRmKHWrYSQHpoO9pK90geGDgDvIs3xQngqw0CW+UfAAs
-         LTpQ==
-X-Gm-Message-State: AOAM533yyUBnhC8OtLDZXKax9bLV7YJG9cEWTEPCoXgjh+9gmdVT04pP
-        By4rj2w5fgb0Sjk3CvOPXajSkt4iriU=
-X-Google-Smtp-Source: ABdhPJzKG/UEMBN2JxxT4t5ii5/02WxmsNydw/51vWww31PExP8pCnRm6o8ECoDVDiXRlGMhAh1I2w==
-X-Received: by 2002:a17:90a:fd8c:: with SMTP id cx12mr3574665pjb.157.1597301809728;
-        Wed, 12 Aug 2020 23:56:49 -0700 (PDT)
-Received: from localhost ([104.192.108.9])
-        by smtp.gmail.com with ESMTPSA id a16sm4807925pfr.45.2020.08.12.23.56.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Aug 2020 23:56:49 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 23:56:44 -0700
-From:   Liu Yong <pkfxxxing@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fs/io_uring.c: Fix uninitialized variable is referenced in
- io_submit_sqe
-Message-ID: <20200813065644.GA91891@ubuntu>
+        Thu, 13 Aug 2020 02:57:11 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5dLrE0_1597301826;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5dLrE0_1597301826)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 13 Aug 2020 14:57:08 +0800
+Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
+        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040224.13054.96724.stgit@localhost.localdomain>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <8ea9e186-b223-fb1b-5c82-2aa43c5e9f10@linux.alibaba.com>
+Date:   Thu, 13 Aug 2020 14:56:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200813040224.13054.96724.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the commit <a4d61e66ee4a> ("<io_uring: prevent re-read of sqe->opcode>") 
-caused another vulnerability. After io_get_req(), the sqe_submit struct 
-in req is not initialized, but the following code defaults that 
-req->submit.opcode is available.
 
-Signed-off-by: Liu Yong <pkfxxxing@gmail.com>
----
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index be3d595a607f..c1aaee061dae 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2559,6 +2559,7 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
- 		goto err;
- 	}
- 
-+	memcpy(&req->submit, s, sizeof(*s));
- 	ret = io_req_set_file(ctx, s, state, req);
- 	if (unlikely(ret)) {
- err_req:
--- 
-2.17.1
+在 2020/8/13 下午12:02, Alexander Duyck 写道:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> We can drop the need for the locked variable by making use of the
+> lruvec_holds_page_lru_lock function. By doing this we can avoid some rcu
+> locking ugliness for the case where the lruvec is still holding the LRU
+> lock associated with the page. Instead we can just use the lruvec and if it
+> is NULL we assume the lock was released.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> ---
+>  mm/compaction.c |   45 ++++++++++++++++++++-------------------------
+>  1 file changed, 20 insertions(+), 25 deletions(-)
+
+Thanks a lot!
+Don't know if community is ok if we keep the patch following whole patchset alone?
 
