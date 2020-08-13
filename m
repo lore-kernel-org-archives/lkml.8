@@ -2,163 +2,196 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC29BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A885BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9103420829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C3320781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHMP35 (ORCPT
+        id S1726685AbgHMPba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:29:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39884 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgHMP34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:29:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 92518AF62;
-        Thu, 13 Aug 2020 15:30:14 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 17:29:51 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     syzbot <syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com>,
-        Roman Gushchin <guro@fb.com>
-Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
-        vdavydov.dev@gmail.com
-Subject: Re: upstream boot error: WARNING in mem_cgroup_css_alloc
-Message-ID: <20200813152951.GO9477@dhcp22.suse.cz>
-References: <00000000000019317f05acbf31bd@google.com>
- <20200813104416.GE9477@dhcp22.suse.cz>
+        Thu, 13 Aug 2020 11:31:30 -0400
+Received: from smtp-bc0c.mail.infomaniak.ch ([45.157.188.12]:53121 "EHLO
+        smtp-bc0c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbgHMPb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 11:31:28 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BS9XG4mmCzlhLv2;
+        Thu, 13 Aug 2020 17:31:26 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4BS9XC0vpZzlh8T5;
+        Thu, 13 Aug 2020 17:31:23 +0200 (CEST)
+Subject: Re: [PATCH v7 3/7] exec: Move path_noexec() check earlier
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200723171227.446711-1-mic@digikod.net>
+ <20200723171227.446711-4-mic@digikod.net>
+ <87a6z1m0u1.fsf@x220.int.ebiederm.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <89b6bb7f-d841-cf0a-8d5c-26c611b56ae7@digikod.net>
+Date:   Thu, 13 Aug 2020 17:31:22 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813104416.GE9477@dhcp22.suse.cz>
+In-Reply-To: <87a6z1m0u1.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 12:44:16, Michal Hocko wrote:
-> This smells like 3e38e0aaca9e ("mm: memcg: charge memcg percpu memory to
-> the parent cgroup"). 
+Kees Cook wrote this patch, which is in Andrew Morton's tree, but I
+think you're talking about O_MAYEXEC, not this patch specifically.
 
-This should be addressed by http://lkml.kernel.org/r/20200813152033.GA701678@cmpxchg.org
-I haven't noticed this is panic_on_warn earlier.
- 
-> On Thu 13-08-20 02:47:26, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    dc06fe51 Merge tag 'rtc-5.9' of git://git.kernel.org/pub/s..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=12d34bd6900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9c89856ae5fc8b6
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=35d35ef677516d65bdda
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+35d35ef677516d65bdda@syzkaller.appspotmail.com
-> > 
-> > mem auto-init: stack:off, heap alloc:on, heap free:off
-> > Memory: 6461180K/7863916K available (116743K kernel code, 17665K rwdata, 21624K rodata, 2792K init, 23940K bss, 1402480K reserved, 0K cma-reserved)
-> > Running RCU self tests
-> > rcu: Preemptible hierarchical RCU implementation.
-> > rcu: 	RCU lockdep checking is enabled.
-> > rcu: 	RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=2.
-> > rcu: 	RCU callback double-/use-after-free debug enabled.
-> > rcu: 	RCU debug extended QS entry/exit.
-> > 	All grace periods are expedited (rcu_expedited).
-> > 	Trampoline variant of Tasks RCU enabled.
-> > rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-> > rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-> > NR_IRQS: 4352, nr_irqs: 440, preallocated irqs: 16
-> > random: get_random_bytes called from boot_init_stack_canary arch/x86/include/asm/stackprotector.h:80 [inline] with crng_init=0
-> > random: get_random_bytes called from start_kernel+0x23b/0x46a init/main.c:957 with crng_init=0
-> > Console: colour VGA+ 80x25
-> > printk: console [ttyS0] enabled
-> > printk: console [ttyS0] enabled
-> > printk: bootconsole [earlyser0] disabled
-> > printk: bootconsole [earlyser0] disabled
-> > Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
-> > ... MAX_LOCKDEP_SUBCLASSES:  8
-> > ... MAX_LOCK_DEPTH:          48
-> > ... MAX_LOCKDEP_KEYS:        8192
-> > ... CLASSHASH_SIZE:          4096
-> > ... MAX_LOCKDEP_ENTRIES:     32768
-> > ... MAX_LOCKDEP_CHAINS:      65536
-> > ... CHAINHASH_SIZE:          32768
-> >  memory used by lock dependency info: 6301 kB
-> >  memory used for stack traces: 4224 kB
-> >  per task-struct memory footprint: 1920 bytes
-> > mempolicy: Enabling automatic NUMA balancing. Configure with numa_balancing= or the kernel.numa_balancing sysctl
-> > ACPI: Core revision 20200717
-> > APIC: Switch to symmetric I/O mode setup
-> > x2apic enabled
-> > Switched APIC routing to physical x2apic.
-> > ..TIMER: vector=0x30 apic1=0 pin1=0 apic2=-1 pin2=-1
-> > clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x212735223b2, max_idle_ns: 440795277976 ns
-> > Calibrating delay loop (skipped) preset value.. 4600.00 BogoMIPS (lpj=23000000)
-> > pid_max: default: 32768 minimum: 301
-> > LSM: Security Framework initializing
-> > LSM: security= is ignored because it is superseded by lsm=
-> > Yama: becoming mindful.
-> > TOMOYO Linux initialized
-> > AppArmor: AppArmor initialized
-> > LSM support for eBPF active
-> > Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, vmalloc)
-> > Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, vmalloc)
-> > Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, vmalloc)
-> > Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, vmalloc)
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 memalloc_unuse_memcg include/linux/sched/mm.h:331 [inline]
-> > WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5226 mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5285
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >  panic+0x2e3/0x75c kernel/panic.c:231
-> >  __warn.cold+0x20/0x4a kernel/panic.c:600
-> >  report_bug+0x1bd/0x210 lib/bug.c:198
-> >  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
-> >  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
-> >  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-> > RIP: 0010:mem_cgroup_alloc mm/memcontrol.c:5226 [inline]
-> > RIP: 0010:mem_cgroup_css_alloc+0x535/0x1c30 mm/memcontrol.c:5284
-> > Code: 01 00 48 8d bb 28 14 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 74 81 e8 e0 00 c2 f9 e9 77 ff ff ff <0f> 0b e9 21 fc ff ff 48 89 ef e8 bc 28 c7 f9 48 b8 00 00 00 00 00
-> > RSP: 0000:ffffffff89a07e20 EFLAGS: 00010246
-> > RAX: dffffc0000000000 RBX: ffffffff89a99dc0 RCX: 1ffff110152b2028
-> > RDX: 1ffffffff135363d RSI: ffffffff83b0f2c2 RDI: ffffffff89a9b1e8
-> > RBP: ffff8880a9590000 R08: 0000000000000001 R09: ffff88821b801aef
-> > R10: 0000000000000000 R11: ffffffff810000d4 R12: ffffffff8ab224b4
-> > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff8ab224d0
-> >  cgroup_init_subsys+0x215/0x4d7 kernel/cgroup/cgroup.c:5587
-> >  cgroup_init+0x359/0xa63 kernel/cgroup/cgroup.c:5713
-> >  start_kernel+0x426/0x46a init/main.c:1035
-> >  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
-> > Rebooting in 86400 seconds..
-> > 
-> > 
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 11/08/2020 21:36, Eric W. Biederman wrote:
+> Mickaël Salaün <mic@digikod.net> writes:
 > 
-> -- 
-> Michal Hocko
-> SUSE Labs
+>> From: Kees Cook <keescook@chromium.org>
+>>
+>> The path_noexec() check, like the regular file check, was happening too
+>> late, letting LSMs see impossible execve()s. Check it earlier as well
+>> in may_open() and collect the redundant fs/exec.c path_noexec() test
+>> under the same robustness comment as the S_ISREG() check.
+>>
+>> My notes on the call path, and related arguments, checks, etc:
+> 
+> A big question arises, that I think someone already asked.
 
--- 
-Michal Hocko
-SUSE Labs
+Al Viro and Jann Horn expressed such concerns for O_MAYEXEC:
+https://lore.kernel.org/lkml/0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net/
+
+> 
+> Why perform this test in may_open directly instead of moving
+> it into inode_permission.  That way the code can be shared with
+> faccessat, and any other code path that wants it?
+
+This patch is just a refactoring.
+
+About O_MAYEXEC, path-based LSM, IMA and IPE need to work on a struct
+file, whereas inode_permission() only gives a struct inode. However,
+faccessat2(2) (with extended flags) seems to be the perfect candidate if
+we want to be able to check file descriptors.
+
+> 
+> That would look to provide a more maintainable kernel.
+
+Why would it be more maintainable?
+
+> 
+> Eric
+> 
+> 
+>> do_open_execat()
+>>     struct open_flags open_exec_flags = {
+>>         .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+>>         .acc_mode = MAY_EXEC,
+>>         ...
+>>     do_filp_open(dfd, filename, open_flags)
+>>         path_openat(nameidata, open_flags, flags)
+>>             file = alloc_empty_file(open_flags, current_cred());
+>>             do_open(nameidata, file, open_flags)
+>>                 may_open(path, acc_mode, open_flag)
+>>                     /* new location of MAY_EXEC vs path_noexec() test */
+>>                     inode_permission(inode, MAY_OPEN | acc_mode)
+>>                         security_inode_permission(inode, acc_mode)
+>>                 vfs_open(path, file)
+>>                     do_dentry_open(file, path->dentry->d_inode, open)
+>>                         security_file_open(f)
+>>                         open()
+>>     /* old location of path_noexec() test */
+>>
+>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> Link: https://lore.kernel.org/r/20200605160013.3954297-4-keescook@chromium.org
+>> ---
+>>  fs/exec.c  | 12 ++++--------
+>>  fs/namei.c |  4 ++++
+>>  2 files changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index bdc6a6eb5dce..4eea20c27b01 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -147,10 +147,8 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+>>  	 * and check again at the very end too.
+>>  	 */
+>>  	error = -EACCES;
+>> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+>> -		goto exit;
+>> -
+>> -	if (path_noexec(&file->f_path))
+>> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
+>> +			 path_noexec(&file->f_path)))
+>>  		goto exit;
+>>  
+>>  	fsnotify_open(file);
+>> @@ -897,10 +895,8 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+>>  	 * and check again at the very end too.
+>>  	 */
+>>  	err = -EACCES;
+>> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+>> -		goto exit;
+>> -
+>> -	if (path_noexec(&file->f_path))
+>> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
+>> +			 path_noexec(&file->f_path)))
+>>  		goto exit;
+>>  
+>>  	err = deny_write_access(file);
+>> diff --git a/fs/namei.c b/fs/namei.c
+>> index a559ad943970..ddc9b25540fe 100644
+>> --- a/fs/namei.c
+>> +++ b/fs/namei.c
+>> @@ -2863,6 +2863,10 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>>  			return -EACCES;
+>>  		flag &= ~O_TRUNC;
+>>  		break;
+>> +	case S_IFREG:
+>> +		if ((acc_mode & MAY_EXEC) && path_noexec(path))
+>> +			return -EACCES;
+>> +		break;
+>>  	}
+>>  
+>>  	error = inode_permission(inode, MAY_OPEN | acc_mode);
