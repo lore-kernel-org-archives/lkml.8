@@ -2,259 +2,244 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0498C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5A420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGvfwBtk"
+	by mail.kernel.org (Postfix) with ESMTP id 79F4E20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHMPeQ (ORCPT
+        id S1726673AbgHMPgE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:34:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59879 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbgHMPeO (ORCPT
+        Thu, 13 Aug 2020 11:36:04 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:14736 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726249AbgHMPgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:34:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597332852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xzivr37W6Sz/OFkat8WISQrphMPdi2PlV4uzOfubSgg=;
-        b=gGvfwBtkh5RtP18LZlcKA9J+cw7xGLCj5l+bfM0324WOmoi8NqG3kv8oxRLZ+MaLkSdlYo
-        hrul+0KRTn5d4EmXhB0mpW6XbB6em9FEFsya3yTDU/a1qfEQLkHfjzNShrDf1QgkiGG8AZ
-        3d1n8UU1aBoaZ4c8qoM9b9HTsyrXVhw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-14sqnvJ0PGe7-Ac8Ox3DLQ-1; Thu, 13 Aug 2020 11:34:10 -0400
-X-MC-Unique: 14sqnvJ0PGe7-Ac8Ox3DLQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C53A1807321;
-        Thu, 13 Aug 2020 15:34:08 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-140.ams2.redhat.com [10.36.113.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6443C60C04;
-        Thu, 13 Aug 2020 15:33:49 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
-        io-uring@vger.kernel.org
-Subject: [PATCH v4 3/3] io_uring: allow disabling rings during the creation
-Date:   Thu, 13 Aug 2020 17:32:54 +0200
-Message-Id: <20200813153254.93731-4-sgarzare@redhat.com>
-In-Reply-To: <20200813153254.93731-1-sgarzare@redhat.com>
-References: <20200813153254.93731-1-sgarzare@redhat.com>
+        Thu, 13 Aug 2020 11:36:00 -0400
+Subject: Re: [PATCH v2 2/2] selinux: add basic filtering for audit trace
+ events
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+CC:     Nick Kralevich <nnk@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        <linux-kernel@vger.kernel.org>, <selinux@vger.kernel.org>
+References: <20200813144914.737306-1-tweek@google.com>
+ <20200813144914.737306-2-tweek@google.com>
+ <02c193e4-008a-5c3d-75e8-9be7bbcb941c@schaufler-ca.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <a82d50bd-a0ec-bd06-7a3a-c2696398c4c3@sony.com>
+Date:   Thu, 13 Aug 2020 17:35:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <02c193e4-008a-5c3d-75e8-9be7bbcb941c@schaufler-ca.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=1XWaLZrsAAAA:8 a=SeaIvTzv9DhRjQTMKMMA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new IORING_SETUP_R_DISABLED flag to start the
-rings disabled, allowing the user to register restrictions,
-buffers, files, before to start processing SQEs.
+On 8/13/20 5:05 PM, Casey Schaufler wrote:
+> On 8/13/2020 7:48 AM, Thiébaud Weksteen wrote:
+>> From: Peter Enderborg <peter.enderborg@sony.com>
+>>
+>> This patch adds further attributes to the event. These attributes are
+>> helpful to understand the context of the message and can be used
+>> to filter the events.
+>>
+>> There are three common items. Source context, target context and tclass.
+>> There are also items from the outcome of operation performed.
+>>
+>> An event is similar to:
+>>            <...>-1309  [002] ....  6346.691689: selinux_audited:
+>>        requested=0x4000000 denied=0x4000000 audited=0x4000000
+>>        result=-13 ssid=315 tsid=61
+> It may not be my place to ask, but *please please please* don't
+> externalize secids. I understand that it's easier to type "42"
+> than "system_r:cupsd_t:s0-s0:c0.c1023", and that it's easier for
+> your tools to parse and store the number. Once you start training
+> people that system_r:cupsd_t:s0-s0:c0.c1023 is secid 42 you'll
+> never be able to change it. The secid will start showing up in
+> scripts. Bad  Things  Will  Happen.
 
-When IORING_SETUP_R_DISABLED is set, SQE are not processed and
-SQPOLL kthread is not started.
+Ok, it seems to mostly against having this performance options.
+Yes, it is a kernel internal data. So is most of the kernel tracing.
+I see it is a primary tool for kernel debugging but than can also be
+used for user-space debugging tools.  Hiding data for debuggers
+does not make any sense too me.
 
-The restrictions registration are allowed only when the rings
-are disable to prevent concurrency issue while processing SQEs.
 
-The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
-opcode with io_uring_register(2).
+>>        scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
+>>        tcontext=system_u:object_r:bin_t:s0 tclass=file
+>>
+>> With systems where many denials are occurring, it is useful to apply a
+>> filter. The filtering is a set of logic that is inserted with
+>> the filter file. Example:
+>>  echo "tclass==\"file\" && ssid!=42" > events/avc/selinux_audited/filter
+>>
+>> This adds that we only get tclass=file but not for ssid 42.
+>>
+>> The trace can also have extra properties. Adding the user stack
+>> can be done with
+>>    echo 1 > options/userstacktrace
+>>
+>> Now the output will be
+>>          runcon-1365  [003] ....  6960.955530: selinux_audited:
+>>      requested=0x4000000 denied=0x4000000 audited=0x4000000
+>>      result=-13 ssid=315 tsid=61
+>>      scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
+>>      tcontext=system_u:object_r:bin_t:s0 tclass=file
+>>           runcon-1365  [003] ....  6960.955560: <user stack trace>
+>>  =>  <00007f325b4ce45b>
+>>  =>  <00005607093efa57>
+>>
+>> Note that the ssid is the internal numeric representation of scontext
+>> and tsid is numeric for tcontext. They are useful for filtering.
+>>
+>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+>> Reviewed-by: Thiébaud Weksteen <tweek@google.com>
+>> ---
+>> v2 changes:
+>> - update changelog to include usage examples
+>>
+>>  include/trace/events/avc.h | 41 ++++++++++++++++++++++++++++----------
+>>  security/selinux/avc.c     | 22 +++++++++++---------
+>>  2 files changed, 44 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
+>> index 07c058a9bbcd..ac5ef2e1c2c5 100644
+>> --- a/include/trace/events/avc.h
+>> +++ b/include/trace/events/avc.h
+>> @@ -1,6 +1,7 @@
+>>  /* SPDX-License-Identifier: GPL-2.0 */
+>>  /*
+>> - * Author: Thiébaud Weksteen <tweek@google.com>
+>> + * Authors:	Thiébaud Weksteen <tweek@google.com>
+>> + *		Peter Enderborg <Peter.Enderborg@sony.com>
+>>   */
+>>  #undef TRACE_SYSTEM
+>>  #define TRACE_SYSTEM avc
+>> @@ -12,23 +13,43 @@
+>>  
+>>  TRACE_EVENT(selinux_audited,
+>>  
+>> -	TP_PROTO(struct selinux_audit_data *sad),
+>> +	TP_PROTO(struct selinux_audit_data *sad,
+>> +		char *scontext,
+>> +		char *tcontext,
+>> +		const char *tclass
+>> +	),
+>>  
+>> -	TP_ARGS(sad),
+>> +	TP_ARGS(sad, scontext, tcontext, tclass),
+>>  
+>>  	TP_STRUCT__entry(
+>> -		__field(unsigned int, tclass)
+>> -		__field(unsigned int, audited)
+>> +		__field(u32, requested)
+>> +		__field(u32, denied)
+>> +		__field(u32, audited)
+>> +		__field(int, result)
+>> +		__string(scontext, scontext)
+>> +		__string(tcontext, tcontext)
+>> +		__string(tclass, tclass)
+>> +		__field(u32, ssid)
+>> +		__field(u32, tsid)
+>>  	),
+>>  
+>>  	TP_fast_assign(
+>> -		__entry->tclass = sad->tclass;
+>> -		__entry->audited = sad->audited;
+>> +		__entry->requested	= sad->requested;
+>> +		__entry->denied		= sad->denied;
+>> +		__entry->audited	= sad->audited;
+>> +		__entry->result		= sad->result;
+>> +		__entry->ssid		= sad->ssid;
+>> +		__entry->tsid		= sad->tsid;
+>> +		__assign_str(tcontext, tcontext);
+>> +		__assign_str(scontext, scontext);
+>> +		__assign_str(tclass, tclass);
+>>  	),
+>>  
+>> -	TP_printk("tclass=%u audited=%x",
+>> -		__entry->tclass,
+>> -		__entry->audited)
+>> +	TP_printk("requested=0x%x denied=0x%x audited=0x%x result=%d ssid=%u tsid=%u scontext=%s tcontext=%s tclass=%s",
+>> +		__entry->requested, __entry->denied, __entry->audited, __entry->result,
+>> +		__entry->ssid, __entry->tsid, __get_str(scontext), __get_str(tcontext),
+>> +		__get_str(tclass)
+>> +	)
+>>  );
+>>  
+>>  #endif
+>> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+>> index b0a0af778b70..7de5cc5169af 100644
+>> --- a/security/selinux/avc.c
+>> +++ b/security/selinux/avc.c
+>> @@ -705,35 +705,39 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
+>>  {
+>>  	struct common_audit_data *ad = a;
+>>  	struct selinux_audit_data *sad = ad->selinux_audit_data;
+>> -	char *scontext;
+>> +	char *scontext = NULL;
+>> +	char *tcontext = NULL;
+>> +	const char *tclass = NULL;
+>>  	u32 scontext_len;
+>> +	u32 tcontext_len;
+>>  	int rc;
+>>  
+>> -	trace_selinux_audited(sad);
+>> -
+>>  	rc = security_sid_to_context(sad->state, sad->ssid, &scontext,
+>>  				     &scontext_len);
+>>  	if (rc)
+>>  		audit_log_format(ab, " ssid=%d", sad->ssid);
+>>  	else {
+>>  		audit_log_format(ab, " scontext=%s", scontext);
+>> -		kfree(scontext);
+>>  	}
+>>  
+>> -	rc = security_sid_to_context(sad->state, sad->tsid, &scontext,
+>> -				     &scontext_len);
+>> +	rc = security_sid_to_context(sad->state, sad->tsid, &tcontext,
+>> +				     &tcontext_len);
+>>  	if (rc)
+>>  		audit_log_format(ab, " tsid=%d", sad->tsid);
+>>  	else {
+>> -		audit_log_format(ab, " tcontext=%s", scontext);
+>> -		kfree(scontext);
+>> +		audit_log_format(ab, " tcontext=%s", tcontext);
+>>  	}
+>>  
+>> -	audit_log_format(ab, " tclass=%s", secclass_map[sad->tclass-1].name);
+>> +	tclass = secclass_map[sad->tclass-1].name;
+>> +	audit_log_format(ab, " tclass=%s", tclass);
+>>  
+>>  	if (sad->denied)
+>>  		audit_log_format(ab, " permissive=%u", sad->result ? 0 : 1);
+>>  
+>> +	trace_selinux_audited(sad, scontext, tcontext, tclass);
+>> +	kfree(tcontext);
+>> +	kfree(scontext);
+>> +
+>>  	/* in case of invalid context report also the actual context string */
+>>  	rc = security_sid_to_context_inval(sad->state, sad->ssid, &scontext,
+>>  					   &scontext_len);
 
-Suggested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v4:
- - fixed io_uring_enter() exit path when ring is disabled
-
-v3:
- - enabled restrictions only when the rings start
-
-RFC v2:
- - removed return value of io_sq_offload_start()
----
- fs/io_uring.c                 | 52 ++++++++++++++++++++++++++++++-----
- include/uapi/linux/io_uring.h |  2 ++
- 2 files changed, 47 insertions(+), 7 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cb365e6e0af7..09fedc380a41 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -226,6 +226,7 @@ struct io_restriction {
- 	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
- 	u8 sqe_flags_allowed;
- 	u8 sqe_flags_required;
-+	bool registered;
- };
- 
- struct io_ring_ctx {
-@@ -7420,8 +7421,8 @@ static int io_init_wq_offload(struct io_ring_ctx *ctx,
- 	return ret;
- }
- 
--static int io_sq_offload_start(struct io_ring_ctx *ctx,
--			       struct io_uring_params *p)
-+static int io_sq_offload_create(struct io_ring_ctx *ctx,
-+				struct io_uring_params *p)
- {
- 	int ret;
- 
-@@ -7458,7 +7459,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
- 			ctx->sqo_thread = NULL;
- 			goto err;
- 		}
--		wake_up_process(ctx->sqo_thread);
- 	} else if (p->flags & IORING_SETUP_SQ_AFF) {
- 		/* Can't have SQ_AFF without SQPOLL */
- 		ret = -EINVAL;
-@@ -7479,6 +7479,12 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
- 	return ret;
- }
- 
-+static void io_sq_offload_start(struct io_ring_ctx *ctx)
-+{
-+	if ((ctx->flags & IORING_SETUP_SQPOLL) && ctx->sqo_thread)
-+		wake_up_process(ctx->sqo_thread);
-+}
-+
- static inline void __io_unaccount_mem(struct user_struct *user,
- 				      unsigned long nr_pages)
- {
-@@ -8218,6 +8224,9 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 	if (!percpu_ref_tryget(&ctx->refs))
- 		goto out_fput;
- 
-+	if (ctx->flags & IORING_SETUP_R_DISABLED)
-+		goto out_fput;
-+
- 	/*
- 	 * For SQ polling, the thread will do all submissions and completions.
- 	 * Just return the requested submit count, and wake the thread if
-@@ -8532,10 +8541,13 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
- 	if (ret)
- 		goto err;
- 
--	ret = io_sq_offload_start(ctx, p);
-+	ret = io_sq_offload_create(ctx, p);
- 	if (ret)
- 		goto err;
- 
-+	if (!(p->flags & IORING_SETUP_R_DISABLED))
-+		io_sq_offload_start(ctx);
-+
- 	memset(&p->sq_off, 0, sizeof(p->sq_off));
- 	p->sq_off.head = offsetof(struct io_rings, sq.head);
- 	p->sq_off.tail = offsetof(struct io_rings, sq.tail);
-@@ -8598,7 +8610,8 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
- 
- 	if (p.flags & ~(IORING_SETUP_IOPOLL | IORING_SETUP_SQPOLL |
- 			IORING_SETUP_SQ_AFF | IORING_SETUP_CQSIZE |
--			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ))
-+			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ |
-+			IORING_SETUP_R_DISABLED))
- 		return -EINVAL;
- 
- 	return  io_uring_create(entries, &p, params);
-@@ -8681,8 +8694,12 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
- 	size_t size;
- 	int i, ret;
- 
-+	/* Restrictions allowed only if rings started disabled */
-+	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
-+		return -EINVAL;
-+
- 	/* We allow only a single restrictions registration */
--	if (ctx->restricted)
-+	if (ctx->restrictions.registered)
- 		return -EBUSY;
- 
- 	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
-@@ -8732,7 +8749,7 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
- 		}
- 	}
- 
--	ctx->restricted = 1;
-+	ctx->restrictions.registered = true;
- 
- 	ret = 0;
- out:
-@@ -8744,6 +8761,21 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
- 	return ret;
- }
- 
-+static int io_register_enable_rings(struct io_ring_ctx *ctx)
-+{
-+	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
-+		return -EINVAL;
-+
-+	if (ctx->restrictions.registered)
-+		ctx->restricted = 1;
-+
-+	ctx->flags &= ~IORING_SETUP_R_DISABLED;
-+
-+	io_sq_offload_start(ctx);
-+
-+	return 0;
-+}
-+
- static bool io_register_op_must_quiesce(int op)
- {
- 	switch (op) {
-@@ -8865,6 +8897,12 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 			break;
- 		ret = io_unregister_personality(ctx, nr_args);
- 		break;
-+	case IORING_REGISTER_ENABLE_RINGS:
-+		ret = -EINVAL;
-+		if (arg || nr_args)
-+			break;
-+		ret = io_register_enable_rings(ctx);
-+		break;
- 	case IORING_REGISTER_RESTRICTIONS:
- 		ret = io_register_restrictions(ctx, arg, nr_args);
- 		break;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index be54bc3cf173..ddb30513e027 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -95,6 +95,7 @@ enum {
- #define IORING_SETUP_CQSIZE	(1U << 3)	/* app defines CQ size */
- #define IORING_SETUP_CLAMP	(1U << 4)	/* clamp SQ/CQ ring sizes */
- #define IORING_SETUP_ATTACH_WQ	(1U << 5)	/* attach to existing wq */
-+#define IORING_SETUP_R_DISABLED	(1U << 6)	/* start with ring disabled */
- 
- enum {
- 	IORING_OP_NOP,
-@@ -268,6 +269,7 @@ enum {
- 	IORING_REGISTER_PERSONALITY,
- 	IORING_UNREGISTER_PERSONALITY,
- 	IORING_REGISTER_RESTRICTIONS,
-+	IORING_REGISTER_ENABLE_RINGS,
- 
- 	/* this goes last */
- 	IORING_REGISTER_LAST
--- 
-2.26.2
 
