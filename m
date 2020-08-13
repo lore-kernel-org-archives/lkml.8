@@ -2,202 +2,108 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A40C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73912C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6636620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597282557;
-	bh=0Hj1FFLiksdhalMIhQwWyJqaE/oRtigMe5pAWnhRaQQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OzUFv5/HFpF1/ttmudmzVxnn/wIfX75EJjm3s92ZaNJmyDYzT6ISQ9/ki2aMWuMJI
-	 +9X4fPOIxSAliW2YvThSwMzqqi4SpSHptYS2Mnrb4Itbymkoqn/tpd3y9pdp8K7FaC
-	 p0K5XAH/VTNrzI97BLieReVC38XZqWWmizbAfSqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 56778207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 01:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHMBf4 (ORCPT
+        id S1726597AbgHMBp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:35:56 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:21996 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgHMBfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 21:35:55 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 07D1ZS13028466;
-        Thu, 13 Aug 2020 10:35:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 07D1ZS13028466
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597282529;
-        bh=lrLt6MViZfHVoAxmdOr+AtPRSZUb1nHMJgHZW/9Z6ZA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GSyFkaw3BiH7pQq/LKwdDw9Wk5jXNUuyK1BzCtKHqX6eMo34NsQEYT6+BTWYhh5TD
-         uAOpd70TZ1upFOjWOBllKBrh6lSX9t3K9A7Bs0Mf8KnFSt3ihBtyyqHWFq6zuOCX3n
-         axv0mPwYsA0KXroC5Xuzt5+rdD9h4f7CyDAQjQrz7+YUwxVxhmvIjD/lxBA/sMyNhL
-         sOfxyrFpTGwjrOxTB8kGTZBDiHpKPoUio2wFu5t1crDmQHtjOCFjTk/C9wgZY27U21
-         atPJrAXR+qwg6XIXZi9zSuxo+ivtXDVhabr6DYj/92KZY1daahnpYwcWwa2XpSbO+u
-         ucEP/XszzanbA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id b26so2090894vsa.13;
-        Wed, 12 Aug 2020 18:35:28 -0700 (PDT)
-X-Gm-Message-State: AOAM5331RO5INRJRDzEcWrjrpnke0S9eIGzIfi0SzSbML290eeQVrxXz
-        OG0+NE+r7mSa87RUfdf7g6HuPHDOXtsXunOzpXI=
-X-Google-Smtp-Source: ABdhPJwHCYha0DGnVlJbeg0bMwop7IHdQJrygv5JsQk0ZZC5iIpl+3DbrYGy8c7HsohBwBUYs3GJCIb7XrUNbtHUDR4=
-X-Received: by 2002:a67:bb06:: with SMTP id m6mr1647566vsn.54.1597282527307;
- Wed, 12 Aug 2020 18:35:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200812173958.2307251-1-masahiroy@kernel.org>
- <CAJkfWY6vhW9kNK-t+2vZQ7Rhn3HedykvT2du7AfO0_9oUAXvjw@mail.gmail.com> <CAKwvOdm3VTZ2QXXxf9pjM6n87UE=Lc-9Cx=V70sNsYGmHCb-hA@mail.gmail.com>
-In-Reply-To: <CAKwvOdm3VTZ2QXXxf9pjM6n87UE=Lc-9Cx=V70sNsYGmHCb-hA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 13 Aug 2020 10:34:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASb9HwvfmywT+3UjMvMUV3QCCaLVr_mSREiED=KNoy4eA@mail.gmail.com>
-Message-ID: <CAK7LNASb9HwvfmywT+3UjMvMUV3QCCaLVr_mSREiED=KNoy4eA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] kbuild: clang-tidy
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 12 Aug 2020 21:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbgHMBp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 21:45:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AED320774;
+        Thu, 13 Aug 2020 01:45:56 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.94)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1k62JX-0074yz-BY; Wed, 12 Aug 2020 21:45:55 -0400
+Message-ID: <20200813014534.833107526@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Wed, 12 Aug 2020 21:45:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [PATCH RT 0/6] Linux 5.4.54-rt33-rc1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 7:53 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Wed, Aug 12, 2020 at 12:56 PM Nathan Huckleberry <nhuck@google.com> wrote:
-> >
-> > On Wed, Aug 12, 2020 at 12:40 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > >
-> > > I improved gen_compile_commands.py in the first two patches,
-> > > then rebased Nathan's v7 [1] on top of them.
-> > > To save time, I modified the Makefile part.
-> > > No change for run-clang-tools.py
-> > >
-> > > I am not sure if the new directory, scripts/clang-tools/,
-> > > is worth creating only for 2 files, but I do not have
-> > > a strong opinion about it.
-> > >
-> > > "make clang-tidy" should work in-tree build,
-> > > out-of-tree build (O=), and external module build (M=).
-> > > Tests and reviews are appreciated.
-> > >
-> > > "make clang-tidy" worked for me.
-> > >
-> > > masahiro@oscar:~/workspace/linux-kbuild$ make -j24 CC=clang clang-tidy
-> > >   DESCEND  objtool
-> > >   CALL    scripts/atomic/check-atomics.sh
-> > >   CALL    scripts/checksyscalls.sh
-> > >   CHK     include/generated/compile.h
-> > >   GEN     compile_commands.json
-> > >   CHECK   compile_commands.json
-> > >
-> > > But "make clang-analyzer" just sprinkled the following error:
-> > >
-> > >   Error: no checks enabled.
-> > >   USAGE: clang-tidy [options] <source0> [... <sourceN>]
->
-> I wasn't able to reproduce Masahiro's reported failure, but seeing as
-> he has `GEN` for compile_commands.json and I have `CHK`, I wonder if
-> that's from a run when the series was still under development?
->
-> I can reproduce if I run:
-> $ clang-tidy '-checks='
-> so maybe was string quoting problem?
->
-> > >
-> > > I built clang-tidy from the latest source.
-> > > I had no idea how to make it work...
-> >
-> > How are you building clang-tidy? The clang static-analyzer may not
-> > have been built.
-> > I believe the static analyzer is built as a part of clang, not as a
-> > part of clang-tools-extra.
-> >
-> > I use this command to build.
-> > cmake -DCMAKE_BUILD_TYPE="release"
-> > -DLLVM_TARGETS_TO_BUILD="X86;AArch64;ARM;RISCV"
-> > -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;llvm-as"
-> > -DLLVM_ENABLE_LLD=1 -G "Ninja" ../llvm
-> >
-> > Adding clang to the list of -DLLVM_ENABLE_PROJECTS will build the
-> > static analyzer.
-> > -DCLANG_ENABLE_STATIC_ANALYZER=1 might also work, but I haven't tested it.
-> >
-> > I tested the patchset and both clang-tidy and clang-analyzer work for me.
->
-> If you rename clang-tidy in your build dir, and ensure you don't have
-> a `clang-tidy` in your $PATH (`which clang-tidy`), maybe there's more
-> we can do to politely inform the user they're missing a dependency to
-> execute the make target?  Not sure if we could could test that
-> clang-tidy supports the clang-analyzer-* checks.  Isn't there an
-> invocation that prints the supported checks? `clang-tidy '-checks=*'
-> --list-checks` is in my shell history.  Maybe grepping that and
-> informing the user how to fix the problem might solve a "papercut?"
->
-> If I remove clang-tidy with this series applied, I get (the failure is
-> obvious to me, but...):
-> ```
-> $ make LLVM=1 -j71 clang-tidy
-> ...
-> multiprocessing.pool.RemoteTraceback:
-> """
-> Traceback (most recent call last):
->   File "/usr/lib/python3.8/multiprocessing/pool.py", line 125, in worker
->     result = (True, func(*args, **kwds))
->   File "/usr/lib/python3.8/multiprocessing/pool.py", line 48, in mapstar
->     return list(map(*args))
->   File "./scripts/clang-tools/run-clang-tools.py", line 54, in run_analysis
->     p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
->   File "/usr/lib/python3.8/subprocess.py", line 489, in run
->     with Popen(*popenargs, **kwargs) as process:
->   File "/usr/lib/python3.8/subprocess.py", line 854, in __init__
->     self._execute_child(args, executable, preexec_fn, close_fds,
->   File "/usr/lib/python3.8/subprocess.py", line 1702, in _execute_child
->     raise child_exception_type(errno_num, err_msg, err_filename)
-> FileNotFoundError: [Errno 2] No such file or directory: 'clang-tidy'
-> """
->
-> The above exception was the direct cause of the following exception:
->
-> Traceback (most recent call last):
->   File "./scripts/clang-tools/run-clang-tools.py", line 74, in <module>
->     main()
->   File "./scripts/clang-tools/run-clang-tools.py", line 70, in main
->     pool.map(run_analysis, datastore)
->   File "/usr/lib/python3.8/multiprocessing/pool.py", line 364, in map
->     return self._map_async(func, iterable, mapstar, chunksize).get()
->   File "/usr/lib/python3.8/multiprocessing/pool.py", line 771, in get
->     raise self._value
-> FileNotFoundError: [Errno 2] No such file or directory: 'clang-tidy'
-> make: *** [Makefile:1861: clang-tidy] Error 1
-> ```
-> $ clang-tidy '-checks=*' --list-checks | grep clang-analyzer | wc -l
-> 111
->
-> And I'm not sure you can even build clang or clang-tidy but not the analyzer.
+
+Dear RT Folks,
+
+This is the RT stable review cycle of patch 5.4.54-rt33-rc1.
+
+Please scream at me if I messed something up. Please test the patches too.
+
+The -rc release will be uploaded to kernel.org and will be deleted when
+the final release is out. This is just a review release (or release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main release
+on 8/14/2020.
+
+Enjoy,
+
+-- Steve
 
 
+To build 5.4.54-rt33-rc1 directly, the following patches should be applied:
 
-I rebuilt clang-tools-extra with -DCLANG_ENABLE_STATIC_ANALYZER on,
-and now clang-analyzer worked for me.  :)
+  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
 
-Perhaps, we could do some checks for clang-tidy.
-I am OK with leaving it as a follow-up work.
+  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.54.xz
 
--- 
-Best Regards
-Masahiro Yamada
+  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.54-rt33-rc1.patch.xz
+
+You can also build from 5.4.54-rt32 by applying the incremental patch:
+
+http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.54-rt32-rt33-rc1.patch.xz
+
+
+Changes from 5.4.54-rt32:
+
+---
+
+
+Ahmed S. Darwish (1):
+      net: phy: fixed_phy: Remove unused seqcount
+
+Matt Fleming (1):
+      signal: Prevent double-free of user struct
+
+Sebastian Andrzej Siewior (3):
+      workqueue: Sync with upstream
+      Bluetooth: Acquire sk_lock.slock without disabling interrupts
+      rwsem: Provide down_read_non_owner() and up_read_non_owner() for -RT
+
+Steven Rostedt (VMware) (1):
+      Linux 5.4.54-rt33-rc1
+
+----
+ drivers/net/phy/fixed_phy.c | 28 +++++++++++-----------------
+ include/linux/swait.h       | 14 --------------
+ kernel/locking/rwsem.c      |  8 ++++----
+ kernel/signal.c             |  4 ++--
+ kernel/workqueue.c          | 28 +++++++++++++++++++---------
+ localversion-rt             |  2 +-
+ net/bluetooth/rfcomm/sock.c |  7 ++-----
+ 7 files changed, 39 insertions(+), 52 deletions(-)
