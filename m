@@ -2,236 +2,116 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92909C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D197C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F0220781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E68520781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgHMHVa (ORCPT
+        id S1726639AbgHMHVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:21:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25170 "EHLO mga11.intel.com"
+        Thu, 13 Aug 2020 03:21:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3421 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMHV3 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:21:29 -0400
-IronPort-SDR: ElKX/bRDka2N58uSNGMKwr5bpXpZU4CDTAIlhraweyddK+gQP/S+qQipkOfio5D2ZYmD+c6utl
- 6JO7299yYRQw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151820896"
+        id S1726048AbgHMHVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:21:42 -0400
+IronPort-SDR: FNBr36xXleSfniaIwFZNdhmlOvHwR8v/7zuQt33jklibTvhlLnSs7+Q9uhaEPr4WfjVZp5jwS/
+ iMac+XkaJGcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="239010514"
 X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="151820896"
+   d="scan'208";a="239010514"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:28 -0700
-IronPort-SDR: DlKZA5mkacYAKooiKsJRmSJoGC5l/xDHeTPUI+n5tVuqb/QSwonfNtbiWIt1ooh9XH7kvVs25F
- Q62b1Df7WMRA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:41 -0700
+IronPort-SDR: mZXybLhReMFjlsyaYV4l85Twun7ACq1O8y2+AwIlQaSul9VpB0JBRIFhA/lDjg/kMfoKs4Iefc
+ +04wQKgrfanQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="495771769"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 00:21:25 -0700
-Subject: Re: [PATCH] perf parse-events: Set exclude_guest for user-space
- counting
-To:     "Jin, Yao" <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20200812065953.22143-1-yao.jin@linux.intel.com>
- <20200812121504.GE13995@kernel.org>
- <74097816-3f36-abea-1eaa-8942aedd7322@linux.intel.com>
- <ab4ae047-ba0b-fed6-36e4-d667e3437e34@linux.intel.com>
- <75360db6-0574-aef5-8c90-6eb8f2a6afb3@linux.intel.com>
- <3341af83-c9f3-49c4-d54b-bf4d2a68e639@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <ae679ffb-c3ed-242e-cd6a-ed1d29fe0a38@linux.intel.com>
-Date:   Thu, 13 Aug 2020 15:21:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <3341af83-c9f3-49c4-d54b-bf4d2a68e639@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="439679708"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga004.jf.intel.com with ESMTP; 13 Aug 2020 00:21:39 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com
+Subject: [PATCH v5 0/3] Modularization of DFL private feature drivers
+Date:   Thu, 13 Aug 2020 15:17:57 +0800
+Message-Id: <1597303080-30640-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/13 15:08, Jin, Yao wrote:
-> 
-> 
-> On 8/13/2020 2:57 PM, Like Xu wrote:
->> Hi Yao,
->>
->> On 2020/8/13 11:11, Jin, Yao wrote:
->>> Hi Like,
->>>
->>> On 8/12/2020 9:02 PM, Like Xu wrote:
->>>> On 2020/8/12 20:15, Arnaldo Carvalho de Melo wrote:
->>>>> Em Wed, Aug 12, 2020 at 02:59:53PM +0800, Jin Yao escreveu:
->>>>>> Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
->>>>>>
->>>>>> But it doesn't make sense that we request for user-space counting
->>>>>> but we also get the guest report.
->>>>>>
->>>>
->>>> Please hold the horse and allow this possibility.
->>>>
->>>> Some authorized perf users on the host may
->>>> only want to count (KVM) guest user space events.
->>>>
->>>> Thanks,
->>>> Like Xu
->>>>
->>>
->>> Without this patch, if we don't set the ":u" modifier, exclude_guest = 1.
->>
->> It's true for the non ":u" case.
->>
->>>
->>> perf record -e cycles ./div
->>> perf evlist -v
->>> cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
->>> IP|TID|TIME|PERIOD, read_format: ID, disabled: 1, inherit: 1, mmap: 1, 
->>> comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, 
->>> exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
->>>
->>> So this patch doesn't change perf's original behavior.
->>
->> The patch changes the "perf kvm" original behavior.
->>
->> Testcase: perf kvm --host --guest --guestkallsyms=guest-kallsyms \
->> --guestmodules=guest-modules record -e cycles:u ...
->>
->> From:
->>
->> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
->> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, 
->> exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
->> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq 
->> }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, 
->> inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 
->> 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
->>
->> To:
->>
->> cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: 
->> IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, 
->> exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1,
->>
->> exclude_guest: 1
->>
->> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq 
->> }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, 
->> inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 
->> 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
->>
->> Thanks,
->> Like Xu
-> 
-> The behavior is similar as native kernel. The change of exclude_guest (0 -> 
-> 1) is expected.
+This patchset makes it possible to develop independent driver modules
+for DFL private features. It also helps to leverage existing kernel
+drivers to enable some IP blocks in DFL.
 
-When we have 'exclude_guest: 1' for perf kvm usage,
-we may get nothing from guest events.
+Patch #1: Release the dfl mmio regions after enumeration, so that private
+          feature drivers could request mmio region in their own drivers.
+Patch #2: Introduce the dfl bus, then dfl devices could be supported by
+          independent dfl drivers.
+Patch #3: An example of the dfl driver for N3000 nios private feature.
 
-The perf kvm user couldn't count (KVM) guest
-user space events only with your patch.
 
-It's unexpected from the pure ':u' semantics.
+Main changes from v1:
+- Add the new Patch #1, to improve the feature id definition.
+- Change the dfl bus uevent format.
+- Change the dfl device's sysfs name format.
+- refactor dfl_dev_add()
+- Add the Patch #4 as an example of the dfl driver.
+- A lot of minor fixes for comments from Hao and Tom.
 
-> 
-> On native kernel,
-> 
-> Before:
-> 
->    perf record -e cycles:u ./div
->    perf evlist -v
->    cycles:u: ..., exclude_kernel: 1, exclude_hv: 1, ...
-> 
-> After:
-> 
->    perf record -e cycles:u ./div
->    perf evlist -v
->    cycles:u: ..., exclude_kernel: 1, exclude_hv: 1,  exclude_guest: 1, ...
-> 
-> Thanks
-> Jin Yao
-> 
->>>
->>> Thanks
->>> Jin Yao
->>>
->>>>>> To keep perf semantics consistent and clear, this patch sets
->>>>>> exclude_guest for user-space counting.
->>>>>
->>>>> Applied, and also added this, that you should consider doing in the
->>>>> future (modulo the "Committer testing:" header :) ):
->>>>>
->>>>> Committer testing:
->>>>>
->>>>> Before:
->>>>>
->>>>>    # perf record -e cycles:u
->>>>>    ^C[ perf record: Woken up 1 times to write data ]
->>>>>    [ perf record: Captured and wrote 1.231 MB perf.data (91 samples) ]
->>>>>    #
->>>>>    # perf evlist -v
->>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, 
->>>>> sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, 
->>>>> inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
->>>>>    <SNIP>
->>>>>    #
->>>>>
->>>>> After:
->>>>>
->>>>>    # perf record -e cycles:u
->>>>>    ^C[ perf record: Woken up 1 times to write data ]
->>>>>    [ perf record: Captured and wrote 1.263 MB perf.data (403 samples) ]
->>>>>    #
->>>>>    # perf evlist -v
->>>>>    cycles:u: size: 120, { sample_period, sample_freq }: 4000, 
->>>>> sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, 
->>>>> inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 
->>>>> 1, exclude_guest: 1
->>>>>    #
->>>>>
->>>>> ----
->>>>>
->>>>> I.e. show actual command output before and after that demonstrates the
->>>>> problem and then the solution.
->>>>>
->>>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>>>> ---
->>>>>>   tools/perf/util/parse-events.c | 2 ++
->>>>>>   1 file changed, 2 insertions(+)
->>>>>>
->>>>>> diff --git a/tools/perf/util/parse-events.c 
->>>>>> b/tools/perf/util/parse-events.c
->>>>>> index 9f7260e69113..4d809f1fe269 100644
->>>>>> --- a/tools/perf/util/parse-events.c
->>>>>> +++ b/tools/perf/util/parse-events.c
->>>>>> @@ -1794,6 +1794,8 @@ static int get_event_modifier(struct 
->>>>>> event_modifier *mod, char *str,
->>>>>>           if (*str == 'u') {
->>>>>>               if (!exclude)
->>>>>>                   exclude = eu = ek = eh = 1;
->>>>>> +            if (!exclude_GH)
->>>>>> +                eG = 1;
->>>>>>               eu = 0;
->>>>>>           } else if (*str == 'k') {
->>>>>>               if (!exclude)
->>>>>> -- 
->>>>>> 2.17.1
->>>>>>
->>>>>
->>>>
->>
+Main changes from v2:
+- Add the doc for dfl-n3000-nios driver.
+- Minor fixes for comments from Tom.
+
+Main changes from v3:
+- improve the dfl devices' uevent format, 4 bits for type & 12 bits for id
+- change dfl_device->type to u8
+- A dedicate field in struct dfl_feature for dfl device instance.
+- error out if dfl_device already exist on dfl_devs_init().
+- Move the err log in regmap implementation, and delete
+  n3000_nios_writel/readl(), they have nothing to wrapper now.
+- Minor fixes and comments improvement.
+
+Main changes from v4:
+- The patch "fpga: dfl: change data type of feature id to u16" is already
+  applied to for-next
+- Unify the naming of some functions in dfl.c
+- Fix the output of fec_mode sysfs inf to "no" on 10G configuration, cause
+  no FEC mode could be configured for 10G.
+- Change the N3000 Nios driver name from "dfl-n3000-nios" to "n3000-nios",
+  and also rename some structures and functions from dfl_n3000_nios_* to
+  n3000_nios_*
+- Minor fixes and comments improvement.
+
+Xu Yilun (3):
+  fpga: dfl: map feature mmio resources in their own feature drivers
+  fpga: dfl: create a dfl bus type to support DFL devices
+  fpga: dfl: add support for N3000 Nios private feature
+
+ Documentation/ABI/testing/sysfs-bus-dfl            |  15 +
+ .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  18 +
+ Documentation/fpga/dfl-n3000-nios.rst              |  45 ++
+ Documentation/fpga/index.rst                       |   1 +
+ drivers/fpga/Kconfig                               |  11 +
+ drivers/fpga/Makefile                              |   2 +
+ drivers/fpga/dfl-n3000-nios.c                      | 528 +++++++++++++++++++++
+ drivers/fpga/dfl-pci.c                             |  24 +-
+ drivers/fpga/dfl.c                                 | 450 +++++++++++++++---
+ drivers/fpga/dfl.h                                 |  93 +++-
+ 10 files changed, 1102 insertions(+), 85 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+ create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+ create mode 100644 drivers/fpga/dfl-n3000-nios.c
+
+-- 
+2.7.4
 
