@@ -2,116 +2,100 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C450C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA2BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046DD20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597320147;
-	bh=lzzY6+Qcf/8rSg07fhVvKCT1rgjxgjHFEq/i2gpmSS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fisule4x1wAg/H4mFuGC0EGYtfMri2vNIIOqjzqdIcj8SApkfGs1cXqLAsVp1eMIT
-	 pvdk5fDYePlACsVksqvpWh8Pey5L6GM0i+knEtJ6jsA8SBfyUU24zM6uInGl/OqgtY
-	 l9ymqFCwZzv7ejIbhTbOzrEfccQLRXrLZga0OAck=
+	by mail.kernel.org (Postfix) with ESMTP id C76AF20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgHMMBn (ORCPT
+        id S1726615AbgHMMCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbgHML7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:59:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B41208B3;
-        Thu, 13 Aug 2020 11:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597319979;
-        bh=lzzY6+Qcf/8rSg07fhVvKCT1rgjxgjHFEq/i2gpmSS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KTXkQX0LNCLLJcbpSLJmay7ngasF0z/VwY1Vilw/lbDE6KX2ZqvNLnGoADA/0sbBb
-         QowOFoCQW4ZW5nwFoEliV7MDbpRrwYCFkJPaJ/+jUFqNY9oRxajKTdJJHOW+wOEKy/
-         /DV6vxXdfaz2odQKwTzcFeqfZmw0FS7iWfSlkcXU=
-Date:   Thu, 13 Aug 2020 13:59:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Recursive/circular locking in
- serial8250_console_write/serial8250_do_startup
-Message-ID: <20200813115948.GA3854926@kroah.com>
-References: <20200812154813.GA46894@roeck-us.net>
- <20200813050629.GA95559@roeck-us.net>
+        Thu, 13 Aug 2020 08:02:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33922 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726570AbgHML7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 07:59:19 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 43880746B97B89570544;
+        Thu, 13 Aug 2020 19:59:10 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
+ 19:59:04 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>, <willemb@google.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: correct zerocopy refcnt with newly allocated UDP or RAW uarg
+Date:   Thu, 13 Aug 2020 07:58:00 -0400
+Message-ID: <20200813115800.4546-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813050629.GA95559@roeck-us.net>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:06:29PM -0700, Guenter Roeck wrote:
-> On Wed, Aug 12, 2020 at 08:48:13AM -0700, Guenter Roeck wrote:
-> > Hi,
-> > 
-> > crbug.com/1114800 reports a hard lockup due to circular locking in the
-> > 8250 console driver. This is seen if CONFIG_PROVE_LOCKING is enabled.
-> > 
-> > Problem is as follows:
-> > - serial8250_do_startup() locks the serial (console) port.
-> > - serial8250_do_startup() then disables interrupts if interrupts are
-> >   shared, by calling disable_irq_nosync().
-> > - disable_irq_nosync() calls __irq_get_desc_lock() to lock the interrupt
-> >   descriptor.
-> > - __irq_get_desc_lock() calls lock_acquire()
-> > - If CONFIG_PROVE_LOCKING is enabled, validate_chain() and check_noncircular()
-> >   are called and identify a potential locking error.
-> > - This locking error is reported via printk, which ultimately calls
-> >   serial8250_console_write().
-> > - serial8250_console_write() tries to lock the serial console port.
-> >   Since it is already locked, the system hangs and ultimately reports
-> >   a hard lockup.
-> > 
-> > I understand we'll need to figure out and fix what lockdep complains about,
-> > and I am working on that. However, even if that is fixed, we'll need a
-> > solution for the recursive lock: Fixing the lockdep problem doesn't
-> > guarantee that a similar problem (or some other log message) won't be
-> > detected and reported sometime in the future while serial8250_do_startup()
-> > holds the console port lock.
-> > 
-> > Ideas, anyone ? Everything I came up with so far seems clumsy and hackish.
-> > 
-> 
-> Turns out the situation is a bit worse than I thought. disable_irq_nosync(),
-> when called from serial8250_do_startup(), locks the interrupt descriptor.
-> The order of locking is
-> 	serial port lock
-> 	  interrupt descriptor lock
-> 
-> At the same time, __setup_irq() locks the interrupt descriptor as well.
-> With the descriptor locked, it may report an error message using pr_err().
-> This in turn may call serial8250_console_write(), which will try to lock
-> the console serial port. The lock sequence is
-> 	interrupt descriptor lock
-> 	  serial port lock
-> 
-> I added the lockdep splat to the bug log at crbug.com/1114800.
-> 
-> Effectively, I think, this means we can't call disable_irq_nosync()
-> while holding a serial port lock, or at least not while holding a
-> serial port lock that is associated with a console.
-> 
-> The problem was introduced (or, rather, exposed) with upstream commit
-> 7febbcbc48fc ("serial: 8250: Check UPF_IRQ_SHARED in advance").
+The var extra_uref is introduced to pass the initial reference taken in
+sock_zerocopy_alloc to the first generated skb. But now we may fail to pass
+the initial reference with newly allocated UDP or RAW uarg when the skb is
+zcopied.
 
-Adding Andy, who wrote the above commit :)
+If the skb is zcopied, we always set extra_uref to false. This is fine with
+reallocted uarg because no extra ref is taken by UDP and RAW zerocopy. But
+if uarg is newly allocated via sock_zerocopy_alloc(), we lost the initial
+reference because extra_uref is false and we missed to pass it to the first
+generated skb.
 
-Andy, any thoughts?
+To fix this, we should set extra_uref to true if UDP or RAW uarg is newly
+allocated when the skb is zcopied.
+
+Fixes: 522924b58308 ("net: correct udp zerocopy refcnt also when zerocopy only on append")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/ip_output.c  | 4 +++-
+ net/ipv6/ip6_output.c | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index 61f802d5350c..78d3b5d48617 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -1019,7 +1019,9 @@ static int __ip_append_data(struct sock *sk,
+ 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
+ 		if (!uarg)
+ 			return -ENOBUFS;
+-		extra_uref = !skb_zcopy(skb);	/* only ref on new uarg */
++		/* Only ref on newly allocated uarg. */
++		if (!skb_zcopy(skb) || (sk->sk_type != SOCK_STREAM && skb_zcopy(skb) != uarg))
++			extra_uref = true;
+ 		if (rt->dst.dev->features & NETIF_F_SG &&
+ 		    csummode == CHECKSUM_PARTIAL) {
+ 			paged = true;
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index c78e67d7747f..0f82923239a9 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1476,7 +1476,9 @@ static int __ip6_append_data(struct sock *sk,
+ 		uarg = sock_zerocopy_realloc(sk, length, skb_zcopy(skb));
+ 		if (!uarg)
+ 			return -ENOBUFS;
+-		extra_uref = !skb_zcopy(skb);	/* only ref on new uarg */
++		/* Only ref on newly allocated uarg. */
++		if (!skb_zcopy(skb) || (sk->sk_type != SOCK_STREAM && skb_zcopy(skb) != uarg))
++			extra_uref = true;
+ 		if (rt->dst.dev->features & NETIF_F_SG &&
+ 		    csummode == CHECKSUM_PARTIAL) {
+ 			paged = true;
+-- 
+2.19.1
 
