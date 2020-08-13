@@ -2,250 +2,109 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EDBC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D600C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF5A20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01B1207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="vmpDWDA8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmZ+2cVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHMMud (ORCPT
+        id S1726622AbgHMMvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:50:33 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:53059 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgHMMsy (ORCPT
+        Thu, 13 Aug 2020 08:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgHMMvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:48:54 -0400
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 6D18423E42;
-        Thu, 13 Aug 2020 14:48:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1597322930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2u/cot6CU6/Y5I/4X9Pr9Fa4kSp/X/8BHzwbd62iWRw=;
-        b=vmpDWDA8UybN0DxXCSsQtUYV6eDymo9nJyXlSaBsgq9J8naBE3ygb4VVlQ2oRWs06zoEzq
-        svqJ7mXDoVSz/g6ZEJsXmDtcEljXu1OsYf6jB9aFESn21e3i5zFPTG49i1/97RfDkamE3z
-        VXBRgfxIn2rkuNy5A/pWagWelsZQKfE=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v8 04/13] irqchip: add sl28cpld interrupt controller support
-Date:   Thu, 13 Aug 2020 14:48:23 +0200
-Message-Id: <20200813124832.17349-5-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200813124832.17349-1-michael@walle.cc>
-References: <20200813124832.17349-1-michael@walle.cc>
+        Thu, 13 Aug 2020 08:51:03 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7D4C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 05:51:02 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id j7so1226608vkk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 05:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z6U+MzbkuK7qE2zWXiIV5fubuG6u2ECbr/eqjOujnCU=;
+        b=JmZ+2cVCvH/NJLMcB8pNKwvmqjinr9zVEEkYBcwRynp3GponnTUIozTMBlSYJeFfdu
+         zD8Gr/YxyMtB/RJR/6DfEFywcsMIfSWRrl3ggZHURB/YMtF/G3hdC7TLebysrh6wtSD7
+         9ftV1qKlcsrxlYfB4KeEN5mi0vMsKes6XHx72Aedcwhs4MDLGD1juvHcouOvufrxtgS3
+         pMLyGwMmSw1uCWFgvjSZZ3LIZE7Q7sTiizR01fR8QcaawF6JfindNjLcZN8R9TPVNljU
+         TDhHRrvmqgKXeV00svNQfAoQ+RGhYBfSep1c/wkp7oP1r+c6h5wl7cX1DJCstRJVnZKK
+         z03Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z6U+MzbkuK7qE2zWXiIV5fubuG6u2ECbr/eqjOujnCU=;
+        b=tT2doD3tDpZKuHLeM4tF1lBBwEorS5JghIEVhUTZ5sQENhQEHD3eJhKSR139M0w1bJ
+         DZtOh4jh8A6XZorwUQWKr2h3bJzMc5OUjKWfcxz8D4KEg3lAZkodbPhMOkLDlig9tqJ8
+         2G5AC4cX3YVuYTOYyFuvf7CUHUDz8E1DmzvxivnhlJe0Ote2Fj+j7wc1NpW1JqtnWEXn
+         9+MXKbymTPOvlUXrRBTudUuck8Yj1wyEeeXBNgMIbutyoLuX8zJaqxA/M0GjG4vJy9W0
+         kTYE9wcznJ8EpyPaaT4DEZPDXMYPKFKrA4efNciKK3E0U5Rww7+1SECrGwZBt9rT/PLs
+         +4aQ==
+X-Gm-Message-State: AOAM531lMJIjmbmenkevY8XwXu2iQ1NbSusvYQN8IpoVZISocZbAN8zE
+        5FV1WPo7wgT1SulkbSoKCwyoWV8zaqY=
+X-Google-Smtp-Source: ABdhPJzk3fnQMuFDYWkubTIlDS60BxrccXYBFKPO9TsP75thrg4xhIcagJ7v0IZpTnEBrdVRfCk9hA==
+X-Received: by 2002:a1f:d387:: with SMTP id k129mr2995210vkg.26.1597323060929;
+        Thu, 13 Aug 2020 05:51:00 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id p16sm778739vkf.40.2020.08.13.05.50.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 05:51:00 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id m12so1237682vko.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 05:50:59 -0700 (PDT)
+X-Received: by 2002:ac5:c925:: with SMTP id u5mr3013838vkl.68.1597323059280;
+ Thu, 13 Aug 2020 05:50:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+References: <20200813121310.23016-1-linmiaohe@huawei.com>
+In-Reply-To: <20200813121310.23016-1-linmiaohe@huawei.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 13 Aug 2020 14:50:22 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSeS9eE_1bsik-0i3qb-WXtQnb3q=mo6+iHOciQjLZ+sHQ@mail.gmail.com>
+Message-ID: <CA+FuTSeS9eE_1bsik-0i3qb-WXtQnb3q=mo6+iHOciQjLZ+sHQ@mail.gmail.com>
+Subject: Re: [PATCH] net: add missing skb_uarg refcount increment in pskb_carve_inside_header()
+To:     Miaohe Lin <linmiaohe@huawei.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Florian Westphal <fw@strlen.de>, martin.varghese@nokia.com,
+        pshelar@ovn.org, dcaratti@redhat.com,
+        Eric Dumazet <edumazet@google.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Shmulik Ladkani <shmulik@metanetworks.com>,
+        Yadu Kishore <kyk.segfault@gmail.com>,
+        sowmini.varadhan@oracle.com,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the interrupt controller inside the sl28 CPLD management
-controller.
+On Thu, Aug 13, 2020 at 2:16 PM Miaohe Lin <linmiaohe@huawei.com> wrote:
+>
+> If the skb is zcopied, we should increase the skb_uarg refcount before we
+> involve skb_release_data(). See pskb_expand_head() as a reference.
 
-The interrupt controller can handle at most 8 interrupts and is really
-simplistic and consists only of an interrupt mask and an interrupt
-pending register.
+Did you manage to observe a bug through this datapath in practice?
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-by: Marc Zyngier <maz@kernel.org>
----
-Changes since v7:
- - added "depends on MFD_SL28CPLD=y || COMPILE_TEST"
+pskb_carve_inside_header is called
+  from pskb_carve
+    from pskb_extract
+      from rds_tcp_data_recv
 
-Changes since v6:
- - none
+That receive path should not see any packets with zerocopy state associated.
 
-Changes since v5:
- - none
 
-Changes since v4:
- - update copyright year
- - don't use "int irq" instead of "unsigne int irq", because
-   platform_get_irq() might return a negative error code. Found by "kernel
-   test robot <lkp@intel.com>
- - remove comma in terminator line of the compatible strings list,
-   suggested by Andy
- - use newer devm_regmap_add_irq_chip_fwnode()
- - don't use KBUID_MODNAME, suggested by Andy
- - remove the platform device table
-
-Changes since v3:
- - see cover letter
-
- drivers/irqchip/Kconfig        |  8 +++
- drivers/irqchip/Makefile       |  1 +
- drivers/irqchip/irq-sl28cpld.c | 96 ++++++++++++++++++++++++++++++++++
- 3 files changed, 105 insertions(+)
- create mode 100644 drivers/irqchip/irq-sl28cpld.c
-
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index bb70b7177f94..19cd32ba2155 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -246,6 +246,14 @@ config RENESAS_RZA1_IRQC
- 	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
- 	  to 8 external interrupts with configurable sense select.
- 
-+config SL28CPLD_INTC
-+	bool "Kontron sl28cpld IRQ controller"
-+	depends on MFD_SL28CPLD=y || COMPILE_TEST
-+	select REGMAP_IRQ
-+	help
-+	  Interrupt controller driver for the board management controller
-+	  found on the Kontron sl28 CPLD.
-+
- config ST_IRQCHIP
- 	bool
- 	select REGMAP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 133f9c45744a..39af7d89204d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
- obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
- obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-+obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
-diff --git a/drivers/irqchip/irq-sl28cpld.c b/drivers/irqchip/irq-sl28cpld.c
-new file mode 100644
-index 000000000000..0aa50d025ef6
---- /dev/null
-+++ b/drivers/irqchip/irq-sl28cpld.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * sl28cpld interrupt controller driver
-+ *
-+ * Copyright 2020 Kontron Europe GmbH
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+
-+#define INTC_IE 0x00
-+#define INTC_IP 0x01
-+
-+static const struct regmap_irq sl28cpld_irqs[] = {
-+	REGMAP_IRQ_REG_LINE(0, 8),
-+	REGMAP_IRQ_REG_LINE(1, 8),
-+	REGMAP_IRQ_REG_LINE(2, 8),
-+	REGMAP_IRQ_REG_LINE(3, 8),
-+	REGMAP_IRQ_REG_LINE(4, 8),
-+	REGMAP_IRQ_REG_LINE(5, 8),
-+	REGMAP_IRQ_REG_LINE(6, 8),
-+	REGMAP_IRQ_REG_LINE(7, 8),
-+};
-+
-+struct sl28cpld_intc {
-+	struct regmap *regmap;
-+	struct regmap_irq_chip chip;
-+	struct regmap_irq_chip_data *irq_data;
-+};
-+
-+static int sl28cpld_intc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sl28cpld_intc *irqchip;
-+	int irq;
-+	u32 base;
-+	int ret;
-+
-+	if (!dev->parent)
-+		return -ENODEV;
-+
-+	irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
-+	if (!irqchip)
-+		return -ENOMEM;
-+
-+	irqchip->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!irqchip->regmap)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	ret = device_property_read_u32(&pdev->dev, "reg", &base);
-+	if (ret)
-+		return -EINVAL;
-+
-+	irqchip->chip.name = "sl28cpld-intc";
-+	irqchip->chip.irqs = sl28cpld_irqs;
-+	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
-+	irqchip->chip.num_regs = 1;
-+	irqchip->chip.status_base = base + INTC_IP;
-+	irqchip->chip.mask_base = base + INTC_IE;
-+	irqchip->chip.mask_invert = true,
-+	irqchip->chip.ack_base = base + INTC_IP;
-+
-+	return devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-+					       irqchip->regmap, irq,
-+					       IRQF_SHARED | IRQF_ONESHOT, 0,
-+					       &irqchip->chip,
-+					       &irqchip->irq_data);
-+}
-+
-+static const struct of_device_id sl28cpld_intc_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-intc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sl28cpld_intc_of_match);
-+
-+static struct platform_driver sl28cpld_intc_driver = {
-+	.probe = sl28cpld_intc_probe,
-+	.driver = {
-+		.name = "sl28cpld-intc",
-+		.of_match_table = sl28cpld_intc_of_match,
-+	}
-+};
-+module_platform_driver(sl28cpld_intc_driver);
-+
-+MODULE_DESCRIPTION("sl28cpld Interrupt Controller Driver");
-+MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
-
+> Fixes: 6fa01ccd8830 ("skbuff: Add pskb_extract() helper function")
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
