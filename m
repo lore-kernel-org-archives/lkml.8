@@ -2,109 +2,136 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E73C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8A682078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Zey1i9YK"
+	by mail.kernel.org (Postfix) with ESMTP id C9B9420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597344779;
+	bh=2mtKqGaeDkG8Ee6GYdHtGerH4iVD6LZfV/g1lZcfGsg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Z7X8MmIDdLU81eYiJsjXvxoSlFJihqEkmo5taWJx31N+pE12IYK+2OALjpen7oj4i
+	 xh4uoAhCV2Mcn6WBWqIPbdU/IbGZxYxy/FGboXnpgnr46y7PXmbMjTfzpAQXFFAE/R
+	 qSHoo/qGR+58GNH45pPPtM6DgLC3bszC5+0VkVx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMSoa (ORCPT
+        id S1726518AbgHMSw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHMSo2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:44:28 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D687EC061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id s16so5139724qtn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i08DjFarJSioJFF+3BzXlzJrV3znYAwGrEz9J75FiX4=;
-        b=Zey1i9YKtQygbzUDBlnW/AKCXPLBGNuzu5QshFKXWVoQGiehGBZWCktZt7P3kmrpyp
-         etLXXJqJYrSLasI6L4DL57cfA+jq+WuaWJ/dPEgm2kOqm3bplNfFZIpdLzM7qO2fNPq7
-         SI5LUPLrMuHlHu1uf/aInNBO05dHYBMtKk/hlVAFeX3t786TTYiuZEzAx4LXnEkK7I0e
-         1p8k2gLsGsdxA6VIzuicHGDlI6A8b4Epw4DAlh/QfTuf/VfScE0xJyabJHg11CBxZeHE
-         H0gbHy7e4Q3PbTQZ4meSA/pFmvsFfvHNyNKZ3BFuZp2OZnw9nKiJwvbWyHbdD+hYFFnb
-         6FpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i08DjFarJSioJFF+3BzXlzJrV3znYAwGrEz9J75FiX4=;
-        b=TaICjO97X06WQTCz82rHxMwq27khSLcmk0duN2xZleL0uemZO+lMeITUsE/rOdX3tm
-         ECNk0UqpFiMlANLJna4/18vve0d6f0UmSeY9ZeciJAX+z2hi3ztV7Qm2q1/v0lUSces/
-         Y8yziYwNihoq8ebffo4MGAkTtFiM5ZcJQNVBsRUBf4XZITNNmqgafTfRG2cDji5qa8Sl
-         n2ld9SLCz4Ox1y78VwKZzhZ7aJrJrKJMeNgSJjMgQOVdxNkURG9DIIzQwZXh5gMVv6xC
-         l7jTE27yCZHgitQ9AZIZqbhAA030EsnPVeg2f6spUSAefqTDRZiLcV1/NQ13qgEaeDu0
-         fp3Q==
-X-Gm-Message-State: AOAM5304m+8a52m0n9UMVnHe1ZGYdxIFWBPYcKpTqrglKB+mZgEv8+X3
-        nbmJLxM4hu4Kjw+bvhVMByVHug==
-X-Google-Smtp-Source: ABdhPJyZpBHtFpCwUCN1Y5bRe8UUWA5ZmNxEvgqLYBigYpnTpeGmXkwoWEtaaNHcAVUMDbL7wZ6m1A==
-X-Received: by 2002:aed:2946:: with SMTP id s64mr6816571qtd.204.1597344266044;
-        Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id k5sm6415227qke.18.2020.08.13.11.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 11:44:25 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/a6xx: fix frequency not always being restored on GMU resume
-Date:   Thu, 13 Aug 2020 14:44:18 -0400
-Message-Id: <20200813184420.18448-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Thu, 13 Aug 2020 14:52:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgHMSw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 14:52:58 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2EF20774;
+        Thu, 13 Aug 2020 18:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597344777;
+        bh=2mtKqGaeDkG8Ee6GYdHtGerH4iVD6LZfV/g1lZcfGsg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=uTMvGRFrpS2IgaqAEMO9B9XA/NuHEQtdGsjW9Rgdx6F0TcGUpampmvjFvu+JF2O3G
+         jL8RAe3HF19kd2xITEDQWGruPNzzD+XJp0B6/Dxe0LtTGFb3ZvXedFrgjHw8wONwzM
+         Z1+mI5lj4ZRC3S4R2W7gSIyCiDH52Klb7HMs87as=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2F969352279C; Thu, 13 Aug 2020 11:52:57 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 11:52:57 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813185257.GF4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813182618.GX2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813182618.GX2674@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch reorganizing the set_freq function made it so the gmu resume
-doesn't always set the frequency, because a6xx_gmu_set_freq() exits early
-when the frequency hasn't been changed. Note this always happens when
-resuming GMU after recovering from a hang.
+On Thu, Aug 13, 2020 at 08:26:18PM +0200, peterz@infradead.org wrote:
+> On Thu, Aug 13, 2020 at 04:34:57PM +0200, Thomas Gleixner wrote:
+> > Michal Hocko <mhocko@suse.com> writes:
+> > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
+> > >> It basically requires to convert the wait queue to something else. Is
+> > >> the waitqueue strict single waiter?
+> > >
+> > > I would have to double check. From what I remember only kswapd should
+> > > ever sleep on it.
+> > 
+> > That would make it trivial as we could simply switch it over to rcu_wait.
+> > 
+> > >> So that should be:
+> > >> 
+> > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
+> > >> 
+> > >> which is limiting the damage to those callers which hand in
+> > >> GFP_RT_NOWAIT.
+> > >> 
+> > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
+> > >> zone->lock in the wrong context. And we want to know about that so we
+> > >> can look at the caller and figure out how to solve it.
+> > >
+> > > Yes, that would have to somehow need to annotate the zone_lock to be ok
+> > > in those paths so that lockdep doesn't complain.
+> > 
+> > That opens the worst of all cans of worms. If we start this here then
+> > Joe programmer and his dog will use these lockdep annotation to evade
+> > warnings and when exposed to RT it will fall apart in pieces. Just that
+> > at that point Joe programmer moved on to something else and the usual
+> > suspects can mop up the pieces. We've seen that all over the place and
+> > some people even disable lockdep temporarily because annotations don't
+> > help.
+> > 
+> > PeterZ might have opinions about that too I suspect.
+> 
+> PeterZ is mightily confused by all of this -- also heat induced brain
+> melt.
+> 
+> I thought the rule was:
+> 
+>  - No allocators (alloc/free) inside raw_spinlock_t, full-stop.
+> 
+> Why are we trying to craft an exception?
 
-Use a simple workaround to prevent this from happening.
+So that we can reduce post-grace-period cache misses by a factor of
+eight when invoking RCU callbacks.  This reduction in cache misses also
+makes it more difficult to overrun RCU with floods of either call_rcu()
+or kfree_rcu() invocations.
 
-Fixes: 1f60d11423db ("drm: msm: a6xx: send opp instead of a frequency")
----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 1 +
- 1 file changed, 1 insertion(+)
+The idea is to allocate page-sized arrays of pointers so that the callback
+invocation can sequence through the array instead of walking a linked
+list, hence the reduction in cache misses.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index b67b38c8fadf..bbbd00020f92 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -845,6 +845,7 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
- 	if (IS_ERR_OR_NULL(gpu_opp))
- 		return;
- 
-+	gmu->freq = 0; /* so a6xx_gmu_set_freq() doesn't exit early */
- 	a6xx_gmu_set_freq(gpu, gpu_opp);
- 	dev_pm_opp_put(gpu_opp);
- }
--- 
-2.26.1
+If the allocation fails, for example, during OOM events, we fall back to
+the linked-list approach.  So, as with much of the rest of the kernel,
+under OOM we just run a bit slower.
 
+							Thanx, Paul
