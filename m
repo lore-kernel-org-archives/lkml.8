@@ -2,179 +2,201 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE928C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1AAC2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57DA205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qhdCfedf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cjIiYaFO";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="lugS+BEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHMCbp (ORCPT
+        id S1726604AbgHMCiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 22:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgHMCbp (ORCPT
+        Wed, 12 Aug 2020 22:38:24 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:53335 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgHMCiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 22:31:45 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F71C061383;
-        Wed, 12 Aug 2020 19:31:44 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id k4so4257811ilr.12;
-        Wed, 12 Aug 2020 19:31:44 -0700 (PDT)
+        Wed, 12 Aug 2020 22:38:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1597286302; x=1628822302;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=2NLBq3hMle5Sd+baaX2OZwmc/FL7/8Vc0an8XiEml/Y=;
+  b=cjIiYaFOyUIExdYX/daCxSJvw+flNWs8GZ03/SXTUaEzC0RUfmi1ragB
+   UqUd01MsyKSHtTx+93SV0D6YrqocwEOT+UQkKOyJHxGhTIofoU8eJi5ON
+   2FrESZFozl3T8zyRE6eBXUhDlXjqneWJfCB61P3f8Rj0w2JyYTDmAn1zp
+   CpuOf5PghAMWeVFFMvFgd3daAXs5uOmj4TS/+cF3XRMLhgqYStzg4v4SO
+   H7+Si5l/oiR5SVvfD0h7npG1YUTgiygg+ORURCy9MLPgUtbCGWn03z0m/
+   m/mn6Uaj9wAMb01I/13QHWUjVmrTjgklDa56qeMJd/QTGvueDmn8imSda
+   Q==;
+IronPort-SDR: 1DsSKYx08gBQZ38Mru32PSrKDgGW69i1oMBK+IoSEkFYWLBxzDWJthZz113bqAeB+iBUb+Ywg7
+ zGSaCxqHA9LshOxk2hTfrMEoX5wMO/D3Te+EqBf8+FEDYwxpwpXSSW7IPzjIbqVMok7ef5btwb
+ qrafxIrkDxWGnuK/eGMdI2LKkZogUGI70zUyJ13de7I+G3686L4lZSsjvmJROW2gjrWlm8llMI
+ 55IhV7bW+PDClj3ppUu0gYzkD7b09hmzaCvGa79RRSRasnQriXd6rsqadBbgdC/qLJMHvEbkpc
+ 2Hg=
+X-IronPort-AV: E=Sophos;i="5.76,306,1592841600"; 
+   d="scan'208";a="254225150"
+Received: from mail-dm6nam10lp2101.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.101])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Aug 2020 10:38:21 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CCUHbnK5b0n6NqY4gYoVJBA+BFjUpiVVlJDZnc3U8O4qgM3J8BE5JII5e5biMvjEhzdyY3QDJFRv92VOqvvzSo5H6GUv/Jac1hsI96uhzFx30dzA5/xoFSNNJsaEZdjXdDmSfCbAXs6hXuLtY1OyGVQzrf8cbZU88cl4+wF+lpQgGCNumXWCs14fQelGjN5hdpEkIYdQl4BJc2r1EHvaFyAyBhooiEp4fFGZ9xaklX9vFmcseXGGoxBl5p87+R3VQR1cLoi+vPjKPL2vK79TPlHYKv+AYaZ3Zi3kRNDmgLu2jPlwP0f+Q/uU/LyE5z3eUKghUlB6xglfi9EbaEe4CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8bHUAZTwaPRh0sfRzywkgg2P637PtNCBg7npzsalulc=;
+ b=DdrGsp+JAqdJEamncDbePkoZm0xvY7Imamj7oyvcspV0ccOqg6owWkSJTi26MjbOqAIbHPT1Dxxc3rnkMXmIiPD3oJvvVD7HmN8gjFJmImzhGpT9QJtFCt0mjEycmgkUfjcLneLFrKq5VJAkdFEBhcNL3E/yeMNBBoY9qwbHDbNHviMPInn967UO995e/d2uICAC4IxtRpryyRh+BwAeDDC7c85mmuNqf7QS6uZPKkyYN0iXO6FOl3FexwUu9ltdAEhmm8rIgsKg3tFdVqyyrP6UGJ7iRcvXL2sb6BwJrisykj6z2SITzCjThsFUv3Hh7R+K5o5GoTsCsmzc3cBgfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qNWYLoXZVMonMKBHLVmtYLhOlAGwJ6EBuGHChAsIpUo=;
-        b=qhdCfedfr/Ep9bZBLmhAKJeAwZhN0pMo6GUSitTaAQbtSuVYKoxD/0YKcoO24/2JP0
-         Nndmv39jDWxQWcGPmIkOGCsblGpa51/QHIbiFGsA2Ox/f9A23qiGqy+MmslFALRf0/do
-         4UddMMK+QndME3ZYl5nNVv4kbRnlJgfjDgHalzUtOfP7ooM7aeK8MLdx+NZX5TEPc5bR
-         1FCDbrWi//y3YbA2epAJeOgxnsnCDdhTxyjpc97A8XWRwV5xe2waWZmURHlXxrdWeoSI
-         z57vPWGcQRVzy8YiP/NMjBuSKftyKu4kSEKChHxmMeA4LIFRZC28QHFOMRseMPT1ujra
-         mRGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qNWYLoXZVMonMKBHLVmtYLhOlAGwJ6EBuGHChAsIpUo=;
-        b=aXyqpg5TDUcwy2/hRo9GjUI9YUvi7qikxHmwJvIyzLpGwpWMOhVMLj8lgdwACRdoIL
-         UL8weJhObf7oncVpDUDSyGm30x8EaXAW8gOMqxkkKCWoUOC4tG6aQWhHF/T+mGitHkkI
-         HYelzhni/09kjTOfwIKtj8hTKgUX16318mI4BqyqDrroW1gMzQL/MHVDOPJHWjZfYrAV
-         vXdk9yNF0uSYNtDHFcvt8gHcUPNY+uU243hIQzpiSCR9bffwOP9pz/h2vYItQtEFXBMZ
-         tvuWEc4eqUHv8PqNIwbNrxVzzAgJC7Pt2+YF/i1swOwiRSjb+Bucd9J9v1x+G8Wm6Cpz
-         p+xg==
-X-Gm-Message-State: AOAM530fWc7a3JIvFphwY3yaw9jyQ9QJrhwk9QVYwY2dRmksaHvQUxdk
-        DswK3GU9+HVKV+qT/l4TazpGoyiWPv4VgcI98n6tYv2s9rJ1Vw==
-X-Google-Smtp-Source: ABdhPJylH3v+THRzQhBifdrCGGocqIQ2qtemdjHQ2VqrVR69VQbCYWZ4Su1ADSxdglVhaS2CyyO1m0ylSx1GTkqkISg=
-X-Received: by 2002:a92:9e48:: with SMTP id q69mr2671414ili.170.1597285903798;
- Wed, 12 Aug 2020 19:31:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200812221518.2869003-1-daniel.diaz@linaro.org>
-In-Reply-To: <20200812221518.2869003-1-daniel.diaz@linaro.org>
-From:   Tom Hebb <tommyhebb@gmail.com>
-Date:   Wed, 12 Aug 2020 19:31:32 -0700
-Message-ID: <CAMcCCgRGpi+3D4479MLU2xQZJYBA1c6mzZ=bb1VLEwPg3VAgLg@mail.gmail.com>
-Subject: Re: [PATCH] tools build feature: Quote CC and CXX for their arguments
-To:     =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8bHUAZTwaPRh0sfRzywkgg2P637PtNCBg7npzsalulc=;
+ b=lugS+BEmy1cV88ZRGLR+sdL3kxsoKUjtS+Q0Slc0JGIPVjqA6kVkK2I5EwtheSBfbLSq1A9AvasAb4XIk+vYdUzbysy6IoqvvS1a5/XaReZz5feHc18uT2aIkM2IbpKwecgL6JRwRR7WbManPQ23psMHxOU+mPNBTAAY1kPH/DE=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BYAPR04MB4871.namprd04.prod.outlook.com (2603:10b6:a03:4e::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Thu, 13 Aug
+ 2020 02:38:20 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::98a4:d2c9:58c5:dee4]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::98a4:d2c9:58c5:dee4%5]) with mapi id 15.20.3261.025; Thu, 13 Aug 2020
+ 02:38:20 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>
+CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <Keith.Busch@wdc.com>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2] nvme: Use spin_lock_irq() when taking the ctrl->lock
+Thread-Topic: [PATCH v2] nvme: Use spin_lock_irq() when taking the ctrl->lock
+Thread-Index: AQHWcP/N3M3Ik/Umo0KIaIZ27EFWNw==
+Date:   Thu, 13 Aug 2020 02:38:20 +0000
+Message-ID: <BYAPR04MB496599E8B5ECCEBEE3E461CE86430@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <20200812232444.18310-1-logang@deltatee.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: deltatee.com; dkim=none (message not signed)
+ header.d=none;deltatee.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 90cba969-9ce8-4c95-360a-08d83f31f151
+x-ms-traffictypediagnostic: BYAPR04MB4871:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB4871A27ED024714D440B08B486430@BYAPR04MB4871.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YY14KoncR9VdC3tLvgJbWBFYI5ByEhNAr5tSSmp04nzeneC4l3nHTmCVkv6MF6hO0IF4bSN3S/SALCGtGEgIT/kGH/gV+0YT9VYUQyGuR5lg8XZk+M32yQtdJxjfRssP2/S3JCPB915FJM8khmRARqdeUA+Kfm69YjLb0VXVFykSK6YD4ofMpBSntczQ0mO+HsUHLE/R/eKEzAvUHuDpRlV9qr5HOsFgBLnmCgyqDePYMowb1ZuTmJbnpWzuyts651xdyIRWMzqju1CBwCRvflhRQ4gY60lf3EfT4OJjHRnsXjrprywtVxRMcS6K6DcMzIzePgh3xttywp2513UMRg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(8676002)(8936002)(110136005)(54906003)(66446008)(66556008)(9686003)(5660300002)(26005)(33656002)(64756008)(52536014)(2906002)(66946007)(66476007)(83380400001)(316002)(478600001)(55016002)(76116006)(4326008)(6506007)(86362001)(53546011)(186003)(71200400001)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: TDzgBpNeI0BB4Vs5Sv4xAJCh3KspbonqBn2x0HOju7qfY5eFOkKk3SkYd4+MAFCUo0O/fjrvyZgrsN/wd5BUUP8UPZPPhUM48x/fPyClZHz8FiXWf8+A2LcLGEKki3WbSrAxRXbVnfTwLGSf6GiN+MgOZCIJL5G6sndSO0Yl9YsHu6EvxQvpZ5Nre40yg2NK8tztzFudD0QchynQg6UU2DpgyYXOWeYAxpVmvkPEVmVQnqH5piljuTANHcBtzkg4PleHd3ajZdmnfJKyULNLkFw0kurOe6SBlFYgEEt2LuMNaCRx1rT3oxuOIPnVFcAZbS9C6RYXRkPNmFImrWMEV1CYd8XL7ELCozh4gXfxxDFY6pEIhFeVNZ9uKtavVE6n6N3Re8S+bCskJSmgjNwhLjRv63iVVA7XC8p3yVYBTcfvizZKHMnO54KeBwiaLWSDnSy8Xz6iu+IML2fg1u+tIJ+hihJh6IV8UqpMXPa4Zf+SzymW7yJbd5UEqQ0o94LAyuCLR+sHspbhDLkEPLCqmOVrJClGvMBR0A2g9Mz+jksld7PIpaLTHdK8Ik9tQw+U4RetKuB1vKIIuvPPvcK+kPZ3jsG8UeHLS34Kmjerx6Up5ejRUB6OmdvdxQIkZYqaAmfHz51GkjSK+ZRRMwpMJw==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90cba969-9ce8-4c95-360a-08d83f31f151
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 02:38:20.6214
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1Bq3Fxvph4ERMIxQ4eF6KN7RTwp/SaB/FnUHiAyABbTjxe6BZO3QYn6acHiqL7wJt6lvIUJKlaDIfLGJvgMRQRIN3ozJv41/t9UukSa8MoI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 3:15 PM Daniel D=C3=ADaz <daniel.diaz@linaro.org> w=
-rote:
->
-> When using a cross-compilation environment, such as OpenEmbedded,
-> the CC an CXX variables are set to something more than just a
-> command: there are arguments (such as --sysroot) that need to be
-> passed on to the compiler so that the right set of headers and
-> libraries are used.
->
-> For the particular case that our systems detected, CC is set to
-> the following:
->
->   export CC=3D"aarch64-linaro-linux-gcc  --sysroot=3D/oe/build/tmp/work/m=
-achine/perf/1.0-r9/recipe-sysroot"
->
-> Without quotes, detection is as follows:
->
->   Auto-detecting system features:
->   ...                         dwarf: [ OFF ]
->   ...            dwarf_getlocations: [ OFF ]
->   ...                         glibc: [ OFF ]
->   ...                          gtk2: [ OFF ]
->   ...                        libbfd: [ OFF ]
->   ...                        libcap: [ OFF ]
->   ...                        libelf: [ OFF ]
->   ...                       libnuma: [ OFF ]
->   ...        numa_num_possible_cpus: [ OFF ]
->   ...                       libperl: [ OFF ]
->   ...                     libpython: [ OFF ]
->   ...                     libcrypto: [ OFF ]
->   ...                     libunwind: [ OFF ]
->   ...            libdw-dwarf-unwind: [ OFF ]
->   ...                          zlib: [ OFF ]
->   ...                          lzma: [ OFF ]
->   ...                     get_cpuid: [ OFF ]
->   ...                           bpf: [ OFF ]
->   ...                        libaio: [ OFF ]
->   ...                       libzstd: [ OFF ]
->   ...        disassembler-four-args: [ OFF ]
->
->   Makefile.config:414: *** No gnu/libc-version.h found, please install gl=
-ibc-dev[el].  Stop.
->   Makefile.perf:230: recipe for target 'sub-make' failed
->   make[1]: *** [sub-make] Error 2
->   Makefile:69: recipe for target 'all' failed
->   make: *** [all] Error 2
->
-> With CC and CXX quoted, some of those features are now detected.
->
-> Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
->
-> Signed-off-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
-
-Whoops, I'm the one who introduced this issue. Fix looks good, thanks!
-
-Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
-Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
-
-> ---
->  tools/build/Makefile.feature | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 774f0b0ca28a..e7818b44b48e 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -8,7 +8,7 @@ endif
->
->  feature_check =3D $(eval $(feature_check_code))
->  define feature_check_code
-> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D$(C=
-C) CXX=3D$(CXX) CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXX=
-FLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$(LDF=
-LAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)te=
-st-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-> +  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
-CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
- CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
-(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
-S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-
-We should probably also be quoting the arguments that expand $(OUTPUT_FEATU=
-RES)
-too, although trying to handle path names with spaces is probably a
-lost cause anyway.
-
->  endef
->
->  feature_set =3D $(eval $(feature_set_code))
-> --
-> 2.25.1
->
+On 8/12/20 16:25, Logan Gunthorpe wrote:=0A=
+> When locking the ctrl->lock spinlock IRQs need to be disabled to avoid a=
+=0A=
+> dead lock. The new spin_lock() calls recently added produce the=0A=
+> following lockdep warning when running the blktest nvme/003:=0A=
+> =0A=
+>      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+>      WARNING: inconsistent lock state=0A=
+>      --------------------------------=0A=
+>      inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.=0A=
+>      ksoftirqd/2/22 [HC0[0]:SC1[1]:HE0:SE0] takes:=0A=
+>      ffff888276a8c4c0 (&ctrl->lock){+.?.}-{2:2}, at: nvme_keep_alive_end_=
+io+0x50/0xc0=0A=
+>      {SOFTIRQ-ON-W} state was registered at:=0A=
+>        lock_acquire+0x164/0x500=0A=
+>        _raw_spin_lock+0x28/0x40=0A=
+>        nvme_get_effects_log+0x37/0x1c0=0A=
+>        nvme_init_identify+0x9e4/0x14f0=0A=
+>        nvme_reset_work+0xadd/0x2360=0A=
+>        process_one_work+0x66b/0xb70=0A=
+>        worker_thread+0x6e/0x6c0=0A=
+>        kthread+0x1e7/0x210=0A=
+>        ret_from_fork+0x22/0x30=0A=
+>      irq event stamp: 1449221=0A=
+>      hardirqs last  enabled at (1449220): [<ffffffff81c58e69>] ktime_get+=
+0xf9/0x140=0A=
+>      hardirqs last disabled at (1449221): [<ffffffff83129665>] _raw_spin_=
+lock_irqsave+0x25/0x60=0A=
+>      softirqs last  enabled at (1449210): [<ffffffff83400447>] __do_softi=
+rq+0x447/0x595=0A=
+>      softirqs last disabled at (1449215): [<ffffffff81b489b5>] run_ksofti=
+rqd+0x35/0x50=0A=
+> =0A=
+>      other info that might help us debug this:=0A=
+>       Possible unsafe locking scenario:=0A=
+> =0A=
+>             CPU0=0A=
+>             ----=0A=
+>        lock(&ctrl->lock);=0A=
+>        <Interrupt>=0A=
+>          lock(&ctrl->lock);=0A=
+> =0A=
+>       *** DEADLOCK ***=0A=
+> =0A=
+>      no locks held by ksoftirqd/2/22.=0A=
+> =0A=
+>      stack backtrace:=0A=
+>      CPU: 2 PID: 22 Comm: ksoftirqd/2 Not tainted 5.8.0-rc4-eid-vmlocalye=
+s-dbg-00157-g7236657c6b3a #1450=0A=
+>      Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04=
+/01/2014=0A=
+>      Call Trace:=0A=
+>       dump_stack+0xc8/0x11a=0A=
+>       print_usage_bug.cold.63+0x235/0x23e=0A=
+>       mark_lock+0xa9c/0xcf0=0A=
+>       __lock_acquire+0xd9a/0x2b50=0A=
+>       lock_acquire+0x164/0x500=0A=
+>       _raw_spin_lock_irqsave+0x40/0x60=0A=
+>       nvme_keep_alive_end_io+0x50/0xc0=0A=
+>       blk_mq_end_request+0x158/0x210=0A=
+>       nvme_complete_rq+0x146/0x500=0A=
+>       nvme_loop_complete_rq+0x26/0x30 [nvme_loop]=0A=
+>       blk_done_softirq+0x187/0x1e0=0A=
+>       __do_softirq+0x118/0x595=0A=
+>       run_ksoftirqd+0x35/0x50=0A=
+>       smpboot_thread_fn+0x1d3/0x310=0A=
+>       kthread+0x1e7/0x210=0A=
+>       ret_from_fork+0x22/0x30=0A=
+> =0A=
+> Fixes: be93e87e7802 ("nvme: support for multiple Command Sets Supported a=
+nd Effects log pages")=0A=
+> Signed-off-by: Logan Gunthorpe<logang@deltatee.com>=0A=
+=0A=
+Thanks for this fix, looks good.=0A=
+=0A=
+Tested-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
