@@ -2,51 +2,112 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F84CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ED2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3237B20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF74820829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:11:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QERHGCA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgHNRKX (ORCPT
+        id S1728392AbgHNRL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:10:23 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3015 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbgHNRKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:10:23 -0400
-Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 39AA4C23FCB17C1C9D5E;
-        Sat, 15 Aug 2020 01:10:21 +0800 (CST)
-Received: from [10.140.157.78] (10.140.157.78) by
- dggeme755-chm.china.huawei.com (10.3.19.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 15 Aug 2020 01:10:20 +0800
-To:     <marc.zyngier@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-Subject: Adjust interrupt Priority for ARM64 GIC
-Message-ID: <5a6e65cf-d2fe-0107-2318-0e3c81d57000@huawei.com>
-Date:   Sat, 15 Aug 2020 01:10:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Fri, 14 Aug 2020 13:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgHNRLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:11:55 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C37C061384;
+        Fri, 14 Aug 2020 10:11:54 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id x2so5543837ybf.12;
+        Fri, 14 Aug 2020 10:11:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mglcVhzuzbD5iqytmy0ojvWdCDVMQ7Jg6r35q9ohuQg=;
+        b=QERHGCA0vwz4s3O8jukMthQqaizlhaP4rs13uvD0cKQsBVG+/f5MilgpPL1Gf+z8dg
+         UPMcwVWaNpUPCbxnEgZrMCVo402/clnyZcMoZA3vNThOOka9RVsbJziSruRvVF3/Uz2f
+         adQyDFRPzGmErSwl0v6OSCioSKC8igEzwUygzZR8T4Nk/pPPrO8ap7DWSJUB25kWZLS5
+         vQJ1WCSeeQryrynpttpy6VEuyGJ9PITfaMMWiiQu39vuA8u7Ha0YxISOyQH2lzzhzFjB
+         hYiA8H6tfHiEcyPekOrMX+/xJg/HbS9zuagXGPuqvCvsfLOv/ErLidXhUt/iqZz+BsD3
+         5/+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mglcVhzuzbD5iqytmy0ojvWdCDVMQ7Jg6r35q9ohuQg=;
+        b=CkFr9CWx7nfSbg29YqaoEyeXhFiNl1PErSOr5hsBPHLGmVs/AZ/xoqlXhZY4+fDyVs
+         j25ejdbm+L3JEDekRMz+rzd/DfGo1vSE2LDtsw80EKIo5RNM24q656MX7rJRDmnNYqMH
+         6JhI5fGkVcfhe3rw6FJBPiwjdSz0DZLAdeFjif0EQbpWZitjMGSczUZ7nWQ0BPvnR4RU
+         LzL2wB1Sp4FzD+wLtygznoJzHY3t6/5jTMavTdfJJgdR5vCrYvvOOGB0V4uKlnNw8LMB
+         ei/MCjlFv/a/mybaYz5KHCM9N4BF+gQsNhNLQfhtn7ubDzzmuBJRWJUfwcyQoSs4TLBT
+         KIYg==
+X-Gm-Message-State: AOAM532GRMP7/crHAwVptnJBtqHKzMorhf7yyTVwTKANRuGc2F6xpdpn
+        EOlFyfTHVnRK7EpxgM1diAPz24i5/u1MwZUdYr4=
+X-Google-Smtp-Source: ABdhPJzZBf60mp6s8Y3MItoqoiwvgalrmw45dcofiQIfr+7AzgE/kEueXkevQYpFU4EzR77VC2C69/DvwzYto4uY4r8=
+X-Received: by 2002:a25:bc50:: with SMTP id d16mr4679058ybk.230.1597425114113;
+ Fri, 14 Aug 2020 10:11:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.140.157.78]
-X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
+References: <20200814091615.21821-1-linmiaohe@huawei.com>
+In-Reply-To: <20200814091615.21821-1-linmiaohe@huawei.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 14 Aug 2020 10:11:43 -0700
+Message-ID: <CAEf4BzYyEurfj8SoXBcG1EY1eOS2yHgpZteON2Ff1E+rPVrh9g@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Convert to use the preferred fallthrough macro
+To:     Miaohe Lin <linmiaohe@huawei.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-   In the Linux kernel, we can not adjust the  interrupt Priority, For all the interrupts, the interrupt Priority are fixed to 0xa0.
-In some scenarios, it needs to change the Priority. so I want to upstream a serie patch to support to change the Priority through procfs. do you agree I upstream this feature? thanks~
+On Fri, Aug 14, 2020 at 2:58 AM Miaohe Lin <linmiaohe@huawei.com> wrote:
+>
+> Convert the uses of fallthrough comments to fallthrough macro.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  kernel/bpf/cgroup.c   | 2 +-
+>  kernel/bpf/cpumap.c   | 2 +-
+>  kernel/bpf/syscall.c  | 2 +-
+>  kernel/bpf/verifier.c | 6 +++---
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+> index 83ff127ef7ae..e21de4f1754c 100644
+> --- a/kernel/bpf/cgroup.c
+> +++ b/kernel/bpf/cgroup.c
+> @@ -1794,7 +1794,7 @@ static bool cg_sockopt_is_valid_access(int off, int size,
+>                         return prog->expected_attach_type ==
+>                                 BPF_CGROUP_GETSOCKOPT;
+>                 case offsetof(struct bpf_sockopt, optname):
+> -                       /* fallthrough */
+> +                       fallthrough;
+
+this fallthrough is not event necessary, let's drop it instead?
+
+>                 case offsetof(struct bpf_sockopt, level):
+>                         if (size != size_default)
+>                                 return false;
+
+[...]
