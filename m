@@ -2,80 +2,100 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A7EC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4F20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8D120866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597411126;
+	bh=dgIyzZaJrjtxubwC36494A5rxRFDssv63Gdsz13c5wg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NevpgQ1Zn4xE7tMrOFlzCriOydrCqivcvAU7pqyqDomB2uMGSqyRL/qKIrrcvQIi6
+	 JH3D/12GsCL387697L7Q30OiSyeKOwC5b+nYo1hLcxpPEgz+ejW1UQDlAtYUk+sfaR
+	 Nj/jbel4epoayNyeFiWYz5AGzyCeWN8NZqOcV3Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgHNNSf (ORCPT
+        id S1728564AbgHNNSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:18:35 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59326 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgHNNSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:18:34 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k6Zb8-0000zF-4P; Fri, 14 Aug 2020 23:18:19 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 14 Aug 2020 23:18:18 +1000
-Date:   Fri, 14 Aug 2020 23:18:18 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.9
-Message-ID: <20200814131817.GA8147@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
- <20200611040544.GA27603@gondor.apana.org.au>
+        Fri, 14 Aug 2020 09:18:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37097 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgHNNSn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:18:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k8so7911665wma.2;
+        Fri, 14 Aug 2020 06:18:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nW1mtRgL1XPVv74zZPLtcR28WG0ZBkgaQ4n0Ou81IOY=;
+        b=AezT62nc5aXV8rczhV5hj1z1i0FEqsyjtlt6P5nstYMy311bEi/GsX1sEXcLS4qbt4
+         eEMNxtkG2RAQ/TzDNt4Rx9UhPRHC7v+LQA77eh6CBG0w9xxc5ZOjXHEyABPK9ZiTQKqS
+         hq85y/c1z4tOlAK0igXaRUi8lePnmX9lwZNKO0CHvZeKsoOkQ3hbRaPvCn3a/G8B6gdW
+         Fb3oYh3m1r4l7kBQ22fKmDQMK0sTc+CrSfbeUX+dz2FlSCUTDzeAAxNGOWjZ+DHK0EUX
+         IcCznjGyh3hhEv5RS4BRoY4zprNwf2z51bLBtI0g1Hvl0jQTEfVird/tevbwrXjehPJ/
+         UUvA==
+X-Gm-Message-State: AOAM532yf2yud27diZyvDdC7yrniejPAM6OY9SSN8kJubB8SdsOt3YCK
+        7j67kjYgm+Zose5++AX20VnFqNS/uII=
+X-Google-Smtp-Source: ABdhPJzImgQ7+albyhkIntvqwF9TOUH9EivjkXRcHdb+Bd4MUIRqvcFpb4iRh4yCuJ5Wcj2Hn6KPIg==
+X-Received: by 2002:a1c:f70a:: with SMTP id v10mr2515326wmh.39.1597411121294;
+        Fri, 14 Aug 2020 06:18:41 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id n12sm15988512wrq.63.2020.08.14.06.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 06:18:40 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 13:18:39 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, gregkh@linuxfoundation.org,
+        iourit@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200814131839.u2vy52mtiejtuwcg@liuwe-devbox-debian-v2>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611040544.GA27603@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200814123856.3880009-2-sashal@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+[...]
+> +
+> +#include "dxgkrnl.h"
+> +
+> +int dxgadapter_init(struct dxgadapter *adapter, struct hv_device *hdev)
+> +{
+> +	int ret = 0;
+> +	char s[80];
+> +
+> +	UNUSED(s);
 
-This push fixes a regression in af_alg.
+If s is not used, why not just remove it?
 
-The following changes since commit 3cbfe80737c18ac6e635421ab676716a393d3074:
+Indeed it is not used anywhere in this function. That saves you 80 bytes
+on stack.
 
-  crypto: sa2ul - Fix inconsistent IS_ERR and PTR_ERR (2020-07-31 18:25:29 +1000)
+> +static int dxgk_destroy_hwcontext(struct dxgprocess *process,
+> +					      void *__user inargs)
+> +{
+> +	/* This is obsolete entry point */
+> +	return ENOTTY;
+> +}
+> +
 
-are available in the Git repository at:
+Other places have been using negative numbers for errors. I guess you
+want -ENOTTY here too.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to 21dfbcd1f5cbff9cf2f9e7e43475aed8d072b0dd:
-
-  crypto: algif_aead - fix uninitialized ctx->init (2020-08-13 17:09:32 +1000)
-
-----------------------------------------------------------------
-Ondrej Mosnacek (1):
-      crypto: algif_aead - fix uninitialized ctx->init
-
- crypto/algif_aead.c     | 6 ------
- crypto/algif_skcipher.c | 7 +------
- 2 files changed, 1 insertion(+), 12 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Wei.
