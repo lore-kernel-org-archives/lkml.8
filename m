@@ -5,67 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E72FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B281420866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0468722B49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sTJJo5Ao"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z5jKBlju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgHNLkY (ORCPT
+        id S1728263AbgHNLkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
+        Fri, 14 Aug 2020 07:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbgHNLj7 (ORCPT
+        with ESMTP id S1728219AbgHNLkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:39:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47263C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:59 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c15so8037836wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:59 -0700 (PDT)
+        Fri, 14 Aug 2020 07:40:22 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6291C06135A
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t14so7661701wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pTidTxM2W7rg3RCDPQVi6+bnqBimLuMVRDwTHQpG6MI=;
-        b=sTJJo5Ao9MoWGnV5QCX1gfI+xXTHpIhbz2b7TURG/31tpUZXShHoedki9o0ukyMbcT
-         WeQin7wucUIH/cENlQCAmqxLxnXtoWT3shSNCql8IQTAlO+WEVakfIOAvmd4+/nrgFIl
-         mPRNqGwMafnkybiB5SOiDMAHnN9corypiRFiy4AQaqkwNH2/YpYQAReihfCZLPb0GV2K
-         tZzhFMv/4jttwAc6jx3p69I3ekCKLngRwL9X2sssocNoNsQBmtUNA05oUBUBoACkZHy0
-         McwdKNFkUFSlyoPzcvhNuOmZ8tbPropQ+tGinR3r4c07PZXzsigSPMHN8fPybCslnLQ+
-         /0wQ==
+        bh=uoJdiMFnGqJL36MQX9//RZPgySw6yuwW0/4q6pcbpxI=;
+        b=Z5jKBlju35T6oTj3hxsY8oXDyw2EjocH3+UWqQor/nEHI1TLpiYZFG/+OYyJeEB2kQ
+         2T5fLfadZrwb1sv21VtNhRA340P+/omrcCtPRqMpkQYgK4yadwVCp0445v5cPAmh763H
+         j5YBLXYXRAOCNNmh64LfTsD2uOriUrw6vnviTLGpxiEOrpG1ekLXmi8AgQI8prR2Aqxs
+         s7lW4M9jtPTxSs+kyOc8G8e6dbJBjn4xy8MdKdarBpiuEyH8UCJ0XvLsIPuENKIWvugP
+         AbxHOK8zN/OsOw+q2PC0O4sBNQWbtzl8r9pkEujXbg7bIIAQAuK+f3CjhEZ+4kPsaieI
+         nIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pTidTxM2W7rg3RCDPQVi6+bnqBimLuMVRDwTHQpG6MI=;
-        b=X8qb5A5Z7Cldq9MUgYuLjqGBikM+BX84sPz3xk3dFtwdGx08qD5XDwMdOr/FXZiBky
-         Zql4cNCBYq8XLu/zHjr9jCe3xNvYFB8lzo1FLYh9vqXpsHwHcR7jIKqOhFP/6F4xUBnX
-         cXL1Wnfw02G4bYb8k2uq1qSwYDNBoTqXmWvkdgNRq9FAaewAEgYomlq0JFJfThAzA9FR
-         c4GITgs2hLpiqO8NIP2yBn5p0/02+u18kx401nCvsJ5ekh6QqhLF3S8dqu04DK46JHUj
-         ikwrDtHUS54K+NEezUpo0t1N6ZEJ3qj4+/42UfkG/mz/aZA7+XvEY/dDLccp2GOQBgAe
-         amvg==
-X-Gm-Message-State: AOAM533hqJ7foqlqnUYnnF8bIU9bekFt00CjCObdEL74jlOPNhVL14z9
-        uE2Widj2gGenMLGQIWB1DFdIsO8YeIM8Ng==
-X-Google-Smtp-Source: ABdhPJzf2CUoe+r24OZQp0WRqevqIU05NtR3yqlbWBijFHrDWUmeueOOtpTFxEruugLoxyFvD9s9kQ==
-X-Received: by 2002:adf:91a1:: with SMTP id 30mr2554293wri.29.1597405198037;
-        Fri, 14 Aug 2020 04:39:58 -0700 (PDT)
+        bh=uoJdiMFnGqJL36MQX9//RZPgySw6yuwW0/4q6pcbpxI=;
+        b=gDzjy+Qkfk7z7IPAZR5mloqapGuKXYzuUP+9BnqfpklQJ5UGJTBaYrANQa75q4Snk+
+         oSuoLxFOTiu+lIWk2xTt/xcb6l/VVzNjCtITE+SYH7fkZbSqB8R2VV9azyYCxVal6oSi
+         CYKzDNeIg8RL3PV/qI1TMgBkID0ej8TE+G3aGGcYGBO/QCMFACrVUjflT4PWRoo8ydzw
+         R9vFKlnOcZY6SbirucZSWp3Ptek1DPCVvXP7dpy7P5Hz+fCMK1+QW0axvhUZ++zgkBPg
+         bxfS1yOJ9yFblzxvV/2EFUqncFfCDfzF+AUfBws9fq5eDuNaVVAiSliPU1LuCiTRJUWc
+         /7TA==
+X-Gm-Message-State: AOAM531jXmOR6Mif3YDJzMgMBicOPqIJ+LwES9qtsoz1858GEVttoxmo
+        lolGK0N25ATv3/3YSCGqIdF/1w==
+X-Google-Smtp-Source: ABdhPJyNHmgfSG7oqJDg2SQorjhZpluNZk69ZMxYqm+xYL0qSq3eatKOxTcA4ERuh7Joh5ya2/azlA==
+X-Received: by 2002:a7b:c14e:: with SMTP id z14mr2262670wmi.34.1597405214622;
+        Fri, 14 Aug 2020 04:40:14 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.39.56
+        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.40.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 04:39:57 -0700 (PDT)
+        Fri, 14 Aug 2020 04:40:13 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Mike McLagan <mike.mclagan@linux.org>, netdev@vger.kernel.org
-Subject: [PATCH 10/30] net: wan: dlci: Remove set but not used variable 'err'
-Date:   Fri, 14 Aug 2020 12:39:13 +0100
-Message-Id: <20200814113933.1903438-11-lee.jones@linaro.org>
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH 22/30] net: wireless: broadcom: brcm80211: brcmfmac: fweh: Remove set but unused variable 'err'
+Date:   Fri, 14 Aug 2020 12:39:25 +0100
+Message-Id: <20200814113933.1903438-23-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200814113933.1903438-1-lee.jones@linaro.org>
 References: <20200814113933.1903438-1-lee.jones@linaro.org>
@@ -79,38 +88,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wan/dlci.c: In function ‘dlci_close’:
- drivers/net/wan/dlci.c:298:8: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c: In function ‘brcmf_fweh_handle_if_event’:
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c:131:6: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
 
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Mike McLagan <mike.mclagan@linux.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wan/dlci.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wan/dlci.c b/drivers/net/wan/dlci.c
-index 7bcee41905cfb..3ca4daf633897 100644
---- a/drivers/net/wan/dlci.c
-+++ b/drivers/net/wan/dlci.c
-@@ -295,14 +295,13 @@ static int dlci_close(struct net_device *dev)
- {
- 	struct dlci_local	*dlp;
- 	struct frad_local	*flp;
--	int			err;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
+index a5cced2c89ac6..6f74567c7bd72 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
+@@ -128,7 +128,6 @@ static void brcmf_fweh_handle_if_event(struct brcmf_pub *drvr,
+ 	struct brcmf_if_event *ifevent = data;
+ 	struct brcmf_if *ifp;
+ 	bool is_p2pdev;
+-	int err = 0;
  
- 	netif_stop_queue(dev);
+ 	brcmf_dbg(EVENT, "action: %u ifidx: %u bsscfgidx: %u flags: %u role: %u\n",
+ 		  ifevent->action, ifevent->ifidx, ifevent->bsscfgidx,
+@@ -171,8 +170,8 @@ static void brcmf_fweh_handle_if_event(struct brcmf_pub *drvr,
+ 	if (ifp && ifevent->action == BRCMF_E_IF_CHANGE)
+ 		brcmf_proto_reset_if(drvr, ifp);
  
- 	dlp = netdev_priv(dev);
+-	err = brcmf_fweh_call_event_handler(drvr, ifp, emsg->event_code, emsg,
+-					    data);
++	brcmf_fweh_call_event_handler(drvr, ifp, emsg->event_code, emsg,
++				      data);
  
- 	flp = netdev_priv(dlp->slave);
--	err = (*flp->deactivate)(dlp->slave, dev);
-+	(*flp->deactivate)(dlp->slave, dev);
- 
- 	return 0;
- }
+ 	if (ifp && ifevent->action == BRCMF_E_IF_DEL) {
+ 		bool armed = brcmf_cfg80211_vif_event_armed(drvr->config);
 -- 
 2.25.1
 
