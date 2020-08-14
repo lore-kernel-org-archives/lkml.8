@@ -2,109 +2,325 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F27C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664BD2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC8620771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WBlGYSJP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C1IQC4c5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHNBo6 (ORCPT
+        id S1726604AbgHNBux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 21:44:58 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60327 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726681AbgHNBoy (ORCPT
+        Thu, 13 Aug 2020 21:50:53 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:30571 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbgHNBuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 21:44:54 -0400
-X-UUID: 372feafcc8cf43b4a9cda9f9ab1202a5-20200814
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VFjE0n0yP6rYccsrd1vDlg8jm85JSl2DOXPzRxPAWrs=;
-        b=WBlGYSJPB3dX2DcMkh83kUpq6aw52KxoBRhG1jKfnr7DbTYhaA8GR9bbt/3oG1CRLWpep+AE0CSThoA9jv+x8+hCfkiP7ewhU5rUnPLIicdZ9joD5uN0pEarwzaxwGZuuk/UIDaVnKw2v72J44DtB0UcTOcoDLRh19038578zSo=;
-X-UUID: 372feafcc8cf43b4a9cda9f9ab1202a5-20200814
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <wenbin.mei@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 579499826; Fri, 14 Aug 2020 09:44:50 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 14 Aug 2020 09:44:48 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 14 Aug 2020 09:44:47 +0800
-From:   Wenbin Mei <wenbin.mei@mediatek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>, <stable@vger.kernel.org>
-Subject: [v5,3/3] mmc: mediatek: add optional module reset property
-Date:   Fri, 14 Aug 2020 09:43:46 +0800
-Message-ID: <20200814014346.6496-4-wenbin.mei@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200814014346.6496-1-wenbin.mei@mediatek.com>
-References: <20200814014346.6496-1-wenbin.mei@mediatek.com>
+        Thu, 13 Aug 2020 21:50:52 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200814015047epoutp0414951f8fd1e4ebb50d434f1aee5258ae~q-2nLFPg70525605256epoutp04c
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:50:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200814015047epoutp0414951f8fd1e4ebb50d434f1aee5258ae~q-2nLFPg70525605256epoutp04c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597369847;
+        bh=gowD4C7TEEhxrbqbRyTMZ6cmvxjAoXc2kJkQv2udKKc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=C1IQC4c5onIp/ufU/ZhB6OrLtaeV+cHKVH3auLna8OouTVJ9QFK63dptEOTuFQ99+
+         alykeLieqfpeOUE1bc7h1SOsYUDQayMjCMZq8hswMUJu7o0/K4PnKdK0xH863wZ321
+         pgGFGJJ3xHem5ED6J5Qo1shYiH0F9DWMfQw0VuEw=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200814015045epcas1p30464b9319cb75a5e59ee92c3b56a9db7~q-2lMPHGU1837718377epcas1p3Z;
+        Fri, 14 Aug 2020 01:50:45 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BSRGq16jszMqYlv; Fri, 14 Aug
+        2020 01:50:43 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        92.38.28578.3FDE53F5; Fri, 14 Aug 2020 10:50:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200814015040epcas1p4e841745e198e780a70a0c2e7a88bc247~q-2giQhvm0697606976epcas1p4a;
+        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200814015040epsmtrp1545ce583772938e12450f4c2cc378db7~q-2ghZaAz1653816538epsmtrp1e;
+        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
+X-AuditID: b6c32a39-8dfff70000006fa2-e4-5f35edf368e1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        85.1F.08303.0FDE53F5; Fri, 14 Aug 2020 10:50:40 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200814015040epsmtip2ed23f1a109fb486de020e525915be925~q-2gPshCb1260612606epsmtip20;
+        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
+Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
+ building OPP table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
+Date:   Fri, 14 Aug 2020 11:02:40 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200814000621.8415-14-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRmVeSWpSXmKPExsWy7bCmru7nt6bxBqt2sFq8+/SU1WL+kXOs
+        Fqs/Pma0uPL1PZvF9L2b2CxaZi1isTjb9Ibd4vKuOWwWn3uPMFp0fpnFZnHxlKvF7cYVbBaT
+        1k5ltGjde4Td4t+1jSwWP3fNY3EQ8Hh/o5XdY+esu+wel879YfbYtKqTzePOtT1sHve7jzN5
+        9Da/Y/Po27KK0ePzJrkAzqhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE
+        3FRbJRefAF23zBygN5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BZYFesWJucWl
+        eel6yfm5VoYGBkamQIUJ2RkPXm1iLejQrvjUsJq5gfGzYhcjJ4eEgIlEZ9N1ti5GLg4hgR2M
+        EqubF7NDOJ8YJU4f+sUK4XxmlJh7ZCM7TMuHpWehqnYxSlz59oUZwnnPKPGq8SYrSJWwQIzE
+        mXkbwapEBI4wS6zuPM4IkmAWmMEocWePMojNJqAlsf/FDTYQm19AUeLqj8dANRwcvAJ2Egv/
+        2IGEWQRUJTZf3g22WVQgTOLkthawMbwCghInZz5hAbE5Bcwk+qdMYIIYLy5x68l8KFteYvvb
+        OWDHSQj855CY8O0Z1AsuEvcXHmOFsIUlXh3fAhWXknjZ3wZlV0usPHmEDaK5g1Fiy/4LUA3G
+        EvuXTmYCOZRZQFNi/S59iLCixM7fc6F+5JN497WHFaREQoBXoqNNCKJEWeLyg7tMELakxOL2
+        TrYJjEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBabI0b2JEZzGtSx3ME5/+0HvECMT
+        B+MhRgkOZiURXubLxvFCvCmJlVWpRfnxRaU5qcWHGE2BATyRWUo0OR+YSfJK4g1NjYyNjS1M
+        DM1MDQ2VxHkf3lKIFxJITyxJzU5NLUgtgulj4uCUamCawKS4b9/9Fadf7s2v7y97UnrAzFpT
+        5tt64wNWq1Ur8lVd0rkuu3gKCX/geGH+Ot46k1/Wae+DprT965N8XzdsLft4627Tp8PmLClM
+        1+fLZwpn+TvU3fJoej39y4+aQP33CVGbt0hOZ1gzQ8ZYdmrCyX9rOoN+XJnldON3q9RTrYIH
+        kc9SCgM28a7bMf3alvIpu5JEXjwrWb/+psXPaS8OsqeX2zb92esy/7avYafE9nnb2wPWJfmZ
+        H5lnezfB8HwkT3dbNIfsnAT12ycagiXlZ550uxhtfP5Qhl2dfo7iw83LBM+0f9K6sbhO6fUT
+        t9+f5vO6H3u4/Zpp9eekSZLB3klv7SUyffJPrdzNaOehxFKckWioxVxUnAgAP2VMZ2wEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvO6Ht6bxBmtOyFq8+/SU1WL+kXOs
+        Fqs/Pma0uPL1PZvF9L2b2CxaZi1isTjb9Ibd4vKuOWwWn3uPMFp0fpnFZnHxlKvF7cYVbBaT
+        1k5ltGjde4Td4t+1jSwWP3fNY3EQ8Hh/o5XdY+esu+wel879YfbYtKqTzePOtT1sHve7jzN5
+        9Da/Y/Po27KK0ePzJrkAzigum5TUnMyy1CJ9uwSujAevNrEWdGhXfGpYzdzA+Fmxi5GTQ0LA
+        ROLD0rPsXYxcHEICOxglTqyazQSRkJSYdvEocxcjB5AtLHH4cDFEzVtGiZVHu1lAaoQFYiTO
+        zNsI1iwicIxZYtPp00wgDrPADEaJPxs2Qo3dwiix/MUqdpAWNgEtif0vbrCB2PwCihJXfzxm
+        BFnBK2AnsfCPHUiYRUBVYvPl3WDlogJhEjuXPAa7iFdAUOLkzCdgmzkFzCT6p0wAizMLqEv8
+        mXeJGcIWl7j1ZD5UXF5i+9s5zBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst
+        1ytOzC0uzUvXS87P3cQIjmgtrR2Me1Z90DvEyMTBeIhRgoNZSYSX+bJxvBBvSmJlVWpRfnxR
+        aU5q8SFGaQ4WJXHer7MWxgkJpCeWpGanphakFsFkmTg4pRqYOtbpXvw441lZvskSXYZjSZfC
+        /mdWLW6Javgyr8f2wrKna6/PXC2dP8X1o/Fd57WvTm3p/yTC9D6Wya7qDFtM6+Rm8XBj7dkc
+        ZlyPL5vrztCtyfyiG7T/0sqO0Ow5Z7veXa7fq/dsn5ZYw9ffWw32Pjpz+Mm3Op4pSumqxWJr
+        Eo5mf3z/+ZZ5yknVe9ZbGFXXWxd/l12QaiV43JT7wqr2fsddZ9LumzVwf59j+NFrplcMs93L
+        WWtX5zBmsXu63PX3zb9ZdnTrLXedKM8J9ZKuDNMVJ3znfugeWrc8XXHBEQ65BD+2uhszmPSf
+        zp1fKxa0xeCm3Zy0qxe9hDNlClWS2lQMqmfsqzvu/mVxU3qDEktxRqKhFnNRcSIAQxz53lcD
+        AAA=
+X-CMS-MailID: 20200814015040epcas1p4e841745e198e780a70a0c2e7a88bc247
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818
+References: <20200814000621.8415-1-digetx@gmail.com>
+        <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
+        <20200814000621.8415-14-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBmaXhzIGVNTUMtQWNjZXNzIG9uIG10NzYyMi9CcGktNjQuDQpCZWZvcmUgd2Ug
-Z290IHRoZXNlIEVycm9ycyBvbiBtb3VudGluZyBlTU1DIGlvbiBSNjQ6DQpbICAgNDguNjY0OTI1
-XSBibGtfdXBkYXRlX3JlcXVlc3Q6IEkvTyBlcnJvciwgZGV2IG1tY2JsazAsIHNlY3RvciAyMDQ4
-MDAgb3AgMHgxOihXUklURSkNCmZsYWdzIDB4ODAwIHBoeXNfc2VnIDEgcHJpbyBjbGFzcyAwDQpb
-ICAgNDguNjc2MDE5XSBCdWZmZXIgSS9PIGVycm9yIG9uIGRldiBtbWNibGswcDEsIGxvZ2ljYWwg
-YmxvY2sgMCwgbG9zdCBzeW5jIHBhZ2Ugd3JpdGUNCg0KVGhpcyBwYXRjaCBhZGRzIGEgb3B0aW9u
-YWwgcmVzZXQgbWFuYWdlbWVudCBmb3IgbXNkYy4NClNvbWV0aW1lcyB0aGUgYm9vdGxvYWRlciBk
-b2VzIG5vdCBicmluZyBtc2RjIHJlZ2lzdGVyDQp0byBkZWZhdWx0IHN0YXRlLCBzbyBuZWVkIHJl
-c2V0IHRoZSBtc2RjIGNvbnRyb2xsZXIuDQoNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4g
-IyB2NS40Kw0KRml4ZXM6IDk2NjU4MGFkMjM2ZSAoIm1tYzogbWVkaWF0ZWs6IGFkZCBzdXBwb3J0
-IGZvciBNVDc2MjIgU29DIikNClNpZ25lZC1vZmYtYnk6IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlA
-bWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0
-cm9uaXguZGU+DQpUZXN0ZWQtYnk6IEZyYW5rIFd1bmRlcmxpY2ggPGZyYW5rLXdAcHVibGljLWZp
-bGVzLmRlPg0KLS0tDQogZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYyB8IDEzICsrKysrKysrKysr
-KysNCiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9tbWMvaG9zdC9tdGstc2QuYyBiL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMNCmluZGV4
-IDM5ZTdmYzU0YzQzOC4uZmM5N2Q1YmYzYTIwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tbWMvaG9z
-dC9tdGstc2QuYw0KKysrIGIvZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYw0KQEAgLTIyLDYgKzIy
-LDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNpbmNsdWRlIDxsaW51eC9zcGlubG9j
-ay5oPg0KICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCisjaW5jbHVkZSA8bGludXgvcmVz
-ZXQuaD4NCiANCiAjaW5jbHVkZSA8bGludXgvbW1jL2NhcmQuaD4NCiAjaW5jbHVkZSA8bGludXgv
-bW1jL2NvcmUuaD4NCkBAIC00MzQsNiArNDM1LDcgQEAgc3RydWN0IG1zZGNfaG9zdCB7DQogCXN0
-cnVjdCBtc2RjX3NhdmVfcGFyYSBzYXZlX3BhcmE7IC8qIHVzZWQgd2hlbiBnYXRlIEhDTEsgKi8N
-CiAJc3RydWN0IG1zZGNfdHVuZV9wYXJhIGRlZl90dW5lX3BhcmE7IC8qIGRlZmF1bHQgdHVuZSBz
-ZXR0aW5nICovDQogCXN0cnVjdCBtc2RjX3R1bmVfcGFyYSBzYXZlZF90dW5lX3BhcmE7IC8qIHR1
-bmUgcmVzdWx0IG9mIENNRDIxL0NNRDE5ICovDQorCXN0cnVjdCByZXNldF9jb250cm9sICpyZXNl
-dDsNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX21tY19jb21wYXRpYmxlIG10ODEz
-NV9jb21wYXQgPSB7DQpAQCAtMTUxNiw2ICsxNTE4LDEyIEBAIHN0YXRpYyB2b2lkIG1zZGNfaW5p
-dF9odyhzdHJ1Y3QgbXNkY19ob3N0ICpob3N0KQ0KIAl1MzIgdmFsOw0KIAl1MzIgdHVuZV9yZWcg
-PSBob3N0LT5kZXZfY29tcC0+cGFkX3R1bmVfcmVnOw0KIA0KKwlpZiAoaG9zdC0+cmVzZXQpIHsN
-CisJCXJlc2V0X2NvbnRyb2xfYXNzZXJ0KGhvc3QtPnJlc2V0KTsNCisJCXVzbGVlcF9yYW5nZSgx
-MCwgNTApOw0KKwkJcmVzZXRfY29udHJvbF9kZWFzc2VydChob3N0LT5yZXNldCk7DQorCX0NCisN
-CiAJLyogQ29uZmlndXJlIHRvIE1NQy9TRCBtb2RlLCBjbG9jayBmcmVlIHJ1bm5pbmcgKi8NCiAJ
-c2RyX3NldF9iaXRzKGhvc3QtPmJhc2UgKyBNU0RDX0NGRywgTVNEQ19DRkdfTU9ERSB8IE1TRENf
-Q0ZHX0NLUEROKTsNCiANCkBAIC0yMjczLDYgKzIyODEsMTEgQEAgc3RhdGljIGludCBtc2RjX2Ry
-dl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAlpZiAoSVNfRVJSKGhvc3Qt
-PnNyY19jbGtfY2cpKQ0KIAkJaG9zdC0+c3JjX2Nsa19jZyA9IE5VTEw7DQogDQorCWhvc3QtPnJl
-c2V0ID0gZGV2bV9yZXNldF9jb250cm9sX2dldF9vcHRpb25hbF9leGNsdXNpdmUoJnBkZXYtPmRl
-diwNCisJCQkJCQkJCSJocnN0Iik7DQorCWlmIChJU19FUlIoaG9zdC0+cmVzZXQpKQ0KKwkJcmV0
-dXJuIFBUUl9FUlIoaG9zdC0+cmVzZXQpOw0KKw0KIAlob3N0LT5pcnEgPSBwbGF0Zm9ybV9nZXRf
-aXJxKHBkZXYsIDApOw0KIAlpZiAoaG9zdC0+aXJxIDwgMCkgew0KIAkJcmV0ID0gLUVJTlZBTDsN
-Ci0tIA0KMi4xOC4wDQo=
+Hi Dmitry,
 
+I add the minor comment. Except of some comments, it looks good to me.
+
+On 8/14/20 9:05 AM, Dmitry Osipenko wrote:
+> The clk_round_rate() won't be usable for building OPP table once
+> interconnect support will be added to the EMC driver because that CLK API
+> function limits the rounded rate based on the clk rate that is imposed by
+> active clk-users, and thus, the rounding won't work as expected if
+> interconnect will set the minimum EMC clock rate before devfreq driver is
+> loaded. The struct tegra_mc contains memory timings which could be used by
+> the devfreq driver for building up OPP table instead of rounding clock
+> rate, this patch implements this idea.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 93 +++++++++++++++++++++----------
+>  1 file changed, 65 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 423dd35c95b3..6c2f56b34535 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/reset.h>
+>  #include <linux/workqueue.h>
+>  
+> +#include <soc/tegra/mc.h>
+> +
+>  #include "governor.h"
+>  
+>  #define ACTMON_GLB_STATUS					0x0
+> @@ -153,6 +155,18 @@ struct tegra_devfreq_device {
+>  	unsigned long target_freq;
+>  };
+>  
+> +struct tegra_devfreq_soc_data {
+> +	const char *mc_compatible;
+> +};
+> +
+> +static const struct tegra_devfreq_soc_data tegra30_soc = {
+> +	.mc_compatible = "nvidia,tegra30-mc",
+> +};
+> +
+> +static const struct tegra_devfreq_soc_data tegra124_soc = {
+> +	.mc_compatible = "nvidia,tegra124-mc",
+> +};
+> +
+>  struct tegra_devfreq {
+>  	struct devfreq		*devfreq;
+>  
+> @@ -771,15 +785,49 @@ static struct devfreq_governor tegra_devfreq_governor = {
+>  	.interrupt_driven = true,
+>  };
+>  
+> +static struct tegra_mc *tegra_get_memory_controller(const char *compatible)
+> +{
+> +	struct platform_device *pdev;
+> +	struct device_node *np;
+> +	struct tegra_mc *mc;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, compatible);
+> +	if (!np)
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	pdev = of_find_device_by_node(np);
+> +	of_node_put(np);
+> +	if (!pdev)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	mc = platform_get_drvdata(pdev);
+> +	if (!mc)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	return mc;
+> +}
+> +
+>  static int tegra_devfreq_probe(struct platform_device *pdev)
+>  {
+> +	const struct tegra_devfreq_soc_data *soc_data;
+>  	struct tegra_devfreq_device *dev;
+>  	struct tegra_devfreq *tegra;
+>  	struct devfreq *devfreq;
+> +	struct tegra_mc *mc;
+>  	unsigned int i;
+> -	long rate;
+>  	int err;
+>  
+> +	soc_data = of_device_get_match_data(&pdev->dev);
+
+I think that better to check whether 'soc_data' is not NULL.
+
+
+> +
+> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
+> +	if (IS_ERR(mc))
+> +		return PTR_ERR(mc);
+
+You better to add error log.
+
+> +
+> +	if (!mc->num_timings) {
+> +		dev_info(&pdev->dev, "memory controller has no timings\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>  	if (!tegra)
+>  		return -ENOMEM;
+> @@ -825,6 +873,20 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> +	for (i = 0; i < mc->num_timings; i++) {
+> +		/*
+> +		 * Memory Controller timings are sorted in ascending clock
+> +		 * rate order, so the last timing will be the max freq.
+> +		 */
+> +		tegra->max_freq = mc->timings[i].rate / KHZ;
+> +
+> +		err = dev_pm_opp_add(&pdev->dev, tegra->max_freq, 0);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+> +			goto remove_opps;
+> +		}
+> +	}
+> +
+>  	reset_control_assert(tegra->reset);
+>  
+>  	err = clk_prepare_enable(tegra->clock);
+> @@ -836,37 +898,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	reset_control_deassert(tegra->reset);
+>  
+> -	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> -	if (rate < 0) {
+> -		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
+> -		return rate;
+> -	}
+> -
+> -	tegra->max_freq = rate / KHZ;
+> -
+>  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+>  		dev = tegra->devices + i;
+>  		dev->config = actmon_device_configs + i;
+>  		dev->regs = tegra->regs + dev->config->offset;
+>  	}
+>  
+> -	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+> -		rate = clk_round_rate(tegra->emc_clock, rate);
+> -
+> -		if (rate < 0) {
+> -			dev_err(&pdev->dev,
+> -				"Failed to round clock rate: %ld\n", rate);
+> -			err = rate;
+> -			goto remove_opps;
+> -		}
+> -
+> -		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
+> -		if (err) {
+> -			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+> -			goto remove_opps;
+> -		}
+> -	}
+> -
+>  	platform_set_drvdata(pdev, tegra);
+>  
+>  	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
+> @@ -921,8 +958,8 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id tegra_devfreq_of_match[] = {
+> -	{ .compatible = "nvidia,tegra30-actmon" },
+> -	{ .compatible = "nvidia,tegra124-actmon" },
+> +	{ .compatible = "nvidia,tegra30-actmon",  .data = &tegra30_soc, },
+> +	{ .compatible = "nvidia,tegra124-actmon", .data = &tegra124_soc, },
+>  	{ },
+>  };
+>  
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
