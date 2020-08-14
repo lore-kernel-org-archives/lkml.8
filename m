@@ -2,200 +2,350 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D350BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87662C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9879520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3EF206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="FOj/Oaja"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cHb36mQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHNA0J (ORCPT
+        id S1726604AbgHNAe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:26:09 -0400
-Received: from mail6.tencent.com ([220.249.245.26]:39338 "EHLO
-        mail6.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgHNA0I (ORCPT
+        Thu, 13 Aug 2020 20:34:27 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:43869 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgHNAe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:26:08 -0400
-Received: from EX-SZ020.tencent.com (unknown [10.28.6.40])
-        by mail6.tencent.com (Postfix) with ESMTP id 0726ECC2AC;
-        Fri, 14 Aug 2020 08:27:20 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
-        s=s202002; t=1597364840;
-        bh=bOw86oaSsvTe0NQuzXz8SlcMqqCiR+EPWjq1IXYxioM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=FOj/Oaja0c+6s2rxg0+LDiR90xH6QQh5XKrUsCo3YbJpKbKXBag+xJOghz1MsV5pd
-         BKbpnmJZPHF0iJtX2FtaHKN+S1Wcwq4BRVEIIJEXvlpV1SPxDdzNILLe4JgAAT3tlt
-         yDUrc0Kxp9DdsEhtf+/6lwuBygvEpeuTRKhTXfvI=
-Received: from EX-SZ003.tencent.com (10.28.6.15) by EX-SZ020.tencent.com
- (10.28.6.40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Fri, 14 Aug
- 2020 08:26:05 +0800
-Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ003.tencent.com
- (10.28.6.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Fri, 14 Aug
- 2020 08:26:05 +0800
-Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
- EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
- 15.01.1847.007; Fri, 14 Aug 2020 08:26:02 +0800
-From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-CC:     Joel Fernandes <joel@joelfernandes.org>,
-        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Thomas Glexiner" <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Subhra Mazumdar" <subhra.mazumdar@oracle.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Pillai <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Ning, Hongyu" <hongyu.ning@linux.intel.com>
-Subject: Re: [RFC PATCH 00/16] Core scheduling v6(Internet mail)
-Thread-Topic: [RFC PATCH 00/16] Core scheduling v6(Internet mail)
-Thread-Index: AQHWTyYIdUbfm2uvOEagav1FxQIttakluk8AgACOfACAAkvVAIAHH5EAgAPAXACAAWIeAIAAWUGAgAFOmgA=
-Date:   Fri, 14 Aug 2020 00:26:02 +0000
-Message-ID: <FAC73DE7-BAE0-42D3-BE9A-227C12275C34@tencent.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
- <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
- <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
- <20200809164408.GA342447@google.com>
- <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
- <20200812230850.GA3511387@google.com>
- <5a39735d-dfd8-bdec-f068-81895799640e@linux.intel.com>
-In-Reply-To: <5a39735d-dfd8-bdec-f068-81895799640e@linux.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [9.19.161.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <91BC87B539FFA9428421B7B5C468BD41@tencent.com>
-Content-Transfer-Encoding: base64
+        Thu, 13 Aug 2020 20:34:26 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200814003421epoutp0423ec9ee6ea038489644ff260823471bc~q_z3rCOE10500205002epoutp04e
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 00:34:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200814003421epoutp0423ec9ee6ea038489644ff260823471bc~q_z3rCOE10500205002epoutp04e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597365261;
+        bh=a4Vq6CqPM+IzwnieurO9inOz861rMmOfAOArONcTU/4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=cHb36mQpfmZYYJ8qllNlVzET4ZYMNY/iy86RSgtPggBkKbkU9o4wCd+YbjMNNPEoo
+         CsaJ5zmhgdOW56CU5wLW/Jj/nRAJlF7LsKF/6Qh2Xi2MK3U/q6j+0ctpmhc/yA0MqA
+         6HM4NL7PyLB0u0/UdXs4O9nY7oxt09EHU1IpXvSY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200814003420epcas1p42dc204364950d5ba0305a9ee7c12d6bd~q_z3DSawg1218512185epcas1p4U;
+        Fri, 14 Aug 2020 00:34:20 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.155]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BSPZc0phgzMqYkg; Fri, 14 Aug
+        2020 00:34:16 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EB.39.28581.70CD53F5; Fri, 14 Aug 2020 09:34:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200814003415epcas1p3fb798e831cfbab79c28e6dca8cdc8959~q_zx7KUrf1378113781epcas1p3B;
+        Fri, 14 Aug 2020 00:34:15 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200814003415epsmtrp2a885e1bb1aadc63b481f6092533d0b02~q_zx6b4eg2147921479epsmtrp21;
+        Fri, 14 Aug 2020 00:34:15 +0000 (GMT)
+X-AuditID: b6c32a38-2e3ff70000006fa5-4e-5f35dc07ec3a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0E.36.08303.60CD53F5; Fri, 14 Aug 2020 09:34:14 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200814003414epsmtip2bced5523bc890427eb0b0881ef8a15cb~q_zxo4ukr3252132521epsmtip2w;
+        Fri, 14 Aug 2020 00:34:14 +0000 (GMT)
+Subject: Re: [PATCH v3] clk: samsung: Prevent potential endless loop in the
+ PLL set_rate ops
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-clk@vger.kernel.org
+Cc:     tomasz.figa@gmail.com, sboyd@kernel.org, mturquette@baylibre.com,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <28cd3eeb-816d-b369-11a9-16cd2c1af87c@samsung.com>
+Date:   Fri, 14 Aug 2020 09:46:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
+In-Reply-To: <20200813095508.7563-1-s.nawrocki@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmri7HHdN4g1/TGS02zljPavGx5x6r
+        xeVdc9gsZpzfx2Sx9shddouLp1wtDr9pZ7X4d20ji8WqXX8YHTg93t9oZffYOesuu8emVZ1s
+        Hn1bVjF6fN4kF8AalW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk
+        4hOg65aZA3SPkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85
+        P9fK0MDAyBSoMCE748OFOcwF0ywrrtw7xN7AuEW3i5GTQ0LARGLR7fXsXYxcHEICOxglXhy6
+        ygrhfGKUWPdoIQuE85lRYmf/V3aYltZVfWwQiV2MEtMmPIVqec8ocXbvAjaQKmGBOInlM9Yy
+        dTFycIgIeEnMa9AFqWEW2Mso0f74H1gNm4CWxP4XN8BsfgFFias/HjOC2LwCdhKLZh4Di7MI
+        qEps3H2KFcQWFQiTOLmtBapGUOLkzCcsIDangLXEjdvLmEFsZgFxiVtP5jNB2PIS29/OYQZZ
+        LCGwkkPicU8/C8QLLhK3Px9gg7CFJV4d3wL1mpTE53d7oeLVEitPHmGDaO5glNiy/wIrRMJY
+        Yv/SyWCfMQtoSqzfpQ8RVpTY+XsuI8RiPol3X3tYQUokBHglOtqEIEqUJS4/uMsEYUtKLG7v
+        ZJvAqDQLyTuzkLwwC8kLsxCWLWBkWcUollpQnJueWmxYYIIc3ZsYwYlVy2IH49y3H/QOMTJx
+        MB5ilOBgVhLhZb5sHC/Em5JYWZValB9fVJqTWnyI0RQYwBOZpUST84GpPa8k3tDUyNjY2MLE
+        0MzU0FBJnPfhLYV4IYH0xJLU7NTUgtQimD4mDk6pBia9LVvqMkxDHm/Y4cN4r0PB7PDd3FnC
+        Gpcs60sLDa9tK6389SjQtXKfT0DB/ZDLJbkbX5RqLoyz+BH37O/Sp5+f290sToi4Lnol9tjz
+        5wmvVNd2Rfz6aOm/cItOyIPXmpVJZ/5r5bwTe+Yesv+rznxnt957i+1yJu+eO0Mjb5qFE3Nu
+        BJvq0U+83Sw7AzdNNdA6EKK07v9q8296+a++bxNQbrkT9zXp/j3nKoEvS7RvhYoGz+Dr5fuy
+        sm6KXWC2/OJLF4qi7V0zUo5+Z14i0NHs/mirwMYz24z9P/35G+js9CLkxKeVKXeXZ0pOyDSy
+        7fkkdeR54zu9Gb/mpj25MnmiLGdAyK4K5/d3oicukY9WYinOSDTUYi4qTgQAJkZt/DUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXpftjmm8wcFlFhYbZ6xntfjYc4/V
+        4vKuOWwWM87vY7JYe+Quu8XFU64Wh9+0s1r8u7aRxWLVrj+MDpwe72+0snvsnHWX3WPTqk42
+        j74tqxg9Pm+SC2CN4rJJSc3JLEst0rdL4Mr4cGEOc8E0y4or9w6xNzBu0e1i5OSQEDCRaF3V
+        x9bFyMUhJLCDUWLh9T/sEAlJiWkXjzJ3MXIA2cIShw8Xg4SFBN4yStzZKwJiCwvESSyfsZYJ
+        pEREwEtiXgPYSGaBvYwS/39WQozsY5RoPLybGSTBJqAlsf/FDTYQm19AUeLqj8eMIDavgJ3E
+        opnHwOIsAqoSG3efYgWxRQXCJHYuecwEUSMocXLmExYQm1PAWuLG7WXMEMvUJf7MuwRli0vc
+        ejKfCcKWl9j+dg7zBEbhWUjaZyFpmYWkZRaSlgWMLKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz
+        0vWS83M3MYKjS0trB+OeVR/0DjEycTAeYpTgYFYS4WW+bBwvxJuSWFmVWpQfX1Sak1p8iFGa
+        g0VJnPfrrIVxQgLpiSWp2ampBalFMFkmDk6pBqa923/+UtuyaW7IQSPrvt+X6vk3SjJd6FvP
+        eOapzc7cn9MPmbutV+j3Dl1wY1eG4BuvKzvEdPcujhfYuzebyb8tddK/5L8zPGxTtohc8xUK
+        2fHo87H4VDY/pvP7/t47ozn1uV4br/HN8FnXjmzUiDjapdC3OPRP3oultXIWul8t52wp/Pjm
+        mubVXR7J8/dOWd976tijvlcJS5h3SD77miq8dyv7xcm8fLwqYhGTTe0yyuW4/7VeFlJTc3oe
+        x365ettOcbmI8/fmz45mmPbBVX37jI1MDmYVDooWMT0vF7y562tzycvAbEbmevPdmgX/DscY
+        z3r5YqM/j9HB3A/x1toNCUkat9e2uvaZ7ZfboqCjxFKckWioxVxUnAgArj15mB0DAAA=
+X-CMS-MailID: 20200814003415epcas1p3fb798e831cfbab79c28e6dca8cdc8959
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200813095520eucas1p209432599420d62e0e54a5545334c329c
+References: <CGME20200813095520eucas1p209432599420d62e0e54a5545334c329c@eucas1p2.samsung.com>
+        <20200813095508.7563-1-s.nawrocki@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gQXVnIDEzLCAyMDIwLCBhdCAxMjoyOCBQTSwgTGksIEF1YnJleSA8YXVicmV5Lmxp
-QGxpbnV4LmludGVsLmNvbT4gd3JvdGU6DQo+IA0KPiBPbiAyMDIwLzgvMTMgNzowOCwgSm9lbCBG
-ZXJuYW5kZXMgd3JvdGU6DQo+PiBPbiBXZWQsIEF1ZyAxMiwgMjAyMCBhdCAxMDowMToyNEFNICsw
-ODAwLCBMaSwgQXVicmV5IHdyb3RlOg0KPj4+IEhpIEpvZWwsDQo+Pj4gDQo+Pj4gT24gMjAyMC84
-LzEwIDA6NDQsIEpvZWwgRmVybmFuZGVzIHdyb3RlOg0KPj4+PiBIaSBBdWJyZXksDQo+Pj4+IA0K
-Pj4+PiBBcG9sb2dpZXMgZm9yIHJlcGx5aW5nIGxhdGUgYXMgSSB3YXMgc3RpbGwgbG9va2luZyBp
-bnRvIHRoZSBkZXRhaWxzLg0KPj4+PiANCj4+Pj4gT24gV2VkLCBBdWcgMDUsIDIwMjAgYXQgMTE6
-NTc6MjBBTSArMDgwMCwgTGksIEF1YnJleSB3cm90ZToNCj4+Pj4gWy4uLl0NCj4+Pj4+ICsvKg0K
-Pj4+Pj4gKyAqIENvcmUgc2NoZWR1bGluZyBwb2xpY3k6DQo+Pj4+PiArICogLSBDT1JFX1NDSEVE
-X0RJU0FCTEVEOiBjb3JlIHNjaGVkdWxpbmcgaXMgZGlzYWJsZWQuDQo+Pj4+PiArICogLSBDT1JF
-X0NPT0tJRV9NQVRDSDogdGFza3Mgd2l0aCBzYW1lIGNvb2tpZSBjYW4gcnVuDQo+Pj4+PiArICog
-ICAgICAgICAgICAgICAgICAgICBvbiB0aGUgc2FtZSBjb3JlIGNvbmN1cnJlbnRseS4NCj4+Pj4+
-ICsgKiAtIENPUkVfQ09PS0lFX1RSVVNUOiB0cnVzdGVkIHRhc2sgY2FuIHJ1biB3aXRoIGtlcm5l
-bA0KPj4+Pj4gCQkJdGhyZWFkIG9uIHRoZSBzYW1lIGNvcmUgY29uY3VycmVudGx5LiANCj4+Pj4+
-ICsgKiAtIENPUkVfQ09PS0lFX0xPTkVMWTogdGFza3Mgd2l0aCBjb29raWUgY2FuIHJ1biBvbmx5
-DQo+Pj4+PiArICogICAgICAgICAgICAgICAgICAgICB3aXRoIGlkbGUgdGhyZWFkIG9uIHRoZSBz
-YW1lIGNvcmUuDQo+Pj4+PiArICovDQo+Pj4+PiArZW51bSBjb3Jlc2NoZWRfcG9saWN5IHsNCj4+
-Pj4+ICsgICAgICAgQ09SRV9TQ0hFRF9ESVNBQkxFRCwNCj4+Pj4+ICsgICAgICAgQ09SRV9TQ0hF
-RF9DT09LSUVfTUFUQ0gsDQo+Pj4+PiArCUNPUkVfU0NIRURfQ09PS0lFX1RSVVNULA0KPj4+Pj4g
-KyAgICAgICBDT1JFX1NDSEVEX0NPT0tJRV9MT05FTFksDQo+Pj4+PiArfTsNCj4+Pj4+IA0KPj4+
-Pj4gV2UgY2FuIHNldCBwb2xpY3kgdG8gQ09SRV9DT09LSUVfVFJVU1Qgb2YgdXBlcmYgY2dyb3Vw
-IGFuZCBmaXggdGhpcyBraW5kDQo+Pj4+PiBvZiBwZXJmb3JtYW5jZSByZWdyZXNzaW9uLiBOb3Qg
-c3VyZSBpZiB0aGlzIHNvdW5kcyBhdHRyYWN0aXZlPw0KPj4+PiANCj4+Pj4gSW5zdGVhZCBvZiB0
-aGlzLCBJIHRoaW5rIGl0IGNhbiBiZSBzb21ldGhpbmcgc2ltcGxlciBJTUhPOg0KPj4+PiANCj4+
-Pj4gMS4gQ29uc2lkZXIgYWxsIGNvb2tpZS0wIHRhc2sgYXMgdHJ1c3RlZC4gKEV2ZW4gcmlnaHQg
-bm93LCBpZiB5b3UgYXBwbHkgdGhlDQo+Pj4+ICAgY29yZS1zY2hlZHVsaW5nIHBhdGNoc2V0LCBz
-dWNoIHRhc2tzIHdpbGwgc2hhcmUgYSBjb3JlIGFuZCBzbmlmZiBvbiBlYWNoDQo+Pj4+ICAgb3Ro
-ZXIuIFNvIGxldCB1cyBub3QgcHJldGVuZCB0aGF0IHN1Y2ggdGFza3MgYXJlIG5vdCB0cnVzdGVk
-KS4NCj4+Pj4gDQo+Pj4+IDIuIEFsbCBrZXJuZWwgdGhyZWFkcyBhbmQgaWRsZSB0YXNrIHdvdWxk
-IGhhdmUgYSBjb29raWUgMCAoc28gdGhhdCB3aWxsIGNvdmVyDQo+Pj4+ICAga3NvZnRpcnFkIHJl
-cG9ydGVkIGluIHlvdXIgb3JpZ2luYWwgaXNzdWUpLg0KPj4+PiANCj4+Pj4gMy4gQWRkIGEgY29u
-ZmlnIG9wdGlvbiAoQ09ORklHX1NDSEVEX0NPUkVfREVGQVVMVF9UQVNLU19VTlRSVVNURUQpLiBE
-ZWZhdWx0DQo+Pj4+ICAgZW5hYmxlIGl0LiBTZXR0aW5nIHRoaXMgb3B0aW9uIHdvdWxkIHRhZyBh
-bGwgdGFza3MgdGhhdCBhcmUgZm9ya2VkIGZyb20gYQ0KPj4+PiAgIGNvb2tpZS0wIHRhc2sgd2l0
-aCB0aGVpciBvd24gY29va2llLiBMYXRlciBvbiwgc3VjaCB0YXNrcyBjYW4gYmUgYWRkZWQgdG8N
-Cj4+Pj4gICBhIGdyb3VwLiBUaGlzIGNvdmVyJ3MgUGV0ZXJaJ3MgYXNrIGFib3V0IGhhdmluZyAn
-ZGVmYXVsdCB1bnRydXN0ZWQnKS4NCj4+Pj4gICAoVXNlcnMgbGlrZSBDaHJvbWVPUyB0aGF0IGRv
-bid0IHdhbnQgdG8gdXNlcnNwYWNlIHN5c3RlbSBwcm9jZXNzZXMgdG8gYmUNCj4+Pj4gICB0YWdn
-ZWQgY2FuIGRpc2FibGUgdGhpcyBvcHRpb24gc28gc3VjaCB0YXNrcyB3aWxsIGJlIGNvb2tpZS0w
-KS4NCj4+Pj4gDQo+Pj4+IDQuIEFsbG93IHByY3RsL2Nncm91cCBpbnRlcmZhY2VzIHRvIGNyZWF0
-ZSBncm91cHMgb2YgdGFza3MgYW5kIG92ZXJyaWRlIHRoZQ0KPj4+PiAgIGFib3ZlIGJlaGF2aW9y
-cy4NCj4+PiANCj4+PiBIb3cgZG9lcyB1cGVyZiBpbiBhIGNncm91cCB3b3JrIHdpdGgga3NvZnRp
-cnFkPyBBcmUgeW91IHN1Z2dlc3RpbmcgSSBzZXQgdXBlcmYncw0KPj4+IGNvb2tpZSB0byBiZSBj
-b29raWUtMCB2aWEgcHJjdGw/DQo+PiANCj4+IFllcywgYnV0IGxldCBtZSB0cnkgdG8gdW5kZXJz
-dGFuZCBiZXR0ZXIuIFRoZXJlIGFyZSAyIHByb2JsZW1zIGhlcmUgSSB0aGluazoNCj4+IA0KPj4g
-MS4ga3NvZnRpcnFkIGdldHRpbmcgaWRsZWQgd2hlbiBIVCBpcyB0dXJuZWQgb24sIGJlY2F1c2Ug
-dXBlcmYgaXMgc2hhcmluZyBhDQo+PiBjb3JlIHdpdGggaXQ6IFRoaXMgc2hvdWxkIG5vdCBiZSBh
-bnkgd29yc2UgdGhhbiBTTVQgT0ZGLCBiZWNhdXNlIGV2ZW4gU01UIE9GRg0KPj4gd291bGQgYWxz
-byByZWR1Y2Uga3NvZnRpcnFkJ3MgQ1BVIHRpbWUganVzdCBjb3JlIHNjaGVkIGlzIGRvaW5nLiBT
-dXJlDQo+PiBjb3JlLXNjaGVkdWxpbmcgYWRkcyBzb21lIG92ZXJoZWFkIHdpdGggSVBJcyBidXQg
-c3VjaCBhIGh1Z2UgZHJvcCBvZiBwZXJmIGlzDQo+PiBzdHJhbmdlLiBQZXRlciBhbnkgdGhvdWdo
-dHMgb24gdGhhdD8NCj4+IA0KPj4gMi4gSW50ZXJmYWNlOiBUbyBzb2x2ZSB0aGUgcGVyZm9ybWFu
-Y2UgcHJvYmxlbSwgeW91IGFyZSBzYXlpbmcgeW91IHdhbnQgdXBlcmYNCj4+IHRvIHNoYXJlIGEg
-Y29yZSB3aXRoIGtzb2Z0aXJxZCBzbyB0aGF0IGl0IGlzIG5vdCBmb3JjZWQgaW50byBpZGxlLiAg
-V2h5IG5vdA0KPj4ganVzdCBrZWVwIHVwZXJmIG91dCBvZiB0aGUgY2dyb3VwPw0KPiANCj4gSSBn
-dWVzcyB0aGlzIGlzIHVuYWNjZXB0YWJsZSBmb3Igd2hvIHJ1bnMgdGhlaXIgYXBwcyBpbiBjb250
-YWluZXIgYW5kIHZtLg0KSU1ITywgIGp1c3QgYXMgSm9lbCBwcm9wb3NlZCwgDQoxLiBDb25zaWRl
-ciBhbGwgY29va2llLTAgdGFzayBhcyB0cnVzdGVkLg0KMi4gQWxsIGtlcm5lbCB0aHJlYWRzIGFu
-ZCBpZGxlIHRhc2sgd291bGQgaGF2ZSBhIGNvb2tpZSAwIA0KSW4gdGhhdCB3YXksIGFsbCB0YXNr
-cyB3aXRoIGNvb2tpZXMoaW5jbHVkaW5nIHVwZXJmIGluIGEgY2dyb3VwKSBjb3VsZCBydW4NCmNv
-bmN1cnJlbnRseSB3aXRoIGtlcm5lbCB0aHJlYWRzLg0KVGhhdCBjb3VsZCBiZSBhIGdvb2Qgc29s
-dXRpb24gZm9yIHRoZSBpc3N1ZS4gOikNCg0KSWYgd2l0aCBDT05GSUdfU0NIRURfQ09SRV9ERUZB
-VUxUX1RBU0tTX1VOVFJVU1RFRCBlbmFibGVkLA0KbWF5YmUgd2Ugc2hvdWxkIHNldCBrc29mdGly
-cWTigJlzIGNvb2tpZSB0byBiZSBjb29raWUtMCB0byBzb2x2ZSB0aGUgaXNzdWUuIA0KDQpUaHgu
-DQpSZWdhcmRzLA0KSmlhbmcNCj4gDQo+IFRoYW5rcywNCj4gLUF1YnJleQ0KPiANCj4+IFRoZW4g
-aXQgd2lsbCBoYXZlIGNvb2tpZSAwIGFuZCBiZSBhYmxlIHRvDQo+PiBzaGFyZSBjb3JlIHdpdGgg
-a2VybmVsIHRocmVhZHMuIEFib3V0IHVzZXItdXNlciBpc29sYXRpb24gdGhhdCB5b3UgbmVlZCwg
-aWYNCj4+IHlvdSB0YWcgYW55ICJ1bnRydXN0ZWQiIHRocmVhZHMgYnkgYWRkaW5nIGl0IHRvIENH
-cm91cCwgdGhlbiB0aGVyZSB3aWxsDQo+PiBhdXRvbWF0aWNhbGx5IGlzb2xhdGVkIGZyb20gdXBl
-cmYgd2hpbGUgYWxsb3dpbmcgdXBlcmYgdG8gc2hhcmUgQ1BVIHdpdGgNCj4+IGtlcm5lbCB0aHJl
-YWRzLg0KPj4gDQo+PiBQbGVhc2UgbGV0IG1lIGtub3cgeW91ciB0aG91Z2h0cyBhbmQgdGhhbmtz
-LA0KPj4gDQo+PiAtIEpvZWwNCj4+IA0KPj4+IA0KPj4+IFRoYW5rcywNCj4+PiAtQXVicmV5DQo+
-Pj4+IA0KPj4+PiA1LiBEb2N1bWVudCBldmVyeXRoaW5nIGNsZWFybHkgc28gdGhlIHNlbWFudGlj
-cyBhcmUgY2xlYXIgYm90aCB0byB0aGUNCj4+Pj4gICBkZXZlbG9wZXJzIG9mIGNvcmUgc2NoZWR1
-bGluZyBhbmQgdG8gc3lzdGVtIGFkbWluaXN0cmF0b3JzLg0KPj4+PiANCj4+Pj4gTm90ZSB0aGF0
-LCB3aXRoIHRoZSBjb25jZXB0IG9mICJzeXN0ZW0gdHJ1c3RlZCBjb29raWUiLCB3ZSBjYW4gYWxz
-byBkbw0KPj4+PiBvcHRpbWl6YXRpb25zIGxpa2U6DQo+Pj4+IDEuIERpc2FibGUgU1RJQlAgd2hl
-biBzd2l0Y2hpbmcgaW50byB0cnVzdGVkIHRhc2tzLg0KPj4+PiAyLiBEaXNhYmxlIEwxRCBmbHVz
-aGluZyAvIHZlcncgc3R1ZmYgZm9yIEwxVEYvTURTIGlzc3Vlcywgd2hlbiBzd2l0Y2hpbmcgaW50
-bw0KPj4+PiAgIHRydXN0ZWQgdGFza3MuDQo+Pj4+IA0KPj4+PiBBdCBsZWFzdCAjMSBzZWVtcyB0
-byBiZSBiaXRpbmcgZW5hYmxpbmcgSFQgb24gQ2hyb21lT1MgcmlnaHQgbm93LCBhbmQgb25lDQo+
-Pj4+IG90aGVyIGVuZ2luZWVyIHJlcXVlc3RlZCBJIGRvIHNvbWV0aGluZyBsaWtlICMyIGFscmVh
-ZHkuDQo+Pj4+IA0KPj4+PiBPbmNlIHdlIGdldCBmdWxsLXN5c2NhbGwgaXNvbGF0aW9uIHdvcmtp
-bmcsIHRocmVhZHMgYmVsb25naW5nIHRvIGEgcHJvY2Vzcw0KPj4+PiBjYW4gYWxzbyBzaGFyZSBh
-IGNvcmUgc28gdGhvc2UgY2FuIGp1c3Qgc2hhcmUgYSBjb3JlIHdpdGggdGhlIHRhc2stZ3JvdXAN
-Cj4+Pj4gbGVhZGVyLg0KPj4+PiANCj4+Pj4+PiBJcyB0aGUgdXBlcmYgdGhyb3VnaHB1dCB3b3Jz
-ZSB3aXRoIFNNVCtjb3JlLXNjaGVkdWxpbmcgdmVyc3VzIG5vLVNNVCA/DQo+Pj4+PiANCj4+Pj4+
-IFRoaXMgaXMgYSBnb29kIHF1ZXN0aW9uLCBmcm9tIHRoZSBkYXRhIHdlIG1lYXN1cmVkIGJ5IHVw
-ZXJmLA0KPj4+Pj4gU01UK2NvcmUtc2NoZWR1bGluZyBpcyAyOC4yJSB3b3JzZSB0aGFuIG5vLVNN
-VCwgOigNCj4+Pj4gDQo+Pj4+IFRoaXMgaXMgd29ycnlpbmcgZm9yIHN1cmUuIDotKC4gV2Ugb3Vn
-aHQgdG8gZGVidWcvcHJvZmlsZSBpdCBtb3JlIHRvIHNlZSB3aGF0DQo+Pj4+IGlzIGNhdXNpbmcg
-dGhlIG92ZXJoZWFkLiBNZS9WaW5lZXRoIGFkZGVkIGl0IGFzIGEgdG9waWMgZm9yIExQQyBhcyB3
-ZWxsLg0KPj4+PiANCj4+Pj4gQW55IG90aGVyIHRob3VnaHRzIGZyb20gb3RoZXJzIG9uIHRoaXM/
-DQo+Pj4+IA0KPj4+PiB0aGFua3MsDQo+Pj4+IA0KPj4+PiAtIEpvZWwNCj4+Pj4gDQo+Pj4+IA0K
-Pj4+Pj4+IHRoYW5rcywNCj4+Pj4+PiANCj4+Pj4+PiAtIEpvZWwNCj4+Pj4+PiBQUzogSSBhbSBw
-bGFubmluZyB0byB3cml0ZSBhIHBhdGNoIGJlaGluZCBhIENPTkZJRyBvcHRpb24gdGhhdCB0YWdz
-DQo+Pj4+Pj4gYWxsIHByb2Nlc3NlcyAoZGVmYXVsdCB1bnRydXN0ZWQpIHNvIGV2ZXJ5dGhpbmcg
-Z2V0cyBhIGNvb2tpZSB3aGljaA0KPj4+Pj4+IHNvbWUgZm9sa3Mgc2FpZCB3YXMgaG93IHRoZXkg
-d2FudGVkIChoYXZlIGEgd2hpdGVsaXN0IGluc3RlYWQgb2YNCj4+Pj4+PiBibGFja2xpc3QpLg0K
-Pj4+Pj4+IA0KPj4+Pj4gDQo+Pj4gDQo+IA0KPiANCg0K
+Hi Sylwester,
+
+On 8/13/20 6:55 PM, Sylwester Nawrocki wrote:
+> In the .set_rate callback for some PLLs there is a loop polling state
+> of the PLL lock bit and it may become an endless loop when something
+> goes wrong with the PLL. For some PLLs there is already code for polling
+> with a timeout but it uses the ktime API, which doesn't work in some
+> conditions when the set_rate op is called, in particular during
+> initialization of the clk provider before the clocksource initialization
+> has completed. Hence the ktime API cannot be used to reliably detect
+> the PLL locking timeout.
+> 
+> This patch adds a common helper function for busy waiting on the PLL lock
+> bit with timeout detection.
+> 
+> Actual PLL lock time depends on the P divider value, the VCO frequency
+> and a constant PLL type specific LOCK_FACTOR and can be calculated as
+> 
+>  lock_time = Pdiv * LOCK_FACTOR / VCO_freq
+> 
+> Common timeout value of 10 ms is used for all the PLLs with an assumption
+> that maximum possible value of Pdiv is 64, maximum possible LOCK_FACTOR
+> value is 3000 and minimum VCO frequency is 24 MHz.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+> Changes for v3:
+>  - use busy-loop with udelay() instead of ktime API
+> Changes for v2:
+>  - use common readl_relaxed_poll_timeout_atomic() macro
+> ---
+>  drivers/clk/samsung/clk-pll.c | 94 ++++++++++++++++---------------------------
+>  1 file changed, 34 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+> index ac70ad7..c83d261 100644
+> --- a/drivers/clk/samsung/clk-pll.c
+> +++ b/drivers/clk/samsung/clk-pll.c
+> @@ -15,7 +15,7 @@
+>  #include "clk.h"
+>  #include "clk-pll.h"
+> 
+> -#define PLL_TIMEOUT_MS		10
+> +#define PLL_TIMEOUT_US		10000U
+> 
+>  struct samsung_clk_pll {
+>  	struct clk_hw		hw;
+> @@ -63,6 +63,25 @@ static long samsung_pll_round_rate(struct clk_hw *hw,
+>  	return rate_table[i - 1].rate;
+>  }
+> 
+> +static int samsung_pll_lock_wait(struct samsung_clk_pll *pll,
+> +				 unsigned int reg_mask)
+> +{
+> +	int i;
+> +
+> +	/* Wait until the PLL is in steady locked state */
+> +	for (i = 0; i < PLL_TIMEOUT_US / 2; i++) {
+> +		if (readl_relaxed(pll->con_reg) & reg_mask)
+> +			return 0;
+> +
+> +		udelay(2);
+> +		cpu_relax();
+> +	}
+> +
+> +	pr_err("Could not lock PLL %s\n", clk_hw_get_name(&pll->hw));
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+>  static int samsung_pll3xxx_enable(struct clk_hw *hw)
+>  {
+>  	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> @@ -241,12 +260,9 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	writel_relaxed(tmp, pll->con_reg);
+> 
+>  	/* Wait until the PLL is locked if it is enabled. */
+> -	if (tmp & BIT(pll->enable_offs)) {
+> -		do {
+> -			cpu_relax();
+> -			tmp = readl_relaxed(pll->con_reg);
+> -		} while (!(tmp & BIT(pll->lock_offs)));
+> -	}
+> +	if (tmp & BIT(pll->enable_offs))
+> +		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
+> +
+>  	return 0;
+>  }
+> 
+> @@ -318,7 +334,7 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  					unsigned long parent_rate)
+>  {
+>  	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> -	u32 tmp, pll_con0, pll_con1;
+> +	u32 pll_con0, pll_con1;
+>  	const struct samsung_pll_rate_table *rate;
+> 
+>  	rate = samsung_get_pll_settings(pll, drate);
+> @@ -356,13 +372,8 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	pll_con1 |= rate->kdiv << PLL36XX_KDIV_SHIFT;
+>  	writel_relaxed(pll_con1, pll->con_reg + 4);
+> 
+> -	/* wait_lock_time */
+> -	if (pll_con0 & BIT(pll->enable_offs)) {
+> -		do {
+> -			cpu_relax();
+> -			tmp = readl_relaxed(pll->con_reg);
+> -		} while (!(tmp & BIT(pll->lock_offs)));
+> -	}
+> +	if (pll_con0 & BIT(pll->enable_offs))
+> +		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
+> 
+>  	return 0;
+>  }
+> @@ -437,7 +448,6 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	struct samsung_clk_pll *pll = to_clk_pll(hw);
+>  	const struct samsung_pll_rate_table *rate;
+>  	u32 con0, con1;
+> -	ktime_t start;
+> 
+>  	/* Get required rate settings from table */
+>  	rate = samsung_get_pll_settings(pll, drate);
+> @@ -489,20 +499,7 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	writel_relaxed(con0, pll->con_reg);
+> 
+>  	/* Wait for locking. */
+> -	start = ktime_get();
+> -	while (!(readl_relaxed(pll->con_reg) & PLL45XX_LOCKED)) {
+> -		ktime_t delta = ktime_sub(ktime_get(), start);
+> -
+> -		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
+> -			pr_err("%s: could not lock PLL %s\n",
+> -					__func__, clk_hw_get_name(hw));
+> -			return -EFAULT;
+> -		}
+> -
+> -		cpu_relax();
+> -	}
+> -
+> -	return 0;
+> +	return samsung_pll_lock_wait(pll, PLL45XX_LOCKED);
+>  }
+> 
+>  static const struct clk_ops samsung_pll45xx_clk_ops = {
+> @@ -588,7 +585,6 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	struct samsung_clk_pll *pll = to_clk_pll(hw);
+>  	const struct samsung_pll_rate_table *rate;
+>  	u32 con0, con1, lock;
+> -	ktime_t start;
+> 
+>  	/* Get required rate settings from table */
+>  	rate = samsung_get_pll_settings(pll, drate);
+> @@ -648,20 +644,7 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	writel_relaxed(con1, pll->con_reg + 0x4);
+> 
+>  	/* Wait for locking. */
+> -	start = ktime_get();
+> -	while (!(readl_relaxed(pll->con_reg) & PLL46XX_LOCKED)) {
+> -		ktime_t delta = ktime_sub(ktime_get(), start);
+> -
+> -		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
+> -			pr_err("%s: could not lock PLL %s\n",
+> -					__func__, clk_hw_get_name(hw));
+> -			return -EFAULT;
+> -		}
+> -
+> -		cpu_relax();
+> -	}
+> -
+> -	return 0;
+> +	return samsung_pll_lock_wait(pll, PLL46XX_LOCKED);
+>  }
+> 
+>  static const struct clk_ops samsung_pll46xx_clk_ops = {
+> @@ -1035,14 +1018,9 @@ static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  			(rate->sdiv << PLL2550XX_S_SHIFT);
+>  	writel_relaxed(tmp, pll->con_reg);
+> 
+> -	/* wait_lock_time */
+> -	do {
+> -		cpu_relax();
+> -		tmp = readl_relaxed(pll->con_reg);
+> -	} while (!(tmp & (PLL2550XX_LOCK_STAT_MASK
+> -			<< PLL2550XX_LOCK_STAT_SHIFT)));
+> -
+> -	return 0;
+> +	/* Wait for locking. */
+> +	return samsung_pll_lock_wait(pll,
+> +			PLL2550XX_LOCK_STAT_MASK << PLL2550XX_LOCK_STAT_SHIFT);
+>  }
+> 
+>  static const struct clk_ops samsung_pll2550xx_clk_ops = {
+> @@ -1132,13 +1110,9 @@ static int samsung_pll2650x_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	con1 |= ((rate->kdiv & PLL2650X_K_MASK) << PLL2650X_K_SHIFT);
+>  	writel_relaxed(con1, pll->con_reg + 4);
+> 
+> -	do {
+> -		cpu_relax();
+> -		con0 = readl_relaxed(pll->con_reg);
+> -	} while (!(con0 & (PLL2650X_LOCK_STAT_MASK
+> -			<< PLL2650X_LOCK_STAT_SHIFT)));
+> -
+> -	return 0;
+> +	/* Wait for locking. */
+> +	return samsung_pll_lock_wait(pll,
+> +			PLL2650X_LOCK_STAT_MASK << PLL2650X_LOCK_STAT_SHIFT);
+>  }
+> 
+>  static const struct clk_ops samsung_pll2650x_clk_ops = {
+> --
+> 2.7.4
+> 
+> 
+> 
+
+Thanks.
+
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
