@@ -2,157 +2,130 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D911C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5464FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98DE20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597447666;
-	bh=GPjCjOBy4/MES/6xwTtupSAhE2pRWrieYpnW2v2mWIY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2Z+g+5Ammga5GJ0sSHZtrmPJllBCA+eW8Ix3X+N71Nzk2VP22M5eJbnKeKGl0pR92
-	 wF0zhIMsoJc4RWo7Q5ERKRwqsAMmHYA8EQNeA/MX70+QWZnIgF3y/HlOZgM81YuWVq
-	 LWsQT+7zgdFacpbm3DTPV8YxisVSaom00zNGJt1s=
+	by mail.kernel.org (Postfix) with ESMTP id 32DA62068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHNX1p (ORCPT
+        id S1728027AbgHNXaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbgHNX1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:27:45 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EFC820768;
-        Fri, 14 Aug 2020 23:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597447664;
-        bh=GPjCjOBy4/MES/6xwTtupSAhE2pRWrieYpnW2v2mWIY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HvU9bzcZLYnzdJR10tU7jmktoTLxECTfl1592MQ0btRmVKPDyYxeX+5c/Cau6KbMf
-         +7RSeUurYeeS5/b1PkHxL7kD90k3yUvHMgn5ZBiyLKgXWuhT+m7qkl9DcJh3CVaQnW
-         R/fOqJkGx/heLGwwJuNemyzyo/fzO0U7xo9S0Ej8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2CD063522B27; Fri, 14 Aug 2020 16:27:44 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 16:27:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200814232744.GU4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200813220619.GA2674@hirez.programming.kicks-ass.net>
- <875z9m3xo7.fsf@nanos.tec.linutronix.de>
- <20200814083037.GD3982@worktop.programming.kicks-ass.net>
- <20200814141425.GM4295@paulmck-ThinkPad-P72>
- <20200814161106.GA13853@paulmck-ThinkPad-P72>
- <20200814174924.GI3982@worktop.programming.kicks-ass.net>
- <20200814180224.GQ4295@paulmck-ThinkPad-P72>
- <875z9lkoo4.fsf@nanos.tec.linutronix.de>
- <20200814204140.GT4295@paulmck-ThinkPad-P72>
- <20200814215206.GL3982@worktop.programming.kicks-ass.net>
+        Fri, 14 Aug 2020 19:30:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:54511 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgHNXaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 19:30:17 -0400
+Received: by mail-il1-f197.google.com with SMTP id k8so3771617ili.21
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 16:30:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=SA9X8J8qG/6k9RqPtMDue8VLhzxw1Kg1UAqeNkKdQ3s=;
+        b=hRIwRpWxd8pDp3ObX32bWOnKeKa9SGNcI11C7GdV97f3Fw1UDj8kNsozpwvTXSd8Lc
+         rYV49Al+g+vZCSlxchbn6c++eSfQvV7+HDsSHuqTQFnlZCuu1Re1BtGJMXwyQ1N3CSOc
+         i/4aqBdzUyqcdSbgmxPneGzv0sqrLsYho4W/uTxiwSP/fIEVhcOvwxF0ISgSe86NqaKo
+         sPMkJ9oA4T0c5qhwMR8lBrej+2icMYtVKhGIRL/tNoz71NopbZWTgl5aHxCHmcTmvzMP
+         8OE7bzF6JIoHlT6YBskAr5O3d6evQNLctvSeqxDofHGcw9un1hKbag8prhx/KqbP4kcx
+         Facw==
+X-Gm-Message-State: AOAM531XMHV2MCLFrHdpfrCvPp8sgYDH+jOEWlvnbkymlVOodzUTIsgk
+        zqCLUkitlJjMJ00qYatt/Ec9coqb+JY7IEVZSOovX7cJXdFl
+X-Google-Smtp-Source: ABdhPJz9eIGB6Ws8UTY+Q8ajVoXMDaX5s1VQsNBPUQJEiSzcKKaE0ZdxmHaR4hN3v/pddtH2CEq7UIzi+idpeuj2wETkzX+vzNXh
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814215206.GL3982@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a02:3f0d:: with SMTP id d13mr4625141jaa.99.1597447816184;
+ Fri, 14 Aug 2020 16:30:16 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 16:30:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a18a8305acdecd3e@google.com>
+Subject: BUG: corrupted list in bt_accept_unlink
+From:   syzbot <syzbot+7f4d3ecf4d3480301722@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 11:52:06PM +0200, Peter Zijlstra wrote:
-> On Fri, Aug 14, 2020 at 01:41:40PM -0700, Paul E. McKenney wrote:
-> > > And that enforces the GFP_NOLOCK allocation mode or some other solution
-> > > unless you make a new rule that calling call_rcu() is forbidden while
-> > > holding zone lock or any other lock which might be nested inside the
-> > > GFP_NOWAIT zone::lock held region.
-> > 
-> > Again, you are correct.  Maybe the forecasted weekend heat will cause
-> > my brain to hallucinate a better solution, but in the meantime, the
-> > GFP_NOLOCK approach looks good from this end.
-> 
-> So I hate __GFP_NO_LOCKS for a whole number of reasons:
-> 
->  - it should be called __GFP_LOCKLESS if anything
->  - it sprinkles a bunch of ugly branches around the allocator fast path
->  - it only works for order==0
-> 
-> Combined I really odn't think this should be a GFP flag. How about a
-> special purpose allocation function, something like so..
+Hello,
 
-This looks entirely reasonable to me!
+syzbot found the following issue on:
 
-							Thanx, Paul
+HEAD commit:    a1d21081 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c77891900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9c89856ae5fc8b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=7f4d3ecf4d3480301722
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1180847a900000
 
-> ---
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 901a21f61d68..cdec9c99fba7 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4875,6 +4875,47 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
->  }
->  EXPORT_SYMBOL(__alloc_pages_nodemask);
->  
-> +struct page *__rmqueue_lockless(struct zone *zone, struct per_cpu_pages *pcp)
-> +{
-> +	struct list_head *list;
-> +	struct page *page;
-> +	int migratetype;
-> +
-> +	for (migratetype = 0; migratetype < MIGRATE_PCPTYPES; migratetype++) {
-> +		list = &pcp->list[migratetype];
-> +		page = list_first_entry_or_null(list, struct page, lru);
-> +		if (page && check_new_pcp(page)) {
-> +			list_del(&page->lru);
-> +			pcp->count--;
-> +			return page;
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +struct page *__alloc_page_lockless(void)
-> +{
-> +	struct zonelist *zonelist = node_zonelist(numa_node_id(), GFP_KERNEL);
-> +	struct per_cpu_pages *pcp;
-> +	struct page *page = NULL;
-> +	unsigned long flags;
-> +	struct zoneref *z;
-> +	struct zone *zone;
-> +
-> +	for_each_zone_zonelist(zone, z, zonelist, ZONE_NORMAL) {
-> +		local_irq_save(flags);
-> +		pcp = &this_cpu_ptr(zone->pageset)->pcp;
-> +		page = __rmqueue_lockless(zone, pcp);
-> +		local_irq_restore(flags);
-> +
-> +		if (page)
-> +			break;
-> +	}
-> +
-> +	return page;
-> +}
-> +
->  /*
->   * Common helper functions. Never use with __GFP_HIGHMEM because the returned
->   * address cannot represent highmem pages. Use alloc_pages and then kmap if
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7f4d3ecf4d3480301722@syzkaller.appspotmail.com
+
+list_del corruption. prev->next should be ffff8880913ab4b8, but was ffff8880890c54b8
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:51!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 5a ab bf fd 0f 0b 48 89 f1 48 c7 c7 40 ff 93 88 4c 89 e6 e8 46 ab bf fd 0f 0b 48 89 ee 48 c7 c7 e0 00 94 88 e8 35 ab bf fd <0f> 0b 4c 89 ea 48 89 ee 48 c7 c7 20 00 94 88 e8 21 ab bf fd 0f 0b
+RSP: 0018:ffffc90000d8fb18 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff8880913ab4b8 RCX: 0000000000000000
+RDX: ffff8880a968a480 RSI: ffffffff815dbc57 RDI: fffff520001b1f55
+RBP: ffff8880913ab4b8 R08: 0000000000000054 R09: ffff8880ae7318e7
+R10: 0000000000000000 R11: 00000000000c3a18 R12: ffff8880890c54b8
+R13: ffff88809914f4b8 R14: ffff88809914f000 R15: 0000000000000008
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000081570f0 CR3: 00000000a6dc2000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del_init include/linux/list.h:204 [inline]
+ bt_accept_unlink+0x26/0x280 net/bluetooth/af_bluetooth.c:187
+ l2cap_sock_teardown_cb+0x197/0x400 net/bluetooth/l2cap_sock.c:1544
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace ea2f8b77c156d63d ]---
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 5a ab bf fd 0f 0b 48 89 f1 48 c7 c7 40 ff 93 88 4c 89 e6 e8 46 ab bf fd 0f 0b 48 89 ee 48 c7 c7 e0 00 94 88 e8 35 ab bf fd <0f> 0b 4c 89 ea 48 89 ee 48 c7 c7 20 00 94 88 e8 21 ab bf fd 0f 0b
+RSP: 0018:ffffc90000d8fb18 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff8880913ab4b8 RCX: 0000000000000000
+RDX: ffff8880a968a480 RSI: ffffffff815dbc57 RDI: fffff520001b1f55
+RBP: ffff8880913ab4b8 R08: 0000000000000054 R09: ffff8880ae7318e7
+R10: 0000000000000000 R11: 00000000000c3a18 R12: ffff8880890c54b8
+R13: ffff88809914f4b8 R14: ffff88809914f000 R15: 0000000000000008
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000080f0b38 CR3: 0000000009a8d000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
