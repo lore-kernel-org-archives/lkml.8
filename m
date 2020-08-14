@@ -2,126 +2,139 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3712C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275D82074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C2A2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uyTFHwNf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QV5CY1O9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgHNJ3J (ORCPT
+        id S1726662AbgHNJ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 05:29:09 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26715 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgHNJ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 05:29:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597397346; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=brCGegxfCcnWHvjZPGGWO7kpAheoszRzrzBQ4JAl0Jo=;
- b=uyTFHwNfSX1wYPkK83I0mrLAyA5XkXlcvvwOuU5GZuXAwUdRNeBYi+dxEZgRrnrkmF/Qb2Bp
- K+3zwV6LE0u4ZGfu8BAO70WCCil7/ILGuaog2QGGuN2cJy62DScu/xKCazVpU5uLvth1lRZ0
- JcpiqVkIUhdr5tuKkje3K1/IUyo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f365961d96d28d61e1c6442 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 09:29:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DFD67C433CB; Fri, 14 Aug 2020 09:29:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16B07C433C6;
-        Fri, 14 Aug 2020 09:29:04 +0000 (UTC)
+        Fri, 14 Aug 2020 05:29:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42990 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgHNJ36 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 05:29:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07E9Teum124793;
+        Fri, 14 Aug 2020 04:29:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597397380;
+        bh=5/rjwRjZWzx8hrnU6DFNe3GilgF9jyJehzM/soNMCzw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QV5CY1O9r+ReoIfZBeaDczp4KHVDRwKgrMIat2BjlP1FOdaPEdxVTw1mB7TRFiN6/
+         goLZyp4jXwyfPkfHwjNriXlV6p02pyp7fcgmxqntNWGS8U4+fnvLRKgO7YiuPBnA+Z
+         PoZ5RKlCxFoqpOY0DYcAjUIcur2vjuWmwySJ5j3U=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07E9TeZI004961
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Aug 2020 04:29:40 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 14
+ Aug 2020 04:29:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 14 Aug 2020 04:29:40 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07E9Ta8k052359;
+        Fri, 14 Aug 2020 04:29:36 -0500
+Subject: Re: [PATCH v8 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
+ bridge
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Swapnil Jakhade <sjakhade@cadence.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <yamonkar@cadence.com>, <jsarha@ti.com>, <nsekhar@ti.com>,
+        <praneeth@ti.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
+ <20200811023622.GC13513@pendragon.ideasonboard.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <49c2a4c8-6d84-6164-d350-6a985fc9a3e9@ti.com>
+Date:   Fri, 14 Aug 2020 12:29:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200811023622.GC13513@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 17:29:04 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Asutosh Das <asutoshd@codeaurora.org>
-Cc:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] scsi: ufs: change ufshcd_comp_devman_upiu() to
- ufshcd_compose_devman_upiu()
-In-Reply-To: <20200813155515.GB25655@asutoshd-linux1.qualcomm.com>
-References: <20200812143704.30245-1-huobean@gmail.com>
- <20200812143704.30245-2-huobean@gmail.com>
- <20200813155515.GB25655@asutoshd-linux1.qualcomm.com>
-Message-ID: <f4a9c3a1147bb03a876d541d1e637976@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13 23:55, Asutosh Das wrote:
-> On Wed, Aug 12 2020 at 07:37 -0700, Bean Huo wrote:
->> From: Bean Huo <beanhuo@micron.com>
->> 
->> ufshcd_comp_devman_upiu() alwasy make me confuse that it is a request
->> completion calling function. Change it to 
->> ufshcd_compose_devman_upiu().
->> 
->> Signed-off-by: Bean Huo <beanhuo@micron.com>
->> Acked-by: Avri Altman <avri.altman@wdc.com>
-> 
-> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+On 11/08/2020 05:36, Laurent Pinchart wrote:
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
-
+>> +static int cdns_mhdp_mailbox_write(struct cdns_mhdp_device *mhdp, u8 val)
+>> +{
+>> +	int ret, full;
+>> +
+>> +	WARN_ON(!mutex_is_locked(&mhdp->mbox_mutex));
+>> +
+>> +	ret = readx_poll_timeout(readl, mhdp->regs + CDNS_MAILBOX_FULL,
+>> +				 full, !full, MAILBOX_RETRY_US,
+>> +				 MAILBOX_TIMEOUT_US);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	writel(val, mhdp->regs + CDNS_MAILBOX_TX_DATA);
+>> +
+>> +	return 0;
+>> +}
 > 
->> ---
->> drivers/scsi/ufs/ufshcd.c | 7 ++++---
->> 1 file changed, 4 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index 5f09cda7b21c..e3663b85e8ee 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -2391,12 +2391,13 @@ static inline void 
->> ufshcd_prepare_utp_nop_upiu(struct ufshcd_lrb *lrbp)
->> }
->> 
->> /**
->> - * ufshcd_comp_devman_upiu - UFS Protocol Information Unit(UPIU)
->> + * ufshcd_compose_devman_upiu - UFS Protocol Information Unit(UPIU)
->>  *			     for Device Management Purposes
->>  * @hba: per adapter instance
->>  * @lrbp: pointer to local reference block
->>  */
->> -static int ufshcd_comp_devman_upiu(struct ufs_hba *hba, struct 
->> ufshcd_lrb *lrbp)
->> +static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
->> +				      struct ufshcd_lrb *lrbp)
->> {
->> 	u8 upiu_flags;
->> 	int ret = 0;
->> @@ -2590,7 +2591,7 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba 
->> *hba,
->> 	ufshcd_prepare_lrbp_crypto(NULL, lrbp);
->> 	hba->dev_cmd.type = cmd_type;
->> 
->> -	return ufshcd_comp_devman_upiu(hba, lrbp);
->> +	return ufshcd_compose_devman_upiu(hba, lrbp);
->> }
->> 
->> static int
->> -- 2.17.1
->> 
+> As commented previously, I think there's room for optimization here. Two
+> options that I think should be investigated are using the mailbox
+> interrupts, and only polling for the first byte of the message
+> (depending on whether the firmware implementation can guarantee that
+> when the first byte is available, the rest of the message will be
+> immediately available too). This can be done on top of this patch
+> though.
+
+I made some tests on this.
+
+I cannot see mailbox_write ever looping, mailbox is never full. So in this case the
+readx_poll_timeout() call is there just for safety to catch the cases where something has gone
+totally wrong or perhaps once in a while the mbox can be full for a tiny moment. But we always do
+need to check CDNS_MAILBOX_FULL before each write to CDNS_MAILBOX_TX_DATA, so we can as well use
+readx_poll_timeout for that to catch the odd cases (afaics, there's no real overhead if the exit
+condition is true immediately).
+
+mailbox_read polls sometimes. Most often it does not poll, as the data is ready in the mbox, and in
+these cases the situation is the same as for mailbox_write.
+
+The cases where it does poll are related to things where the fw has to wait for something. The
+longest poll waits seemed to be EDID read (16 ms wait) and adjusting LT (1.7 ms wait). And afaics,
+when the first byte of the received message is there, the rest of the bytes will be available
+without wait.
+
+For mailbox_write and for most mailbox_reads I think using interrupts makes no sense, as the
+overhead would be big.
+
+For those few long read operations, interrupts would make sense. I guess a simple way to handle this
+would be to add a new function, wait_for_mbox_data() or such, which would use the interrupts to wait
+for mbox not empty. This function could be used in selected functions (edid, LT) after
+cdns_mhdp_mailbox_send().
+
+Although I think it's not that bad currently, MAILBOX_RETRY_US is 1ms, so it's quite lazy polling,
+so perhaps this can be considered TODO optimization.
+
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
