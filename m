@@ -2,163 +2,112 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA613C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE85BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87DD2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9873C2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k73o73VN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KjgK+a6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgHNWXp (ORCPT
+        id S1727864AbgHNWYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 18:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
+        Fri, 14 Aug 2020 18:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgHNWXo (ORCPT
+        with ESMTP id S1726285AbgHNWYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 18:23:44 -0400
+        Fri, 14 Aug 2020 18:24:32 -0400
 Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6859C061388
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so4784497plk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5D5C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:24:32 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f5so4793280plr.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:24:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5jRl27RMtgZLeq7b/WHxRkukWBIOKeVCPevK+sNiPhQ=;
-        b=k73o73VNd0qn9M+iiKly87GFMMXb6KyBorDW4eREbb7tWN2jSXYRFziRAoYgSezuUF
-         FLz13Od/1weIFdHYZAkH4EE6DZ2zj7DIZfLAK/em3ojP/RtKqLTLGoQKKszjB6dJ4pV9
-         mte4YoB6Bc6FECyWkOAdnIkWLrrXIYtyO/yYs=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YeiaI0cBbmIVgM9KK8qJD1B8RoJBQ6CWSMWYzinrWjc=;
+        b=KjgK+a6u6Kx6XUlBgSgd8V5i1YscGs6TojRN9+IHp9wxZStU60+jsrTI9g+0bSN1jl
+         J77sCZ3P+O/Xga8pdnYF7q91ojj7jyNCzSc1hrx5X1QU0uWjPu8+o8bQEKkx9wl26ylr
+         xHWLlFiSNkBxaY1NZn/ZBguIpR1iI/g+GR7k8vO5Rs7Uki7fWxn5aHZn4kHpCg3B1GPJ
+         591tiiihnmDBrkpm7gRPxtbxp+PNMgn7GLZN7L28hVafnk36mOjS5qREqKRz96pe+YMM
+         6dgtykvIbRjP3CNne9MS8Gw87BiEir1r6bn7lZqCmSeeeyl449ARF5BXTHApo+3FGEP4
+         sicA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5jRl27RMtgZLeq7b/WHxRkukWBIOKeVCPevK+sNiPhQ=;
-        b=jBgdRzznfNLmoYPcO5+HPpkboy6plBsqd4h1QVUp87h2jBmk5KatyvLaDvwUEhhIzM
-         qmdWhwDwzax0TTJ7eCzpsXtylCxSI1CNh7vvkw4Us/AMm6Gy1XlFEMK/elXr15RVRvD9
-         KWZhi6n/rjwLadR618iXXXnwqiDLulwofDvYvlLRa6hE0D3uFO6IJKU49cZA4cQcSCi8
-         j2ro51T7doQF33Oq9b68YhXJZdO5lTOQKgourpQgNvGJe3kISEpuzMru95BguVSPCCfG
-         HwuoO3k7HoaJoP+Vzq+lrvbcALKoOMUFJPifJ6aAn42gla6ARX+CCu8lQHKwAE3FxWab
-         NSQw==
-X-Gm-Message-State: AOAM530syvcmflvglFz81PnhKnkk+Sl2yId6V6SBKTWpYl/owSaetTT4
-        //Uq9sKlRK8YddutYnXrHFzmaw==
-X-Google-Smtp-Source: ABdhPJw4VToGF1Qswjip3GwGa5R4xOuQDDzZR0q80w8U/1h/s8l757szCrDYF3vT/E21VzKADGZyYA==
-X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3422745plz.239.1597443823248;
-        Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
-        by smtp.gmail.com with ESMTPSA id a17sm9302460pgi.26.2020.08.14.15.23.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 15:23:42 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        linux-bluetooth@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Daniel Winkler <danielwinkler@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH] bluetooth: Set ext scan response only when it exists
-Date:   Fri, 14 Aug 2020 15:23:36 -0700
-Message-Id: <20200814152323.1.Ib022565452fde0c02fbcf619950ef868715dd243@changeid>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YeiaI0cBbmIVgM9KK8qJD1B8RoJBQ6CWSMWYzinrWjc=;
+        b=X4aNAIlh25J/7NadX9r6QN93Tnxz0cpikEQehVWOGVd2s9ppc/Q/PcpPnXdQzrlvWT
+         PJeqsKMcVufzQFe/ufUelCpaFl11K1M6y0T6wiOTbqHHZI9qjMAniMAhHRZUIIAlzKmQ
+         50kfRhYGNFmSEVBf7INBf8V/7qwY0zWEhEnFP5d/q9kjBnh82kl0+czs53nuKW8izBKZ
+         vQJ0bs4fOS1UopT2hV4lDkqUeR0JcOax1/zycBUsWO63Ib6YgNGzOKuwPXDJUasQ3C+e
+         V8NSdytWqed9n34SRzOO6xoWkdCeOo7MgQ+OAhxhB1MqwJmk9RpICP/ya3zij/tYOFym
+         qnmg==
+X-Gm-Message-State: AOAM531aHk7fk75cx1EcKtyBm5ep/AaaOMGthQnlwQIMdcUZK++ZRVj4
+        u30MuBiecKuZFVUDnxeRkx/YHYpMxJLsBTaBpDPhCw==
+X-Google-Smtp-Source: ABdhPJwIQT3IgIQ/kbIfKzriwToHojYpVqPKRA1c4+IXWI0W+BsDcitUmC+SA7WAqQjsofNh91Jf7Rf589EHI6QGVsA=
+X-Received: by 2002:a17:902:cb91:: with SMTP id d17mr3326522ply.223.1597443871397;
+ Fri, 14 Aug 2020 15:24:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200814212525.6118-1-john.ogness@linutronix.de>
+In-Reply-To: <20200814212525.6118-1-john.ogness@linutronix.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 14 Aug 2020 15:24:19 -0700
+Message-ID: <CAKwvOdk_ex+v7XZEoY=1Rh3S_GuCPJD3_NTiMhtsmP+5=MctVA@mail.gmail.com>
+Subject: Re: [PATCH 0/2][next] update gdb scripts for lockless printk ringbuffer
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only set extended scan response only when it exists. Otherwise, clear
-the scan response data.
+On Fri, Aug 14, 2020 at 2:25 PM John Ogness <john.ogness@linutronix.de> wrote:
+>
+> Hi,
+>
+> When we brought in the new lockless printk ringbuffer, we overlooked the gdb
+> scripts. Here are a set of patches to implement gdb support for the new
+> ringbuffer.
+>
+> John Ogness (2):
+>   scripts/gdb: add utils.read_ulong()
+>   scripts/gdb: update for lockless printk ringbuffer
 
-Per the core spec v5.2, Vol 4, Part E, 7.8.55
+Thanks John! For the series:
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-If the advertising set is non-scannable and the Host uses this command
-other than to discard existing data, the Controller shall return the
-error code Invalid HCI Command Parameters (0x12).
+>
+>  Documentation/admin-guide/kdump/gdbmacros.txt | 153 ++++++++++++------
+>  scripts/gdb/linux/dmesg.py                    | 139 +++++++++++-----
+>  scripts/gdb/linux/utils.py                    |   7 +
+>  3 files changed, 216 insertions(+), 83 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-On WCN3991, the controller correctly responds with Invalid Parameters
-when this is sent.  That error causes __hci_req_hci_power_on to fail
-with -EINVAL and LE devices can't connect because background scanning
-isn't configured.
 
-Here is an hci trace of where this issue occurs during power on:
-
-< HCI Command: LE Set Extended Advertising Parameters (0x08|0x0036) plen 25
-        Handle: 0x00
-        Properties: 0x0010
-          Use legacy advertising PDUs: ADV_NONCONN_IND
-        Min advertising interval: 181.250 msec (0x0122)
-        Max advertising interval: 181.250 msec (0x0122)
-        Channel map: 37, 38, 39 (0x07)
-        Own address type: Random (0x01)
-        Peer address type: Public (0x00)
-        Peer address: 00:00:00:00:00:00 (OUI 00-00-00)
-        Filter policy: Allow Scan Request from Any, Allow Connect...
-        TX power: 127 dbm (0x7f)
-        Primary PHY: LE 1M (0x01)
-        Secondary max skip: 0x00
-        Secondary PHY: LE 1M (0x01)
-        SID: 0x00
-        Scan request notifications: Disabled (0x00)
-> HCI Event: Command Complete (0x0e) plen 5
-      LE Set Extended Advertising Parameters (0x08|0x0036) ncmd 1
-        Status: Success (0x00)
-        TX power (selected): 9 dbm (0x09)
-< HCI Command: LE Set Advertising Set Random Address (0x08|0x0035) plen 7
-        Advertising handle: 0x00
-        Advertising random address: 08:FD:55:ED:22:28 (OUI 08-FD-55)
-> HCI Event: Command Complete (0x0e) plen 4
-      LE Set Advertising Set Random Address (0x08|0x0035) ncmd
-        Status: Success (0x00)
-< HCI Command: LE Set Extended Scan Response Data (0x08|0x0038) plen 35
-        Handle: 0x00
-        Operation: Complete scan response data (0x03)
-        Fragment preference: Minimize fragmentation (0x01)
-        Data length: 0x0d
-        Name (short): Chromebook
-> HCI Event: Command Complete (0x0e) plen 4
-      LE Set Extended Scan Response Data (0x08|0x0038) ncmd 1
-        Status: Invalid HCI Command Parameters (0x12)
-
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Reviewed-by: Daniel Winkler <danielwinkler@google.com>
----
-
- net/bluetooth/hci_request.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index e0269192f2e536..e17bc8a1c66ddd 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -1533,11 +1533,14 @@ void __hci_req_update_scan_rsp_data(struct hci_request *req, u8 instance)
- 
- 		memset(&cp, 0, sizeof(cp));
- 
--		if (instance)
-+		/* Extended scan response data doesn't allow a response to be
-+		 * set if the instance isn't scannable.
-+		 */
-+		if (get_adv_instance_scan_rsp_len(hdev, instance))
- 			len = create_instance_scan_rsp_data(hdev, instance,
- 							    cp.data);
- 		else
--			len = create_default_scan_rsp_data(hdev, cp.data);
-+			len = 0;
- 
- 		if (hdev->scan_rsp_data_len == len &&
- 		    !memcmp(cp.data, hdev->scan_rsp_data, len))
 -- 
-2.28.0.220.ged08abb693-goog
-
+Thanks,
+~Nick Desaulniers
