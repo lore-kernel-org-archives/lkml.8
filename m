@@ -2,187 +2,156 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC46C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B0B2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76D12068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fGd5UiLK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="U1CiDBcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgHNNf3 (ORCPT
+        id S1728607AbgHNNfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:35:29 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19826 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHNNf1 (ORCPT
+        Fri, 14 Aug 2020 09:35:50 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:37176 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgHNNfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:35:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3692e80000>; Fri, 14 Aug 2020 06:34:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Aug 2020 06:35:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Aug 2020 06:35:27 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Aug
- 2020 13:35:26 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 14 Aug 2020 13:35:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m4H3kLRdNN6F8oOjsdhwk2sOWok0hDkeGbgqDEN+lcgxdO4pulhE85W/dbZW/Msgl4EvB+Cl2YQtXm3FN2mauOWI0psPAmp60M/u/MZEwz4yiVrTJyJJZcoBPy64HpFkFwa2CsyxZGJNbYmmVao+a1CPpvEDXohKjmZEPHDJtoqaG+2tcuR4xoYb7x0IDyf1wHaXRhK+fA1sH00YH35tjxcF2juNlif2sMAVmI9YjNrepOy0qrGygN3mnjmswolmBybpQHQKRP+jMMC/w38dyG0dV3osKgh0+HLOLltLSETWZyl6ElYiNEi+xfYPrDF3/7fQD2IoTCOBWqzan7laIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQgIVKo6fzkOwdqUsyq8/I0P+tpE4OWeO1KsRqtsH6s=;
- b=nIwpmDZ9ZBhT9Em336S9+2FC5YeZZxQaP0TQkSamORHsZhNcIa/QpVc/MDY3rbm65iEd9S9xDKdXMEKAn1gTaAexjqkCXBzLt6la0IwLiI1Xw+9A7T38GYBGDf8irIeCKsmxOXWwbnKkjEEvYEHgVy4sXAF8t5QWlKnN8B60OKJabebbJTqG55vpEqieZ7e811ZQPAg20qiUr2SuK9mSgUFdoaPWH7Yl6FkjuKimavebaNybksa/Z6Zl8ES6uRmKtxjW2E3eD0T6zLhsfaDhODnhzoWNbApX8YLGS7MDD08CFlbc4HFJ7KHn6rnB5CLmGlePEYKcfstTCFywDTtcxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB2858.namprd12.prod.outlook.com (2603:10b6:5:182::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Fri, 14 Aug
- 2020 13:35:25 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3283.022; Fri, 14 Aug 2020
- 13:35:25 +0000
-Date:   Fri, 14 Aug 2020 10:35:22 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200814133522.GE1152540@nvidia.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
-X-ClientProxiedBy: YT1PR01CA0021.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::34)
- To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+        Fri, 14 Aug 2020 09:35:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597412147;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Vhg2qIv0Jz5uNB1to7SsFv5hNsQzCGoy7ntsgX816ME=;
+  b=U1CiDBcZk1odElv4SojTnBSGXwXPhBkaRZVZk/CoBW0ullto4znGBiGG
+   uHsf5+yOe5TM4xt5+ykkaT0K0rYGhjo3bcvLQEVoSoqYxXBQbhyMw67JN
+   3OBQzvUv8Tw+ohvEHxpm16tWiFRt7DnCHf2UeY5y3FeugHwP8L1o9Z+VU
+   Y=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: 3kOFJD7N60ERtsB74qGJI3XB6PL0hrH37iAm0pbM5PNV/FQ6T6jmbeXASasblAXIeXQLqwqf0n
+ B/Da4GKHV9G6vOYMwD44IXUGCJ3cYZz2PgjkPj0Fu8FehPYFdfIA/yqX5Wl/Wi5AdwnNtqOBNq
+ 40Ye7b7xVui+0ZvJub15TmF7cyPT3T+Bh7pUD91DG/xaiMgJ/3oxy9ZFN8COrkdaJsAjZEg4WX
+ mmGqnJVZd3jJ/pY7wNa7/8pzAw/ZVX0QKpqU1zHC70psBGvrmWKbneBDww7mnmZg+X4dW6syS7
+ mIA=
+X-SBRS: 2.7
+X-MesageID: 24880445
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,312,1592884800"; 
+   d="scan'208";a="24880445"
+Date:   Fri, 14 Aug 2020 15:35:36 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        "Yan Yankovskyi" <yyankovskyi@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200814133536.GL975@Air-de-Roger>
+References: <20200811094447.31208-1-roger.pau@citrix.com>
+ <20200811094447.31208-3-roger.pau@citrix.com>
+ <20200813073337.GA16160@infradead.org>
+ <20200813075420.GC975@Air-de-Roger>
+ <20200814072920.GA6126@infradead.org>
+ <20200814095629.GJ975@Air-de-Roger>
+ <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
+ <20200814124724.GK975@Air-de-Roger>
+ <fc10d3a5-fe79-335e-353a-1bf480af7c7c@suse.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0021.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 13:35:24 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k6Zre-006gGT-Ah; Fri, 14 Aug 2020 10:35:22 -0300
-X-Originating-IP: [206.223.160.26]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 73105564-1236-47ef-24c8-08d84056e60c
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2858:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB28583BE093FF570C8C7AB281C2400@DM6PR12MB2858.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xfhFI+LDyy0GWo756LjFOYYmxKj2VC/OrQW5Z0w+Sgg0TFgeiWJQdY7YbCvF+rnhpF/JpYM6TL4VLzXKDoRcnlmrG3hEhUCMdYuVwG+xnjclylWbNCYg/po5iuZeNRqPHIpDZpzNtswJecJQonENXY1/2MmtSTSWjSVdKs8JAp6zvn2b24MetvLvW0PNWID9xBeH+e8lJ3ESwJHuk1L7pHaRxQD/WFiUK4JT/xikDbRaKbR0fl1oggd0O/u5oWtUOD2JCBPHLXL8VnSeZvRqIqK1lbSr2cimGav9wZhQQeYzjLNA7xjSu+jOr1y9xPnO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(86362001)(8676002)(2906002)(6916009)(478600001)(316002)(54906003)(8936002)(7416002)(7406005)(9786002)(2616005)(1076003)(186003)(426003)(4744005)(33656002)(9746002)(4326008)(26005)(66476007)(66946007)(66556008)(36756003)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: YcldZ/jqWFVO4ZWMmAcfknwGOItCNW393eBPf9Ged5ghhsepUJzul3c186NQnFuIjelXm8Dcahq6nljXcPs5ZEUSS+lpCcDWft1oDN5lSgmow2pu01ZUzyt3DDgWWJHydeqnth4Ma3SqmIDi6ZWJFq6/KT8HqECM6gnHWozjA7G7hcvJQUr/JILmx5QklnVKdT9+uhxv/nzwfp6KPe4RaXjErvGMetatJgP+7l7AqsDT/Q1D3o9UR97k5YBoJ8MMMkSyWb+pbgvPgULuuSCkiaMBpZAmvZDiIBCT099EOUONlHyqF+QOGpSD6TN1m85Kd2zrJKh+jlcoVdhg4TNLDNH8Aa30GULk+6LS70+ECPEsVO40VrpMfMptRrpbt3CEhEFoYBQdErHbdtTozA/ZDLIHzK1PxSfJlyryJYvtnFwe4Vjsoqv9BO10oyy2GANtM/M1ifA4CyYOD6oJaswi9bp8ylj1tZ1LyFb/ojLM9GojQbI3rswtC6TCBFQ9WVSAaz50AxGqso0pjyJDILJ96KTcU+N0KMtE8r4vRxsGYnkhs2C27iAAPAuXDZMjhZDJ1EBxIejeGqCYTNUr5Zo5FPuWBMWYPVvoeZciNnv5jQpTenGGlCGHm4xD7V0sJASsMPNs5C8+yYr82x1FL/kdMA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73105564-1236-47ef-24c8-08d84056e60c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 13:35:24.9372
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9ASUEzdfZ57dSg2arMGADMdvFsplcHYQkmHDbLuduOnB3IQV2QKZNsgrJatUZ/Oe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2858
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597412072; bh=xQgIVKo6fzkOwdqUsyq8/I0P+tpE4OWeO1KsRqtsH6s=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=fGd5UiLKqZvWeQIT/m+MOaJJAW8Z90KwIxKTCCj7HzaCBCql4CUw203isD9TAv0Py
-         2sKOHVN9EuM4yy5ZDMXjk5l39x40gFC74dg6gKbh59CDT7xVkxa86Ldr9SyXzOHraZ
-         m8zd7hfnG/gXoJUkaqh3GeHUtnac844S6dmNEvzy+TpnTZPcqoXbrPVbXjexZUlEcz
-         aYKmeofP3PhxvxdCI7tD1pN9a5ulikQtZ8dYAe3kjZ/JhuYLwowJ2qbnC52HIU4/uB
-         DQ8lHWYHDEaqAZ1RICGnNugDCLNysiR7JYJR2cETkp5Q5S2KU/apK22a9ORxr4samh
-         O+T21a+0btvKw==
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc10d3a5-fe79-335e-353a-1bf480af7c7c@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 07:32:24AM +0000, Tian, Kevin wrote:
-
-> > I would prefer to see that the existing userspace interface have the
-> > extra needed bits for virtualization (eg by having appropriate
-> > internal kernel APIs to make this easy) and all the emulation to build
-> > the synthetic PCI device be done in userspace.
+On Fri, Aug 14, 2020 at 02:54:38PM +0200, Jürgen Groß wrote:
+> On 14.08.20 14:47, Roger Pau Monné wrote:
+> > On Fri, Aug 14, 2020 at 12:27:32PM +0200, Jürgen Groß wrote:
+> > > On 14.08.20 11:56, Roger Pau Monné wrote:
+> > > > On Fri, Aug 14, 2020 at 08:29:20AM +0100, Christoph Hellwig wrote:
+> > > > > On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
+> > > > > > On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
+> > > > > > > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
+> > > > > > > > If enabled (because ZONE_DEVICE is supported) the usage of the new
+> > > > > > > > functionality untangles Xen balloon and RAM hotplug from the usage of
+> > > > > > > > unpopulated physical memory ranges to map foreign pages, which is the
+> > > > > > > > correct thing to do in order to avoid mappings of foreign pages depend
+> > > > > > > > on memory hotplug.
+> > > > > > > 
+> > > > > > > So please just select ZONE_DEVICE if this is so much better rather
+> > > > > > > than maintaining two variants.
+> > > > > > 
+> > > > > > We still need to other variant for Arm at least, so both need to be
+> > > > > > maintained anyway, even if we force ZONE_DEVICE on x86.
+> > > > > 
+> > > > > Well, it still really helps reproducability if you stick to one
+> > > > > implementation of x86.
+> > > > > 
+> > > > > The alternative would be an explicit config option to opt into it,
+> > > > > but just getting a different implementation based on a random
+> > > > > kernel option is strange.
+> > > > 
+> > > > Would adding something like the chunk below to the patch be OK?
+> > > > 
+> > > > ---8<---
+> > > > diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+> > > > index 018020b91baa..5f321a1319e6 100644
+> > > > --- a/drivers/xen/Kconfig
+> > > > +++ b/drivers/xen/Kconfig
+> > > > @@ -328,7 +328,14 @@ config XEN_FRONT_PGDIR_SHBUF
+> > > >    	tristate
+> > > >    config XEN_UNPOPULATED_ALLOC
+> > > > -	bool
+> > > > -	default y if ZONE_DEVICE && !ARM && !ARM64
+> > > > +	bool "Use unpopulated memory ranges for guest mappings"
+> > > > +	depends on X86
+> > > > +	select ZONE_DEVICE
+> > > > +	default y
+> > > 
+> > > I'd rather use "default XEN_BACKEND" here, as mappings of other guest's
+> > > memory is rarely used for non-backend guests.
+> > 
+> > There's also the privcmd and gnt devices which make heavy use of this,
+> > so I'm not sure only selecting by default on XEN_BACKEND is the best
+> > option.
 > 
-> In the end what decides the direction is the amount of changes that
-> we have to put in kernel, not whether we call it 'emulation'. 
+> I just want to avoid that kernels built for running as Xen guest, but
+> not as dom0, will be forced to select ZONE_DEVICE.
+> 
+> As privcmd is dom0-only, this is no problem.
 
-No, this is not right. The decision should be based on what will end
-up more maintable in the long run.
+Oh, didn't know that, I somehow assumed privcmd would be available to
+all Xen guests regardless of whether dom0 support was selected.
 
-Yes it would be more code to dis-aggregate some of the things
-currently only bundled as uAPI inside VFIO (eg your vSVA argument
-above) but once it is disaggregated the maintability of the whole
-solution will be better overall, and more drivers will be able to use
-this functionality.
+> In case you are worrying about gnt devices, I'd be fine to switch to
+> 
+> default XEN_BACKEND || XEN_GNTDEV
 
-Jason
+Sure. maybe even:
+
+default XEN_BACKEND || XEN_GNTDEV || XEN_DOM0
+
+Do you want me to resend with this changed or are you happy to fixup
+if there are no further comments?
+
+Thanks, Roger.
