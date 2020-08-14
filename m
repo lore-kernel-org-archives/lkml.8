@@ -2,204 +2,160 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C095C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB512087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597408397;
-	bh=tmSjrnWHnIR5nNAlJudislRb3fi769/gr5l0KSK4yls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GHiP6Qj7AXxIInz3ynSTqLljnYMWK70A5WAvyjraQGAh2EZi2CDqOOdvAiRNnOWvF
-	 6LuVcEr3xNV+KaJPOcwFClKvswfRwdLuNqnRY/3H+IfeM+XXGk848diKKOO5cuuWVI
-	 2spMBFo4+3opU1eGh7UtHaMyKj6b6qU/gBg++Kag=
+	by mail.kernel.org (Postfix) with ESMTP id 0F84120B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfmccwaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgHNMdP (ORCPT
+        id S1727952AbgHNMdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbgHNMdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:33:14 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A82220866;
-        Fri, 14 Aug 2020 12:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597408393;
-        bh=tmSjrnWHnIR5nNAlJudislRb3fi769/gr5l0KSK4yls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FvENzcYnq5xjoQ/WXGlRBMqqSCCZ+QDwtXk9SohgLMRcKhCcCcdECxTUTT62jzpfA
-         KlocHmRCXUI1JKFUvNLwg5OJUcjN3pmJsSmkS5mQd7PbGVpHGfNChELmk0OvQtPujp
-         isH89e8X3DlyIg7k8vrvx2PEOrW97ZtxGmRoVu8o=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B09F040D3D; Fri, 14 Aug 2020 09:33:10 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:33:10 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 13/18] perf ftrace: add support for trace option
- tracing_thresh
-Message-ID: <20200814123310.GC13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-14-changbin.du@gmail.com>
+        Fri, 14 Aug 2020 08:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgHNMdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:33:32 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AB1C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:33:31 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y206so4486341pfb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IMDtNR26hhEws5urGuPDuNDJnZY4acdKK7mNXzOEzD4=;
+        b=mfmccwaVDf8eBSVHF2kqV/jf8XJvqpNdJXpniiM9SNN7/X3M3Uq4wG35Ykymlyorrp
+         sNIjDj4gI2t7BgmMBn1dAujA4Vzbf9EPhZQJccpoJr3Mei1a461MYkXiwEp7JQJyUoQA
+         SDhiFQ00Q+JQ6ooc5pzg5vyvIlZCDNPFueU/82a1faa079k4T+nVbBdO+qrmM4Xeh2/S
+         3wBDa1/fr3Jcsl7v1QzQ1gtVFt4CCnlH9nZYAO/I0Pa8HpE/dO5me6jgS7vDayMTRhvh
+         6Gkr+/oTvIE5DGEG29CVkWA8x6asq84pGXbiTrNIrRpF9/NyivEsY5GOH20ccLEEDjJH
+         NgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IMDtNR26hhEws5urGuPDuNDJnZY4acdKK7mNXzOEzD4=;
+        b=SVxxnGRfK19txCdxh8HvLO0zqqptg988JAFeg7fjKegJATnBb6v59QMJM0YMjlyCfN
+         q/KKhK1uVY3VBLiVpFRfgwX1wIDNfJtNy5y0pR1u2notQ5jtn83qvnwtsWFpYVtmGqzB
+         s3cuztHsy/pK2J367Q4YTwgVzEE5hTojGtYQrYkcoTjZ2n4Rot1pA8GDpQb3sjtSfMVn
+         HggeLXsPVchQAM4RHz2bYobLBu4eo2U+UQfLqCom8x+3Tf2JwrcyE2gQyekFls7MTl2Q
+         k/UDhOyPml3CymvyDTJp8xAecl0jHsYUxx/A/HAQTcGWVr2darKtdWGs6+P14j9C2/F0
+         /HFw==
+X-Gm-Message-State: AOAM532tJGIfN7LiVNfvEpIDa1aYiUGcZ/BjCk9w1QxDf4HVDKQ/g4S0
+        GC8937S9vEo/Nb1i5YGXEPs=
+X-Google-Smtp-Source: ABdhPJy3RUbKPHh6p35U+35BTGkwbCGSjqaHJwafgAFRFxpcyomhgV6dy29zbUSeASnLIPH8tMtY5A==
+X-Received: by 2002:a63:ce56:: with SMTP id r22mr1624540pgi.141.1597408411457;
+        Fri, 14 Aug 2020 05:33:31 -0700 (PDT)
+Received: from cvds-vagarw7.iind.intel.com ([192.55.54.40])
+        by smtp.googlemail.com with ESMTPSA id x8sm9808957pfp.101.2020.08.14.05.33.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Aug 2020 05:33:31 -0700 (PDT)
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>
+Cc:     greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH v3] staging: greybus: audio: fix uninitialized value issue
+Date:   Fri, 14 Aug 2020 18:03:15 +0530
+Message-Id: <bc4f29eb502ccf93cd2ffd98db0e319fa7d0f247.1597408126.git.vaibhav.sr@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-14-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:36AM +0800, Changbin Du escreveu:
-> This adds an option '--graph-opts thresh' to setup trace duration
-> threshold for funcgraph tracer.
+The current implementation for gbcodec_mixer_dapm_ctl_put() uses
+uninitialized gbvalue for comparison with updated value. This was found
+using static analysis with coverity.
 
-Applied, please consider making --duration an alias for this, as this is
-also available in 'perf trace':
+Uninitialized scalar variable (UNINIT)
+11. uninit_use: Using uninitialized value
+gbvalue.value.integer_value[0].
+460        if (gbvalue.value.integer_value[0] != val) {
 
-[root@quaco ~]# perf trace --duration 500 --max-events=5
-   369.860 gnome-shell/2084 poll(ufds: 0x559577983080, nfds: 21, timeout_msecs: 7194) = 1
-   493.654 pool-geoclue/386046 futex(uaddr: 0x56024843b610, op: WAIT|PRIVATE_FLAG, val: 1201, utime: 0x7f32bd7f9cc0) = -1 ETIMEDOUT (Connection timed out)
-    71.604 WebRTC_Worker/111634 futex(uaddr: 0x7fb4c364d608, op: WAIT_BITSET|PRIVATE_FLAG, val: 0, utime: 0x7fb4c364d410, val3: MATCH_ANY) = -1 ETIMEDOUT (Connection timed out)
-   601.645 pool-gsd-smart/2469 clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x7fb82cbd1cf0, rmtp: 0x7fb82cbd1d00) = 0
-   623.823 chromium-brows/92363 futex(uaddr: 0x7ffcfd064e38, op: WAIT_BITSET|PRIVATE_FLAG, val: 0, utime: 0x7ffcfd064c40, val3: MATCH_ANY) = -1 ETIMEDOUT (Connection timed out)
-[root@quaco ~]#
+This patch fixes the issue with fetching the gbvalue before using it for
+    comparision.
 
-  $ perf trace -h duration
+Fixes: 6339d2322c47 ("greybus: audio: Add topology parser for GB codec")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+---
+Changelog:
+v2: Fix the missing check for return value after get_control.
+v3: Use single exit path to avoid missing autosuspend sequence.
+---
+ drivers/staging/greybus/audio_topology.c | 29 ++++++++++++------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-        --duration <float>
-                          show only events with duration > N.M ms
+diff --git a/drivers/staging/greybus/audio_topology.c b/drivers/staging/greybus/audio_topology.c
+index 2f9fdbdcd547..83b38ae8908c 100644
+--- a/drivers/staging/greybus/audio_topology.c
++++ b/drivers/staging/greybus/audio_topology.c
+@@ -456,6 +456,15 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
+ 	val = ucontrol->value.integer.value[0] & mask;
+ 	connect = !!val;
 
-  $
++	ret = gb_pm_runtime_get_sync(bundle);
++	if (ret)
++		return ret;
++
++	ret = gb_audio_gb_get_control(module->mgmt_connection, data->ctl_id,
++				      GB_AUDIO_INVALID_INDEX, &gbvalue);
++	if (ret)
++		goto exit;
++
+ 	/* update ucontrol */
+ 	if (gbvalue.value.integer_value[0] != val) {
+ 		for (wi = 0; wi < wlist->num_widgets; wi++) {
+@@ -466,25 +475,17 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
+ 		gbvalue.value.integer_value[0] =
+ 			cpu_to_le32(ucontrol->value.integer.value[0]);
 
-This way one would be able to do:
+-		ret = gb_pm_runtime_get_sync(bundle);
+-		if (ret)
+-			return ret;
+-
+ 		ret = gb_audio_gb_set_control(module->mgmt_connection,
+ 					      data->ctl_id,
+ 					      GB_AUDIO_INVALID_INDEX, &gbvalue);
+-
+-		gb_pm_runtime_put_autosuspend(bundle);
+-
+-		if (ret) {
+-			dev_err_ratelimited(codec_dev,
+-					    "%d:Error in %s for %s\n", ret,
+-					    __func__, kcontrol->id.name);
+-			return ret;
+-		}
+ 	}
 
-  # perf trace --duration N.M
+-	return 0;
++exit:
++	gb_pm_runtime_put_autosuspend(bundle);
++	if (ret)
++		dev_err_ratelimited(codec_dev, "%d:Error in %s for %s\n", ret,
++				    __func__, kcontrol->id.name);
++	return ret;
+ }
 
-To see at syscall level, then add 'f':
+ #define SOC_DAPM_MIXER_GB(xname, kcount, data) \
 
-  # perf ftrace --duration N.M
+base-commit: fc80c51fd4b23ec007e88d4c688f2cac1b8648e7
+--
+2.27.0
 
-To see at kernel function level. Switching from one perf tool to another
-with such ease is the main objective here, I'd say :-)
-
-- Arnaldo
- 
-> $ sudo ./perf ftrace -G '*' --graph-opts thresh=100
->  3) ! 184.060 us  |    } /* schedule */
->  3) ! 185.600 us  |  } /* exit_to_usermode_loop */
->  2) ! 225.989 us  |    } /* schedule_idle */
->  2) # 4140.051 us |  } /* do_idle */
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  1 +
->  tools/perf/builtin-ftrace.c              | 26 +++++++++++++++++++++++-
->  2 files changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index a2056aaf2ece..6fa927e5971b 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -107,6 +107,7 @@ OPTIONS
->  	  nosleep-time - Measure on-CPU time only for function_graph tracer.
->  	  noirqs       - Ignore functions that happen inside interrupt.
->  	  verbose      - Show process names, PIDs, timestamps, etc.
-> +	  thresh=<n>   - Setup trace duration threshold in microseconds.
->  
->  SEE ALSO
->  --------
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 8ee5287bd84a..ca61f8b8bbf6 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -48,6 +48,7 @@ struct perf_ftrace {
->  	int			graph_nosleep_time;
->  	int			graph_noirqs;
->  	int			graph_verbose;
-> +	int			graph_thresh;
->  };
->  
->  struct filter_entry {
-> @@ -234,6 +235,9 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
->  	if (write_tracing_file("max_graph_depth", "0") < 0)
->  		return -1;
->  
-> +	if (write_tracing_file("tracing_thresh", "0") < 0)
-> +		return -1;
-> +
->  	reset_tracing_filters();
->  	reset_tracing_options(ftrace);
->  	return 0;
-> @@ -446,6 +450,20 @@ static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
->  	return 0;
->  }
->  
-> +static int set_tracing_thresh(struct perf_ftrace *ftrace)
-> +{
-> +	int ret;
-> +
-> +	if (ftrace->graph_thresh == 0)
-> +		return 0;
-> +
-> +	ret = write_tracing_file_int("tracing_thresh", ftrace->graph_thresh);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  {
->  	char *trace_file;
-> @@ -545,6 +563,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  		goto out_reset;
->  	}
->  
-> +	if (set_tracing_thresh(ftrace) < 0) {
-> +		pr_err("failed to set tracing thresh\n");
-> +		goto out_reset;
-> +	}
-> +
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
->  		goto out_reset;
-> @@ -727,6 +750,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
->  		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
->  		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
->  		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
-> +		{ .name = "thresh",		.value_ptr = &ftrace->graph_thresh },
->  		{ .name = NULL, }
->  	};
->  
-> @@ -798,7 +822,7 @@ int cmd_ftrace(int argc, const char **argv)
->  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
->  		    "Max depth for function graph tracer"),
->  	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
-> -		     "graph tracer options, available options: nosleep-time,noirqs,verbose",
-> +		     "graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>",
->  		     parse_graph_tracer_opts),
->  	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
->  		     "size of per cpu buffer", parse_buffer_size),
-> -- 
-> 2.25.1
-> 
-
--- 
-
-- Arnaldo
