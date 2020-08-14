@@ -7,125 +7,111 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D7320771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287F620771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E1U4hFDl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c3oazDIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgHNLli (ORCPT
+        id S1728372AbgHNLmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39778 "EHLO
+        Fri, 14 Aug 2020 07:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgHNLkT (ORCPT
+        with ESMTP id S1728205AbgHNLkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:40:19 -0400
+        Fri, 14 Aug 2020 07:40:18 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E87C06134F
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:13 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id p20so8089309wrf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3913C06134E
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id p20so8089238wrf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B0W9kY9gOABObNMzFU7qR/h3u0fr5wbeuus7asIVtUU=;
-        b=E1U4hFDlHsWCrCkg8hTw44iOHiljc6bi7sr1Wngty/U98hc+h9XGcyQ8CEPIhui25F
-         417ZFpDXtzly+m5CyiKiImTP9a7jsJEnrbK2mDUY4RV2aUb8RAaOTOeYXrnu7x2pZkJP
-         MXMXxJm2OxEMEeCtooLzYPX5nKAMBlZ8mOkgLiyuBoIxkxGXJcrQPFqxhI7DueNgEDNW
-         1Tko1MSqREU27ERvsb1rPQmtYkym9UhJw73R4INHVU0lLcDfaladGaiFIpKRdzSlBrGl
-         uhWKAE6rof7skSjSOHuNbtr8UJgLSnlj/vtEhmYu5cLxOVa6hirwnLYWuAtE2zYZv3rN
-         WPdQ==
+        bh=9Db0/XegKOvDRgZ77poJrd7OK4ys0Vj7FE0VspABfIc=;
+        b=c3oazDInGW7hjrBIsl+zkAlUf5XdaIpPfFz3xERqVymAskbwi16DPAktyD53jA3b66
+         /VOUQgRQ6z4vBQOCkHrfsvmGX69PCEy7jMg5cYGTAN/BKeMSg1aFyX6u1JgYhY/wofRP
+         AjLQ2/OgQciCs1lQvFlym5gCyLc5UElaSt+nCxIIt0GrxXFIHEO19882b+DHL24RcpNs
+         PlLlaG8OWAcbN1yTgVP4CABv2rSyGGMMwqzTawWPQTJwLSIGKGm+asMO19fjIT2BXKjP
+         eaWwSPDyMvcL9trE/s3Hp9dQl/io/SIae6+GP2aGpowdN/RiSUqjTfZ4re4x9uCX+ZVq
+         wnEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B0W9kY9gOABObNMzFU7qR/h3u0fr5wbeuus7asIVtUU=;
-        b=FRN+8QUsj/86Ge2NPFrMOGcflncyHhnWF9VpwN0Musni9idb7ibAkYK/xxwL/FireS
-         M8EDOzHXXAHeEGjy42oLmc4+HxTltljtk0tPGY69yUpZejNWlMk+DsnCdgoHjxZ8x4PI
-         6Mr8yNuxRUTwZ+AdXj+gWTW4bnMWce3nHN2AjgdOOoQFQzA2pnKtAchsWHT6hNDhE3GL
-         lTGOBsJcZqbKBUBmD2bea7+Yan/o/yA1UVkEJH3cCYHdNt9M1+duOo3zTukbfUY8gz/X
-         Cb8eL7G2OOQyS1oYBcMvEmPYuFhy9E7PgegJqxKOTEyuRz134X8iHbmyEJOhRJ5s3XLU
-         A4Ig==
-X-Gm-Message-State: AOAM531LxdhZj505KBoGw4rZP3yH0kjcSqribY5eYtnybGlxnPprUaC5
-        VR9GR7UHDZKgadfHGtMZEhwA/A==
-X-Google-Smtp-Source: ABdhPJwZp2MJiKoowkR6rTySosLQ4LI6NDWDp3ihnDEADkd3a0DOkIa7HHs6uIgFFvyT1RnLJb/lDA==
-X-Received: by 2002:a5d:6748:: with SMTP id l8mr2534059wrw.358.1597405211761;
-        Fri, 14 Aug 2020 04:40:11 -0700 (PDT)
+        bh=9Db0/XegKOvDRgZ77poJrd7OK4ys0Vj7FE0VspABfIc=;
+        b=WObvw/vQayRja9JAozXdZdrJ/iVLcVWrdKvYeYphZiQFoO6IQ4auHk0nWKe12zRoR6
+         x97FxE2luEk+Kr1rPxjuYsOTfjvebpUMeELkqwjOVTrHgRX5KMSeCYmlZGQLmCyHWaVk
+         +K7Y93FFpKmjFQ4HsVClG3qk3yv4YtwIukSV2Ei9S3nwNrLK59NHqzxGc5vh2J96Ecgk
+         5qfWfKO26VJtONRhpGwMFNh5L+AJuLvELp3wR5MtmBPJ9sPaQpi7o4/hcVcJNzgRfM6d
+         W8txBhKWe4cghiKWmz+SpgIwXN5ybKvpCrzuEFg0xP5uq+3s1GY7/df9v+rCq+CyKvGQ
+         wklA==
+X-Gm-Message-State: AOAM530kyl5ddWUU6J66LQytfh4IgcwBySkLx5v7euKcOSB8qIahxaIR
+        c2/7coFOFxtnqLq9BQxEvCMi1g==
+X-Google-Smtp-Source: ABdhPJy2TwazZiHw6gMHYPOVlPScYRlKeMGm2BnOOf+FwnWaIAiGUOP2+xsysshx48ue6Viw0BB5gA==
+X-Received: by 2002:adf:ea0c:: with SMTP id q12mr2302330wrm.382.1597405210454;
+        Fri, 14 Aug 2020 04:40:10 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.40.10
+        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.40.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 04:40:11 -0700 (PDT)
+        Fri, 14 Aug 2020 04:40:09 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "Luis R. Rodriguez" <mcgrof@winlab.rutgers.edu>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH 20/30] net: wireless: ath: ath5k: base: Fix kerneldoc formatting issue
-Date:   Fri, 14 Aug 2020 12:39:23 +0100
-Message-Id: <20200814113933.1903438-21-lee.jones@linaro.org>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 19/30] net: fddi: skfp: fplustm: Remove seemingly unused variable 'ID_sccs'
+Date:   Fri, 14 Aug 2020 12:39:22 +0100
+Message-Id: <20200814113933.1903438-20-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200814113933.1903438-1-lee.jones@linaro.org>
 References: <20200814113933.1903438-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc expects attributes/parameters to be in '@*.: ' format and
-gets confused if the variable does not follow the type/attribute
-definitions.
+This variable is present in many source files and has not been used
+anywhere (at least internally) since it was introduced.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/ath/ath5k/base.c:1111: warning: Function parameter or member 'ah' not described in 'ath5k_drain_tx_buffs'
+ drivers/net/fddi/skfp/fplustm.c:25:19: warning: ‘ID_sccs’ defined but not used [-Wunused-const-variable=]
 
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Nick Kossifidis <mickflemm@gmail.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: "Luis R. Rodriguez" <mcgrof@winlab.rutgers.edu>
-Cc: linux-wireless@vger.kernel.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/ath/ath5k/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/fddi/skfp/fplustm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath5k/base.c b/drivers/net/wireless/ath/ath5k/base.c
-index 65a4c142640d0..b70acefdc3fb7 100644
---- a/drivers/net/wireless/ath/ath5k/base.c
-+++ b/drivers/net/wireless/ath/ath5k/base.c
-@@ -1098,7 +1098,7 @@ ath5k_beaconq_config(struct ath5k_hw *ah)
- /**
-  * ath5k_drain_tx_buffs - Empty tx buffers
-  *
-- * @ah The &struct ath5k_hw
-+ * @ah: The &struct ath5k_hw
-  *
-  * Empty tx buffers from all queues in preparation
-  * of a reset or during shutdown.
+diff --git a/drivers/net/fddi/skfp/fplustm.c b/drivers/net/fddi/skfp/fplustm.c
+index 02966d141948f..4cbb145c74abb 100644
+--- a/drivers/net/fddi/skfp/fplustm.c
++++ b/drivers/net/fddi/skfp/fplustm.c
+@@ -21,10 +21,6 @@
+ #include <linux/bitrev.h>
+ #include <linux/etherdevice.h>
+ 
+-#ifndef	lint
+-static const char ID_sccs[] = "@(#)fplustm.c	1.32 99/02/23 (C) SK " ;
+-#endif
+-
+ #ifndef UNUSED
+ #ifdef  lint
+ #define UNUSED(x)	(x) = (x)
 -- 
 2.25.1
 
