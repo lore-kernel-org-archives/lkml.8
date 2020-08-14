@@ -4,159 +4,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FE7C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E537820866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3931020866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lcPg0MJN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C4ZfU0/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgHNNXx (ORCPT
+        id S1728478AbgHNNYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgHNNXx (ORCPT
+        Fri, 14 Aug 2020 09:24:01 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18507 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgHNNYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:23:53 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722A1C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:23:52 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id t10so9902701ejs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PJVMgjHP6gnp0mjaxlRSS4/pgm74X7VzDgM85iATqFQ=;
-        b=lcPg0MJN52u2w8bKn3vXx5YumuLzvS88Y8QDNdQmUluO/C6RRpq77tK1Xdjlr8sO4g
-         U0MrYKPh3k1/kYr2wvIjvtqhmwNBrYYYjIxqwMpeB9viturwBe70V7hgWfv6B1zU0ogo
-         l8it6e5ob+p2mAFjdDFkDTofZXSN5iBvshjsU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PJVMgjHP6gnp0mjaxlRSS4/pgm74X7VzDgM85iATqFQ=;
-        b=KQ3hCCTlClLk4trOoi37rQIy7+eBkKKWdyx9AnFWnVJrgOL9JTukRM/m4eqdgy+V+T
-         JmBVaxIpkheYFbOtsDpJcf/vBgH1CdGtDRYjxf74GMI6vbtIX2Fe5uIm+RDTj/O0VxXL
-         9fN3EQ0VBDP+hmW2udtlGjqWgaF3HNkJ50VqKM93MYCrMXbaZ554cRb6NrogLNW3TS7F
-         tzDnUFf3gqTk9VvKbRoPTbHj6nH9tmqxxgeRhkLt2lyrgWAEaVCW+PnsaoKdWKlRZaEP
-         uMggYxMNuViPaLgS96GIVIh6yGJfCHXzIiD+uCBU6ZAqXQWMpOgxQWbm+yxi4SnH7hbY
-         zF4g==
-X-Gm-Message-State: AOAM533zjn/HL6x0KoGKzywfcUqPH2lPbZpnBGKIlwOUUod/aLQk4p0D
-        kLWfzX1nxSmMvqKvNt3OoRKAaZr3fiGUeA==
-X-Google-Smtp-Source: ABdhPJwa43iB56BCuhn93X1xBokxsp7wDPcVMSi7ULlHsQEnWtYX5QvNFg9NCCAIgxri0yDKcYxLBw==
-X-Received: by 2002:a17:906:cc48:: with SMTP id mm8mr2486558ejb.292.1597411430955;
-        Fri, 14 Aug 2020 06:23:50 -0700 (PDT)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id k10sm6635626ejj.108.2020.08.14.06.23.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 06:23:50 -0700 (PDT)
-Received: by mail-wr1-f41.google.com with SMTP id a5so8342261wrm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:23:50 -0700 (PDT)
-X-Received: by 2002:a5d:6744:: with SMTP id l4mr2915962wrw.105.1597411089399;
- Fri, 14 Aug 2020 06:18:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com> <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
-In-Reply-To: <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Fri, 14 Aug 2020 15:17:58 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
-Message-ID: <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Support running driver's probe for a device
- powered off
-To:     Bingbu Cao <bingbu.cao@linux.intel.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Aug 2020 09:24:00 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3690390000>; Fri, 14 Aug 2020 06:23:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Aug 2020 06:24:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Aug 2020 06:24:00 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Aug
+ 2020 13:23:56 +0000
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
+ by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 14 Aug 2020 13:23:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nqyFQ6zaYvLksZpvkSChUHoEK+0n6Xekh2eTioRsJIp9eDCyMmNBgoLgAoT9BUoLCZU3WksXd+JZG7ltsytwUIx7YySuCHFDOwgfLFQLUS6AiKmRjZz4rSAzxzjszKHUiEbzQN/jB98X4STmvluMj60G6vvhVRdN+a6/dcyZWrGuB878Jl4T/TVB4dYWQ2GKXNUmntJlAmpC8qsZnbwWU8/oWS/eqQVH1+2scudEj69/M5dzmM+7CVQLyWTaJ7yuAXaJ4XAhHxqefUipj0w8iAVdjFHYlpfAoml9uDzRBl3O4P5EhwWd/k9fe9+C35fKxKRxmmuXiQ9D6vwnHdUPHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rEKxcsretAumhsNSa8bIZOc54WVwzRso/kPsg3TKsO4=;
+ b=Ypz3DNGi8zDfn7bqnpGXQa0q6f3fKoxY0Y5dLcoopvUyLk9Da3OHzC0o01+zvJ32tA5N60wVe8MlacCot1qG63+LLPw5wS1UvaMb7AkzTrfAEljRlb2iLCL1wlSQMea3pYHAJ+f2hESMyysKwABPOkbyqDW+QvkB3sdjz6iNuPWLYsYgyK17IWtcOAtsxHRK7kguZwFPVYsAF5aGYxOJkvB9tfHByT7mDkM+PqZBPC3jupFaiYUi3iLFPCKmPKz2v0v/ObVWSd5wTcEZH7PfApG9W/3XoLh41KBfnDg7WF0ZBtxrxsgGWigapOj3Zqzm5RrkLtMKWi1WTgRQ+HJ09g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3739.namprd12.prod.outlook.com (2603:10b6:5:1c4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Fri, 14 Aug
+ 2020 13:23:55 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3283.022; Fri, 14 Aug 2020
+ 13:23:55 +0000
+Date:   Fri, 14 Aug 2020 10:23:52 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Jason Wang <jasowang@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Message-ID: <20200814132352.GD1152540@nvidia.com>
+References: <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
+ <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
+ <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
+X-ClientProxiedBy: YT1PR01CA0084.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2d::23) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0084.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2d::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 13:23:54 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k6ZgW-006g4D-Hy; Fri, 14 Aug 2020 10:23:52 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 91f91e23-4f8a-4dea-97e6-08d840554ab8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3739:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3739951C8F61BCB7E0CF8D5EC2400@DM6PR12MB3739.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Rx9ntj5s/YxTlq8w58Ye17B7AL8ZlpdUWvLZN5lTUBte12kiEjAcTCRNA6nMYNcq4u7cZan8vKavOJ/LHDG6/YORBHCuOQRhRe44ONxoaJ3hvO+poUq4+eMJ8maCCdL/U7FDYOJNFlvJLcYV9bAAZ9MPGg7o8ppRwoU/B4kWu3uOqvEq9bvGgO+g4jfVmK4C3bOspYFg9Bvm0aY0rkPBnIR5C1OGz2goVaapp1fjPldWnPnsbO0lQJp9gRdllkwUqd8LqWfvF+ZOeTB2VoR48zrcLtPwPlZaATzJ6wqIp53ivtSu3WAlOfF971T/x466Bbro93aUng30wr8NSQOEcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(7406005)(7416002)(9786002)(8676002)(86362001)(66556008)(66476007)(83380400001)(54906003)(66946007)(36756003)(426003)(9746002)(1076003)(26005)(33656002)(478600001)(186003)(2616005)(6916009)(316002)(5660300002)(2906002)(8936002)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 5By5nfU1qiFuHk/gvKijgwEUkYT6NNCd0P/3m3TXoDZct+d1BWt/iL31ljnqeqlLuOiiyv2y0tWA6nOtAcyrshsYcKZMQwEkpzb1U894FL8ehXejoDAaoc+6yTe+ahnZEmRkTevmp47zVtaj+Hc1KVu8j2gwWhFXzB2WiN3I+y6OCBoCJl82i7vZAbSotKy2Bmew4+g5h2QtDHlC3T1ZGLyjePjqWmt/yNGBw+nQfFzdN+UjgQeeloVfoGQmGisdutZsboDUkGjvwJbXdTz9s2DDZL7FcmsMz6v/ZWhmzclHIMa/Rq9ivOPMAVF0AUzmOVxLn1raPqhOSVeFV0l/uE6d07Mqhq9iUpdsiWSLExQ7IQpTKXgyTF51OuOtGh8+A+/bHrGl/W5jhJAEt9/aDX+ovncykvRyOhopU9Mj6sC7z7G9XS5xty+XNvd1H+JC1MbWNE7i9ObN8nlO7//HOFDpaUR9KPTHik9pt8uc9B9XyHOD2tSg1yv8r1OJ7RAnjhb6pTaCQa2BAgnwcePnYPb3ShVSR9B71uT9/Pj8rtQYTCmZCalnmktJVONt5Y/v78kY+JPOL6umL0cvP6pAhN/GQ8KXEpEtT+beLgTrKv8Sq1pn8VYvmW/1lZrmcKagkMDzRDxklhe0GkFnIu2k6g==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91f91e23-4f8a-4dea-97e6-08d840554ab8
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 13:23:55.1659
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7ByLX3ujHu9id5kk0A4x7645RFRKxgGRZ7p59soY+OalWvpWK87OIDoe1LM45Chr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3739
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597411385; bh=6gmnzK6qTJemowiU5IvwpbIyEbCOVRDkJXgG0Re9620=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         Content-Transfer-Encoding:In-Reply-To:X-ClientProxiedBy:
+         MIME-Version:X-MS-Exchange-MessageSentRepresentingType:
+         X-Originating-IP:X-MS-PublicTrafficType:
+         X-MS-Office365-Filtering-Correlation-Id:X-MS-TrafficTypeDiagnostic:
+         X-LD-Processed:X-MS-Exchange-Transport-Forked:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=C4ZfU0/WJfDfNgttPA+KKcxuSyk2HkbA6SXE/wP0PWBNU7SkR5/yft6onf7sFP3+a
+         4YS/KmuCggKYAWHNyspTrEb1DJEngjQKDj1SX8N/cLoGELAYyn0LEsFDuR/n0S6thc
+         54zDZ31J5zbnvOhPd47hI42amaBlyT7eu6WU1gmwxYXib3gZ3b4Rz+ESOx5pYl+3uM
+         vtVG4uNcNAm0zeaGk7H5WRwiDJXaelZF4rOREWneIVectHq9ojBjdKq3EmaJGfTXY3
+         IH8Z1fS61Hgpx/unSVgXgRP/ZnHn5xzDcQZstOagRMlChVKFVBX1idLM5Hg/mDRHZW
+         Ep7WoVeUPhu6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 6:12 AM Bingbu Cao <bingbu.cao@linux.intel.com> wro=
-te:
->
->
->
-> On 8/10/20 10:27 PM, Sakari Ailus wrote:
-> > Hi all,
-> >
-> ...snip...
-> >
-> > The use case is such that there is a privacy LED next to an integrated
-> > user-facing laptop camera, and this LED is there to signal the user tha=
-t
-> > the camera is recording a video or capturing images. That LED also happ=
-ens
-> > to be wired to one of the power supplies of the camera, so whenever you
-> > power on the camera, the LED will be lit, whether images are captured f=
-rom
-> > the camera --- or not. There's no way to implement this differently
-> > without additional software control (allowing of which is itself a
-> > hardware design decision) on most CSI-2-connected camera sensors as the=
-y
-> > simply have no pin to signal the camera streaming state.
-> >
-> > This is also what happens during driver probe: the camera will be power=
-ed
-> > on by the I=C2=B2C subsystem calling dev_pm_domain_attach() and the dev=
-ice is
-> > already powered on when the driver's own probe function is called. To t=
-he
-> > user this visible during the boot process as a blink of the privacy LED=
-,
-> > suggesting that the camera is recording without the user having used an
-> > application to do that. From the end user's point of view the behaviour=
- is
-> > not expected and for someone unfamiliar with internal workings of a
-> > computer surely seems quite suspicious --- even if images are not being
-> > actually captured.
-> >
-> > I've tested these on linux-next master. They also apply to Wolfram's
-> > i2c/for-next branch, there's a patch that affects the I=C2=B2C core cha=
-nges
-> > here (see below). The patches apart from that apply to Bartosz's
-> > at24/for-next as well as Mauro's linux-media master branch.
->
-> Sakari, we meet one issue - once the vcm sub-device registered, the user =
-space
-> will try to open the VCM (I have not figure out who did that), it will al=
-so
-> trigger the acpi pm resume/suspend, as the VCM always shares same power r=
-ail
-> with camera sensor, so the privacy LED still has a blink.
+On Thu, Aug 13, 2020 at 02:01:58PM +0800, Jason Wang wrote:
+>=20
+> On 2020/8/13 =E4=B8=8B=E5=8D=881:26, Tian, Kevin wrote:
+> > > From: Jason Wang <jasowang@redhat.com>
+> > > Sent: Thursday, August 13, 2020 12:34 PM
+> > >=20
+> > >=20
+> > > On 2020/8/12 =E4=B8=8B=E5=8D=8812:05, Tian, Kevin wrote:
+> > > > > The problem is that if we tie all controls via VFIO uAPI, the oth=
+er
+> > > > > subsystem like vDPA is likely to duplicate them. I wonder if ther=
+e is a
+> > > > > way to decouple the vSVA out of VFIO uAPI?
+> > > > vSVA is a per-device (either pdev or mdev) feature thus naturally s=
+hould
+> > > > be managed by its device driver (VFIO or vDPA). From this angle som=
+e
+> > > > duplication is inevitable given VFIO and vDPA are orthogonal passth=
+rough
+> > > > frameworks. Within the kernel the majority of vSVA handling is done=
+ by
+> > > > IOMMU and IOASID modules thus most logic are shared.
+> > >=20
+> > > So why not introduce vSVA uAPI at IOMMU or IOASID layer?
+> > One may ask a similar question why IOMMU doesn't expose map/unmap
+> > as uAPI...
+>=20
+>=20
+> I think this is probably a good idea as well. If there's anything missed =
+in
+> the infrastructure, we can invent. Besides vhost-vDPA, there are other
+> subsystems that relaying their uAPI to IOMMU API. Duplicating uAPIs is
+> usually a hint of the codes duplication. Simple map/unmap could be easy b=
+ut
+> vSVA uAPI is much more complicated.
 
-It's not always the case, as on some designs there are multiple power
-rails to the sensor and one drives the LED, while the other drives the
-VCM. That said, it would be still good to solve it in either case.
+A way to create the vSVA objects unrelated to VFIO and then pass those
+objects for device use into existing uAPIs, to me, makes alot of
+sense.
 
-Perhaps we need some more general discussion on the side effects of
-simply opening and querying a device. Most of V4L2 drivers these days
-are designed to avoid powering up the hardware until it's absolutely
-needed to do so. However, for non-streaming subdevs that are directly
-controlled by the userspace, like VCM, it's a common practice to power
-up on open and down on release. This is because they don't have a
-"streaming" state, so the driver has no way to determine when the
-power is needed. I wonder if there is a way to improve this.
+You should not have to use the VFIO API just to get vSVA.
 
-Best regards,
-Tomasz
+Or stated another way, the existing user driver should be able to get
+a PASID from the vSVA components as well as just create a PASID from
+the local mm_struct.
+
+The same basic argument goes for all the points - the issue is really
+the only uAPI we have for this stuff is under VFIO, and the better
+solution is to disagregate that uAPI, not to try and make everything
+pretend to be a VFIO device.
+
+Jason
