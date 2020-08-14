@@ -2,106 +2,81 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8767207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NuPdsvc3"
+	by mail.kernel.org (Postfix) with ESMTP id B45C820866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgHNPP7 (ORCPT
+        id S1726754AbgHNPUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:15:59 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:20212 "EHLO m43-7.mailgun.net"
+        Fri, 14 Aug 2020 11:20:05 -0400
+Received: from 8bytes.org ([81.169.241.247]:35856 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgHNPP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:15:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597418155; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=DMWgRHrRRjTDJXLtrLvtw3sk3LVQOvR9zSjiVrGpUPE=; b=NuPdsvc3k3mdu0oTViLZo8h7+4ea7fHIrbXadqe+jfEYKK022r4WYcOB91w3fSutZR8UAe0s
- sK+t3uBj9ACvc8tsImn9eN3D3cF6pNU89H72F8B/1LxFcr9sq7D7YkGDiFNbBRiQOMcT3j6F
- Ciz8SDRt5IRQBqWX2tZgTAYbGdI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f36aaa01e4d3989d47fc515 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 15:15:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7B6E7C43391; Fri, 14 Aug 2020 15:15:44 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726297AbgHNPUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:20:04 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 410CFC433C6;
-        Fri, 14 Aug 2020 15:15:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 410CFC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        Fabrice Bellet <fabrice@bellet.info>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
-        <20200814113933.1903438-13-lee.jones@linaro.org>
-Date:   Fri, 14 Aug 2020 18:15:39 +0300
-In-Reply-To: <20200814113933.1903438-13-lee.jones@linaro.org> (Lee Jones's
-        message of "Fri, 14 Aug 2020 12:39:15 +0100")
-Message-ID: <87r1s9l0mc.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by theia.8bytes.org (Postfix) with ESMTPSA id A5D3F1E6;
+        Fri, 14 Aug 2020 17:20:01 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason@zx2c4.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, kirill.shutemov@intel.com,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 0/2] x86: Retry to remove vmalloc/ioremap synchronzation
+Date:   Fri, 14 Aug 2020 17:19:45 +0200
+Message-Id: <20200814151947.26229-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+From: Joerg Roedel <jroedel@suse.de>
 
->  - Ensure spaces appear after {for, if, while, etc}
->  - Ensure spaces to not appear after '('
->  - Ensure spaces to not appear before ')'
->  - Ensure spaces appear between ')' and '{'
->  - Ensure spaces appear after ','
->  - Ensure spaces do not appear before ','
->  - Ensure spaces appear either side of '='
->  - Ensure '{'s which open functions are on a new line
->  - Remove trailing whitespace
->
-> There are still a whole host of issues with this file, but this
-> patch certainly breaks the back of them.
->
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Benjamin Reed <breed@users.sourceforge.net>
-> Cc: Javier Achirica <achirica@users.sourceforge.net>
-> Cc: Jean Tourrilhes <jt@hpl.hp.com>
-> Cc: Fabrice Bellet <fabrice@bellet.info>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/net/wireless/cisco/airo.c | 897 ++++++++++++++++--------------
->  1 file changed, 467 insertions(+), 430 deletions(-)
+Hi,
 
-This is a driver for ancient hardware, I'm not sure if it's worth trying
-to fix any style issues. Is anyone even using it? Should we instead just
-remove the driver?
+as discussed here are the updates to the recent patches and fixes to
+pre-allocate the vmalloc/ioremap second-level page-table pages on
+x86-64.
+
+Patch one is a re-send of
+
+	commit 8bb9bf242d1f ("x86/mm/64: Do not sync vmalloc/ioremap mappings")
+
+with more explanations about what broke, what fixed it and why its now
+safe to apply it again.
+
+Patch two updates the comment in preallocate_vmalloc_pages(), it is
+mostly the wording from Dave Hansen, so he really deserved the
+authorship of it. I just didn't want to commit/send it in his name.
+Feel free to change authorship of this patch to him.
+
+Regards,
+
+	Joerg
+
+Joerg Roedel (2):
+  x86/mm/64: Do not sync vmalloc/ioremap mappings
+  x86/mm/64: Update comment in preallocate_vmalloc_pages()
+
+ arch/x86/include/asm/pgtable_64_types.h |  2 --
+ arch/x86/mm/init_64.c                   | 20 ++++++++++----------
+ 2 files changed, 10 insertions(+), 12 deletions(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.28.0
+
