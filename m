@@ -2,112 +2,73 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF59C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06C620885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC9420866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgHNPUK (ORCPT
+        id S1727012AbgHNPUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgHNPUH (ORCPT
+        Fri, 14 Aug 2020 11:20:36 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:51498 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgHNPUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:20:07 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0BDC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:20:06 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 205C74BB;
-        Fri, 14 Aug 2020 17:20:02 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason@zx2c4.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, kirill.shutemov@intel.com,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 1/2] x86/mm/64: Do not sync vmalloc/ioremap mappings
-Date:   Fri, 14 Aug 2020 17:19:46 +0200
-Message-Id: <20200814151947.26229-2-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200814151947.26229-1-joro@8bytes.org>
-References: <20200814151947.26229-1-joro@8bytes.org>
+        Fri, 14 Aug 2020 11:20:35 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k6bVR-00H01D-G4; Fri, 14 Aug 2020 09:20:33 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k6bVQ-0001vZ-PO; Fri, 14 Aug 2020 09:20:33 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Sang Yan <sangyan@huawei.com>
+Cc:     <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <xiexiuqi@huawei.com>, <guohanjun@huawei.com>,
+        <zhuling8@huawei.com>, <luanjianhai@huawei.com>,
+        <luchunhua@huawei.com>
+References: <20200814055239.47348-1-sangyan@huawei.com>
+Date:   Fri, 14 Aug 2020 10:17:06 -0500
+In-Reply-To: <20200814055239.47348-1-sangyan@huawei.com> (Sang Yan's message
+        of "Fri, 14 Aug 2020 01:52:38 -0400")
+Message-ID: <87tux5i7f1.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1k6bVQ-0001vZ-PO;;;mid=<87tux5i7f1.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/U8iQDvUHSg0k7Zv0nFYBoIQGMmYLEEDU=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Sang Yan <sangyan@huawei.com> writes:
 
-Remove the code to sync the vmalloc and ioremap ranges for x86-64. The
-page-table pages are all pre-allocated so that synchronization is
-no longer necessary.
+> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
+> copy all segments from vmalloced memory to kernel boot memory,
+> because of disabled mmu.
 
-This is a patch that already went into the kernel as:
+I haven't seen kexec that slow since I tested on my 16Mhz 386.
 
-	commit 8bb9bf242d1f ("x86/mm/64: Do not sync vmalloc/ioremap mappings")
+That machine has an excuse it really is slow.  Anything else
+that takes seconds is almost certainly slow because someone
+has misconfigured things to not cache the data copied by kexec.
 
-But it had to be reverted later because it unveiled a bug from:
+I humbly suggest that you fix the arm64 code so that the data gets
+cached.
 
-	commit 6eb82f994026 ("x86/mm: Pre-allocate P4D/PUD pages for vmalloc area")
-
-The bug in that commit causes the P4D/PUD pages not to be correctly
-allocated, making the synchronization still necessary. That issue got
-fixed meanwhile upstream:
-
-	commit 995909a4e22b ("x86/mm/64: Do not dereference non-present PGD entries")
-
-With that fix it is safe again to remove the page-table synchronization
-for vmalloc/ioremap ranges on x86-64.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/pgtable_64_types.h | 2 --
- arch/x86/mm/init_64.c                   | 5 -----
- 2 files changed, 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 8f63efb2a2cc..52e5f5f2240d 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -159,6 +159,4 @@ extern unsigned int ptrs_per_p4d;
- 
- #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
- 
--#define ARCH_PAGE_TABLE_SYNC_MASK	(pgtable_l5_enabled() ?	PGTBL_PGD_MODIFIED : PGTBL_P4D_MODIFIED)
--
- #endif /* _ASM_X86_PGTABLE_64_DEFS_H */
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index a4ac13cc3fdc..777d83546764 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -217,11 +217,6 @@ static void sync_global_pgds(unsigned long start, unsigned long end)
- 		sync_global_pgds_l4(start, end);
- }
- 
--void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
--{
--	sync_global_pgds(start, end);
--}
--
- /*
-  * NOTE: This function is marked __ref because it calls __init function
-  * (alloc_bootmem_pages). It's safe to do it ONLY when after_bootmem == 0.
--- 
-2.28.0
-
+Eric
