@@ -2,120 +2,123 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 205A820768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D64520768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFe9eDvL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OMfC0SRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHNPOK (ORCPT
+        id S1726773AbgHNPOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        Fri, 14 Aug 2020 11:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHNPOA (ORCPT
+        with ESMTP id S1726297AbgHNPON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:14:00 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 326F1C061384;
-        Fri, 14 Aug 2020 08:14:00 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so4673936pgm.7;
-        Fri, 14 Aug 2020 08:14:00 -0700 (PDT)
+        Fri, 14 Aug 2020 11:14:13 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D74EC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:14:12 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id t15so11147034iob.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XSS7WdL7dEt4UqGKCmBkFa5bvmRGZIDyUv0fFwrbFAk=;
-        b=IFe9eDvLv9A9WCmAt+4OWHCaSPRxZrlhITfTFpa0LyTKXV2WkVTDBJnz79jmDJ/K2t
-         jUswjK3E816rd8x5TzCEXBvggIIgqCMqPScBHu0tmEVhayY4Cyaqm1Zy04W5dDr/H+oy
-         Ime2KL2luXnL7KvNlsnpbvFfYNQhkt1c+YjMXaBAhNVflOTuDItBoOMf1AraiDYtsLVc
-         YtYJ8wx7NC1DZwLSKGM/yZeyN2cAxZYf5LkAMOHRgn2HV/BvQAjgnQX0F9AXbfEkwJNE
-         PL1Vsz/5zAfae+iN2xglr+Q/jWn0mwyYAA1b/rNlmvNpuU17tn6639Vt1lxj2MrXt1Jq
-         XpQQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MKTBim8KTV4YYSPcKr4lTz1ll7NO32DkOj8t7IHHcLM=;
+        b=OMfC0SRvrBeXjj4WClZCp7FBrPwMiRg24Qq1pQ8QQR1s3+wC9byYLHIQdNlsmW2LOE
+         nA8qD1MgJH+azoVMFeKNF13H6ZmDqmcq6c3G6bQCK0zCxO1fFs5qUwdUjRyP4yoJfF6R
+         ThM9Eo4bod3FG/y64B7XL4G4AlwCqtKs8M5qBNIKjZ6n5Z13YypUItfsFC1qHQg1KqfN
+         ErMv7ZvGIw9VfhoUOCmRzFWkBx77Zr82/29j6hqtQDStsyBSq91L9Bw1j5JqXFfIgEmL
+         w2N+pSosGgOeyKXZWd8G9wFR4awDPjl7fkhpJmwoY3kHKqgxsKzhVUth7ZOKJc4AGXah
+         i3pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XSS7WdL7dEt4UqGKCmBkFa5bvmRGZIDyUv0fFwrbFAk=;
-        b=EfkCyryuJtXhsiGKYMzmYAiVk6vyd325FHoCXvtYqgiv0dzQiQqZNGL0EUnw8EQjnX
-         lf1AjtJNoXO925inSHZIr8qt/3F1DlAbqvv7KnTHwYLMLqe5vnReT8XFC4zqDWhdY18Z
-         QQtZN57fQCQj8Hd9mtEtVIFqCY/AR75cZC0tVtn3KcJGNPzy6ivrhEqaa6AwIUBoISl7
-         51A84q2g7QnwJKI2VCRu4sC5rHg/FT17ff4z4a+0oN2/VAPRO0dwh9IoF+ImrIoiRW4W
-         HrlR9henMW208OljrgQJgfrLIEQ7VpdOQWv5tpOTcRPFH5AStb8pAlZBYvzb24c3FBjU
-         CEag==
-X-Gm-Message-State: AOAM531HBchI5R5/DpXm9abMImP0BrD91RBw4LK/fGhHgEgJkkACRlO6
-        BRCuWbV1pRSa6jds4BwnEc9ZcbGqXk4=
-X-Google-Smtp-Source: ABdhPJx/R839VL0IRTIO5koe08YOukeU6NP2R9Yn5mq5Y5Lc2LzBxq6geUhYOanzZzNbvMAdbCxDgQ==
-X-Received: by 2002:a63:1a49:: with SMTP id a9mr2079119pgm.110.1597418039768;
-        Fri, 14 Aug 2020 08:13:59 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f13sm9381927pfd.215.2020.08.14.08.13.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Aug 2020 08:13:59 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 08:13:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Beniamin Bia <beniamin.bia@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/hwmon/adm1177.c: use simple i2c probe
-Message-ID: <20200814151358.GA256451@roeck-us.net>
-References: <20200813160958.1506536-1-steve@sk2.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MKTBim8KTV4YYSPcKr4lTz1ll7NO32DkOj8t7IHHcLM=;
+        b=E50nHVVnSpMDy9b6PJFgAF3BfasIpCfreJYNgqpxPjZHfR0++UzrbYXObgPlKWuGVg
+         TGQPvAgUwVhhaneyWvunWeSFVVxRpzfyaALcTIj0x5TML9+THO06Pn6+Ap9fwoco7ZP9
+         QgJisQgMeEiYEI05sBsi7N6ny+Iwp39y+C78Io6jBXXqXerBKiQRlhB8/yHtnqvwQQsm
+         f2AdPfLCeQVBrg0KgEPCL8V6Z3Ep34i1HpvACr5yhBsMlzXTEzijiYS10n/xHdNQCiUg
+         +9WqrWCVjMnBg7ICEG40ewmzyD7GJM/yiB6T/qjqUwsgKGP1KvgaWWgqKPindPPMtzZ1
+         WAag==
+X-Gm-Message-State: AOAM531ZFdWHtCMd/hVN07LaOODQsmBsMf2o2JYQ4SHzP2DHYDa7fgIl
+        psHZShCt1lJ4SHA3oHqwy9biHRkcn9cmrfuYjPSbKg==
+X-Google-Smtp-Source: ABdhPJxtrAzyjhyQfi2P+J75BasSp3zQNNU33ONWMQHPXuUdsXEvXQk81EraFs9H1NVwsR4f9XlGB6Rzl/9BMA1PU0I=
+X-Received: by 2002:a5e:df42:: with SMTP id g2mr2488843ioq.117.1597418051772;
+ Fri, 14 Aug 2020 08:14:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813160958.1506536-1-steve@sk2.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <6e3bace9ebea4f59a567a9ab0ef85d90@huawei.com>
+In-Reply-To: <6e3bace9ebea4f59a567a9ab0ef85d90@huawei.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 14 Aug 2020 08:14:00 -0700
+Message-ID: <CANn89iKgM6KbMFh8z2inQrWwZS7AEF9Meujad89WfY-gZvXDgQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] net: Fix potential deadloop in skb_copy_ubufs()
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        "jeremy@azazel.net" <jeremy@azazel.net>,
+        "mashirle@us.ibm.com" <mashirle@us.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 06:09:58PM +0200, Stephen Kitt wrote:
-> This driver doesn't use the id information provided by the old i2c
-> probe function, so it can trivially be converted to the simple
-> ("probe_new") form.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+On Fri, Aug 14, 2020 at 12:14 AM linmiaohe <linmiaohe@huawei.com> wrote:
+>
+> Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+> >On Thu, Aug 6, 2020 at 1:48 PM linmiaohe <linmiaohe@huawei.com> wrote:
+> >>
+> >> From: Miaohe Lin <linmiaohe@huawei.com>
+> >>
+> >> We could be trapped in deadloop when we try to copy userspace skb
+> >> frags buffers to kernel with a cloned skb:
+> >> Reproduce code snippet:
+> >>         skb = alloc_skb(UBUF_DATA_LEN, GFP_ATOMIC);
+> >>         clone = skb_clone(skb, GFP_ATOMIC);
+> >>         skb_zcopy_set_nouarg(clone, NULL);
+> >>         pskb_expand_head(skb, 0, 0, GFP_ATOMIC);
+> >>
+> >> Catch this unexpected case and return -EINVAL in skb_orphan_frags()
+> >> before we call skb_copy_ubufs() to fix it.
+> >
+> >Is this a hypothetical codepath?
+> >
+> >skb zerocopy carefully tracks clone calls where necessary. See the call to skb_orphan_frags in skb_clone, and the implementation of that callee.
+> >
+> >The only caller of skb zerocopy with nouarg is tpacket_fill_skb, as of commit 5cd8d46ea156 ("packet: copy user buffers before orphan or clone").
+> >
+> >As the commit subject indicates, this sets skb_zcopy_set_nouarg exactly to be sure that any clone will trigger a copy of "zerocopy"
+> >user data to private kernel memory.
+> >
+> >No clone must happen between alloc_skb and skb_zcopy_set_nouarg, indeed. But AFAIK, none exists.
+>
+> Since we always call skb_orphan_frags in skb_clone, is it unnecessary to call skb_orphan_frags in pskb_expand_head when skb is cloned ?
 
-I'll apply the entire series, but please don't use entire path names
-as tag in the future but follow bubsystem rules.
+Please give us a real case.
 
-Thanks,
-Guenter
+I fear that your patches are coming directly from some kind of
+automated tool, that really misses how the code is really used
+from _current_ code base, not _hypothetical_ one.
 
-> ---
->  drivers/hwmon/adm1177.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/adm1177.c b/drivers/hwmon/adm1177.c
-> index d314223a404a..6e8bb661894b 100644
-> --- a/drivers/hwmon/adm1177.c
-> +++ b/drivers/hwmon/adm1177.c
-> @@ -196,8 +196,7 @@ static void adm1177_remove(void *data)
->  	regulator_disable(st->reg);
->  }
->  
-> -static int adm1177_probe(struct i2c_client *client,
-> -			 const struct i2c_device_id *id)
-> +static int adm1177_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct device *hwmon_dev;
-> @@ -277,7 +276,7 @@ static struct i2c_driver adm1177_driver = {
->  		.name = "adm1177",
->  		.of_match_table = adm1177_dt_ids,
->  	},
-> -	.probe = adm1177_probe,
-> +	.probe_new = adm1177_probe,
->  	.id_table = adm1177_id,
->  };
->  module_i2c_driver(adm1177_driver);
+This is very time consuming. Please provide evidence first.
+
+Thank you.
