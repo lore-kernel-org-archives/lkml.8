@@ -2,113 +2,111 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5B3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D18C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37AF820774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C8E20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q+k/cLCC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PViFerxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbgHNPFl (ORCPT
+        id S1728662AbgHNPFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:05:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40688 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728347AbgHNPFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:05:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597417536; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=7FCVfLxxmii9ov0dCHs81K5wnCBYwV2wRwZYNb84Q9E=;
- b=Q+k/cLCC5QtV2zhxJq7yjef/8EDcvnswMDLr0EtWcA+2iVXQLgEgWtfAwl1n6J64TtzoVDTT
- yGN+j1FHNu5xyYWKc06ouUr0bUBrhEbfJOgnWE6tY1uQAhWLA4K9BOBIiiqoUuBaIyAZVK9U
- wOEP4W4TuC0dc7zU/2qvYSTFahE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f36a8331e4d3989d476e079 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 15:05:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0936C43391; Fri, 14 Aug 2020 15:05:22 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78CDAC433C9;
-        Fri, 14 Aug 2020 15:05:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78CDAC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 14 Aug 2020 11:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgHNPFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:05:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC97AC061384;
+        Fri, 14 Aug 2020 08:05:48 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id d4so4506010pjx.5;
+        Fri, 14 Aug 2020 08:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ftk7cVeP2VJCv8rvQnvKeC7BVrEaHbeeYHcpYUiy4OM=;
+        b=PViFerxHW5l9qfmgreTd/IZit/rdgX8jVzkh/lM/LGYel3JZ6+/kDlVTJjV61Ua1zL
+         UTbh4wg1npg5hYawIC1NRelSlAjfBW0KhQ15GZcfpcott4XauhB0sNXBGWfEE1xprvOI
+         EJSb2FkA2Xa/ZYAepJdhKAm2But19BK/V0uxoO+2GT1lnH5qJ/ybRKV4DbwPJAg9VKC3
+         WP2dVdArQF1c7HbawiuX8cjzcZ0Olk57wojMlNc1qddn32pPUF39TtyLWEGP4ZXe8Rxe
+         4WvAGEQvMkARg5HcSX2Z8DahCdNBcQHezbauG+gf8Q/0qEOYd4Lppi8A5nRvFDM/rUdm
+         mosg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ftk7cVeP2VJCv8rvQnvKeC7BVrEaHbeeYHcpYUiy4OM=;
+        b=d4c87FKMaFjYfmzPeC4pdzZMMV/91Xbpg4Ep0VU9gERf86oDGa2kB9rYD1mWCBRQcg
+         u5yaqV1gjdTRTixG3a9EDW+C3u8rTlqVxyk5MCYDGXVjZLLW7ZRflNRibfw2slP/7AWd
+         ub6E0un4ktwbDy5zRDkxW9ARrIgKmO4lSuQ8mwjISm1rZF0g3zeBI5HJCpIVaw0Yh9xV
+         mAh4z4yDYT1Rq7+oe7enKlEerU1Y52mJLys6hJ6ok9ThEjO5YzP55+6oDywHGAoQShR6
+         3T9foPqdUeZDWmfKmbHHjilRJQpaon1vZXyq5+oFFPp8JPGiHgmQfUlVvA7bnUp1G2Zs
+         2wdQ==
+X-Gm-Message-State: AOAM533tQ6Yydh/DLX9koZKxxZ8tMZkS4t/+ifpGK2j43mQ+SCcAvHuC
+        5THHZ5YwRexemnnKEqdnTsyviBkZgo0=
+X-Google-Smtp-Source: ABdhPJxk1RWg2dnouIo67Ez/jEBdW83owOuk8msCbL1MTY2sLMb2L5fyRpoVIA3x4+KLhIuRkWdfbQ==
+X-Received: by 2002:a17:902:246:: with SMTP id 64mr2331945plc.70.1597417548278;
+        Fri, 14 Aug 2020 08:05:48 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id mr21sm8664024pjb.57.2020.08.14.08.05.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2020 08:05:47 -0700 (PDT)
+Subject: Re: WARNING: locking bug in try_to_grab_pending
+To:     syzbot <syzbot+2b713236b28823cd4dff@syzkaller.appspotmail.com>,
+        davem@davemloft.net, edumazet@google.com, jmaloy@redhat.com,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com,
+        yoshfuji@linux-ipv6.org
+References: <000000000000dbe6ee05acd63ca2@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <4c3119a4-2395-dafc-5146-d23d568c5aef@gmail.com>
+Date:   Fri, 14 Aug 2020 08:05:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <000000000000dbe6ee05acd63ca2@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 7/7] ath: drop unnecessary list_empty
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1595761112-11003-8-git-send-email-Julia.Lawall@inria.fr>
-References: <1595761112-11003-8-git-send-email-Julia.Lawall@inria.fr>
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200814150522.C0936C43391@smtp.codeaurora.org>
-Date:   Fri, 14 Aug 2020 15:05:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-> list_for_each_entry{_safe} is able to handle an empty list.
-> The only effect of avoiding the loop is not initializing the
-> index variable.
-> Drop list_empty tests in cases where these variables are not
-> used.
+
+On 8/14/20 6:17 AM, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
-> Note that list_for_each_entry{_safe} is defined in terms of
-> list_first_entry, which indicates that it should not be used on an
-> empty list.  But in list_for_each_entry{_safe}, the element obtained
-> by list_first_entry is not really accessed, only the address of its
-> list_head field is compared to the address of the list head, so the
-> list_first_entry is safe.
+> commit 1378817486d6860f6a927f573491afe65287abf1
+> Author: Eric Dumazet <edumazet@google.com>
+> Date:   Thu May 21 18:29:58 2020 +0000
 > 
-> The semantic patch that makes this change for the list_for_each_entry
-> case is as follows: (http://coccinelle.lip6.fr/)
+>     tipc: block BH before using dst_cache
 > 
-> <smpl>
-> @@
-> expression x,e;
-> statement S;
-> identifier i;
-> @@
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175599f6900000
+> start commit:   6663cf82 flow_offload: Fix flow action infrastructure
+> git tree:       net-next
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8572a6e4661225f4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2b713236b28823cd4dff
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e932a8c00000
 > 
-> -if (!(list_empty(x)))
->    list_for_each_entry(i,x,...) S
->  ... when != i
-> ? i = e
-> </smpl>
+> If the result looks correct, please mark the issue as fixed by replying with:
 > 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> #syz fix: tipc: block BH before using dst_cache
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
 
-Patch applied to ath-next branch of ath.git, thanks.
-
-18c25b4019ca ath: drop unnecessary list_empty
-
--- 
-https://patchwork.kernel.org/patch/11685677/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+#syz fix: tipc: block BH before using dst_cache
