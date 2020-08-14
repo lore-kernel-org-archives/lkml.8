@@ -2,388 +2,265 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0371C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7203FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA9A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4729F207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XTm4CnJm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oQUuPT7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgHNOmP (ORCPT
+        id S1728857AbgHNOoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 10:42:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
+        Fri, 14 Aug 2020 10:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgHNOmN (ORCPT
+        with ESMTP id S1727074AbgHNOoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 10:42:13 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B9AC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:42:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t14so8125953wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:42:13 -0700 (PDT)
+        Fri, 14 Aug 2020 10:44:12 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D12C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:44:12 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id p8so4752882vsm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Yl1G/VWK1CNE49Md/itICc0B3b1iGHZpHbQFnK+4y7c=;
-        b=XTm4CnJmcol29c/L1LWgP71sOmq5iwlhwzLYsTY8FlF/s3jdyW9+mMtrs4bmj1Ub7p
-         nmwTCpuKv0bRIqqVH+df8STg2LVTSmF5j/Thb0kJMaJ5SRnDzmMIu4o1Mkr9sHclq4mh
-         7iPrQd8a5QESfIEusG+tBzfuGauswKPFja7T/ngf99i2Ff/wcVEbHmZEqPOEFH16D+0S
-         czf2Xm7oQtonSbG31rxy4qO7c8uvIZI12MqaKaw9nATZ8yjSqp9C6TtgTwDwuEgfwHfG
-         YCCYSnZtHGMzsxBMi8T1mXCua+KoYCRF7B7FChG/t25g90zMQKprsuC2SapkNOsbbnU5
-         GKRA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Amv9QIiHfjtn876TD4rggI0HRc+PqFCwXxxaILu+uJE=;
+        b=oQUuPT7L0xdiY8xjAMJQ87XG8vQcYVqFZwy2yTZmgKZ7gpQCNP+W4dK54ss8qP8pIG
+         LvxugT9QMOVE0N2m0V42xK+3b2aC3e3yeXG+TEI77xHH5usLHfjRPW1oNhv3gzH0Pqoz
+         v2mjuN3J8RHveggm0kxOgNauW1U4mKDLhObdw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Yl1G/VWK1CNE49Md/itICc0B3b1iGHZpHbQFnK+4y7c=;
-        b=taO9hXKl/L+6TtCsiLxXsRHgmX4T/3tWtLdT9dNN8w1V9jwMbGiMiROeqT1GEwQMkK
-         fsLKflwfthZxVlXWjBOPmjK1QmLKsM+0LLypLN6JN2zioVoC56AdUGyi3upCye+H6CTd
-         7KoZSogredzmeS31Y4ssWk+yFzmlCWyKCMMy5WAgQHSywZJT7x7dGv3JyolwQD9YaUI7
-         FJ+MtsEKuaacKF7f1w0BrC1AJdt2lD/q2FGSMZOLx2Z7EHDlfMCajUR+mBs4bJ4UTRiE
-         qmwOkfYoFFxyD2sRjzX38jnOIimlbV/BQJkUb83CfDHPigvv4whHnDvZ3YrR0TCBCS40
-         ODRA==
-X-Gm-Message-State: AOAM532RvtBshacG3av9nUh7p9JDmo7XOldVQ6FFtXrERBH0KvQARbND
-        tk7svCd8rTlmp6bLjZo54Fin+g==
-X-Google-Smtp-Source: ABdhPJz3h9KpTkhab2czIoIGf2XLBCdcrFvF1QAk2TAc++EZpV3bI2FqdxKi9a29yTby+c50VqLp0w==
-X-Received: by 2002:a05:600c:2301:: with SMTP id 1mr2824954wmo.110.1597416131875;
-        Fri, 14 Aug 2020 07:42:11 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id g188sm16511592wma.5.2020.08.14.07.42.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 07:42:10 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 15:42:06 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL v2] MFD for v5.9
-Message-ID: <20200814144206.GL4354@dell>
-References: <20200811074637.GG4411@dell>
- <CAHk-=wgF6Ld0-E0Ych_s=jyS4ssaabK08QR4NOzfRrde0LVHfg@mail.gmail.com>
- <20200813071949.GG4354@dell>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Amv9QIiHfjtn876TD4rggI0HRc+PqFCwXxxaILu+uJE=;
+        b=k4nH696V2iuTYq6hF/4cYEE4G5iXpYAtfuyxvWV68MXtaHMd3x4lQwe3sLaUkg0u1F
+         2EFBNq3e3tbw5NLydh4ZLpe4EI5GglTHvXN1FHvdtSS9W1qckJ9oh+TH83NqfOHVVt9h
+         7zvQWYWHu/jz54YajBa3aG0388pT+FC4IW9WdzQ6/kvNdi2oj1CQl6tGM6KXjQoWi8qU
+         uZcxDRchXt8I5rgpvsuWtSaT0oqNRhCOKsu/kTYdNWVsBm7qXYKP5mw0DXQuMIXvDbar
+         5nfNP+8h69Fhrsx3K3dn5lfjmW3UwQaqgJbg6Bx0n5hMN+cHVbyLybDuQrFEzc7cvlac
+         YCqg==
+X-Gm-Message-State: AOAM5305l53vZhRleJbjHPht+rYJcGvCEUZcO/P9MEyeKjcSGg/hBIKZ
+        pafQYaYN07sHn1Glj488GwikX5HKm6P9xw==
+X-Google-Smtp-Source: ABdhPJw3uu+ro+dpoiZsVgWjqQ1aD/DsMTr7Vg3R5tjSRNlB3yqi5+L1ebrN8luXMslRPzu/NWJBHA==
+X-Received: by 2002:a67:f893:: with SMTP id h19mr1724259vso.158.1597416250654;
+        Fri, 14 Aug 2020 07:44:10 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id k28sm1504772vko.3.2020.08.14.07.44.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2020 07:44:09 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id i129so4767423vsi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:44:09 -0700 (PDT)
+X-Received: by 2002:a67:d714:: with SMTP id p20mr1801455vsj.119.1597416248940;
+ Fri, 14 Aug 2020 07:44:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200813071949.GG4354@dell>
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+ <1595333413-30052-3-git-send-email-sumit.garg@linaro.org> <CAD=FV=XUNqun3d+C_7GpgntGWRXwLSLnXKStLUz8iqZoGKu8zg@mail.gmail.com>
+ <CAFA6WYNq-Z5WD=AqJn2_DEg0F6G1CYte2y5Snc964vsgCnr0Bw@mail.gmail.com>
+ <CAD=FV=Vu3PGSUzargD-6e2XOw=Eh7CZaQ_+a09dr8SR1T8eE2g@mail.gmail.com> <CAFA6WYPJ_w+R15NRKK5BzZtTxKq8Gh_mGswuYbW0cYZoBYLhxw@mail.gmail.com>
+In-Reply-To: <CAFA6WYPJ_w+R15NRKK5BzZtTxKq8Gh_mGswuYbW0cYZoBYLhxw@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 14 Aug 2020 07:43:57 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XA91CcyGMHKmnMG4LD7HO1d65Fuq3nDWDH_NKPOh+n3Q@mail.gmail.com>
+Message-ID: <CAD=FV=XA91CcyGMHKmnMG4LD7HO1d65Fuq3nDWDH_NKPOh+n3Q@mail.gmail.com>
+Subject: Re: [RFC 2/5] serial: core: Add framework to allow NMI aware serial drivers
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good evening Linus,
+Hi,
 
-> > You can try again next merge window, by now it's too late to send me
-> > completely untested garbage and try to fix it up.
-> 
-> Could I please urge you to reconsider.  The branch is well tested (in
-> -next, by private 'kernel test robot' tests and by extensive TuxBuild
-> testing).  I have cleaned up the offending line (it was just one line
-> causing the 2 new 'unused variable' issues) and all of my tests are
-> now passing (with W=1 turned off).  The branch also extinguishes well
-> over 100 W=1 warnings to boot.  It certainly does more good than
-> harm.
-> 
-> If you decide stick with your decision however, I'll also understand.
+On Fri, Aug 14, 2020 at 4:17 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> On Thu, 13 Aug 2020 at 20:08, Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Aug 13, 2020 at 7:19 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+> > >
+> > > On Thu, 13 Aug 2020 at 05:29, Doug Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Jul 21, 2020 at 5:11 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+> > > > >
+> > > > > Add NMI framework APIs in serial core which can be leveraged by serial
+> > > > > drivers to have NMI driven serial transfers. These APIs are kept under
+> > > > > CONFIG_CONSOLE_POLL as currently kgdb initializing uart in polling mode
+> > > > > is the only known user to enable NMI driven serial port.
+> > > > >
+> > > > > The general idea is to intercept RX characters in NMI context, if those
+> > > > > are specific to magic sysrq then allow corresponding handler to run in
+> > > > > NMI context. Otherwise defer all other RX and TX operations to IRQ work
+> > > > > queue in order to run those in normal interrupt context.
+> > > > >
+> > > > > Also, since magic sysrq entry APIs will need to be invoked from NMI
+> > > > > context, so make those APIs NMI safe via deferring NMI unsafe work to
+> > > > > IRQ work queue.
+> > > > >
+> > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > > ---
+> > > > >  drivers/tty/serial/serial_core.c | 120 ++++++++++++++++++++++++++++++++++++++-
+> > > > >  include/linux/serial_core.h      |  67 ++++++++++++++++++++++
+> > > > >  2 files changed, 185 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> > > > > index 57840cf..6342e90 100644
+> > > > > --- a/drivers/tty/serial/serial_core.c
+> > > > > +++ b/drivers/tty/serial/serial_core.c
+> > > > > @@ -3181,8 +3181,14 @@ static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+> > > > >                 return true;
+> > > > >         }
+> > > > >
+> > > > > +#ifdef CONFIG_CONSOLE_POLL
+> > > > > +       if (in_nmi())
+> > > > > +               irq_work_queue(&port->nmi_state.sysrq_toggle_work);
+> > > > > +       else
+> > > > > +               schedule_work(&sysrq_enable_work);
+> > > > > +#else
+> > > > >         schedule_work(&sysrq_enable_work);
+> > > > > -
+> > > > > +#endif
+> > > >
+> > > > It should be a very high bar to have #ifdefs inside functions.  I
+> > > > don't think this meets it.  Instead maybe something like this
+> > > > (untested and maybe slightly wrong syntax, but hopefully makes
+> > > > sense?):
+> > > >
+> > > > Outside the function:
+> > > >
+> > > > #ifdef CONFIG_CONSOLE_POLL
+> > > > #define queue_port_nmi_work(port, work_type)
+> > > > irq_work_queue(&port->nmi_state.work_type)
+> > > > #else
+> > > > #define queue_port_nmi_work(port, work_type)
+> > > > #endif
+> > > >
+> > > > ...and then:
+> > > >
+> > > > if (IS_ENABLED(CONFIG_CONSOLE_POLL) && in_nmi())
+> > > >   queue_port_nmi_work(port, sysrq_toggle_work);
+> > > > else
+> > > >   schedule_work(&sysrq_enable_work);
+> > > >
+> > > > ---
+> > > >
+> > > > The whole double-hopping is really quite annoying.  I guess
+> > > > schedule_work() can't be called from NMI context but can be called
+> > > > from IRQ context?  So you need to first transition from NMI context to
+> > > > IRQ context and then go and schedule the work?  Almost feels like we
+> > > > should just fix schedule_work() to do this double-hop for you if
+> > > > called from NMI context.  Seems like you could even re-use the list
+> > > > pointers in the work_struct to keep the queue of people who need to be
+> > > > scheduled from the next irq_work?  Worst case it seems like you could
+> > > > add a schedule_work_nmi() that would do all the hoops for you.  ...but
+> > > > I also know very little about NMI so maybe I'm being naive.
+> > > >
+> > >
+> > > Thanks for this suggestion and yes indeed we could make
+> > > schedule_work() NMI safe and in turn get rid of all this #ifdefs. Have
+> > > a look at below changes:
+> > >
+> > > diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> > > index 26de0ca..1daf1b4 100644
+> > > --- a/include/linux/workqueue.h
+> > > +++ b/include/linux/workqueue.h
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/atomic.h>
+> > >  #include <linux/cpumask.h>
+> > >  #include <linux/rcupdate.h>
+> > > +#include <linux/irq_work.h>
+> > >
+> > >  struct workqueue_struct;
+> > >
+> > > @@ -106,6 +107,7 @@ struct work_struct {
+> > >  #ifdef CONFIG_LOCKDEP
+> > >         struct lockdep_map lockdep_map;
+> > >  #endif
+> > > +       struct irq_work iw;
+> >
+> > Hrm, I was thinking you could just have a single queue per CPU then
+> > you don't need to add all this extra data to every single "struct
+> > work_struct".  I was thinking you could use the existing list node in
+> > the "struct work_struct" to keep track of the list of things.  ...but
+> > maybe my idea this isn't actually valid because the linked list might
+> > be in use if we're scheduling work that's already pending / running?
+> >
+> > In any case, I worry that people won't be happy with the extra
+> > overhead per "struct work_struct".  Can we reduce it at all?  It still
+> > does feel like you could get by with a single global queue and thus
+> > you wouldn't need to store the function pointer and flags with every
+> > "struct work_struct", right?  So all you'd need is a single pointer
+> > for the linked list?  I haven't actually tried implementing this,
+> > though, so I could certainly be wrong.
+>
+> Let me try to elaborate here:
+>
+> Here we are dealing with 2 different layers of deferring work, one is
+> irq_work (NMI safe) using "struct irq_work" and other is normal
+> workqueue (NMI unsafe) using "struct work_struct".
+>
+> So when we are in NMI context, the only option is to use irq_work to
+> defer work and need to pass reference to "struct irq_work". Now in
+> following irq_work function:
+>
+> +void queue_work_nmi(struct irq_work *iw)
+> +{
+> +       struct work_struct *work = container_of(iw, struct work_struct, iw);
+> +
+> +       queue_work(system_wq, work);
+> +}
+> +EXPORT_SYMBOL(queue_work_nmi);
+>
+> we can't find a reference to "struct work_struct" until there is 1:1
+> mapping with "struct irq_work". So we require a way to establish this
+> mapping and having "struct irq_work" as part of "struct work_struct"
+> tries to achieve that. If you have any better way to achieve this, I
+> can use that instead.
 
-Here is the new pull request.  It has been tested; locally, by
-TuxBuild and the Intel 'kernel test robot' [0].  Please consider this for
-addition into v5.9.  All of these patches have also soak tested in
--next for a considerable amount of time.
+So I guess the two options to avoid the overhead are:
 
-[0] https://pastebin.ubuntu.com/p/CjwVcf4Nwd/
+1. Create a new struct:
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+struct nmi_queuable_work_struct {
+  struct work_struct work;
+  struct irq_work iw;
+};
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+Then the overhead is only needed for those that want this
+functionality.  Those people would need to use a variant
+nmi_schedule_work() which, depending on in_nmi(), would either
+schedule it directly or use the extra work.
 
-are available in the Git repository at:
+Looks like Daniel already responded and suggested this.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.9-1
 
-for you to fetch changes up to e15d7f2b81d2e7d93115d46fa931b366c1cdebc2:
+2. Something that duplicates the code of at least part of irq_work and
+therefore saves the need to store the function pointer.  Think of it
+this way: if you made a whole copy of irq_work that was hardcoded to
+just call the function you wanted then you wouldn't need to store a
+function pointer.  This is, of course, excessive.  I was trying to
+figure out if you could do less by only copying the NMI-safe
+linked-list manipulation, but this is probably impossible and not
+worth it anyway.
 
-  mfd: syscon: Use a unique name with regmap_config (2020-08-13 07:51:03 +0100)
-
-----------------------------------------------------------------
- - Core Frameworks
-   - Make better attempt at matching device with the correct OF node
-   - Allow batch removal of hierarchical sub-devices
-
- - New Drivers
-   - Add STM32 Clocksource driver
-   - Add support for Khadas System Control Microcontroller
-
- - Driver Removal
-   - Remove unused driver for TI's SMSC ECE1099
-
- - New Device Support
-   - Add support for Intel Emmitsburg PCH to Intel LPSS PCI
-   - Add support for Intel Tiger Lake PCH-H to Intel LPSS PCI
-   - Add support for Dialog DA revision to Dialog DA9063
-
- - New Functionality
-   - Add support for AXP803 to be probed by I2C
-
- - Fix-ups
-   - Numerous W=1 warning fixes
-   - Device Tree changes; stm32-lptimer, gateworks-gsc, khadas,mcu, stmfx, cros-ec, j721e-system-controller
-   - Enabled Regmap 'fast I/O'; stm32-lptimer
-   - Change BUG_ON to WARN_ON; arizona-core
-   - Remove superfluous code/initialisation; madera, max14577
-   - Trivial formatting/spelling issues; madera-core, madera-i2c, da9055, max77693-private
-   - Switch to of_platform_populate(); sprd-sc27xx-spi
-   - Expand out set/get brightness/pwm macros; lm3533-ctrlbank
-   - Disable IRQs on suspend; motorola-cpcap
-   - Clean-up error handling; intel_soc_pmic_mrfld
-   - Ensure correct removal order of sub-devices; madera
-   - Many s/HTTP/HTTPS/ link changes
-   - Ensure name used with Regmap is unique; syscon
-
- - Bug Fixes
-   - Properly 'put' clock on unbind and error; arizona-core
-   - Fix revision handling; da9063
-   - Fix 'assignment of read-only location' error; kempld-core
-   - Avoid using the Regmap API when atomic; rn5t618
-   - Redefine volatile register description; rn5t618
-   - Use locking to protect event handler; dln2
-
-----------------------------------------------------------------
-Adam Thomson (2):
-      mfd: da9063: Fix revision handling to correctly select reg tables
-      mfd: da9063: Add support for latest DA silicon revision
-
-Alexander A. Klimov (1):
-      mfd: Replace HTTP links with HTTPS ones
-
-Andreas Kemnade (2):
-      mfd: rn5t618: Make restart handler atomic safe
-      mfd: rn5t618: Fix caching of battery related registers
-
-Andy Shevchenko (3):
-      mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-      mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
-      mfd: dln2: Run event handler loop under spinlock
-
-Benjamin Gaignard (5):
-      dt-bindings: mfd: Document STM32 low power timer bindings
-      mfd: stm32: Add defines to be used for clkevent purpose
-      mfd: stm32: Enable regmap fast_io for stm32-lptimer
-      clocksource: Add Low Power STM32 timers driver
-      dt-bindings: mfd: Convert stmfx bindings to json-schema
-
-Charles Keepax (6):
-      mfd: arizona: Remove BUG_ON usage
-      mfd: arizona: Ensure 32k clock is put on driver unbind and error
-      mfd: madera: Remove unused forward declaration of madera_codec_pdata
-      mfd: madera: Fix minor formatting issues
-      mfd: mfd-core: Add mechanism for removal of a subset of children
-      mfd: madera: Improve handling of regulator unbinding
-
-Chunyan Zhang (1):
-      mfd: sprd: Populate sub-devices defined in DT
-
-Colin Ian King (1):
-      mfd: max14577: Remove redundant initialization of variable current_bits
-
-Fabio Estevam (2):
-      dt-bindings: mfd: st,stmfx: Remove extra additionalProperties
-      dt-bindings: mfd: st,stmfx: Remove I2C unit name
-
-Frank Lee (1):
-      mfd: axp20x: Allow the AXP803 to be probed by I2C
-
-Ikjoon Jang (1):
-      dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-
-Johan Hovold (1):
-      mfd: lm3533: Expand control-bank accessors
-
-Lee Jones (36):
-      mfd: twl4030-irq: Fix incorrect type in assignment warning
-      mfd: twl4030-irq: Fix cast to restricted __le32 warning
-      mfd: tps6586x: Fix cast to restricted __le32 warning
-      mfd: altera-sysmgr: Fix physical address storing hacks
-      mfd: sprd-sc27xx-spi: Fix symbol 'sprd_pmic_detect_charger_type' was not declared warning
-      mfd: ab3100-core: Fix incompatible types in comparison expression warning
-      mfd: ab8500-debugfs: Fix incompatible types in comparison expression issue
-      mfd: tc3589x: Remove invalid use of kerneldoc syntax
-      mfd: wm8400-core: Supply description for wm8400_reset_codec_reg_cache's arg
-      mfd: wm831x-core: Supply description wm831x_reg_{un}lock args
-      mfd: wm8350-core: Supply description wm8350_reg_{un}lock args
-      mfd: mfd-core: Complete kerneldoc header for devm_mfd_add_devices()
-      mfd: db8500-prcmu: Add description for 'reset_reason' in kerneldoc
-      mfd: db8500-prcmu: Remove incorrect function header from .probe() function
-      mfd: omap-usb-host: Remove invalid use of kerneldoc syntax
-      mfd: omap-usb-host: Provide description for 'pdev' argument to .probe()
-      mfd: omap-usb-tll: Provide description for 'pdev' argument to .probe()
-      mfd: atmel-smc: Add missing colon(s) for 'conf' arguments
-      mfd: altera-sysmgr: Supply descriptions for 'np' and 'property' function args
-      mfd: cros_ec_dev: Fix cros_feature_to_{name,cells} struct descriptions
-      mfd: tps65218: Repair incorrect function argument name 's/tps65218/tps/'
-      mfd: tps65217: Repair incorrect function argument name 's/tps65217/tps/'
-      mfd: ab3100-otp: Add missing colon(s) for all documented kerneldoc arguments
-      mfd: tps65010: Remove delcared and set, but never used variable 'status'
-      mfd: si476x-cmd: Repair wrongly described function argument 's/response/resp'
-      mfd: si476x-cmd: Add missing colon(s) for all documented kerneldoc arguments
-      mfd: si476x-i2c: Add description for si476x_core_fwver_to_revision()'s arg 'func'
-      mfd: si476x-i2c: Fix spelling mistake in case() statement's FALLTHROUGH comment
-      mfd: si476x-cmd: Update si476x_cmd_am_rsq_status()'s kerneldoc
-      mfd: si476x-cmd: Add missing documentation for si476x_cmd_fm_rds_status()'s arg 'report'
-      mfd: rave-sp: Fix mistake in 'struct rave_sp_deframer's kerneldoc
-      mfd: sprd-sc27xx-spi: Fix-up bogus IRQ register offset and mask setting
-      mfd: axp20x-i2c: Do not define 'struct acpi_device_id' when !CONFIG_ACPI
-      mfd: core: Make a best effort attempt to match devices with the correct of_nodes
-      mfd: core: Fix formatting of MFD helpers
-      mfd: core: Add OF_MFD_CELL_REG() helper
-
-Matti Vaittinen (1):
-      MAINTAINERS: Add entry for ROHM Power Management ICs
-
-Michael Walle (1):
-      mfd: smsc-ece1099: Remove driver
-
-Neil Armstrong (4):
-      dt-bindings: mfd: Add Khadas Microcontroller bindings
-      mfd: Add support for the Khadas System control Microcontroller
-      thermal: Add support for the MCU controlled FAN on Khadas boards
-      MAINTAINERS: Add myself as maintainer for Khadas MCU drivers
-
-Randy Dunlap (2):
-      mfd: da9055: pdata.h: Drop a duplicated word
-      mfd: max77693-private: Drop a duplicated word
-
-Roger Quadros (1):
-      dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system controller
-
-Stephen Rothwell (1):
-      mfd: kempld-core: Fix 'assignment of read-only location' error
-
-Suman Anna (1):
-      mfd: syscon: Use a unique name with regmap_config
-
-Tim Harvey (1):
-      dt-bindings: mfd: gateworks-gsc: Add 16bit pre-scaled voltage mode
-
-Tony Lindgren (1):
-      mfd: motorola-cpcap: Disable interrupt for suspend
-
-Xu Wang (1):
-      mfd: intel_soc_pmic_mrfld: Simplify the return expression of intel_scu_ipc_dev_iowrite8()
-
- Documentation/devicetree/bindings/mfd/cros-ec.txt  |  76 ------
- .../devicetree/bindings/mfd/gateworks-gsc.yaml     |   5 +-
- .../devicetree/bindings/mfd/google,cros-ec.yaml    | 129 ++++++++++
- .../devicetree/bindings/mfd/khadas,mcu.yaml        |  44 ++++
- .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  |   5 +
- .../devicetree/bindings/mfd/st,stmfx.yaml          | 122 ++++++++++
- Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 ---
- .../bindings/mfd/ti,j721e-system-controller.yaml   |  74 ++++++
- .../devicetree/bindings/mfd/twl-family.txt         |   2 +-
- .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 ---------
- Documentation/driver-api/index.rst                 |   1 -
- Documentation/driver-api/smsc_ece1099.rst          |  60 -----
- MAINTAINERS                                        |  41 ++++
- drivers/clocksource/Kconfig                        |   4 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/timer-stm32-lp.c               | 221 +++++++++++++++++
- drivers/mfd/Kconfig                                |  33 ++-
- drivers/mfd/Makefile                               |   2 +-
- drivers/mfd/ab3100-core.c                          |   2 +-
- drivers/mfd/ab3100-otp.c                           |  20 +-
- drivers/mfd/ab8500-debugfs.c                       |   2 +-
- drivers/mfd/altera-sysmgr.c                        |  19 +-
- drivers/mfd/arizona-core.c                         |  20 +-
- drivers/mfd/atmel-smc.c                            |   4 +-
- drivers/mfd/axp20x-i2c.c                           |   4 +
- drivers/mfd/cros_ec_dev.c                          |   4 +-
- drivers/mfd/da9063-core.c                          |  31 ---
- drivers/mfd/da9063-i2c.c                           | 271 +++++++++++++++++++--
- drivers/mfd/db8500-prcmu.c                         |   6 +-
- drivers/mfd/dln2.c                                 |   4 +
- drivers/mfd/hi6421-pmic-core.c                     |   2 +-
- drivers/mfd/intel-lpss-pci.c                       |  19 ++
- drivers/mfd/intel_soc_pmic_mrfld.c                 |   7 +-
- drivers/mfd/kempld-core.c                          |  30 +--
- drivers/mfd/khadas-mcu.c                           | 142 +++++++++++
- drivers/mfd/lm3533-ctrlbank.c                      |  94 ++++---
- drivers/mfd/lp873x.c                               |   2 +-
- drivers/mfd/lp87565.c                              |   2 +-
- drivers/mfd/madera-core.c                          |  33 ++-
- drivers/mfd/madera-i2c.c                           |   1 -
- drivers/mfd/max14577.c                             |   2 +-
- drivers/mfd/mfd-core.c                             | 121 ++++++++-
- drivers/mfd/motorola-cpcap.c                       |  23 ++
- drivers/mfd/omap-usb-host.c                        |   6 +-
- drivers/mfd/omap-usb-tll.c                         |   4 +-
- drivers/mfd/rave-sp.c                              |   2 +-
- drivers/mfd/rn5t618.c                              |  46 +++-
- drivers/mfd/si476x-cmd.c                           |  74 +++---
- drivers/mfd/si476x-i2c.c                           |   7 +-
- drivers/mfd/smsc-ece1099.c                         |  87 -------
- drivers/mfd/sprd-sc27xx-spi.c                      |  82 +------
- drivers/mfd/stm32-lptimer.c                        |   1 +
- drivers/mfd/syscon.c                               |   4 +-
- drivers/mfd/tc3589x.c                              |   2 +-
- drivers/mfd/ti_am335x_tscadc.c                     |   2 +-
- drivers/mfd/tps65010.c                             |   5 +-
- drivers/mfd/tps65086.c                             |   2 +-
- drivers/mfd/tps65217.c                             |   6 +-
- drivers/mfd/tps65218.c                             |   6 +-
- drivers/mfd/tps6586x.c                             |   7 +-
- drivers/mfd/tps65912-core.c                        |   2 +-
- drivers/mfd/tps65912-i2c.c                         |   2 +-
- drivers/mfd/tps65912-spi.c                         |   2 +-
- drivers/mfd/twl4030-irq.c                          |   4 +-
- drivers/mfd/wm831x-core.c                          |   4 +
- drivers/mfd/wm8350-core.c                          |   4 +
- drivers/mfd/wm8400-core.c                          |   2 +
- drivers/thermal/Kconfig                            |  11 +
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/khadas_mcu_fan.c                   | 162 ++++++++++++
- include/linux/mfd/core.h                           |  42 +++-
- include/linux/mfd/da9055/pdata.h                   |   2 +-
- include/linux/mfd/da9063/core.h                    |   1 +
- include/linux/mfd/da9063/registers.h               |  15 +-
- include/linux/mfd/hi6421-pmic.h                    |   2 +-
- include/linux/mfd/khadas-mcu.h                     |  91 +++++++
- include/linux/mfd/lp873x.h                         |   2 +-
- include/linux/mfd/lp87565.h                        |   2 +-
- include/linux/mfd/madera/pdata.h                   |   1 -
- include/linux/mfd/max77693-private.h               |   2 +-
- include/linux/mfd/smsc.h                           | 104 --------
- include/linux/mfd/stm32-lptimer.h                  |   5 +
- include/linux/mfd/ti_am335x_tscadc.h               |   2 +-
- include/linux/mfd/tps65086.h                       |   2 +-
- include/linux/mfd/tps65217.h                       |   2 +-
- include/linux/mfd/tps65218.h                       |   2 +-
- include/linux/mfd/tps65912.h                       |   2 +-
- 87 files changed, 1799 insertions(+), 846 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
- delete mode 100644 Documentation/driver-api/smsc_ece1099.rst
- create mode 100644 drivers/clocksource/timer-stm32-lp.c
- create mode 100644 drivers/mfd/khadas-mcu.c
- delete mode 100644 drivers/mfd/smsc-ece1099.c
- create mode 100644 drivers/thermal/khadas_mcu_fan.c
- create mode 100644 include/linux/mfd/khadas-mcu.h
- delete mode 100644 include/linux/mfd/smsc.h
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-Doug
