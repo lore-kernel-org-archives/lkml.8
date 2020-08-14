@@ -2,209 +2,164 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3213320768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF63A20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MSmYb+MK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZMi+b2V2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHNXWu (ORCPT
+        id S1727104AbgHNXZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:22:50 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:28029 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNXWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:22:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597447368; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cqB2KYoA6yVaX4oJso9WfBF09SwAmfmeiF0tTyQrqMw=;
- b=MSmYb+MKBGe61801KVdVyJIIMMjnfolD4zylmsdtPdKZtgwoVrcavYS+7cK2ecjxY5D0eo8D
- 7rknqVAyNPPm1gFzeBu2we19vTYBteKEAHG1AMYJiqiJBvxPmjP/dLkBKcnhGzHyGldnyKv/
- T76gOAde9e6WwdI4mjMKi9f9wno=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f371cbc4c787f237b9f2f9a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 23:22:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B673C43395; Fri, 14 Aug 2020 23:22:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64FAEC433C9;
-        Fri, 14 Aug 2020 23:22:35 +0000 (UTC)
+        Fri, 14 Aug 2020 19:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNXZk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 19:25:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA9DC061385;
+        Fri, 14 Aug 2020 16:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Y0E0LZUHG1vNnpFUrQvEenCL5ANWUqlMtRfd74+R+f4=; b=ZMi+b2V2BDJLYdZu4LmYyLf93Y
+        LbEZs4mp5zRmDlBM6rUd1xxVkoETDadYCD1tNb4NR1eEnLjlHBmJikkaxQHGKfiYd6gu0QD6k02IW
+        pQtGg2/R9g33xhRbBmD9tEc+56RVqyONxwU2SfIULbdnHuXTXZqv7t1++M9gJIA0YO6QhITj2MXU1
+        6o7LvvXW+a9O619rFSRW6yQ1UuicmRbsdcVnT56Afe8VRCFN1EIzqq6u5iXEeadBdPe+lvlOClcxP
+        XguDnOrVDKZHfhxYAaX0lppoeLvnxXdA82xRSPw8VFNjNYF+fR9zMAh1yH/EX+XgP5/QxVclmiqTG
+        h9k5CJ0Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6j4q-0003s4-1D; Fri, 14 Aug 2020 23:25:37 +0000
+Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+To:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+References: <20200814213842.31151-1-ashok.raj@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
+Date:   Fri, 14 Aug 2020 16:25:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200814213842.31151-1-ashok.raj@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 16:22:35 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        robdclark@gmail.com, linux-kernel@vger.kernel.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        daniel@ffwll.ch, airlied@linux.ie, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-In-Reply-To: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-Message-ID: <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-14 10:05, Dmitry Baryshkov wrote:
-> On 12/08/2020 07:42, Tanmay Shah wrote:
->> From: Chandan Uddaraju <chandanu@codeaurora.org>
->> 
->> Add the needed DP PLL specific files to support
->> display port interface on msm targets.
+On 8/14/20 2:38 PM, Ashok Raj wrote:
+> When offlining CPU's, fixup_irqs() migrates all interrupts away from the
+
+                 CPUs,
+
+> outgoing CPU to an online CPU. Its always possible the device sent an
+
+                                 It's
+
+> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> lapic identifies such interrupts. apic_soft_disable() will not capture any
+
+  LAPIC
+
+> new interrupts in IRR. This causes interrupts from device to be lost during
+> cpu offline. The issue was found when explicitly setting MSI affinity to a
+
+  CPU
+
+> CPU and immediately offlining it. It was simple to recreate with a USB
+> ethernet device and doing I/O to it while the CPU is offlined. Lost
+> interrupts happen even when Interrupt Remapping is enabled.
 > 
-> [skipped]
+> Current code does apic_soft_disable() before migrating interrupts.
 > 
->> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
->> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> new file mode 100644
->> index 000000000000..475ba6ed59ab
->> --- /dev/null
->> +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> @@ -0,0 +1,98 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
->> reserved.
->> + */
->> +
->> +#ifndef __DP_PLL_10NM_H
->> +#define __DP_PLL_10NM_H
->> +
->> +#include "dp_pll.h"
->> +#include "dp_reg.h"
->> +
->> +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->> +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->> +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->> +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->> +
->> +#define NUM_DP_CLOCKS_MAX            6
->> +
->> +#define DP_PHY_PLL_POLL_SLEEP_US        500
->> +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->> +
->> +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->> +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->> +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->> +
->> +struct dp_pll_vco_clk {
->> +    struct clk_hw hw;
->> +    unsigned long    rate;        /* current vco rate */
->> +    u64        min_rate;    /* min vco rate */
->> +    u64        max_rate;    /* max vco rate */
->> +    void        *priv;
->> +};
->> +
->> +struct dp_pll_db {
+> native_cpu_disable()
+> {
+> 	...
+> 	apic_soft_disable();
+> 	cpu_disable_common();
+> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> }
 > 
-> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
-> example, will use slightly different structure.
+> Just fliping the above call sequence seems to hit the IRR checks
+
+       flipping
+
+> and the lost interrupt is fixed for both legacy MSI and when
+> interrupt remapping is enabled.
+> 
+> 
+> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> 
+> To: linux-kernel@vger.kernel.org
+> To: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/kernel/smpboot.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index ffbd9a3d78d8..278cc9f92f2f 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -1603,13 +1603,20 @@ int native_cpu_disable(void)
+>  	if (ret)
+>  		return ret;
+>  
+> +	cpu_disable_common();
+>  	/*
+>  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+>  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+> -	 * messages.
+> +	 * messages. Its important to do apic_soft_disable() after
+
+	             It's
+
+> +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
+> +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
+> +	 * currently set IRR/ISR but new interrupts will not set IRR.
+> +	 * This causes interrupts sent to outgoing cpu before completion
+
+	                                           CPU
+
+> +	 * of irq migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
+
+	      IRQ
+
+> +	 * APIC State after It Has been Software Disabled" section for more
+> +	 * details.
+>  	 */
+>  	apic_soft_disable();
+> -	cpu_disable_common();
+>  
+>  	return 0;
+>  }
 > 
 
-Sure, it sounds good. I will give it try. Thanks!
-
->> +    struct msm_dp_pll *base;
->> +
->> +    int id;
->> +    struct platform_device *pdev;
->> +
->> +    /* private clocks: */
->> +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
->> +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
-> 
-> Then these two fields can use exact number of clocks rather than
-> NUM_DP_CLOCKS_MAX.
-> 
-
-I didn't get this. I think NUM_DP_CLOCKS_MAX is doing same?
-
->> +    u32 num_hws;
->> +
->> +    /* lane and orientation settings */
->> +    u8 lane_cnt;
->> +    u8 orientation;
->> +
->> +    /* COM PHY settings */
->> +    u32 hsclk_sel;
->> +    u32 dec_start_mode0;
->> +    u32 div_frac_start1_mode0;
->> +    u32 div_frac_start2_mode0;
->> +    u32 div_frac_start3_mode0;
->> +    u32 integloop_gain0_mode0;
->> +    u32 integloop_gain1_mode0;
->> +    u32 vco_tune_map;
->> +    u32 lock_cmp1_mode0;
->> +    u32 lock_cmp2_mode0;
->> +    u32 lock_cmp3_mode0;
->> +    u32 lock_cmp_en;
->> +
->> +    /* PHY vco divider */
->> +    u32 phy_vco_div;
->> +    /*
->> +     * Certain pll's needs to update the same vco rate after resume 
->> in
->> +     * suspend/resume scenario. Cached the vco rate for such plls.
->> +     */
->> +    unsigned long    vco_cached_rate;
->> +    u32        cached_cfg0;
->> +    u32        cached_cfg1;
->> +    u32        cached_outdiv;
->> +
->> +    uint32_t index;
->> +};
->> +
->> +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
->> +{
->> +    return container_of(hw, struct dp_pll_vco_clk, hw);
->> +}
->> +
->> +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
->> +
->> +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
->> +
->> +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
->> +                unsigned long parent_rate);
->> +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
->> +                unsigned long parent_rate);
->> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
->> +                unsigned long *parent_rate);
->> +int dp_vco_prepare_10nm(struct clk_hw *hw);
->> +void dp_vco_unprepare_10nm(struct clk_hw *hw);
->> +
->> +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
->> +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
-> 
-> These functions don't seem to be used outside of dp_pll_10nm. What
-> about making them static?
-
-I can't declare static to "init" and "deinit" as they are exported to 
-dp_pll.c.
-Rest of them I can move to dp_pll_10nm and then define static.
+thanks.
+-- 
+~Randy
 
