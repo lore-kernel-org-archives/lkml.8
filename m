@@ -2,116 +2,68 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40555C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05354C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2404120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2D52074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHNHRy (ORCPT
+        id S1726647AbgHNHT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 03:17:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38904 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgHNHRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:17:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 565B5AC7F;
-        Fri, 14 Aug 2020 07:18:14 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 09:17:50 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200814071750.GZ9477@dhcp22.suse.cz>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <87lfiitquu.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Aug 2020 03:19:58 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51904 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726213AbgHNHT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 03:19:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5iicOY_1597389589;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5iicOY_1597389589)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 14 Aug 2020 15:19:51 +0800
+Subject: Re: [RFC PATCH 2/3] mm: Drop use of test_and_set_skip in favor of
+ just setting skip
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
+        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040232.13054.82417.stgit@localhost.localdomain>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <6c072332-ff16-757d-99dd-b8fbae131a0c@linux.alibaba.com>
+Date:   Fri, 14 Aug 2020 15:19:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfiitquu.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200813040232.13054.82417.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
-> Michal Hocko <mhocko@suse.com> writes:
-[...]
-> > Why should we limit the functionality of the allocator for something
-> > that is not a real problem?
+
+
+在 2020/8/13 下午12:02, Alexander Duyck 写道:
 > 
-> We'd limit the allocator for exactly ONE new user which was aware of
-> this problem _before_ the code hit mainline. And that ONE user is
-> prepared to handle the fail.
-
-If we are to limit the functionality to this one particular user then
-I would consider a dedicated gfp flag a huge overkill. It would be much
-more easier to have a preallocated pool of pages and use those and
-completely avoid the core allocator. That would certainly only shift the
-complexity to the caller but if it is expected there would be only that
-single user then it would be probably better than opening a can of worms
-like allocator usable from raw spin locks.
-
-Paul would something like that be feasible?
-
-Really we have been bitten by a single usecase gfp flags in the past.
-
-[...]
-> Even if we could make this lockdep thing work that does not mean that
-> it's a good thing to do.
+> Since we have dropped the late abort case we can drop the code that was
+> clearing the LRU flag and calling page_put since the abort case will now
+> not be holding a reference to a page.
 > 
-> Quite the contrary, you'd just encourage people to create more of those
-> use cases for probably the completely wrong reasons. Putting a
-> limitation into place upfront might makes them think farther than just
-> slapping GFP_RT_ATOMIC in and be done with it. Let me dream :)
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Good one ;) But seriously. I was suggesting lockdep workaround because
-I reckon that is less prone to an abuse than gfp flags. Lockdep is that
-scary thing people do not want to touch by a long pole but gfp flags
-are something you have to deal with when calling allocator and people
-tend to be creative. We used to suck in documentation so I am not
-wondering but things have improved so maybe the usage is going to
-improve as well. Anyway __GFP_NO_LOCK would be a free ticket to "I want
-to optimize even further" land. Maybe a better naming would be better
-but I am skeptical.
+seems the case-lru-file-mmap-read case drop about 3% on this patch in a rough testing.
+on my 80 core machine.
 
-> I've dealt with tons of patches in the last 15+ years where people just
-> came up with 's/GFP_KERNEL/GFP_ATOMIC/ because tool complained'
-> patches. The vast majority of them were bogus because the alloc() was
-> simply at the wrong place.
+Thanks
+Alex
 
-Completely agreed.
- 
-> Forcing people not to take the easy way out by making the infrastructure
-> restrictive is way better than encouraging mindless hackery. We have
-> enough of this (not restricted to memory allocations) all over the
-> kernel already. No need for more.
-
-I do agree with you. I just slightly disagree where the danger is.
-Explicit lockdep usage outside of the core is spread much less than the
-allocator so the abuse is less likely.
--- 
-Michal Hocko
-SUSE Labs
