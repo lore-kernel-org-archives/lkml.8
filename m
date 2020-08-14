@@ -2,179 +2,163 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E38CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B51C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE56420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="koI94SeK"
+	by mail.kernel.org (Postfix) with ESMTP id 0D76220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgHNOFa (ORCPT
+        id S1728320AbgHNOGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 10:05:30 -0400
-Received: from mail.efficios.com ([167.114.26.124]:42112 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgHNOFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 10:05:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id F28542E7E23;
-        Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id qpFD0rIEYa4Q; Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id AD9F92E7C89;
-        Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AD9F92E7C89
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1597413920;
-        bh=ezFuUeP2uWgg8JJIlZA8XGQl5+/G+O/dmRGgk5g3eS8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=koI94SeKxbNFCit9ju0/fT9XgY+uzkDCxSKRLPSM/If/lJwxeTyBZnrQjrVc+n+JB
-         xeMW57aZO39FAZO8mpDxbbn90ZUlXxSZ7bf0DH/yTbtg+t7avO+AFmdmrIcTtJPBKR
-         3diXVqIcTfGXG9AQqIqxAjvAm1G4kRJMI9EepKsu5KH6ePWViZ//cS83l2lXvTxr8w
-         71NiVaJLBUWPyVadD4LTVoVZvArvCpsXnvwE00pzZ2/lsl0d3qLVRPQNRYk3OZDYwU
-         GZK3eTRTpCDmtdR2q5RgBppxiehV5WpHN3P7ThINX7PRwE5+bYRTXHmy1MmI0j04zI
-         MWe7VuBzNcelg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id MkBH6ZSZSQF8; Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 9F6AC2E7C87;
-        Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-Date:   Fri, 14 Aug 2020 10:05:20 -0400 (EDT)
-From:   Michael Jeanson <mjeanson@efficios.com>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Ahern <dsahern@kernel.org>, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Message-ID: <217122726.8258.1597413920624.JavaMail.zimbra@efficios.com>
-In-Reply-To: <49f26c7d-b8aa-57e7-02c6-424bec9c3845@gmail.com>
-References: <20200811195003.1812-1-mathieu.desnoyers@efficios.com> <20200811195003.1812-2-mathieu.desnoyers@efficios.com> <49f26c7d-b8aa-57e7-02c6-424bec9c3845@gmail.com>
-Subject: Re: [PATCH 1/3] selftests: Add VRF icmp error route lookup test
+        Fri, 14 Aug 2020 10:06:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53022 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728181AbgHNOGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 10:06:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0F89EB1B9;
+        Fri, 14 Aug 2020 14:06:29 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 16:06:04 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814140604.GE9477@dhcp22.suse.cz>
+References: <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <87lfiitquu.fsf@nanos.tec.linutronix.de>
+ <20200814071750.GZ9477@dhcp22.suse.cz>
+ <20200814121544.GA32598@pc636>
+ <20200814124832.GD9477@dhcp22.suse.cz>
+ <20200814133450.GK4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - GC84 (Linux)/8.8.15_GA_3953)
-Thread-Topic: selftests: Add VRF icmp error route lookup test
-Thread-Index: L7PbwFLrYb4o0H7ABrtySfFz4apuVQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814133450.GK4295@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On 13 Aug, 2020, at 19:13, David Ahern dsahern@gmail.com wrote:
-
-...
-
->> +ipv6_ping()
->> +{
->> +	log_section "IPv6: VRF ICMP error route lookup ping"
->> +
->> +	setup
->> +
->> +	# verify connectivity
->> +	if ! check_connectivity6; then
->> +		echo "Error: Basic connectivity is broken"
->> +		ret=1
->> +		return
->> +	fi
->> +
->> +	if [ "$VERBOSE" = "1" ]; then
->> +		echo "Command to check for ICMP ttl exceeded:"
->> +		run_cmd ip netns exec h1 "${ping6}" -t1 -c1 -W2 ${H2_N2_IP6}
->> +	fi
->> +
->> +	ip netns exec h1 "${ping6}" -t1 -c1 -W2 ${H2_N2_IP6} | grep -q "Time exceeded:
->> Hop limit"
+On Fri 14-08-20 06:34:50, Paul E. McKenney wrote:
+> On Fri, Aug 14, 2020 at 02:48:32PM +0200, Michal Hocko wrote:
+> > On Fri 14-08-20 14:15:44, Uladzislau Rezki wrote:
+> > > > On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
+> > > > > Michal Hocko <mhocko@suse.com> writes:
+> > > > [...]
+> > > > > > Why should we limit the functionality of the allocator for something
+> > > > > > that is not a real problem?
+> > > > > 
+> > > > > We'd limit the allocator for exactly ONE new user which was aware of
+> > > > > this problem _before_ the code hit mainline. And that ONE user is
+> > > > > prepared to handle the fail.
+> > > > 
+> > > > If we are to limit the functionality to this one particular user then
+> > > > I would consider a dedicated gfp flag a huge overkill. It would be much
+> > > > more easier to have a preallocated pool of pages and use those and
+> > > > completely avoid the core allocator. That would certainly only shift the
+> > > > complexity to the caller but if it is expected there would be only that
+> > > > single user then it would be probably better than opening a can of worms
+> > > > like allocator usable from raw spin locks.
+> > > > 
+> > > Vlastimil raised same question earlier, i answered, but let me answer again:
+> > > 
+> > > It is hard to achieve because the logic does not stick to certain static test
+> > > case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
+> > > on that, "how heavily" - number of pages are formed, until the drain/reclaimer
+> > > thread frees them.
+> > 
+> > How many pages are talking about - ball park? 100s, 1000s?
 > 
-> run_cmd runs the command and if VERBOSE is set to 1 shows the command to
-> the user. Something is off with this script and passing the -v arg -- I
-> do not get a command list. This applies to the whole script.
-
-Hum, I have no issues here with '-v', you get no output at all from run_cmd?
-
+> Under normal operation, a couple of pages per CPU, which would make
+> preallocation entirely reasonable.  Except that if someone does something
+> that floods RCU callbacks (close(open) in a tight userspace loop, for but
+> one example), then 2000 per CPU might not be enough, which on a 64-CPU
+> system comes to about 500MB.  This is beyond excessive for preallocation
+> on the systems I am familiar with.
 > 
-> Since you need to check for output, I suggest modifying run_cmd to
-> search the output for the given string.
+> And the flooding case is where you most want the reclamation to be
+> efficient, and thus where you want the pages.
 
-I took this pattern of executing commands twice when running with verbose and
-grepping the output from icmp_redirect.sh. I'll see if I can come up with
-something fancier in run_cmd.
+I am not sure the page allocator would help you with this scenario
+unless you are on very large machines. Pagesets scale with the available
+memory and percpu_pagelist_fraction sysctl (have a look at
+pageset_set_high_and_batch). It is roughly 1000th of the zone size for
+each zone. You can check that in /proc/vmstat (my 8G machine)
 
+Node 0, zone      DMA
+Not interesting at all
+Node 0, zone    DMA32
+  pagesets
+    cpu: 0
+              count: 242
+              high:  378
+              batch: 63
+    cpu: 1
+              count: 355
+              high:  378
+              batch: 63
+    cpu: 2
+              count: 359
+              high:  378
+              batch: 63
+    cpu: 3
+              count: 366
+              high:  378
+              batch: 63
+Node 0, zone   Normal
+  pagesets
+    cpu: 0
+              count: 359
+              high:  378
+              batch: 63
+    cpu: 1
+              count: 241
+              high:  378
+              batch: 63
+    cpu: 2
+              count: 297
+              high:  378
+              batch: 63
+    cpu: 3
+              count: 227
+              high:  378
+              batch: 63
 
->> +	log_test $? 0 "Ping received ICMP ttl exceeded"
->> +}
->> +################################################################################
-> 
-> missing newline between '}' and '####'
+Besides that do you need to be per-cpu? Having 1000 pages available and
+managed under your raw spinlock should be good enough already no?
+ 
+> This of course raises the question of how much memory the lockless caches
+> contain, but fortunately these RCU callback flooding scenarios also
+> involve process-context allocation of the memory that is being passed
+> to kfree_rcu().  That allocation should keep the lockless caches from
+> going empty in the common case, correct?
 
-Ack
+Yes, those are refilled both on the allocation/free paths. But you
+cannot really rely on that to happen early enough.
 
-...
-
->> +while getopts :46pvh o
->> +do
->> +	case $o in
->> +		4) TESTS=ipv4;;
->> +		6) TESTS=ipv6;;
->> +                p) PAUSE_ON_FAIL=yes;;
->> +                v) VERBOSE=1;;
->> +		h) usage; exit 0;;
->> +                *) usage; exit 1;;
-> 
-> indentation issues; not using tabs
-> 
-
-Ack
-
->> +	esac
->> +done
->> +
->> +#
->> +# show user test config
->> +#
->> +if [ -z "$TESTS" ]; then
->> +        TESTS="$TESTS_IPV4 $TESTS_IPV6"
->> +elif [ "$TESTS" = "ipv4" ]; then
->> +        TESTS="$TESTS_IPV4"
->> +elif [ "$TESTS" = "ipv6" ]; then
->> +        TESTS="$TESTS_IPV6"
->> +fi
->> +
->> +for t in $TESTS
->> +do
->> +	case $t in
->> +	ipv4_ping|ping)             ipv4_ping;;
->> +	ipv4_traceroute|traceroute) ipv4_traceroute;;
->> +
->> +	ipv6_ping|ping)             ipv6_ping;;
->> +	ipv6_traceroute|traceroute) ipv6_traceroute;;
->> +
->> +	# setup namespaces and config, but do not run any tests
->> +	setup)                      setup; exit 0;;
-> 
-> you don't allow '-t setup' so you can remove this part
-
-I'l add the missing '-t' option to getopts.
-
-> 
->> +
->> +	help)                       echo "Test names: $TESTS"; exit 0;;
->> +	esac
->> +done
->> +
->> +cleanup
->> +
->> +printf "\nTests passed: %3d\n" ${nsuccess}
->> +printf "Tests failed: %3d\n"   ${nfail}
->> +
->> +exit $ret
+Do you happen to have any numbers that would show the typical usage
+and how often the slow path has to be taken becase pcp lists are
+depleted? In other words even if we provide a functionality to give
+completely lockless way to allocate memory how useful that is?
+-- 
+Michal Hocko
+SUSE Labs
