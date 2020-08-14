@@ -2,156 +2,82 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6950BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76D12068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="U1CiDBcZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4522D20885
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgHNNfu (ORCPT
+        id S1728623AbgHNNga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:35:50 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:37176 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHNNfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:35:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1597412147;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Vhg2qIv0Jz5uNB1to7SsFv5hNsQzCGoy7ntsgX816ME=;
-  b=U1CiDBcZk1odElv4SojTnBSGXwXPhBkaRZVZk/CoBW0ullto4znGBiGG
-   uHsf5+yOe5TM4xt5+ykkaT0K0rYGhjo3bcvLQEVoSoqYxXBQbhyMw67JN
-   3OBQzvUv8Tw+ohvEHxpm16tWiFRt7DnCHf2UeY5y3FeugHwP8L1o9Z+VU
-   Y=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: 3kOFJD7N60ERtsB74qGJI3XB6PL0hrH37iAm0pbM5PNV/FQ6T6jmbeXASasblAXIeXQLqwqf0n
- B/Da4GKHV9G6vOYMwD44IXUGCJ3cYZz2PgjkPj0Fu8FehPYFdfIA/yqX5Wl/Wi5AdwnNtqOBNq
- 40Ye7b7xVui+0ZvJub15TmF7cyPT3T+Bh7pUD91DG/xaiMgJ/3oxy9ZFN8COrkdaJsAjZEg4WX
- mmGqnJVZd3jJ/pY7wNa7/8pzAw/ZVX0QKpqU1zHC70psBGvrmWKbneBDww7mnmZg+X4dW6syS7
- mIA=
-X-SBRS: 2.7
-X-MesageID: 24880445
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,312,1592884800"; 
-   d="scan'208";a="24880445"
-Date:   Fri, 14 Aug 2020 15:35:36 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Fri, 14 Aug 2020 09:36:30 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43782 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgHNNga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:36:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 1E861FB07;
+        Fri, 14 Aug 2020 15:36:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q6Zfzkg2jRDO; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id EC786457CC; Fri, 14 Aug 2020 15:36:23 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        "Yan Yankovskyi" <yyankovskyi@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
-Message-ID: <20200814133536.GL975@Air-de-Roger>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-3-roger.pau@citrix.com>
- <20200813073337.GA16160@infradead.org>
- <20200813075420.GC975@Air-de-Roger>
- <20200814072920.GA6126@infradead.org>
- <20200814095629.GJ975@Air-de-Roger>
- <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
- <20200814124724.GK975@Air-de-Roger>
- <fc10d3a5-fe79-335e-353a-1bf480af7c7c@suse.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
+Date:   Fri, 14 Aug 2020 15:36:20 +0200
+Message-Id: <cover.1597412076.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc10d3a5-fe79-335e-353a-1bf480af7c7c@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 02:54:38PM +0200, Jürgen Groß wrote:
-> On 14.08.20 14:47, Roger Pau Monné wrote:
-> > On Fri, Aug 14, 2020 at 12:27:32PM +0200, Jürgen Groß wrote:
-> > > On 14.08.20 11:56, Roger Pau Monné wrote:
-> > > > On Fri, Aug 14, 2020 at 08:29:20AM +0100, Christoph Hellwig wrote:
-> > > > > On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
-> > > > > > On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
-> > > > > > > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
-> > > > > > > > If enabled (because ZONE_DEVICE is supported) the usage of the new
-> > > > > > > > functionality untangles Xen balloon and RAM hotplug from the usage of
-> > > > > > > > unpopulated physical memory ranges to map foreign pages, which is the
-> > > > > > > > correct thing to do in order to avoid mappings of foreign pages depend
-> > > > > > > > on memory hotplug.
-> > > > > > > 
-> > > > > > > So please just select ZONE_DEVICE if this is so much better rather
-> > > > > > > than maintaining two variants.
-> > > > > > 
-> > > > > > We still need to other variant for Arm at least, so both need to be
-> > > > > > maintained anyway, even if we force ZONE_DEVICE on x86.
-> > > > > 
-> > > > > Well, it still really helps reproducability if you stick to one
-> > > > > implementation of x86.
-> > > > > 
-> > > > > The alternative would be an explicit config option to opt into it,
-> > > > > but just getting a different implementation based on a random
-> > > > > kernel option is strange.
-> > > > 
-> > > > Would adding something like the chunk below to the patch be OK?
-> > > > 
-> > > > ---8<---
-> > > > diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-> > > > index 018020b91baa..5f321a1319e6 100644
-> > > > --- a/drivers/xen/Kconfig
-> > > > +++ b/drivers/xen/Kconfig
-> > > > @@ -328,7 +328,14 @@ config XEN_FRONT_PGDIR_SHBUF
-> > > >    	tristate
-> > > >    config XEN_UNPOPULATED_ALLOC
-> > > > -	bool
-> > > > -	default y if ZONE_DEVICE && !ARM && !ARM64
-> > > > +	bool "Use unpopulated memory ranges for guest mappings"
-> > > > +	depends on X86
-> > > > +	select ZONE_DEVICE
-> > > > +	default y
-> > > 
-> > > I'd rather use "default XEN_BACKEND" here, as mappings of other guest's
-> > > memory is rarely used for non-backend guests.
-> > 
-> > There's also the privcmd and gnt devices which make heavy use of this,
-> > so I'm not sure only selecting by default on XEN_BACKEND is the best
-> > option.
-> 
-> I just want to avoid that kernels built for running as Xen guest, but
-> not as dom0, will be forced to select ZONE_DEVICE.
-> 
-> As privcmd is dom0-only, this is no problem.
+The panel uses a Focaltech FT8006p, the touch part is handled by the already
+existing edt-ft5x06. It can be found in e.g. the Librem 5.
 
-Oh, didn't know that, I somehow assumed privcmd would be available to
-all Xen guests regardless of whether dom0 support was selected.
+This series is against next-20200814.
 
-> In case you are worrying about gnt devices, I'd be fine to switch to
-> 
-> default XEN_BACKEND || XEN_GNTDEV
+Guido Günther (3):
+  dt-bindings: vendor-prefixes: Add mantix vendor prefix
+  dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+  drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
 
-Sure. maybe even:
+ .../display/panel/mantix,mlaf057we51-x.yaml   |  73 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 362 ++++++++++++++++++
+ 6 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
 
-default XEN_BACKEND || XEN_GNTDEV || XEN_DOM0
+-- 
+2.26.2
 
-Do you want me to resend with this changed or are you happy to fixup
-if there are no further comments?
-
-Thanks, Roger.
