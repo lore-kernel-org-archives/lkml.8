@@ -7,105 +7,89 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC73C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB82C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4857206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E443206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHNKbh (ORCPT
+        id S1727046AbgHNKcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:31:37 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44992 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726012AbgHNKbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:31:36 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx398DaDZfOuUIAA--.29S2;
-        Fri, 14 Aug 2020 18:31:31 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] MIPS: Loongson: Use default CONFIG_FRAME_WARN as 2048 for Loongson64 to fix build warnings
-Date:   Fri, 14 Aug 2020 18:31:30 +0800
-Message-Id: <1597401090-4314-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
+        Fri, 14 Aug 2020 06:32:03 -0400
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:46754 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726012AbgHNKcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:32:02 -0400
+X-Greylist: delayed 1673 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 06:32:02 EDT
+Received: from [188.210.212.0] (helo=localhost.localdomain)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1k6WZD-000572-AB; Fri, 14 Aug 2020 11:04:07 +0100
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     thomas.preston@codethink.co.uk
+Subject: [PATCH 3/3] devicetree: mcp23s08: Remove interrupt-controller
+Date:   Fri, 14 Aug 2020 11:03:57 +0100
+Message-Id: <20200814100357.209340-4-thomas.preston@codethink.co.uk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dx398DaDZfOuUIAA--.29S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7trWDuF1DAr47Kw13tw1UJrb_yoW8AFWUpF
-        WfJr1DAr4UKF4Fya90kFZ7GFZYy3Z3AFW7GFW7Xa4UXF909ayDXrnrKF1UGr42qFWvyay8
-        uF95KF1a9a4q937anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUuOJ5UUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 70b838292bef ("MIPS: Update default config file for
-Loongson-3"), CONFIG_VHOST_SCSI and CONFIG_VHOST are set when use
-loongson3_defconfig, and then there exists the following two build
-warnings related with these two configs:
+The mcp23s08 device and friends are interrupt /client/ nodes, and should
+not reference the interrupt controller device tree properties
+"interrupt-controller" and "interrupt-cells" [0].
 
-  CC [M]  drivers/vhost/scsi.o
-drivers/vhost/scsi.c: In function ‘vhost_scsi_flush’:
-drivers/vhost/scsi.c:1374:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
- }
- ^
-  LD [M]  drivers/vhost/vhost_scsi.o
-  CC [M]  drivers/vhost/vsock.o
-  LD [M]  drivers/vhost/vhost_vsock.o
-  CC [M]  drivers/vhost/vhost.o
-drivers/vhost/vhost.c: In function ‘log_used’:
-drivers/vhost/vhost.c:1896:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
- }
- ^
+Remove the confusing "interrupt-controller" and "interrupt-cells"
+properties from the pinctrl-mcp23s08 devicetree bindings documentation.
 
-CONFIG_FRAME_WARN=2048 can fix it, since the default CONFIG_FRAME_WARN
-for 64BIT is 2048, just delete the CONFIG_FRAME_WARN line in defconfig.
+[0] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
-config FRAME_WARN
-        int "Warn for stack frames larger than"
-        range 0 8192
-        default 2048 if GCC_PLUGIN_LATENT_ENTROPY
-        default 1280 if (!64BIT && PARISC)
-        default 1024 if (!64BIT && !PARISC)
-        default 2048 if 64BIT
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
 ---
- arch/mips/configs/loongson3_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+ .../devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt      | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index a65b08d..a5005c8 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -403,7 +403,6 @@ CONFIG_CRYPTO_TEA=m
- CONFIG_CRYPTO_TWOFISH=m
- CONFIG_CRYPTO_DEFLATE=m
- CONFIG_PRINTK_TIME=y
--CONFIG_FRAME_WARN=1024
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_MAGIC_SYSRQ=y
- # CONFIG_SCHED_DEBUG is not set
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index 8b94aa8f5971..bb1b53030552 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -43,10 +43,6 @@ Required device specific properties (only for SPI chips):
+ - spi-max-frequency = The maximum frequency this chip is able to handle
+ 
+ Optional properties:
+-- #interrupt-cells : Should be two.
+-  - first cell is the pin number
+-  - second cell is used to specify flags.
+-- interrupt-controller: Marks the device node as a interrupt controller.
+ - drive-open-drain: Sets the ODR flag in the IOCON register. This configures
+         the IRQ output as open drain active low.
+ 
+@@ -72,8 +68,6 @@ gpiom1: gpio@20 {
+ 
+         interrupt-parent = <&gpio1>;
+         interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+-        interrupt-controller;
+-        #interrupt-cells=<2>;
+         microchip,irq-mirror;
+ };
+ 
+@@ -130,8 +124,6 @@ gpio21: gpio@21 {
+ 	interrupt-parent = <&socgpio>;
+ 	interrupts = <0x17 0x8>;
+ 	interrupt-names = "mcp23017@21 irq";
+-	interrupt-controller;
+-	#interrupt-cells = <0x2>;
+ 	microchip,irq-mirror;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2cgpio0irq &gpio21pullups>;
 -- 
-2.1.0
+2.26.2
 
