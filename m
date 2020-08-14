@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B3820708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE98120708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J0yRjS8w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RoM8+KMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgHNR22 (ORCPT
+        id S1728513AbgHNR3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
+        Fri, 14 Aug 2020 13:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgHNR2P (ORCPT
+        with ESMTP id S1728740AbgHNR20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:15 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EE3C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:14 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id l18so6471301qvq.16
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:14 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:26 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54698C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:26 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id m13so7432471qth.16
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=E0RrGh1M0jqaaDoEOkU8MvQi4g07cx9su4pS9IT1SWw=;
-        b=J0yRjS8wAi98SLl40BtGkKwGJXb87bHWptPKQUee0Z7i8RnowmsAsnTsSSGI/mRVKG
-         /jBE+O/OM0IlfTDa5WKWGDVszoGwgZAxqhir2+UYOvzVv0T0kxYGs89EIVE3j7zvDcQP
-         GPQ1zisFX3ghoL4cEwaGUe+RAIqE8fE978O2GWSaMwrA6JP4uyHCDH6oudvPU+qzrFnK
-         s/DztyfYwRhXAGuuuDUHlU5qU/ik0sNsoQCOVLC2aU7SaX6rXyrlmEfq6jLz9760Mo/W
-         YzyxoAF7tuNY/jCOHcxGNwqQSk8KoNiASEdIQr3iycLeHaTqYkXL/Uqo8uXoj1mabJku
-         9Q2Q==
+        bh=PrZ8Xx7ZOES69PjxJ7W+uco2MTpU8K38pV5r5s6HLuc=;
+        b=RoM8+KMI2h2GGKlzWuBgOR8Py0rNY7TZMU06j0CyrdWaNMgFm+s8aVx1SJGX4Gx0Yu
+         7iL0jYVGq/ZpqBnKxoozCPmzSxL5lsRQMy2MGg2ljRc0JK9qid+eJ2ca8kYM11IVazPU
+         5D7wAuSxLeuNoPDkQezSRD7cNU5Z09U4lP7ujCWlF7UV9xrPSIT3wWXn4AmlrwKCmmZ6
+         MvANSRo5c7D+PDmzdXHvWcV6sxBbvbluV5BCCH721wPS6ssCiOTdk5t/CEy4TJHFjQzX
+         YS8XRg4nwVZIqyKJ+wlb4D/ziTqK/qXt72NUwCDuxOh4M1MUX8qf3kZgQYHweBxv5nTr
+         VPGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=E0RrGh1M0jqaaDoEOkU8MvQi4g07cx9su4pS9IT1SWw=;
-        b=pOgMdZf0rxAYThQcinx/6bM0wIlz8gfs8hLWdt3g0tDwrlyhvxrXWSjDA5cJtZMHsk
-         UL5H5C8k2Vm3a+LykSSh2glOI+AdvGeRyyDjp+zuKU0zf4L2P/Z1CpSQn8iWNvueu1aV
-         cLfgVrXSRxm7Kv/Zarf0HHLCPfTzirxArEvUV9GKUPWyZDRZGgmLKglhUhNrz9axJdY/
-         EIGwvvD0Zj30KUXMRN0dFtv8a367bfVXGatOVCdRbkeHtTN9OG6uRzeGx/llJ5YdQCuu
-         XNRIJxyRyWe5Xzs+K82rSMVvEpwXIvHjWwMd/uzKHvBYUrQntst0hDAeHavEPjQ7oxSj
-         ugig==
-X-Gm-Message-State: AOAM532SpGHnoX93dUHcCI6hQ3pLYe8BSX0ldHeDWADjIt0AvjPtvNC9
-        Z4H2dQh4Lwg0bAv6LjWfpctlgBbnv9CwM4JO
-X-Google-Smtp-Source: ABdhPJy3SdR9WMFOSxqndhovcLxyBqUrrg3mnD1AcV1Kt+RAUKx381UmFBB5e6t6uAgctFxBWyRwguDJG3EOOPOZ
-X-Received: by 2002:a0c:9a0c:: with SMTP id p12mr3610073qvd.75.1597426093874;
- Fri, 14 Aug 2020 10:28:13 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:27:03 +0200
+        bh=PrZ8Xx7ZOES69PjxJ7W+uco2MTpU8K38pV5r5s6HLuc=;
+        b=XlSsZkrEgwq758SP3ENb0E0fgzj3DvAwreaez0jeZ2Yr2XswAWoK5s08bbkUOaLrVQ
+         KDlFdAnQ0wZOw7UuGk9Z89mS3/jG+KQ5jQLwdXyNFJ8q77r3yiBYWc0+piZWMBJTh5o6
+         l131PQJT7nVlZ735h2falKODlhWrQG7W8ev+ITx7ZFM02ZJuErCEleSwKL5A39ErbAIM
+         6+DfyuRj9tLoTzGBPvmIOxLvuletQH+s1IxwB2AdOFP7HBaA48WutWCE3WcmrzLt62NG
+         SZjY1mxTClZjrjggWVqBtugAo6MZysmv2BWAamRWezFnXxvX4OAQ9qqBCeJfHhBEjSTS
+         CyHg==
+X-Gm-Message-State: AOAM530oB4kBJFq0zpjPYPS2YuzvZC6iV4hY3iVg69Eq7hTvH+8RIxRB
+        VA9aFp3omy8snb7c3fWry9V0pe27U6hjH0AQ
+X-Google-Smtp-Source: ABdhPJyLILHteR8XQv6ASUjnKzzYpuETsrstUrOhCFHCsdKqZXOKezDHAwecoNC7DdH7utKm4OIpglyx7bKUIliq
+X-Received: by 2002:a0c:99c8:: with SMTP id y8mr3624054qve.57.1597426105434;
+ Fri, 14 Aug 2020 10:28:25 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:27:08 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+Message-Id: <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
+Subject: [PATCH 26/35] kasan, arm64: Enable TBI EL1
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -78,8 +78,7 @@ Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -88,121 +87,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Add the implementation of the in-kernel fault handler.
+Hardware tag-based KASAN relies on Memory Tagging Extension (MTE) that is
+built on top of the Top Byte Ignore (TBI) feature.
 
-When a tag fault happens on a kernel address:
-* a warning is logged,
-* the faulting instruction is skipped,
-* the execution continues.
-
-When a tag fault happens on a user address:
-* the kernel executes do_bad_area() and panics.
+Enable in-kernel TBI when CONFIG_KASAN_HW_TAGS is turned on by enabling
+the TCR_TBI1 bit in proc.S.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Co-developed-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/arm64/mm/fault.c | 50 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+ arch/arm64/mm/proc.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 5e832b3387f1..c62c8ba85c0e 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -33,6 +33,7 @@
- #include <asm/debug-monitors.h>
- #include <asm/esr.h>
- #include <asm/kprobes.h>
-+#include <asm/mte.h>
- #include <asm/processor.h>
- #include <asm/sysreg.h>
- #include <asm/system_misc.h>
-@@ -222,6 +223,20 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
- 	return 1;
- }
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 152d74f2cc9c..6880ddaa5144 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -38,7 +38,7 @@
+ /* PTWs cacheable, inner/outer WBWA */
+ #define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
  
-+static bool is_el1_mte_sync_tag_check_fault(unsigned int esr)
-+{
-+	unsigned int ec = ESR_ELx_EC(esr);
-+	unsigned int fsc = esr & ESR_ELx_FSC;
-+
-+	if (ec != ESR_ELx_EC_DABT_CUR)
-+		return false;
-+
-+	if (fsc == ESR_ELx_FSC_MTE)
-+		return true;
-+
-+	return false;
-+}
-+
- static bool is_el1_instruction_abort(unsigned int esr)
- {
- 	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_CUR;
-@@ -294,6 +309,18 @@ static void die_kernel_fault(const char *msg, unsigned long addr,
- 	do_exit(SIGKILL);
- }
- 
-+static void report_tag_fault(unsigned long addr, unsigned int esr,
-+			     struct pt_regs *regs)
-+{
-+	bool is_write = ((esr & ESR_ELx_WNR) >> ESR_ELx_WNR_SHIFT) != 0;
-+
-+	pr_alert("Memory Tagging Extension Fault in %pS\n", (void *)regs->pc);
-+	pr_alert("  %s at address %lx\n", is_write ? "Write" : "Read", addr);
-+	pr_alert("  Pointer tag: [%02x], memory tag: [%02x]\n",
-+			mte_get_ptr_tag(addr),
-+			mte_get_mem_tag((void *)addr));
-+}
-+
- static void __do_kernel_fault(unsigned long addr, unsigned int esr,
- 			      struct pt_regs *regs)
- {
-@@ -317,12 +344,16 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
- 			msg = "execute from non-executable memory";
- 		else
- 			msg = "read from unreadable memory";
-+	} else if (is_el1_mte_sync_tag_check_fault(esr)) {
-+		report_tag_fault(addr, esr, regs);
-+		msg = "memory tagging extension fault";
- 	} else if (addr < PAGE_SIZE) {
- 		msg = "NULL pointer dereference";
- 	} else {
- 		msg = "paging request";
- 	}
- 
-+
- 	die_kernel_fault(msg, addr, esr, regs);
- }
- 
-@@ -658,10 +689,27 @@ static int do_sea(unsigned long addr, unsigned int esr, struct pt_regs *regs)
- 	return 0;
- }
- 
-+static int do_tag_recovery(unsigned long addr, unsigned int esr,
-+			   struct pt_regs *regs)
-+{
-+	report_tag_fault(addr, esr, regs);
-+
-+	/* Skip over the faulting instruction and continue: */
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-+
-+	return 0;
-+}
-+
-+
- static int do_tag_check_fault(unsigned long addr, unsigned int esr,
- 			      struct pt_regs *regs)
- {
--	do_bad_area(addr, esr, regs);
-+	/* The tag check fault (TCF) is per TTBR */
-+	if (is_ttbr0_addr(addr))
-+		do_bad_area(addr, esr, regs);
-+	else
-+		do_tag_recovery(addr, esr, regs);
-+
- 	return 0;
- }
- 
+-#ifdef CONFIG_KASAN_SW_TAGS
++#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
+ #define TCR_KASAN_FLAGS TCR_TBI1
+ #else
+ #define TCR_KASAN_FLAGS 0
 -- 
 2.28.0.220.ged08abb693-goog
 
