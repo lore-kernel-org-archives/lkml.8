@@ -2,133 +2,90 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EADDC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B85C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8439C206B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A66D22B49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0cCCceBv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iIl3fT9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgHNIPg (ORCPT
+        id S1727109AbgHNIQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:15:36 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36111 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgHNIPd (ORCPT
+        Fri, 14 Aug 2020 04:16:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35324 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgHNIQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:15:33 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E896F1BF204;
-        Fri, 14 Aug 2020 08:15:30 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 10:15:30 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Victor Ding <victording@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH] rtc: cmos: initialize rtc time when reading alarm
-Message-ID: <20200814081530.GA6530@piout.net>
-References: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
- <20200813073325.GK3480@piout.net>
- <CANqTbdZhZL--JebFhZPkf2+VuCUs2b=Me-BoBHgAtt_MvQBX3A@mail.gmail.com>
+        Fri, 14 Aug 2020 04:16:38 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597392996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aw8cLn0cJ1vSrWaV3ggp3sxIOuFTPfWi+rVC27WKTwM=;
+        b=0cCCceBvsEqTbdr7y1QJk9XX9nO0fZLIYh0M7uovWZt/bHEQPQFvWUQ6YjKAHrwupITRJs
+        H4X47VQ8i3iZviR1ZsRhb2WtjjsTmdEJaa4OVOZPBeKpPxSrHCSkgFHVzusv7VWGpjx3P2
+        Fo3o/3/HbGzOGQCDqf3tOQ55u3q9myTXjfJGeiG3uFU/IuvAf+LWuP2tzuqwVgIkmnT8xW
+        IrC+eqTj9tQSn/zKZ45oGsSaC0Sd89LY8EvMHF2c9OOK8rLruTikk7TKzWFXsbnnKqKCwy
+        PO0Gyz8V/IYttw90UJasKGM151yHIxvxfvF9/i+3gi//Sl9bvxySZ9xe4YQWOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597392996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aw8cLn0cJ1vSrWaV3ggp3sxIOuFTPfWi+rVC27WKTwM=;
+        b=iIl3fT9DoAwtelVo9Y9+WBxuGUawFbUpEyGdLGzwzr2II+M8XCOLLNd9JuIu93y9yiuoJA
+        MmA2WsqxTGKo/GDg==
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
+In-Reply-To: <20200814033424.GA582@jagdpanzerIV.localdomain>
+References: <20200717234818.8622-1-john.ogness@linutronix.de> <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com> <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley> <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de> <20200813051853.GA510@jagdpanzerIV.localdomain> <875z9nvvl2.fsf@jogness.linutronix.de> <20200813084136.GK12903@alley> <87v9hmrg84.fsf@jogness.linutronix.de> <20200814033424.GA582@jagdpanzerIV.localdomain>
+Date:   Fri, 14 Aug 2020 10:22:35 +0206
+Message-ID: <87k0y1k5gc.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANqTbdZhZL--JebFhZPkf2+VuCUs2b=Me-BoBHgAtt_MvQBX3A@mail.gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2020 16:10:13+1000, Victor Ding wrote:
-> Hi Alexandre,
-> 
-> On Thu, Aug 13, 2020 at 5:33 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > On 13/08/2020 15:41:34+1000, Victor Ding wrote:
-> > > cmos_read_alarm() may leave certain fields of a struct rtc_time
-> > > untouched; therefore, these fields contain garbage if not properly
-> > > initialized, leading to inconsistent values when converting into
-> > > time64_t.
-> > > This patch to set all fields of a struct rtc_time to -1 before calling
-> > > cmos_read_alarm().
-> > >
-> >
-> > I don't think this actually helps with the conversion as mktime64
-> > is taking unsigned int so I would think you need the whole logic that is
-> > in __rtc_read_alarm
-> 
-> It's true that this change does not produce a correct time64_t; however,
-> it isn't the intention either. The proposed change only produces a
-> consistent value: calling obtaining identical struct rtc_time if the CMOS
-> wakealarm is unchanged. In the case of suspend/resume, a correct value
-> time64_t is not necessary; a consistent value is sufficient to correctly
-> perform an equality test for `t_current_expires` and `t_saved_expires`.
-> Logic to deduce a correct time64_t is expensive and hence I would like to
-> avoid __rtc_read_alarm's logic here.
-> 
-> Prior to this patch, the struct rtc_time is uninitialized. After calling
-> cmos_read_alarm(), the tm_year field is always left untouched and hence
-> contains only garbage. On platforms without enhanced RTC timers, the
-> tm_mon and tm_mday fields are left with garbage as well. Therefore,
-> `t_current_expires` and `t_saved_expires` from garbage data, which leads
-> to incorrect equality test results.
-> 
+On 2020-08-14, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+> One thing that we need to handle here, I believe, is that the context
+> which crashes the kernel should flush its cont buffer, because the
+> information there is relevant to the crash:
+>
+> 	pr_cont_alloc_info(&c);
+> 	pr_cont(&c, "1");
+> 	pr_cont(&c, "2");
+> 	>>
+> 	   oops
+> 	      panic()
+> 	<<
+> 	pr_cont_flush(&c);
+>
+> We better flush that context's pr_cont buffer during panic().
 
-Seeing that saved_wkalrm is initialized to zero, wouldn't it be
-sufficient to initialize current_alarm to 0? This can be done simply at
-the declaration. I personally find the -1 to be confusing especially
-since the result ends up being architecture dependent.
+I am not convinced of the general usefulness of partial messages, but as
+long as we have an API that includes registration, usage, and
+deregistration of some sort of handle, then we leave the window open for
+such implementations.
 
-> >
-> > > Signed-off-by: Victor Ding <victording@google.com>
-> > > ---
-> > >
-> > >  drivers/rtc/rtc-cmos.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-> > > index bcc96ab7793f..c99af567780d 100644
-> > > --- a/drivers/rtc/rtc-cmos.c
-> > > +++ b/drivers/rtc/rtc-cmos.c
-> > > @@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
-> > >                       enable_irq_wake(cmos->irq);
-> > >       }
-> > >
-> > > +     memset(&cmos->saved_wkalrm.time, -1, sizeof(struct rtc_time));
-> > >       cmos_read_alarm(dev, &cmos->saved_wkalrm);
-> > >
-> > >       dev_dbg(dev, "suspend%s, ctrl %02x\n",
-> > > @@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
-> > >               return;
-> > >       }
-> > >
-> > > +     memset(&current_alarm.time, -1, sizeof(struct rtc_time));
-> > >       cmos_read_alarm(dev, &current_alarm);
-> > >       t_current_expires = rtc_tm_to_time64(&current_alarm.time);
-> > >       t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
-> > > --
-> > > 2.28.0.236.gb10cc79966-goog
-> > >
-> >
-> > --
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> 
-> Best regards,
-> Victor Ding
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+John Ogness
