@@ -2,109 +2,74 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D330C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14182068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597392921;
-	bh=O/CKn70poXMC1eVo5v8wL30+8uUO0oPYHL7wCqph7yE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Usds/WUtgOVMVgj41AexIHOL/Fgvm2fvii9MFCd/PEZy6V1etUBnxRXMRfDVVMTOE
-	 DVE6gGMFgrwT3L5xlGu3DuBm4gQnzgiOQEF8nYtgi5GlJIOoUGa2yF6haUHzlAYmBk
-	 vDTfbUiK+SMYHgyN1Ho10auKmWjCiecAuWeja3Ac=
+	by mail.kernel.org (Postfix) with ESMTP id 208AD206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHNIPT (ORCPT
+        id S1727084AbgHNIPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 04:15:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46076 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgHNIPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:15:19 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA292068E;
-        Fri, 14 Aug 2020 08:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597392918;
-        bh=O/CKn70poXMC1eVo5v8wL30+8uUO0oPYHL7wCqph7yE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=K+zev1q6hZX5b62eLIKBQ5eJ4ayAbwZwLoTFP2d7lJZyOtRgaQCG6IA5wQ53RyI5F
-         O6QoK0BbfFr0YQoHNTDyXRcPHGFbaiVWEf5hP9Gc4t4vglCqz3ev9X5ewZdYHtuaj0
-         iUkee5DVG4dzrUTIoGjzK7ruGyR8Ym7nNmg8Z0sI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6Urt-0026tv-Ac; Fri, 14 Aug 2020 09:15:17 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 09:15:17 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] exec: Restore EACCES of S_ISDIR execve()
-In-Reply-To: <20200813231723.2725102-2-keescook@chromium.org>
-References: <20200813231723.2725102-1-keescook@chromium.org>
- <20200813231723.2725102-2-keescook@chromium.org>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <5ea68dd13fc8d5568b69f42fa384b8d3@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: keescook@chromium.org, akpm@linux-foundation.org, shuah@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1726050AbgHNIPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:15:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0631B1A0372;
+        Fri, 14 Aug 2020 10:15:31 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 384A61A0366;
+        Fri, 14 Aug 2020 10:15:27 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 36E9B402A8;
+        Fri, 14 Aug 2020 10:15:22 +0200 (CEST)
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        amurray@thegoodpenguin.co.uk, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH] PCI: designware-ep: Fix the Header Type check
+Date:   Fri, 14 Aug 2020 16:08:13 +0800
+Message-Id: <20200814080813.8070-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-14 00:17, Kees Cook wrote:
-> The return code for attempting to execute a directory has always been
-> EACCES. Adjust the S_ISDIR exec test to reflect the old errno instead
-> of the general EISDIR for other kinds of "open" attempts on 
-> directories.
-> 
-> Reported-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/lkml/20200813151305.6191993b@why
-> Fixes: 633fb6ac3980 ("exec: move S_ISREG() check earlier")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/namei.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 2112e578dccc..e99e2a9da0f7 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2849,8 +2849,10 @@ static int may_open(const struct path *path,
-> int acc_mode, int flag)
->  	case S_IFLNK:
->  		return -ELOOP;
->  	case S_IFDIR:
-> -		if (acc_mode & (MAY_WRITE | MAY_EXEC))
-> +		if (acc_mode & MAY_WRITE)
->  			return -EISDIR;
-> +		if (acc_mode & MAY_EXEC)
-> +			return -EACCES;
->  		break;
->  	case S_IFBLK:
->  	case S_IFCHR:
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+The current check will result in the multiple function device
+fails to initialize. So fix the check by masking out the
+multiple function bit.
 
-         M.
+Fixes: 0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 4680a51c49c0..4b7abfb1e669 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -654,7 +654,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 	int i;
+ 
+ 	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+-	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
++	if (hdr_type & 0x7f != PCI_HEADER_TYPE_NORMAL) {
+ 		dev_err(pci->dev,
+ 			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+ 			hdr_type);
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
