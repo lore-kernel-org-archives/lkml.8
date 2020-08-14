@@ -2,107 +2,111 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A94C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3302D207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FE120866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apTCCIIR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nHJCA4bC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UINynS6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgHNPWQ (ORCPT
+        id S1727822AbgHNPXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNPWI (ORCPT
+        Fri, 14 Aug 2020 11:23:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37374 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgHNPXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:22:08 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42799C061384;
-        Fri, 14 Aug 2020 08:22:08 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id v22so7115889edy.0;
-        Fri, 14 Aug 2020 08:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/ih4Rf1fys+3V3bYHR06uQQ/6JimIUcju77eK2mx+a8=;
-        b=apTCCIIRtZJe2OdaK+cQWlkqeq7lOBkdmQTPxItcxLC6M+Vo5BLbKn6pZ9e+jaQsqa
-         8CDuxHy5HatIbPaA3sCOEBU9t7p/tw/EENH+l3aweoCdjEJk1ql/ftuS3TC/uHGugyab
-         gDHiF/+J46W5IhqopoYvXMKepADIyPp6BtDu9wL+OcU5pT4oR6x2RqLwnOuCuleJQYK5
-         d4I6OQ8TgFP45auoSFoojgG9O1ESDEJrV50lDb2pxTnpk8mLU/sphA71i4+nRQmrPuqm
-         NRDmHjz8aiZhJubhHLLNKE2M2F/bJ1qFMGckEzPLiYdzWbbXA/2wBc5pn1s8rsiZg0lz
-         fswg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/ih4Rf1fys+3V3bYHR06uQQ/6JimIUcju77eK2mx+a8=;
-        b=J1Q3aFUgCqNKIu2DU1aifDAC6NJPBZ5y/5xy6aAxOh8IXgO9d2wg014pazFE60qLN5
-         PC/HqUk5S94SkouJ3nuYvU0yTg/ES5xaZ9BDfo6MDODZLIT7qQ6CWt/UgttND5e5yYc5
-         xszCY7ouT8AwUc70RDxnqAZHCSDvbTYN5kwFHVxti9RzNGSaDQgb9giQ8P1W2m21dNvj
-         Wh85F+CAAAzThQbZgTyafyaSVItDw9XaCOnR7QdKdmNBnDOxK5hm1InMzXIttMyj6GWg
-         KBQ6zHjrgmWz76DLAtMDNWhCdGNBuZ7uKHLHIZlx5Cws+r8zeds0I+mJ1CJDNGnOt1Ed
-         TKXw==
-X-Gm-Message-State: AOAM532K8ypgRxmFra9yXD1ANHeJCWRNMaqZBZ57VnFKDXY370cVBsEy
-        TKhGaXpcy6OETcFIiLSlOqU=
-X-Google-Smtp-Source: ABdhPJw2WN3FXSBnT1ya0PnsO1C+XaduTRHZBOS2jAUmuI6LT40u+WhxoEh+VkXqMPZKMZpAA6mvqg==
-X-Received: by 2002:a05:6402:1c09:: with SMTP id ck9mr2807701edb.74.1597418527065;
-        Fri, 14 Aug 2020 08:22:07 -0700 (PDT)
-Received: from localhost.localdomain (abag79.neoplus.adsl.tpnet.pl. [83.6.170.79])
-        by smtp.googlemail.com with ESMTPSA id e8sm6087974edy.68.2020.08.14.08.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 08:22:06 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     ~postmarketos/upstreaming@lists.sr.ht
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 2/2] [-next] arm64: dts: qcom: kitakami: Enable qcom,full-pwr-cycle on SDHCI1
-Date:   Fri, 14 Aug 2020 17:22:00 +0200
-Message-Id: <20200814152201.254010-2-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200814152201.254010-1-konradybcio@gmail.com>
-References: <20200814152201.254010-1-konradybcio@gmail.com>
+        Fri, 14 Aug 2020 11:23:32 -0400
+Date:   Fri, 14 Aug 2020 15:23:30 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597418610;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2387gP5Ra5yqujQ4UJsWART/df5bzYPCQMLcDcUCLco=;
+        b=nHJCA4bCMmUfvye1T/VI25EXJy+QOyzrHhi61r+VmQlhjSL1ztSS3rrUiVvCxuVtpjADW9
+        p4Zm8VJqFSWiKwfwH5Ey8LpeDHezXJ/R5s1/Y1FXAjKY3sktXQL2lE+g7KafoqtlHgt32j
+        9/GhAbQnubJa3H6jn09HFX21vXJMu7lZZfHBZ2TaeYh4PvWPVBe0FAOyWwFQrwprVXuxUz
+        EfloN/DWCxUz88BM8H09nPM8cnjip7hU78/FLm8hyYff45fIxdAnQ1N8YASWKU1cwMc+mT
+        iK1QdEog8G1yWk1/W4uPBBPuUw3RyY5VK8tXSfwNkmuUwu8EuuUopkLDmc93MQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597418610;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2387gP5Ra5yqujQ4UJsWART/df5bzYPCQMLcDcUCLco=;
+        b=UINynS6bRWQP7V0kQVUSCZYD8CBVnpfTuob2Y0f9vM3KHqv1xmlXGTRB0+kd3+m9cV2u6x
+        c+gt3wCeg5zPIPCQ==
+From:   "tip-bot2 for Zhang Rui" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/rapl: Fix missing psys sysfs attributes
+Cc:     Zhang Rui <rui.zhang@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Len Brown <len.brown@intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200811153149.12242-2-rui.zhang@intel.com>
+References: <20200811153149.12242-2-rui.zhang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159741861009.3192.851997896622686550.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is required to prevent permanent eMMC damage.
+The following commit has been merged into the perf/urgent branch of tip:
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Commit-ID:     4bb5fcb97a5df0bbc0a27e0252b1e7ce140a8431
+Gitweb:        https://git.kernel.org/tip/4bb5fcb97a5df0bbc0a27e0252b1e7ce140a8431
+Author:        Zhang Rui <rui.zhang@intel.com>
+AuthorDate:    Tue, 11 Aug 2020 23:31:47 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 14 Aug 2020 12:35:11 +02:00
+
+perf/x86/rapl: Fix missing psys sysfs attributes
+
+This fixes a problem introduced by commit:
+
+  5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
+
+that perf event sysfs attributes for psys RAPL domain are missing.
+
+Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Len Brown <len.brown@intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Link: https://lore.kernel.org/r/20200811153149.12242-2-rui.zhang@intel.com
 ---
- arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/events/rapl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-index 30cb3aa7d734..eb806d1e4454 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-@@ -439,6 +439,8 @@ &sdhc1 {
- 	 * vmmc-supply = <&pm8994_l20>;
- 	 * vqmmc-supply = <&pm8994_s4>;
- 	 */
-+
-+	qcom,full-pwr-cycle;
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 68b3882..e972383 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -665,7 +665,7 @@ static const struct attribute_group *rapl_attr_update[] = {
+ 	&rapl_events_pkg_group,
+ 	&rapl_events_ram_group,
+ 	&rapl_events_gpu_group,
+-	&rapl_events_gpu_group,
++	&rapl_events_psys_group,
+ 	NULL,
  };
  
- &sdhc2 {
--- 
-2.28.0
-
