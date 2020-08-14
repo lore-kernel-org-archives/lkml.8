@@ -2,197 +2,161 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D39C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C48C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C8C207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="AhyFHw5B"
+	by mail.kernel.org (Postfix) with ESMTP id 8A9F420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHNHyp (ORCPT
+        id S1726763AbgHNH6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 03:54:45 -0400
-Received: from mail6.tencent.com ([220.249.245.26]:51401 "EHLO
-        mail6.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgHNHyp (ORCPT
+        Fri, 14 Aug 2020 03:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgHNH6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:54:45 -0400
-Received: from EX-SZ018.tencent.com (unknown [10.28.6.39])
-        by mail6.tencent.com (Postfix) with ESMTP id F04FECC21D;
-        Fri, 14 Aug 2020 15:55:53 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
-        s=s202002; t=1597391754;
-        bh=o850WcbSMqnLKm9YBAzQLyImyavWOHQw53EezhFEJYM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=AhyFHw5BYaPa1+shhBmkBPubHWeettt5eBk31OP85zUDld280nge12vd74Z+6HJJz
-         ck2GRcsurVOaLBxSdiYaRvE3FOTAsAwcKztJ2xj2d+KUdakfyAEWI1gAfAjh+EduSh
-         Flxx562w6IgRdsMDUve/KDNQXsK5Wl0xWLgAc8UU=
-Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ018.tencent.com
- (10.28.6.39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Fri, 14 Aug
- 2020 15:54:39 +0800
-Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ012.tencent.com
- (10.28.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Fri, 14 Aug
- 2020 15:54:39 +0800
-Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
- EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
- 15.01.1847.007; Fri, 14 Aug 2020 15:54:39 +0800
-From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-CC:     Joel Fernandes <joel@joelfernandes.org>,
-        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Thomas Glexiner" <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Subhra Mazumdar" <subhra.mazumdar@oracle.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Pillai <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Ning, Hongyu" <hongyu.ning@linux.intel.com>
-Subject: Re: [RFC PATCH 00/16] Core scheduling v6(Internet mail)
-Thread-Topic: [RFC PATCH 00/16] Core scheduling v6(Internet mail)
-Thread-Index: AQHWTyYIdUbfm2uvOEagav1FxQIttakluk8AgACOfACAAkvVAIAHH5EAgAPAXACAAWIeAIAAWUGAgAFOmgCAABOzAIAAKUkAgAAUpQCAACvBAA==
-Date:   Fri, 14 Aug 2020 07:54:39 +0000
-Message-ID: <8276AA2B-72D9-4B2A-9F50-E6C2744BB9E8@tencent.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
- <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
- <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
- <20200809164408.GA342447@google.com>
- <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
- <20200812230850.GA3511387@google.com>
- <5a39735d-dfd8-bdec-f068-81895799640e@linux.intel.com>
- <FAC73DE7-BAE0-42D3-BE9A-227C12275C34@tencent.com>
- <89d973d1-1302-17a6-c647-ea7c538c2747@linux.intel.com>
- <18263ED7-88B3-4DED-9714-55D9D2EB69D9@tencent.com>
- <97a82444-77ab-dbd2-f765-0d818f94ca0b@linux.intel.com>
-In-Reply-To: <97a82444-77ab-dbd2-f765-0d818f94ca0b@linux.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.28.2.15]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A35B58A183D650499AE91C0A7C8CE1DE@tencent.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Aug 2020 03:58:44 -0400
+Received: from gardel.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA78C061383;
+        Fri, 14 Aug 2020 00:58:43 -0700 (PDT)
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id 973F3E814D8;
+        Fri, 14 Aug 2020 09:58:37 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 1001B16081D; Fri, 14 Aug 2020 09:58:36 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 09:58:36 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API
+Message-ID: <20200814075836.GA230635@gardel-login>
+References: <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk>
+ <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
+ <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gT24gQXVnIDE0LCAyMDIwLCBhdCAxOjE4IFBNLCBMaSwgQXVicmV5IDxhdWJyZXku
-bGlAbGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIDIwMjAvOC8xNCAxMjowNCwgYmVu
-YmppYW5nKOiSi+W9qikgd3JvdGU6DQo+PiANCj4+IA0KPj4+IE9uIEF1ZyAxNCwgMjAyMCwgYXQg
-OTozNiBBTSwgTGksIEF1YnJleSA8YXVicmV5LmxpQGxpbnV4LmludGVsLmNvbT4gd3JvdGU6DQo+
-Pj4gDQo+Pj4gT24gMjAyMC84LzE0IDg6MjYsIGJlbmJqaWFuZyjokovlvaopIHdyb3RlOg0KPj4+
-PiANCj4+Pj4gDQo+Pj4+PiBPbiBBdWcgMTMsIDIwMjAsIGF0IDEyOjI4IFBNLCBMaSwgQXVicmV5
-IDxhdWJyZXkubGlAbGludXguaW50ZWwuY29tPiB3cm90ZToNCj4+Pj4+IA0KPj4+Pj4gT24gMjAy
-MC84LzEzIDc6MDgsIEpvZWwgRmVybmFuZGVzIHdyb3RlOg0KPj4+Pj4+IE9uIFdlZCwgQXVnIDEy
-LCAyMDIwIGF0IDEwOjAxOjI0QU0gKzA4MDAsIExpLCBBdWJyZXkgd3JvdGU6DQo+Pj4+Pj4+IEhp
-IEpvZWwsDQo+Pj4+Pj4+IA0KPj4+Pj4+PiBPbiAyMDIwLzgvMTAgMDo0NCwgSm9lbCBGZXJuYW5k
-ZXMgd3JvdGU6DQo+Pj4+Pj4+PiBIaSBBdWJyZXksDQo+Pj4+Pj4+PiANCj4+Pj4+Pj4+IEFwb2xv
-Z2llcyBmb3IgcmVwbHlpbmcgbGF0ZSBhcyBJIHdhcyBzdGlsbCBsb29raW5nIGludG8gdGhlIGRl
-dGFpbHMuDQo+Pj4+Pj4+PiANCj4+Pj4+Pj4+IE9uIFdlZCwgQXVnIDA1LCAyMDIwIGF0IDExOjU3
-OjIwQU0gKzA4MDAsIExpLCBBdWJyZXkgd3JvdGU6DQo+Pj4+Pj4+PiBbLi4uXQ0KPj4+Pj4+Pj4+
-ICsvKg0KPj4+Pj4+Pj4+ICsgKiBDb3JlIHNjaGVkdWxpbmcgcG9saWN5Og0KPj4+Pj4+Pj4+ICsg
-KiAtIENPUkVfU0NIRURfRElTQUJMRUQ6IGNvcmUgc2NoZWR1bGluZyBpcyBkaXNhYmxlZC4NCj4+
-Pj4+Pj4+PiArICogLSBDT1JFX0NPT0tJRV9NQVRDSDogdGFza3Mgd2l0aCBzYW1lIGNvb2tpZSBj
-YW4gcnVuDQo+Pj4+Pj4+Pj4gKyAqICAgICAgICAgICAgICAgICAgICAgb24gdGhlIHNhbWUgY29y
-ZSBjb25jdXJyZW50bHkuDQo+Pj4+Pj4+Pj4gKyAqIC0gQ09SRV9DT09LSUVfVFJVU1Q6IHRydXN0
-ZWQgdGFzayBjYW4gcnVuIHdpdGgga2VybmVsDQo+Pj4+Pj4+Pj4gCQkJdGhyZWFkIG9uIHRoZSBz
-YW1lIGNvcmUgY29uY3VycmVudGx5LiANCj4+Pj4+Pj4+PiArICogLSBDT1JFX0NPT0tJRV9MT05F
-TFk6IHRhc2tzIHdpdGggY29va2llIGNhbiBydW4gb25seQ0KPj4+Pj4+Pj4+ICsgKiAgICAgICAg
-ICAgICAgICAgICAgIHdpdGggaWRsZSB0aHJlYWQgb24gdGhlIHNhbWUgY29yZS4NCj4+Pj4+Pj4+
-PiArICovDQo+Pj4+Pj4+Pj4gK2VudW0gY29yZXNjaGVkX3BvbGljeSB7DQo+Pj4+Pj4+Pj4gKyAg
-ICAgICBDT1JFX1NDSEVEX0RJU0FCTEVELA0KPj4+Pj4+Pj4+ICsgICAgICAgQ09SRV9TQ0hFRF9D
-T09LSUVfTUFUQ0gsDQo+Pj4+Pj4+Pj4gKwlDT1JFX1NDSEVEX0NPT0tJRV9UUlVTVCwNCj4+Pj4+
-Pj4+PiArICAgICAgIENPUkVfU0NIRURfQ09PS0lFX0xPTkVMWSwNCj4+Pj4+Pj4+PiArfTsNCj4+
-Pj4+Pj4+PiANCj4+Pj4+Pj4+PiBXZSBjYW4gc2V0IHBvbGljeSB0byBDT1JFX0NPT0tJRV9UUlVT
-VCBvZiB1cGVyZiBjZ3JvdXAgYW5kIGZpeCB0aGlzIGtpbmQNCj4+Pj4+Pj4+PiBvZiBwZXJmb3Jt
-YW5jZSByZWdyZXNzaW9uLiBOb3Qgc3VyZSBpZiB0aGlzIHNvdW5kcyBhdHRyYWN0aXZlPw0KPj4+
-Pj4+Pj4gDQo+Pj4+Pj4+PiBJbnN0ZWFkIG9mIHRoaXMsIEkgdGhpbmsgaXQgY2FuIGJlIHNvbWV0
-aGluZyBzaW1wbGVyIElNSE86DQo+Pj4+Pj4+PiANCj4+Pj4+Pj4+IDEuIENvbnNpZGVyIGFsbCBj
-b29raWUtMCB0YXNrIGFzIHRydXN0ZWQuIChFdmVuIHJpZ2h0IG5vdywgaWYgeW91IGFwcGx5IHRo
-ZQ0KPj4+Pj4+Pj4gY29yZS1zY2hlZHVsaW5nIHBhdGNoc2V0LCBzdWNoIHRhc2tzIHdpbGwgc2hh
-cmUgYSBjb3JlIGFuZCBzbmlmZiBvbiBlYWNoDQo+Pj4+Pj4+PiBvdGhlci4gU28gbGV0IHVzIG5v
-dCBwcmV0ZW5kIHRoYXQgc3VjaCB0YXNrcyBhcmUgbm90IHRydXN0ZWQpLg0KPj4+Pj4+Pj4gDQo+
-Pj4+Pj4+PiAyLiBBbGwga2VybmVsIHRocmVhZHMgYW5kIGlkbGUgdGFzayB3b3VsZCBoYXZlIGEg
-Y29va2llIDAgKHNvIHRoYXQgd2lsbCBjb3Zlcg0KPj4+Pj4+Pj4ga3NvZnRpcnFkIHJlcG9ydGVk
-IGluIHlvdXIgb3JpZ2luYWwgaXNzdWUpLg0KPj4+Pj4+Pj4gDQo+Pj4+Pj4+PiAzLiBBZGQgYSBj
-b25maWcgb3B0aW9uIChDT05GSUdfU0NIRURfQ09SRV9ERUZBVUxUX1RBU0tTX1VOVFJVU1RFRCku
-IERlZmF1bHQNCj4+Pj4+Pj4+IGVuYWJsZSBpdC4gU2V0dGluZyB0aGlzIG9wdGlvbiB3b3VsZCB0
-YWcgYWxsIHRhc2tzIHRoYXQgYXJlIGZvcmtlZCBmcm9tIGENCj4+Pj4+Pj4+IGNvb2tpZS0wIHRh
-c2sgd2l0aCB0aGVpciBvd24gY29va2llLiBMYXRlciBvbiwgc3VjaCB0YXNrcyBjYW4gYmUgYWRk
-ZWQgdG8NCj4+Pj4+Pj4+IGEgZ3JvdXAuIFRoaXMgY292ZXIncyBQZXRlcloncyBhc2sgYWJvdXQg
-aGF2aW5nICdkZWZhdWx0IHVudHJ1c3RlZCcpLg0KPj4+Pj4+Pj4gKFVzZXJzIGxpa2UgQ2hyb21l
-T1MgdGhhdCBkb24ndCB3YW50IHRvIHVzZXJzcGFjZSBzeXN0ZW0gcHJvY2Vzc2VzIHRvIGJlDQo+
-Pj4+Pj4+PiB0YWdnZWQgY2FuIGRpc2FibGUgdGhpcyBvcHRpb24gc28gc3VjaCB0YXNrcyB3aWxs
-IGJlIGNvb2tpZS0wKS4NCj4+Pj4+Pj4+IA0KPj4+Pj4+Pj4gNC4gQWxsb3cgcHJjdGwvY2dyb3Vw
-IGludGVyZmFjZXMgdG8gY3JlYXRlIGdyb3VwcyBvZiB0YXNrcyBhbmQgb3ZlcnJpZGUgdGhlDQo+
-Pj4+Pj4+PiBhYm92ZSBiZWhhdmlvcnMuDQo+Pj4+Pj4+IA0KPj4+Pj4+PiBIb3cgZG9lcyB1cGVy
-ZiBpbiBhIGNncm91cCB3b3JrIHdpdGgga3NvZnRpcnFkPyBBcmUgeW91IHN1Z2dlc3RpbmcgSSBz
-ZXQgdXBlcmYncw0KPj4+Pj4+PiBjb29raWUgdG8gYmUgY29va2llLTAgdmlhIHByY3RsPw0KPj4+
-Pj4+IA0KPj4+Pj4+IFllcywgYnV0IGxldCBtZSB0cnkgdG8gdW5kZXJzdGFuZCBiZXR0ZXIuIFRo
-ZXJlIGFyZSAyIHByb2JsZW1zIGhlcmUgSSB0aGluazoNCj4+Pj4+PiANCj4+Pj4+PiAxLiBrc29m
-dGlycWQgZ2V0dGluZyBpZGxlZCB3aGVuIEhUIGlzIHR1cm5lZCBvbiwgYmVjYXVzZSB1cGVyZiBp
-cyBzaGFyaW5nIGENCj4+Pj4+PiBjb3JlIHdpdGggaXQ6IFRoaXMgc2hvdWxkIG5vdCBiZSBhbnkg
-d29yc2UgdGhhbiBTTVQgT0ZGLCBiZWNhdXNlIGV2ZW4gU01UIE9GRg0KPj4+Pj4+IHdvdWxkIGFs
-c28gcmVkdWNlIGtzb2Z0aXJxZCdzIENQVSB0aW1lIGp1c3QgY29yZSBzY2hlZCBpcyBkb2luZy4g
-U3VyZQ0KPj4+Pj4+IGNvcmUtc2NoZWR1bGluZyBhZGRzIHNvbWUgb3ZlcmhlYWQgd2l0aCBJUElz
-IGJ1dCBzdWNoIGEgaHVnZSBkcm9wIG9mIHBlcmYgaXMNCj4+Pj4+PiBzdHJhbmdlLiBQZXRlciBh
-bnkgdGhvdWdodHMgb24gdGhhdD8NCj4+Pj4+PiANCj4+Pj4+PiAyLiBJbnRlcmZhY2U6IFRvIHNv
-bHZlIHRoZSBwZXJmb3JtYW5jZSBwcm9ibGVtLCB5b3UgYXJlIHNheWluZyB5b3Ugd2FudCB1cGVy
-Zg0KPj4+Pj4+IHRvIHNoYXJlIGEgY29yZSB3aXRoIGtzb2Z0aXJxZCBzbyB0aGF0IGl0IGlzIG5v
-dCBmb3JjZWQgaW50byBpZGxlLiAgV2h5IG5vdA0KPj4+Pj4+IGp1c3Qga2VlcCB1cGVyZiBvdXQg
-b2YgdGhlIGNncm91cD8NCj4+Pj4+IA0KPj4+Pj4gSSBndWVzcyB0aGlzIGlzIHVuYWNjZXB0YWJs
-ZSBmb3Igd2hvIHJ1bnMgdGhlaXIgYXBwcyBpbiBjb250YWluZXIgYW5kIHZtLg0KPj4+PiBJTUhP
-LCAganVzdCBhcyBKb2VsIHByb3Bvc2VkLCANCj4+Pj4gMS4gQ29uc2lkZXIgYWxsIGNvb2tpZS0w
-IHRhc2sgYXMgdHJ1c3RlZC4NCj4+Pj4gMi4gQWxsIGtlcm5lbCB0aHJlYWRzIGFuZCBpZGxlIHRh
-c2sgd291bGQgaGF2ZSBhIGNvb2tpZSAwIA0KPj4+PiBJbiB0aGF0IHdheSwgYWxsIHRhc2tzIHdp
-dGggY29va2llcyhpbmNsdWRpbmcgdXBlcmYgaW4gYSBjZ3JvdXApIGNvdWxkIHJ1bg0KPj4+PiBj
-b25jdXJyZW50bHkgd2l0aCBrZXJuZWwgdGhyZWFkcy4NCj4+Pj4gVGhhdCBjb3VsZCBiZSBhIGdv
-b2Qgc29sdXRpb24gZm9yIHRoZSBpc3N1ZS4gOikNCj4+PiANCj4+PiBGcm9tIHVwZXJmIHBvaW50
-IG9mIHJldmlldywgaXQgY2FuIHRydXN0IGNvb2tpZS0wKEkgYXNzdW1lIHdlIHN0aWxsIG5lZWQN
-Cj4+PiBzb21lIG1vZGlmaWNhdGlvbnMgdG8gY2hhbmdlIGNvb2tpZS1tYXRjaCB0byBjb29raWUt
-Y29tcGF0aWJsZSB0byBhbGxvdw0KPj4+IFpFUk8gYW5kIE5PTlpFUk8gcnVuIHRvZ2V0aGVyKS4N
-Cj4+PiANCj4+PiBCdXQgZnJvbSBrZXJuZWwgdGhyZWFkIHBvaW50IG9mIHJldmlldywgaXQgY2Fu
-IE5PVCB0cnVzdCB1cGVyZiwgdW5sZXNzDQo+Pj4gd2Ugc2V0IHVwZXJmJ3MgY29va2llIHRvIDAu
-DQo+PiBUaGF04oCZcyByaWdodC4gOikNCj4+IENvdWxkIHdlIHNldCB0aGUgY29va2llIG9mIGNn
-cm91cCB3aGVyZSB1cGVyZiBsaWVzIHRvIDA/DQo+PiANCj4gSU1ITyB0aGUgZGlzYWR2YW50YWdl
-IGlzIHRoYXQgaWYgdGhlcmUgYXJlIHR3byBvciBtb3JlIGNncm91cHMgc2V0IGNvb2tpZS0wLA0K
-PiB0aGVuIHRoZSB1c2VyIGFwcGxpY2F0aW9ucyBpbiB0aGVzZSBjZ3JvdXBzIGNvdWxkIHJ1biBj
-b25jdXJyZW50bHkgb24gYSBjb3JlLA0KPiB0aG91Z2ggYWxsIG9mIHRoZW0gYXJlIHNldCBhcyB0
-cnVzdGVkLCB3ZSBtYWRlIGEgaG9sZSBvZiB1c2VyLT51c2VyIGlzb2xhdGlvbi4NCkZvciB0aGF0
-IGNhc2UsIGhvdyBhYm91dCwNCi0gdXNlIGEgc3BlY2lhbCBjb29raWUoY29va2llLXRydXN0KSBp
-bnN0ZWFkIG9mIGNvb2tpZS0wIGZvciBrZXJuZWwgdGhyZWFkDQotIGltcGxlbWVudCBjb29raWVf
-cGFydGlhbF9tYXRjaCgpIHRvIG1hdGNoIHBhcnQgb2YgdGhlIGNvb2tpZQ0KLSBDb29raWUtbm9y
-bWFsKG5vcm1hbCB0YXNrcyB1c2UpIGNvdWxkIHRydXN0IGNvb2tpZS10cnVzdCwNCi0gdGFza3Mg
-dGVuZCB0byBiZSB0cnVzdGVkIGJ5IGNvb2tpZS10cnVzdCBjb3VsZCB1c2UgY29va2llcyBpbmNs
-dWRpbmcNCiAgY29va2llLXRydXN0IHBhcnRpYWxseSwgd2hpbGUgY29va2llLW5vcm1hbCBkb2Vz
-IG5vdCBpbmNsdWRlIGNvb2tpZS10cnVzdC4gDQotIGNvb2tpZS10cnVzdCB0YXNrcyB1c2UgY29v
-a2llX3BhcnRpYWxfbWF0Y2goKSB0byBtYXRjaCBjb29raWUNCi0gbm9ybWFsIHRhc2tzIHVzZSB0
-aGUgc3RhbmRhcmQgY29va2llIG1hdGNoKGZ1bGwgbWF0Y2gpIGludGVyZmFjZSB0byBtYXRjaCBj
-b29raWUuDQoNCkp1c3QgYSBzdWRkZW4gdGhvdWdodC4gOikNCg0KVGh4Lg0KUmVnYXJkcywNCkpp
-YW5nDQoNCg==
+On Mi, 12.08.20 12:50, Linus Torvalds (torvalds@linux-foundation.org) wrote:
+
+> On Wed, Aug 12, 2020 at 12:34 PM Steven Whitehouse <swhiteho@redhat.com> wrote:
+> >
+> > The point of this is to give us the ability to monitor mounts from
+> > userspace.
+>
+> We haven't had that before, I don't see why it's suddenly such a big deal.
+>
+> The notification side I understand. Polling /proc files is not the answer.
+>
+> But the whole "let's design this crazy subsystem for it" seems way
+> overkill. I don't see anybody caring that deeply.
+>
+> It really smells like "do it because we can, not because we must".
+
+With my systemd maintainer hat on (and of other userspace stuff),
+there's a couple of things I really want from the kernel because it
+would fix real problems for us:
+
+1. we want mount notifications that don't require to scan
+   /proc/self/mountinfo entirely again every time things change, over
+   and over again, simply because that doesn't scale. We have various
+   bugs open about this performance bottleneck, I could point you to,
+   but I figure it's easy to see why this currently doesn't scale...
+
+2. We want an unpriv API to query (and maybe set) the fs UUID, like we
+   have nowadays for the fs label FS_IOC_[GS]ETFSLABEL
+
+3. We want an API to query time granularity of file systems
+   timestamps. Otherwise it's so hard in userspace to reproducibly
+   re-generate directory trees. We need to know for example that some
+   fs only has 2s granularity (like fat).
+
+4. Similar, we want to know if an fs is case-sensitive for file
+   names. Or case-preserving. And which charset it accepts for filenames.
+
+5. We want to know if a file system supports access modes, xattrs,
+   file ownership, device nodes, symlinks, hardlinks, fifos, atimes,
+   btimes, ACLs and so on. All these things currently can only be
+   figured out by changing things and reading back if it worked. Which
+   sucks hard of course.
+
+6. We'd like to know the max file size on a file system.
+
+7. Right now it's hard to figure out mount options used for the fs
+   backing some file: you can now statx() the file, determine the
+   mnt_id by that, and then search that in /proc/self/mountinfo, but
+   it's slow, because again we need to scan the whole file until we
+   find the entry we need. And that can be huge IRL.
+
+8. Similar: we quite often want to know submounts of a mount. It would
+   be great if for that kind of information (i.e. list of mnt_ids
+   below some other mnt_id) we wouldn't have to scan the whole of
+   /p/s/mi again. In many cases in our code we operate recursively,
+   and want to know the mounts below some specific dir, but currently
+   pay performance price for it if the number of file systems on the
+   host is huge. This doesn't sound like a biggie, but actually is a
+   biggie. In systemd we spend a lot of time scaninng /p/s/mi...
+
+9. How are file locks implemented on this fs? Are they local only, and
+   orthogonal to remote locks? Are POSIX and BSD locks possibly merged
+   at the backend? Do they work at all?
+
+I don't really care too much how an API for this looks like, but let
+me just say that I am not a fan of APIs that require allocating an fd
+for querying info about an fd. This 'feels' a bit too recursive: if
+you expose information about some fd in some magic procfs subdir, or
+even in some virtual pseudo-file below the file's path then this means
+we have to allocate a new fd to figure out things or the first fd, and
+if we'd know the same info for that, we'd theoretically recurse
+down. Now of course, most likely IRL we wouldn't actually recurse down,
+but it is still smelly. In particular if fd limits are tight. I mean,
+I really don't care if you expose non-file-system stuff via the fs, if
+that's what you want, but I think exposing *fs* metainfo in the *fs*,
+it's just ugly.
+
+I generally detest APIs that have no chance to ever returning multiple
+bits of information atomically. Splitting up querying of multiple
+attributes into multiple system calls means they couldn't possibly be
+determined in a congruent way. I much prefer APIs where we provide a
+struct to fill in and do a single syscall, and at least for some
+fields we'd know afterwards that the fields were filled in together
+and are congruent with each other.
+
+I am a fan of the statx() system call I must say. If we had something
+like this for the file system itself I'd be quite happy, it could tick
+off many of the requests I list above.
+
+Hope this is useful,
+
+Lennart
+
+--
+Lennart Poettering, Berlin
