@@ -2,205 +2,78 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D46C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5862E2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B80F20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgHNSiU (ORCPT
+        id S1726678AbgHNSsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 14:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgHNSiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 14:38:19 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70BB920774;
-        Fri, 14 Aug 2020 18:38:18 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 14:38:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [RFC PATCH] vsprintf: Add %pv extension replacement for
- print_vma_addr
-Message-ID: <20200814143816.33325a49@oasis.local.home>
-In-Reply-To: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
-References: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Aug 2020 14:48:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41130 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgHNSsJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:48:09 -0400
+Received: by mail-io1-f69.google.com with SMTP id e12so6656649ioc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 11:48:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=FdIRXuZCQukDRQ0XU5HzlXLbagxjzssCGhlf1mUy6ZA=;
+        b=g5Mqu7H4RckR1gnSPIdO/Km6EHvoqCFakRmVG1spTaaRiTAlZQUmNESMCw7DDj36Jw
+         Jyu7zAxMmDK3ud8F+cri0XUZUKbImNK3MzezkjWkI9Xm5regzRi93zgApqUbBxxlVhB0
+         IYOVs5kLok1ddz4IZb7qj6NZDjq65ezBo8xhmHrGOepJkG+//m1qfzmBmMize4FfC/Y3
+         Qh7d+kAVr8MslBn7DxEgXDBZTzQ7H4F9gn/p5J4gW7KsF0LazE8rfipgo3oQDOn9PzH5
+         /3eGPQxGutQDwXelY5pbZerH6TfZaochPAOog4TysYvFayJ4rxPrmaMWFpfi/NdPcos+
+         cOoQ==
+X-Gm-Message-State: AOAM533dJOfspiekazn9R2QP4OjMpbvtWIlm/q52iNEhmLkes+yxECIk
+        WrUrDXUBJG2mbLTOzFJQgj4zsL0ci9Mo9x0xog3hWZcSBon/
+X-Google-Smtp-Source: ABdhPJzNTvNy1dhu9pwSXa3tWa4iLGVzBCdcRYK93MYJzzPqsQW/K4PnkT/GdTdJGW94oI0/s3HorImYD5cpCRRwVwYGVaoycdZT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:c09:: with SMTP id d9mr3762153ile.289.1597430888599;
+ Fri, 14 Aug 2020 11:48:08 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 11:48:08 -0700
+In-Reply-To: <000000000000eea12405843bc43c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab163105acdadc50@google.com>
+Subject: Re: KASAN: use-after-free Read in refcount_inc_not_zero_checked (2)
+From:   syzbot <syzbot+eff6b596cc8194e2f029@syzkaller.appspotmail.com>
+To:     ardb@kernel.org, davem@davemloft.net, linux-efi@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, netdev@vger.kernel.org, nivedita@alum.mit.edu,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 10:53:03 -0700
-Joe Perches <joe@perches.com> wrote:
+syzbot suspects this issue was fixed by commit:
 
-> There is a print_vma_addr function used several places
-> that requires KERN_CONT use.
-> 
-> Add a %pv mechanism to avoid the need for KERN_CONT.
-> 
-> An example conversion is arch/x86/kernel/signal.c
-> 
-> from:
-> 	if (show_unhandled_signals && printk_ratelimit()) {
-> 		printk("%s"
-> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx",
-> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-> 		       me->comm, me->pid, where, frame,
-> 		       regs->ip, regs->sp, regs->orig_ax);
-> 		print_vma_addr(KERN_CONT " in ", regs->ip);
-> 		pr_cont("\n");
-> to:
-> 		printk("%s"
-> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx in %pv\n",
-> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-> 		       me->comm, me->pid, where, frame,
-> 		       regs->ip, regs->sp, regs->orig_ax, (void *)regs->ip);
-> ---
->  lib/vsprintf.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index c155769559ab..654402c43f8d 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -995,6 +995,12 @@ static const struct printf_spec default_dec_spec = {
->  	.precision = -1,
->  };
->  
-> +static const struct printf_spec default_hex_spec = {
-> +	.base = 16,
-> +	.precision = -1,
-> +	.flags = SMALL,
-> +};
-> +
->  static const struct printf_spec default_dec02_spec = {
->  	.base = 10,
->  	.field_width = 2,
-> @@ -2089,6 +2095,50 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
->  	return widen_string(buf, buf - buf_start, end, spec);
->  }
->  
-> +static noinline_for_stack
-> +char *vma_addr(char *buf, char *end, void *ip,
-> +	       struct printf_spec spec, const char *fmt)
-> +{
-> +#ifdef CONFIG_MMU
-> +	struct mm_struct *mm = current->mm;
-> +	struct vm_area_struct *vma;
-> +
-> +	/*
-> +	 * we might be running from an atomic context so we cannot sleep
-> +	 */
-> +	if (!mmap_read_trylock(mm))
-> +		return buf;
-> +
-> +	vma = find_vma(mm, (unsigned long)ip);
-> +	if (vma && vma->vm_file) {
-> +		char *p;
-> +		struct file *f = vma->vm_file;
-> +		char *page = (char *)__get_free_page(GFP_NOWAIT);
-> +
-> +		if (page) {
-> +			p = file_path(f, page, PAGE_SIZE);
-> +			if (IS_ERR(p))
-> +				p = "?";
-> +			buf = string(buf, end, kbasename(p), default_str_spec);
-> +			buf = string_nocheck(buf, end, "[", default_str_spec);
-> +			buf = pointer_string(buf, end,
-> +					     (void *)vma->vm_start,
-> +					     default_hex_spec);
-> +			buf = string_nocheck(buf, end, "+", default_str_spec);
-> +			buf = pointer_string(buf, end,
-> +					     (void *)(vma->vm_end - vma->vm_start),
-> +					     default_hex_spec);
-> +			buf = string_nocheck(buf, end, "]", default_str_spec);
-> +			free_page((unsigned long)page);
-> +		}
-> +	}
-> +	mmap_read_unlock(mm);
-> +#else
-> +	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
-> +#endif
+commit 987053a30016a7d9ab3e4ad973e7c51aeb1f1ef6
+Author: Arvind Sankar <nivedita@alum.mit.edu>
+Date:   Thu Apr 30 18:28:40 2020 +0000
 
-I'm fine with all his, but I feel more comfortable if this patch
-created a single copy of the code. Perhaps add:
+    efi/x86: Move command-line initrd loading to efi_main
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 87ec87cdc1ff..795a4db4d83d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4771,32 +4771,7 @@ EXPORT_SYMBOL_GPL(access_process_vm);
-  */
- void print_vma_addr(char *prefix, unsigned long ip)
- {
--	struct mm_struct *mm = current->mm;
--	struct vm_area_struct *vma;
--
--	/*
--	 * we might be running from an atomic context so we cannot sleep
--	 */
--	if (!mmap_read_trylock(mm))
--		return;
--
--	vma = find_vma(mm, ip);
--	if (vma && vma->vm_file) {
--		struct file *f = vma->vm_file;
--		char *buf = (char *)__get_free_page(GFP_NOWAIT);
--		if (buf) {
--			char *p;
--
--			p = file_path(f, buf, PAGE_SIZE);
--			if (IS_ERR(p))
--				p = "?";
--			printk("%s%s[%lx+%lx]", prefix, kbasename(p),
--					vma->vm_start,
--					vma->vm_end - vma->vm_start);
--			free_page((unsigned long)buf);
--		}
--	}
--	mmap_read_unlock(mm);
-+	printk("%s%pv", prefix, ip);
- }
- 
- #if defined(CONFIG_PROVE_LOCKING) || defined(CONFIG_DEBUG_ATOMIC_SLEEP)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11680f6a900000
+start commit:   9c7dc824 Merge tag '5.1-rc-smb3' of git://git.samba.org/sf..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1aaa1cfbfe1abf
+dashboard link: https://syzkaller.appspot.com/bug?extid=eff6b596cc8194e2f029
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e294a3200000
 
+If the result looks correct, please mark the issue as fixed by replying with:
 
-And of course this would need for documentation.
+#syz fix: efi/x86: Move command-line initrd loading to efi_main
 
--- Steve
-
-
-
-> +	return buf;
-> +}
-> +
->  /*
->   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
->   * by an extra set of alphanumeric characters that are extended format
-> @@ -2254,6 +2304,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->  		return uuid_string(buf, end, ptr, spec, fmt);
->  	case 'V':
->  		return va_format(buf, end, ptr, spec, fmt);
-> +	case 'v':
-> +		return vma_addr(buf, end, ptr, spec, fmt);
->  	case 'K':
->  		return restricted_pointer(buf, end, ptr, spec);
->  	case 'N':
-> 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
