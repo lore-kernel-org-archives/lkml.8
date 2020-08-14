@@ -2,189 +2,264 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A801DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B722206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TbaUT2ai";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="e6TDlPgo"
+	by mail.kernel.org (Postfix) with ESMTP id 84AFD214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597407885;
+	bh=IwB+Es2SKcnVLtC96l4yBZ8mqLuNmVr3B751bFwfTH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=najaGlKEOlgUoq1eU+v4tZwzpBTiFSVvreZfGSAq8zFaL8R3e0+Lr5wHd7jysdqnR
+	 UaYntbA2YwBn/9kRas3Zt8bgb8pkbXpz51e5Qfmfvve56uyDGMoDkJka5R1YsyqL3o
+	 bbjSo+/q4y1uRSL6V46E0hLRFdQ5SvzIsdBOXLP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHNMUs (ORCPT
+        id S1727885AbgHNMYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:20:48 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:28073 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgHNMUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:20:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597407640; x=1628943640;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=SpU33UC7nJ5osmUOvPg8hYf6pn9V/4aszvqU9n1JFvQ=;
-  b=TbaUT2aiUcL+LnP/HiIVVlRfh8LsK6tgAvPI+fONjBWiJAPWInDeV+ID
-   tSBKGEDBjpjlQB9CHofq9SJApu9T2L04mcbUDrl8TzIEidtKCbLOc+FUY
-   7DuQVAzDOWnkMEg7eb4FrxAqVwZo+8j/UYWPtLxjWBh6PwR4p83n8Lhju
-   Y7cjxA7m6zIT0O94vdG62eCIzDOWcb5QuKWJntr9qbasKyODTb1JYUO2f
-   wgeAmLAofjOnN0Ooz/pEYgZQX6NAXrrYlzKwUZj0s3opuEfrMOPIsFKfL
-   TSrieIxCc+iPVLBvNvcyryhPzZZYL1m5SFejmJwYJ6KNE7kaE+CSyLmQw
-   A==;
-IronPort-SDR: j4shW0UZ08ARf5SMTahy3FEb8KJ7PGDhrwbKbpiWD3fmbmLbp/q2hRXUi5JZ3e5YcrLrgopDu0
- zMxp1dgCv19a6FFA0+55z8I3BUMDUPyi5vSuxlxOhYyWg5+L/fXJod4NASSXYUUN77j7jkmvsE
- qBIfxcabP2HrlQhtCGUxkpGJHpoli69y0AfxXgNBxXRUMhqcEPSidOQwccWydhv6cV03VNcpft
- rtolQyXlZO76CxuPTVehWyFz/CYx3HF2/4Ard2Y7ryOiQfD/OzzI5Ad6RoKytqW8+ZrvCcarLM
- e9M=
-X-IronPort-AV: E=Sophos;i="5.76,312,1592841600"; 
-   d="scan'208";a="254359538"
-Received: from mail-sn1nam02lp2054.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.54])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Aug 2020 20:20:38 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EyWYmbLhwFCMf2f5Ytq7y8Q/ikg/lKRU2fy2tzpgTX2egiUJaaf/nTmRJTswhK+wF6T77HxOZg4Q1TdP7Gn8XdLuxM/S19L9S4TleCWdiJD4zXc7EV6bu1khwsIjPUJPQnMSW0y+RT/HfYA3zHtA49LFXXG4i54ZT9wj3kx63h4htvXGbE7n+wCxeKlYaaH3FR6THQGrTQqbHLSA3HJjVNJ/qgXCQndU4T44e7dhT23CWKHHS3xC/BoqoZUlxeFJKEnFA71krnTQlTj61fH17/DNJzhv8kFHsDg9bjFQv4r2yxhgP9XMwIOF0GZFf4bGMrB6RNJOu4jhQ3NfFQt/9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uOkfuM6GGqXLNE+Kyh2J35ZVZ48rg0h6dRf5B05rLHg=;
- b=TuwfRcCIHYAiwYCw+QKgmPbtLnsrKBwstlIiHBQlgp2wPlYng+0EtThObcpEQ/Y0iNif2IxnwT4Thd1IApycVtJKGmbMU8cH3Xvm4rzB99aZWwrJotkItz9/p/N0NEs2LdMw9omzwb4zrgq4ebGDOB3BOLzB/s6FgTxRvGvBLEXiERHjJ1SqkyzEj/dHLzBDe6VUVxkIrArLtr8r1A7OYwGtgXQ/ZYbcuAx2JD8m1HQdfEdUmucYuVnpQbjFm5R7SCD5eksQGYjlt4kI1gtzE9cPlkwO0j3Rarl7Qu45Br7r96A5HycBno7p+TfiaxEQV+d3Q1M/mVXobC7p/ZpZNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uOkfuM6GGqXLNE+Kyh2J35ZVZ48rg0h6dRf5B05rLHg=;
- b=e6TDlPgobaoVtGRmmKsL/SuPjL7pL2/nGHIH3WuXuHCvu0V1Xh1IKoNOx7ZG78QiI8OsY1HI2X9LXlw6oiyfx6YjQOSLMD21U37IqEWsqdy1e9hN2WSnrAk/fcPmZwI7FbER8UKWwVVAI3158mwvQPkZRWxs9opQamv2vnkl4zY=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB3749.namprd04.prod.outlook.com (2603:10b6:903:e8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Fri, 14 Aug
- 2020 12:20:34 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::7d15:9936:4b3b:f8a2]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::7d15:9936:4b3b:f8a2%12]) with mapi id 15.20.3283.016; Fri, 14 Aug
- 2020 12:20:34 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-Thread-Topic: [PATCH v4 6/6] io_uring: add support for zone-append
-Thread-Index: AQHWYdbcc0q15qREKECGO7brHi6zEg==
-Date:   Fri, 14 Aug 2020 12:20:34 +0000
-Message-ID: <CY4PR04MB37518A2859396BCE0EEF5270E7400@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
- <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731091416.GA29634@infradead.org>
- <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731094135.GA4104@infradead.org>
- <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731125110.GA11500@infradead.org>
- <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200814081411.GA16943@infradead.org>
- <CY4PR04MB3751DE1ECCA4099902AABAA6E7400@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200814120422.GA1872@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2400:2411:43c0:6000:28a1:79eb:9c3c:a78e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 60a007b8-7631-4937-0298-08d8404c71c1
-x-ms-traffictypediagnostic: CY4PR04MB3749:
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR04MB37498277FACF8FA7D74534FCE7400@CY4PR04MB3749.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +8VIX4sxnrCHn1MtFSekaqr3J8hYhB//Kg4lMRRdKxSU3Cd/sZryCB5hGnN5AxnBQeA7N6HvuOKOGZextCB1kYHj0f15UfXeDaDV//K/noHHToziJABtJxaCVtt6WBNLkFLKQG+I9M6kk9m2pcIHbfEwlQOM3llqdn8rH3nw870wrglRrlaZ6CaGGbq4XlKCff8KFk4LnHsO8DhZg30xebKUvzVUEecN7sIphTT06jbA6erdWwyC8vDcatA5HmLT0C0ukNdTRY+bCXw6VDBooYczVuwr8sAkq/cd+hHYVGb6VbYE0f7w3fqc6sbF+yp9MKplRXq5tSIdVjLuIW/jxw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(5660300002)(83380400001)(186003)(7696005)(86362001)(53546011)(66946007)(6506007)(9686003)(8936002)(6916009)(55016002)(76116006)(4326008)(91956017)(33656002)(478600001)(54906003)(7416002)(52536014)(71200400001)(2906002)(8676002)(66446008)(64756008)(66476007)(316002)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xNTB23psWOekOB6FuTJOEP0k7JByKq+gzYGWTAtc94yeLwCx+bphDOkWJNGdfEJgYTbrLsPku0ATOvE7qUIUzScNQCkTXVCzAPbMrWgOL9qNstG8YyQE1pjklMIz4yDZbCI/JcCv8hNawRTqURDqMiXEGx5W4slFmK5GFkStGDFD7x2biMevpsahd7FzTfzaY3v9yEzW4heYmoAcQ9PMdjoF+7ZkiUdcgm6cC/+5hpgquLyOZ2XkU0NJ0YnuRUI68MKKLBC61DSQf5Yj4S99FT+phKQRM+gzZAchDJEaZKfOlIiknXvtHsFWpAbVC4T3ILeRiU532003LS898gd+97EomN7ODx1MJej3UTHeod0U5Nei1brknNNG9kwqgrHs7U38IIoGcMHythNbj2m8nhOcytUvbnWHaab5r3dQ+fRFHEUrx9hE4IZDtHH+QR4bFP6tPaSpWIC1f3xDO8peTPM22JomaT59r72XNjhGYnfl/f+nbWcE21hFeEV48saf5clKEhhbOduYeq1Khe57o42mx0D9BGjYe3jZWiDPNprBlStfT23DrWFRKex3fg+WEHxJqcRHYg5qd3oCVAX7t1TMDaU8g4dNGk55iVjrsDBhea5heX/7EARIxbEEqkCHqJSCThy/gLiCZVfRiwd5iknBXT5KIKHgyOr3ilZTi/CNo7PqCL17Tk6fisdUbv4zYnfNjzw91Tu9B0Oy6h+eMQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 14 Aug 2020 08:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgHNMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:24:43 -0400
+Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C8020B1F;
+        Fri, 14 Aug 2020 12:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597407882;
+        bh=IwB+Es2SKcnVLtC96l4yBZ8mqLuNmVr3B751bFwfTH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qFjJAd3pKbpcoHrke5NAb89fmYm0FL74ZpQgbtMeLRSxlcKB1I4ZvqEKWOmy9cJsV
+         IHIKhAUGyArWlrxhkhqU0F4aEBCQTplJPkvlNYULeRygUfc8TmhAdLeCMLOk3k6Mn8
+         OC2YLdTLhBVrRJqI5dIiIvza25vqPTXKp76X0T+Q=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F348D40D3D; Fri, 14 Aug 2020 09:24:40 -0300 (-03)
+Date:   Fri, 14 Aug 2020 09:24:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 08/18] perf ftrace: add support for tracing option
+ 'func_stack_trace'
+Message-ID: <20200814122440.GY13995@kernel.org>
+References: <20200808023141.14227-1-changbin.du@gmail.com>
+ <20200808023141.14227-9-changbin.du@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60a007b8-7631-4937-0298-08d8404c71c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2020 12:20:34.2692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +5lB5ETxnlTMmNcsRFAuY5oTAXWcmN+BospLiwJ1W3wBYasFhBPEOsJWIClPd/jKhd5GlZycOj3x/7h46kkscg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB3749
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808023141.14227-9-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/14 21:04, hch@infradead.org wrote:=0A=
-> On Fri, Aug 14, 2020 at 08:27:13AM +0000, Damien Le Moal wrote:=0A=
->>>=0A=
->>> O_APPEND pretty much implies out of order, as there is no way for an=0A=
->>> application to know which thread wins the race to write the next chunk.=
-=0A=
->>=0A=
->> Yes and no. If the application threads do not synchronize their calls to=
-=0A=
->> io_submit(), then yes indeed, things can get out of order. But if the=0A=
->> application threads are synchronized, then the offset set for each appen=
-d AIO=0A=
->> will be in sequence of submission, so the user will not see its writes=
-=0A=
->> completing at different write offsets than this implied offsets.=0A=
-> =0A=
-> Nothing gurantees any kind of ordering for two separate io_submit calls.=
-=0A=
-> The kernel may delay one of them for any reason.=0A=
-=0A=
-Ah. Yes. The inode locking is at the single aio issuing level, not the io_s=
-ubmit=0A=
-syscall level... So yes, in the end, the aios offsets and their execution o=
-rder=0A=
-can be anything. I see it now. So O_APPEND implying zone append is fine for=
- zonefs.=0A=
-=0A=
-> =0A=
-> Now if you are doing two fully synchronous write calls on an=0A=
-> O_APPEND fd, yes they are serialized.  But using Zone Append won't=0A=
-> change that.=0A=
-=0A=
-Yep. That zonefs already does.=0A=
-=0A=
-OK. So I think I will send a writeup of the semantic discussed so far. We a=
-lso=0A=
-still need a solution for io_uring interface for the written offset report =
-and=0A=
-we can implement.=0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Em Sat, Aug 08, 2020 at 10:31:31AM +0800, Changbin Du escreveu:
+> This adds support to display call trace for function tracer. To do this,
+> just specify a '--func-opts call-graph' option.
+
+Applied, thanks for providing the usage example and the output of the
+tool, please consider making this more compact and similar to the other
+perf tools as:
+
+   # perf ftrace -g -T vfs_read
+
+  # perf report -h -g
+  
+   Usage: perf report [<options>]
+  
+      -g, --call-graph <print_type,threshold[,print_limit],order,sort_key[,branch],value>
+                            Display call graph (stack chain/backtrace):
+  
+                                  print_type:     call graph printing style (graph|flat|fractal|folded|none)
+                                  threshold:      minimum call graph inclusion threshold (<percent>)
+                                  print_limit:    maximum number of call graph entry (<number>)
+                                  order:          call graph order (caller|callee)
+                                  sort_key:       call graph sort key (function|address)
+                                  branch:         include last branch info to call graph (branch)
+                                  value:          call graph value (percent|period|count)
+  
+                                  Default: graph,0.5,caller,function,percent
+  
+  # 
+
+Is there a way to ask for a limit in the number of levels? That is
+similar to /proc/sys/kernel/perf_event_max_stack (system wide) and
+perf_event_attr.sample_max_stack (per event)?
+
+One can ask for that per event:
+
+  # perf trace -e sched:*_wakeup/max-stack=2/ -e sched:*switch/max-stack=5/ --max-events=4
+     0.000 migration/0/12 sched:sched_switch(prev_comm: "migration/0", prev_pid: 12 (migration/0), prev_prio: 0, prev_state: 1, next_comm: "swapper/0", next_pid: 0, next_prio: 120)
+                                       __schedule ([kernel.kallsyms])
+                                       __schedule ([kernel.kallsyms])
+                                       schedule ([kernel.kallsyms])
+                                       smpboot_thread_fn ([kernel.kallsyms])
+                                       kthread ([kernel.kallsyms])
+     2.381 :0/0 sched:sched_wakeup(comm: "PacerThread", pid: 111637 (PacerThread), prio: 120, success: 1, target_cpu: 0)
+                                       ttwu_do_wakeup ([kernel.kallsyms])
+                                       ttwu_do_wakeup ([kernel.kallsyms])
+     2.387 :0/0 sched:sched_switch(prev_comm: "swapper/0", prev_pid: 0, prev_prio: 120, prev_state: 0, next_comm: "PacerThread", next_pid: 111637 (PacerThread), next_prio: 120)
+                                       __schedule ([kernel.kallsyms])
+                                       __schedule ([kernel.kallsyms])
+                                       schedule_idle ([kernel.kallsyms])
+                                       do_idle ([kernel.kallsyms])
+                                       cpu_startup_entry ([kernel.kallsyms])
+     2.410 PacerThread/111637 sched:sched_switch(prev_comm: "PacerThread", prev_pid: 111637 (PacerThread), prev_prio: 120, prev_state: 1, next_comm: "swapper/0", next_pid: 0, next_prio: 120)
+                                       __schedule ([kernel.kallsyms])
+                                       __schedule ([kernel.kallsyms])
+                                       schedule ([kernel.kallsyms])
+                                       futex_wait_queue_me ([kernel.kallsyms])
+                                       futex_wait ([kernel.kallsyms])
+  #
+
+- Arnaldo
+ 
+> $ sudo perf ftrace -T vfs_read --func-opts call-graph
+>  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+>  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+>  => vfs_read
+>  => ksys_read
+>  => __x64_sys_read
+>  => do_syscall_64
+>  => entry_SYSCALL_64_after_hwframe
+>  ...
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> 
+> ---
+> v3: switch to uniform option --func-opts.
+> v2: option name '-s' -> '--func-call-graph'
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt |  4 +++
+>  tools/perf/builtin-ftrace.c              | 42 ++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index c46d0a09b38c..8f08ad0992c2 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -76,6 +76,10 @@ OPTIONS
+>  	specify multiple functions (or glob patterns).  It will be
+>  	passed to 'set_ftrace_notrace' in tracefs.
+>  
+> +--func-opts::
+> +	List of options allowed to set:
+> +	  call-graph - Display kernel stack trace for function tracer.
+> +
+>  -G::
+>  --graph-funcs=::
+>  	Select function_graph tracer and set graph filter on the given
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 07b81d0c1658..469b89748c42 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -27,6 +27,7 @@
+>  #include "util/cap.h"
+>  #include "util/config.h"
+>  #include "util/units.h"
+> +#include "util/parse-sublevel-options.h"
+>  
+>  #define DEFAULT_TRACER  "function_graph"
+>  
+> @@ -42,6 +43,7 @@ struct perf_ftrace {
+>  	int			graph_depth;
+>  	unsigned long		percpu_buffer_size;
+>  	bool			inherit;
+> +	int			func_stack_trace;
+>  };
+>  
+>  struct filter_entry {
+> @@ -202,6 +204,7 @@ static void reset_tracing_filters(void);
+>  static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+>  {
+>  	write_tracing_option_file("function-fork", "0");
+> +	write_tracing_option_file("func_stack_trace", "0");
+>  }
+>  
+>  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> @@ -278,6 +281,17 @@ static int set_tracing_cpu(struct perf_ftrace *ftrace)
+>  	return set_tracing_cpumask(cpumap);
+>  }
+>  
+> +static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
+> +{
+> +	if (!ftrace->func_stack_trace)
+> +		return 0;
+> +
+> +	if (write_tracing_option_file("func_stack_trace", "1") < 0)
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int reset_tracing_cpu(void)
+>  {
+>  	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
+> @@ -426,6 +440,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  		goto out_reset;
+>  	}
+>  
+> +	if (set_tracing_func_stack_trace(ftrace) < 0) {
+> +		pr_err("failed to set tracing option func_stack_trace\n");
+> +		goto out_reset;
+> +	}
+> +
+>  	if (set_tracing_filters(ftrace) < 0) {
+>  		pr_err("failed to set tracing filters\n");
+>  		goto out_reset;
+> @@ -598,6 +617,26 @@ static int parse_buffer_size(const struct option *opt,
+>  	return -1;
+>  }
+>  
+> +static int parse_func_tracer_opts(const struct option *opt,
+> +				  const char *str, int unset)
+> +{
+> +	int ret;
+> +	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
+> +	struct sublevel_option func_tracer_opts[] = {
+> +		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
+> +		{ .name = NULL, }
+> +	};
+> +
+> +	if (unset)
+> +		return 0;
+> +
+> +	ret = perf_parse_sublevel_options(str, func_tracer_opts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static void select_tracer(struct perf_ftrace *ftrace)
+>  {
+>  	bool graph = !list_empty(&ftrace->graph_funcs) ||
+> @@ -645,6 +684,9 @@ int cmd_ftrace(int argc, const char **argv)
+>  		     parse_filter_func),
+>  	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+>  		     "do not trace given functions", parse_filter_func),
+> +	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
+> +		     "function tracer options, available options: call-graph",
+> +		     parse_func_tracer_opts),
+>  	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+>  		     "trace given functions using function_graph tracer",
+>  		     parse_filter_func),
+> -- 
+> 2.25.1
+> 
+
+-- 
+
+- Arnaldo
