@@ -2,89 +2,102 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F95C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7827C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878042087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B071320708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V3fulic2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHNHOo (ORCPT
+        id S1727111AbgHNHOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 03:14:44 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:35438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbgHNHOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:14:43 -0400
-Received: from dggeme752-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 0A64FF16F2CD84232FF6;
-        Fri, 14 Aug 2020 15:14:40 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme752-chm.china.huawei.com (10.3.19.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 14 Aug 2020 15:14:39 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Fri, 14 Aug 2020 15:14:39 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        "jeremy@azazel.net" <jeremy@azazel.net>,
-        "mashirle@us.ibm.com" <mashirle@us.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] net: Fix potential deadloop in skb_copy_ubufs()
-Thread-Topic: [PATCH 1/5] net: Fix potential deadloop in skb_copy_ubufs()
-Thread-Index: AdZyCng8yL/EIjdPQ3Gs3ioJM4VpUQ==
-Date:   Fri, 14 Aug 2020 07:14:39 +0000
-Message-ID: <6e3bace9ebea4f59a567a9ab0ef85d90@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.252]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 14 Aug 2020 03:14:53 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40235 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726674AbgHNHN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 03:13:28 -0400
+X-UUID: 4735ccdb2a09448fba078424b10a34be-20200814
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=L1y9pPxdA0pzcOflsm1/2eGbT5uGkzxv9JWPGmzEw9Q=;
+        b=V3fulic27HKChV+ZUQArxzeJxo58VWhZvef1E8c6jOaETMXDmqLCcAjOf+pDwlQ3GGtCh7f+Ezkn7nqy+Fv4tvRN+oVeoFCknADQmhTPa2suZPNJ4ft0hKb52nvz2QHMyh1KSHw1p/tMWqOQeMLdIeaZUGvkKAj/o9a42MyWSVQ=;
+X-UUID: 4735ccdb2a09448fba078424b10a34be-20200814
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1500603377; Fri, 14 Aug 2020 15:13:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 14 Aug 2020 15:13:22 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 14 Aug 2020 15:13:21 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v12 16/29] media: platform: Delete vidioc_s_selection ioctl of jpeg dec
+Date:   Fri, 14 Aug 2020 15:11:49 +0800
+Message-ID: <20200814071202.25067-18-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200814071202.25067-1-xia.jiang@mediatek.com>
+References: <20200814071202.25067-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2lsbGVtIGRlIEJydWlqbiA8d2lsbGVtZGVicnVpam4ua2VybmVsQGdtYWlsLmNvbT4gd3JvdGU6
-DQo+T24gVGh1LCBBdWcgNiwgMjAyMCBhdCAxOjQ4IFBNIGxpbm1pYW9oZSA8bGlubWlhb2hlQGh1
-YXdlaS5jb20+IHdyb3RlOg0KPj4NCj4+IEZyb206IE1pYW9oZSBMaW4gPGxpbm1pYW9oZUBodWF3
-ZWkuY29tPg0KPj4NCj4+IFdlIGNvdWxkIGJlIHRyYXBwZWQgaW4gZGVhZGxvb3Agd2hlbiB3ZSB0
-cnkgdG8gY29weSB1c2Vyc3BhY2Ugc2tiIA0KPj4gZnJhZ3MgYnVmZmVycyB0byBrZXJuZWwgd2l0
-aCBhIGNsb25lZCBza2I6DQo+PiBSZXByb2R1Y2UgY29kZSBzbmlwcGV0Og0KPj4gICAgICAgICBz
-a2IgPSBhbGxvY19za2IoVUJVRl9EQVRBX0xFTiwgR0ZQX0FUT01JQyk7DQo+PiAgICAgICAgIGNs
-b25lID0gc2tiX2Nsb25lKHNrYiwgR0ZQX0FUT01JQyk7DQo+PiAgICAgICAgIHNrYl96Y29weV9z
-ZXRfbm91YXJnKGNsb25lLCBOVUxMKTsNCj4+ICAgICAgICAgcHNrYl9leHBhbmRfaGVhZChza2Is
-IDAsIDAsIEdGUF9BVE9NSUMpOw0KPj4NCj4+IENhdGNoIHRoaXMgdW5leHBlY3RlZCBjYXNlIGFu
-ZCByZXR1cm4gLUVJTlZBTCBpbiBza2Jfb3JwaGFuX2ZyYWdzKCkgDQo+PiBiZWZvcmUgd2UgY2Fs
-bCBza2JfY29weV91YnVmcygpIHRvIGZpeCBpdC4NCj4NCj5JcyB0aGlzIGEgaHlwb3RoZXRpY2Fs
-IGNvZGVwYXRoPw0KPg0KPnNrYiB6ZXJvY29weSBjYXJlZnVsbHkgdHJhY2tzIGNsb25lIGNhbGxz
-IHdoZXJlIG5lY2Vzc2FyeS4gU2VlIHRoZSBjYWxsIHRvIHNrYl9vcnBoYW5fZnJhZ3MgaW4gc2ti
-X2Nsb25lLCBhbmQgdGhlIGltcGxlbWVudGF0aW9uIG9mIHRoYXQgY2FsbGVlLg0KPg0KPlRoZSBv
-bmx5IGNhbGxlciBvZiBza2IgemVyb2NvcHkgd2l0aCBub3VhcmcgaXMgdHBhY2tldF9maWxsX3Nr
-YiwgYXMgb2YgY29tbWl0IDVjZDhkNDZlYTE1NiAoInBhY2tldDogY29weSB1c2VyIGJ1ZmZlcnMg
-YmVmb3JlIG9ycGhhbiBvciBjbG9uZSIpLg0KPg0KPkFzIHRoZSBjb21taXQgc3ViamVjdCBpbmRp
-Y2F0ZXMsIHRoaXMgc2V0cyBza2JfemNvcHlfc2V0X25vdWFyZyBleGFjdGx5IHRvIGJlIHN1cmUg
-dGhhdCBhbnkgY2xvbmUgd2lsbCB0cmlnZ2VyIGEgY29weSBvZiAiemVyb2NvcHkiDQo+dXNlciBk
-YXRhIHRvIHByaXZhdGUga2VybmVsIG1lbW9yeS4NCj4NCj5ObyBjbG9uZSBtdXN0IGhhcHBlbiBi
-ZXR3ZWVuIGFsbG9jX3NrYiBhbmQgc2tiX3pjb3B5X3NldF9ub3VhcmcsIGluZGVlZC4gQnV0IEFG
-QUlLLCBub25lIGV4aXN0cy4NCg0KU2luY2Ugd2UgYWx3YXlzIGNhbGwgc2tiX29ycGhhbl9mcmFn
-cyBpbiBza2JfY2xvbmUsIGlzIGl0IHVubmVjZXNzYXJ5IHRvIGNhbGwgc2tiX29ycGhhbl9mcmFn
-cyBpbiBwc2tiX2V4cGFuZF9oZWFkIHdoZW4gc2tiIGlzIGNsb25lZCA/DQoNClRoYW5rcy4NCg0K
+SlBFRyBkZWMgZG9lcyd0IHN1cHBvcnQgc2V0dGluZyBhIGNvbXBvc2UgcmVjdGFuZ2xlLCBzbyBy
+ZW1vdmUNCm10a19qcGVnX2RlY19zX3NlbGVjdGlvbigpLg0KDQpSZXZpZXdlZC1ieTogVG9tYXN6
+IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4NClNpZ25lZC1vZmYtYnk6IFhpYSBKaWFuZyA8eGlh
+LmppYW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KdjEyOiBubyBjaGFuZ2VzDQotLS0NCiAuLi4vbWVk
+aWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jICAgfCAyMiAtLS0tLS0tLS0tLS0t
+LS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDIyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgYi9kcml2ZXJz
+L21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KaW5kZXggZGIzYThiMjJk
+Y2NkLi45ZDE5MzVkMDc4MmIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210
+ay1qcGVnL210a19qcGVnX2NvcmUuYw0KKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGst
+anBlZy9tdGtfanBlZ19jb3JlLmMNCkBAIC00MzksMjcgKzQzOSw2IEBAIHN0YXRpYyBpbnQgbXRr
+X2pwZWdfZ19zZWxlY3Rpb24oc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKnByaXYsDQogCXJldHVy
+biAwOw0KIH0NCiANCi1zdGF0aWMgaW50IG10a19qcGVnX3Nfc2VsZWN0aW9uKHN0cnVjdCBmaWxl
+ICpmaWxlLCB2b2lkICpwcml2LA0KLQkJCQlzdHJ1Y3QgdjRsMl9zZWxlY3Rpb24gKnMpDQotew0K
+LQlzdHJ1Y3QgbXRrX2pwZWdfY3R4ICpjdHggPSBtdGtfanBlZ19maF90b19jdHgocHJpdik7DQot
+DQotCWlmIChzLT50eXBlICE9IFY0TDJfQlVGX1RZUEVfVklERU9fQ0FQVFVSRSkNCi0JCXJldHVy
+biAtRUlOVkFMOw0KLQ0KLQlzd2l0Y2ggKHMtPnRhcmdldCkgew0KLQljYXNlIFY0TDJfU0VMX1RH
+VF9DT01QT1NFOg0KLQkJcy0+ci5sZWZ0ID0gMDsNCi0JCXMtPnIudG9wID0gMDsNCi0JCXMtPnIu
+d2lkdGggPSBjdHgtPm91dF9xLnc7DQotCQlzLT5yLmhlaWdodCA9IGN0eC0+b3V0X3EuaDsNCi0J
+CWJyZWFrOw0KLQlkZWZhdWx0Og0KLQkJcmV0dXJuIC1FSU5WQUw7DQotCX0NCi0JcmV0dXJuIDA7
+DQotfQ0KLQ0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdjRsMl9pb2N0bF9vcHMgbXRrX2pwZWdfaW9j
+dGxfb3BzID0gew0KIAkudmlkaW9jX3F1ZXJ5Y2FwICAgICAgICAgICAgICAgID0gbXRrX2pwZWdf
+cXVlcnljYXAsDQogCS52aWRpb2NfZW51bV9mbXRfdmlkX2NhcAk9IG10a19qcGVnX2VudW1fZm10
+X3ZpZF9jYXAsDQpAQCAtNDczLDcgKzQ1Miw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdjRsMl9p
+b2N0bF9vcHMgbXRrX2pwZWdfaW9jdGxfb3BzID0gew0KIAkudmlkaW9jX3FidWYgICAgICAgICAg
+ICAgICAgICAgID0gdjRsMl9tMm1faW9jdGxfcWJ1ZiwNCiAJLnZpZGlvY19zdWJzY3JpYmVfZXZl
+bnQgICAgICAgICA9IG10a19qcGVnX3N1YnNjcmliZV9ldmVudCwNCiAJLnZpZGlvY19nX3NlbGVj
+dGlvbgkJPSBtdGtfanBlZ19nX3NlbGVjdGlvbiwNCi0JLnZpZGlvY19zX3NlbGVjdGlvbgkJPSBt
+dGtfanBlZ19zX3NlbGVjdGlvbiwNCiANCiAJLnZpZGlvY19jcmVhdGVfYnVmcwkJPSB2NGwyX20y
+bV9pb2N0bF9jcmVhdGVfYnVmcywNCiAJLnZpZGlvY19wcmVwYXJlX2J1ZgkJPSB2NGwyX20ybV9p
+b2N0bF9wcmVwYXJlX2J1ZiwNCi0tIA0KMi4xOC4wDQo=
+
