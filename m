@@ -2,129 +2,92 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B407DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 916DA20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597400532;
-	bh=33O52nLJidh0VcqvP2rWJWMpE5R/xs4T7xQI99NJxmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AJ+yhTE3zvRX8pcq8LBdDU4uXRqsuUjKNU3DF4ETzZZEIk3dbXS+hoIRexEzyRkl0
-	 3YefE4CCnZ0GZa7HaHSt7UsMsoVCPBnHeSPx2Qgkr7xAV1JLikwHRPbMRVPjPNN7+q
-	 8cEtIlLUOLLW/2nlLmULD959GcGNbBu4eb7Zudck=
+	by mail.kernel.org (Postfix) with ESMTP id 164E020781
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Udj4hUqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHNKWL (ORCPT
+        id S1726787AbgHNKXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
+        Fri, 14 Aug 2020 06:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgHNKWL (ORCPT
+        with ESMTP id S1726012AbgHNKXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:22:11 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62E9C061383;
-        Fri, 14 Aug 2020 03:22:10 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id bo3so9341662ejb.11;
-        Fri, 14 Aug 2020 03:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=04U/JyVCq8HzNFNtt8PnwdArTiazRQ31ar9uuWKl7UY=;
-        b=suqR4YluRA5IhG0SHVtNDhL70Dzo8bdNHl7ev0BE3R7rFGVEPZ2pjjDkd6AOvt2G0q
-         gDLWd3kZ67AGlRbGi2FZu0oZPgOojvOIrPR1KKeG57n5WFO39+SQAiNxufYQTcBOrVXM
-         GxP9sQYqtkgcG6Z4JKB09ubvupll6yH4PcVLl4L577PRgqBTRSfLaZkJQEInQyPca/Gj
-         8pVfIA1ebCQA7+nKHbp6FkcvgMAtNVg6KMgt5lMQV/C07wpZ8bDpfOeQahgEz04CtbDG
-         XBWGiuDCY8DhPBT73+9mLqOiWoQgS8USfD9El1qJsutbT8y0C8+KW9wt33+yV4OyfWwQ
-         /STQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=04U/JyVCq8HzNFNtt8PnwdArTiazRQ31ar9uuWKl7UY=;
-        b=i5TbMU2iSPsvqYQZnLLzboxiMIwXJsJhw5/jeoo3PpREGcwRqwPzaA8AK1RcHcyWMp
-         06y0x85YYI80/drv+lxpF63ypQfBON4lA684LYyDPB9NzkEyiOBPFk3ZiJKV7D7gGKo1
-         S/Pd4nAUij4Gwp7q7fhh1Lf/qzr0PAP6pASgQs+m2rHRBLIkPKGKG1ernhBWGq0reyvp
-         V4R0iIYaNMoWZ0W/m2A69ONznBn/uRtf5uSEIcFEBNpi6QRepNTAL6kXwtJ6Uvj6fkH5
-         uwz/sd204bzbRojgCWnb8fcykvrZFHA2YmZ9N/zLGUSUZzEPOBOF8JQWhegxSqdRn12m
-         uxXQ==
-X-Gm-Message-State: AOAM53321dAQjomndDEeBsGlyFJblwGGxah1eRXq8hTIDOj/5dGFFL6u
-        1m5NK/Rz9GBhga+DDThvBTY=
-X-Google-Smtp-Source: ABdhPJyfb+2aFXmmubH+Qkzo7wwJpoay02/UILq46GvduaermHJKvviXcCdAA1dXKdkKuYXr2rZ0QQ==
-X-Received: by 2002:a17:906:eca4:: with SMTP id qh4mr1638276ejb.255.1597400529446;
-        Fri, 14 Aug 2020 03:22:09 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id z5sm6338260ejm.111.2020.08.14.03.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 03:22:08 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 12:22:06 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: new build warnings after binutils update
-Message-ID: <20200814102206.GB2367157@gmail.com>
-References: <20200811143130.0ca95b8d@canb.auug.org.au>
- <CAMj1kXGvfjO_e7AgurJ-81o6e4rBC8HkXi3Kkb+ZZfy-MoKcyQ@mail.gmail.com>
+        Fri, 14 Aug 2020 06:23:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5B9C061383;
+        Fri, 14 Aug 2020 03:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2bzdVcEaOY9NKXRzVCZZ4sATksY3jrzQirPEzdSYgjQ=; b=Udj4hUqe3bw8kl4v/Dp54CIPsr
+        VKWn8vvCTPIkIW3fOq5z/jLcbdNMwEZjGL5Zk0p1oqRioYu6vFdl1mTvx+aOvxkVdrNrVxJ6PDAkd
+        9lhbIE2yRRNy6r7Msr8RJgZw7BbyB19SveC/v/wpYEFXzKd7GyiG6BxYK4dhTK2/nE+mjbA5F57/g
+        sceZyYLg5bsFsPVP9MWZ6WbmoIBd/EWjNYLkQOGtVdXNlm7cCrvRNTQmBeTaTkklKspqHBtfpKfTG
+        S+ZwaZONPYo6oUM9Qd/RDf4IFlONJapXDj8ZTlmmJNrI2fbxbkyPPcJICA7q1H1a1W0QeSjRR+eZh
+        S7Vbdeig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6Wrb-0003QY-DE; Fri, 14 Aug 2020 10:23:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D5F030066E;
+        Fri, 14 Aug 2020 12:23:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 497C22C33E600; Fri, 14 Aug 2020 12:23:06 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 12:23:06 +0200
+From:   peterz@infradead.org
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814102306.GK35926@hirez.programming.kicks-ass.net>
+References: <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813182618.GX2674@hirez.programming.kicks-ass.net>
+ <20200813185257.GF4295@paulmck-ThinkPad-P72>
+ <20200813220619.GA2674@hirez.programming.kicks-ass.net>
+ <875z9m3xo7.fsf@nanos.tec.linutronix.de>
+ <20200814083037.GD3982@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGvfjO_e7AgurJ-81o6e4rBC8HkXi3Kkb+ZZfy-MoKcyQ@mail.gmail.com>
+In-Reply-To: <20200814083037.GD3982@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Ard Biesheuvel <ardb@kernel.org> wrote:
-
-> (+ Arvind, Kees)
+On Fri, Aug 14, 2020 at 10:30:37AM +0200, Peter Zijlstra wrote:
+> > > 1.	Prohibit invoking allocators from raw atomic context, such
+> > >	as when holding a raw spinlock.
+> > 
+> >   Clearly the simplest solution but not Pauls favourite and
+> >   unfortunately he has a good reason.
 > 
-> On Thu, 13 Aug 2020 at 22:58, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > After upgading some software, builds of Linus' tree now produce these warnings:
-> >
-> > x86_64-linux-gnu-ld: arch/x86/boot/compressed/head_64.o: warning: relocation in read-only section `.head.text'
-> > x86_64-linux-gnu-ld: warning: creating DT_TEXTREL in a PIE
-> >
-> > I upgraded binutils from 2.34-8 to 2.35-1 (Debian versions).
-> >
-> > $ x86_64-linux-gnu-gcc --version
-> > x86_64-linux-gnu-gcc (Debian 9.3.0-13) 9.3.0
-> >
-> > Any ideas?
-> >
-> 
-> Arvind and I have some patches on the list that fix various relocation
-> issues in the decompressor binary.
-> 
-> As far as I can tell, Arvind's patch to suppress runtime relocations
-> [0] addresses this exact issue.
-> 
-> Unfortunately, in spite of various pings and attempts to get the x86
-> maintainers to notice this series, it has been ignored so far. Perhaps
-> this is a good time to merge it for -rc1/2?
-> 
-> [0] https://lore.kernel.org/lkml/20200731202738.2577854-6-nivedita@alum.mit.edu/
+> Which isn't actually stated anywhere I suppose ?
 
-It all looked good to me but was a bit late for v5.9, will pick up 
-after -rc1.
-
-Thanks,
-
-	Ingo
+Introduce raw_kfree_rcu() that doesn't do the allocation, and fix the
+few wonky callsites.
