@@ -2,87 +2,162 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D739C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ECBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F9A20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78292078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtoQ1vpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHNDC4 (ORCPT
+        id S1726679AbgHNDDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 23:02:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48346 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgHNDCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 23:02:55 -0400
-IronPort-SDR: slOS+5gjyNI3HbwVa7/OZUoRtPG9gzP8GDWHHBsd6D6woiLKF6SniKKEb2odvcyXKJM0P+0XFK
- 9E1r4/eQ2JKw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="218683649"
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="218683649"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 20:02:54 -0700
-IronPort-SDR: wEhkRU/DQPC9pX4DpyoPjXFa9SctLxpLCacV6p3VqTHLmP/IYd6gRRjH/Yt4wk5gy8JlMIq6OU
- TJPk0Stmdx9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="399357936"
-Received: from ipu5-build.bj.intel.com ([10.238.232.196])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2020 20:02:52 -0700
-From:   Bingbu Cao <bingbu.cao@intel.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helgaas@kernel.org
-Cc:     sakari.ailus@linux.intel.com, tian.shu.qiu@intel.com,
-        bingbu.cao@intel.com, bingbu.cao@linux.intel.com
-Subject: [PATCH v3] nvmem: core: add sanity check in nvmem_device_read()
-Date:   Fri, 14 Aug 2020 11:01:46 +0800
-Message-Id: <1597374106-15974-1-git-send-email-bingbu.cao@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 13 Aug 2020 23:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgHNDDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 23:03:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7EEC061757;
+        Thu, 13 Aug 2020 20:03:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so3869391pfn.0;
+        Thu, 13 Aug 2020 20:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U1Bj9dSIh39mR+cb3mNLwfHnOjyrZiRgjj6ooulNuZA=;
+        b=UtoQ1vpc39WSDbgSqNH3PSccUc40sshdxWH7cpeNgQHguSPoCQSFE0STjpmNipaEHv
+         ucQRc+bnkimZgebOQWrZDCBwSuW7KjwopD68NLJRc+zhHQ9gXejxof4D6hdPJPFHqYbT
+         plkY3MVuPp2kJFHmVN2S10cx9AlpP7gorn27UnhPKab5POgqZ5PTwU2es2BJMc14Pyy3
+         hJtZRfGxSm3Db8PBAcKvnD45LIsgFBp1HpCtu0Mb8SSuPeNhqRE34XL/YnU7On1mR4OW
+         1bvsae+9bh/t/ubD56k+0qanYpJI54WYzQ6Oz/qcIygW1YLsk0FOTNM4bJmdL4nWXLnH
+         XiTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U1Bj9dSIh39mR+cb3mNLwfHnOjyrZiRgjj6ooulNuZA=;
+        b=TnZZFH+GdVXz376kv/kF2oBHPQP4Wq8qGbsbSvKjptGNEDgc/MjNHC57xBUJGt3wbu
+         8WHrUxVikxELKMTwaB+HSvuVAkz9nrep2kL4yfy2uGatSsqyxIb1lFl9Y6q//oZaVN+0
+         pEc3uRZw2gHOTvUSNmUdSd9lvkmbSD9zK4i8fA8TaYiWP1oQZoWxMdv8bwwaIXoVkmGM
+         7PiioomY/gpmc5mzPtChr2aImgyqC75DHKu0S/Xlwss3nqlSkYkHne8aH7sdF50XQ9n2
+         odCjgOKr/pJMAcnejYQkJsBn6DjrHxCYNwK9fM+lvChf62WNMq+ALKXH2LpSzHCT3XsB
+         7EpA==
+X-Gm-Message-State: AOAM531RwtdMr1kMq0O5kufrWazM94ZgP4Elu6iGgw1vScbaZ4PsyyoP
+        LtamAVcKIMNh3+nExl8Mt/tYDWvI
+X-Google-Smtp-Source: ABdhPJxufaFMEkSWsGqJmDqi1u2GRZbCuEl7oDe4NclFDxtAeXTfNStWQ9qh0PmQ/aBtXBe+0McXWQ==
+X-Received: by 2002:a63:4f52:: with SMTP id p18mr414035pgl.408.1597374194343;
+        Thu, 13 Aug 2020 20:03:14 -0700 (PDT)
+Received: from sol.lan (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
+        by smtp.gmail.com with ESMTPSA id z3sm6522231pgk.49.2020.08.13.20.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 20:03:13 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v4 00/20] gpio: cdev: add uAPI v2
+Date:   Fri, 14 Aug 2020 11:02:37 +0800
+Message-Id: <20200814030257.135463-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvmem device read/write could be called directly once nvmem
-device registered, the sanity check should be done before each
-nvmem_reg_read/write().
+This patchset defines and implements adds a new version of the
+GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+support for debounce, event sequence numbers, and allowing for requested
+lines with different configurations.
+It provides some future proofing by adding optional configuration fields
+and padding reserved for future use.
 
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
----
- drivers/nvmem/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+The series can be partitioned into two sets; the first eleven
+contain the v2 uAPI implementation, and the final seven port
+the GPIO tools to the v2 uAPI and extend them to use new uAPI features.
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 927eb5f6003f..09ad5a06efee 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -69,6 +69,9 @@ static BLOCKING_NOTIFIER_HEAD(nvmem_notifier);
- static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
- 			  void *val, size_t bytes)
- {
-+	if (bytes + offset > nvmem->size)
-+		return -EINVAL;
-+
- 	if (nvmem->reg_read)
- 		return nvmem->reg_read(nvmem->priv, offset, val, bytes);
- 
-@@ -80,6 +83,9 @@ static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
- {
- 	int ret;
- 
-+	if (bytes + offset > nvmem->size)
-+		return -EINVAL;
-+
- 	if (nvmem->reg_write) {
- 		gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
- 		ret = nvmem->reg_write(nvmem->priv, offset, val, bytes);
+The more complicated patches include their own commentary where
+appropriate.
+
+Cheers,
+Kent.
+
+Changes for v4:
+ - bitmap width clarification in gpiod.h (patch 04)
+ - fix info offset initialisation bug (patch 08 and inserting patch 01)
+ - replace strncpy with strscpy to remove compiler warnings
+   (patch 08 and inserting patch 02)
+ - fix mask handling in line_get_values (patch 07)
+
+Changes for v3:
+ - disabling the character device from the build requires EXPERT
+ - uAPI revisions (see patch 02)
+ - replace padding_not_zeroed with calls to memchr_inv
+ - don't use bitops on 64-bit flags as that doesn't work on BE-32
+ - accept first attribute matching a line in gpio_v2_line_config.attrs
+   rather than the last
+ - rework lsgpio port to uAPI v2 as flags reverted to v1 like layout
+   (since patch v2)
+ - swapped patches 17 and 18 to apply debounce to multiple monitored
+   lines
+
+Changes for v2:
+ - split out cleanup patches into a separate series.
+ - split implementation patch into a patch for each ioctl or major feature.
+ - split tool port patch into a patch per tool.
+ - rework uAPI to allow requested lines with different configurations.
+
+
+Kent Gibson (20):
+  gpiolib: cdev: desc_to_lineinfo should set info offset
+  gpiolib: cdev: replace strncpy with strscpy
+  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+  gpio: uapi: define uAPI v2
+  gpiolib: make cdev a build option
+  gpiolib: add build option for CDEV v1 ABI
+  gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and
+    GPIO_V2_LINE_GET_VALUES_IOCTL
+  gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
+    GPIO_V2_GET_LINEINFO_WATCH_IOCTL
+  gpiolib: cdev: support edge detection for uAPI v2
+  gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
+  gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
+  gpiolib: cdev: support setting debounce
+  gpio: uapi: document uAPI v1 as deprecated
+  tools: gpio: port lsgpio to v2 uAPI
+  tools: gpio: port gpio-watch to v2 uAPI
+  tools: gpio: rename nlines to num_lines
+  tools: gpio: port gpio-hammer to v2 uAPI
+  tools: gpio: port gpio-event-mon to v2 uAPI
+  tools: gpio: add multi-line monitoring to gpio-event-mon
+  tools: gpio: add debounce support to gpio-event-mon
+
+ drivers/gpio/Kconfig        |   29 +-
+ drivers/gpio/Makefile       |    2 +-
+ drivers/gpio/gpiolib-cdev.c | 1354 +++++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib-cdev.h |   15 +
+ drivers/gpio/gpiolib.c      |    2 +
+ drivers/gpio/gpiolib.h      |    6 +
+ include/uapi/linux/gpio.h   |  316 +++++++-
+ tools/gpio/gpio-event-mon.c |  146 ++--
+ tools/gpio/gpio-hammer.c    |   56 +-
+ tools/gpio/gpio-utils.c     |  127 ++--
+ tools/gpio/gpio-utils.h     |   50 +-
+ tools/gpio/gpio-watch.c     |   16 +-
+ tools/gpio/lsgpio.c         |   60 +-
+ 13 files changed, 1949 insertions(+), 230 deletions(-)
+
+
+base-commit: 22cc422070d9a9a399f8a70b89f1b852945444cb
 -- 
-2.7.4
+2.28.0
 
