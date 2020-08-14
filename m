@@ -6,69 +6,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE630C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C02CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5AE2206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64929206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597437292;
-	bh=ZYAKTMixhsAxwqGc64zD7+lYHJZVqcZX6SlY3GmH6SU=;
+	s=default; t=1597437305;
+	bh=xmraX1VskVlB1C4HiotcsoIX4dcBJb1puLCu/NmqxQw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=L22JJl8Adm5mQ/qxb0hg6vR0pd0gS94UxY7x763cHZ2n/HtqHqBl7j4IPeGnvuS81
-	 9865DUAJQ8HaNncxJ2Y8THkXIuzzetiCItvbDvKK7jwwT/aEnBwbXfSyb5vdybDRYk
-	 PFQ0gRP9uPuqsQr8QHBfG5Z76tVhLmB09o87Q+p4=
+	b=LEKaaBXRtuDszma6RtKlZLW+2jGbaEMZw0v39wT2eCdyS5NLDtFPp1b6xsoSxkaLJ
+	 EIeVWk72Wb43HUQ3ImOu7sLJzKZUKiUcPhhJoWZMdlilykacnbyE4EjBQin/Rbwvb+
+	 oDUb1ezTVuZ6TmZdPSYJF3yCdSPYUDPJ02NZIU7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHNUev (ORCPT
+        id S1727876AbgHNUfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 16:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52860 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 16:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNUev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 16:34:51 -0400
-Subject: Re: [GIT PULL] Crypto Fixes for 5.9
+        id S1726213AbgHNUfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 16:35:03 -0400
+Subject: Re: [GIT PULL] Hyper-V fixes for 5.9-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597437289;
-        bh=ZYAKTMixhsAxwqGc64zD7+lYHJZVqcZX6SlY3GmH6SU=;
+        s=default; t=1597437303;
+        bh=xmraX1VskVlB1C4HiotcsoIX4dcBJb1puLCu/NmqxQw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=v9gOd6jYiCr94sicRl62Y0obLHEPilfvzSectuXdLQYS73XBSFtGZrFWPsSyLWT1C
-         FWn/+Lgewa0bS3viNNzw2aeP2oCNO99Qlz0D9ZTn6wW90fg+e1p8lAnRfVsMHNOuHY
-         LNBy/p0OzeV7PzdVAto/8nFFsLPH2WmUWS9UpqGU=
+        b=QWFE1dG8Sxan25P/b2hD4dZvO7/1O388VCtzkZZYimYbaePdWszIDBCsFuon+jppq
+         d+rEVNYWc+ZruUccHQo5CGgdYx3JU4ZbYyeWePgx0CHlrdv+V7RtHbwCm8eyGCqhMj
+         B8oBAO5040aHkfjF2Uv1fpgnX7/ZwW1QIz9Urg5k=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200814131817.GA8147@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
- <20200611040544.GA27603@gondor.apana.org.au> <20200814131817.GA8147@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-crypto.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200814131817.GA8147@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 21dfbcd1f5cbff9cf2f9e7e43475aed8d072b0dd
+In-Reply-To: <20200814100751.uirns3llugywet2x@liuwe-devbox-debian-v2>
+References: <20200814100751.uirns3llugywet2x@liuwe-devbox-debian-v2>
+X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200814100751.uirns3llugywet2x@liuwe-devbox-debian-v2>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+X-PR-Tracked-Commit-Id: b9d8cf2eb3ceecdee3434b87763492aee9e28845
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d9361cb285281563adada9b16708b12053bd6531
-Message-Id: <159743728959.11329.10172436795875749032.pr-tracker-bot@kernel.org>
-Date:   Fri, 14 Aug 2020 20:34:49 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+X-PR-Merge-Commit-Id: cd94257d7a8103acf136e4bd46e3d0ad698a6f3d
+Message-Id: <159743730299.11329.15823682190785813966.pr-tracker-bot@kernel.org>
+Date:   Fri, 14 Aug 2020 20:35:02 +0000
+To:     Wei Liu <wei.liu@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 23:18:18 +1000:
+The pull request you sent on Fri, 14 Aug 2020 10:07:51 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d9361cb285281563adada9b16708b12053bd6531
+https://git.kernel.org/torvalds/c/cd94257d7a8103acf136e4bd46e3d0ad698a6f3d
 
 Thank you!
 
