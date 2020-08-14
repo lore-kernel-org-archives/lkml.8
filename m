@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE75C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE47C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3752078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2968E22C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+6DNaeG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ttJgaF/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgHNR2F (ORCPT
+        id S1728430AbgHNR2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
+        Fri, 14 Aug 2020 13:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbgHNR2C (ORCPT
+        with ESMTP id S1728688AbgHNR2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:02 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8880FC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:02 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id i4so6527547qvv.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:02 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:05 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E821C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:05 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id e14so7485645qtm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=l6ZIwvY6syyAP67b2MO5JHAbeJPBE9lyCC+sGAziw0Y=;
-        b=a+6DNaeGtiK8RCbbEJSYLo+X1UMhNxWoSfsXBd3ip7DAyvTiyPTnoLrmeGVgbLvsLx
-         CfpZKFFIvUuTxkBYDZDQn4jbGgswxQdQkBs5VxOgEcg5+iRb7bqLWyASx3w3iF6+2dk1
-         pbgqCiTuFstwf5I6mi0DpUvGIbwg/XLzQm17VEOz7spf7VI+6MEL2AH29BoM7qpqlkUb
-         9ce6X7/d2RmXIOEQQ9dwmguTJZxg6DC/de53tpFF7HdIloSioMjjzjIprIayyVndKKl+
-         Dft04zNWux8SRfTG5d0zwMQLGVh2OUWV29lifG2KiF2tIJZ3GI3MbAiHjiMNSGd827mX
-         +UvQ==
+        bh=mCvcC3dYzcxUwc7C0YdRc21YWrhNGjweNe7or4+XlWk=;
+        b=ttJgaF/P3U2oSow7UH8ZHinJK2ntN4CM0o6Ekay4TdHMFd56qT409NSuHPVxrA56h5
+         SwXrB1xrCWdP52W4WZBRr965mtYnjn35Tq0Gk+EDG2xRUJh7Qkf8IOrv5UwqSrTyRycJ
+         yOAI7dF0zkRvPzw7R+QqT3nFkoY6nHFsEvLDjKUWzuQ60iwzyjXpi81rT5mbx+IxoO59
+         cw1EVMXw38/5FbII9vnx0nbFNeMtDT6YvbT8UruueGBDnQgnUiTFPgh6nxKfXM+y6VPv
+         u4t+f7POCw97KRCE1yAOFsd1oZBYpDjj95G4NO9SE/RMMvbP5+NciohmFzjEY48S68Ut
+         lJPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=l6ZIwvY6syyAP67b2MO5JHAbeJPBE9lyCC+sGAziw0Y=;
-        b=ThNI7UzaKiFWRvq/ytL/xoWs6Mu1Fkn7gyi8PJWClcHKNZ5M6OkFQsVWOsUIoa2Er7
-         BFvIBooNXrUvZtxbfWGQhxpAasHKPmbzOc43eAsH9ZoWWdMhjom81JkEQxgILWnHQa3N
-         kuroCX98BSVtIY42zgqewZiYgORL12vT3nV/rkmE3YdTKBBgmi6ZxPutnhL4hj75YPup
-         EGko5GapHm3xQx6P9P/RacEyL0brRCHGkHCZ6XVad+DOVIsDJtep7CS45LFJhkh5VmSv
-         l2Hj0CzF5urxn0IF+ucCA26TxUaZKjA5VzK55x7Ze42PPJkDLQXzvgZ0O5kNXngHGCTA
-         7Nag==
-X-Gm-Message-State: AOAM531Zxoh3AtwDJm7TbDH4Ewl8ALGAhqjfmVC1dLKvQyDV86CBEVz5
-        zZJiZVsJxKnCR5Qfgi4N0EomPUtEZAduAudK
-X-Google-Smtp-Source: ABdhPJy3uOE8d50CkEhPANU8s2DSDIvcOJG7lmvrwT9uA8T2s4Kv8enADBz7gFdwS2uXrMPjd1s0rvPxNPa2NPmj
-X-Received: by 2002:a05:6214:1841:: with SMTP id d1mr3456365qvy.135.1597426081697;
- Fri, 14 Aug 2020 10:28:01 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:26:58 +0200
+        bh=mCvcC3dYzcxUwc7C0YdRc21YWrhNGjweNe7or4+XlWk=;
+        b=Yv9Jg5+6EscMVtW/kvN4Q/IWUCMfiocCstGNA6n1Fy5faYU6mQzstuhhr5eYqDBzut
+         kL0yN9tAnxaC8NlHTo6Ufc0Ci+Qdizl/BsUHkKSunvP+JSY2wMHxcdqzML0wL0MiWB76
+         IY8LsmypH0Cu8X6Lcl+DF1SP4rt58ul01R+y6H4ItZqqj1+mfWUn5O9sYPI9oWC4cmPm
+         ASzUGe5O8YSyoX3SD5CvnE42aL3nSuFgPXurHG3eHsDZVHlSkN/Hd6bRvWORC9/tBrDS
+         iJwFZM0ZEEyYlU+namFWIeah1Lw1zAhNZwjj6vx70SsmeYvQYMRP2FfOPEKElcb+So1R
+         yBKA==
+X-Gm-Message-State: AOAM530Z6hMWNwRZLtFtKg4C8phlaUQVBVIeWwa32RNJefRdavzgHrXp
+        Au4mG+qapAoTUKemAHIRpUglCBGEMILoX/Mv
+X-Google-Smtp-Source: ABdhPJwyr1exuUZ/fVZL/EhW5aHt3/m30xzb8gPM63f7667oSE8rNBHS3hr4bCvgKG+YQTcF8zeI8ppWiSbBiHwW
+X-Received: by 2002:ad4:4ea7:: with SMTP id ed7mr3716612qvb.8.1597426084066;
+ Fri, 14 Aug 2020 10:28:04 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:26:59 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <e0683edc00699fcc0fc1fbc3cb1320875ff434f2.1597425745.git.andreyknvl@google.com>
+Message-Id: <1142e2ec61dfc863a4ec5b92b60c97120957ec80.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 16/35] kasan: kasan_non_canonical_hook only for software modes
+Subject: [PATCH 17/35] kasan: rename SHADOW layout macros to META
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -89,30 +89,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This is a preparatory commit for the upcoming addition of a new hardware
 tag-based (MTE-based) KASAN mode.
 
-kasan_non_canonical_hook() is only applicable to KASAN modes that use
-shadow memory, and won't be needed for hardware tag-based KASAN.
+Hardware tag-based KASAN won't be using shadow memory, but will reuse
+these macros. Rename "SHADOW" to implementation-neutral "META".
 
-No functional changes for software modes.
+No functional changes.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/kasan/report.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/kasan/report.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 8ad1ced1607d..2cce7c9beea3 100644
+index 2cce7c9beea3..6306673e7062 100644
 --- a/mm/kasan/report.c
 +++ b/mm/kasan/report.c
-@@ -376,7 +376,8 @@ bool kasan_report(unsigned long addr, size_t size, bool is_write,
- 	return ret;
+@@ -36,11 +36,11 @@
+ #include "kasan.h"
+ #include "../slab.h"
+ 
+-/* Shadow layout customization. */
+-#define SHADOW_BYTES_PER_BLOCK 1
+-#define SHADOW_BLOCKS_PER_ROW 16
+-#define SHADOW_BYTES_PER_ROW (SHADOW_BLOCKS_PER_ROW * SHADOW_BYTES_PER_BLOCK)
+-#define SHADOW_ROWS_AROUND_ADDR 2
++/* Metadata layout customization. */
++#define META_BYTES_PER_BLOCK 1
++#define META_BLOCKS_PER_ROW 16
++#define META_BYTES_PER_ROW (META_BLOCKS_PER_ROW * META_BYTES_PER_BLOCK)
++#define META_ROWS_AROUND_ADDR 2
+ 
+ static unsigned long kasan_flags;
+ 
+@@ -243,7 +243,7 @@ static void print_address_description(void *addr, u8 tag)
+ 
+ static bool row_is_guilty(const void *row, const void *guilty)
+ {
+-	return (row <= guilty) && (guilty < row + SHADOW_BYTES_PER_ROW);
++	return (row <= guilty) && (guilty < row + META_BYTES_PER_ROW);
  }
  
--#ifdef CONFIG_KASAN_INLINE
-+#if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
-+	defined(CONFIG_KASAN_INLINE)
- /*
-  * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
-  * canonical half of the address space) cause out-of-bounds shadow memory reads
+ static int shadow_pointer_offset(const void *row, const void *shadow)
+@@ -252,7 +252,7 @@ static int shadow_pointer_offset(const void *row, const void *shadow)
+ 	 *    3 + (BITS_PER_LONG/8)*2 chars.
+ 	 */
+ 	return 3 + (BITS_PER_LONG/8)*2 + (shadow - row)*2 +
+-		(shadow - row) / SHADOW_BYTES_PER_BLOCK + 1;
++		(shadow - row) / META_BYTES_PER_BLOCK + 1;
+ }
+ 
+ static void print_memory_metadata(const void *addr)
+@@ -262,15 +262,15 @@ static void print_memory_metadata(const void *addr)
+ 	const void *shadow_row;
+ 
+ 	shadow_row = (void *)round_down((unsigned long)shadow,
+-					SHADOW_BYTES_PER_ROW)
+-		- SHADOW_ROWS_AROUND_ADDR * SHADOW_BYTES_PER_ROW;
++					META_BYTES_PER_ROW)
++		- META_ROWS_AROUND_ADDR * META_BYTES_PER_ROW;
+ 
+ 	pr_err("Memory state around the buggy address:\n");
+ 
+-	for (i = -SHADOW_ROWS_AROUND_ADDR; i <= SHADOW_ROWS_AROUND_ADDR; i++) {
++	for (i = -META_ROWS_AROUND_ADDR; i <= META_ROWS_AROUND_ADDR; i++) {
+ 		const void *kaddr = kasan_shadow_to_mem(shadow_row);
+ 		char buffer[4 + (BITS_PER_LONG/8)*2];
+-		char shadow_buf[SHADOW_BYTES_PER_ROW];
++		char shadow_buf[META_BYTES_PER_ROW];
+ 
+ 		snprintf(buffer, sizeof(buffer),
+ 			(i == 0) ? ">%px: " : " %px: ", kaddr);
+@@ -279,17 +279,17 @@ static void print_memory_metadata(const void *addr)
+ 		 * function, because generic functions may try to
+ 		 * access kasan mapping for the passed address.
+ 		 */
+-		memcpy(shadow_buf, shadow_row, SHADOW_BYTES_PER_ROW);
++		memcpy(shadow_buf, shadow_row, META_BYTES_PER_ROW);
+ 		print_hex_dump(KERN_ERR, buffer,
+-			DUMP_PREFIX_NONE, SHADOW_BYTES_PER_ROW, 1,
+-			shadow_buf, SHADOW_BYTES_PER_ROW, 0);
++			DUMP_PREFIX_NONE, META_BYTES_PER_ROW, 1,
++			shadow_buf, META_BYTES_PER_ROW, 0);
+ 
+ 		if (row_is_guilty(shadow_row, shadow))
+ 			pr_err("%*c\n",
+ 				shadow_pointer_offset(shadow_row, shadow),
+ 				'^');
+ 
+-		shadow_row += SHADOW_BYTES_PER_ROW;
++		shadow_row += META_BYTES_PER_ROW;
+ 	}
+ }
+ 
 -- 
 2.28.0.220.ged08abb693-goog
 
