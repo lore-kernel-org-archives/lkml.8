@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148D3C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA19A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B922078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErKBwp+P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HaM6qeJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgHNAHw (ORCPT
+        id S1727793AbgHNAIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
+        Thu, 13 Aug 2020 20:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgHNAH0 (ORCPT
+        with ESMTP id S1727037AbgHNAHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:07:26 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157ECC061757;
-        Thu, 13 Aug 2020 17:07:26 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id i19so3949155lfj.8;
-        Thu, 13 Aug 2020 17:07:25 -0700 (PDT)
+        Thu, 13 Aug 2020 20:07:42 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85E1C061383;
+        Thu, 13 Aug 2020 17:07:41 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v4so8143064ljd.0;
+        Thu, 13 Aug 2020 17:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6hV/jfb1j57ds6uWusc67dwvrbgr9Nuaem2xPT64pOI=;
-        b=ErKBwp+Pi3uw2mPs1tCdGXty9djbWFZh7U9QKleaHXoAfkxBNKfThE66Q/uzNnc7J4
-         aTk8+/JsZmycsCyPcO8wlyCxP/+7dhTSQleHzgB8RAXh9y9JX/qoA3h0Dt4KqGsgqWgT
-         32US2OzxXAYh3P3Bq+YMOkgwj1jgCvZwihVWC43so56FI4FPSpixkmxH7Ryz0yw9gdcO
-         oycjad2ZwnRCk/P+MMGMiuHDdDaSqD6SW/HA2t+uraoAPUbv+yCSmeRz8aO8ak/Vfyco
-         dauYMCWTVOLrANbGWhYaug2aCunXB+Mmt8gqYzR6ZB7AEUZVQQHPqWg9rQyiGNg8aABC
-         xSIA==
+        bh=7B2Fjpe2WofrQ7YRSrsm/9vOVUdpsuOK81+7RfPmroY=;
+        b=HaM6qeJArqPXRUxsPKUHAks2qnElfoALYTWeTT9zpff+MRFIE61LHa+pfpAAY2hnVU
+         6FQIXAbnNKa8nqQAvYixLwFArz2ht9xxzZIcaG8UDLqd4mvnPI5BaXL6F05MpJwrsiaH
+         iiqNN8rpKet0HgKGTFWtrgWj/a77b1RLyoynmITH4k3ZGyfNhBc6kcitvZp3uFHKofdR
+         NUxW0fb/4dL6bxmCWqBmfWrpMgjAV84Z/9HDi6TNI2Sg+89WgtUN4bwc6Yu+q+me2PUd
+         ffmaSHrkK7qIY201GUp/uWREnjEKqRaZId3nZUT9sE9qsA+HWH6mNndqY1bKEzRiWBAB
+         BbvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6hV/jfb1j57ds6uWusc67dwvrbgr9Nuaem2xPT64pOI=;
-        b=JsF5/m6Vo8IrQ2bGh5p1Szc0FRGeodkAXnBPQ5A9MOh0KlRvdZcED8EJD1blHyGqk6
-         hselcLmLVARvN0FiKgDu+7lRTJeDKldP0zrZ2I0HrNHedHhfzff8ipWQqry4iPF2T+eb
-         Wv5HMzKRVbMZuv8EFBHICpfod1KcGcmv3awNMnh+e3vFHpGD2+MyEtf4O2+kBrkzI+QA
-         s8EOMK3QJL7mM5rKdpNTNID7tSeZdALb+S5TAmcPYv87hG02M1LfBNPf/lIrliNHczZR
-         Dhlnd2dXuVDlE+mG7/afPHiy3xr/zqdPYmjNpTDmlE/aaNlRi1OUXDFilyavnHX4rnD0
-         EGEg==
-X-Gm-Message-State: AOAM5314hmV0lwt5UzIp/gCfKh/FBs0GV/JjR+hX0RUlttV7EmVIkS0U
-        mgEOXq0Mgn2fEmIMvG2A7VU=
-X-Google-Smtp-Source: ABdhPJyX4+8v8JUfhatSVHBEDRahqnCfgVnO8HrDC7HMA1cGJSRRGzDZfveHa/V3VlNsHtHH294fRg==
-X-Received: by 2002:ac2:58c6:: with SMTP id u6mr3340219lfo.105.1597363644627;
-        Thu, 13 Aug 2020 17:07:24 -0700 (PDT)
+        bh=7B2Fjpe2WofrQ7YRSrsm/9vOVUdpsuOK81+7RfPmroY=;
+        b=gfsb16JoD3JJFlakgh0N+q7X2aaCTCLH+iurTpMUmUusnMuzIrwID6h26Z2xTxEoIf
+         mQmdUiHP1fhGClU9hpp1DYu7icNvKeG0KfBwSeatOpwXRYxlebP/HKVU3UXWuN17reyj
+         nmw/5Yj+jlDJIRNCXtAx64qN3xMhNO7UcfkY5ltW3TVkZaiytDOsm1Ye1lyiWS/3+Y5Y
+         WcvLtUfkyG6VkDzosPgqVoKGwSqWaKoLKBw3YxpfGRUlSSCnCSwtvogdSqMXa/VOKrG3
+         QX/kmZPuOthaO6tNZv2uxVaob5edEWR2MAkiFWmUGgX1g72RkDiaWp7N5VkAPVZPhnb+
+         WDLg==
+X-Gm-Message-State: AOAM532BYpggeKzWPenB5WeVkekdckMVsUmJDi31c38x08OG9dr6J36E
+        39UKX/DouwqGha2ml/bg7JY=
+X-Google-Smtp-Source: ABdhPJwiLQtOEsyJZryW1Z/xHL/Syj4Ki1lFQT0pVOuRrIjHNd7mLGMWk53BFO0l8cNZ0e5ryYtlzA==
+X-Received: by 2002:a2e:b55c:: with SMTP id a28mr98068ljn.107.1597363660402;
+        Thu, 13 Aug 2020 17:07:40 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.23
+        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 17:07:24 -0700 (PDT)
+        Thu, 13 Aug 2020 17:07:39 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 21/36] dt-bindings: memory: tegra30: emc: Document new interconnect property
-Date:   Fri, 14 Aug 2020 03:06:06 +0300
-Message-Id: <20200814000621.8415-22-digetx@gmail.com>
+Subject: [PATCH v5 35/36] drm/tegra: dc: Tune up high priority request controls for Tegra20
+Date:   Fri, 14 Aug 2020 03:06:20 +0300
+Message-Id: <20200814000621.8415-36-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200814000621.8415-1-digetx@gmail.com>
 References: <20200814000621.8415-1-digetx@gmail.com>
@@ -88,47 +88,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-External memory controller is interconnected with memory controller and
-with external memory. Document new interconnect property which turns
-external memory controller into interconnect provider.
+Tegra20 has a high-priority-request control that allows to configure
+when display's memory client should perform read requests with a higher
+priority (Tegra30+ uses other means like Latency Allowance).
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch changes the controls configuration in order to get a more
+aggressive memory prefetching, which allows to reliably avoid FIFO
+underflow when running on a lower memory frequency. This allow us
+safely drop the memory bandwidth requirement by about two times in a
+most popular use-cases (only one display active, video overlay inactive,
+no scaling is done).
+
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../bindings/memory-controllers/nvidia,tegra30-emc.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/tegra/dc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-index 112bae2fcbbd..c243986db420 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-@@ -31,6 +31,9 @@ properties:
-   interrupts:
-     maxItems: 1
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 850fbcebefc2..4b062408467e 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -1999,12 +1999,12 @@ static void tegra_crtc_atomic_enable(struct drm_crtc *crtc,
+ 		tegra_dc_writel(dc, value, DC_CMD_INT_POLARITY);
  
-+  "#interconnect-cells":
-+    const: 0
-+
-   nvidia,memory-controller:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-@@ -214,6 +217,7 @@ required:
-   - interrupts
-   - clocks
-   - nvidia,memory-controller
-+  - "#interconnect-cells"
+ 		/* initialize timer */
+-		value = CURSOR_THRESHOLD(0) | WINDOW_A_THRESHOLD(0x20) |
+-			WINDOW_B_THRESHOLD(0x20) | WINDOW_C_THRESHOLD(0x20);
++		value = CURSOR_THRESHOLD(0) | WINDOW_A_THRESHOLD(0x70) |
++			WINDOW_B_THRESHOLD(0x30) | WINDOW_C_THRESHOLD(0x70);
+ 		tegra_dc_writel(dc, value, DC_DISP_DISP_MEM_HIGH_PRIORITY);
  
- additionalProperties: false
+-		value = CURSOR_THRESHOLD(0) | WINDOW_A_THRESHOLD(1) |
+-			WINDOW_B_THRESHOLD(1) | WINDOW_C_THRESHOLD(1);
++		value = CURSOR_THRESHOLD(0) | WINDOW_A_THRESHOLD(0) |
++			WINDOW_B_THRESHOLD(0) | WINDOW_C_THRESHOLD(0);
+ 		tegra_dc_writel(dc, value, DC_DISP_DISP_MEM_HIGH_PRIORITY_TIMER);
  
-@@ -227,6 +231,8 @@ examples:
- 
-         nvidia,memory-controller = <&mc>;
- 
-+        #interconnect-cells = <0>;
-+
-         emc-timings-1 {
-             nvidia,ram-code = <1>;
- 
+ 		value = VBLANK_INT | WIN_A_UF_INT | WIN_B_UF_INT | WIN_C_UF_INT |
 -- 
 2.27.0
 
