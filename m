@@ -2,78 +2,135 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8532EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B46C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B2920774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BB820708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kdboruhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgHNRXY (ORCPT
+        id S1728433AbgHNRZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:23:24 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:47860 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbgHNRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:23:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0B015FB03;
-        Fri, 14 Aug 2020 19:23:22 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Cirbr_6XKokd; Fri, 14 Aug 2020 19:23:20 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3D040457CC; Fri, 14 Aug 2020 19:23:20 +0200 (CEST)
-Date:   Fri, 14 Aug 2020 19:23:20 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Camera LED on Librem 5 was Re: [PATCH] backlight: add
- led-backlight driver
-Message-ID: <20200814172320.GA740513@bogon.m.sigxcpu.org>
-References: <20200219191412.GA15905@amd>
- <20200220082956.GA3383@bogon.m.sigxcpu.org>
- <20200220234151.GB1544@amd>
+        Fri, 14 Aug 2020 13:25:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:27019 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbgHNRZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:25:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597425952; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=78OfwuaCwHC0ol+hDTUUpWv1nDFOyPEEK9sBLT+15ss=; b=kdboruhFQBJ5JOgOLOhPWW7gRpL2iYZk/x1pf63TyXn1HYEIqSJZ1zj/gNIifnbgF/FeC0ZV
+ 7qyGm0tE4Z07trNfwSogP9dJp6s7Ixiulvn4fZpIiI4zzEKeQ2UghhrO4QOnZEhTeU6kQwpV
+ 2eH7xXZNR9dh7nZkvrruubIEwQ0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f36c9123f2ce11020af2a28 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 17:25:38
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1BC04C433C9; Fri, 14 Aug 2020 17:25:37 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD71FC433CA;
+        Fri, 14 Aug 2020 17:25:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD71FC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Martin Langer <martin-langer@gmx.de>,
+        Stefano Brivio <stefano.brivio@polimi.it>,
+        Michael Buesch <m@bues.ch>, van Dyk <kugelfang@gentoo.org>,
+        Andreas Jaggi <andreas.jaggi@waterwave.ch>,
+        Albert Herranz <albert_herranz@yahoo.es>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 07/30] net: wireless: broadcom: b43: main: Add braces around empty statements
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <20200814113933.1903438-8-lee.jones@linaro.org>
+        <87v9hll0ro.fsf@codeaurora.org> <20200814164322.GP4354@dell>
+Date:   Fri, 14 Aug 2020 20:25:31 +0300
+In-Reply-To: <20200814164322.GP4354@dell> (Lee Jones's message of "Fri, 14 Aug
+        2020 17:43:22 +0100")
+Message-ID: <87eeo9kulw.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200220234151.GB1544@amd>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-On Fri, Feb 21, 2020 at 12:41:51AM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > This patch adds a led-backlight driver (led_bl), which is similar to
-> > > pwm_bl except the driver uses a LED class driver to adjust the
-> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
-> > 
-> > Tested-by: Guido Günther <agx@sigxcpu.org>
-> 
-> Thanks for testing!
-> 
-> I noticed blog post about using Librem 5 torch. Unfortunately, it used
-> very strange/non-standard interface, first using LED as a GPIO to
-> enable LED controller, then direct i2c access. That is not acceptable
-> interface for mainline, and it would be better not to advertise such
-> code, as it will likely become broken in future.
+Lee Jones <lee.jones@linaro.org> writes:
 
-I agree, there's a driver for the lm3560 in media/ but how would one
-expose the torch part as a LED? It seems you hit something similar in
+> On Fri, 14 Aug 2020, Kalle Valo wrote:
+>
+>> Lee Jones <lee.jones@linaro.org> writes:
+>>=20
+>> > Fixes the following W=3D1 kernel build warning(s):
+>> >
+>> >  drivers/net/wireless/broadcom/b43/main.c: In function =E2=80=98b43_du=
+mmy_transmission=E2=80=99:
+>> >  drivers/net/wireless/broadcom/b43/main.c:785:3: warning: suggest
+>> > braces around empty body in an =E2=80=98if=E2=80=99 statement [-Wempty=
+-body]
+>> >  drivers/net/wireless/broadcom/b43/main.c: In function =E2=80=98b43_do=
+_interrupt_thread=E2=80=99:
+>> >  drivers/net/wireless/broadcom/b43/main.c:2017:3: warning: suggest
+>> > braces around empty body in an =E2=80=98if=E2=80=99 statement [-Wempty=
+-body]
+>> >
+>> > Cc: Kalle Valo <kvalo@codeaurora.org>
+>> > Cc: "David S. Miller" <davem@davemloft.net>
+>> > Cc: Jakub Kicinski <kuba@kernel.org>
+>> > Cc: Martin Langer <martin-langer@gmx.de>
+>> > Cc: Stefano Brivio <stefano.brivio@polimi.it>
+>> > Cc: Michael Buesch <m@bues.ch>
+>> > Cc: van Dyk <kugelfang@gentoo.org>
+>> > Cc: Andreas Jaggi <andreas.jaggi@waterwave.ch>
+>> > Cc: Albert Herranz <albert_herranz@yahoo.es>
+>> > Cc: linux-wireless@vger.kernel.org
+>> > Cc: b43-dev@lists.infradead.org
+>> > Cc: netdev@vger.kernel.org
+>> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> > ---
+>> >  drivers/net/wireless/broadcom/b43/main.c | 6 ++++--
+>> >  1 file changed, 4 insertions(+), 2 deletions(-)
+>>=20
+>> Please don't copy the full directory structure to the title. I'll change
+>> the title to more simple version:
+>>=20
+>> b43: add braces around empty statements
+>
+> This seems to go the other way.
+>
+> "net: wireless: b43" seems sensible.
 
-    https://lkml.org/lkml/2018/5/6/30
+Sorry, not understanding what you mean here.
 
-I also couldn't find an in tree driver that registers a flashlight
-as a v4l subdev. Did i miss that?
+>> I'll do similar changes to other wireless-drivers patches.
+>
+> Thanks.
+>
+> Does that mean it's been applied, or is this future tense?
 
-Cheers,
- -- Guido
+It's not applied yet, there will be an automatic "applied" email once I
+have done that.
+
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
