@@ -2,102 +2,180 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C29C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24802068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597392794;
-	bh=MmxQNl8+vLlHzOR3qnK3CTNQlzCrPiowIyHnwsh4Te4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A3tOiRFTxEj/B81aYJU/+UMe8aAk8xaKQW+2Dw1jJ3Fx7lzy4Z2F+kdAhpjraSSaA
-	 gq0XPjLnQx5ldOaBY7a2hEoCnHPG0thA0gSw91XHWN17coymKG6qU0U7MmNY+Guu+Y
-	 VqzryuKgwSNgvxtP92fdO1evyGebwNqxjCWSD/IE=
+	by mail.kernel.org (Postfix) with ESMTP id 8F3332068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=harman.com header.i=@harman.com header.b="hdI4vxZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHNINM (ORCPT
+        id S1727035AbgHNIOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:13:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgHNINL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:13:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE37D2068E;
-        Fri, 14 Aug 2020 08:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597392791;
-        bh=MmxQNl8+vLlHzOR3qnK3CTNQlzCrPiowIyHnwsh4Te4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G5Y3OMEcOwAECD8bL+8gJnC3dK/tHABFsBSBMEqFqTIZojB9lu+YyiUqm8Y3e+5pd
-         UsnqvIreB/iqsdauEBOksdFNJakgQD79jLMntIV37vF/EzK1FhIpbWPwvWPPTVn44k
-         GbL2DilF46d7kuC06NkbyFEzpm8GgK+7cUENAJns=
-Date:   Fri, 14 Aug 2020 10:13:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] exec: Restore EACCES of S_ISDIR execve()
-Message-ID: <20200814081319.GA4075588@kroah.com>
-References: <20200813231723.2725102-1-keescook@chromium.org>
- <20200813231723.2725102-2-keescook@chromium.org>
- <20200814071102.GA4062560@kroah.com>
+        Fri, 14 Aug 2020 04:14:01 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.2]:39017 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgHNIOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:14:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harman.com;
+        s=harman2020; t=1597392838; i=@harman.com;
+        bh=XjNzQgYHnj5AbPTb6t48hQtzDyaXNCi9P2fFLdemfgY=;
+        h=From:To:CC:Subject:Date:Message-ID:Content-Type:
+         Content-Transfer-Encoding:MIME-Version;
+        b=hdI4vxZD5ZqWRbkA9ZqZBIKPeGz8uChO+dcgfZFdi9+HxXZGBX56eVLzikn3ttx90
+         K4lDO0Te58GX9s01dmqjDbf4geUDDpp4/WWeIbAk8mlc1klq7F+OGd7oF3b8poD62X
+         tthK4O3wbxWg1VG5b3+Cn7kMEDRscG3+QVe8cKPJuC09n6Q8MIIKqH0JtQLtZ7hQzR
+         38mFA0YOEiooCxykdIYwiJK9fzI7/hOFsBmtrQsgMNB1rBjCB1YVtb+0HGvKTD4xPk
+         5CLoTYLNM8kKnWhA+ZQwACWBAKMuORaR5SCwPZQHY2sNxXBOC68ps9+92e7GtrwBjM
+         GDAZf6loNd4xg==
+Received: from [100.112.130.0] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.us-west-2.aws.symcld.net id 2F/B2-01971-6C7463F5; Fri, 14 Aug 2020 08:13:58 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRWlGSWpSXmKPExsVyqPAOq+4xd7N
+  4g09nGC1OnDvGbnF51xw2ByaPz5vkAhijWDPzkvIrElgzJp/6wl7wV7qidUFIA+NUiS5GLg4h
+  gS2MEj/OT2OGc+b0T2WHcA4ySuw7dQIow8nBJmAusWtPCzuILSLgLnHtcS8jiM0s4Chxe+9bJ
+  hBbWMBV4v/2lSxdjBxANV4SH+4HQpTrSVy5cACsnEVAVWLTz81gNi/QmP+PF4LZjAJiEt9PrW
+  GCGCkucevJfDBbQkBAYsme88wQtqjEy8f/WCFsA4mtS/exQNhyEsu2P4fq1ZO4MXUKG4StLbF
+  s4WtmiF2CEidnPgGrFxLQkLh2aCXrBEbRWUjWzULSPgtJ+ywk7QsYWVYxmicVZaZnlOQmZubo
+  GhoY6BoaGukaGlnqmhroJVbpJuqVFuuWpxaX6BrpJZYX6xVX5ibnpOjlpZZsYgRGVUpBo9EOx
+  r+vP+gdYpTkYFIS5bU2N4sX4kvKT6nMSCzOiC8qzUktPsQow8GhJMGb7QaUEyxKTU+tSMvMAU
+  Y4TFqCg0dJhHeFK1Cat7ggMbc4Mx0idYrRnmPj07mLmDkmvASRB4/OA5KXrwNJIZa8/LxUKXH
+  enSBTBUDaMkrz4IbCEtIlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8MiBTeDLzSuB2vwI6
+  iwnoLL1mU5CzShIRUlINTBFCv0+sCDRN+OS0OdTr9oYLGY7T2LRlHrAVB3p+yrtu218w71naR
+  /WGU21/bE4JV/oaMapozq487T7bVch9nVvhDZPP4Vv/1Pl6Cq/qnnU8ZbPvkjPiouo2nbvNJx
+  2xf/d/7ez/fAICXnnLelc+zt3aoenJMmHmvic/OY/Ei7TyKlsIyOXuY1k8/3BVYMuy19/Py7a
+  YMi5cyZHzdxe3qE6CwPcrrZOVFnPYulzrNjAzi5+36HDNC6k5of8bZpZ0N1gsTnih+EPoze1T
+  4rd5JBOy509jWneOtWCDJfeiSyJiW3ecl1i6I6X7aMwf16S4ZP2DW5mvHnla2fXM8PqngraHM
+  8XzpQ3YOXXKOrx2KrEUZyQaajEXFScCAHthy/DDAwAA
+X-Env-Sender: Vladut.Vranceanu@harman.com
+X-Msg-Ref: server-21.tower-322.messagelabs.com!1597392832!48855!2
+X-Originating-IP: [194.113.220.5]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22423 invoked from network); 14 Aug 2020 08:13:57 -0000
+Received: from unknown (HELO HIMDWSMB10.ad.harman.com) (194.113.220.5)
+  by server-21.tower-322.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 14 Aug 2020 08:13:57 -0000
+Received: from HIMDWSMB08.ad.harman.com (10.70.50.118) by
+ HIMDWSMB10.ad.harman.com (10.70.50.215) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 14 Aug 2020 10:13:52 +0200
+Received: from HIMDWSMB07.ad.harman.com (10.70.50.117) by
+ HIMDWSMB08.ad.harman.com (10.70.50.118) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 14 Aug 2020 10:13:52 +0200
+Received: from HIMDWSMB07.ad.harman.com ([fe80::4cf8:5ebd:53f7:f6c4]) by
+ HIMDWSMB07.ad.harman.com ([fe80::4cf8:5ebd:53f7:f6c4%16]) with mapi id
+ 15.00.1497.000; Fri, 14 Aug 2020 10:13:52 +0200
+From:   "Vranceanu, Vladut" <Vladut.Vranceanu@harman.com>
+To:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [linux-ima-user]Systemd cgroups freezes after activating EVM
+Thread-Topic: [linux-ima-user]Systemd cgroups freezes after activating EVM
+Thread-Index: AdZyEsnJR1w89j+xSzSLGGMu//7ukA==
+Date:   Fri, 14 Aug 2020 08:13:52 +0000
+Message-ID: <d7a7b26117dc4129b9750130ba59b93e@HIMDWSMB07.ad.harman.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.70.50.4]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814071102.GA4062560@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 09:11:02AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 13, 2020 at 04:17:22PM -0700, Kees Cook wrote:
-> > The return code for attempting to execute a directory has always been
-> > EACCES. Adjust the S_ISDIR exec test to reflect the old errno instead
-> > of the general EISDIR for other kinds of "open" attempts on directories.
-> > 
-> > Reported-by: Marc Zyngier <maz@kernel.org>
-> > Link: https://lore.kernel.org/lkml/20200813151305.6191993b@why
-> > Fixes: 633fb6ac3980 ("exec: move S_ISREG() check earlier")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  fs/namei.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 2112e578dccc..e99e2a9da0f7 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -2849,8 +2849,10 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >  	case S_IFLNK:
-> >  		return -ELOOP;
-> >  	case S_IFDIR:
-> > -		if (acc_mode & (MAY_WRITE | MAY_EXEC))
-> > +		if (acc_mode & MAY_WRITE)
-> >  			return -EISDIR;
-> > +		if (acc_mode & MAY_EXEC)
-> > +			return -EACCES;
-> >  		break;
-> >  	case S_IFBLK:
-> >  	case S_IFCHR:
-> 
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@google.com>
+Hello,
 
-And to round out the "let's use a different email address for each
-response, to drive accounting tools crazy!" effort, you can also add:
+I have some questions regarding system freezing at boot after activating EV=
+M. I receive this error message:
 
-Tested-by: Greg Kroah-Hartman <gregkh@android.com>
+=A0=A0=A0=A0=A0 systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/system=
+: No such file of device.
+=A0=A0=A0=A0=A0 [!!!!!] Failed to mount API filesystems, freezing.
 
-thanks,
+I am using Linux kernel 4.19.78 and system v2.34. My aim is to activate IMA=
+/EVM with EVM in mode 0x80000006, as per https://www.kernel.org/doc/Documen=
+tation/ABI/testing/evm. I have a script running from an initramFS, which do=
+es the IMA/EVM setup like the following:
 
-greg "I don't have enough different email addresses" k-h
+=A0=A0=A0=A0=A0=A0 mount -n -t securityfs securityfs /sys/kernel/security
+
+=A0=A0=A0=A0=A0=A0 (set -e; while read i; do echo $i >&2; echo $i; done) </=
+etc/keys/policy >/sys/kernel/security/ima/policy
+
+=A0=A0=A0=A0=A0=A0 ima_id=3D"`awk '/\.ima/ { printf "%d", "0x"$1; }' /proc/=
+keys`"
+=A0=A0=A0=A0=A0=A0 evmctl import /etc/keys/x509_ima_1.der $ima_id
+
+=A0=A0=A0=A0=A0=A0 evm_id=3D"`awk '/\.evm/ { printf "%d", "0x"$1; }' /proc/=
+keys`"
+=A0=A0=A0=A0=A0=A0 evmctl import /etc/keys/x509_ima_1.der $evm_id
+
+=A0=A0=A0=A0=A0=A0 cat /etc/keys/kmk | keyctl padd user kmk @u
+=A0=A0=A0=A0=A0=A0 keyctl add encrypted evm-key "load `cat /etc/keys/evm-ke=
+y`" @u
+
+=A0=A0=A0=A0=A0=A0 echo -2147483642 > /sys/kernel/security/evm
+
+, where the policy is:=20
+
+=A0 =A0=A0=A0dont_appraise fsmagic=3D0x9fa0
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x62656572
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x64626720
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x01021994
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x858458f6
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x1cd1=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=20
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x42494e4d
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0x73636673
+=A0=A0=A0=A0 dont_appraise fsmagic=3D0xf97cff8c
+
+This would be a dummy policy, with which I could still reproduce the issue.
+
+Kernel command line parameters are:
+
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0 bootargs =3D "console=3Dt=
+tyS0,921600n1 \
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 debugshell=3D1 printk.disable=
+_uart=3D0 rootwait mem=3D1024m \
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 loglevel=3D8 earlycon=3Duart8=
+250,mmio32,0x11002000 rootfstype=3Dext4 ima_appraise=3Dlog evm=3Dfix cgroup=
+_no_v1=3Dall quiet ";
+
+, where ima_appraise=3Dlog evm=3Dfix should ensure that boot freeze does no=
+t occur cause of missing signatures and cgroup_no_v1=3Dall is one of my att=
+empts at solving the issue(not needed).
+
+The problem occurs specifically only when running this instruction "echo -2=
+147483642 > /sys/kernel/security/evm", of activating EVM. The same setup go=
+es through boot fine when leaving that out. Moreover, when doing the instru=
+ction in user-space, that also works(though I get some EVM-related kernel m=
+essages which, at this point, I'm not sure whether are normal or not).
+
+I would much appreciate any lead to what I could be doing wrong, as it is d=
+ifficult for me to trace the problem both for my lack of expertise and the =
+way the image is formed. I am not subscribed to this mailing list, as advis=
+ed by the FAQ, so please reply to my email individually as well, if you do.
+
+Thank you,
+Vlad
+
+P.S.: Already messaged systemd community and the answer was:
+
+systemd is just the messenger here. It tries to mount cgroupfs and that's d=
+enied due to some permission problem. We don't know IMA/EVM here. Please co=
+ntact the IMA community instead, they might be able to tell you why the ker=
+nel would refuse cgroupfs mounts.
+
+cgroupfs is required to be mountable for systemd to work. There's no way ar=
+ound that.
+
+
