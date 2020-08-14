@@ -2,171 +2,183 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0F3205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D21B205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oc/++NNg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fC2m851E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgHNI4V (ORCPT
+        id S1727778AbgHNI4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:56:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42846 "EHLO
+        Fri, 14 Aug 2020 04:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgHNI4U (ORCPT
+        with ESMTP id S1726050AbgHNI4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:56:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE96C061383;
-        Fri, 14 Aug 2020 01:56:19 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 17so4249336pfw.9;
-        Fri, 14 Aug 2020 01:56:19 -0700 (PDT)
+        Fri, 14 Aug 2020 04:56:41 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09D7C061383
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:56:40 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id b11so4438033lfe.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zTcT2yb4VlahiZ+8x3DiZcJOZkmeuTPvsJD8D2PV1jQ=;
-        b=oc/++NNgtI8v6eFrM0KIqAXlLPm2RknS/SV/lh/tUXDQHB8pdqmlxlheAvtfix/5OM
-         tLzhnCft3oe37d3qXf8+l2t5J1sMEmkoMEGS8geSLxgl8sB6PAChS1CPjmvrXFbEpR+y
-         wjjjZ2rG5DHJoEdIEyYJjoh3w1DWc24UyiyzLuB8MyeLfo7uFVzXZewZkiG4dEN8MFUo
-         Gqtf1ez/+cJr/WCQCHpUTzl92NvKY+ZXVgEVd4ZwEHGiVtSv24CJqm12bVfjavCkMQPo
-         BMPs7crTzHlHKtw9WAVBafFsZdiz9VNy0mzmcKGUUy4r7tV3NcK4fukNDbqRJsBMVAEe
-         uz3Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H74Cx0z7INlxIE76e/bwEKWBIIXIiyO99JQfsOTNz+c=;
+        b=fC2m851EepP6y3+PUFFwoHaW8xxT6TI6FbzNMNPsrg/JesnhLqHkvJaxd5tFQycNf0
+         V8FaaoydQbWXbrjgIO/bP5wYHxHfaqDANieNPmkvl/tXmwVOcxu5EnmicJvDUU7sPKpW
+         P7iP6es/T3PsAln32FalesydnX2NRu0tcyI8TSRjKskSLY7FnpPbGJm7Pu9HkQ+menwx
+         HN6z15CxIiQLGAI9aaUwCXe/3m7FQSGW8MNcMnntUVoKCKrtBp+05mvNQYu/jJDc1jjL
+         4zAwt2obtcCp1SPvas74t295EvGSCo6p3m51vCtedKH4GOfCx2rTv03zEdTQfZ6EJPW/
+         h1Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=zTcT2yb4VlahiZ+8x3DiZcJOZkmeuTPvsJD8D2PV1jQ=;
-        b=c2saxJ57njuQO8sD3zq0ydc7KH3vs8Ry2heTV6MguSoYFFXjmV+Qz537HEfP6WQtMG
-         +ytcKxuz2+ZXAi467h9ZMpKdg70OUii1CEU1lOWuq2gCKH3pjZJc3G1PWzdBzLCJz70y
-         Iudw7GnKEl8x4j3jMdiJjGG54KS9ILVXVUYxfz6utXd53oSmTEkRrdrZAH4lb4SMKHP+
-         yE7uvEl+gLDfwiC8xii7OdgPmGu7J/h8u3ULQpbdRlOqURjv9ubZhNuPZdAroOXvzQnN
-         8MImDZG44lt+zhK6xKeNTxRevOn3TSCVil4Pc0J2E7TwiYvgqdTcP8IHQDA6aoLwjI0Z
-         mPSg==
-X-Gm-Message-State: AOAM533yKlqoc31EhlNrpLJtKnh1b1+dbKHt/HWHSw7RZrQ7NHADpSXV
-        iGwh4A+Gk7NovlItOvezlPavZ37IzXw=
-X-Google-Smtp-Source: ABdhPJyfJw+JRCcHRK5mYeqXgxZBEKbhdNI+zRQErExZOJKxYHQqSs2GplRu196nml01FcKc6RgA3g==
-X-Received: by 2002:a62:e704:: with SMTP id s4mr1165962pfh.177.1597395379200;
-        Fri, 14 Aug 2020 01:56:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n2sm7349968pgv.37.2020.08.14.01.56.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Aug 2020 01:56:18 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 01:56:17 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, jonas.gorski@gmail.com,
-        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v4] mtd: parsers: bcm63xx: simplify CFE detection
-Message-ID: <20200814085617.GA129183@roeck-us.net>
-References: <20200612073549.1658336-1-noltari@gmail.com>
- <20200615091740.2958303-1-noltari@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H74Cx0z7INlxIE76e/bwEKWBIIXIiyO99JQfsOTNz+c=;
+        b=MjmfYIL74VjqkbyjGnVGPak0ygQ0wxEtayU/yOtRhZ5+Qi+LMEhrtBdRvbm9Q1kQvv
+         9fDA6yaKXvyGsqed7wKORancJCQ52J9PwnWvHWP54eVePwsJoiQHfv9OC2cMFdn5OUwC
+         4Y6O3UYm9OidYxiWHIv7CmkRYulIwt8F2uqC0xVkgfiRfnFxulBnUMgiram+QyW1WzE4
+         T7pTeEegdnLFonzOSFv6BXJNB8hv3mx+LswUkhHqJt5YFMbQT7TlCH9hx2IrdSsSYo+S
+         QJ6vgIoITs/Caobk17+GTGw2EFkk9Z93QNTRTBt9TcoVb3gzN/9FFgJ3gXbLYqj2TkmX
+         /2Sw==
+X-Gm-Message-State: AOAM531h9dXbDlH8wQ60+Sir7sHPHh7lVfL6ScPBkNeYWHnXbcsTFPi0
+        36eeDEHoc8Pw16qhFKgMsmJHqErZMnAC1tvHsWqeQA==
+X-Google-Smtp-Source: ABdhPJwZ7hKmOrS0sEGPPmEpUtzL9l0ws8MRzjbhigkn5PZcz07tk1gy+KU4Rova9kUDRYC1MGuDCJsBIA1IgTUmZx0=
+X-Received: by 2002:a19:8644:: with SMTP id i65mr802101lfd.20.1597395399029;
+ Fri, 14 Aug 2020 01:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615091740.2958303-1-noltari@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+ <20200813073325.GK3480@piout.net> <CANqTbdZhZL--JebFhZPkf2+VuCUs2b=Me-BoBHgAtt_MvQBX3A@mail.gmail.com>
+ <20200814081530.GA6530@piout.net>
+In-Reply-To: <20200814081530.GA6530@piout.net>
+From:   Victor Ding <victording@google.com>
+Date:   Fri, 14 Aug 2020 18:56:02 +1000
+Message-ID: <CANqTbdb=nrh-Kva9hsEQp9sowMiM795bm5W+4QKw_cuVKJL2_w@mail.gmail.com>
+Subject: Re: [PATCH] rtc: cmos: initialize rtc time when reading alarm
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:17:40AM +0200, Álvaro Fernández Rojas wrote:
-> Instead of trying to parse CFE version string, which is customized by some
-> vendors, let's just check that "CFE1" was passed on argument 3.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Hi Alexandre,
 
-mips:allmodconfig:
+On Fri, Aug 14, 2020 at 6:15 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 14/08/2020 16:10:13+1000, Victor Ding wrote:
+> > Hi Alexandre,
+> >
+> > On Thu, Aug 13, 2020 at 5:33 PM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On 13/08/2020 15:41:34+1000, Victor Ding wrote:
+> > > > cmos_read_alarm() may leave certain fields of a struct rtc_time
+> > > > untouched; therefore, these fields contain garbage if not properly
+> > > > initialized, leading to inconsistent values when converting into
+> > > > time64_t.
+> > > > This patch to set all fields of a struct rtc_time to -1 before calling
+> > > > cmos_read_alarm().
+> > > >
+> > >
+> > > I don't think this actually helps with the conversion as mktime64
+> > > is taking unsigned int so I would think you need the whole logic that is
+> > > in __rtc_read_alarm
+> >
+> > It's true that this change does not produce a correct time64_t; however,
+> > it isn't the intention either. The proposed change only produces a
+> > consistent value: calling obtaining identical struct rtc_time if the CMOS
+> > wakealarm is unchanged. In the case of suspend/resume, a correct value
+> > time64_t is not necessary; a consistent value is sufficient to correctly
+> > perform an equality test for `t_current_expires` and `t_saved_expires`.
+> > Logic to deduce a correct time64_t is expensive and hence I would like to
+> > avoid __rtc_read_alarm's logic here.
+> >
+> > Prior to this patch, the struct rtc_time is uninitialized. After calling
+> > cmos_read_alarm(), the tm_year field is always left untouched and hence
+> > contains only garbage. On platforms without enhanced RTC timers, the
+> > tm_mon and tm_mday fields are left with garbage as well. Therefore,
+> > `t_current_expires` and `t_saved_expires` from garbage data, which leads
+> > to incorrect equality test results.
+> >
+>
+> Seeing that saved_wkalrm is initialized to zero, wouldn't it be
+> sufficient to initialize current_alarm to 0? This can be done simply at
+> the declaration. I personally find the -1 to be confusing especially
+> since the result ends up being architecture dependent.
+>
 
-ERROR: modpost: "fw_arg3" [drivers/mtd/parsers/bcm63xxpart.ko] undefined!
+Good point. Initializing the struct to 0 is also sufficient; I'll
+update the patch
+to initialize the fields to 0 and submit the updated version.
 
-This is not surprising, since fw_arg3 is not exported.
+Note that both `saved_wkalrm` and `current_alarm` must be initialized.
+`cmos_suspend` may be called multiple times; `cmos_read_alarm` may or
+may not update `time.tm_mon` or `time.tm_mday` depends on `cmos->day_alrm`
+and `cmos->mon_alrm`. Both `day_alrm` and `mon_alrm` could theoretically
+change. Say if at first `day_alrm` is enabled, `cmos_read_alarm` would fill
+`time.tm_mday`. Later on, if `day_alrm` becomes disabled, `cmos_read_alarm`
+would not update `time.tm_mday` and hence leaves its value as garbage.
 
-Guenter
+> > >
+> > > > Signed-off-by: Victor Ding <victording@google.com>
+> > > > ---
+> > > >
+> > > >  drivers/rtc/rtc-cmos.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >
+> > > > diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+> > > > index bcc96ab7793f..c99af567780d 100644
+> > > > --- a/drivers/rtc/rtc-cmos.c
+> > > > +++ b/drivers/rtc/rtc-cmos.c
+> > > > @@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
+> > > >                       enable_irq_wake(cmos->irq);
+> > > >       }
+> > > >
+> > > > +     memset(&cmos->saved_wkalrm.time, -1, sizeof(struct rtc_time));
+> > > >       cmos_read_alarm(dev, &cmos->saved_wkalrm);
+> > > >
+> > > >       dev_dbg(dev, "suspend%s, ctrl %02x\n",
+> > > > @@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
+> > > >               return;
+> > > >       }
+> > > >
+> > > > +     memset(&current_alarm.time, -1, sizeof(struct rtc_time));
+> > > >       cmos_read_alarm(dev, &current_alarm);
+> > > >       t_current_expires = rtc_tm_to_time64(&current_alarm.time);
+> > > >       t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
+> > > > --
+> > > > 2.28.0.236.gb10cc79966-goog
+> > > >
+> > >
+> > > --
+> > > Alexandre Belloni, Bootlin
+> > > Embedded Linux and Kernel engineering
+> > > https://bootlin.com
+> >
+> > Best regards,
+> > Victor Ding
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-> ---
->  v4: shorten conditional compilation part as suggested by Miquèl.
->  v3: keep COMPILE_TEST compatibility by adding a new function that only checks
->      fw_arg3 when CONFIG_MIPS is defined.
->  v2: use CFE_EPTSEAL definition and avoid using an additional function.
-> 
->  drivers/mtd/parsers/bcm63xxpart.c | 32 ++++++++++++-------------------
->  1 file changed, 12 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/mtd/parsers/bcm63xxpart.c b/drivers/mtd/parsers/bcm63xxpart.c
-> index 78f90c6c18fd..b15bdadaedb5 100644
-> --- a/drivers/mtd/parsers/bcm63xxpart.c
-> +++ b/drivers/mtd/parsers/bcm63xxpart.c
-> @@ -22,6 +22,11 @@
->  #include <linux/mtd/partitions.h>
->  #include <linux/of.h>
->  
-> +#ifdef CONFIG_MIPS
-> +#include <asm/bootinfo.h>
-> +#include <asm/fw/cfe/cfe_api.h>
-> +#endif /* CONFIG_MIPS */
-> +
->  #define BCM963XX_CFE_BLOCK_SIZE		SZ_64K	/* always at least 64KiB */
->  
->  #define BCM963XX_CFE_MAGIC_OFFSET	0x4e0
-> @@ -32,28 +37,15 @@
->  #define STR_NULL_TERMINATE(x) \
->  	do { char *_str = (x); _str[sizeof(x) - 1] = 0; } while (0)
->  
-> -static int bcm63xx_detect_cfe(struct mtd_info *master)
-> +static inline int bcm63xx_detect_cfe(void)
->  {
-> -	char buf[9];
-> -	int ret;
-> -	size_t retlen;
-> +	int ret = 0;
->  
-> -	ret = mtd_read(master, BCM963XX_CFE_VERSION_OFFSET, 5, &retlen,
-> -		       (void *)buf);
-> -	buf[retlen] = 0;
-> +#ifdef CONFIG_MIPS
-> +	ret = (fw_arg3 == CFE_EPTSEAL);
-> +#endif /* CONFIG_MIPS */
->  
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (strncmp("cfe-v", buf, 5) == 0)
-> -		return 0;
-> -
-> -	/* very old CFE's do not have the cfe-v string, so check for magic */
-> -	ret = mtd_read(master, BCM963XX_CFE_MAGIC_OFFSET, 8, &retlen,
-> -		       (void *)buf);
-> -	buf[retlen] = 0;
-> -
-> -	return strncmp("CFE1CFE1", buf, 8);
-> +	return ret;
->  }
->  
->  static int bcm63xx_read_nvram(struct mtd_info *master,
-> @@ -138,7 +130,7 @@ static int bcm63xx_parse_cfe_partitions(struct mtd_info *master,
->  	struct bcm963xx_nvram *nvram = NULL;
->  	int ret;
->  
-> -	if (bcm63xx_detect_cfe(master))
-> +	if (!bcm63xx_detect_cfe())
->  		return -EINVAL;
->  
->  	nvram = vzalloc(sizeof(*nvram));
+Best regards,
+Victor Ding
