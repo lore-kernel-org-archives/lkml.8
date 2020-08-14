@@ -2,211 +2,133 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A74C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA988C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61612087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597409248;
-	bh=LWfEJo2yv51g1xPFjTHclS9PxlauBHm3nptze07V1nM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5XsK8MAnoJ84dkwYJ2IiVpOIWoFBLdIPD9k7egpZkmEzDojplC8CqaOG2t5TkXVG
-	 IAFADzcUC7VFTLinM9nhV+6Ktme20K3XWS7O5ikhpap7h2IPN2qJsulxyg1yWEwPJV
-	 mgoU1Uqc/PhTXoaNzxfeEFoV7o2z/tDI3SKwPge4=
+	by mail.kernel.org (Postfix) with ESMTP id 8914D2087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:47:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="fvQw+GCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgHNMr0 (ORCPT
+        id S1728449AbgHNMrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgHNMr0 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:47:26 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08E62087D;
-        Fri, 14 Aug 2020 12:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597409245;
-        bh=LWfEJo2yv51g1xPFjTHclS9PxlauBHm3nptze07V1nM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ceSENNIJg5elCC7plusVsTqf2rls5rYhUd9IVT966zuFXdNwGT+inVwKX9s/+Laty
-         n4QLvW0aDtE4VeSxhmomfi9KMiVyS5P0n6teNR5H0uek57Llg7RcbnPE2+HrWd8L4J
-         ACCBn/wcezUulZr8HZ+4uvZlvSmmGq8YVdvsIWiA=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B720540D3D; Fri, 14 Aug 2020 09:47:22 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:47:22 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        like.xu@linux.intel.com
-Subject: Re: [PATCH v3] perf parse-events: Set exclude_guest=1 for user-space
- counting
-Message-ID: <20200814124722.GG13995@kernel.org>
-References: <20200814012120.16647-1-yao.jin@linux.intel.com>
+        Fri, 14 Aug 2020 08:47:36 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:48214 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgHNMre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:47:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597409252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vqjMOLWnURMtkyVmLKBVLJihqVbQncODXADZyEOQvAk=;
+  b=fvQw+GCU168lX7Tm2iJ6NsNggch6O07E6zrDKEBqWpBxCV0G47SXo/mS
+   2Jp2iEate6cLunXXpEU+Rf3dsOrhZseyG0+ercrVK52dKwn6N14anSPuF
+   beMThDbionCSVKoEkj1G9V4ryFjAF4pgereiJUPIJrzP2jVAR5ACCRUIZ
+   U=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: w0A6Vy4ueaWrF7WgfuyBrSR1ACS+hknjc95m+9zhN7fc2SAsmovKRsi3m41T/jo7eaFuu78C7Z
+ S5MTDLXuflc0oQ1pEQ7/9xHjpo5CwxYh3w/78O9M19ZBSjqnsDO5hTI/QpYfLCVTsqY3rO+TdA
+ lbC/WWyTBQbMerqZS+yaBvI3Y+TDQgr/7/ffkMR3MsIWS/vtCi8ou01AxoCZ+/N/T1DSOpRv+J
+ GZhylUerYrKxWKmzDSfQJlY510XRbTKxifOc5UaGesqqi1ipL3B/WtYRbgtGC/JNVtACLQ8jDM
+ CR0=
+X-SBRS: 2.7
+X-MesageID: 24855572
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,312,1592884800"; 
+   d="scan'208";a="24855572"
+Date:   Fri, 14 Aug 2020 14:47:25 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        "Yan Yankovskyi" <yyankovskyi@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200814124724.GK975@Air-de-Roger>
+References: <20200811094447.31208-1-roger.pau@citrix.com>
+ <20200811094447.31208-3-roger.pau@citrix.com>
+ <20200813073337.GA16160@infradead.org>
+ <20200813075420.GC975@Air-de-Roger>
+ <20200814072920.GA6126@infradead.org>
+ <20200814095629.GJ975@Air-de-Roger>
+ <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200814012120.16647-1-yao.jin@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 14, 2020 at 09:21:20AM +0800, Jin Yao escreveu:
-> Currently if we run 'perf record -e cycles:u', exclude_guest=0.
+On Fri, Aug 14, 2020 at 12:27:32PM +0200, Jürgen Groß wrote:
+> On 14.08.20 11:56, Roger Pau Monné wrote:
+> > On Fri, Aug 14, 2020 at 08:29:20AM +0100, Christoph Hellwig wrote:
+> > > On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
+> > > > On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
+> > > > > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
+> > > > > > If enabled (because ZONE_DEVICE is supported) the usage of the new
+> > > > > > functionality untangles Xen balloon and RAM hotplug from the usage of
+> > > > > > unpopulated physical memory ranges to map foreign pages, which is the
+> > > > > > correct thing to do in order to avoid mappings of foreign pages depend
+> > > > > > on memory hotplug.
+> > > > > 
+> > > > > So please just select ZONE_DEVICE if this is so much better rather
+> > > > > than maintaining two variants.
+> > > > 
+> > > > We still need to other variant for Arm at least, so both need to be
+> > > > maintained anyway, even if we force ZONE_DEVICE on x86.
+> > > 
+> > > Well, it still really helps reproducability if you stick to one
+> > > implementation of x86.
+> > > 
+> > > The alternative would be an explicit config option to opt into it,
+> > > but just getting a different implementation based on a random
+> > > kernel option is strange.
+> > 
+> > Would adding something like the chunk below to the patch be OK?
+> > 
+> > ---8<---
+> > diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+> > index 018020b91baa..5f321a1319e6 100644
+> > --- a/drivers/xen/Kconfig
+> > +++ b/drivers/xen/Kconfig
+> > @@ -328,7 +328,14 @@ config XEN_FRONT_PGDIR_SHBUF
+> >   	tristate
+> >   config XEN_UNPOPULATED_ALLOC
+> > -	bool
+> > -	default y if ZONE_DEVICE && !ARM && !ARM64
+> > +	bool "Use unpopulated memory ranges for guest mappings"
+> > +	depends on X86
+> > +	select ZONE_DEVICE
+> > +	default y
 > 
-> But it doesn't make sense in most cases that we request for
-> user-space counting but we also get the guest report.
-> 
-> Of course, we also need to consider perf kvm usage case that
-> authorized perf users on the host may only want to count guest
-> user space events. For example,
-> 
-> perf kvm --guest record -e cycles:u
+> I'd rather use "default XEN_BACKEND" here, as mappings of other guest's
+> memory is rarely used for non-backend guests.
 
-Ok, probably this works, but what if I want to record guest user samples
-without using 'perf kvm'?
+There's also the privcmd and gnt devices which make heavy use of this,
+so I'm not sure only selecting by default on XEN_BACKEND is the best
+option.
 
-Can we have a 'U' modifier, perhaps, for that?
-
-I.e.
-
-perf record -e cycles:uU would not set exclude_host not exclude_guest,
-cycles:u excludes guest user, cycles:U excludes host user, would that be
-possible?
-
-Anyway, I think that with what we have, your patch makes sense, having a
-way to, without using 'perf kvm' still be able to sample the guest can
-be done on top. of this.
-
-Xu, can we get your Reviewed-by if this addresses your concerns?
-
-- Arnaldo
- 
-> When we have 'exclude_guest=1' for perf kvm usage, we may get
-> nothing from guest events.
-> 
-> To keep perf semantics consistent and clear, this patch sets
-> exclude_guest=1 for user-space counting but except for perf
-> kvm usage.
-> 
-> Before:
->   perf record -e cycles:u ./div
->   perf evlist -v
->   cycles:u: ..., exclude_kernel: 1, exclude_hv: 1, ...
-> 
-> After:
->   perf record -e cycles:u ./div
->   perf evlist -v
->   cycles:u: ..., exclude_kernel: 1, exclude_hv: 1,  exclude_guest: 1, ...
-> 
-> Before:
->   perf kvm --guest record -e cycles:u -vvv
-> 
-> perf_event_attr:
->   size                             120
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|ID|CPU|PERIOD
->   read_format                      ID
->   disabled                         1
->   inherit                          1
->   exclude_kernel                   1
->   exclude_hv                       1
->   freq                             1
->   sample_id_all                    1
-> 
-> After:
->   perf kvm --guest record -e cycles:u -vvv
-> 
-> perf_event_attr:
->   size                             120
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|ID|CPU|PERIOD
->   read_format                      ID
->   disabled                         1
->   inherit                          1
->   exclude_kernel                   1
->   exclude_hv                       1
->   freq                             1
->   sample_id_all                    1
-> 
-> For Before/After, exclude_guest are both 0 for perf kvm usage.
-> 
-> perf test 6
->  6: Parse event definition strings             : Ok
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  v3:
->  ---
->  For perf kvm, if we have 'exclude_guest=1', we can't get guest
->  events. So we don't set 'exclude_guest=1' for perf kvm.
-> 
->  v2:
->  ---
->  Fix the 'perf test 6' failure.
-> 
->  tools/perf/tests/parse-events.c | 4 ++--
->  tools/perf/util/parse-events.c  | 3 +++
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 7f9f87a470c3..aae0fd9045c1 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -719,7 +719,7 @@ static int test__group2(struct evlist *evlist)
->  	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
->  	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
->  	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-> -	TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
-> +	TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
->  	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
->  	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
->  	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
-> @@ -842,7 +842,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
->  	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
->  	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
->  	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-> -	TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
-> +	TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
->  	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
->  	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
->  	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 9f7260e69113..ff4c23d2a0f3 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -37,6 +37,7 @@
->  #include "util/evsel_config.h"
->  #include "util/event.h"
->  #include "util/pfm.h"
-> +#include "perf.h"
->  
->  #define MAX_NAME_LEN 100
->  
-> @@ -1794,6 +1795,8 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
->  		if (*str == 'u') {
->  			if (!exclude)
->  				exclude = eu = ek = eh = 1;
-> +			if (!exclude_GH && !perf_guest)
-> +				eG = 1;
->  			eu = 0;
->  		} else if (*str == 'k') {
->  			if (!exclude)
-> -- 
-> 2.17.1
-> 
-
--- 
-
-- Arnaldo
+Thanks, Roger.
