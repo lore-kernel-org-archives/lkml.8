@@ -2,410 +2,175 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50399C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DAAC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B31520791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69A420791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="Q8PTC4Eu"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jdnHWE9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHNNb4 (ORCPT
+        id S1728506AbgHNNcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:31:56 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:55130 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbgHNNb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:31:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=10159; q=dns/txt; s=axis-central1;
-  t=1597411915; x=1628947915;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0pgMPV92f759j772BAb65TdIH1uz74Ejo9KR80SU1HU=;
-  b=Q8PTC4EuDRxOBrIPR5hcTZZKxPMHpSUutrkeB8eCMa9Jz4ZZHkYfpH1I
-   UeCcF//XeQW2WDKTVK2Rh5TggnpIJIVLJW6l17cigD2jqeiRMIyFWKXzw
-   bHQlTWZKElI/X1GU0ZLZfUtA0Q6jbzRX3eUtA+EzrPscfTTJ+1Ecq+VUs
-   sof1Zdk+9tSpqA8eDmd2VJz4OyuX5jW7ODsVTkHVf0KGbB1eE349zJ7EM
-   Hv9LcMZE0YoIsmgw4IJgfXnGapNxizbeOivSwhqprldFwsFqZe0s5dBGX
-   I8Tk+wbwMkrYAidG3nBcyUYKQkh7sX3ugaEdWbqRcO/04Lz/NnFe48t7S
-   w==;
-IronPort-SDR: sMWGEmpxnLxU8ogXyUUWxWrdbbvFlnQ8FkWgQPPmXmQPSLBPr6HuCmUziTwNd+26CAaH58/tI/
- VOB9C34IxJt1RuhLL1DNuTcGQd7i9G1XFUP/KBBvs+lH1eOyVmNUp4qocs8lczgMEYXs8h8YAz
- 8R/lXDZEZNYJfeTMth1Agur3aLJEUXeH+t3a6S25xC8cFY80LX8E/X4c5pJjPh+KR0pIu2HaCz
- Qsvjeaovtg9uvbKY0gEJTQ312SxwM/+OHjwKwoAcQ4YXAjqnL+jv6qlnOgbY/+q40tSBnzzz77
- fSs=
-X-IronPort-AV: E=Sophos;i="5.76,312,1592863200"; 
-   d="scan'208";a="11808837"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     <jbaron@akamai.com>, <rostedt@goodmis.org>, <mingo@redhat.com>
-CC:     <kernel@axis.com>, <corbet@lwn.net>, <pmladek@suse.com>,
-        <sergey.senozhatsky@gmail.com>, <john.ogness@linutronix.de>,
-        <linux-kernel@vger.kernel.org>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH v2] dynamic debug: allow printing to trace event
-Date:   Fri, 14 Aug 2020 15:31:51 +0200
-Message-ID: <20200814133151.7759-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 14 Aug 2020 09:32:15 -0400
+Received: from mail-co1nam11on2103.outbound.protection.outlook.com ([40.107.220.103]:38849
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726237AbgHNNcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:32:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fDLCgp/yBHGCNpY9J2JV+2HcosIiWPrXmU3RNl0pyJ3DYCXfdV9l8mp4qdZj/ZUhSvo+ZTmFbMGx/XOw06z0M1a6OS2cC7EQzriGnVG6y8UvhL5nZNA993nPFluOedEgj/gXak++RAP5dzscVR/tVjarDDKVDGNWeUdCrzLmGx9iGjkbCWJPhi1iV5A0kzcEqfFOrqAWvrn6MSNVotqyUSZ5BECqWs4ui1BdiachPpmuHonCEpmaXtc4En6GjeEBf3khAK+d/qnkDz2dRBx+J2gWiG1Hk8biC8Ii8GGUVD2I+12zz8erz7LXU6zgQH3FJryUIqU4gUKlxU+DOBmhWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7fk+nE1Is0N7kHr8pE0x+NwB2o4qD3Ib6jzhrh2oYU=;
+ b=nfMclI9SN02kWHB7FaW26gvH21kP+WOKkzLaHmC44H6t/RIW/1K2iOPFWP/axr68FFrkz2hpAfNHcdV494CLMEw7csIFcxsH1cnZrKlor4IEsuJz0tRNE21/PEUjTT2r5CSU9C/qaOOZSQoXtgKV1/eOYjM7YSW6D8NZoBA5KrecZOQMisigqFA5BeoJ5cGk6BL+cRacvCb1c8JE4ks0EWmF71D3rIuP49sYftlT/vzwSdTO91eNelJqp6yLpuKNf9zkPkpTiOjK5VoXn7Rr06QL+4ittY+WFEjUZlelitqoNIb6TZcfx+6i8LPM3tJjkXufmDkMsOxGdzSlWusaOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7fk+nE1Is0N7kHr8pE0x+NwB2o4qD3Ib6jzhrh2oYU=;
+ b=jdnHWE9r/2Z0cV3KulCL6DFVnQp+92iLLBQ/kR1BUg5nkOwdv3QVg+1+WA5SXsc7408uFSOsDTq+MlTBYx1XnlM5cGu1CpzjMpq7lCZOO53wVJ1Xif6/pnIzNnVPWV+PIgi/DojaWoc3a+SEU2fiGyi/dgx1qAI8KO1qf+r29LM=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0923.namprd21.prod.outlook.com (2603:10b6:302:10::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.5; Fri, 14 Aug
+ 2020 13:32:12 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%9]) with mapi id 15.20.3305.017; Fri, 14 Aug 2020
+ 13:32:12 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>
+Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt in
+ ACPI DSDT
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt
+ in ACPI DSDT
+Thread-Index: AQHWcczKSYf6p85IYUulglZB/fkqp6k3W0mAgAA+3SA=
+Date:   Fri, 14 Aug 2020 13:32:11 +0000
+Message-ID: <MW2PR2101MB1052649114BC9A0396FB8905D7400@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
+ <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
+In-Reply-To: <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-08-14T13:32:10Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0d044122-5ea9-480e-8b20-24288e093990;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: eab0303b-cac2-4dfe-620f-08d84056736f
+x-ms-traffictypediagnostic: MW2PR2101MB0923:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB0923AEAFCCE5B21FF58D3122D7400@MW2PR2101MB0923.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:549;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZhIj5Zz/X3Jh82jQS2t8tkB/I9LfMzhAxgn5vpHauesEo6Y8uOfa49mAzuhbnFqUAdWt6wAM7DlzJmxux3H/G/ZWk/LYEEX3Nyuu40abK4tWuxOGd5m84xLVi3Nrno7wASyulSp0RJ6k7KBndSMlvWpNQ8o97W+k8w3iG4fDAH2iyDByYSMKyxfOQ5IHtgqNRjYH30YacGzlS3EPj+9YuDy8lSxl1vE4KhfrHlbU5HJj0FKBfOQsLJdN9nd5O/xRtD5Aucm2oa5vV842UG97ZE79koh+wxRb7YwhE8TCyF+zTdgeDWO79+m+mkblEIK/2KfMdnQVfZzcFgQDJV7Zyw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(33656002)(6506007)(4326008)(66446008)(52536014)(186003)(5660300002)(82950400001)(82960400001)(10290500003)(76116006)(26005)(64756008)(66476007)(7696005)(66946007)(66556008)(71200400001)(6916009)(8990500004)(2906002)(8676002)(9686003)(86362001)(55016002)(8936002)(478600001)(83380400001)(316002)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lAwr1jZNQxo1j+7A8H/2I8c/t4Q+Lil0OB35jKUQuZnFk/D0zZKwV6TYAqgJ7r/12IOJZ1S80BQMk9Euxdjt201W0AbbzBg0UySahYVPnlKJT79WSv4hh6Qr2xoc8TjTYSZV2jjzaGrMbaYLAJuLOXcnK3NC28YT7THKUjtQ59V2O5SEkE7zEa/yulGA8QfTXvX5RJ0SskOB0lFPEZX2vVhrC1JUCAQTMGBXLbceprpN6cguSWy6K1GuX+duq4UrifEZ+7/11Uddff8si8hup7xqvWv7Vk/QmsblHU/m8CN0Blh+WPFqEMFpNcfaWvIgWeWv11U7Bqr3P5dmqEx+hsLqY9QETEOMdnWdGevgqyS77kF2H7ws6WP20AJJGkFmQyU1kXpu61qwnpCSAR7rQQr8i0I8nRgaimnONzq83SmzIlQF7LLYCPVQQfw/K8nmIvcYvWwOn/vSPR/bum4w6KYrZr6jIQ/6fDYGZ09Pc9jKB6HAI/g+d1O6C8VSzynu8WaHmYcLv4sfFfUyGeO6YFfPhxcZUzqto3j2zXbW4qtV+VETsH/mCzEltFcwXaza6XuCoiwM3+4OtXKPDbxAHwW9cWDRfC3T/7LWOooguVVHGh5inB5t+X80JTR15uA/5kQYSXihiahVsLhUurLg4g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eab0303b-cac2-4dfe-620f-08d84056736f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2020 13:32:12.0180
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8Eg/3OBimhlYhlKVoYjSTqtzfkY4W1heQTfMZZpuWASj7+E5Bp+31VBopKDt8SEbIm7Ag9p/nsSbpcG0eK7s3WzHrs/gXcDDiiCFWxloJ1w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0923
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When debugging device drivers, I've found it very useful to be able to
-redirect existing pr_debug()/dev_dbg() prints to the trace buffer
-instead of dmesg.  Among the many advantages of the trace buffer is that
-it can be dynamically resized, allows these prints to combined with
-other trace events, and doesn't fill up system logs.
+From: Wei Liu <wei.liu@kernel.org> Sent: Friday, August 14, 2020 2:44 AM
+>=20
+> On Thu, Aug 13, 2020 at 04:51:19PM -0700, Michael Kelley wrote:
+> > On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
+> > in the ACPI DSDT.  This information is not used on x86 because the
+> > interrupt vector must be hardcoded.  But update the generic
+> > VMbus driver to do the parsing and pass the information to the
+> > architecture specific code that sets up the Linux IRQ.  Update
+> > consumers of the interrupt to get it from an architecture specific
+> > function.
+> >
+> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> > ---
+> >  arch/x86/include/asm/mshyperv.h |  1 +
+> >  arch/x86/kernel/cpu/mshyperv.c  |  3 ++-
+> >  drivers/hv/hv.c                 |  2 +-
+> >  drivers/hv/vmbus_drv.c          | 30 +++++++++++++++++++++++++++---
+> >  include/asm-generic/mshyperv.h  |  4 +++-
+> >  5 files changed, 34 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/msh=
+yperv.h
+> > index 4f77b8f..ffc2899 100644
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+> > @@ -54,6 +54,7 @@ typedef int (*hyperv_fill_flush_list_func)(
+> >  #define hv_enable_vdso_clocksource() \
+> >  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
+> >  #define hv_get_raw_timer() rdtsc_ordered()
+> > +#define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
+> >
+> >  /*
+> >   * Reference to pv_ops must be inline so objtool
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyp=
+erv.c
+> > index 3112544..538aa87 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -55,9 +55,10 @@
+> >  	set_irq_regs(old_regs);
+> >  }
+> >
+> > -void hv_setup_vmbus_irq(void (*handler)(void))
+> > +int hv_setup_vmbus_irq(int irq, void (*handler)(void))
+> >  {
+>=20
+> irq is not used here. Did you perhaps forget to commit a chunk of code?
 
-Since dynamic debug already has hooks in these call sites, getting these
-prints into the ftrace buffer is straightforward if we have dynamic
-debug do it.
+No, this is correct.  Per the commit message, the irq information
+parsed from the DSDT is not used in the x86 code.  But it is used on the
+ARM64 side.  I should add a comment to that effect here in the x86
+code so there's no confusion.
 
-Add an "x" flag to make the dynamic debug call site print to a new
-printk:dynamic trace event.  The trace event can be emitted instead of
-or in addition to the printk().
+Michael
 
-The print buffer is statically allocated and managed using code borrowed
-from __ftrace_trace_stack() and is limited to 256 bytes (four of these
-are allocated per CPU to handle the various contexts); anything larger
-will be truncated.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
-v2:
- - Remove stack buffer and use code similar to __ftrace_trace_stack()
- - Use an event with the same class as printk:console
-
- .../admin-guide/dynamic-debug-howto.rst       |   1 +
- include/linux/dynamic_debug.h                 |   7 +-
- include/trace/events/printk.h                 |  12 +-
- lib/dynamic_debug.c                           | 155 +++++++++++++++---
- 4 files changed, 146 insertions(+), 29 deletions(-)
-
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index e5a8def45f3f..d2ebee464db7 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -229,6 +229,7 @@ of the characters::
- The flags are::
- 
-   p    enables the pr_debug() callsite.
-+  x    enables trace to the printk:dynamic event
-   f    Include the function name in the printed message
-   l    Include line number in the printed message
-   m    Include module name in the printed message
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index aa9ff9e1c0b3..f599ed21ecc5 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -27,13 +27,16 @@ struct _ddebug {
- 	 * writes commands to <debugfs>/dynamic_debug/control
- 	 */
- #define _DPRINTK_FLAGS_NONE	0
--#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
-+#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
- #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
- #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
- #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
- #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
-+#define _DPRINTK_FLAGS_TRACE		(1<<5)
-+#define _DPRINTK_FLAGS_PRINT		(_DPRINTK_FLAGS_PRINTK | \
-+					 _DPRINTK_FLAGS_TRACE)
- #if defined DEBUG
--#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
-+#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINTK
- #else
- #define _DPRINTK_FLAGS_DEFAULT 0
- #endif
-diff --git a/include/trace/events/printk.h b/include/trace/events/printk.h
-index 13d405b2fd8b..6c89121a1669 100644
---- a/include/trace/events/printk.h
-+++ b/include/trace/events/printk.h
-@@ -7,7 +7,7 @@
- 
- #include <linux/tracepoint.h>
- 
--TRACE_EVENT(console,
-+DECLARE_EVENT_CLASS(printk,
- 	TP_PROTO(const char *text, size_t len),
- 
- 	TP_ARGS(text, len),
-@@ -31,6 +31,16 @@ TRACE_EVENT(console,
- 
- 	TP_printk("%s", __get_str(msg))
- );
-+
-+DEFINE_EVENT(printk, console,
-+	TP_PROTO(const char *text, size_t len),
-+	TP_ARGS(text, len)
-+);
-+
-+DEFINE_EVENT(printk, dynamic,
-+	TP_PROTO(const char *text, size_t len),
-+	TP_ARGS(text, len)
-+);
- #endif /* _TRACE_PRINTK_H */
- 
- /* This part must be outside protection */
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 1d012e597cc3..76fc3e33fe41 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -36,6 +36,7 @@
- #include <linux/sched.h>
- #include <linux/device.h>
- #include <linux/netdevice.h>
-+#include <trace/events/printk.h>
- 
- #include <rdma/ib_verbs.h>
- 
-@@ -84,11 +85,12 @@ static inline const char *trim_prefix(const char *path)
- }
- 
- static struct { unsigned flag:8; char opt_char; } opt_array[] = {
--	{ _DPRINTK_FLAGS_PRINT, 'p' },
-+	{ _DPRINTK_FLAGS_PRINTK, 'p' },
- 	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
- 	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
- 	{ _DPRINTK_FLAGS_INCL_LINENO, 'l' },
- 	{ _DPRINTK_FLAGS_INCL_TID, 't' },
-+	{ _DPRINTK_FLAGS_TRACE, 'x' },
- 	{ _DPRINTK_FLAGS_NONE, '_' },
- };
- 
-@@ -600,6 +602,96 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
- 	return buf;
- }
- 
-+/*
-+ * This code is heavily based on __ftrace_trace_stack().
-+ *
-+ * Allow 4 levels of nesting: normal, softirq, irq, NMI.
-+ */
-+#define DYNAMIC_TRACE_NESTING	4
-+
-+struct dynamic_trace_buf {
-+	char buf[256];
-+};
-+
-+struct dynamic_trace_bufs {
-+	struct dynamic_trace_buf bufs[DYNAMIC_TRACE_NESTING];
-+};
-+
-+static DEFINE_PER_CPU(struct dynamic_trace_bufs, dynamic_trace_bufs);
-+static DEFINE_PER_CPU(int, dynamic_trace_reserve);
-+
-+static void dynamic_trace(const char *fmt, va_list args)
-+{
-+	struct dynamic_trace_buf *buf;
-+	int bufidx;
-+	int len;
-+
-+	preempt_disable_notrace();
-+
-+	bufidx = __this_cpu_inc_return(dynamic_trace_reserve) - 1;
-+
-+	if (WARN_ON_ONCE(bufidx > DYNAMIC_TRACE_NESTING))
-+		goto out;
-+
-+	/* For the same reasons as in __ftrace_trace_stack(). */
-+	barrier();
-+
-+	buf = this_cpu_ptr(dynamic_trace_bufs.bufs) + bufidx;
-+
-+	len = vscnprintf(buf->buf, sizeof(buf->buf), fmt, args);
-+	trace_dynamic(buf->buf, len);
-+
-+out:
-+	/* As above. */
-+	barrier();
-+	__this_cpu_dec(dynamic_trace_reserve);
-+	preempt_enable_notrace();
-+}
-+
-+static void dynamic_printk(unsigned int flags, const char *fmt, ...)
-+{
-+	if (flags & _DPRINTK_FLAGS_TRACE) {
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		/*
-+		 * All callers include the KERN_DEBUG prefix to keep the
-+		 * vprintk case simple; strip it out for tracing.
-+		 */
-+		dynamic_trace(fmt + strlen(KERN_DEBUG), args);
-+		va_end(args);
-+	}
-+
-+	if (flags & _DPRINTK_FLAGS_PRINTK) {
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		vprintk(fmt, args);
-+		va_end(args);
-+	}
-+}
-+
-+static void dynamic_dev_printk(unsigned int flags, const struct device *dev,
-+			       const char *fmt, ...)
-+{
-+
-+	if (flags & _DPRINTK_FLAGS_TRACE) {
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		dynamic_trace(fmt, args);
-+		va_end(args);
-+	}
-+
-+	if (flags & _DPRINTK_FLAGS_PRINTK) {
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		dev_vprintk_emit(LOGLEVEL_DEBUG, dev, fmt, args);
-+		va_end(args);
-+	}
-+}
-+
- void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
- {
- 	va_list args;
-@@ -614,7 +706,8 @@ void __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
- 
--	printk(KERN_DEBUG "%s%pV", dynamic_emit_prefix(descriptor, buf), &vaf);
-+	dynamic_printk(descriptor->flags, KERN_DEBUG "%s%pV",
-+		       dynamic_emit_prefix(descriptor, buf), &vaf);
- 
- 	va_end(args);
- }
-@@ -624,6 +717,7 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
- 		      const struct device *dev, const char *fmt, ...)
- {
- 	struct va_format vaf;
-+	unsigned int flags;
- 	va_list args;
- 
- 	BUG_ON(!descriptor);
-@@ -633,16 +727,18 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
- 
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
-+	flags = descriptor->flags;
- 
- 	if (!dev) {
--		printk(KERN_DEBUG "(NULL device *): %pV", &vaf);
-+		dynamic_printk(flags, KERN_DEBUG "(NULL device *): %pV",
-+			      &vaf);
- 	} else {
- 		char buf[PREFIX_SIZE];
- 
--		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
--				dynamic_emit_prefix(descriptor, buf),
--				dev_driver_string(dev), dev_name(dev),
--				&vaf);
-+		dynamic_dev_printk(flags, dev, "%s%s %s: %pV",
-+				   dynamic_emit_prefix(descriptor, buf),
-+				   dev_driver_string(dev), dev_name(dev),
-+				   &vaf);
- 	}
- 
- 	va_end(args);
-@@ -655,6 +751,7 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
- 			  const struct net_device *dev, const char *fmt, ...)
- {
- 	struct va_format vaf;
-+	unsigned int flags;
- 	va_list args;
- 
- 	BUG_ON(!descriptor);
-@@ -664,22 +761,24 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
- 
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
-+	flags = descriptor->flags;
- 
- 	if (dev && dev->dev.parent) {
- 		char buf[PREFIX_SIZE];
- 
--		dev_printk_emit(LOGLEVEL_DEBUG, dev->dev.parent,
--				"%s%s %s %s%s: %pV",
--				dynamic_emit_prefix(descriptor, buf),
--				dev_driver_string(dev->dev.parent),
--				dev_name(dev->dev.parent),
--				netdev_name(dev), netdev_reg_state(dev),
--				&vaf);
-+		dynamic_dev_printk(flags, dev->dev.parent,
-+				   "%s%s %s %s%s: %pV",
-+				   dynamic_emit_prefix(descriptor, buf),
-+				   dev_driver_string(dev->dev.parent),
-+				   dev_name(dev->dev.parent),
-+				   netdev_name(dev), netdev_reg_state(dev),
-+				   &vaf);
- 	} else if (dev) {
--		printk(KERN_DEBUG "%s%s: %pV", netdev_name(dev),
--		       netdev_reg_state(dev), &vaf);
-+		dynamic_printk(flags, KERN_DEBUG "%s%s: %pV",
-+			       netdev_name(dev), netdev_reg_state(dev), &vaf);
- 	} else {
--		printk(KERN_DEBUG "(NULL net_device): %pV", &vaf);
-+		dynamic_printk(flags, KERN_DEBUG "(NULL net_device): %pV",
-+			       &vaf);
- 	}
- 
- 	va_end(args);
-@@ -694,27 +793,31 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 			 const struct ib_device *ibdev, const char *fmt, ...)
- {
- 	struct va_format vaf;
-+	unsigned int flags;
- 	va_list args;
- 
- 	va_start(args, fmt);
- 
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
-+	flags = descriptor->flags;
- 
- 	if (ibdev && ibdev->dev.parent) {
- 		char buf[PREFIX_SIZE];
- 
--		dev_printk_emit(LOGLEVEL_DEBUG, ibdev->dev.parent,
--				"%s%s %s %s: %pV",
--				dynamic_emit_prefix(descriptor, buf),
--				dev_driver_string(ibdev->dev.parent),
--				dev_name(ibdev->dev.parent),
--				dev_name(&ibdev->dev),
--				&vaf);
-+		dynamic_dev_printk(flags, ibdev->dev.parent,
-+				   "%s%s %s %s: %pV",
-+				   dynamic_emit_prefix(descriptor, buf),
-+				   dev_driver_string(ibdev->dev.parent),
-+				   dev_name(ibdev->dev.parent),
-+				   dev_name(&ibdev->dev),
-+				   &vaf);
- 	} else if (ibdev) {
--		printk(KERN_DEBUG "%s: %pV", dev_name(&ibdev->dev), &vaf);
-+		dynamic_printk(flags, KERN_DEBUG "%s: %pV",
-+			       dev_name(&ibdev->dev), &vaf);
- 	} else {
--		printk(KERN_DEBUG "(NULL ib_device): %pV", &vaf);
-+		dynamic_printk(flags, KERN_DEBUG "(NULL ib_device): %pV",
-+			       &vaf);
- 	}
- 
- 	va_end(args);
--- 
-2.25.1
-
+>=20
+> >  	vmbus_handler =3D handler;
+> > +	return 0;
+> >  }
+>=20
+> Wei.
