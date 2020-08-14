@@ -4,100 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB557C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D739C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835AC2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F9A20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHNC4i (ORCPT
+        id S1726651AbgHNDC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:56:38 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:39610 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726564AbgHNC4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 22:56:37 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj95h_TVfJbkIAA--.14S2;
-        Fri, 14 Aug 2020 10:56:34 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: Loongson: Set CONFIG_FRAME_WARN=2048 in loongson3_defconfig to fix build warning
-Date:   Fri, 14 Aug 2020 10:56:33 +0800
-Message-Id: <1597373793-8482-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxj95h_TVfJbkIAA--.14S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ary8GFykKw43uF4Uur15Jwb_yoW8WryfpF
-        WfJr1DAr48KF4Fya98CF97WFZYvFn3AFW7WFW7Xa4UXF909ayDZr9rKF1UJr47tryqyw40
-        9as5KFnIvFWDC37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU3pnPUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Thu, 13 Aug 2020 23:02:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48346 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbgHNDCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 23:02:55 -0400
+IronPort-SDR: slOS+5gjyNI3HbwVa7/OZUoRtPG9gzP8GDWHHBsd6D6woiLKF6SniKKEb2odvcyXKJM0P+0XFK
+ 9E1r4/eQ2JKw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="218683649"
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="218683649"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 20:02:54 -0700
+IronPort-SDR: wEhkRU/DQPC9pX4DpyoPjXFa9SctLxpLCacV6p3VqTHLmP/IYd6gRRjH/Yt4wk5gy8JlMIq6OU
+ TJPk0Stmdx9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="399357936"
+Received: from ipu5-build.bj.intel.com ([10.238.232.196])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2020 20:02:52 -0700
+From:   Bingbu Cao <bingbu.cao@intel.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helgaas@kernel.org
+Cc:     sakari.ailus@linux.intel.com, tian.shu.qiu@intel.com,
+        bingbu.cao@intel.com, bingbu.cao@linux.intel.com
+Subject: [PATCH v3] nvmem: core: add sanity check in nvmem_device_read()
+Date:   Fri, 14 Aug 2020 11:01:46 +0800
+Message-Id: <1597374106-15974-1-git-send-email-bingbu.cao@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 70b838292bef ("MIPS: Update default config file for
-Loongson-3"), CONFIG_VHOST_SCSI and CONFIG_VHOST are set when use
-loongson3_defconfig, and then there exists the following two build
-warnings related with these two configs, set CONFIG_FRAME_WARN=2048
-in loongson3_defconfig to fix it.
+nvmem device read/write could be called directly once nvmem
+device registered, the sanity check should be done before each
+nvmem_reg_read/write().
 
-  CC [M]  drivers/vhost/scsi.o
-drivers/vhost/scsi.c: In function ‘vhost_scsi_flush’:
-drivers/vhost/scsi.c:1374:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
- }
- ^
-  LD [M]  drivers/vhost/vhost_scsi.o
-  CC [M]  drivers/vhost/vsock.o
-  LD [M]  drivers/vhost/vhost_vsock.o
-  CC [M]  drivers/vhost/vhost.o
-drivers/vhost/vhost.c: In function ‘log_used’:
-drivers/vhost/vhost.c:1896:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
- }
- ^
-
-Fixes: 70b838292bef ("MIPS: Update default config file for Loongson-3")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
 ---
- arch/mips/configs/loongson3_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index a65b08d..2b356d9 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -403,7 +403,7 @@ CONFIG_CRYPTO_TEA=m
- CONFIG_CRYPTO_TWOFISH=m
- CONFIG_CRYPTO_DEFLATE=m
- CONFIG_PRINTK_TIME=y
--CONFIG_FRAME_WARN=1024
-+CONFIG_FRAME_WARN=2048
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_MAGIC_SYSRQ=y
- # CONFIG_SCHED_DEBUG is not set
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 927eb5f6003f..09ad5a06efee 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -69,6 +69,9 @@ static BLOCKING_NOTIFIER_HEAD(nvmem_notifier);
+ static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
+ 			  void *val, size_t bytes)
+ {
++	if (bytes + offset > nvmem->size)
++		return -EINVAL;
++
+ 	if (nvmem->reg_read)
+ 		return nvmem->reg_read(nvmem->priv, offset, val, bytes);
+ 
+@@ -80,6 +83,9 @@ static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
+ {
+ 	int ret;
+ 
++	if (bytes + offset > nvmem->size)
++		return -EINVAL;
++
+ 	if (nvmem->reg_write) {
+ 		gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
+ 		ret = nvmem->reg_write(nvmem->priv, offset, val, bytes);
 -- 
-2.1.0
+2.7.4
 
