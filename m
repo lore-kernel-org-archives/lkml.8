@@ -3,101 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC1C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C24C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7685120771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09FC22BEA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHNCRN (ORCPT
+        id S1726640AbgHNCR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:17:13 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:65530 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgHNCRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 22:17:13 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 07E2H8i0010343
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 19:17:09 -0700 (PDT)
-Received: from [128.224.162.157] (128.224.162.157) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
- 19:17:08 -0700
-Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
-To:     Len Brown <lenb@kernel.org>
-CC:     Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200717060849.12469-1-liwei.song@windriver.com>
- <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com>
-From:   Liwei Song <liwei.song@windriver.com>
-Message-ID: <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com>
-Date:   Fri, 14 Aug 2020 10:17:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 13 Aug 2020 22:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbgHNCR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 22:17:28 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5BF20771;
+        Fri, 14 Aug 2020 02:17:26 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 22:17:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zejiang Tang <tangzejiang@loongson.cn>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: ftrace: Remove redundant #ifdef
+ CONFIG_DYNAMIC_FTRAC
+Message-ID: <20200813221725.102a3b3e@oasis.local.home>
+In-Reply-To: <1597370895-5412-1-git-send-email-tangzejiang@loongson.cn>
+References: <1597370895-5412-1-git-send-email-tangzejiang@loongson.cn>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-with multilib lib32 support, the rootfs will be 32-bit, 
-the kernel is still 64-bit, in this case run turbostat
-will failed with "out of range" error.
+On Fri, 14 Aug 2020 10:08:15 +0800
+Zejiang Tang <tangzejiang@loongson.cn> wrote:
 
-Thanks,
-Liwei.
+> There exists redundant #ifdef CONFIG_DYNAMIC_FTRAC in ftrace.c, remove it.
+> 
+> Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
 
-On 8/14/20 05:43, Len Brown wrote:
-> Huh?
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> ---
+>  arch/mips/kernel/ftrace.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> On Fri, Jul 17, 2020 at 2:09 AM Liwei Song <liwei.song@windriver.com> wrote:
->>
->> with 32-bit rootfs, the offset may out of range when set it
->> to 0xc0010299, define it as "unsigned long long" type and
->> call pread64 directly in kernel.
->>
->> Signed-off-by: Liwei Song <liwei.song@windriver.com>
->> ---
->>  tools/power/x86/turbostat/turbostat.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
->> index 33b370865d16..4c5cdfcb5721 100644
->> --- a/tools/power/x86/turbostat/turbostat.c
->> +++ b/tools/power/x86/turbostat/turbostat.c
->> @@ -33,6 +33,7 @@
->>  #include <sys/capability.h>
->>  #include <errno.h>
->>  #include <math.h>
->> +#include <sys/syscall.h>
->>
->>  char *proc_stat = "/proc/stat";
->>  FILE *outf;
->> @@ -381,11 +382,11 @@ int get_msr_fd(int cpu)
->>         return fd;
->>  }
->>
->> -int get_msr(int cpu, off_t offset, unsigned long long *msr)
->> +int get_msr(int cpu, unsigned long long offset, unsigned long long *msr)
->>  {
->>         ssize_t retval;
->>
->> -       retval = pread(get_msr_fd(cpu), msr, sizeof(*msr), offset);
->> +       retval = syscall(SYS_pread64, get_msr_fd(cpu), msr, sizeof(*msr), offset);
->>
->>         if (retval != sizeof *msr)
->>                 err(-1, "cpu%d: msr offset 0x%llx read failed", cpu, (unsigned long long)offset);
->> --
->> 2.17.1
->>
-> 
-> 
+> diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+> index 2625232..f57e68f 100644
+> --- a/arch/mips/kernel/ftrace.c
+> +++ b/arch/mips/kernel/ftrace.c
+> @@ -37,10 +37,6 @@ void arch_ftrace_update_code(int command)
+>  	ftrace_modify_all_code(command);
+>  }
+>  
+> -#endif
+> -
+> -#ifdef CONFIG_DYNAMIC_FTRACE
+> -
+>  #define JAL 0x0c000000		/* jump & link: ip --> ra, jump to target */
+>  #define ADDR_MASK 0x03ffffff	/*  op_code|addr : 31...26|25 ....0 */
+>  #define JUMP_RANGE_MASK ((1UL << 28) - 1)
+
