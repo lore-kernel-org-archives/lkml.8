@@ -2,82 +2,121 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A8FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F13EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3EB20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE3C20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:40:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+xR5/sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHNCkd (ORCPT
+        id S1726647AbgHNCkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:40:33 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:36034 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726564AbgHNCkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 22:40:33 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxaMSZ+TVfzLcIAA--.2S2;
-        Fri, 14 Aug 2020 10:40:25 +0800 (CST)
-From:   Zejiang Tang <tangzejiang@loongson.cn>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] MIPS: ftrace: Remove redundant #ifdef CONFIG_DYNAMIC_FTRACE
-Date:   Fri, 14 Aug 2020 10:40:24 +0800
-Message-Id: <1597372824-8270-1-git-send-email-tangzejiang@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxaMSZ+TVfzLcIAA--.2S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gry3ury7Wry7Gw15WFy8Zrb_yoW3Cwc_Jr
-        12vw40kryFk3WvgrZ5XrWrX345CwsIgrZ5u3WDuryYva9Iyw45XFW7J3s8Xrn0qa1kZFs8
-        AwnxWr1kJayakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-        0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU3pnPUUUUU=
-X-CM-SenderInfo: pwdqw6phmlt03j6o00pqjv00gofq/
+        Thu, 13 Aug 2020 22:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgHNCkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 22:40:46 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A64C061757;
+        Thu, 13 Aug 2020 19:40:46 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c10so5031882pjn.1;
+        Thu, 13 Aug 2020 19:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1FUoAbvyEKIH5lQKuzluOyz2/ynwOKVUIX8AS+w28WA=;
+        b=C+xR5/svYbw49MY4CeW82SJXbGnX+JNhURW4NRg8W+6hzAFLpOU/my1FRJ5O0gHGWf
+         VAlVdoW2esbR7vWEeQUWFH0Jq7GcD+xFsBOUjeG2U9x2SHmPNLxwcvV97RwA1l4fh+i2
+         +M/34tH1Wr6XkBaaDg/Jg9eqhDsR+jDTIVk5lXr0M35SPbUSBzfRDX4MI+XsXjmJW5q3
+         2sEOICZBbL04zS1AtXchQpXCRnUiNeCTzSTTANAy4nkzofNJgX+QaKLbSAkfsbvzqzyZ
+         VjlfYKMGh7pJgaTph9vg4QVkl+kXKsVtraG0hRt1hw5/JDgmMZiwZUh0UUrRcksHgXH1
+         Jdiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1FUoAbvyEKIH5lQKuzluOyz2/ynwOKVUIX8AS+w28WA=;
+        b=kzGcHTxgQulXn17RgvPvY7LiL3zhIOuVMJbt1Oqh9D95xOxXEG+k1ntXE51dC0Es4c
+         yJQfcn3Wn8ch9ghivQCcuPjpPLK/TfPjUTIvxvVwvRRAQ8/pUsP5YABk4OIzLO03Hae7
+         lNu3gS5E7Cj4bUhPdzw8T1wqcYNXy7Nc26Wr/hw1oF6H0I0SJ5FxgQWOFe0rqpGXyfD2
+         AAFB8g0GXvZsx5U52EIUrugKLAgtLWMqd6TROOBT1LgUse7JKEaWLYHcHVOUCNcMZwLX
+         KMwIo7DLHOGFJTMyjmwstp9SfsXaJFZCHVN24RHAnWzpLLfiSuBhDaGy8DhCoQ01llcA
+         v5zA==
+X-Gm-Message-State: AOAM533D8ckQ4QxeeEMF1KeGv7zMGPAx72ZMeD5z7oFy1mzptI4yO6FU
+        DK/S8yDEjxAhB7we6OKGlno=
+X-Google-Smtp-Source: ABdhPJyTjSmkPtRA6/sXaKkEFWxaxBkZ4HL8mupIi9HzpilQYOPzsg6o2GqsZMiPbcCB0VR+sfOnTg==
+X-Received: by 2002:a17:90a:6fc5:: with SMTP id e63mr497592pjk.200.1597372845667;
+        Thu, 13 Aug 2020 19:40:45 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id a19sm7294660pfn.10.2020.08.13.19.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 19:40:44 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 01/19] drm/msm: remove dangling submitqueue references
+Date:   Thu, 13 Aug 2020 19:40:56 -0700
+Message-Id: <20200814024114.1177553-2-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists redundant #ifdef CONFIG_DYNAMIC_FTRACE in ftrace.c, remove it.
+From: Rob Clark <robdclark@chromium.org>
 
-Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Currently it doesn't matter, since we free the ctx immediately.  But
+when we start refcnt'ing the ctx, we don't want old dangling list
+entries to hang around.
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- arch/mips/kernel/ftrace.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
-index 2625232..f57e68f 100644
---- a/arch/mips/kernel/ftrace.c
-+++ b/arch/mips/kernel/ftrace.c
-@@ -37,10 +37,6 @@ void arch_ftrace_update_code(int command)
- 	ftrace_modify_all_code(command);
+diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
+index a1d94be7883a..90c9d84e6155 100644
+--- a/drivers/gpu/drm/msm/msm_submitqueue.c
++++ b/drivers/gpu/drm/msm/msm_submitqueue.c
+@@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
+ 	 * No lock needed in close and there won't
+ 	 * be any more user ioctls coming our way
+ 	 */
+-	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
++	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
++		list_del(&entry->node);
+ 		msm_submitqueue_put(entry);
++	}
  }
  
--#endif
--
--#ifdef CONFIG_DYNAMIC_FTRACE
--
- #define JAL 0x0c000000		/* jump & link: ip --> ra, jump to target */
- #define ADDR_MASK 0x03ffffff	/*  op_code|addr : 31...26|25 ....0 */
- #define JUMP_RANGE_MASK ((1UL << 28) - 1)
+ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
 -- 
-2.1.0
+2.26.2
 
