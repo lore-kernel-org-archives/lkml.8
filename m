@@ -2,145 +2,94 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546BD20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F105920791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4hTwEsgl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kDeKObwQ"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="ogPWcSqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgHNNci (ORCPT
+        id S1728539AbgHNNeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgHNNch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:32:37 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09694C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:32:36 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597411955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WZojXpF4CtFVHLmarhLq1h1iKcdgxc2RpfZdaP2LUC8=;
-        b=4hTwEsgl4HcRIxSII5/fwGY8GDZ+WrKb+QiRIB95G4B6ixEAbwfJG+dOxycUIN4bFB2vKo
-        TS5klI4Yh6uw4dSkjjyI2mn7/Sn8orOjYGewGYm6fr3T+7S63HBDN9ZJaWUQJZmSEA9ZNe
-        IIZ6+h89d7ACBO8/WZB4lzrWBqdz6lSIsDUyblT4Kt+QzrgMZySm9F5LdDenFPfE/HnIfU
-        Ff+eE7GC0YOkxK865WapnnLYDfFaStTU47hj7xRDtwSCU7so+lTleqczoN1Lbyget2pldW
-        EqzYt5OKRC1IiJf7BpruQd3zNVkV0gjGPbFY8KK1wJmzDKAjzau3yzTlqBTdsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597411955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WZojXpF4CtFVHLmarhLq1h1iKcdgxc2RpfZdaP2LUC8=;
-        b=kDeKObwQFo5U/wxKAaE1swO/ff/4Gw8C5nGHWBCJCPiOyEqPYR9VJGuoaXpmfhXI71CMWT
-        HGitrbMtHddq2jDA==
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Subject: Re: fs/ocfs2/suballoc.c:2430:2-8: preceding lock on line 2413
-In-Reply-To: <202008141412.mP88ccpD%lkp@intel.com>
-References: <202008141412.mP88ccpD%lkp@intel.com>
-Date:   Fri, 14 Aug 2020 15:32:35 +0200
-Message-ID: <878sehl5e4.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Aug 2020 09:34:18 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:55327 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgHNNeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:34:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1058; q=dns/txt; s=axis-central1;
+  t=1597412056; x=1628948056;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YVahuulwrH51eJacyIUw/4WvPqZAzfYdmsvREBEkBDM=;
+  b=ogPWcSqSfgyYQ3d1Y/dxR+9cA1WwtOQx8jh69+8IzZxo4l29YFYc1bOl
+   OwNos06/PxATjTLlRIzRdmKxPULwc/USNzJ5tmUfrxZE9kzsKp/aoG/PJ
+   KI1ZfO9nZszZSI+BLHew9B0BSw0CyUHRiVivgpX7rnwKhHR0te9dKqL+A
+   dTntfkqJZaCLNO0VzgOAK6EhpAeAgmcaHK4oBlV6VNmJKz6+ksuROCGVY
+   l06VmcRlEbNLeaFIf8B46ZEthhB/BK+AUuy+XnlUO1Os0EusWhE6QtUkr
+   QBx7ygcDdLeiLPnsVYwcdw7+FkDAdFOD+kNJzv/ZRgWEQyzGGSoDjvKqC
+   A==;
+IronPort-SDR: 0g5mw+43X0CZ0OKp+cCyiQOJdM6VOCqRs0sO/O6HaHf6thzvuzR2/vs90+DioZY8+BTPD4cKvY
+ BjqVCIm1H0bau75MJGBqqi+JuxsDBAhbU2d2rwU7UvV2b84spO3lPt+WP8Jf4dVGzB+RJkFPFq
+ OrxIS8TyUrPG1k4ZXwMRh16M+lh6tDKSplJ2rM61a//zO0iF7gm+WOLuH5bwjSds6m+qX0sAPT
+ a4UVdd3EeTZ2eFZmMS5rPoqgG8ADupZQTVoIX0SpGot4knK6t9PG1gdN2WY29axeD9HV/NjNf0
+ NHg=
+X-IronPort-AV: E=Sophos;i="5.76,312,1592863200"; 
+   d="scan'208";a="11808915"
+Date:   Fri, 14 Aug 2020 15:34:15 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     John Ogness <john.ogness@linutronix.de>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] dynamic debug: allow printing to trace event
+Message-ID: <20200814133415.nbkehai2vp765an5@axis.com>
+References: <20200721141105.16034-1-vincent.whitchurch@axis.com>
+ <20200721173045.540ae500@oasis.local.home>
+ <87eep3zmg9.fsf@jogness.linutronix.de>
+ <20200722144952.2mewrgebgkyr2zyf@axis.com>
+ <20200722112823.3ba72d31@oasis.local.home>
+ <20200723105735.mqfkfbljjda7qz7n@axis.com>
+ <20200723112644.7759f82f@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200723112644.7759f82f@oasis.local.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14 2020 at 14:11, kernel test robot wrote:
->
-> coccinelle warnings: (new ones prefixed by >>)
->
->>> fs/ocfs2/suballoc.c:2430:2-8: preceding lock on line 2413
->
-> vim +2430 fs/ocfs2/suballoc.c
->
-> 415cb800375cc4 Mark Fasheh     2007-09-16  2379  
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2380  static int ocfs2_block_group_clear_bits(handle_t *handle,
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2381  					struct inode *alloc_inode,
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2382  					struct ocfs2_group_desc *bg,
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2383  					struct buffer_head *group_bh,
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2384  					unsigned int bit_off,
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2385  					unsigned int num_bits,
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2386  					void (*undo_fn)(unsigned int bit,
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2387  							unsigned long *bmap))
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2388  {
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2389  	int status;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2390  	unsigned int tmp;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2391  	struct ocfs2_group_desc *undo_bg = NULL;
-> 464170647b5648 Thomas Gleixner 2019-08-09  2392  	struct journal_head *jh;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2393  
-> 42035306132802 Joel Becker     2008-11-13  2394  	/* The caller got this descriptor from
-> 42035306132802 Joel Becker     2008-11-13  2395  	 * ocfs2_read_group_descriptor().  Any corruption is a code bug. */
-> 42035306132802 Joel Becker     2008-11-13  2396  	BUG_ON(!OCFS2_IS_VALID_GROUP_DESC(bg));
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2397  
-> 2f73e135b83c50 Tao Ma          2011-02-22  2398  	trace_ocfs2_block_group_clear_bits(bit_off, num_bits);
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2399  
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2400  	BUG_ON(undo_fn && !ocfs2_is_cluster_bitmap(alloc_inode));
-> 0cf2f7632b1789 Joel Becker     2009-02-12  2401  	status = ocfs2_journal_access_gd(handle, INODE_CACHE(alloc_inode),
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2402  					 group_bh,
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2403  					 undo_fn ?
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2404  					 OCFS2_JOURNAL_ACCESS_UNDO :
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2405  					 OCFS2_JOURNAL_ACCESS_WRITE);
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2406  	if (status < 0) {
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2407  		mlog_errno(status);
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2408  		goto bail;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2409  	}
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2410  
-> 464170647b5648 Thomas Gleixner 2019-08-09  2411  	jh = bh2jh(group_bh);
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2412  	if (undo_fn) {
-> 464170647b5648 Thomas Gleixner 2019-08-09 @2413  		spin_lock(&jh->b_state_lock);
-> 464170647b5648 Thomas Gleixner 2019-08-09  2414  		undo_bg = (struct ocfs2_group_desc *) jh->b_committed_data;
-> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2415  		BUG_ON(!undo_bg);
-> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2416  	}
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2417  
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2418  	tmp = num_bits;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2419  	while(tmp--) {
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2420  		ocfs2_clear_bit((bit_off + tmp),
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2421  				(unsigned long *) bg->bg_bitmap);
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2422  		if (undo_fn)
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2423  			undo_fn(bit_off + tmp,
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2424  				(unsigned long *) undo_bg->bg_bitmap);
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2425  	}
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2426  	le16_add_cpu(&bg->bg_free_bits_count, num_bits);
-> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2427  	if (le16_to_cpu(bg->bg_free_bits_count) > le16_to_cpu(bg->bg_bits)) {
-> e75ed71be4f2f7 Changwei Ge     2018-01-31  2428  		if (undo_fn)
-> 464170647b5648 Thomas Gleixner 2019-08-09  2429  			spin_unlock(&jh->b_state_lock);
-> 7ecef14ab1db96 Joe Perches     2015-09-04 @2430  		return ocfs2_error(alloc_inode->i_sb, "Group descriptor # %llu has bit count %u but claims %u are freed. num_bits %d\n",
-> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2431  				   (unsigned long long)le64_to_cpu(bg->bg_blkno),
-> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2432  				   le16_to_cpu(bg->bg_bits),
-> 7ecef14ab1db96 Joe Perches     2015-09-04  2433  				   le16_to_cpu(bg->bg_free_bits_count),
-> 7ecef14ab1db96 Joe Perches     2015-09-04  2434  				   num_bits);
-> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2435  	}
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2436  
-> b4414eea0e7b9c Mark Fasheh     2010-03-11  2437  	if (undo_fn)
-> 464170647b5648 Thomas Gleixner 2019-08-09  2438  		spin_unlock(&jh->b_state_lock);
-> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2439  
-> ec20cec7a35158 Joel Becker     2010-03-19  2440  	ocfs2_journal_dirty(handle, group_bh);
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2441  bail:
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2442  	return status;
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2443  }
-> ccd979bdbce9fb Mark Fasheh     2005-12-15  2444  
+On Thu, Jul 23, 2020 at 05:26:44PM +0200, Steven Rostedt wrote:
+> On Thu, 23 Jul 2020 12:57:35 +0200
+> Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
+> 
+> > Would it be acceptable to just use a fixed size for the event?  At least
+> > for my own debugging use cases it's preferable to just have to increase
+> > the trace buffer size in case it's insufficient, rather than to have to
+> > restort to one-off debugging code.
+> 
+> There's two other options.
+> 
+> Option 1, is to allocate 256 bytes times 4 (in case of interruption,
+> where you have a separate buffer for every context - normal, softirq,
+> irq, nmi), and use it like I do for stack traces in the latest kernel
+> (see __ftrace_stack_trace() in kernel/trace/trace.c)
+> 
+> Option 2, would be to use trace_array_vprintk(), but you need to create
+> your own instance to do so to keep from messing with the top level buffer.
 
-That's clearly a false positive. Is there anything what can be done to
-help that cocci script here?
+Thanks for the suggestions, I've sent out a v2 implementing option 1:
 
-Thanks,
-
-        tglx
+https://lore.kernel.org/lkml/20200814133151.7759-1-vincent.whitchurch@axis.com/
