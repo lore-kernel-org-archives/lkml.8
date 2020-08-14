@@ -2,109 +2,149 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA37C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE04C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5037207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597418955;
-	bh=Hij014ULnJWEoKB27ougW8LrTHCuOQS5HxLs2kfi0Gg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x+rkGGjSxQjDmhHmuZVZiK/pK1xBOnj9Qmb/vfU2XJjtge2N61fGNGksGzIaWehhi
-	 Cgk6Q9hK4WgTGVXzfkbJZnnkdfZYhVIN+kdw3GP0dO4wlWnvWsQzfQFwGrL47GeQZW
-	 XSUM872xR6KAwOpNHa+jaYoLvE/Kdy/kAN+CO9P4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F22E204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHNP3L (ORCPT
+        id S1727081AbgHNPaX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:29:11 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:32910 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgHNP3E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:29:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t7so7876482otp.0;
-        Fri, 14 Aug 2020 08:29:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vBVBMvKKxks/kGkJ4ndBszEEsQk9CsCHA7aFPfw0OnY=;
-        b=ZiGghja38wB46vjSAhPbNDcDO67HuzxVsxaTnxsqrwYqpappI5vA74zYA8elDpnbHO
-         b6eolEASrnyrgCDCS+7HKZQtyNuFJQPEk0ITo5flWZb0FaE6R9qTkC+hIDScY7ODWr+V
-         Rtp7UVzhzmQOd0ZcdfTXEdIoCe/H5/m46pGNNci3+xQtZ4SU4R4lNeOCSFyUGCs/os9c
-         PYOraUS+bKHElG91GQF9qbMLfJDyZeymRRxyzNgvohqJL1GJ4bc9Ua1OT4xUNJ2u5qAV
-         4DeBr/p5w+s8t95VpFb5i9v8DDm4bFy1euWoKMt9loO+x83L4JVoY3k2aZ6/xhZeSVPP
-         4QCQ==
-X-Gm-Message-State: AOAM533fuZLW30hpxtL7P76Y1ruhROffX6yKCpvyiPPeIfu3gG2ouafR
-        qUOwRU61GgZjfshUY77aq62JKG5akJZgQiCrBbg=
-X-Google-Smtp-Source: ABdhPJz1T4tJ8ofzUGM0XQjCNBZ6PvK5Zq6i4UC8Y+eAkenmq/nx3KmnaWGeq6j/7fuAaFaAt8U6C3Dv5bPtU6dw8Nw=
-X-Received: by 2002:a05:6830:1c74:: with SMTP id s20mr2165582otg.167.1597418944007;
- Fri, 14 Aug 2020 08:29:04 -0700 (PDT)
+        Fri, 14 Aug 2020 11:30:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57234 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbgHNPaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:30:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6A58EAE2C;
+        Fri, 14 Aug 2020 15:30:41 +0000 (UTC)
+From:   =?utf-8?Q?Aur=C3=A9lien?= Aptel <aaptel@suse.com>
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fs: NTFS read-write driver GPL implementation by
+ Paragon Software.
+In-Reply-To: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+Date:   Fri, 14 Aug 2020 17:30:16 +0200
+Message-ID: <87h7t5454n.fsf@suse.com>
 MIME-Version: 1.0
-References: <1597286952-5706-1-git-send-email-wangqing@vivo.com>
-In-Reply-To: <1597286952-5706-1-git-send-email-wangqing@vivo.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Aug 2020 17:28:52 +0200
-Message-ID: <CAJZ5v0h=UmD33X_i80X3ww7nC=xQL7V8XaoNq2XvU_XcdQGfZQ@mail.gmail.com>
-Subject: Re: [PATCH] acpi/nfit: Use kobj_to_dev() instead
-To:     Wang Qing <wangqing@vivo.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 4:54 AM Wang Qing <wangqing@vivo.com> wrote:
->
-> Use kobj_to_dev() instead of container_of()
->
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
+I've tried this using libntfs-3g mkfs.ntfs
 
-LGTM
+# mkfs.ntfs /dev/vb1
+# mount -t ntfs3 /dev/vb1 /mnt
 
-Dan, any objections?
+This already triggered UBSAN:
 
-> ---
->  drivers/acpi/nfit/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> index fa4500f..3bb350b
-> --- a/drivers/acpi/nfit/core.c
-> +++ b/drivers/acpi/nfit/core.c
-> @@ -1382,7 +1382,7 @@ static bool ars_supported(struct nvdimm_bus *nvdimm_bus)
->
->  static umode_t nfit_visible(struct kobject *kobj, struct attribute *a, int n)
->  {
-> -       struct device *dev = container_of(kobj, struct device, kobj);
-> +       struct device *dev = kobj_to_dev(kobj);
->         struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
->
->         if (a == &dev_attr_scrub.attr && !ars_supported(nvdimm_bus))
-> @@ -1667,7 +1667,7 @@ static struct attribute *acpi_nfit_dimm_attributes[] = {
->  static umode_t acpi_nfit_dimm_attr_visible(struct kobject *kobj,
->                 struct attribute *a, int n)
->  {
-> -       struct device *dev = container_of(kobj, struct device, kobj);
-> +       struct device *dev = kobj_to_dev(kobj);
->         struct nvdimm *nvdimm = to_nvdimm(dev);
->         struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->
-> --
-> 2.7.4
->
+ ================================================================================
+ UBSAN: object-size-mismatch in fs/ntfs3/super.c:834:16
+ load of address 000000006ae096b5 with insufficient space
+ for an object of type 'const char'
+ CPU: 3 PID: 1248 Comm: mount Not tainted 5.8.0+ #4
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+ Call Trace:
+  dump_stack+0x78/0xa0
+  ubsan_epilogue+0x5/0x40
+  ubsan_type_mismatch_common.cold+0xc8/0xcd
+  __ubsan_handle_type_mismatch_v1+0x32/0x37
+  ntfs_fill_super+0x9f/0x13e0
+  ? vsnprintf+0x1ef/0x4f0
+  mount_bdev+0x193/0x1c0
+
+Which points to:
+
+	sb->s_magic = *(unsigned long *)s_magic; /* TODO */
+
+Maybe store ('n'<<32)|('t'<<24)|('f'<<16)|('s'<<8) ?
+Seems harmless.
+
+* * *
+
+Then I've tried to copy /etc into it:
+
+# cp -rp /etc /mnt
+
+But this triggered a NULL ptr deref:
+
+ BUG: kernel NULL pointer dereference, address: 0000000000000028
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0 
+ Oops: 0000 [#1] SMP NOPTI
+ CPU: 0 PID: 1255 Comm: cp Not tainted 5.8.0+ #4
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+ RIP: 0010:ntfs_insert_security+0x187/0x4a0
+ Code: 00 48 83 c4 18 85 c0 0f 85 54 01 00 00 48 8b 44 24 50 49 8d b5 d8 01 00 00 8b 54 24 60 83 c3 14 48 89 74 24 30 48 85 c0 74 3a <39> 58 28 0f 84 7e 01 00 00 49 89 e8 48 8d 4c 24 50 4c 89 f2 4c 89
+ RSP: 0018:ffffac73403dfc58 EFLAGS: 00010246
+ RAX: 0000000000000000 RBX: 0000000000000064 RCX: 0000000000000010
+ RDX: 00000000000000b0 RSI: 0000000000000000 RDI: 0000000000000000
+ RBP: ffff94154ed5fe00 R08: 0000000000000000 R09: 0000000000000001
+ R10: ffff9415781a6180 R11: 0000000000000003 R12: ffff94155c989800
+ R13: ffff94151e8d2a38 R14: ffff9415781a6170 R15: ffff9415781173f0
+ FS:  00007fd19b86e580(0000) GS:ffff94157dc00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000028 CR3: 000000001ac2a000 CR4: 0000000000350ef0
+ Call Trace:
+  ? mark_held_locks+0x49/0x70
+  ? lockdep_hardirqs_on_prepare+0xf7/0x190
+  ? ktime_get_coarse_real_ts64+0x9e/0xd0
+  ? trace_hardirqs_on+0x1c/0xe0
+  ntfs_create_inode+0x2db/0x11c0
+  ntfs_mkdir+0x58/0x90
+  vfs_mkdir+0x109/0x1f0
+  do_mkdirat+0x81/0x120
+  do_syscall_64+0x33/0x40
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fd19ad54dd7
+ Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 b9 70 2c 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 91 70 2c 00 f7 d8 64 89 01 48
+ RSP: 002b:00007ffec3c41588 EFLAGS: 00000206 ORIG_RAX: 0000000000000053
+ RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007fd19ad54dd7
+ RDX: 00000000000c0001 RSI: 00000000000001c0 RDI: 000055cad585fcf0
+ RBP: 00007ffec3c41990 R08: 00007ffec3c41b50 R09: 00007fd19ada55c0
+ R10: 00000000000001ef R11: 0000000000000206 R12: 00007ffec3c41b50
+ R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffec3c437be
+
+
+(gdb) list *(ntfs_insert_security+0x187)
+0xffffffff814e5097 is in ntfs_insert_security (fs/ntfs3/fsntfs.c:1811).
+1806
+1807            if (!e)
+1808                    goto insert_security;
+1809
+1810    next_security:
+1811            if (le32_to_cpu(e->sec_hdr.size) != new_sec_size)
+1812                    goto skip_read_sds;
+1813
+1814            err = ntfs_read_run_nb(sbi, &ni->file.run, le64_to_cpu(e->sec_hdr.off),
+1815                                   d_security, new_sec_size, NULL);
+
+(gdb) disas /s ntfs_insert_security
+....
+1811            if (le32_to_cpu(e->sec_hdr.size) != new_sec_size)
+   0xffffffff814e5097 <+391>:   cmp    %ebx,0x28(%rax) <=====
+   0xffffffff814e509a <+394>:   je     0xffffffff814e521e <ntfs_insert_security+782>
+
+(gdb) p/x (int)&((NTFS_DE_SDH*)0)->sec_hdr.size
+$4 = 0x28
+
+So I think 'e' is NULL. Not sure how it can happen.
+
+Cheers,
+-- 
+Aurélien Aptel / SUSE Labs Samba Team
+GPG: 1839 CB5F 9F5B FB9B AA97  8C99 03C8 A49B 521B D5D3
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, DE
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah HRB 247165 (AG München)
