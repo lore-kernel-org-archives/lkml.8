@@ -2,220 +2,119 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB7020829
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597404942;
-	bh=+SScuk5qKesicxoXWFToSaNdAgaR48N+FzRr69hLNUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UvIbUHrR+yRl2Fr8iG5u4/aas8SBsCsywO2WGIDBo7+p2Ueccw0q6EmCrQHItCTNf
-	 6o50YQ6JIAyVJiK+kjuyGZKt8RW6hECWdmp+eN8gnwZJqipoQ8DVzV03UDnmN/tWsh
-	 rb3i7dfw7FOw2Yxj1qvs/v+k5Q8cL3NJBcGztdbo=
+	by mail.kernel.org (Postfix) with ESMTP id 0F51020771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2+cpT2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHNLfj (ORCPT
+        id S1728032AbgHNLjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgHNLfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:35:37 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688A320771;
-        Fri, 14 Aug 2020 11:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597404937;
-        bh=+SScuk5qKesicxoXWFToSaNdAgaR48N+FzRr69hLNUI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0F5u6IEWSPAtra/Ni8o34VKtJ2v8tUrF+3882Ir3HYULk1ap8G1+qPhlQODEay0cm
-         szuRKEm2y+mXi/wU0G3qjGBrnAiKN28fv89YTxJ/tYe/0rPr1aR6ZX4xQs3ExZagyO
-         hMmnqZ0DMB27PdStrUngtiXoHVsn1fqN2QugX4Ak=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7F2FD4097F; Fri, 14 Aug 2020 08:35:35 -0300 (-03)
-Date:   Fri, 14 Aug 2020 08:35:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 02/18] perf ftrace: add option '-F/--funcs' to list
- available functions
-Message-ID: <20200814113535.GS13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-3-changbin.du@gmail.com>
+        Fri, 14 Aug 2020 07:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgHNLja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 07:39:30 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C73C061384;
+        Fri, 14 Aug 2020 04:39:30 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t14so7660047wmi.3;
+        Fri, 14 Aug 2020 04:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PvaE6Xvjdl4FATqRBfh8A95bTlKRTVItk5/IF9Iibaw=;
+        b=C2+cpT2T5s3PRdb1iX1gNsVRN7+bzUvaFphsG2v4A4+u/IgKs/5MzA0CITX++JzJcA
+         ARxviUnSCDMZxWnYKfWsqJISab18SwV0zGWnoF9dmGH90QIb2oT5ru4T37dTkC97Utv9
+         MY8ZpHnR+dFTb2ykAzedOFZheMFAAn4iCEwvWZ6XYpN+HTN4i9v+YqJsAEfX9Kd/eQo0
+         11VZ+PJ+xuZK34tzxYeHm4LZxZL8vXxkWs0DHsYPFs++eVXi+wsdPkIrwu0QLRhl/0bj
+         hkyPEopNYgun6Zui5DIgfn2N7H6VaxP0yJVCaRrxHqpW6Y6DUA8tWaLzkYw6DLl+hLxa
+         On7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PvaE6Xvjdl4FATqRBfh8A95bTlKRTVItk5/IF9Iibaw=;
+        b=rMr0RCYYYuV/QnFOCzeV9RbAgjnAgRflwmUPc3ubiiqv7KWrX2ZyuzLs9tTQmp2f0D
+         KR4hhehC35oMqJIKOa8tdoweMviESld6qay2XVfrku5gyWyrmyb0EAbvWKoh6xLHHJ1u
+         twlQHc+HJytujpKMfhhZua4/y/OBx/xmdI/AzTDtVLwGNzcsOt2OCM4pqPnB/PVJT8Ee
+         KBSMCHOxSoUMXBQJhTlJO5uaDGkyus10DikttVoqmleM2xFExb/bLpow8rGUl35UEnxi
+         ESuLIYyC2HsoHdM7j73ldkoWZoHHC6u0KPwLKsfAbrXVP0yN7MvIzjZaPrBjleLHECHh
+         TKLA==
+X-Gm-Message-State: AOAM530dqFfewse/Ba4fHgPDbnXV9oslDweRbnoozgVsCo01F4Sew47t
+        XyHOHwkarXbzyyfJ6i5r/844kmEN2Jk=
+X-Google-Smtp-Source: ABdhPJxfBdi37/yRj31u/1yVwVd6B4rPFoZNcM/71Em90ApUpFePmeHl8qrPizZJGJzVOdZ9+Ez4rA==
+X-Received: by 2002:a7b:c38e:: with SMTP id s14mr2172037wmj.124.1597405169330;
+        Fri, 14 Aug 2020 04:39:29 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id o7sm15093033wrv.50.2020.08.14.04.39.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 04:39:28 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 13:39:27 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/hwmon/adm1029.c: use simple i2c probe
+Message-ID: <20200814113927.GA15832@Red>
+References: <20200813161129.1507599-1-steve@sk2.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-3-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200813161129.1507599-1-steve@sk2.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:25AM +0800, Changbin Du escreveu:
-> This adds an option '-F/--funcs' to list all available functions to trace,
-> which is read from tracing file 'available_filter_functions'.
+On Thu, Aug 13, 2020 at 06:11:29PM +0200, Stephen Kitt wrote:
+> This driver doesn't use the id information provided by the old i2c
+> probe function, so it can trivially be converted to the simple
+> ("probe_new") form.
 > 
-> $ sudo ./perf ftrace -F | head
-> trace_initcall_finish_cb
-> initcall_blacklisted
-> do_one_initcall
-> do_one_initcall
-> trace_initcall_start_cb
-> run_init_process
-> try_to_run_init_process
-> match_dev_by_label
-> match_dev_by_uuid
-> rootfs_init_fs_context
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > ---
-> v3: fix return value issue.
-> v2: option name '-l/--list-functions' -> '-F/--funcs'
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  4 +++
->  tools/perf/builtin-ftrace.c              | 46 ++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
+>  drivers/hwmon/adm1029.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 821d4d334a09..4f5628445a63 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -31,6 +31,10 @@ OPTIONS
->  --verbose=::
->          Verbosity level.
->  
-> +-F::
-> +--funcs::
-> +        List all available functions to trace.
-> +
->  -p::
->  --pid=::
->  	Trace on existing process id (comma separated list).
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 048a11192b59..1ebf71ecc1a8 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -33,6 +33,7 @@ struct perf_ftrace {
->  	struct evlist		*evlist;
->  	struct target		target;
->  	const char		*tracer;
-> +	bool			list_avail_functions;
->  	struct list_head	filters;
->  	struct list_head	notrace;
->  	struct list_head	graph_funcs;
-> @@ -128,6 +129,46 @@ static int append_tracing_file(const char *name, const char *val)
->  	return __write_tracing_file(name, val, true);
+> diff --git a/drivers/hwmon/adm1029.c b/drivers/hwmon/adm1029.c
+> index f7752a5bef31..50b1df7b008c 100644
+> --- a/drivers/hwmon/adm1029.c
+> +++ b/drivers/hwmon/adm1029.c
+> @@ -352,8 +352,7 @@ static int adm1029_init_client(struct i2c_client *client)
+>  	return 1;
 >  }
 >  
-> +static int read_tracing_file_to_stdout(const char *name)
-> +{
-> +	char buf[4096];
-> +	char *file;
-> +	int fd;
-> +	int ret = -1;
-> +
-> +	file = get_tracing_file(name);
-> +	if (!file) {
-> +		pr_debug("cannot get tracing file: %s\n", name);
-> +		return -1;
-> +	}
-> +
-> +	fd = open(file, O_RDONLY);
-> +	if (fd < 0) {
-> +		pr_debug("cannot open tracing file: %s: %s\n",
-> +			 name, str_error_r(errno, buf, sizeof(buf)));
-> +		goto out;
-> +	}
-> +
-> +	/* read contents to stdout */
-> +	while (true) {
-> +		int n = read(fd, buf, sizeof(buf));
-> +		if (n == 0)
-> +			break;
-> +		else if (n < 0)
-> +			goto out_close;
-> +
-> +		if (fwrite(buf, n, 1, stdout) != 1)
-> +			goto out_close;
-> +	}
-> +	ret = 0;
-> +
-> +out_close:
-> +	close(fd);
-> +out:
-> +	put_tracing_file(file);
-> +	return ret;
-> +}
-> +
->  static int reset_tracing_cpu(void);
->  static void reset_tracing_filters(void);
->  
-> @@ -302,6 +343,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  	signal(SIGCHLD, sig_handler);
->  	signal(SIGPIPE, sig_handler);
->  
-> +	if (ftrace->list_avail_functions)
-> +		return read_tracing_file_to_stdout("available_filter_functions");
-> +
->  	if (reset_tracing_files(ftrace) < 0) {
->  		pr_err("failed to reset ftrace\n");
->  		goto out;
-> @@ -487,6 +531,8 @@ int cmd_ftrace(int argc, const char **argv)
->  	const struct option ftrace_options[] = {
->  	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
->  		   "tracer to use: function_graph(default) or function"),
-> +	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
-> +		    "Show available functions to filter"),
-
-A boolean? I guess this can be a first step, but why not do it like
-'perf probe' and accept a patterna? Allows for less typing:
-
-  # perf probe -h -F
-
-    -F, --funcs <[FILTER]>
-                          Show potential probe-able functions.
-
-[root@quaco ~]#
-
-# perf probe -F '*btf_parse*'
-btf_parse_hdr
-btf_parse_str_sec
-btf_parse_vmlinux
-#
-# perf ftrace -F | grep btf_parse
-btf_parse_str_sec
-btf_parse_hdr
-btf_parse_vmlinux
-#
-
-I'm applying this to make progress, but please consider sending a patch
-to make this behave in the same way as 'perf probe'.
-
-- Arnaldo
-
-
->  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
->  		   "trace on existing process id"),
->  	OPT_INCR('v', "verbose", &verbose,
+> -static int adm1029_probe(struct i2c_client *client,
+> -			 const struct i2c_device_id *id)
+> +static int adm1029_probe(struct i2c_client *client)
+>  {
+>  	struct device *dev = &client->dev;
+>  	struct adm1029_data *data;
+> @@ -390,7 +389,7 @@ static struct i2c_driver adm1029_driver = {
+>  	.driver = {
+>  		.name = "adm1029",
+>  	},
+> -	.probe		= adm1029_probe,
+> +	.probe_new	= adm1029_probe,
+>  	.id_table	= adm1029_id,
+>  	.detect		= adm1029_detect,
+>  	.address_list	= normal_i2c,
 > -- 
-> 2.25.1
+> 2.25.4
 > 
+Hello
 
--- 
+Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
 
-- Arnaldo
+But please give me a few day to test it.
