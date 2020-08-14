@@ -2,130 +2,134 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8530F2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2524204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iI8H0DkK";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sCwH9e6a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5LWdSu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHNQjm (ORCPT
+        id S1728096AbgHNQki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:39:42 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:54860 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726196AbgHNQji (ORCPT
+        Fri, 14 Aug 2020 12:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgHNQkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:39:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 24EE18EE1F3;
-        Fri, 14 Aug 2020 09:39:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597423178;
-        bh=1GeTo5+kI1ZRhYo/3Dw/Az7CcWr7NSXW8xvPXgcpISU=;
-        h=Subject:From:To:Cc:Date:From;
-        b=iI8H0DkK++J37msJ9f6ACFP7e1R+IODPSjhA8pUglwnGcp7EoF2M9319bJgwM/Ite
-         I28WzqEZnaXza1FcndALl9dOzinw2uIH1Ij4URNyeoloejjaW2pIiTt8HyZroWUWUL
-         R9W8mEB2NSminaRLx4C8rWueOa/k5SQanSfl4kQ8=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nngdI4FgmOnG; Fri, 14 Aug 2020 09:39:38 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9F5588EE0E4;
-        Fri, 14 Aug 2020 09:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597423177;
-        bh=1GeTo5+kI1ZRhYo/3Dw/Az7CcWr7NSXW8xvPXgcpISU=;
-        h=Subject:From:To:Cc:Date:From;
-        b=sCwH9e6aAh50PKxfabdr/J/CWbC/3CWTHrBKiSRKmNFfte003LOMJu95qtA0D683w
-         puVfzTz+s31X6NW8prOQbWHEIsHEXwB47xrt6Wcf1dPCBakOfX6fgY4qwXAvQiXASk
-         621a1HPxLMu8MDW4eH0eazQ7fF7fLdsWzumZKqiM=
-Message-ID: <1597423176.3916.19.camel@HansenPartnership.com>
-Subject: [GIT PULL] final round of SCSI updates for the 5.8+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 14 Aug 2020 09:39:36 -0700
+        Fri, 14 Aug 2020 12:40:33 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631A3C061384;
+        Fri, 14 Aug 2020 09:40:33 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id j9so8939921ilc.11;
+        Fri, 14 Aug 2020 09:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=6kFd9MKJ26HXWbtZalFdRqvz3pTX7PP0OTXt4UnbRWo=;
+        b=n5LWdSu7L9rgnPtztRpSIfGLxql9kQGyKLAbC+ID0HNw8i12hLRYN9Gg5xTSxvjjFb
+         ENw2YIpZL/fIuLE9nLvTkO2Zf07KDkKCit2uiZQ/IXcqWm28jWQSAYIMcYOmAc5bV3ME
+         U7pYhRgOaci3HKZyFI7lv3QPYVPAdHlsaPplA6kZU0DOkuoj4IVfFxZqZdZJILsJvbw/
+         kKZ1inh/0aRkArdJ6ETKLP3V7+GPJ0tml8UUiesQlR3GhcbDRF2iCgPU8GyiSdnnpQpr
+         B3OS35sJJ7LSn856cPU99tnhpz0XdqMgG+4Vra61B2Gbug1XTAI8FVEtE3TKfiKIVmRE
+         Q71g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=6kFd9MKJ26HXWbtZalFdRqvz3pTX7PP0OTXt4UnbRWo=;
+        b=PRvUDJR3fJcmdPwufol1TesfrZRoTCnKckjUGqDxPTb+QDqOvIwee3soCxrOPryAQL
+         OXOh/Vdqe8Aq2qz665tYn/TPTDdHlx7p9wJOq4E9BN/npJEco3Xeb1SyhxOuj3bgMlHC
+         amweigprNBMud5FliKc56Wj4H6yMWLO1AyGG3sN/qDbfawLi+/bAjZjw7LdrhfP6dqgm
+         svMJ4tGURqnylManOdhaYapoN7lAxh9xqyAxI7ZGxjuru+PZr/LxjjxzrSK+jwoF18C/
+         b26BnccPHsXlUIygKy8azTU8avqc3AraWE3T69KCoSBZQKUHwJc8JICUt3phdLlCrdIL
+         TyRA==
+X-Gm-Message-State: AOAM530Q+F6DNl2bvTwgsbrn6gNuN7cv/Y8sZ/HtCe+EJRVTQItESmCS
+        mqXWruRuUwuB2SqZoyxiRY1ykhjlsJWxE1Qw1fQ=
+X-Google-Smtp-Source: ABdhPJzvaBuDiE50Vb6Q7YRhmN5NkFmWlJD3sMdLIyDRDHJv8cYBY5vvXM5zEZduDvaYqXBCYDiGO4BFv2Kg36Hw8PU=
+X-Received: by 2002:a92:98c1:: with SMTP id a62mr3201014ill.195.1597423232780;
+ Fri, 14 Aug 2020 09:40:32 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:6602:2815:0:0:0:0 with HTTP; Fri, 14 Aug 2020 09:40:32
+ -0700 (PDT)
+In-Reply-To: <20200814144844.1920-1-tangbin@cmss.chinamobile.com>
+References: <20200814144844.1920-1-tangbin@cmss.chinamobile.com>
+From:   Tom Psyborg <pozega.tomislav@gmail.com>
+Date:   Fri, 14 Aug 2020 18:40:32 +0200
+Message-ID: <CAKR_QVLYeY5g8kuGwCPBj+aRMmE_yAUYx593vW1-UGYZGZnH3w@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: fix the status check and wrong return
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the set of patches which arrived too late to stabilise in -next
-for the first pull.  It's really just an lpfc driver update and an
-assortment of minor fixes, all in drivers.  The only core update is to
-the zone block device driver, which isn't the one most people use.
+On 14/08/2020, Tang Bin <tangbin@cmss.chinamobile.com> wrote:
+> In the function ath10k_ahb_clock_init(), devm_clk_get() doesn't
+> return NULL. Thus use IS_ERR() and PTR_ERR() to validate
+> the returned value instead of IS_ERR_OR_NULL().
+>
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/net/wireless/ath/ath10k/ahb.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/wireless/ath/ath10k/ahb.c
+> b/drivers/net/wireless/ath/ath10k/ahb.c
+> index ed87bc00f..ea669af6a 100644
+> --- a/drivers/net/wireless/ath/ath10k/ahb.c
+> +++ b/drivers/net/wireless/ath/ath10k/ahb.c
+> @@ -87,24 +87,24 @@ static int ath10k_ahb_clock_init(struct ath10k *ar)
+>  	dev = &ar_ahb->pdev->dev;
+>
+>  	ar_ahb->cmd_clk = devm_clk_get(dev, "wifi_wcss_cmd");
+> -	if (IS_ERR_OR_NULL(ar_ahb->cmd_clk)) {
+> +	if (IS_ERR(ar_ahb->cmd_clk)) {
+>  		ath10k_err(ar, "failed to get cmd clk: %ld\n",
+>  			   PTR_ERR(ar_ahb->cmd_clk));
+> -		return ar_ahb->cmd_clk ? PTR_ERR(ar_ahb->cmd_clk) : -ENODEV;
+> +		return PTR_ERR(ar_ahb->cmd_clk);
+>  	}
+>
+>  	ar_ahb->ref_clk = devm_clk_get(dev, "wifi_wcss_ref");
+> -	if (IS_ERR_OR_NULL(ar_ahb->ref_clk)) {
+> +	if (IS_ERR(ar_ahb->ref_clk)) {
+>  		ath10k_err(ar, "failed to get ref clk: %ld\n",
+>  			   PTR_ERR(ar_ahb->ref_clk));
+> -		return ar_ahb->ref_clk ? PTR_ERR(ar_ahb->ref_clk) : -ENODEV;
+> +		return PTR_ERR(ar_ahb->ref_clk);
+>  	}
+>
+>  	ar_ahb->rtc_clk = devm_clk_get(dev, "wifi_wcss_rtc");
+> -	if (IS_ERR_OR_NULL(ar_ahb->rtc_clk)) {
+> +	if (IS_ERR(ar_ahb->rtc_clk)) {
+>  		ath10k_err(ar, "failed to get rtc clk: %ld\n",
+>  			   PTR_ERR(ar_ahb->rtc_clk));
+> -		return ar_ahb->rtc_clk ? PTR_ERR(ar_ahb->rtc_clk) : -ENODEV;
+> +		return PTR_ERR(ar_ahb->rtc_clk);
+>  	}
+>
+>  	return 0;
+> --
+> 2.20.1.windows.1
+>
+>
+>
+>
 
-The patch is available here:
+Hi
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
-
-The short changelog is:
-
-Damien Le Moal (1):
-      scsi: sd_zbc: Improve zone revalidation
-
-Dick Kennedy (8):
-      scsi: lpfc: Update lpfc version to 12.8.0.3
-      scsi: lpfc: Fix LUN loss after cable pull
-      scsi: lpfc: Fix validation of bsg reply lengths
-      scsi: lpfc: Fix retry of PRLI when status indicates its unsupported
-      scsi: lpfc: Fix oops when unloading driver while running mds diags
-      scsi: lpfc: Fix RSCN timeout due to incorrect gidft counter
-      scsi: lpfc: Fix no message shown for lpfc_hdw_queue out of range value
-      scsi: lpfc: Fix FCoE speed reporting
-
-Ewan D. Milne (1):
-      scsi: lpfc: nvmet: Avoid hang / use-after-free again when destroying targetport
-
-Javed Hasan (2):
-      scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-      scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
-
-Jing Xiangfeng (1):
-      scsi: lpfc: Add missing misc_deregister() for lpfc_init()
-
-Max Gurtovoy (1):
-      scsi: target: Make iscsit_register_transport() return void
-
-Xiang Chen (1):
-      scsi: scsi_transport_sas: Add spaces around binary operator "|"
-
-And the diffstat:
-
- drivers/scsi/fcoe/fcoe_ctlr.c                 |  2 +-
- drivers/scsi/libfc/fc_disc.c                  | 12 +++-
- drivers/scsi/lpfc/lpfc_attr.c                 | 26 +++++++-
- drivers/scsi/lpfc/lpfc_bsg.c                  | 21 +++---
- drivers/scsi/lpfc/lpfc_ct.c                   | 22 +++++--
- drivers/scsi/lpfc/lpfc_els.c                  | 10 ++-
- drivers/scsi/lpfc/lpfc_init.c                 | 25 +++++--
- drivers/scsi/lpfc/lpfc_nportdisc.c            |  8 ++-
- drivers/scsi/lpfc/lpfc_nvmet.c                |  2 +-
- drivers/scsi/lpfc/lpfc_sli.c                  | 11 +++-
- drivers/scsi/lpfc/lpfc_version.h              |  2 +-
- drivers/scsi/scsi_transport_sas.c             |  2 +-
- drivers/scsi/sd.c                             | 10 ++-
- drivers/scsi/sd.h                             | 11 +++-
- drivers/scsi/sd_zbc.c                         | 93 +++++++++++++--------------
- drivers/target/iscsi/iscsi_target_transport.c |  4 +-
- include/target/iscsi/iscsi_transport.h        |  2 +-
- 17 files changed, 165 insertions(+), 98 deletions(-)
-
-James
-
+You should've include which HW/FW combination you tested this on
