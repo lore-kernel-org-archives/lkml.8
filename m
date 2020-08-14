@@ -6,62 +6,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E285DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA3F20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE0B20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597446319;
-	bh=JGMBlZxpVz9L/JCrZJWseb1MuhaAPKBiaoMzbsArEhE=;
+	s=default; t=1597446335;
+	bh=8+QFhUozxAR70X6uCOqVJsy6N76d6JZ+BWwJDPnUKK4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JI0KvVZz5LlLb8pLg/NIrHZLMmuRWbhcjnmdMduqqo+tX37VTvn1xCtyAXBp2qDa2
-	 OSv0D3qD7dES1UhKKpwxq+Jxb++AXey30zqrNPAvZMW4TaHmA7OJCi/NZgQgt94Gzf
-	 Uk59txzjBUYOeISqw37owW0a5+op8yrS7v0qtGVI=
+	b=wepPbYiwsRQNOJQ+NqlWQ6micqK2C8PkKVNtDnV88Xbb9wQddOP7HHjnDJroBIlWd
+	 qEjoAQ70DkccNFeDNPliPd7z6oPMa6aznnne/SOJ6hHhV/miuub/Bo2R29y+1HyHQE
+	 aj4da5NPSOBjC9/6NYeRGEwP1TcZwev8QT5JPMn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgHNXFR (ORCPT
+        id S1728381AbgHNXFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 19:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNXFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:05:16 -0400
-Subject: Re: [GIT PULL] pwm: Changes for v5.9-rc1
+        id S1726213AbgHNXFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 19:05:31 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.9-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597446315;
-        bh=JGMBlZxpVz9L/JCrZJWseb1MuhaAPKBiaoMzbsArEhE=;
+        s=default; t=1597446330;
+        bh=8+QFhUozxAR70X6uCOqVJsy6N76d6JZ+BWwJDPnUKK4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=eVQJ8L58qokVdg5a+QtgGNHXekfcsy1kjScMyRWliMBCuwD8ATmqnEO5F+8UbOPty
-         VGb1rjm+1VjczYywfHIxNtB+z/xdUzhmcbFrrvSgKjqJusMIl4rJ1ZSDkaLAhafLHh
-         fpB+/q76YJlZH80FPhSv2fXdRwzGUzN3xHfjI2jw=
+        b=HNwoQy7lI3d24YL7N47iynsevf+NMna1cwcMwyZRP87M19rGeHYd7IyZ6qt46aSIM
+         2VlwgXtB5oHREGD1QYjsBLFOjdxUUL7/XTniPK81ZFcxB4PpqglnXQJpbLyZJ/DxfT
+         XZW4zECKGG82bCesAdWD3ISomQ4yXb1kNKq8gKMA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200814130332.557034-1-thierry.reding@gmail.com>
-References: <20200814130332.557034-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200814130332.557034-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.9-rc1
-X-PR-Tracked-Commit-Id: 6ced5ff0be8e94871ba846dfbddf69d21363f3d7
+In-Reply-To: <s5hk0y1slvx.wl-tiwai@suse.de>
+References: <s5hk0y1slvx.wl-tiwai@suse.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <s5hk0y1slvx.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.9-rc1
+X-PR-Tracked-Commit-Id: 5a25de6df789cc805a9b8ba7ab5deef5067af47e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fded09198826b2998242ed2e1a16527849884d3f
-Message-Id: <159744631575.12327.3516358021806989399.pr-tracker-bot@kernel.org>
-Date:   Fri, 14 Aug 2020 23:05:15 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
+X-PR-Merge-Commit-Id: 87bd8c2b93ae899ecd90a5e0550cdae4260cc4ca
+Message-Id: <159744633087.12327.12776591018307770444.pr-tracker-bot@kernel.org>
+Date:   Fri, 14 Aug 2020 23:05:30 +0000
+To:     Takashi Iwai <tiwai@suse.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 15:03:32 +0200:
+The pull request you sent on Fri, 14 Aug 2020 09:54:26 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.9-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.9-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fded09198826b2998242ed2e1a16527849884d3f
+https://git.kernel.org/torvalds/c/87bd8c2b93ae899ecd90a5e0550cdae4260cc4ca
 
 Thank you!
 
