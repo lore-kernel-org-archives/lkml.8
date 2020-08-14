@@ -2,122 +2,194 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E97C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78939C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994822065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597424479;
-	bh=32dsAfPl6aOK5JToUz3GssUw76AqOJ4D3MzB5L6Fd+Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J4ZSIWY3Y9kzuQrNGY2nKixoGRLhBX2saQXOyKhyWp+NN3s+x9Z3ZcjV3XYGs3JA8
-	 DvhfOsYZiGTZj7BQDY4gJItszetY19dCa98jr2P/wZoLceI4ZfXUAaOIpGy24wd3wA
-	 qLKA+/HVF3ra2/vcU+H7dx/Cul+ewAVlFlkKqXtQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4504520774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaUDLCfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgHNRBS (ORCPT
+        id S1728257AbgHNRB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
+        Fri, 14 Aug 2020 13:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNRBM (ORCPT
+        with ESMTP id S1726270AbgHNRB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:01:12 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D39C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:01:05 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id s9so5169985lfs.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:01:05 -0700 (PDT)
+        Fri, 14 Aug 2020 13:01:26 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEEEC061384;
+        Fri, 14 Aug 2020 10:01:25 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u20so4849387pfn.0;
+        Fri, 14 Aug 2020 10:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nizDAhVzGoyUTNelDQzkgPTXNiaz1M5pIsGVkewPp+Q=;
-        b=WnoM8GbslOnVvT6dmQv2qeyabfGpLfkl3M+87saW+EFeN+qxqIaHQ2TT2BoepFPmJC
-         L6PB+4TIG3L6SyzX2Guv0S6tYvwT+0t23wuFqmAbNPoScZ01R9z4a2gF9KXvJKxkUhC5
-         p0On3StYRnYmr0oLkA8Xxxn/+1bZBxePS8Shc=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xiHC5DUY3Z/y6RtGYjcjT7j7DBa8EN54OpDjf5EfHiE=;
+        b=EaUDLCfh8Z6nm4RvCaTT7SUfk/rMB6EyH9B/yh3Mjaxesj8UFgiEsXU3oitdayGTB7
+         QRTE3c24Pbq+u0YMyQoPFWfvt8G+8GpR4HkYpXHL0HX4LCavxzJvy0a/VjqaEzxTqmdR
+         d2UQpmHgcXK+uNvN02XbohOvWgFVtHT5+48Ze2PLCHiXbKjk7uAI9vXTIIeEmJr8YLQg
+         u3RXSgA73Gu0gPlqa/djaNM60TnGPB2PpS05pRmuYrEZLUrRs56g5sCKEXqJjsm1q372
+         KzbnbH/zv7R60Rjpm2UNbgdhy8FMbm88cVwVjw1/JHrcQRWdce6ojziowWARYQS/lGWf
+         MZAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nizDAhVzGoyUTNelDQzkgPTXNiaz1M5pIsGVkewPp+Q=;
-        b=EjQSEkp4U7ia1YYB6NpM2QaEbti4WKYsnzyRLAo6b/R/Wd5s/eImeWrOKWjUi3pABH
-         zJT2DX4ADQ50NwINSs8aZd7jtio8d73x9rhezlIQGNOvyYsgF2MqZjh8AcmMB6wzznnd
-         hLsN7Vx6ITFXKFBcRuWmmrYrbSuSvAQqG1g9YPGb5z0ciPzrJdC6CTC265Z/hUb/oJLu
-         QGH76CvLi/aIwzYu0OnyOs5wL9aaZEZ/41iehMVQ0LXtgmJihkxMGvu+UFz9gdXevFoa
-         9RrOfSiVSlLNRJ+atiYDbC7TzW0vJ7CZbTO8/dck2cP+uqg3mipCHqyedKEQQSxPFkDc
-         gxxw==
-X-Gm-Message-State: AOAM531FZkSc+tXY89UQSrjvrWYl3F1oXxOBV6laJtQdOllL+gIV7DHL
-        jxwAgW7CCAc6BOvR4k8kGfIMEHrSX3A/Fw==
-X-Google-Smtp-Source: ABdhPJzwgemHan/oMwds7GSQLf93skgf7ZyDkPlWYdHuxFZBwF0ct/EiU0+X4Br7YAfHj/B9KW6NyQ==
-X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1627402lfb.101.1597424462879;
-        Fri, 14 Aug 2020 10:01:02 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id t205sm1995720lff.8.2020.08.14.10.01.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 10:01:01 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id v9so10669230ljk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:01:01 -0700 (PDT)
-X-Received: by 2002:a2e:545:: with SMTP id 66mr1801662ljf.285.1597424460838;
- Fri, 14 Aug 2020 10:01:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xiHC5DUY3Z/y6RtGYjcjT7j7DBa8EN54OpDjf5EfHiE=;
+        b=PZb3NrJaJ7JuExs9KUF2HAXNCUmWECPIVHZpKUyWWqITRZRAB94HZIsxV3ymni+5Fa
+         rAtJg095fg1ctt9zmhBnQ6ziqCDQbe1nEfBjrTRfK+yT+IWjsk11Qe2HyZhRxXS1yGY5
+         fX2egVvsx47rpKsQDdjDJWdpGdQElbkjWe0dhu7quQx/5eVKrGeNSTjlWv7VXLxCCPT8
+         Maz00QAfaZDBkP/6lNDD9Udpgz2ZQjdzzKBChZDF16k4hKDYw86mO5uosCfMYREOUy1m
+         ejhDBlNAzCYqYvJEGhw8/kT5Jyq+ReWHIPcLiNxVdYRTDz2n73OvIt0LEiERBaUK55HN
+         +svA==
+X-Gm-Message-State: AOAM5322Hk1o4GvU3rZ4XfvwzENkqYC41YXbvXsGpkYb8X28YNDLsZJA
+        soVmzuyDNtx1YcZIqlaCXLA=
+X-Google-Smtp-Source: ABdhPJweDz/UYGVY+PT1HUJ5dSv5+9NA/T7zfFSnrDEqaMooDfesI251oDJYN5qulsRvWqeHjfivoA==
+X-Received: by 2002:a63:4c11:: with SMTP id z17mr2324722pga.152.1597424484997;
+        Fri, 14 Aug 2020 10:01:24 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:affd])
+        by smtp.gmail.com with ESMTPSA id l7sm8987929pjf.43.2020.08.14.10.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 10:01:23 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 10:01:20 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andriin@fb.com, yhs@fb.com,
+        linux@rasmusvillemoes.dk, andriy.shevchenko@linux.intel.com,
+        pmladek@suse.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org, shuah@kernel.org,
+        rdna@fb.com, scott.branden@broadcom.com, quentin@isovalent.com,
+        cneirabustos@gmail.com, jakub@cloudflare.com, mingo@redhat.com,
+        rostedt@goodmis.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next 2/4] bpf: make BTF show support generic,
+ apply to seq files/bpf_trace_printk
+Message-ID: <20200814170120.q5gcmlapm7aldmzg@ast-mbp.dhcp.thefacebook.com>
+References: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
+ <1596724945-22859-3-git-send-email-alan.maguire@oracle.com>
+ <20200813014616.6enltdpq6hzlri6r@ast-mbp.dhcp.thefacebook.com>
+ <alpine.LRH.2.21.2008141344560.6816@localhost>
 MIME-Version: 1.0
-References: <20200814141327.GJ7488@shao2-debian>
-In-Reply-To: <20200814141327.GJ7488@shao2-debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 14 Aug 2020 10:00:44 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj8oc=wCvqcMdpKM8cceEYmicpf++rNDWC_5A6qYDP9QQ@mail.gmail.com>
-Message-ID: <CAHk-=wj8oc=wCvqcMdpKM8cceEYmicpf++rNDWC_5A6qYDP9QQ@mail.gmail.com>
-Subject: Re: [mm] 3e38e0aaca: WARNING:at_mm/memcontrol.c:#mem_cgroup_alloc
-To:     kernel test robot <lkp@intel.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Waiman Long <longman@redhat.com>,
-        Bixuan Cui <cuibixuan@huawei.com>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.21.2008141344560.6816@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 7:14 AM kernel test robot <lkp@intel.com> wrote:
->
-> FYI, we noticed the following commit (built with gcc-9):
->
-> commit: 3e38e0aaca9eafb12b1c4b731d1c10975cbe7974 ("mm: memcg: charge memcg percpu memory to the parent cgroup")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
->
-> in testcase: boot
->
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+On Fri, Aug 14, 2020 at 02:06:37PM +0100, Alan Maguire wrote:
+> On Wed, 12 Aug 2020, Alexei Starovoitov wrote:
+> 
+> > On Thu, Aug 06, 2020 at 03:42:23PM +0100, Alan Maguire wrote:
+> > > 
+> > > The bpf_trace_printk tracepoint is augmented with a "trace_id"
+> > > field; it is used to allow tracepoint filtering as typed display
+> > > information can easily be interspersed with other tracing data,
+> > > making it hard to read.  Specifying a trace_id will allow users
+> > > to selectively trace data, eliminating noise.
+> > 
+> > Since trace_id is not seen in trace_pipe, how do you expect users
+> > to filter by it?
+> 
+> Sorry should have specified this.  The approach is to use trace
+> instances and filtering such that we only see events associated
+> with a specific trace_id.  There's no need for the trace event to
+> actually display the trace_id - it's still usable as a filter.
+> The steps involved are:
+> 
+> 1. create a trace instance within which we can specify a fresh
+>    set of trace event enablings, filters etc.
+> 
+> mkdir /sys/kernel/debug/tracing/instances/traceid100
+> 
+> 2. enable the filter for the specific trace id
+> 
+> echo "trace_id == 100" > 
+> /sys/kernel/debug/tracing/instances/traceid100/events/bpf_trace/bpf_trace_printk/filter
+> 
+> 3. enable the trace event
+> 
+> echo 1 > 
+> /sys/kernel/debug/tracing/instances/events/bpf_trace/bpf_trace_printk/enable
+> 
+> 4. ensure the BPF program uses a trace_id 100 when calling bpf_trace_btf()
 
-This should have already been fixed by commit 9f457179244a ("mm:
-memcontrol: fix warning when allocating the root cgroup").
+ouch.
+I think you interpreted the acceptance of the
+commit 7fb20f9e901e ("bpf, doc: Remove references to warning message when using bpf_trace_printk()")
+in the wrong way.
 
-But I forget what the syntax is to report that to the kernel test
-robot. Would it be possible for lkp automatically look for "Fixes:"
-tags, perhaps?
+Everything that doc had said is still valid. In particular:
+-A: This is done to nudge program authors into better interfaces when
+-programs need to pass data to user space. Like bpf_perf_event_output()
+-can be used to efficiently stream data via perf ring buffer.
+-BPF maps can be used for asynchronous data sharing between kernel
+-and user space. bpf_trace_printk() should only be used for debugging.
 
-                 Linus
+bpf_trace_printk is for debugging only. _debugging of bpf programs themselves_.
+What you're describing above is logging and tracing. It's not debugging of programs.
+perf buffer, ring buffer, and seq_file interfaces are the right
+interfaces for tracing, logging, and kernel debugging.
+
+> > It also feels like workaround. May be let bpf prog print the whole
+> > struct in one go with multiple new lines and call
+> > trace_bpf_trace_printk(buf) once?
+> 
+> We can do that absolutely, but I'd be interested to get your take
+> on the filtering mechanism before taking that approach.  I'll add
+> a description of the above mechanism to the cover letter and
+> patch to be clearer next time too.
+
+I think patch 3 is no go, because it takes bpf_trace_printk in
+the wrong direction.
+Instead please refactor it to use string buffer or seq_file as an output.
+If the user happen to use bpf_trace_printk("%s", buf);
+after that to print that string buffer to trace_pipe that's user's choice.
+I can see such use case when program author wants to debug
+their bpf program. That's fine. But for kernel debugging, on demand and
+"always on" logging and tracing the documentation should point
+to sustainable interfaces that don't interfere with each other,
+can be run in parallel by multiple users, etc.
+
+> > 
+> > Also please add interface into bpf_seq_printf.
+> > BTF enabled struct prints is useful for iterators too
+> > and generalization you've done in this patch pretty much takes it there.
+> > 
+> 
+> Sure, I'll try and tackle that next time.
+> 
+> > > +#define BTF_SHOW_COMPACT	(1ULL << 0)
+> > > +#define BTF_SHOW_NONAME		(1ULL << 1)
+> > > +#define BTF_SHOW_PTR_RAW	(1ULL << 2)
+> > > +#define BTF_SHOW_ZERO		(1ULL << 3)
+> > > +#define BTF_SHOW_NONEWLINE	(1ULL << 32)
+> > > +#define BTF_SHOW_UNSAFE		(1ULL << 33)
+> > 
+> > I could have missed it earlier, but what is the motivation to leave the gap
+> > in bits? Just do bit 4 and 5 ?
+> > 
+> 
+> Patch 3 uses the first 4 as flags to bpf_trace_btf();
+> the final two are not supported for the helper as flag values
+> so I wanted to leave some space for additional bpf_trace_btf() flags.
+> BTF_SHOW_NONEWLINE is always used for bpf_trace_btf(), since the
+> tracing adds a newline for us and we don't want to double up on newlines, 
+> so it's ORed in as an implicit argument for the bpf_trace_btf() case. 
+> BTF_SHOW_UNSAFE isn't allowed within BPF so it's not available as
+> a flag for the helper.
+
+I see. I think such approach is more error prone than explicit filtering.
+It's better to check for NONEWLINE and UNSAFE explicitly in those places
+instead of playing obscure game of upper bits.
+Also the choice of NONEWLINE vs NEWLINE should be available from the program
+when it wants to print it into a string or into a seq_file.
