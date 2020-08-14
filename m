@@ -2,146 +2,364 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF872078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19662204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFvEcPmC"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="KzqFWp6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHNQuQ (ORCPT
+        id S1728101AbgHNQu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59582 "EHLO
+        Fri, 14 Aug 2020 12:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNQuM (ORCPT
+        with ESMTP id S1726270AbgHNQuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:50:12 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B20C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:50:11 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so4835652pfn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:50:11 -0700 (PDT)
+        Fri, 14 Aug 2020 12:50:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668CAC061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:50:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f1so8933314wro.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:50:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NhtFbl/XT/fNJtXIOkJbd01ZUJG0WSNdtqeIvrQZm5M=;
-        b=AFvEcPmCLr6XEpCa6VqWWD3moPXxkQMbV03UY+L7yPI2N6eVEn+FzCWtH53m7X49Oq
-         pOQ8wauTltihOwF2MwkFreTJEPK3C/AFjRkAzPv3aPGfxNbnFatjwZBbInhqvZGVOMLe
-         m5CHaddGebOKm9LTn99PC4zwVECb7kMrXRnPsEoiQnR7yufZwjjKNidl6aLZfxcm2U5p
-         A+sQlpjWlYwSWsBALV7sTrFGt6ukiCQC6770RyXxxhTOt2itVCq4Mbr8Na3cOVqUiCdI
-         mYcxw34UmGCLYhI/GZHXUl6JYS44kSNc5/5VDECywSv+SnP5DcT1V1TmjSoYILnWhPKM
-         TGQg==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CLxzLX+VcaF8ftRc2XX+J7Z14wNbVmfBAlNMUPu33z0=;
+        b=KzqFWp6gXiMuLftO1NS1V8FejDNAA4Df+LJ1jHvMAiu+pcpZSbt+6rMkLioPO2zTSr
+         li7rRbUEBvw2zc5KL4i0YJ13k8VZ3T+qeHJtZIUWMDts06D22A07nyBybNlTQOm9SvwJ
+         w1LquWU4CyalCyafV4nEIHvJIH1IswSvmovjo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NhtFbl/XT/fNJtXIOkJbd01ZUJG0WSNdtqeIvrQZm5M=;
-        b=NlklEl6tR2kXTp84DOUb4QqArskOEg3f/ESzAMOsFvK8tOot8x8ZzHEyzRGgKWXHTC
-         dp6pnBKD12T2p/7igeaxrzIahH7i1bsRgyp3vq2YsFzB8/I+BaA8+4U3QhhkhdyuSvsR
-         1nz7Rim1PH/BJ0g07Y/tQeLko2ye7Wjco7gTgci2vhlU2PPEilzWKdwD/6lFvkOyWiMd
-         nneIq99j36/jVBfOgbylDpAM2q1gzHtkShgUSJJ88DLWt7bEWT3vKTR3zuWujM8JZcjo
-         krLhPZI4BirfDDQynCNc2hs6uyYzbV7GKHvRkm0ISCZjNSCDREb39nL1pUJt73IUUSmL
-         xj9w==
-X-Gm-Message-State: AOAM533ERQBRgQxMtjj5StM8qoRBm0YpLAJLPQ9vMcGJSHOZPRuIfImM
-        PPC3ewPPPtbMIKM/+LpqXkM=
-X-Google-Smtp-Source: ABdhPJz54ssn56mHayR6quMpHG5wxmawgiA9EHX7ihUxI+z8K87Svdcz2Gq/wnolVhHBau/eI148ow==
-X-Received: by 2002:a63:1523:: with SMTP id v35mr2396760pgl.317.1597423811498;
-        Fri, 14 Aug 2020 09:50:11 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s125sm9952636pfb.125.2020.08.14.09.50.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Aug 2020 09:50:10 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Doug Berger <opendmb@gmail.com>
-Subject: [PATCH v2] mm: include CMA pages in lowmem_reserve at boot
-Date:   Fri, 14 Aug 2020 09:49:26 -0700
-Message-Id: <1597423766-27849-1-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CLxzLX+VcaF8ftRc2XX+J7Z14wNbVmfBAlNMUPu33z0=;
+        b=GheDRXaP6r3Wd/Yugy9mu/qxZ5yaNbQZ+hcUVjrYKJg1T05Dx25wugbKhKCyJ78maz
+         EJtRKl1WQyeUEA49kqK1FYMqPa7QdgwZ8SqDLKd/+st66/fEN70mOvXr7jV50cvmmxzH
+         Ho82p682ltkCdgi2yMFvEnB39CaPapn/9+aSXcmfDAKD/4u2lKJbeu6UM6LsiIa5mA5i
+         OndxdHj5O40JiQEvSwTWjE17bAeM8rLY4HzSr+dJacOQoKHI6a5YtzWOVbi5EBV/00je
+         Awdey6ZWkxHJOI6mdhskHUL4plCDJiHD2AABAy8bkYCwV8VmOhfNQP0bKSvlAM7bcJfM
+         LYNw==
+X-Gm-Message-State: AOAM532e85klqp0CHWbNYfUXCdCpOT/qqJ9fc+6FHdAgYMIm008pmDn4
+        RbQkTPSaaN+5EniKZ2DFbMl9Px0bJ5NgMZE78YzK
+X-Google-Smtp-Source: ABdhPJzIAjnoAVbl8xo0cqHSkexAHYs5DSN/E5xaVwBGIW5m2LQO6jC/hWl0mbf3enA0s9uIoKbJMGKBWGln7vrE6l8=
+X-Received: by 2002:a5d:4bd0:: with SMTP id l16mr3438855wrt.384.1597423822061;
+ Fri, 14 Aug 2020 09:50:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200812234758.3563-1-atish.patra@wdc.com> <20200812234758.3563-4-atish.patra@wdc.com>
+ <20200814093906.GG752365@kernel.org>
+In-Reply-To: <20200814093906.GG752365@kernel.org>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 14 Aug 2020 09:50:10 -0700
+Message-ID: <CAOnJCU+aJKnssfXr4O1+s=yo2txxEqu9xFGf9u8XTWJnav+cNA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/9] RISC-V: Implement late mapping page table
+ allocation functions
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        fwts-devel@lists.ubuntu.com, Mao Han <han_mao@c-sky.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Steven Price <steven.price@arm.com>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Daniel Schaefer <daniel.schaefer@hpe.com>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lowmem_reserve arrays provide a means of applying pressure
-against allocations from lower zones that were targeted at
-higher zones. Its values are a function of the number of pages
-managed by higher zones and are assigned by a call to the
-setup_per_zone_lowmem_reserve() function.
+On Fri, Aug 14, 2020 at 2:39 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Wed, Aug 12, 2020 at 04:47:52PM -0700, Atish Patra wrote:
+> > Currently, page table setup is done during setup_va_final where fixmap can
+> > be used to create the temporary mappings. The physical frame is allocated
+> > from memblock_alloc_* functions. However, this won't work if page table
+> > mapping needs to be created for a different mm context (i.e. efi mm) at
+> > a later point of time.
+> >
+> > Use generic kernel page allocation function & macros for any mapping
+> > after setup_vm_final.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>
+> A nit below, otherwise
+>
+>
+> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+>
+> > ---
+> >  arch/riscv/mm/init.c | 130 ++++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 99 insertions(+), 31 deletions(-)
+> >
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index b75ebe8e7a92..d238cdc501ee 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -32,6 +32,17 @@ extern char _start[];
+> >  void *dtb_early_va __initdata;
+> >  uintptr_t dtb_early_pa __initdata;
+> >
+> > +struct pt_alloc_ops {
+> > +     pte_t *(*get_pte_virt)(phys_addr_t pa);
+> > +     phys_addr_t (*alloc_pte)(uintptr_t va);
+> > +#ifndef __PAGETABLE_PMD_FOLDED
+> > +     pmd_t *(*get_pmd_virt)(phys_addr_t pa);
+> > +     phys_addr_t (*alloc_pmd)(uintptr_t va);
+> > +#endif
+> > +};
+> > +
+> > +struct pt_alloc_ops pt_ops;
+>
+> static?
+>
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses
-of the /proc/sys/vm/lowmem_reserve_ratio sysctl file.
+Ahh yes. Thanks for catching that. I will fix it in the next version.
 
-The function init_per_zone_wmark_min() was moved up from a
-module_init to a core_initcall to resolve a sequencing issue
-with khugepaged. Unfortunately this created a sequencing issue
-with CMA page accounting.
+> > +
+> >  static void __init zone_sizes_init(void)
+> >  {
+> >       unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+> > @@ -211,7 +222,6 @@ EXPORT_SYMBOL(pfn_base);
+> >  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+> >  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+> >  pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
+> > -static bool mmu_enabled;
+> >
+> >  #define MAX_EARLY_MAPPING_SIZE       SZ_128M
+> >
+> > @@ -234,27 +244,46 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+> >       }
+> >  }
+> >
+> > -static pte_t *__init get_pte_virt(phys_addr_t pa)
+> > +static inline pte_t *__init get_pte_virt_early(phys_addr_t pa)
+> >  {
+> > -     if (mmu_enabled) {
+> > -             clear_fixmap(FIX_PTE);
+> > -             return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
+> > -     } else {
+> > -             return (pte_t *)((uintptr_t)pa);
+> > -     }
+> > +     return (pte_t *)((uintptr_t)pa);
+> >  }
+> >
+> > -static phys_addr_t __init alloc_pte(uintptr_t va)
+> > +static inline pte_t *__init get_pte_virt_fixmap(phys_addr_t pa)
+> > +{
+> > +     clear_fixmap(FIX_PTE);
+> > +     return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
+> > +}
+> > +
+> > +static inline pte_t *get_pte_virt_late(phys_addr_t pa)
+> > +{
+> > +     return (pte_t *) __va(pa);
+> > +}
+> > +
+> > +static inline phys_addr_t __init alloc_pte_early(uintptr_t va)
+> >  {
+> >       /*
+> >        * We only create PMD or PGD early mappings so we
+> >        * should never reach here with MMU disabled.
+> >        */
+> > -     BUG_ON(!mmu_enabled);
+> > +     BUG();
+> > +}
+> >
+> > +static inline phys_addr_t __init alloc_pte_fixmap(uintptr_t va)
+> > +{
+> >       return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> >  }
+> >
+> > +static phys_addr_t alloc_pte_late(uintptr_t va)
+> > +{
+> > +     unsigned long vaddr;
+> > +
+> > +     vaddr = __get_free_page(GFP_KERNEL);
+> > +     if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
+> > +             BUG();
+> > +     return __pa(vaddr);
+> > +}
+> > +
+> >  static void __init create_pte_mapping(pte_t *ptep,
+> >                                     uintptr_t va, phys_addr_t pa,
+> >                                     phys_addr_t sz, pgprot_t prot)
+> > @@ -279,28 +308,46 @@ pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> >  #endif
+> >  pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+> >
+> > -static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+> > +static pmd_t *__init get_pmd_virt_early(phys_addr_t pa)
+> >  {
+> > -     if (mmu_enabled) {
+> > -             clear_fixmap(FIX_PMD);
+> > -             return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
+> > -     } else {
+> > -             return (pmd_t *)((uintptr_t)pa);
+> > -     }
+> > +     /* Before MMU is enabled */
+> > +     return (pmd_t *)((uintptr_t)pa);
+> >  }
+> >
+> > -static phys_addr_t __init alloc_pmd(uintptr_t va)
+> > +static pmd_t *__init get_pmd_virt_fixmap(phys_addr_t pa)
+> >  {
+> > -     uintptr_t pmd_num;
+> > +     clear_fixmap(FIX_PMD);
+> > +     return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
+> > +}
+> > +
+> > +static pmd_t *get_pmd_virt_late(phys_addr_t pa)
+> > +{
+> > +     return (pmd_t *) __va(pa);
+> > +}
+> >
+> > -     if (mmu_enabled)
+> > -             return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> > +static phys_addr_t __init alloc_pmd_early(uintptr_t va)
+> > +{
+> > +     uintptr_t pmd_num;
+> >
+> >       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> >       BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+> >       return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+> >  }
+> >
+> > +static phys_addr_t __init alloc_pmd_fixmap(uintptr_t va)
+> > +{
+> > +     return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> > +}
+> > +
+> > +static phys_addr_t alloc_pmd_late(uintptr_t va)
+> > +{
+> > +     unsigned long vaddr;
+> > +
+> > +     vaddr = __get_free_page(GFP_KERNEL);
+> > +     BUG_ON(!vaddr);
+> > +     return __pa(vaddr);
+> > +}
+> > +
+> >  static void __init create_pmd_mapping(pmd_t *pmdp,
+> >                                     uintptr_t va, phys_addr_t pa,
+> >                                     phys_addr_t sz, pgprot_t prot)
+> > @@ -316,28 +363,28 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
+> >       }
+> >
+> >       if (pmd_none(pmdp[pmd_idx])) {
+> > -             pte_phys = alloc_pte(va);
+> > +             pte_phys = pt_ops.alloc_pte(va);
+> >               pmdp[pmd_idx] = pfn_pmd(PFN_DOWN(pte_phys), PAGE_TABLE);
+> > -             ptep = get_pte_virt(pte_phys);
+> > +             ptep = pt_ops.get_pte_virt(pte_phys);
+> >               memset(ptep, 0, PAGE_SIZE);
+> >       } else {
+> >               pte_phys = PFN_PHYS(_pmd_pfn(pmdp[pmd_idx]));
+> > -             ptep = get_pte_virt(pte_phys);
+> > +             ptep = pt_ops.get_pte_virt(pte_phys);
+> >       }
+> >
+> >       create_pte_mapping(ptep, va, pa, sz, prot);
+> >  }
+> >
+> >  #define pgd_next_t           pmd_t
+> > -#define alloc_pgd_next(__va) alloc_pmd(__va)
+> > -#define get_pgd_next_virt(__pa)      get_pmd_virt(__pa)
+> > +#define alloc_pgd_next(__va) pt_ops.alloc_pmd(__va)
+> > +#define get_pgd_next_virt(__pa)      pt_ops.get_pmd_virt(__pa)
+> >  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)   \
+> >       create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
+> >  #define fixmap_pgd_next              fixmap_pmd
+> >  #else
+> >  #define pgd_next_t           pte_t
+> > -#define alloc_pgd_next(__va) alloc_pte(__va)
+> > -#define get_pgd_next_virt(__pa)      get_pte_virt(__pa)
+> > +#define alloc_pgd_next(__va) pt_ops.alloc_pte(__va)
+> > +#define get_pgd_next_virt(__pa)      pt_ops.get_pte_virt(__pa)
+> >  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)   \
+> >       create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
+> >  #define fixmap_pgd_next              fixmap_pte
+> > @@ -421,6 +468,12 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >       BUG_ON((load_pa % map_size) != 0);
+> >       BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+> >
+> > +     pt_ops.alloc_pte = alloc_pte_early;
+> > +     pt_ops.get_pte_virt = get_pte_virt_early;
+> > +#ifndef __PAGETABLE_PMD_FOLDED
+> > +     pt_ops.alloc_pmd = alloc_pmd_early;
+> > +     pt_ops.get_pmd_virt = get_pmd_virt_early;
+> > +#endif
+> >       /* Setup early PGD for fixmap */
+> >       create_pgd_mapping(early_pg_dir, FIXADDR_START,
+> >                          (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
+> > @@ -497,9 +550,16 @@ static void __init setup_vm_final(void)
+> >       phys_addr_t pa, start, end;
+> >       struct memblock_region *reg;
+> >
+> > -     /* Set mmu_enabled flag */
+> > -     mmu_enabled = true;
+> > -
+> > +     /**
+> > +      * MMU is enabled at this point. But page table setup is not complete yet.
+> > +      * fixmap page table alloc functions should be used at this point
+> > +      */
+> > +     pt_ops.alloc_pte = alloc_pte_fixmap;
+> > +     pt_ops.get_pte_virt = get_pte_virt_fixmap;
+> > +#ifndef __PAGETABLE_PMD_FOLDED
+> > +     pt_ops.alloc_pmd = alloc_pmd_fixmap;
+> > +     pt_ops.get_pmd_virt = get_pmd_virt_fixmap;
+> > +#endif
+> >       /* Setup swapper PGD for fixmap */
+> >       create_pgd_mapping(swapper_pg_dir, FIXADDR_START,
+> >                          __pa_symbol(fixmap_pgd_next),
+> > @@ -533,6 +593,14 @@ static void __init setup_vm_final(void)
+> >       /* Move to swapper page table */
+> >       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
+> >       local_flush_tlb_all();
+> > +
+> > +     /* generic page allocation functions must be used to setup page table */
+> > +     pt_ops.alloc_pte = alloc_pte_late;
+> > +     pt_ops.get_pte_virt = get_pte_virt_late;
+> > +#ifndef __PAGETABLE_PMD_FOLDED
+> > +     pt_ops.alloc_pmd = alloc_pmd_late;
+> > +     pt_ops.get_pmd_virt = get_pmd_virt_late;
+> > +#endif
+> >  }
+> >  #else
+> >  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> > --
+> > 2.24.0
+> >
+>
+> --
+> Sincerely yours,
+> Mike.
 
-The CMA pages are added to the managed page count of a zone
-when cma_init_reserved_areas() is called at boot also as a
-core_initcall. This makes it uncertain whether the CMA pages
-will be added to the managed page counts of their zones before
-or after the call to init_per_zone_wmark_min() as it becomes
-dependent on link order. With the current link order the pages
-are added to the managed count after the lowmem_reserve arrays
-are initialized at boot.
 
-This means the lowmem_reserve values at boot may be lower than
-the values used later if /proc/sys/vm/lowmem_reserve_ratio is
-accessed even if the ratio values are unchanged.
 
-In many cases the difference is not significant, but for example
-an ARM platform with 1GB of memory and the following memory layout
-[    0.000000] cma: Reserved 256 MiB at 0x0000000030000000
-[    0.000000] Zone ranges:
-[    0.000000]   DMA      [mem 0x0000000000000000-0x000000002fffffff]
-[    0.000000]   Normal   empty
-[    0.000000]   HighMem  [mem 0x0000000030000000-0x000000003fffffff]
-
-would result in 0 lowmem_reserve for the DMA zone. This would allow
-userspace to deplete the DMA zone easily. Funnily enough
-$ cat /proc/sys/vm/lowmem_reserve_ratio
-would fix up the situation because it forces
-setup_per_zone_lowmem_reserve as a side effect.
-
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the
-CMA pages have the chance to be properly accounted in their
-zone(s) and allowing the lowmem_reserve arrays to receive
-consistent values.
-
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8b7d0ecf30b1..f3e340ec2b6b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7887,7 +7887,7 @@ int __meminit init_per_zone_wmark_min(void)
- 
- 	return 0;
- }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
- 
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
 -- 
-2.7.4
-
+Regards,
+Atish
