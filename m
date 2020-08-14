@@ -2,85 +2,74 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDBCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B12620774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IThPlJJ9"
+	by mail.kernel.org (Postfix) with ESMTP id 28B6920708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHNGFg (ORCPT
+        id S1726697AbgHNGGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:05:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29563 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726139AbgHNGFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:05:33 -0400
-X-UUID: 2d99217e74c84f8ba20a5b274f5aa6fd-20200814
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qLDakBeiLbmANdjXt3bA+JvN+jwjGyd1xiqJb9UZTck=;
-        b=IThPlJJ9LO0zjrFTZu+Sn3J9t+ddJxMcvj13LvIw+ZfS/ys8AIg2xg5m7WxsOrU52eDM7njvUXkXI35ORlDpsqWH0Jrm0hVYBiXiXvFauqwizWHdfpKHmXLG5Y1G4Lz/ji3Pn1W+phuGyIwMFLWGPVqXHUKiQ0Jf9SycrFpRrgM=;
-X-UUID: 2d99217e74c84f8ba20a5b274f5aa6fd-20200814
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <seiya.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 734366943; Fri, 14 Aug 2020 14:05:29 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 14 Aug 2020 14:05:27 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 14 Aug 2020 14:05:27 +0800
-From:   Seiya Wang <seiya.wang@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>
-Subject: [PATCH v4 3/3] dt-bindings: timer: Add compatible for Mediatek MT8192
-Date:   Fri, 14 Aug 2020 14:04:54 +0800
-Message-ID: <20200814060454.32200-4-seiya.wang@mediatek.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20200814060454.32200-1-seiya.wang@mediatek.com>
-References: <20200814060454.32200-1-seiya.wang@mediatek.com>
+        Fri, 14 Aug 2020 02:06:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:48459 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgHNGGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:06:45 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CB6A068CEE; Fri, 14 Aug 2020 08:06:42 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 08:06:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     amit.pundir@linaro.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, iommu@lists.linux-foundation.org,
+        linux-rpi-kernel@lists.infradead.org, rientjes@google.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 2/2] dma-pool: Only allocate from CMA when in same
+ memory zone
+Message-ID: <20200814060642.GA1338@lst.de>
+References: <20200806184756.32075-1-nsaenzjulienne@suse.de> <20200806184756.32075-3-nsaenzjulienne@suse.de> <20200807052116.GA584@lst.de> <aae9250e660339142e9390427a603c4cf4e282af.camel@suse.de> <20200808063354.GA17329@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808063354.GA17329@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBjb21taXQgYWRkcyBkdC1iaW5kaW5nIGRvY3VtZW50YXRpb24gb2YgdGltZXIgZm9yIE1l
-ZGlhdGVrIE1UODE5MiBTb0MNClBsYXRmb3JtLg0KDQpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IFNlaXlhIFdhbmcgPHNlaXlhLndhbmdAbWVk
-aWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVy
-L21lZGlhdGVrLG10ay10aW1lci50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQNCmluZGV4IDBkMjU2NDg2Zjg4Ni4u
-NjkwYTljMDk2NmFjIDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0DQpAQCAtMjIsNiAr
-MjIsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIA0KIAlGb3IgdGhvc2UgU29DcyB0aGF0IHVz
-ZSBTWVNUDQogCSogIm1lZGlhdGVrLG10ODE4My10aW1lciIgZm9yIE1UODE4MyBjb21wYXRpYmxl
-IHRpbWVycyAoU1lTVCkNCisJKiAibWVkaWF0ZWssbXQ4MTkyLXRpbWVyIiBmb3IgTVQ4MTkyIGNv
-bXBhdGlibGUgdGltZXJzIChTWVNUKQ0KIAkqICJtZWRpYXRlayxtdDc2MjktdGltZXIiIGZvciBN
-VDc2MjkgY29tcGF0aWJsZSB0aW1lcnMgKFNZU1QpDQogCSogIm1lZGlhdGVrLG10Njc2NS10aW1l
-ciIgZm9yIE1UNjc2NSBhbmQgYWxsIGFib3ZlIGNvbXBhdGlibGUgdGltZXJzIChTWVNUKQ0KIA0K
-LS0gDQoyLjE0LjENCg==
+On Sat, Aug 08, 2020 at 08:33:54AM +0200, Christoph Hellwig wrote:
+> On Fri, Aug 07, 2020 at 10:50:19AM +0200, Nicolas Saenz Julienne wrote:
+> > On Fri, 2020-08-07 at 07:21 +0200, Christoph Hellwig wrote:
+> > > On Thu, Aug 06, 2020 at 08:47:55PM +0200, Nicolas Saenz Julienne wrote:
+> > > > There is no guarantee to CMA's placement, so allocating a zone specific
+> > > > atomic pool from CMA might return memory from a completely different
+> > > > memory zone. To get around this double check CMA's placement before
+> > > > allocating from it.
+> > > 
+> > > As the builtbot pointed out, memblock_start_of_DRAM can't be used from
+> > > non-__init code.  But lookig at it I think throwing that in
+> > > is bogus anyway, as cma_get_base returns a proper physical address
+> > > already.
+> > 
+> > It does indeed, but I'm comparing CMA's base with bitmasks that don't take into
+> > account where the memory starts. Say memory starts at 0x80000000, and CMA falls
+> > into ZONE_DMA [0x80000000 0xC0000000], if you want to compare it with
+> > DMA_BIT_MASK(zone_dma_bits) you're forced to unify the memory bases.
+> > 
+> > That said, I now realize that this doesn't work for ZONE_DMA32 which has a hard
+> > limit on 32bit addresses reglardless of the memory base.
+> > 
+> > That said I still need to call memblock_start_of_DRAM() any suggestions WRT
+> > that? I could save the value in dma_atomic_pool_init(), which is __init code.
+> 
+> The pool must be about a 32-bit physical address.  The offsets can be
+> different for every device..
 
+Do you plan to resend this one without the memblock_start_of_DRAM
+thingy?
