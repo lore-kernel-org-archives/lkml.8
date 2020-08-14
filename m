@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F320EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF1892078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA19A207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHD2fNCD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErKBwp+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgHNAIB (ORCPT
+        id S1726690AbgHNAHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        Thu, 13 Aug 2020 20:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbgHNAHh (ORCPT
+        with ESMTP id S1726904AbgHNAH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:07:37 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661C6C061757;
-        Thu, 13 Aug 2020 17:07:37 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m22so8091716ljj.5;
-        Thu, 13 Aug 2020 17:07:37 -0700 (PDT)
+        Thu, 13 Aug 2020 20:07:26 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157ECC061757;
+        Thu, 13 Aug 2020 17:07:26 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id i19so3949155lfj.8;
+        Thu, 13 Aug 2020 17:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SYVrVqyKmi1R5n5EphsB7nCz8XZpBo0lBJhV0Ix8t+w=;
-        b=kHD2fNCDU7lJmrFW6dXFuOYm22bBYvr3VdsN9nKcyfb18EcS1FH+7kQ7JrxIqkMhOF
-         BULskAMHRRV7KO+7N/NkWA1lQ4nONQz1EILPJD0F2L0kwmo4DHViU8MnUzUwFegY60kQ
-         7tbY7ZiTvc8il6FQp/3xToaxFb/uwTQRj91YtVI6iE0fEsjePGJtz2UlAXQ+aegw0Udo
-         kTZu3m2DlUeNijlHo9oFblbttVhqM8jjworPOKtJ3GP6mqSoKXBGbOpuzlsz1mWE05H0
-         zhtAHSMNb60N9aiUaAf8rCZA4nkWRrHFdDUxAmZjYKgZOAvMJT6wKTDDsW6yBqwZhFoy
-         WxCA==
+        bh=6hV/jfb1j57ds6uWusc67dwvrbgr9Nuaem2xPT64pOI=;
+        b=ErKBwp+Pi3uw2mPs1tCdGXty9djbWFZh7U9QKleaHXoAfkxBNKfThE66Q/uzNnc7J4
+         aTk8+/JsZmycsCyPcO8wlyCxP/+7dhTSQleHzgB8RAXh9y9JX/qoA3h0Dt4KqGsgqWgT
+         32US2OzxXAYh3P3Bq+YMOkgwj1jgCvZwihVWC43so56FI4FPSpixkmxH7Ryz0yw9gdcO
+         oycjad2ZwnRCk/P+MMGMiuHDdDaSqD6SW/HA2t+uraoAPUbv+yCSmeRz8aO8ak/Vfyco
+         dauYMCWTVOLrANbGWhYaug2aCunXB+Mmt8gqYzR6ZB7AEUZVQQHPqWg9rQyiGNg8aABC
+         xSIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SYVrVqyKmi1R5n5EphsB7nCz8XZpBo0lBJhV0Ix8t+w=;
-        b=XpRAhkCJlJnDN2l7KfAAlHXzyS1mNcW9OUWqUhRU8+nGXphJDXqtWUiJkGRhF1ZCQv
-         vLLF8dvsS/A1sPdrWGhUNgKsOZlLGlgwo8d0yWsoYwUtBIhfGSJ02iZOosg3viH2WzRi
-         9IPAeF/j1QLEvnW+POZdm4UGp3n20Dcv0A3CSshVNsaqlS4HtMNIDPWZnrbsg7nJhINh
-         buBelvdbcXwiT8K2t6vorVhVK9urRm8DIIRxVbFpOV3FsEx9qWZnZnI6bVMrsIX8Uo1g
-         laZMTLpwZZ8CZKjYi6/UgXQ773Xus9qxfaySLl9RFwfIgAjiVceBhNncD45/N21A1ExG
-         ev1Q==
-X-Gm-Message-State: AOAM530ehnbJZj4lqYVEKok61eCVLXkRoYz5CXeFvTLi5x4cyAvmu+Vu
-        TUHingZcy86M8mEn/eAyuxg=
-X-Google-Smtp-Source: ABdhPJwIs4y8aNM38rBL6i83ol6zAmutagnBs98xg1dZ+TNRSEXv4E1FjDzY79vpk5xE4Wzx4pmpiA==
-X-Received: by 2002:a2e:9dd0:: with SMTP id x16mr107011ljj.144.1597363655869;
-        Thu, 13 Aug 2020 17:07:35 -0700 (PDT)
+        bh=6hV/jfb1j57ds6uWusc67dwvrbgr9Nuaem2xPT64pOI=;
+        b=JsF5/m6Vo8IrQ2bGh5p1Szc0FRGeodkAXnBPQ5A9MOh0KlRvdZcED8EJD1blHyGqk6
+         hselcLmLVARvN0FiKgDu+7lRTJeDKldP0zrZ2I0HrNHedHhfzff8ipWQqry4iPF2T+eb
+         Wv5HMzKRVbMZuv8EFBHICpfod1KcGcmv3awNMnh+e3vFHpGD2+MyEtf4O2+kBrkzI+QA
+         s8EOMK3QJL7mM5rKdpNTNID7tSeZdALb+S5TAmcPYv87hG02M1LfBNPf/lIrliNHczZR
+         Dhlnd2dXuVDlE+mG7/afPHiy3xr/zqdPYmjNpTDmlE/aaNlRi1OUXDFilyavnHX4rnD0
+         EGEg==
+X-Gm-Message-State: AOAM5314hmV0lwt5UzIp/gCfKh/FBs0GV/JjR+hX0RUlttV7EmVIkS0U
+        mgEOXq0Mgn2fEmIMvG2A7VU=
+X-Google-Smtp-Source: ABdhPJyX4+8v8JUfhatSVHBEDRahqnCfgVnO8HrDC7HMA1cGJSRRGzDZfveHa/V3VlNsHtHH294fRg==
+X-Received: by 2002:ac2:58c6:: with SMTP id u6mr3340219lfo.105.1597363644627;
+        Thu, 13 Aug 2020 17:07:24 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.34
+        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 17:07:35 -0700 (PDT)
+        Thu, 13 Aug 2020 17:07:24 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 31/36] memory: tegra20-emc: Create tegra20-devfreq device
-Date:   Fri, 14 Aug 2020 03:06:16 +0300
-Message-Id: <20200814000621.8415-32-digetx@gmail.com>
+Subject: [PATCH v5 21/36] dt-bindings: memory: tegra30: emc: Document new interconnect property
+Date:   Fri, 14 Aug 2020 03:06:06 +0300
+Message-Id: <20200814000621.8415-22-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200814000621.8415-1-digetx@gmail.com>
 References: <20200814000621.8415-1-digetx@gmail.com>
@@ -88,30 +88,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tegra20-devfreq driver provides memory frequency scaling functionality
-and it uses EMC clock for the scaling. Since tegra20-devfreq is a software
-driver, the device for the driver needs to be created manually. Let's do
-it from EMC driver since it provides the clk rate-change functionality.
+External memory controller is interconnected with memory controller and
+with external memory. Document new interconnect property which turns
+external memory controller into interconnect provider.
 
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../bindings/memory-controllers/nvidia,tegra30-emc.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 437d9d789941..e603cc0b0341 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -884,6 +884,9 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 	tegra_emc_debugfs_init(emc);
- 	tegra_emc_interconnect_init(emc);
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
+index 112bae2fcbbd..c243986db420 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
+@@ -31,6 +31,9 @@ properties:
+   interrupts:
+     maxItems: 1
  
-+	if (IS_ENABLED(CONFIG_ARM_TEGRA20_DEVFREQ))
-+		platform_device_register_simple("tegra20-devfreq", -1, NULL, 0);
++  "#interconnect-cells":
++    const: 0
 +
- 	/*
- 	 * Don't allow the kernel module to be unloaded. Unloading adds some
- 	 * extra complexity which doesn't really worth the effort in a case of
+   nvidia,memory-controller:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description:
+@@ -214,6 +217,7 @@ required:
+   - interrupts
+   - clocks
+   - nvidia,memory-controller
++  - "#interconnect-cells"
+ 
+ additionalProperties: false
+ 
+@@ -227,6 +231,8 @@ examples:
+ 
+         nvidia,memory-controller = <&mc>;
+ 
++        #interconnect-cells = <0>;
++
+         emc-timings-1 {
+             nvidia,ram-code = <1>;
+ 
 -- 
 2.27.0
 
