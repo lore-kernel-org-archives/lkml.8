@@ -2,107 +2,137 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28645C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0270B2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C288D2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkoqvZoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgHNKJn (ORCPT
+        id S1726754AbgHNKKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:09:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39212 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgHNKJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:09:40 -0400
-IronPort-SDR: v9olPLzJFE8/D8EMOYiRzvBhLxyrqkWLDiVOc4HoyjvaYaCwpZ9V+Y+NH4RlhBbvm5TiXUaFaJ
- /W9bzwc20Hyg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="142225727"
-X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="142225727"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 03:09:40 -0700
-IronPort-SDR: Ybx8mk0552li0bdHdUB5/dPO86kL96paT7UAUsymjTxWeEEFMaHNyg4TVfG+hdQR/GllgXHLp9
- 0J1o/mhb1tUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="325687704"
-Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
-  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2020 03:09:37 -0700
-Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200807084841.7112-1-chenyi.qiang@intel.com>
- <20200807084841.7112-8-chenyi.qiang@intel.com>
- <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
- <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
- <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-Message-ID: <ae2191a7-a165-3b50-2c8d-e2ddb4505455@intel.com>
-Date:   Fri, 14 Aug 2020 18:07:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 14 Aug 2020 06:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgHNKKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:10:39 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63FC6C061383;
+        Fri, 14 Aug 2020 03:10:39 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so7861683wrh.3;
+        Fri, 14 Aug 2020 03:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R46SsqR1eyTATyhcAOvh3H+PeSzPXKSuMJhoGSukpwE=;
+        b=ZkoqvZoN/zk5fWo/v9mYsby8Ww5Gy2pTb6vtMRcIkHDJzQPegLt8O8rrj++0RPqi2z
+         pDsXrWYVVZdvt7BIUQP/FNkgEAXN1uG6NrKaT69dlvDs+o/wjUrt8fHAJCP3yzR9xNfy
+         tT0HqGDpiyKHwHUyki3eYhBtEgjldOfzxMd45C2rTsxfqLPFG0s9UCQMxZAT04KrRHzU
+         RJ2HvpD9C3PU0EIM49HALg/SaxSu3S50l5OmrAOyJhIOSjJsh1PG+Bpg3i1GlNExA5uY
+         mql7U3Be570mZDAzuC071dxztsojSJn3f0jxO8dK/eyHUSBxghR+rtRGQxwIxcz47dgs
+         vw8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R46SsqR1eyTATyhcAOvh3H+PeSzPXKSuMJhoGSukpwE=;
+        b=ZMRHPybPt+iGeuHK0wM9HddN+UT6cr4m+BK1+UyvK6YkVqbL39jbKdTFljSqlBt8O1
+         pXyv/bVuK3QqK/hgQLM7IaCo0VKEdty1bqpeGezzCzZ8TQOWmxu3WSU8HBrFjLrgV26o
+         ZA+3tKuv1VI8TH1F/3z/Nnf1rb9WU6woF3jv/l9sYhtzhkh8/+0xeYFhw6QFLUYyQS0m
+         5B0XKDfmgCQqEvMbJ/wqCHyiP5+/LrlhBf1Ry5ogJGOkerGm96m7D7k15cvBDjQb1mvG
+         jMC8nCEb05sVnGVgKXSu3CJamlwVi+hQhyP4SeRo1KMZRH8+nOxrhnOK3qvGCYkhC+Wy
+         6abw==
+X-Gm-Message-State: AOAM532zdrnrxXNu7Xlo0RstS6EUqsx3rvVPF+ezNEQDnMEuq11eYKDn
+        w/PplXq4Q7MoovqGvayKVVI3Afj+tYuVz6KuIzA=
+X-Google-Smtp-Source: ABdhPJy5Ary+CLZu0csWXpWFWur1DgCIbdgUHlLLl0lwU1vFMcz37O56KcA1H3bwbBBqunLPJqe9CA==
+X-Received: by 2002:a5d:4144:: with SMTP id c4mr2032285wrq.200.1597399838075;
+        Fri, 14 Aug 2020 03:10:38 -0700 (PDT)
+Received: from syz-necip.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id s206sm13909891wmf.40.2020.08.14.03.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 03:10:37 -0700 (PDT)
+From:   Necip Fazil Yildiran <fazilyildiran@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     courtney.cavin@sonymobile.com, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, elver@google.com, andreyknvl@google.com,
+        glider@google.com, necip@google.com,
+        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Subject: [PATCH] net: qrtr: fix usage of idr in port assignment to socket
+Date:   Fri, 14 Aug 2020 10:10:00 +0000
+Message-Id: <20200814101000.2463612-1-fazilyildiran@gmail.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Necip Fazil Yildiran <necip@google.com>
 
+Passing large uint32 sockaddr_qrtr.port numbers for port allocation
+triggers a warning within idr_alloc() since the port number is cast
+to int, and thus interpreted as a negative number. This leads to
+the rejection of such valid port numbers in qrtr_port_assign() as
+idr_alloc() fails.
 
-On 8/14/2020 1:52 AM, Jim Mattson wrote:
-> On Wed, Aug 12, 2020 at 9:54 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->>
->>
->>
->> On 8/11/2020 8:05 AM, Jim Mattson wrote:
->>> On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->>>>
->>>> PKS MSR passes through guest directly. Configure the MSR to match the
->>>> L0/L1 settings so that nested VM runs PKS properly.
->>>>
->>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
->>>> ---
-> 
->>>> +           (!vmx->nested.nested_run_pending ||
->>>> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
->>>> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
->>>
->>> This doesn't seem right to me. On the target of a live migration, with
->>> L2 active at the time the snapshot was taken (i.e.,
->>> vmx->nested.nested_run_pending=0), it looks like we're going to try to
->>> overwrite the current L2 PKRS value with L1's PKRS value (except that
->>> in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
->>> 0). Am I missing something?
->>>
->>
->> We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS.
->> Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's
->> PKRS to L2.
-> 
-> I'm thinking of the case where vmx->nested.nested_run_pending is
-> false, and we are processing a KVM_SET_NESTED_STATE ioctl, yet
-> VM_ENTRY_LOAD_IA32_PKRS *is* set in the vmcs12.
-> 
+To avoid the problem, switch to idr_alloc_u32() instead.
 
-Oh, I miss this case. What I'm still confused here is that the 
-restoration for GUEST_IA32_DEBUGCTL and GUEST_BNDCFGS have the same 
-issue, right? or I miss something.
+Fixes: bdabad3e36 ("net: Add Qualcomm IPC router")
+Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Signed-off-by: Necip Fazil Yildiran <necip@google.com>
+---
+ net/qrtr/qrtr.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index b4c0db0b7d31..52d0707df776 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -693,22 +693,24 @@ static void qrtr_port_remove(struct qrtr_sock *ipc)
+ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ {
+ 	int rc;
++	u32 min_port;
+ 
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+-		rc = idr_alloc(&qrtr_ports, ipc,
+-			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+-			       GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = QRTR_MIN_EPH_SOCKET;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+ 		rc = -EACCES;
+ 	} else if (*port == QRTR_PORT_CTRL) {
+-		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
++		min_port = 0;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
+ 	} else {
+-		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = *port;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	}
+ 	mutex_unlock(&qrtr_port_lock);
+ 
+-- 
+2.28.0.220.ged08abb693-goog
+
