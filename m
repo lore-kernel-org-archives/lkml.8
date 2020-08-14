@@ -2,243 +2,131 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B18C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDA4E2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBF32074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ri6oB0rF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="poB4mWhw"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="dp2O7B1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgHNVdU (ORCPT
+        id S1728428AbgHNVe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 17:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgHNVdT (ORCPT
+        Fri, 14 Aug 2020 17:34:28 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:6538 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726596AbgHNVe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 17:33:19 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E74C061385;
-        Fri, 14 Aug 2020 14:33:18 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597440796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OwWBY4TEuHm2fQz9DnZzdQZIEjLqr3kBQSAnQO+mIdk=;
-        b=Ri6oB0rFeS/gNC8OmjvJ203za9nGNqjt8we/eB8BJYdTcDlVv8AiNuL/d5W0bZH2ZHnSM+
-        lFLv4M45OMigTIGDwZsgt6+QzC7SqaLZm49CwGz3tLnYzKXFcFqXbWybO2eQ2XodoqqZqO
-        aQOzXltl7FWLKh4IoeDx3A4q9xO4F2KC+Xizv65rTDuXFyRc+b1YnlCFc+fj4FzH/7bZ1R
-        E2QTUoq7qFfjzg7PR4WIl7ZZpm6QUy7EMBXntXk0BSNcglxWPEhcIp49gF0HM8aK9Qlbaa
-        dc6fJ/it2AlXK+sIOovOjg7Udq14HNy/SlgVvGuqXreJXsUC9pRbqopOECurcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597440796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OwWBY4TEuHm2fQz9DnZzdQZIEjLqr3kBQSAnQO+mIdk=;
-        b=poB4mWhwcYOKh3TENL6PbdDGc0fnsTyhWS1EzEC9xFZZQTyoPK+PdzB89DV4bFzDnvzo6o
-        i7y5adb64i0/ctCA==
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org,
-        linux-doc@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH][next] docs: vmcoreinfo: add lockless printk ringbuffer vmcoreinfo
-Date:   Fri, 14 Aug 2020 23:39:16 +0206
-Message-Id: <20200814213316.6394-1-john.ogness@linutronix.de>
+        Fri, 14 Aug 2020 17:34:28 -0400
+Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ELMYqP017847;
+        Fri, 14 Aug 2020 22:30:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=apBYV70I3ke9U2rudRI7Z/BYmo6lMSbGaBtjTjz53fw=;
+ b=dp2O7B1a0uXd4qYEnXQeUKNyjYkpHntHffBOjY9Me9BlnGC7KwoDN4WaMQHwAilcSAmZ
+ PrARh4QpSfBOnEXJLY6eA+3uLVHSzT+BIqut1FuWCKQQP3j01j9sUUoR4boMMoJvfJIy
+ g16YMxP9xSQHpOOehDWpcfk03s2d380+weXJmZXNOCuszW2JmojaIH5j8nFeRbxYU9KR
+ 44/NQpDh+b8xd0QMlnLyN7M65TDtYY/vVO+W1ZyO3jO26Zo4tpVJqACBC2vr0n2Rbl6f
+ bdJON0DEHLMA1I2Pcn/h5Ax2kGzdrQ7VUe3JpfKrPYBjhToYM3T7+EfnndBZ5yrWmOaa hA== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 32sm5j032h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Aug 2020 22:30:36 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 07EL2Bga020888;
+        Fri, 14 Aug 2020 17:30:35 -0400
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 32sqcyct4b-1;
+        Fri, 14 Aug 2020 17:30:34 -0400
+Received: from [0.0.0.0] (stag-ssh-gw01.bos01.corp.akamai.com [172.27.113.23])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id B054F3BA27;
+        Fri, 14 Aug 2020 21:30:34 +0000 (GMT)
+Subject: Re: [PATCH v2] dynamic debug: allow printing to trace event
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     mingo@redhat.com, kernel@axis.com, corbet@lwn.net,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        john.ogness@linutronix.de, linux-kernel@vger.kernel.org
+References: <20200814133151.7759-1-vincent.whitchurch@axis.com>
+ <20200814131531.01b43c91@oasis.local.home>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <461439ab-0720-e3cc-f49f-f294fbba4129@akamai.com>
+Date:   Fri, 14 Aug 2020 17:30:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200814131531.01b43c91@oasis.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-14_13:2020-08-14,2020-08-14 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=699
+ malwarescore=0 bulkscore=0 suspectscore=0 spamscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008140154
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-14_16:2020-08-14,2020-08-14 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 spamscore=0 priorityscore=1501 suspectscore=0
+ adultscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=617 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008140157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the introduction of the lockless printk ringbuffer, the
-VMCOREINFO relating to the kernel log buffer was changed. Update the
-documentation to match those changes.
 
-Fixes: ("printk: use the lockless ringbuffer")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
----
- based on next-20200814
 
- .../admin-guide/kdump/vmcoreinfo.rst          | 131 ++++++++++++++----
- 1 file changed, 102 insertions(+), 29 deletions(-)
+On 8/14/20 1:15 PM, Steven Rostedt wrote:
+> On Fri, 14 Aug 2020 15:31:51 +0200
+> Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
+>> index aa9ff9e1c0b3..f599ed21ecc5 100644
+>> --- a/include/linux/dynamic_debug.h
+>> +++ b/include/linux/dynamic_debug.h
+>> @@ -27,13 +27,16 @@ struct _ddebug {
+>>  	 * writes commands to <debugfs>/dynamic_debug/control
+>>  	 */
+>>  #define _DPRINTK_FLAGS_NONE	0
+>> -#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
+>> +#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
+> 
+> The above looks like a cleanup unrelated to this patch, and probably
+> should be on its own.
 
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 2baad0bfb09d..eb116905c31c 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -189,50 +189,123 @@ from this.
- Free areas descriptor. User-space tools use this value to iterate the
- free_area ranges. MAX_ORDER is used by the zone buddy allocator.
- 
--log_first_idx
-+prb
-+---
-+
-+A pointer to the printk ringbuffer (struct printk_ringbuffer). This
-+may be pointing to the static boot ringbuffer or the dynamically
-+allocated ringbuffer, depending on when the the core dump occurred.
-+Used by user-space tools to read the active kernel log buffer.
-+
-+printk_rb_static
-+----------------
-+
-+A pointer to the static boot printk ringbuffer. If @prb has a
-+different value, this is useful for viewing the initial boot messages,
-+which may have been overwritten in the dynamically allocated
-+ringbuffer.
-+
-+clear_seq
-+---------
-+
-+The sequence number of the printk() record after the last clear
-+command. It indicates the first record after the last
-+SYSLOG_ACTION_CLEAR, like issued by 'dmesg -c'. Used by user-space
-+tools to dump a subset of the dmesg log.
-+
-+printk_ringbuffer
-+-----------------
-+
-+The size of a printk_ringbuffer structure. This structure contains all
-+information required for accessing the various components of the
-+kernel log buffer.
-+
-+(printk_ringbuffer, desc_ring|text_data_ring|dict_data_ring|fail)
-+-----------------------------------------------------------------
-+
-+Offsets for the various components of the printk ringbuffer. Used by
-+user-space tools to view the kernel log buffer without requiring the
-+declaration of the structure.
-+
-+prb_desc_ring
- -------------
- 
--Index of the first record stored in the buffer log_buf. Used by
--user-space tools to read the strings in the log_buf.
-+The size of the prb_desc_ring structure. This structure contains
-+information about the set of record descriptors.
- 
--log_buf
---------
-+(prb_desc_ring, count_bits|descs|head_id|tail_id)
-+-------------------------------------------------
-+
-+Offsets for the fields describing the set of record descriptors. Used
-+by user-space tools to be able to traverse the descriptors without
-+requiring the declaration of the structure.
-+
-+prb_desc
-+--------
-+
-+The size of the prb_desc structure. This structure contains
-+information about a single record descriptor.
-+
-+(prb_desc, info|state_var|text_blk_lpos|dict_blk_lpos)
-+------------------------------------------------------
-+
-+Offsets for the fields describing a record descriptors. Used by
-+user-space tools to be able to read descriptors without requiring
-+the declaration of the structure.
-+
-+prb_data_blk_lpos
-+-----------------
-+
-+The size of the prb_data_blk_lpos structure. This structure contains
-+information about where the text or dictionary data (data block) is
-+located within the respective data ring.
-+
-+(prb_data_blk_lpos, begin|next)
-+-------------------------------
- 
--Console output is written to the ring buffer log_buf at index
--log_first_idx. Used to get the kernel log.
-+Offsets for the fields describing the location of a data block. Used
-+by user-space tools to be able to locate data blocks without
-+requiring the declaration of the structure.
- 
--log_buf_len
-+printk_info
- -----------
- 
--log_buf's length.
-+The size of the printk_info structure. This structure contains all
-+the meta-data for a record.
- 
--clear_idx
-----------
-+(printk_info, seq|ts_nsec|text_len|dict_len|caller_id)
-+------------------------------------------------------
- 
--The index that the next printk() record to read after the last clear
--command. It indicates the first record after the last SYSLOG_ACTION
--_CLEAR, like issued by 'dmesg -c'. Used by user-space tools to dump
--the dmesg log.
-+Offsets for the fields providing the meta-data for a record. Used by
-+user-space tools to be able to read the information without requiring
-+the declaration of the structure.
- 
--log_next_idx
--------------
-+prb_data_ring
-+-------------
- 
--The index of the next record to store in the buffer log_buf. Used to
--compute the index of the current buffer position.
-+The size of the prb_data_ring structure. This structure contains
-+information about a set of data blocks.
- 
--printk_log
------------
-+(prb_data_ring, size_bits|data|head_lpos|tail_lpos)
-+---------------------------------------------------
- 
--The size of a structure printk_log. Used to compute the size of
--messages, and extract dmesg log. It encapsulates header information for
--log_buf, such as timestamp, syslog level, etc.
-+Offsets for the fields describing a set of data blocks. Used by
-+user-space tools to be able to access the data blocks without
-+requiring the declaration of the structure.
- 
--(printk_log, ts_nsec|len|text_len|dict_len)
---------------------------------------------
-+atomic_long_t
-+-------------
-+
-+The size of the atomic_long_t structure. Used by user-space tools to
-+be able to copy the full structure, regardless of its
-+architecture-specific implementation.
-+
-+(atomic_long_t, counter)
-+------------------------
- 
--It represents field offsets in struct printk_log. User space tools
--parse it and check whether the values of printk_log's members have been
--changed.
-+Offset for the long value of an atomic_long_t variable. Used by
-+user-space tools to access the long value without requiring the
-+architecture-specific declaration.
- 
- (free_area.free_list, MIGRATE_TYPES)
- ------------------------------------
--- 
-2.20.1
+I read it as we used to have this one thing called 'print', which really meant
+printk, but now that we also have the ability to output to the trace buffer,
+what does 'print' mean now? So I read it as being part of this change.
 
+> 
+>>  #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
+>>  #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
+>>  #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
+>>  #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
+>> +#define _DPRINTK_FLAGS_TRACE		(1<<5)	
+>> +#define _DPRINTK_FLAGS_PRINT		(_DPRINTK_FLAGS_PRINTK | \
+>> +					 _DPRINTK_FLAGS_TRACE)
+
+
+Is _DPRINTK_FLAGS_PRINT actually used anywhere? Looks to me like
+it can be removed.
+
+This is a feature I've wanted for dynamic debug for a while. Thanks for
+implementing it!
+
+Dynamic can be enabled on the command line in order to print things early
+in boot (I think ftrace can as well), I want to make sure that there are
+no ordering issues here? And things wouldn't blow up if we enable printing
+to the ftrace buffer early on via dyanmic debug?
+
+Thanks,
+
+-Jason
