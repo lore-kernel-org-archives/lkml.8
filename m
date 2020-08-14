@@ -2,123 +2,143 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C419AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3273C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9006720829
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N3zwz4kQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8E86620774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHNRMQ (ORCPT
+        id S1728369AbgHNRPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728395AbgHNRMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:12:15 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13964C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:12:14 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h8so5180493lfp.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oTnqLQcun1oAd2jUgg7+f/faki/0xT/2c6vC8h9xpbw=;
-        b=N3zwz4kQcVvMDiCWrRIXQz2rRp6Dmu6TWX489BnbDLouEXbPNNxetAQAHQn7vcfPdu
-         D9dcGIwxDz5vTquvaVCKu8GwUZ6SxBY5udXv80hJnLBc4vR2jd3e4cGFahp67Xp6XZWE
-         mxNwn2EuMvR6D0c6CP82qtNyRQrf2d8koRH03SsRhkmFhZqZWBxAlMQtIJMenvRsPp79
-         9bea1KRn3PBOL0pvZXzkH2XhjfiP90TOPxtXA0XCDKHhIlzkJ+CPggG27aaCShGiNEC1
-         RnhRYAG3Nx4KQ15TPkWH5lpOwxRJoFnFcRUEEF0+RctAWC1tIcMCmdR4DKvdpiyvkLPf
-         VQdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oTnqLQcun1oAd2jUgg7+f/faki/0xT/2c6vC8h9xpbw=;
-        b=HLsomTiJNuR5huxnDJXKmrNZnm1gH9KR354EfImwkS5ODwS2Q0MfI0sI2HuzNZ9636
-         BFjyPWil8ZLLAiCg5wMh3ms2ft2PEj7edZaZIc5J4P8QS8bLRY2ObhCcA5f+RIjWhlCY
-         sFNETYKp03SEsLxkMZGg+2hgZqH8siG7Izo/33dbpv3oUOY8LpE/OppnWVA0bOklmmPA
-         Fgct7MwIp1dG42HBayOmsZUj0RzOejXpQd71NTaPUgu8AbRhtr/+s7HYW8FZ9Gi/66aA
-         nKcdnWQPFm4u/lza0fsNpspbOImgV0uS6uzCJZrU8hWa6MiOKwQuOqUqYEoUECXOqO4P
-         t3eg==
-X-Gm-Message-State: AOAM5320ED3FdwUOX+zWk5Cd7AfT/4VbXt4eM1tND9Q9rrQx9bWMsprp
-        gN8z/w+M0ZSIpbRHu/ZxpO+QCg==
-X-Google-Smtp-Source: ABdhPJwthnbVLKpJB0/hPo/55RCT2z4Bd1DEwwzsboqMb6G7MLrh7IK+1wUoKkMpH/2PdYyI/Fnvuw==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr1656731lfn.83.1597425132894;
-        Fri, 14 Aug 2020 10:12:12 -0700 (PDT)
-Received: from [192.168.43.7] ([188.162.64.200])
-        by smtp.gmail.com with ESMTPSA id q10sm1874788ljh.110.2020.08.14.10.12.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 10:12:12 -0700 (PDT)
-Subject: Re: [PATCH v10 2/5] drm/msm/dp: add displayPort driver support
-To:     Tanmay Shah <tanmay@codeaurora.org>, swboyd@chromium.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robdclark@gmail.com
-Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-3-tanmay@codeaurora.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
-Date:   Fri, 14 Aug 2020 20:12:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 14 Aug 2020 13:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgHNRPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:15:34 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20253206B6;
+        Fri, 14 Aug 2020 17:15:33 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 13:15:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     <jbaron@akamai.com>, <mingo@redhat.com>, <kernel@axis.com>,
+        <corbet@lwn.net>, <pmladek@suse.com>,
+        <sergey.senozhatsky@gmail.com>, <john.ogness@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dynamic debug: allow printing to trace event
+Message-ID: <20200814131531.01b43c91@oasis.local.home>
+In-Reply-To: <20200814133151.7759-1-vincent.whitchurch@axis.com>
+References: <20200814133151.7759-1-vincent.whitchurch@axis.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200812044223.19279-3-tanmay@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 14 Aug 2020 15:31:51 +0200
+Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
+> index aa9ff9e1c0b3..f599ed21ecc5 100644
+> --- a/include/linux/dynamic_debug.h
+> +++ b/include/linux/dynamic_debug.h
+> @@ -27,13 +27,16 @@ struct _ddebug {
+>  	 * writes commands to <debugfs>/dynamic_debug/control
+>  	 */
+>  #define _DPRINTK_FLAGS_NONE	0
+> -#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
+> +#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
 
-On 12/08/2020 07:42, Tanmay Shah wrote:
-> From: Chandan Uddaraju <chandanu@codeaurora.org>
+The above looks like a cleanup unrelated to this patch, and probably
+should be on its own.
 
-[skipped]
-
-> +		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
-> +			   dp_parser_check_prefix("stream", clk_name))  &&
-> +			   ctrl_clk_index < ctrl_clk_count) {
-> +			struct dss_clk *clk =
-> +				&ctrl_power->clk_config[ctrl_clk_index];
-> +			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
-> +			ctrl_clk_index++;
+>  #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
+>  #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
+>  #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
+>  #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
+> +#define _DPRINTK_FLAGS_TRACE		(1<<5)	
+> +#define _DPRINTK_FLAGS_PRINT		(_DPRINTK_FLAGS_PRINTK | \
+> +					 _DPRINTK_FLAGS_TRACE)
+>  #if defined DEBUG
+> -#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
+> +#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINTK
+>  #else
+>  #define _DPRINTK_FLAGS_DEFAULT 0
+>  #endif
+> diff --git a/include/trace/events/printk.h b/include/trace/events/printk.h
+> index 13d405b2fd8b..6c89121a1669 100644
+> --- a/include/trace/events/printk.h
+> +++ b/include/trace/events/printk.h
+> @@ -7,7 +7,7 @@
+>  
+>  #include <linux/tracepoint.h>
+>  
+> -TRACE_EVENT(console,
+> +DECLARE_EVENT_CLASS(printk,
+>  	TP_PROTO(const char *text, size_t len),
+>  
+>  	TP_ARGS(text, len),
+> @@ -31,6 +31,16 @@ TRACE_EVENT(console,
+>  
+>  	TP_printk("%s", __get_str(msg))
+>  );
 > +
-> +			if (!strncmp(clk_name, "ctrl_link",
-> +					strlen("ctrl_link")) ||
-> +					!strncmp(clk_name, "stream_pixel",
-> +					strlen("ctrl_pixel")))
+> +DEFINE_EVENT(printk, console,
+> +	TP_PROTO(const char *text, size_t len),
+> +	TP_ARGS(text, len)
+> +);
+> +
+> +DEFINE_EVENT(printk, dynamic,
 
-This should be "stream_pixel", I believe. I don't like macros, but most 
-probably it would help here. Also function/brace alignment could be 
-better (sorry, it really hides the issue here).
+Can we call this "dynamic_printk" or "printk_dynamic", as
+trace_dynamic() is too generic.
 
+> +	TP_PROTO(const char *text, size_t len),
+> +	TP_ARGS(text, len)
+> +);
+>  #endif /* _TRACE_PRINTK_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 1d012e597cc3..76fc3e33fe41 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/device.h>
+>  #include <linux/netdevice.h>
+> +#include <trace/events/printk.h>
+>  
+>  #include <rdma/ib_verbs.h>
+>  
+> @@ -84,11 +85,12 @@ static inline const char *trim_prefix(const char *path)
+>  }
+>  
+>  static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+> -	{ _DPRINTK_FLAGS_PRINT, 'p' },
+> +	{ _DPRINTK_FLAGS_PRINTK, 'p' },
 
-> +				clk->type = DSS_CLK_PCLK;
-> +			else
-> +				clk->type = DSS_CLK_AHB;
-> +		}
-> +	}
+Again, this looks unrelated, and shouldn't be part of this patch.
 
+>  	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
+>  	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
+>  	{ _DPRINTK_FLAGS_INCL_LINENO, 'l' },
+>  	{ _DPRINTK_FLAGS_INCL_TID, 't' },
+> +	{ _DPRINTK_FLAGS_TRACE, 'x' },
+>  	{ _DPRINTK_FLAGS_NONE, '_' },
+>  };
+>  
 
--- 
-With best wishes
-Dmitry
+Other then the two comments above, I'm fine with this change.
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
