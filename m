@@ -2,269 +2,193 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42396C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C53A20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22406207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHNIqp (ORCPT
+        id S1726789AbgHNIsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:46:45 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24196 "EHLO mga12.intel.com"
+        Fri, 14 Aug 2020 04:48:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51646 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgHNIqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:46:44 -0400
-IronPort-SDR: WCXVbP3qtXG0lXoiHLDGPT/PEL7cXN7NLlxlElXyZxyqSSzdF2hFj9DNifcBEkW4DkWsEFgcnq
- X97y1QTWYXUg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="133897305"
+        id S1726050AbgHNIsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:48:17 -0400
+IronPort-SDR: vzMscWVC+53qCeFb6xXgAoM9iibjrNsb2wdR5nZVzkNbruBrcYRtEHC1Xm2o9UM3+5OIzRYb8W
+ G2jNmtfZZpJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="154339110"
 X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="133897305"
+   d="scan'208";a="154339110"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 01:46:42 -0700
-IronPort-SDR: 7SUjLnKdtkf6mm5php99netnUFQYhe5d3szIy6e3H89YsXzBJU9rK2Y+SUoHsiXPGga/vkIg80
- 56Qz9/kj1T5Q==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 01:48:15 -0700
+IronPort-SDR: cVSBszhNIPMGS4G5YZvTK9Wd6YmjoCnQVqbrzNvw+SmOfAlRYC15zYK0BBhcItFMSCNwyn830/
+ /Z37AJ47TV+g==
 X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="291678153"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by orsmga003.jf.intel.com with ESMTP; 14 Aug 2020 01:46:40 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: hdac_hdmi: support 'ELD' mixer
-Date:   Fri, 14 Aug 2020 16:34:36 +0800
-Message-Id: <20200814083436.19845-1-brent.lu@intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="470525084"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 01:48:13 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v13 00/10] Guest Last Branch Recording Enabling (KVM part)
+To:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+References: <20200726153229.27149-1-like.xu@linux.intel.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <6d4d7b00-cbca-9875-24bd-e6c4efaf0586@intel.com>
+Date:   Fri, 14 Aug 2020 16:48:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200726153229.27149-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an binary mixer 'ELD' to each HDMI PCM device so user space
-could read the ELD data of external HDMI display.
+Are there no interested reviewers or users?
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/codecs/hdac_hdmi.c | 139 +++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
+Just a kindly ping.
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index f26b77faed59..83656bbf22a7 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -9,6 +9,7 @@
-  *
-  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
-+
- #include <linux/init.h>
- #include <linux/delay.h>
- #include <linux/module.h>
-@@ -107,6 +108,7 @@ struct hdac_hdmi_pcm {
- 	unsigned char chmap[8]; /* ALSA API channel-map */
- 	struct mutex lock;
- 	int jack_event;
-+	struct snd_kcontrol *eld_ctl;
- };
- 
- struct hdac_hdmi_dai_port_map {
-@@ -1248,6 +1250,7 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 	struct hdac_hdmi_pcm *pcm;
- 	int size = 0;
- 	int port_id = -1;
-+	bool eld_valid, eld_changed;
- 
- 	if (!hdmi)
- 		return;
-@@ -1273,6 +1276,8 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 			size = -EINVAL;
- 	}
- 
-+	eld_valid = port->eld.eld_valid;
-+
- 	if (size > 0) {
- 		port->eld.eld_valid = true;
- 		port->eld.eld_size = size;
-@@ -1281,6 +1286,8 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 		port->eld.eld_size = 0;
- 	}
- 
-+	eld_changed = (eld_valid != port->eld.eld_valid);
-+
- 	pcm = hdac_hdmi_get_pcm(hdev, port);
- 
- 	if (!port->eld.monitor_present || !port->eld.eld_valid) {
-@@ -1313,6 +1320,12 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 
- 	}
- 	mutex_unlock(&hdmi->pin_mutex);
-+
-+	if (eld_changed && pcm)
-+		snd_ctl_notify(hdmi->card,
-+			       SNDRV_CTL_EVENT_MASK_VALUE |
-+			       SNDRV_CTL_EVENT_MASK_INFO,
-+			       &pcm->eld_ctl->id);
- }
- 
- static int hdac_hdmi_add_ports(struct hdac_device *hdev,
-@@ -1411,6 +1424,122 @@ static void hdac_hdmi_skl_enable_dp12(struct hdac_device *hdev)
- 
- }
- 
-+static int hdac_hdmi_eld_ctl_info(struct snd_kcontrol *kcontrol,
-+			     struct snd_ctl_elem_info *uinfo)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
-+	struct hdac_hdmi_pcm *pcm;
-+	struct hdac_hdmi_port *port;
-+	struct hdac_hdmi_eld *eld;
-+
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_BYTES;
-+	uinfo->count = 0;
-+
-+	pcm = get_hdmi_pcm_from_id(hdmi, kcontrol->id.device);
-+	if (!pcm) {
-+		dev_dbg(component->dev, "%s: no pcm, device %d\n", __func__,
-+			kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	if (list_empty(&pcm->port_list)) {
-+		dev_dbg(component->dev, "%s: empty port list, device %d\n",
-+			__func__, kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	mutex_lock(&hdmi->pin_mutex);
-+
-+	list_for_each_entry(port, &pcm->port_list, head) {
-+		eld = &port->eld;
-+
-+		if (eld->eld_valid) {
-+			uinfo->count = eld->eld_size;
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&hdmi->pin_mutex);
-+
-+	return 0;
-+}
-+
-+static int hdac_hdmi_eld_ctl_get(struct snd_kcontrol *kcontrol,
-+			    struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
-+	struct hdac_hdmi_pcm *pcm;
-+	struct hdac_hdmi_port *port;
-+	struct hdac_hdmi_eld *eld;
-+
-+	memset(ucontrol->value.bytes.data, 0, ARRAY_SIZE(ucontrol->value.bytes.data));
-+
-+	pcm = get_hdmi_pcm_from_id(hdmi, kcontrol->id.device);
-+	if (!pcm) {
-+		dev_dbg(component->dev, "%s: no pcm, device %d\n", __func__,
-+			kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	if (list_empty(&pcm->port_list)) {
-+		dev_dbg(component->dev, "%s: empty port list, device %d\n",
-+			__func__, kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	mutex_lock(&hdmi->pin_mutex);
-+
-+	list_for_each_entry(port, &pcm->port_list, head) {
-+		eld = &port->eld;
-+
-+		if (!eld->eld_valid)
-+			continue;
-+
-+		if (eld->eld_size > ARRAY_SIZE(ucontrol->value.bytes.data) ||
-+		    eld->eld_size > ELD_MAX_SIZE) {
-+			mutex_unlock(&hdmi->pin_mutex);
-+
-+			dev_err(component->dev, "%s: buffer too small, device %d eld_size %d\n",
-+				__func__, kcontrol->id.device, eld->eld_size);
-+			snd_BUG();
-+			return -EINVAL;
-+		}
-+
-+		memcpy(ucontrol->value.bytes.data, eld->eld_buffer,
-+		       eld->eld_size);
-+		break;
-+	}
-+
-+	mutex_unlock(&hdmi->pin_mutex);
-+
-+	return 0;
-+}
-+
-+static int hdac_hdmi_create_eld_ctl(struct snd_soc_component *component, struct hdac_hdmi_pcm *pcm)
-+{
-+	struct snd_kcontrol *kctl;
-+	struct snd_kcontrol_new hdmi_eld_ctl = {
-+		.access	= SNDRV_CTL_ELEM_ACCESS_READ |
-+			  SNDRV_CTL_ELEM_ACCESS_VOLATILE,
-+		.iface	= SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name	= "ELD",
-+		.info	= hdac_hdmi_eld_ctl_info,
-+		.get	= hdac_hdmi_eld_ctl_get,
-+		.device	= pcm->pcm_id,
-+	};
-+
-+	/* add ELD ctl with the device number corresponding to the PCM stream */
-+	kctl = snd_ctl_new1(&hdmi_eld_ctl, component);
-+	if (!kctl)
-+		return -ENOMEM;
-+
-+	pcm->eld_ctl = kctl;
-+
-+	return snd_ctl_add(component->card->snd_card, kctl);
-+}
-+
- static const struct snd_soc_dai_ops hdmi_dai_ops = {
- 	.startup = hdac_hdmi_pcm_open,
- 	.shutdown = hdac_hdmi_pcm_close,
-@@ -1784,6 +1913,16 @@ int hdac_hdmi_jack_init(struct snd_soc_dai *dai, int device,
- 		}
- 	}
- 
-+	/* add control for ELD Bytes */
-+	err = hdac_hdmi_create_eld_ctl(component, pcm);
-+	if (err < 0) {
-+		dev_err(&hdev->dev,
-+			"eld control add failed with err: %d for pcm: %d\n",
-+			err, device);
-+		kfree(pcm);
-+		return err;
-+	}
-+
- 	list_add_tail(&pcm->head, &hdmi->pcm_list);
- 
- 	return 0;
--- 
-2.17.1
+On 2020/7/26 23:32, Like Xu wrote:
+> Hi Paolo,
+>
+> Please review this new version for the Kernel 5.9 release, and
+> Sean may not review them as he said in the previous email
+> https://lore.kernel.org/kvm/20200710162819.GF1749@linux.intel.com/
+>
+> You may cherry-pick the perf patches "3cb9d5464c1c..e1ad1ac2deb8"
+> from the branch "tip/perf/core" of scm/linux/kernel/git/tip/tip.git
+> as PeterZ said in the previous email
+> https://lore.kernel.org/kvm/20200703075646.GJ117543@hirez.programming.kicks-ass.net/
+>
+> We may also apply the qemu-devel patch to the upstream qemu and try
+> the QEMU command lines with '-cpu host' or '-cpu host,pmu=true,lbr=true'.
+>
+> The following error will be gone forever with the patchset:
+>
+>    $ perf record -b lbr ${WORKLOAD}
+>    or $ perf record --call-graph lbr ${WORKLOAD}
+>    Error:
+>    cycles: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+>
+> Please check more details in each commit and feel free to test.
+>
+> v12->v13 Changelog:
+> - remove perf patches since they're queued in the tip/perf/core;
+> - add a minor patch to refactor MSR_IA32_DEBUGCTLMSR set/get handler;
+> - add a minor patch to expose vmx_set_intercept_for_msr();
+> - add a minor patch to initialize perf_capabilities in the intel_pmu_init();
+> - spilt the big patch to three pieces (0004-0006) for better understanding and review
+> - make the LBR_FMT exposure patch as the last step to enable guest LBR;
+>
+> Previous:
+> https://lore.kernel.org/kvm/20200613080958.132489-1-like.xu@linux.intel.com/
+>
+> ---
+>
+> The last branch recording (LBR) is a performance monitor unit (PMU)
+> feature on Intel processors that records a running trace of the most
+> recent branches taken by the processor in the LBR stack. This patch
+> series is going to enable this feature for plenty of KVM guests.
+>
+> The user space could configure whether it's enabled or not for each
+> guest via MSR_IA32_PERF_CAPABILITIES msr. As a first step, a guest
+> could only enable LBR feature if its cpu model is the same as the
+> host since the LBR feature is still one of model specific features.
+>
+> If it's enabled on the guest, the guest LBR driver would accesses the
+> LBR MSR (including IA32_DEBUGCTLMSR and records MSRs) as host does.
+> The first guest access on the LBR related MSRs is always interceptible.
+> The KVM trap would create a special LBR event (called guest LBR event)
+> which enables the callstack mode and none of hardware counter is assigned.
+> The host perf would enable and schedule this event as usual.
+>
+> Guest's first access to a LBR registers gets trapped to KVM, which
+> creates a guest LBR perf event. It's a regular LBR perf event which gets
+> the LBR facility assigned from the perf subsystem. Once that succeeds,
+> the LBR stack msrs are passed through to the guest for efficient accesses.
+> However, if another host LBR event comes in and takes over the LBR
+> facility, the LBR msrs will be made interceptible, and guest following
+> accesses to the LBR msrs will be trapped and meaningless.
+>
+> Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
+> VMX transition brings too excessive overhead to frequent vmx transition
+> itself, the guest LBR event would help save/restore the LBR stack msrs
+> during the context switching with the help of native LBR event callstack
+> mechanism, including LBR_SELECT msr.
+>
+> If the guest no longer accesses the LBR-related MSRs within a scheduling
+> time slice and the LBR enable bit is unset, vPMU would release its guest
+> LBR event as a normal event of a unused vPMC and the pass-through
+> state of the LBR stack msrs would be canceled.
+>
+> ---
+>
+> LBR testcase:
+> echo 1 > /proc/sys/kernel/watchdog
+> echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
+> echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
+> echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
+> ./perf record -b ./br_instr a
+>
+> - Perf report on the host:
+> Samples: 72K of event 'cycles', Event count (approx.): 72512
+> Overhead  Command   Source Shared Object           Source Symbol                           Target Symbol                           Basic Block Cycles
+>    12.12%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           1
+>    11.05%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             5
+>     8.81%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             4
+>     5.04%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           20
+>     4.92%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             6
+>     4.88%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           6
+>     4.58%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           5
+>
+> - Perf report on the guest:
+> Samples: 92K of event 'cycles', Event count (approx.): 92544
+> Overhead  Command   Source Shared Object  Source Symbol                                   Target Symbol                                   Basic Block Cycles
+>    12.03%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   1
+>    11.09%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     5
+>     8.57%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     4
+>     5.08%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     6
+>     5.06%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   20
+>     4.87%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   6
+>     4.70%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   5
+>
+> Conclusion: the profiling results on the guest are similar to that on the host.
+>
+> Like Xu (10):
+>    KVM: x86: Move common set/get handler of MSR_IA32_DEBUGCTLMSR to VMX
+>    KVM: x86/vmx: Make vmx_set_intercept_for_msr() non-static and expose it
+>    KVM: vmx/pmu: Initialize vcpu perf_capabilities once in intel_pmu_init()
+>    KVM: vmx/pmu: Clear PMU_CAP_LBR_FMT when guest LBR is disabled
+>    KVM: vmx/pmu: Create a guest LBR event when vcpu sets DEBUGCTLMSR_LBR
+>    KVM: vmx/pmu: Pass-through LBR msrs to when the guest LBR event is ACTIVE
+>    KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
+>    KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
+>    KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES
+>    KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
+>
+>   arch/x86/kvm/pmu.c              |  12 +-
+>   arch/x86/kvm/pmu.h              |   5 +
+>   arch/x86/kvm/vmx/capabilities.h |  22 ++-
+>   arch/x86/kvm/vmx/pmu_intel.c    | 296 +++++++++++++++++++++++++++++++-
+>   arch/x86/kvm/vmx/vmx.c          |  44 ++++-
+>   arch/x86/kvm/vmx/vmx.h          |  28 +++
+>   arch/x86/kvm/x86.c              |  15 +-
+>   7 files changed, 395 insertions(+), 27 deletions(-)
+>
 
