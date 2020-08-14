@@ -2,175 +2,87 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61702C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4864522BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCF020866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:29:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="lA4Z5YPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgHNM2e (ORCPT
+        id S1728200AbgHNM3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:28:34 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55521 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgHNM2V (ORCPT
+        Fri, 14 Aug 2020 08:29:07 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:35857 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728080AbgHNM3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:28:21 -0400
-X-Originating-IP: 93.0.49.108
-Received: from [192.168.1.34] (108.49.0.93.rev.sfr.net [93.0.49.108])
-        (Authenticated sender: maxime.chretien@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0652620009;
-        Fri, 14 Aug 2020 12:28:14 +0000 (UTC)
-From:   Maxime Chretien <maxime.chretien@bootlin.com>
-Subject: Re: [PATCH] kconfig qconf: Add grey background for hidden options
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708133015.12286-1-maxime.chretien@bootlin.com>
- <CAK7LNASpZ=By_-5KKps_q3emHuLBNv7AneLh9eNwBqbZToivSA@mail.gmail.com>
-Message-ID: <889cd38e-8c70-f359-c2ca-c63911bec601@bootlin.com>
-Date:   Fri, 14 Aug 2020 14:28:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 14 Aug 2020 08:29:06 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 3D99D821D8;
+        Fri, 14 Aug 2020 15:29:02 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1597408142;
+        bh=Iw6Y6XZXPaiabTVuM/0vS3/cljuK3vSfRRU2EX8bVMA=;
+        h=From:To:Subject:Date;
+        b=lA4Z5YPwe9WgHrXODDC1MVvwajy2Beq5KfP5h5nZ6Ic3w9SzPTCoqju4YHY6IcNaK
+         +WSjEDAnOkZthBRFZjKL+9b01hwp2y3bHRpX44PWfuO10S0z6POKSd8IrH/ADRHXuZ
+         adlLVt2OItXOMaN0v7Ocb0WAPcJ1t1mgB7YcH7hY=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 14 Aug 2020 15:29:01 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Fri, 14 Aug 2020 15:29:01 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Topic: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Index: AdZyNcmjSkpkGje7R9K6YobJrVDyZw==
+Date:   Fri, 14 Aug 2020 12:29:01 +0000
+Message-ID: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASpZ=By_-5KKps_q3emHuLBNv7AneLh9eNwBqbZToivSA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/2020 15:54, Masahiro Yamada wrote:
-> On Wed, Jul 8, 2020 at 10:30 PM Maxime Chretien
-> <maxime.chretien@bootlin.com>  wrote:
->> This is useful to see which configuration parameters can be edited
->> or not when "Show All Options" is enabled.
->>
->> Signed-off-by: Maxime Chretien<maxime.chretien@bootlin.com>
->> ---
->>   scripts/kconfig/qconf.cc | 7 +++++++
->>   scripts/kconfig/qconf.h  | 4 ++++
->>   2 files changed, 11 insertions(+)
-> I like the idea, but
-> maybe this patch could be improved?
->
-> For example, in the following test code,
-> BAR is correctly painted grey when CONFIG_FOO=n,
-> but "my menu" is always white despite of
-> "depends on FOO"
->
-> ----(test code)------
->
-> config FOO
->         bool "foo"
->
-> config BAR
->         bool "bar"
->         depends on FOO
->
-> menu "my menu"
->         depends on FOO
->
-> endmenu
->
-> -------(test code end)----
+This patch adds NTFS Read-Write driver to fs/ntfs3.
 
+Having decades of expertise in commercial file systems development and huge
+test coverage, we at Paragon Software GmbH want to make our contribution to
+the Open Source Community by providing implementation of NTFS Read-Write
+driver for the Linux Kernel.
 
-It could probably be improved.
-Maybe the "visible" state of the menu can be changed
-or maybe we should use another element in the test
-to grey out menus that needs to be greyed out.
+This is fully functional NTFS Read-Write driver. Current version works with
+NTFS(including v3.1) normal/compressed/sparse files and supports journal re=
+playing.
 
+We plan to support this version after the codebase once merged, and add new
+features and fix bugs. For example, full journaling support over JBD will b=
+e
+added in later updates.
 
->> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
->> index c0ac8f7b5f1a..be9ff4651da1 100644
->> --- a/scripts/kconfig/qconf.cc
->> +++ b/scripts/kconfig/qconf.cc
->> @@ -208,6 +208,13 @@ void ConfigItem::updateMenu(void)
->>          }
->>          if (!sym_has_value(sym) && visible)
->>                  prompt += " (NEW)";
->> +
->> +       if(!visible) {
->> +               setBackground(promptColIdx, QBrush(QColor("#E0E0E0")));
->> +       } else {
->> +               setBackground(promptColIdx, QBrush());
->> +       }
->> +
-> I think all the columns should be grey-grounded.
-> Please note you can click other columns to
-> toggle y/m/n.
+The patch is too big to handle it within an e-mail body, so it is available=
+ to download=20
+on our server: https://dl.paragon-software.com/ntfs3/ntfs3.patch
+
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com=
 >
->
-> How about something like this?
->
->
->
-> QBrush brush;
->
-> if (visible)
->          brush = QBrush()
-> else
->          brush = QBrush(QColor("#E0E0E0"));
->
-> setBackground(promptColIdx, brush);
-> setBackground(nameColIdx, brush);
-> setBackground(noColIdx, brush);
-> setBackground(modColIdx, brush);
-> setBackground(yesColIdx, brush);
-> setBackground(dataColIdx, brush);
-
-
-Yes I agree should be better like that so that we can
-see what's grey or not even if we have scrolled far
-from the first column.
-
-
->
->
->>   set_prompt:
->>          setText(promptColIdx, prompt);
->>   }
->> diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
->> index c879d79ce817..79e47e8c1ae7 100644
->> --- a/scripts/kconfig/qconf.h
->> +++ b/scripts/kconfig/qconf.h
->> @@ -174,6 +174,10 @@ class ConfigItem : public QTreeWidgetItem {
->>          {
->>                  return Parent::text(idx);
->>          }
->> +       void setBackground(colIdx idx, const QBrush& brush)
->> +       {
->> +               Parent::setBackground(idx, brush);
->> +       }
-> I do not understand why this wrapper is useful...
->
-
-
-Well we need to use "Parent" to have access to the "setBackground" function
-and I thought it was the way to use it has it's done with "setPixmap" 
-just under it.
-
-Maybe there is a better way to do that, I'm a beginner in linux development
-so I'm not totally aware of all the rules and ways to add new things.
-
-
->>          void setPixmap(colIdx idx, const QIcon &icon)
->>          {
->>                  Parent::setIcon(idx, icon);
->> --
->> 2.27.0
->>
-
-
-Thanks for reviewing this.
-
-Best regards
-Maxime Chretien
