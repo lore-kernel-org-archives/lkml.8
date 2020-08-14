@@ -2,76 +2,137 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED22C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2F820768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425E620768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yr1gxaM+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MyXKn9Ve"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fAOOWOgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgHNXUw (ORCPT
+        id S1728181AbgHNXWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:20:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39674 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgHNXUw (ORCPT
+        Fri, 14 Aug 2020 19:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNXWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:20:52 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597447250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6LX7oqtOI6mdc7zsr/58CbF56Ijm4R7j+15Yb+EoC2s=;
-        b=Yr1gxaM+cUiqwc8M3Lwa5stilhaPXijnRIEOE6RFJjZP14Obi0x0dSOhosUmM8PtcbNjij
-        8/uKq9iH/n0y9Se/qHf1U5eRiRT7wQYzfIiv9SwezoQKTf9fr89VHl4mtypuRQzGI6G/4v
-        3xBOOkeoxcmftBNiM2FcOxJhw2/Ks3imCBMdSwINykZDmpKhH7Yrg51rhQBCAvIpweuiDK
-        CJVXKRIZToq0Y68DetLoludyD5RSoD9GygmiuaeL3SZqT5X0T4V898hyeuO0k54yzTKkQA
-        HgEKp7m/SKeIc1vvx1H6aQdo0QYpO/sBaNkGgXYsXhVc/liq9lv2OXm+vVEybQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597447250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6LX7oqtOI6mdc7zsr/58CbF56Ijm4R7j+15Yb+EoC2s=;
-        b=MyXKn9VeXVyBnDpyGcQ0p7G5un8hj01qIURm0jqLpQ0vLeQ7wMa5X+pU+n03aNeYU2J+mk
-        Qf1KlHDHxJvrEFBQ==
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [GIT pull] irq/urgent for v5.9-rc1
-In-Reply-To: <CAHk-=wjUx-DOx8kL91PmPwCbA6K7-9LXZ_+bkoa4SuQ6_zbaPA@mail.gmail.com>
-References: <159742071192.30851.2328227964586183297.tglx@nanos> <CAHk-=wjUx-DOx8kL91PmPwCbA6K7-9LXZ_+bkoa4SuQ6_zbaPA@mail.gmail.com>
-Date:   Sat, 15 Aug 2020 01:20:49 +0200
-Message-ID: <87r1s8ke5q.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Aug 2020 19:22:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E9AC061385;
+        Fri, 14 Aug 2020 16:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=gcuzMKy5ca6nfpuGB7Mj7FbeflYqFCzDME2EUzPv4RI=; b=fAOOWOgbBBcaQyop3AF67ybOEX
+        k/WF+pgpKGKLLKzbe7Ulx6Ps2XQvg8KHEStyZjDY9NPvQupoQrFENxvNiHJrEXtnvlGDDUcxy1Hyj
+        XQLxy2PVel5XjaOyffpPuWnLysmtajdns/y4kJge3K1NOqDyk0EmYxCucuH0KGwYOq93fSKGR2n3r
+        hSFZ36NXhNa4O7937jfUb3hG0bXZkcE2na7NvzfjDoV9YDkKDgrif4pPhgnyTq8LvLvE7ANflQpbA
+        taeK74i9uBbRoIqgS7v6qkVtUqX9qrXlOIoFxcn/S+q8EUPAi1jZ4EhqobOVsVaOKHKzUHG4/pn35
+        1748qU+Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6j19-0003gu-0n; Fri, 14 Aug 2020 23:21:53 +0000
+Subject: Re: [RFC/RFT PATCH 6/6] riscv: Add numa support for riscv64 platform
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Greentime Hu <greentime.hu@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anup Patel <Anup.Patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200814214725.28818-1-atish.patra@wdc.com>
+ <20200814214725.28818-7-atish.patra@wdc.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0d5046a4-8b7e-6279-ccd2-e02b2a091139@infradead.org>
+Date:   Fri, 14 Aug 2020 16:21:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200814214725.28818-7-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14 2020 at 14:14, Linus Torvalds wrote:
-> On Fri, Aug 14, 2020 at 9:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Two fixes in the core interrupt code which ensure that all error exits
->> unlock the descriptor lock.
->
-> No diffstat?
->
-> I've pulled it, but please check what went wrong..
+On 8/14/20 2:47 PM, Atish Patra wrote:
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 7b5905529146..4bd67f94aaac 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -137,7 +137,7 @@ config PAGE_OFFSET
+>  	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
+>  
+>  config ARCH_FLATMEM_ENABLE
+> -	def_bool y
+> +	def_bool !NUMA
+>  
+>  config ARCH_SPARSEMEM_ENABLE
+>  	def_bool y
+> @@ -295,6 +295,35 @@ config TUNE_GENERIC
+>  
+>  endchoice
+>  
+> +# Common NUMA Features
+> +config NUMA
+> +	bool "Numa Memory Allocation and Scheduler Support"
 
-Duh, incomplete restore of environment after replacing the worn out
-SSD. Fixed.
+	      NUMA
 
-Thanks,
+> +	select GENERIC_ARCH_NUMA
+> +	select OF_NUMA
+> +	select ARCH_SUPPORTS_NUMA_BALANCING
+> +	help
+> +	  Enable NUMA (Non-Uniform Memory Access) support.
+> +
+> +	  The kernel will try to allocate memory used by a CPU on the
+> +	  local memory of the CPU and add some more NUMA awareness to the kernel.
+> +
+> +config NODES_SHIFT
+> +	int "Maximum NUMA Nodes (as a power of 2)"
+> +	range 1 10
+> +	default "2"
+> +	depends on NEED_MULTIPLE_NODES
+> +	help
+> +	  Specify the maximum number of NUMA Nodes available on the target
+> +	  system.  Increases memory reserved to accommodate various tables.
+> +
+> +config USE_PERCPU_NUMA_NODE_ID
+> +	def_bool y
+> +	depends on NUMA
+> +
+> +config NEED_PER_CPU_EMBED_FIRST_CHUNK
+> +	def_bool y
+> +	depends on NUMA
+> +
+>  config RISCV_ISA_C
+>  	bool "Emit compressed instructions when building Linux"
+>  	default y
 
-        tglx
+
+thanks.
+-- 
+~Randy
 
