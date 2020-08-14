@@ -2,128 +2,149 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89118C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D47C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67BC820715
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFD020715
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TTWFAdtB"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rSYP0Ptm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgHNDTr (ORCPT
+        id S1726640AbgHND3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 23:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgHNDTq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 23:19:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DF2C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 20:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rBYMDlxTiytCZOnej5NOe0TEBJStDGeKuKqn0WaGAj0=; b=TTWFAdtBK1+bVftJ/OqF/azC0M
-        pqwZT+TlfShXxbamW3IjWAiZT++8tBBVcF34m3c1uuD1E7agFUdKic/Se9Riy8MVEV/m01ARuxYnk
-        p61gMHbgTozzBo5D+nQNqCWR2g0z7dYyeAsxRnlckMaUuRNf64dgUsVASm01f8xouKRVxNHicMqqr
-        xoGcDB/Vvaj6sPkQ0HZpXyxJ+3hf2+g4KXbgZ1ExvbpH6cSEqk07SwoIy77xShnHvPucQxDdbn+4m
-        fHHrCxz2e7dldytvaIQWEeePy62h6tiMJAz9OnWwUwW5JBXw6ALSQMsxpKBaDrdepp3v1G9ttkheO
-        MgjXM1VQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6QFd-0004tP-NA; Fri, 14 Aug 2020 03:19:29 +0000
-Date:   Fri, 14 Aug 2020 04:19:29 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <klamm@yandex-team.ru>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm : update ra->ra_pages if it's NOT equal to
- bdi->ra_pages
-Message-ID: <20200814031929.GV17456@casper.infradead.org>
-References: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
- <20200814014355.GS17456@casper.infradead.org>
- <20200814020700.GT17456@casper.infradead.org>
- <CAGWkznEkTeTq4-wPKBcNsF2vF5SVaFc3xoZmceKSwg34vpkqbg@mail.gmail.com>
- <20200813193307.d5597367b7964d95f63e4580@linux-foundation.org>
- <CAGWkznFwDnrSqt68oMp+rcNFT_EgN3ke7-e0Tb1xfXreVXgHYw@mail.gmail.com>
+        Thu, 13 Aug 2020 23:29:02 -0400
+Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:54478
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726567AbgHND3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 23:29:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fvqBhBdEV64xGvBctVzeZsXUjyQ3uiM/35BLJKsc6ilqKpe2CplsRmxkUXe3xpyvXmBS7vYL865E+PE/TwuCRgEZ+H4jWeKQ0bKmNQxlusQmgAzA0/e/UvI+DOI6DhUCuXkRuNDpySNF8uYwE8Bwv6C0MtnbeuwBH7ibXgVDLLPDVJWHir6hwB+uhHI0XOMmdgpdDD837HIt05McGr03J5wyXSnhCPtTgNJVkv0+4s4fKDXJt3mJPwAx90u0VITHQGENhnISTwqiACOCuwW70gc1JdcxybsSZTaU0PvAG1FWZ+6XAmMmdBQOvPCZ++fNakr3f9AMYnWywL7uJl6veA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5eR/Y7GURvsUm4RJmxqoTvO9r4C6clW5odAvQd14ldk=;
+ b=FziOgmtHKXIL085SoeorWZmLRYvDStJxNZXz8i9HbuGNhKI3rByNgdyY93SB/3i60MwrR2AYnX/22RLW6v2JVoW9GTAR82zRxZEM25/AS55EdeBY6HHplDYrbzbHCx9nNNZnjLkVmoSx8es95pe88wYlt71znXTbm/DICxzIoNFvoWm3ve+qhYx0CMwz6IdrkQ1vAdWexvXx3ZDcOlMOwsH9QKCsOoAVm8pKnxF/zB2AmJ2UnWi40b1Pd0cgW1rJ2Jr4gQOnED2brQ+t7SM2GUyMyH9xFzzHVbdFvuUeaM9Erw69h+8VZj+d/6ztvFh7WWl6c9IqIqjOypBWSoxo3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5eR/Y7GURvsUm4RJmxqoTvO9r4C6clW5odAvQd14ldk=;
+ b=rSYP0Ptmv2ztVjaImNltrtjEk+tfwg7LTokL7O1haDexKFDh5mAAOtJJZQ6nH4RimYeAedYGlXfstK0ccJ5KN1L3MVVayhQ9STWC3xzTa4+TfJySxgfKOGw4C16RSRM08w/LaH+9jCIoiMY3m2qS+oUu1r8R6ER6uL65e6MXuLo=
+Received: from AM0PR04MB4772.eurprd04.prod.outlook.com (2603:10a6:208:c2::17)
+ by AM0PR04MB6212.eurprd04.prod.outlook.com (2603:10a6:208:148::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Fri, 14 Aug
+ 2020 03:28:58 +0000
+Received: from AM0PR04MB4772.eurprd04.prod.outlook.com
+ ([fe80::b00e:440a:6ac6:b3c4]) by AM0PR04MB4772.eurprd04.prod.outlook.com
+ ([fe80::b00e:440a:6ac6:b3c4%3]) with mapi id 15.20.3283.016; Fri, 14 Aug 2020
+ 03:28:58 +0000
+From:   Jiafei Pan <jiafei.pan@nxp.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "romain.perier@gmail.com" <romain.perier@gmail.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] softirq: add irq off checking for
+ __raise_softirq_irqoff
+Thread-Topic: [EXT] Re: [PATCH] softirq: add irq off checking for
+ __raise_softirq_irqoff
+Thread-Index: AQHWa6gdrPnfNrtYpEW7p3l8OUGNa6k1ljAAgAFoBhA=
+Date:   Fri, 14 Aug 2020 03:28:58 +0000
+Message-ID: <AM0PR04MB47726683A69EE5ED162A1D328A400@AM0PR04MB4772.eurprd04.prod.outlook.com>
+References: <20200806040729.39186-1-Jiafei.Pan@nxp.com>
+ <20200813055822.GC3982@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200813055822.GC3982@worktop.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e8a51dab-171b-4846-8075-08d840022e8d
+x-ms-traffictypediagnostic: AM0PR04MB6212:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6212CED5B99EC607DFF9B0238A400@AM0PR04MB6212.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4772.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(366004)(136003)(376002)(86362001)(9686003)(54906003)(316002)(8936002)(5660300002)(7696005)(6916009)(52536014)(83380400001)(55016002)(186003)(26005)(6506007)(44832011)(71200400001)(66476007)(478600001)(66446008)(66556008)(66946007)(64756008)(2906002)(33656002)(4326008)(8676002)(76116006);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznFwDnrSqt68oMp+rcNFT_EgN3ke7-e0Tb1xfXreVXgHYw@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB4772.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8a51dab-171b-4846-8075-08d840022e8d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2020 03:28:58.7073
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wecn0xeWSXyEg1AhaYcqahl9KUobTBEJBiNwxfQZmyqUPex5t/CsQPymUcjs8M50vezrviO9SvKpwn0036u+CQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:45:37AM +0800, Zhaoyang Huang wrote:
-> On Fri, Aug 14, 2020 at 10:33 AM Andrew Morton
-> <akpm@linux-foundation.org> wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> Sent: Thursday, August 13, 2020 1:58 PM
+>=20
+> On Thu, Aug 06, 2020 at 12:07:29PM +0800, Jiafei Pan wrote:
+> > __raise_softirq_irqoff will update per-CPU mask of pending softirqs,
+> > it need to be called in irq disabled context in order to keep it
+> > atomic operation, otherwise it will be interrupted by hardware
+> > interrupt, and per-CPU softirqs pending mask will be corrupted, the
+> > result is there will be unexpected issue, for example hrtimer soft irq
+> > will be losed and soft hrtimer will never be expire and handled.
 > >
-> > On Fri, 14 Aug 2020 10:20:11 +0800 Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+> > Adding irqs disabled checking here to provide warning in irqs enabled
+> > context.
 > >
-> > > On Fri, Aug 14, 2020 at 10:07 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > On Fri, Aug 14, 2020 at 02:43:55AM +0100, Matthew Wilcox wrote:
-> > > > > On Fri, Aug 14, 2020 at 09:30:11AM +0800, Zhaoyang Huang wrote:
-> > > > > > file->f_ra->ra_pages will remain the initialized value since it opend, which may
-> > > > > > be NOT equal to bdi->ra_pages as the latter one is updated somehow(etc,
-> > > > > > echo xxx > /sys/block/dm/queue/read_ahead_kb).So sync ra->ra_pages to the
-> > > > > > updated value when sync read.
-> > > > >
-> > > > > It still ignores the work done by shrink_readahead_size_eio()
-> > > > > and fadvise(POSIX_FADV_SEQUENTIAL).
-> > > >
-> > > > ... by the way, if you're trying to update one particular file's readahead
-> > > > state, you can just call fadvise(POSIX_FADV_NORMAL) on it.
-> > > >
-> > > > If you want to update every open file's ra_pages by writing to sysfs,
-> > > > then just no.  We don't do that.
-> > > No, What I want to fix is the file within one process's context  keeps
-> > > using the initialized value when it is opened and not sync with new
-> > > value when bdi->ra_pages changes.
+> > Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+> > ---
+> >  kernel/softirq.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
 > >
-> > So you're saying that
+> > diff --git a/kernel/softirq.c b/kernel/softirq.c index
+> > bf88d7f62433..11f61e54a3ae 100644
+> > --- a/kernel/softirq.c
+> > +++ b/kernel/softirq.c
+> > @@ -481,6 +481,11 @@ void raise_softirq(unsigned int nr)
 > >
-> >         echo xxx > /sys/block/dm/queue/read_ahead_kb
-> >
-> > does not affect presently-open files, and you believe that it should do
-> > so?
-> >
-> > I guess that could be a reasonable thing to want - it's reasonable for
-> > a user to expect that writing to a global tunable will take immediate
-> > global effect.  I guess.
-> >
-> > But as Matthew says, it would help if you were to explain why this is
-> > needed.  In full detail.  What operational problems is the present
-> > implementation causing?
-> The real scenario is some system(like android) will turbo read during
-> startup via expanding the readahead window and then set it back to
-> normal(128kb as usual). However, some files in the system process
-> context will keep to be opened since it is opened up and has no chance
-> to sync with the updated value as it is almost impossible to change
-> the files attached to the inode(processes are unaware of these
-> things). we have to fix it from a kernel perspective.
-
-OK, this is a much more useful description of the problem, thank you!
-
-I can think of two possibilities here.  One is that maybe our readahead
-heuristics just don't work on modern phone hardware.  Perhaps we need
-to ramp up more aggressively by default.
-
-The other is that maybe it really is just a "boost at startup" kind
-of situation and so we should support _that_.  Some interface where
-we can set a ra_boost, and then do:
-
-	if (ra_boost)
-		newsize *= 2;
-
-in get_init_ra_size().
-
+> >  void __raise_softirq_irqoff(unsigned int nr)  {
+> > +     /* This function can only be called in irq disabled context,
+> > +      * otherwise or_softirq_pending will be interrupted by hardware
+> > +      * interrupt, so that there will be unexpected issue.
+> > +      */
+>=20
+> Comment style is wrong, also I'm not sure the comment is really helpfull.
+[Jiafei Pan] Thanks for your comments, yes, function name already indicate =
+the function
+Should be called in irq off context, will remove the comment in next versio=
+n.
+>=20
+> > +     WARN_ON_ONCE(!irqs_disabled());
+>=20
+>         lockdep_assert_irqs_disabled();
+>=20
+> >       trace_softirq_raise(nr);
+> >       or_softirq_pending(1UL << nr);
+> >  }
