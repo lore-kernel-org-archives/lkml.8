@@ -2,104 +2,107 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A21C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F257020768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597436239;
-	bh=dE/nZhvxWYeZCBydsXwZUXsRq+k+LkliB7aNsno/FDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VjB1bIZNCv34QgM09Ft9uYZ3uckfFQs9XSXYrbg36oQvy5CoT2biCkDTsGd8NGOY1
-	 1c0f/rcw+xCBRLuQBe0EA2aZG3VpozKBYvSyD8QECpPa0DQ6B7+IZemmSK26eI3chU
-	 UsWOp2GP0BOM4NZKevaLuYPnFAIYsK5TD2wYmIc4=
+	by mail.kernel.org (Postfix) with ESMTP id 6183020771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jdo0NGDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgHNURR (ORCPT
+        id S1728028AbgHNUYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 16:17:17 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45650 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgHNURL (ORCPT
+        Fri, 14 Aug 2020 16:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgHNUYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 16:17:11 -0400
-Received: by mail-il1-f195.google.com with SMTP id k4so9483379ilr.12;
-        Fri, 14 Aug 2020 13:17:11 -0700 (PDT)
+        Fri, 14 Aug 2020 16:24:44 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25CAC061387
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mt12so4931355pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=rwpaXnT2EeEfwGVu4ev0tx59FKrNBxWx6TusqvWIrO4=;
+        b=Jdo0NGDfaHr6zmtamxEimY/fqPy2jmUHSXfgnVas6TIV83p6Tc/4V+90pUHvallzEc
+         C/iVNYD1ikU9HKFeCoEiaUSjHf2k+OPtnGgDgyt+1oAyoSPy0oZSZZtOYGwuovPd/bPN
+         bh/7iVIqEXktIv/8CZAJqfNXvvD1oqgSa989k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FNoeq/3cmPqVA+RIc35kN62jsibVvRZS7HT9CMV2TpI=;
-        b=EMj8QtEfFDFURBmWLITfDvCjZGo5MS61u7qQjb6ICX7bE8LU06xtX6IWww5Wbkqc8T
-         LaUdKk62D7OkRy6ctveDKvicyVC2fjLckzxd7eCQtfEfJV4Mu3T5I/vI2b4X9xIIrpOj
-         4rXJN5VSSNdx4RFM+9F1OE/jjElanpV40aUphnwNlhv6+MNVT/xjdLAYiC6uvC2b1l6U
-         /W2QJ2PBLLTnwWbrCpC6uafucogPe7OUIe/ElcyBmgli+XComwUGF+IEY1L6JHHqzndL
-         f5cB/vEltX6IZprnp3HReXdJg/fYzmjC7e4YTd3PcLULAMq+7jcG6v9l/JIfIYTXOl6X
-         RgWg==
-X-Gm-Message-State: AOAM530QWPlUmlNXTTmmEtgL4VUT8C++pcHFcmsYAEmV4M6+DKJGQen+
-        Xo9CqkB09KWz1fi/Kse4Tg==
-X-Google-Smtp-Source: ABdhPJx7cbnCdcYvPSQ4Xc47+5JkFamz29Xm/VhyWl5MfiI+mx8d4VSx2QHQtGasdNGDyDgJPkxgug==
-X-Received: by 2002:a92:d786:: with SMTP id d6mr3892576iln.144.1597436230765;
-        Fri, 14 Aug 2020 13:17:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id l5sm4883891ilj.88.2020.08.14.13.17.09
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=rwpaXnT2EeEfwGVu4ev0tx59FKrNBxWx6TusqvWIrO4=;
+        b=Ei7DBtlvOufy0ndjAGe5ePPaaUqHMvYaaml4SeLWY9wLi16or+Wb8as3I9lm3Ghtsz
+         nKsrcIJ1IlbtyW7lLKP0kwvH6JhfibUKi+OBVIR5jmurdJnsqZmDn01d7oXCHAXwYWqW
+         9CnQM/KXGUPawxZtubjTXxXUhMLoJwaQAiAgSu1SZGPlH6/7NgE2xiE64+91Zi52l57v
+         Xi0FIm6ayIzHbeRmpikt1ljT/YnfU5iaIV9myqMvWhFpAWCTiAXn3VU1VjBvGoFBHZVa
+         /V7Jd4vYBYt8pIrd6SPfOvy7XIuKJMpmnmbpW2N0gSuUrkFEiyv9RkJCaOUTOE1ki4X0
+         SR1A==
+X-Gm-Message-State: AOAM532o76cLfOiqNcGPLCEhzEwGxo+/CnB9LUVcP40nMRcfB7xGcAsG
+        OW5ribaO17GayIUfYHtCRZyyzKrJYpiQSQ==
+X-Google-Smtp-Source: ABdhPJy/guAnpNvjPltmDRyGFOwK8QXlT4NftOMstfwJ8I5HPq/JZI2YY8fQWzE+0d728rj4fPnFbQ==
+X-Received: by 2002:a17:90a:1fca:: with SMTP id z10mr3536837pjz.209.1597436684024;
+        Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id r15sm10581689pfq.189.2020.08.14.13.24.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 13:17:09 -0700 (PDT)
-Received: (nullmailer pid 2668367 invoked by uid 1000);
-        Fri, 14 Aug 2020 20:17:08 -0000
-Date:   Fri, 14 Aug 2020 14:17:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     mauro.chehab@huawei.com, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 43/44] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200814201708.GA2665752@bogus>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
- <da65a508d01aa2092999d0ce7e9c061ccfd24036.1597247164.git.mchehab+huawei@kernel.org>
+        Fri, 14 Aug 2020 13:24:43 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da65a508d01aa2092999d0ce7e9c061ccfd24036.1597247164.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org> <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com> <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
+Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Fri, 14 Aug 2020 13:24:42 -0700
+Message-ID: <159743668207.33733.6711446681138353287@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 17:56:53 +0200, Mauro Carvalho Chehab wrote:
-> Add documentation for the properties needed by the HiSilicon
-> 6421v600 driver, and by the SPMI controller used to access
-> the chipset.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
->  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
->  2 files changed, 236 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> 
+Quoting Maulik Shah (2020-08-13 00:30:44)
+> Hi,
+>=20
+> On 8/12/2020 3:01 AM, Stephen Boyd wrote:
+> > Quoting Maulik Shah (2020-08-10 04:21:00)
+> >> Clear previous kernel's configuration during init by resetting
+> >> interrupts in enable bank to zero.
+> > Can you please add some more information here about why we're not
+> > clearing all the pdc irqs and only the ones that are listed in DT?
+> sure.
+> >   Is
+> > that because the pdc is shared between exception levels of the CPU and
+> > so some irqs shouldn't be used? Does the DT binding need to change to
+> > only list the hwirqs that are usable by the OS instead of the ones that
+> > are usable for the entire system? The binding doesn't mention this at
+> > all so I am just guessing here.
+>=20
+> The IRQs specified in qcom,pdc-ranges property in DT are the only ones=20
+> that can be used in the current OS for the PDC.
+>=20
+> So instead of setting entire register to zero (each reg supports 32=20
+> interrupts enable bit) only clearing the ones that can be used.
+>=20
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1343770
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Ok. Is something wrong with setting all the register bits to 0? Is there
+something else in those registers that shouldn't be touched? Please add
+these details to the commit message.
