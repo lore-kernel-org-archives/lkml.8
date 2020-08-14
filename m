@@ -2,92 +2,100 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56263C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264B120639
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R3lBnAZp"
+	by mail.kernel.org (Postfix) with ESMTP id A8E6020639
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgHNH30 (ORCPT
+        id S1726599AbgHNHba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 03:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgHNH3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:29:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BECC061757
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 00:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AfrMrkrA2HZxTkg5Cv0NWjTzaYh5Z28RiUGGto0tVJU=; b=R3lBnAZpajlKS+ZYCmzCTpzXZE
-        WGskKYnrQlnWOI08brF1QFByRNy9vewCqurBe8Sf7S6fS7hkYLfKSbxupKlE9RPQT9NbuzcWIwtfe
-        +5b6TguaGGXn5Lcg34eWFhwMbYdHtbmQAHk8+UgjKsuOR5zYxZthbEqKTZgd7Q+IXKUIaTDTTy6hi
-        EKm9u0BgGFiEAtjVzo/4P5mO2SjqiAw7Pb8SEMSUEqUKekpbo6VERpfF1Eai1/PwpiNTcC7tdq8M2
-        5DDK5kk5wuflH/Kkdc/b25Aln3IQ3Kt2ErsOFEzjpFNp7ioD/PZIfZc2H1Ob+lJhV/YbogoRFnlP0
-        SXuEMMGw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6U9Q-0001lh-7m; Fri, 14 Aug 2020 07:29:20 +0000
-Date:   Fri, 14 Aug 2020 08:29:20 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Roger Pau Monn?? <roger.pau@citrix.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
-Message-ID: <20200814072920.GA6126@infradead.org>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-3-roger.pau@citrix.com>
- <20200813073337.GA16160@infradead.org>
- <20200813075420.GC975@Air-de-Roger>
+        Fri, 14 Aug 2020 03:31:30 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34602 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726455AbgHNHba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 03:31:30 -0400
+Received: from [10.130.0.75] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxCMXHPTZf+tIIAA--.125S3;
+        Fri, 14 Aug 2020 15:31:21 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Set CONFIG_FRAME_WARN=2048 in
+ loongson3_defconfig to fix build warning
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1597373793-8482-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200814065310.GA4751@alpha.franken.de>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <be055bef-e731-7242-78ca-e1844389c791@loongson.cn>
+Date:   Fri, 14 Aug 2020 15:31:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813075420.GC975@Air-de-Roger>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200814065310.GA4751@alpha.franken.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxCMXHPTZf+tIIAA--.125S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF1UAr1DXF4DXFy5Wr45KFg_yoWkWwb_Wr
+        yUGaykurW5ArykuFZ7Wws5C392ya4UZw1rAr15Xr13Xas3trnxtw4kJrn8CFn8X3Zrtrsx
+        Z3y8A3sFkF1IqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUMMKZUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
-> On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
-> > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
-> > > If enabled (because ZONE_DEVICE is supported) the usage of the new
-> > > functionality untangles Xen balloon and RAM hotplug from the usage of
-> > > unpopulated physical memory ranges to map foreign pages, which is the
-> > > correct thing to do in order to avoid mappings of foreign pages depend
-> > > on memory hotplug.
-> > 
-> > So please just select ZONE_DEVICE if this is so much better rather
-> > than maintaining two variants.
-> 
-> We still need to other variant for Arm at least, so both need to be
-> maintained anyway, even if we force ZONE_DEVICE on x86.
+On 08/14/2020 02:53 PM, Thomas Bogendoerfer wrote:
+> On Fri, Aug 14, 2020 at 10:56:33AM +0800, Tiezhu Yang wrote:
+>> Fixes: 70b838292bef ("MIPS: Update default config file for Loongson-3")
+> I'm not so sure whether this warrants a fixes tag.
 
-Well, it still really helps reproducability if you stick to one
-implementation of x86.
+I use git bisect to find it is the first bad commit. Please let me know
+if it is not necessary and then I will remove the Fixes tag.
 
-The alternative would be an explicit config option to opt into it,
-but just getting a different implementation based on a random
-kernel option is strange.
+>
+>>   arch/mips/configs/loongson3_defconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+>> index a65b08d..2b356d9 100644
+>> --- a/arch/mips/configs/loongson3_defconfig
+>> +++ b/arch/mips/configs/loongson3_defconfig
+>> @@ -403,7 +403,7 @@ CONFIG_CRYPTO_TEA=m
+>>   CONFIG_CRYPTO_TWOFISH=m
+>>   CONFIG_CRYPTO_DEFLATE=m
+>>   CONFIG_PRINTK_TIME=y
+>> -CONFIG_FRAME_WARN=1024
+>> +CONFIG_FRAME_WARN=2048
+> what about just dropping it ? Default for 64bit is 2048. Leaving it out
+> of the config has the advantage that you will get a change of the default
+> for free.
+
+OK, looks good to me, I will send v2.
+
+Thanks,
+Tiezhu
+
+>
+> Thomas.
+>
+
