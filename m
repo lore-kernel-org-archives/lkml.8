@@ -2,119 +2,103 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08165C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFAD2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pe1CcitE"
+	by mail.kernel.org (Postfix) with ESMTP id 81B3A20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgHNDEH (ORCPT
+        id S1726834AbgHNDEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 23:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgHNDEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 23:04:07 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038ABC061757;
-        Thu, 13 Aug 2020 20:04:07 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g7so2410402plq.1;
-        Thu, 13 Aug 2020 20:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
-        b=pe1CcitEeOWOhGNcoplHa3LSDUbCGNHTQ8PCZmSoQHagv247AvvUyhYa9EuoERZzIa
-         7XbeJjZE8a/K1vyWyJLweEWa7m1T6kjzV9LFtWji9afePiO9bppOuTtK+tM13G0/Cf3C
-         QXn/wCaJPaNkkLRvn5wNkXpZgcfxmV9KfSDAtDyu91bJapjjG6hmP585GorLJwadXaIO
-         4DP2jGTCMfYUogQIXyEqZjgDfSKiIqIsGcK8XgGBvtISO+ZEb2IZEyIr06jrSMQvQvw+
-         5ri09b4u6dMAEJj2a5576UoC9C9c/AihlwxaEHAEdIAfCVdQkiIZ2tH4GgP63Ct2Odbg
-         0BZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
-        b=sjN8aciltI+/JeoYRE6KjIC0XAUz2AsKSldbEdZgH6dkjf5sOq3Ox/YQxABYwuV138
-         jtdb6HgAbL9reyiNLiAJsNfyrHvwYje6+0V2580VOkmIKQDpCNg6OrLpkNfBSpiAxyy3
-         5liZx/K3KQKMykeQ5ogIfi5uQi4kg3TKWNjo+88kgic5bGbzss17gGAzi2/C13X3+MaC
-         Xb0xy3Ok+kbuuQUGJIZIYLZzjN2deIo2LCI/kY91mXsGh/vMG82eBRYYlY0cCoHSHDeY
-         syfEcQtANSpFNKico1pXiw788I54SNFEQv68H8oAWOpyyW9NnJbPh0Jd4LrVZaAq0qiZ
-         2xBA==
-X-Gm-Message-State: AOAM530nJUiNiwGs53l3+zenWP8c6McnXdvyVmu4r8FoEuJp9A/xpU9V
-        OedYJ+Wlm6qG7BgGXnXh03mb6QKr
-X-Google-Smtp-Source: ABdhPJxqjCNISAGNnFZsHqG7/0hfokJF28tTjo7LKsYnEJ2DWuKGyDgoYJLNq34UF/MWTH4YhROe8g==
-X-Received: by 2002:a17:90a:740e:: with SMTP id a14mr549437pjg.165.1597374246161;
-        Thu, 13 Aug 2020 20:04:06 -0700 (PDT)
-Received: from sol.lan (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id z3sm6522231pgk.49.2020.08.13.20.04.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 20:04:05 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v4 06/20] gpiolib: add build option for CDEV v1 ABI
-Date:   Fri, 14 Aug 2020 11:02:43 +0800
-Message-Id: <20200814030257.135463-7-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200814030257.135463-1-warthog618@gmail.com>
-References: <20200814030257.135463-1-warthog618@gmail.com>
+        Thu, 13 Aug 2020 23:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726564AbgHNDEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 23:04:08 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE6B20716;
+        Fri, 14 Aug 2020 03:04:08 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 23:04:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] bootconfig: Fix off-by-one in
+ xbc_node_compose_key_after()
+Message-ID: <20200813230406.2e3b9246@oasis.local.home>
+In-Reply-To: <20200813193818.a44ea9afc447f57d470b2def@linux-foundation.org>
+References: <20200813183050.029a6003@oasis.local.home>
+        <20200813193818.a44ea9afc447f57d470b2def@linux-foundation.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a build option to allow the removal of the CDEV v1 ABI.
+On Thu, 13 Aug 2020 19:38:18 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
+> On Thu, 13 Aug 2020 18:30:50 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > 
+> > While reviewing some patches for bootconfig, I noticed the following
+> > code in xbc_node_compose_key_after():
+> > 
+> > 	ret = snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+> > 		       depth ? "." : "");
+> > 	if (ret < 0)
+> > 		return ret;
+> > 	if (ret > size) {
+> > 		size = 0;
+> > 	} else {
+> > 		size -= ret;
+> > 		buf += ret;
+> > 	}
+> > 
+> > But snprintf() returns the number of bytes that would be written, not
+> > the number of bytes that are written (ignoring the nul terminator).
+> > This means that if the number of non null bytes written were to equal
+> > size, then the nul byte, which snprintf() always adds, will overwrite
+> > that last byte.
+> > 
+> > 	ret = snprintf(buf, 5, "hello");
+> > 	printf("buf = '%s'\n", buf);
+> > 	printf("ret = %d\n", ret);
+> > 
+> > produces:
+> > 
+> > 	buf = 'hell'
+> > 	ret = 5
+> > 
+> > The string was truncated without ret being greater than 5.
+> > Test (ret >= size) for overwrite.  
+> 
+> What are the end-user visible effects of the bug?  IOW, why cc:stable?
+> 
 
-This patch is before the v2 implementation, and is non-functional until
-that patch, as some parts of that patch would be written slightly
-differently if removing v1 was not considered.
-Adding this patch after that would necessitate revisiting the v2 changes,
-so this ordering results in two simpler patches.
+Hmm, looking at it at a wider view, it may not be an issue. The tools
+code calls this code, and I looked to see if it was possible to corrupt
+the buffer by an incorrect size. But now that I'm looking at the else
+part of the section, it may not be a problem as it may act the same.
 
- drivers/gpio/Kconfig | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+That is, ret == size will make size = 0 with the size -= ret, and we
+get the same result.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8e409b9c33dc..0c62e35cf3a6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -82,6 +82,18 @@ config GPIO_CDEV
- 
- 	  If unsure, say Y.
- 
-+config GPIO_CDEV_V1
-+	bool "Support GPIO ABI Version 1"
-+	default y
-+	depends on GPIO_CDEV
-+	help
-+	  Say Y here to support version 1 of the GPIO CDEV ABI.
-+
-+	  This ABI version is deprecated and will be removed in the future.
-+	  Please use the latest ABI for new developments.
-+
-+	  If unsure, say Y.
-+
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
--- 
-2.28.0
+OK, you can drop the patch. Thanks for the review!
 
+Although, there's no error message if the buffer is not big enough to
+hold the fields.
+
+Masami?
+
+-- Steve
