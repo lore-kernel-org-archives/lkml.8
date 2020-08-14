@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A55C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0F620774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE322078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wLdpPUJw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r3Pq4Nw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgHNR23 (ORCPT
+        id S1728758AbgHNR23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 14 Aug 2020 13:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbgHNR2U (ORCPT
+        with ESMTP id S1728018AbgHNR2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:20 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF86EC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:19 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id s23so3593846wrb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:19 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:14 -0400
+Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A4EC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:13 -0700 (PDT)
+Received: by mail-wr1-x449.google.com with SMTP id d6so3591552wrv.23
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ZkzH9bOmKLetwfTAc91nMyZnzSTKk7nABhSXX08ok80=;
-        b=wLdpPUJww5Ou2gUNuObrOdFaQJnwk0f2wflLug0UxXjjB+JUFXEgy0pH9EJA0zc2Sa
-         SV/JD6gXxYc8wagutHbT1eUXJ9ZAuMFvhoOliuhpaoQLHOz/NNoYpBIB4Na0gKA8ML/9
-         1IygqyNxrVi5xO4HBEfdG9bBZQt2GIQr9oN+HYuAyHMXgprw4bxZWFeJoyOjRVvNxO5T
-         xY06EZ2RFKc4m+QOjEBnFNnkS47Tv3wDXKIY+t5vcT7jIKe5RGeipEE/Je9CVTeGOKPX
-         4tpGn5ZtbfVXXOeirPojx390N6o1GbaZYW/Pa2alwkhzB6IopgXoC2j5AIc8GQcYVYLi
-         XytQ==
+        bh=Riwx46dUdQZCUBoIKFQK30aeY6nxibjjbFZQvhGTSVk=;
+        b=r3Pq4Nw/CaoWG6G6om2TkSeS2q3clDVrI1jCJZUuPgJWrFW56RmBaxQJTKiw8RDwkv
+         SXknHXxNubQ/xsH4JUduXI8P7Ao0rNKHTmxWSLd6+rR3L+eMVGvfYsQZCNJcqno+0SvU
+         tQTCc0IaZnYqxsGgZIWb6dR600zBkz4ATNFlZXN0oodOskMVMbwApFhSiSS8Hc5kEo1o
+         2keQXF4RswsJN9aziL4F/HMIxE1tLyJyZehyXq70N4BsfEQC2/qJApII530XcFa6vDo9
+         umF+SAHHeQEUyeUJl91ZaJnkzhY9dZLQUxwtVJNYU4o96vxe2Ib/F+vtqvgmZyDaI9I/
+         HVjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ZkzH9bOmKLetwfTAc91nMyZnzSTKk7nABhSXX08ok80=;
-        b=r7YzURaRN8/e/umRlfg8mTtoRw8IlzYDU4yxd6SrQ4/qnrHO+s0xp/NcgDCoUV1QFV
-         +jQ4tEeR85aWmf6UzAucmAmx/vdzZcEYINM9VUzB9LBdv/Tr4iWbKAxnfHmp4Kx/epT4
-         pNIzkfo7v8BgQG4S5pnTPP5pp1fTJRCwsjj1IXbN95UqO00EJTvdThc+OvFNhRoVJclL
-         xbR963wiP7wpoF2RauOCZJt4kSk1F/S8UZ2Mx6YxY8veOvOeu1w4xQf1OPT0Mk/EjvMv
-         75l06FdU57EOhcb3zBStcIH6WXZScUt6Why/o0b5/W45rgogwVMC/yjrTbqb4GeWBXur
-         aWmQ==
-X-Gm-Message-State: AOAM533KOcBdMjvkstHIPhPFVoXZG3NjBXRzQYXwx8jCNVfLOCL5IQ+v
-        /H395bZk4wh5HF4BdcJnXfrJezpCxvWs1Qbz
-X-Google-Smtp-Source: ABdhPJx5Ck5Wm3Z23U/jQ6DdPc0XSBI9kJNP63nW1NBupfmsFurN9ES0UHSW0KHc3wLY01k6oB2+DKHrQsXny6lv
-X-Received: by 2002:a05:6000:1085:: with SMTP id y5mr3627507wrw.100.1597426098448;
- Fri, 14 Aug 2020 10:28:18 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:27:05 +0200
+        bh=Riwx46dUdQZCUBoIKFQK30aeY6nxibjjbFZQvhGTSVk=;
+        b=RHYRnOWPv/lY25tY+4Z9k28BaQUUOXI4TFdI3dun4QhGj5noI+OcmUClF80sCCZbDz
+         tFjy0vm69PQ7z88vbQeokxa9/eBAzDsiF6oId9ha3SFaep9QHLB3Bz9NrNxSUypKGavv
+         6dXuiz4WxdpcOMdkwc4impOCf/V1hK95yDxWFUBaQWUupPxE5hwfesQJErSxmYrKKDp/
+         +fp2nlSHv89uA53oFsfWjJZXctYQWQ/VW7EOAnBXEEqDFo51yjm7JIzuFBq9wPl72sXJ
+         kV7C1sTPdbOxvDM5PSTrb+gmlT4mYjTmrcyGA1+6xmfM0Yzu1oaBAy6lDj0FHBH3/Utl
+         jjOg==
+X-Gm-Message-State: AOAM5324p9/R0FRHfSuomuGpvbUGZRxxwPn6Bt6Ug7xcWxepDFcxb3pk
+        /hdAqzZqTADNN652nS249uewzQ55EzSyiXHr
+X-Google-Smtp-Source: ABdhPJw/jNH9QPIZc2t+4rbadjLlOE44b7TKGySp7yNB+Ni/K8pn2eaB/l/BXc2r60vcjhzOsBbB8v3UAMZ+9JJW
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr424057wmm.1.1597426091488;
+ Fri, 14 Aug 2020 10:28:11 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:27:02 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <bf88a783f1c9b6643a96648dac88b4edc8d464d2.1597425745.git.andreyknvl@google.com>
+Message-Id: <2cf260bdc20793419e32240d2a3e692b0adf1f80.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 23/35] arm64: mte: Convert gcr_user into an exclude mask
+Subject: [PATCH 20/35] arm64: mte: Add in-kernel MTE helpers
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -78,7 +78,8 @@ Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,136 +88,247 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-The gcr_user mask is a per thread mask that represents the tags that are
-excluded from random generation when the Memory Tagging Extension is
-present and an 'irg' instruction is invoked.
+Provide helper functions to manipulate allocation and pointer tags for
+kernel addresses.
 
-gcr_user affects the behavior on EL0 only.
+Low-level helper functions (mte_assign_*, written in assembly) operate
+tag values from the [0x0, 0xF] range. High-level helper functions
+(mte_get/set_*) use the [0xF0, 0xFF] range to preserve compatibility
+with normal kernel pointers that have 0xFF in their top byte.
 
-Currently that mask is an include mask and it is controlled by the user
-via prctl() while GCR_EL1 accepts an exclude mask.
-
-Convert the include mask into an exclude one to make it easier the
-register setting.
-
-Note: This change will affect gcr_kernel (for EL1) introduced with a
-future patch.
+MTE_GRANULE_SIZE definition is moved to mte_asm.h header that doesn't
+have any dependencies and is safe to include into any low-level header.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Co-developed-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/arm64/include/asm/processor.h |  2 +-
- arch/arm64/kernel/mte.c            | 29 +++++++++++++++--------------
- 2 files changed, 16 insertions(+), 15 deletions(-)
+ arch/arm64/include/asm/esr.h     |  1 +
+ arch/arm64/include/asm/mte.h     | 46 +++++++++++++++++++++++++++++---
+ arch/arm64/include/asm/mte_asm.h | 10 +++++++
+ arch/arm64/kernel/mte.c          | 43 +++++++++++++++++++++++++++++
+ arch/arm64/lib/mte.S             | 41 ++++++++++++++++++++++++++++
+ 5 files changed, 138 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mte_asm.h
 
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index fec204d28fce..ed9efa5be8eb 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -153,7 +153,7 @@ struct thread_struct {
- #endif
- #ifdef CONFIG_ARM64_MTE
- 	u64			sctlr_tcf0;
--	u64			gcr_user_incl;
-+	u64			gcr_user_excl;
- #endif
- };
+diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+index 035003acfa87..bc0dc66a6a27 100644
+--- a/arch/arm64/include/asm/esr.h
++++ b/arch/arm64/include/asm/esr.h
+@@ -103,6 +103,7 @@
+ #define ESR_ELx_FSC		(0x3F)
+ #define ESR_ELx_FSC_TYPE	(0x3C)
+ #define ESR_ELx_FSC_EXTABT	(0x10)
++#define ESR_ELx_FSC_MTE		(0x11)
+ #define ESR_ELx_FSC_SERROR	(0x11)
+ #define ESR_ELx_FSC_ACCESS	(0x08)
+ #define ESR_ELx_FSC_FAULT	(0x04)
+diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
+index 1c99fcadb58c..733be1cb5c95 100644
+--- a/arch/arm64/include/asm/mte.h
++++ b/arch/arm64/include/asm/mte.h
+@@ -5,14 +5,19 @@
+ #ifndef __ASM_MTE_H
+ #define __ASM_MTE_H
  
+-#define MTE_GRANULE_SIZE	UL(16)
++#include <asm/mte_asm.h>
++
+ #define MTE_GRANULE_MASK	(~(MTE_GRANULE_SIZE - 1))
+ #define MTE_TAG_SHIFT		56
+ #define MTE_TAG_SIZE		4
++#define MTE_TAG_MASK		GENMASK((MTE_TAG_SHIFT + (MTE_TAG_SIZE - 1)), MTE_TAG_SHIFT)
++#define MTE_TAG_MAX		(MTE_TAG_MASK >> MTE_TAG_SHIFT)
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <linux/bitfield.h>
+ #include <linux/page-flags.h>
++#include <linux/types.h>
+ 
+ #include <asm/pgtable-types.h>
+ 
+@@ -45,7 +50,16 @@ long get_mte_ctrl(struct task_struct *task);
+ int mte_ptrace_copy_tags(struct task_struct *child, long request,
+ 			 unsigned long addr, unsigned long data);
+ 
+-#else
++void *mte_assign_valid_ptr_tag(void *ptr);
++void *mte_assign_random_ptr_tag(void *ptr);
++void mte_assign_mem_tag_range(void *addr, size_t size);
++
++#define mte_get_ptr_tag(ptr)	((u8)(((u64)(ptr)) >> MTE_TAG_SHIFT))
++u8 mte_get_mem_tag(void *addr);
++u8 mte_get_random_tag(void);
++void *mte_set_mem_tag_range(void *addr, size_t size, u8 tag);
++
++#else /* CONFIG_ARM64_MTE */
+ 
+ /* unused if !CONFIG_ARM64_MTE, silence the compiler */
+ #define PG_mte_tagged	0
+@@ -80,7 +94,33 @@ static inline int mte_ptrace_copy_tags(struct task_struct *child,
+ 	return -EIO;
+ }
+ 
+-#endif
++static inline void *mte_assign_valid_ptr_tag(void *ptr)
++{
++	return ptr;
++}
++static inline void *mte_assign_random_ptr_tag(void *ptr)
++{
++	return ptr;
++}
++static inline void mte_assign_mem_tag_range(void *addr, size_t size)
++{
++}
++
++#define mte_get_ptr_tag(ptr)	0xFF
++static inline u8 mte_get_mem_tag(void *addr)
++{
++	return 0xFF;
++}
++static inline u8 mte_get_random_tag(void)
++{
++	return 0xFF;
++}
++static inline void *mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
++{
++	return addr;
++}
++
++#endif /* CONFIG_ARM64_MTE */
+ 
+ #endif /* __ASSEMBLY__ */
+ #endif /* __ASM_MTE_H  */
+diff --git a/arch/arm64/include/asm/mte_asm.h b/arch/arm64/include/asm/mte_asm.h
+new file mode 100644
+index 000000000000..aa532c1851e1
+--- /dev/null
++++ b/arch/arm64/include/asm/mte_asm.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020 ARM Ltd.
++ */
++#ifndef __ASM_MTE_ASM_H
++#define __ASM_MTE_ASM_H
++
++#define MTE_GRANULE_SIZE	UL(16)
++
++#endif /* __ASM_MTE_ASM_H  */
 diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index e2d708b4583d..7717ea9bc2a7 100644
+index eb39504e390a..e2d708b4583d 100644
 --- a/arch/arm64/kernel/mte.c
 +++ b/arch/arm64/kernel/mte.c
-@@ -135,23 +135,22 @@ static void set_sctlr_el1_tcf0(u64 tcf0)
- 	preempt_enable();
+@@ -13,8 +13,10 @@
+ #include <linux/swap.h>
+ #include <linux/swapops.h>
+ #include <linux/thread_info.h>
++#include <linux/types.h>
+ #include <linux/uio.h>
+ 
++#include <asm/barrier.h>
+ #include <asm/cpufeature.h>
+ #include <asm/mte.h>
+ #include <asm/ptrace.h>
+@@ -72,6 +74,47 @@ int memcmp_pages(struct page *page1, struct page *page2)
+ 	return ret;
  }
  
--static void update_gcr_el1_excl(u64 incl)
-+static void update_gcr_el1_excl(u64 excl)
++u8 mte_get_mem_tag(void *addr)
++{
++	if (system_supports_mte())
++		addr = mte_assign_valid_ptr_tag(addr);
++
++	return 0xF0 | mte_get_ptr_tag(addr);
++}
++
++u8 mte_get_random_tag(void)
++{
++	u8 tag = 0xF;
++
++	if (system_supports_mte())
++		tag = mte_get_ptr_tag(mte_assign_random_ptr_tag(NULL));
++
++	return 0xF0 | tag;
++}
++
++void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
++{
++	void *ptr = addr;
++
++	if ((!system_supports_mte()) || (size == 0))
++		return addr;
++
++	tag = 0xF0 | (tag & 0xF);
++	ptr = (void *)__tag_set(ptr, tag);
++	size = ALIGN(size, MTE_GRANULE_SIZE);
++
++	mte_assign_mem_tag_range(ptr, size);
++
++	/*
++	 * mte_assign_mem_tag_range() can be invoked in a multi-threaded
++	 * context, ensure that tags are written in memory before the
++	 * reference is used.
++	 */
++	smp_wmb();
++
++	return ptr;
++}
++
+ static void update_sctlr_el1_tcf0(u64 tcf0)
  {
--	u64 excl = ~incl & SYS_GCR_EL1_EXCL_MASK;
+ 	/* ISB required for the kernel uaccess routines */
+diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
+index 03ca6d8b8670..8c743540e32c 100644
+--- a/arch/arm64/lib/mte.S
++++ b/arch/arm64/lib/mte.S
+@@ -149,3 +149,44 @@ SYM_FUNC_START(mte_restore_page_tags)
  
- 	/*
--	 * Note that 'incl' is an include mask (controlled by the user via
--	 * prctl()) while GCR_EL1 accepts an exclude mask.
-+	 * Note that the mask controlled by the user via prctl() is an
-+	 * include while GCR_EL1 accepts an exclude mask.
- 	 * No need for ISB since this only affects EL0 currently, implicit
- 	 * with ERET.
- 	 */
- 	sysreg_clear_set_s(SYS_GCR_EL1, SYS_GCR_EL1_EXCL_MASK, excl);
- }
- 
--static void set_gcr_el1_excl(u64 incl)
-+static void set_gcr_el1_excl(u64 excl)
- {
--	current->thread.gcr_user_incl = incl;
--	update_gcr_el1_excl(incl);
-+	current->thread.gcr_user_excl = excl;
-+	update_gcr_el1_excl(excl);
- }
- 
- void flush_mte_state(void)
-@@ -166,7 +165,7 @@ void flush_mte_state(void)
- 	/* disable tag checking */
- 	set_sctlr_el1_tcf0(SCTLR_EL1_TCF0_NONE);
- 	/* reset tag generation mask */
--	set_gcr_el1_excl(0);
-+	set_gcr_el1_excl(SYS_GCR_EL1_EXCL_MASK);
- }
- 
- void mte_thread_switch(struct task_struct *next)
-@@ -177,7 +176,7 @@ void mte_thread_switch(struct task_struct *next)
- 	/* avoid expensive SCTLR_EL1 accesses if no change */
- 	if (current->thread.sctlr_tcf0 != next->thread.sctlr_tcf0)
- 		update_sctlr_el1_tcf0(next->thread.sctlr_tcf0);
--	update_gcr_el1_excl(next->thread.gcr_user_incl);
-+	update_gcr_el1_excl(next->thread.gcr_user_excl);
- }
- 
- void mte_suspend_exit(void)
-@@ -185,13 +184,14 @@ void mte_suspend_exit(void)
- 	if (!system_supports_mte())
- 		return;
- 
--	update_gcr_el1_excl(current->thread.gcr_user_incl);
-+	update_gcr_el1_excl(current->thread.gcr_user_excl);
- }
- 
- long set_mte_ctrl(struct task_struct *task, unsigned long arg)
- {
- 	u64 tcf0;
--	u64 gcr_incl = (arg & PR_MTE_TAG_MASK) >> PR_MTE_TAG_SHIFT;
-+	u64 gcr_excl = ~((arg & PR_MTE_TAG_MASK) >> PR_MTE_TAG_SHIFT) &
-+		       SYS_GCR_EL1_EXCL_MASK;
- 
- 	if (!system_supports_mte())
- 		return 0;
-@@ -212,10 +212,10 @@ long set_mte_ctrl(struct task_struct *task, unsigned long arg)
- 
- 	if (task != current) {
- 		task->thread.sctlr_tcf0 = tcf0;
--		task->thread.gcr_user_incl = gcr_incl;
-+		task->thread.gcr_user_excl = gcr_excl;
- 	} else {
- 		set_sctlr_el1_tcf0(tcf0);
--		set_gcr_el1_excl(gcr_incl);
-+		set_gcr_el1_excl(gcr_excl);
- 	}
- 
- 	return 0;
-@@ -224,11 +224,12 @@ long set_mte_ctrl(struct task_struct *task, unsigned long arg)
- long get_mte_ctrl(struct task_struct *task)
- {
- 	unsigned long ret;
-+	u64 incl = ~task->thread.gcr_user_excl & SYS_GCR_EL1_EXCL_MASK;
- 
- 	if (!system_supports_mte())
- 		return 0;
- 
--	ret = task->thread.gcr_user_incl << PR_MTE_TAG_SHIFT;
-+	ret = incl << PR_MTE_TAG_SHIFT;
- 
- 	switch (task->thread.sctlr_tcf0) {
- 	case SCTLR_EL1_TCF0_NONE:
+ 	ret
+ SYM_FUNC_END(mte_restore_page_tags)
++
++/*
++ * Assign pointer tag based on the allocation tag
++ *   x0 - source pointer
++ * Returns:
++ *   x0 - pointer with the correct tag to access memory
++ */
++SYM_FUNC_START(mte_assign_valid_ptr_tag)
++	ldg	x0, [x0]
++	ret
++SYM_FUNC_END(mte_assign_valid_ptr_tag)
++
++/*
++ * Assign random pointer tag
++ *   x0 - source pointer
++ * Returns:
++ *   x0 - pointer with a random tag
++ */
++SYM_FUNC_START(mte_assign_random_ptr_tag)
++	irg	x0, x0
++	ret
++SYM_FUNC_END(mte_assign_random_ptr_tag)
++
++/*
++ * Assign allocation tags for a region of memory based on the pointer tag
++ *   x0 - source pointer
++ *   x1 - size
++ *
++ * Note: size is expected to be MTE_GRANULE_SIZE aligned
++ */
++SYM_FUNC_START(mte_assign_mem_tag_range)
++	/* if (src == NULL) return; */
++	cbz	x0, 2f
++	/* if (size == 0) return; */
++	cbz	x1, 2f
++1:	stg	x0, [x0]
++	add	x0, x0, #MTE_GRANULE_SIZE
++	sub	x1, x1, #MTE_GRANULE_SIZE
++	cbnz	x1, 1b
++2:	ret
++SYM_FUNC_END(mte_assign_mem_tag_range)
 -- 
 2.28.0.220.ged08abb693-goog
 
