@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D827C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC51C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EEB20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5878820771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597441882;
-	bh=FZaiQ8VxvyxWvY/boCcLhA3BsvzvI8AVxduKAtbwHXU=;
+	s=default; t=1597441886;
+	bh=GNfLN5y4xDxrqQFiwT3F93E5Y+qrQk4eaEHSr1wkqX4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2c7j/cFlYj/5p+wQOkA9HZagfanT4WmatWejeNFLr0zJbZyH9XT7CyRhXgfSLNg2D
-	 ignKg4w6ZhZDb6U4NmOQZLz7rifQzRkzCKpaBorw2cbfWj1QZXD1d4+nuzLJZdR9Cw
-	 obga/2V3EmJq8wFj/elYXFe/iWYd3HCC6GmGdAhs=
+	b=Lq5UGw1xiwP93rainyMp6ghheanZ6ald0AmxdIRA+yU30TvrWiCg95vXnRgqE264t
+	 ZvauVikFxkgdIGdjwnbHu24qWhFo0qOw9Q15fUWoJhkuMz/rdKDPb0v5XEeoPbgstE
+	 +4Gy+WRcQAu00859FFU2AZnO+5GwpmUS6QoAtELE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgHNVvU (ORCPT
+        id S1728607AbgHNVvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 17:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46340 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 17:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbgHNVvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 17:51:19 -0400
-Subject: Re: [GIT pull] timers/urgent for v5.9-rc1
+        id S1727994AbgHNVvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 17:51:20 -0400
+Subject: Re: [GIT PULL] OpenRISC updates for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597441878;
-        bh=FZaiQ8VxvyxWvY/boCcLhA3BsvzvI8AVxduKAtbwHXU=;
+        s=default; t=1597441879;
+        bh=GNfLN5y4xDxrqQFiwT3F93E5Y+qrQk4eaEHSr1wkqX4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yeZO/4Ft/q/XkabMj9/w4VP5/9dr1Z0F5a0/FLehbv+V7ad5bbUkx89nqUcTLjq7c
-         0j2CzOIM2AWNa0+oCLea8jXu2Li1uJorFoCVSmRHN2SsIHg/UoPb1mta3SkCksL+44
-         SvyowPYM92KwDvtbVkxG8G1sGQOtT6xO7CIefkbc=
+        b=jEkoXke6cA3BOYWtfWWPWnHIUcKhHDVU37RMugTd9sSt5yMWUO9Mmux3oy//tZbQb
+         pICRmxjQHm44mFLWuD2iY52hc4ikrT9vJAcbM23O3ieoikZ/vfXNiuRM6PGqdWUwTO
+         nLEx3ANnxpEwWw7usoaRmuE42j536m+MqtiXBViY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <159742071432.30851.8730414087382693550.tglx@nanos>
-References: <159742071192.30851.2328227964586183297.tglx@nanos> <159742071432.30851.8730414087382693550.tglx@nanos>
+In-Reply-To: <20200814204759.GT80756@lianli.shorne-pla.net>
+References: <20200814204759.GT80756@lianli.shorne-pla.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <159742071432.30851.8730414087382693550.tglx@nanos>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-08-14
-X-PR-Tracked-Commit-Id: b0294f30256bb6023b2044fd607855123863d98f
+X-PR-Tracked-Message-Id: <20200814204759.GT80756@lianli.shorne-pla.net>
+X-PR-Tracked-Remote: git://github.com/openrisc/linux.git tags/for-linus
+X-PR-Tracked-Commit-Id: 55b2662ec665cc8b592809a011fe807b05370ab8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b923f1247b72fc100b87792fd2129d026bb10e66
-Message-Id: <159744187880.11302.13127271812443521684.pr-tracker-bot@kernel.org>
-Date:   Fri, 14 Aug 2020 21:51:18 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
+X-PR-Merge-Commit-Id: e1d74fbe50c46253de519e772c5c2f431b2b837d
+Message-Id: <159744187988.11302.13663539950271854164.pr-tracker-bot@kernel.org>
+Date:   Fri, 14 Aug 2020 21:51:19 +0000
+To:     Stafford Horne <shorne@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        LKML <linux-kernel@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 15:58:34 -0000:
+The pull request you sent on Sat, 15 Aug 2020 05:47:59 +0900:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-08-14
+> git://github.com/openrisc/linux.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b923f1247b72fc100b87792fd2129d026bb10e66
+https://git.kernel.org/torvalds/c/e1d74fbe50c46253de519e772c5c2f431b2b837d
 
 Thank you!
 
