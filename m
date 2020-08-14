@@ -2,137 +2,112 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020F9C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F69C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C95232065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA9A2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:47:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFAkiefp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2JVY4wn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgHNPpj (ORCPT
+        id S1727963AbgHNPr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
+        Fri, 14 Aug 2020 11:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbgHNPpe (ORCPT
+        with ESMTP id S1726652AbgHNPry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:45:34 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43A0C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:45:33 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id z12so2766104uam.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:45:33 -0700 (PDT)
+        Fri, 14 Aug 2020 11:47:54 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73319C061384;
+        Fri, 14 Aug 2020 08:47:54 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id c16so10381599ejx.12;
+        Fri, 14 Aug 2020 08:47:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zQZzIw/ZCPBQIBTWVJ/QTuh1ruI6/xC6sQhY9LnkgaM=;
-        b=dFAkiefpcJ4gc/AAN59D2Bcqi5RMedv9ORvbtUfT55oz/42XK0JOiGXUU+RCxoZl35
-         IdpVK/faoeJt/YZPtUkXOO9aoMCwkpydg93VWuQEr3+lj6opxSXZOdFDxERZssC1bOXa
-         KjyUE7cV+0TgtQu12uXXFCYfekU4pYzJ7jqyleRlISfqlTHeffNf74r4AmyDWd5nnwa4
-         Q4H/oIOogeu+gCMutWjOcRjyN4E16dg2m0UHCbi16C5w65dJjZuZVHNsx0W/OjRl/ikk
-         /4ihBV/oWTHR4M9+iib5qEhH1DUz66cwnEYxl5r70BYTs630Ey/WVvyYIqK4Q+QORVhQ
-         N0wA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tSUWel2LD1uzLrzrGMirAq4Y0+/ttrm/EqnWacwxu/Q=;
+        b=L2JVY4wn3bmai0Fo5r88GmoNsAL9Gv9NjZPPMwuOvHmR+/Mz+jIiEumfYPWTuQSpWV
+         jGEc1zOxWbax8tKIXwOIb5sAO8URKnBKAgFTg4aOrF1t3aLHu88VMfQ9Ixkhu1SBpIai
+         NZ0hB2d/9fitUUiMP8N5hvSecTj7o4JKaq0J7YBtBcn+0Tw1xb4pJKAc/3fHih9K8inJ
+         9cPtdC70+Sxrvo8gmlCQ+6/v0z/KVd/dhh82jYLsEqIqeCzah3iuRSMt1JXl3F+qXeX3
+         av3S9nrOHluDOQcJz0KE32pvSvkilq/sjUV0Lr6cBfHbVyeFnxsHONG5ncP07TODFPe2
+         h7FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zQZzIw/ZCPBQIBTWVJ/QTuh1ruI6/xC6sQhY9LnkgaM=;
-        b=Q9KSjZr7jIrDYZ2zY6fo9shD6sEMrqAUbFSIAMqs1Z1o1PXZ4CPARQhjP/Qdq7YNO2
-         +i/wvKppYn0Y1ofak5hLstrVf84KohWSQRlna0XT+PXPB2wDS7f+oc9TIfMIlSOf6tOe
-         44lnM/B1IJwCbS1flPCsHxiHE7d0p8zVbsa5eBGBmsf+nDYzJVXJoe6pZERg5HA6WSOG
-         0GIyMT+av/+d1pzLjaOyWwJmw3VD2KWitSYhanGxgoUD1xZAcHrXIOaXkQQRMtHFXHPl
-         0xPazK7fJItiFldwSShYR/sYcoxqzJRqS2gJiN6aQ9841/Qrlfb//lta+GkSE0i2MMfA
-         OWmA==
-X-Gm-Message-State: AOAM5320hnQvgGzx092FHeTNnyCTGyqdKSFUMCH/wUES2+LRC7uXDOs7
-        CMAYnIFNVei7ywDrwQ9dH4PiwTNmW8QHnA==
-X-Google-Smtp-Source: ABdhPJxmSHSqz112qLAeL+rn25g9EbL751MZusnRlC11SkxJNuVAMgLSMwCIbF/P3RZuEeJ+70WWtw==
-X-Received: by 2002:ab0:1305:: with SMTP id g5mr1701556uae.93.1597419931721;
-        Fri, 14 Aug 2020 08:45:31 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id u185sm1502812vke.17.2020.08.14.08.45.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 08:45:30 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id a1so4873932vsp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:45:30 -0700 (PDT)
-X-Received: by 2002:a05:6102:517:: with SMTP id l23mr1899215vsa.114.1597419929742;
- Fri, 14 Aug 2020 08:45:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tSUWel2LD1uzLrzrGMirAq4Y0+/ttrm/EqnWacwxu/Q=;
+        b=PwtFh9UzJntwDDrf2B39C7gCcBnGGOsC4mw9oEkifGqP//r876d+XKGTlqanQoqrsl
+         b6mTbG9s12Oo2w9IzEzdcVZ/nIFQOmKvi2+SzhmVdO6lvv2uGgA6pdWnb6J5V5VMzIei
+         jYjLY28UazH1kcbfFqvnVXCeLhrMm87qKy7MSGsXKygEpnh4DUvRRCX5vo5ooZyxfQ7f
+         kCiWcOhMc14IEojM4rA3dOldkzwRNwYnq7b97IBVM7XQDhoh340Znht/aOu1jrPM8j7W
+         txtZWR7TNtNGsH7/mSsz33YJoSwcQminb690+c6uvjFZ63Cngroe1k7K6ZU7E9okcm6p
+         1kGA==
+X-Gm-Message-State: AOAM533ChTMjVs2a0oUJ/NEr8+5iDN3mhH1dGMHi15jcctmLVjNBhdMG
+        fEWnHS+GmmjWTHh2PCJe7rI=
+X-Google-Smtp-Source: ABdhPJzXH4+elQwzA7ASy8tfMldGnQqYaAIS+EFDQon3MKoIMj9ZM/a7kqtFnkn7XBY7aRsAcwcM2Q==
+X-Received: by 2002:a17:907:7287:: with SMTP id dt7mr2913733ejc.224.1597420073067;
+        Fri, 14 Aug 2020 08:47:53 -0700 (PDT)
+Received: from localhost.localdomain (abag79.neoplus.adsl.tpnet.pl. [83.6.170.79])
+        by smtp.googlemail.com with ESMTPSA id lc10sm6998252ejb.22.2020.08.14.08.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 08:47:52 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     ~postmarketos/upstreaming@lists.sr.ht
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: kitakami: Temporarily disable SDHCI1
+Date:   Fri, 14 Aug 2020 17:47:49 +0200
+Message-Id: <20200814154749.257837-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <84f3ed74e9de4422933bc6a642890697@huawei.com>
-In-Reply-To: <84f3ed74e9de4422933bc6a642890697@huawei.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 14 Aug 2020 17:44:53 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSd+wGq2V2G1uDBdmyUGe1cquBXdVtSW_7BCwYQEd8E3ag@mail.gmail.com>
-Message-ID: <CA+FuTSd+wGq2V2G1uDBdmyUGe1cquBXdVtSW_7BCwYQEd8E3ag@mail.gmail.com>
-Subject: Re: [PATCH] net: correct zerocopy refcnt with newly allocated UDP or
- RAW uarg
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:17 AM linmiaohe <linmiaohe@huawei.com> wrote:
->
-> Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-> >On Thu, Aug 13, 2020 at 1:59 PM Miaohe Lin <linmiaohe@huawei.com> wrote:
-> >>
-> >> The var extra_uref is introduced to pass the initial reference taken
-> >> in sock_zerocopy_alloc to the first generated skb. But now we may fail
-> >> to pass the initial reference with newly allocated UDP or RAW uarg
-> >> when the skb is zcopied.
-> >
-> >extra_uref is true if there is no previous skb to append to or there is a previous skb, but that does not have zerocopy data associated yet (because the previous call(s) did not set MSG_ZEROCOPY).
-> >
-> >In other words, when first (allocating and) associating a zerocopy struct with the skb.
->
-> Many thanks for your explaination. The var extra_uref plays the role as you say. I just borrowed the description of var extra_uref from previous commit log here.
->
-> >
-> >> -               extra_uref = !skb_zcopy(skb);   /* only ref on new uarg */
-> >> +               /* Only ref on newly allocated uarg. */
-> >> +               if (!skb_zcopy(skb) || (sk->sk_type != SOCK_STREAM && skb_zcopy(skb) != uarg))
-> >> +                       extra_uref = true;
-> >
-> >SOCK_STREAM does not use __ip_append_data.
-> >
-> >This leaves as new branch skb_zcopy(skb) && skb_zcopy(skb) != uarg.
-> >
-> >This function can only acquire a uarg through sock_zerocopy_realloc, which on skb_zcopy(skb) only returns the existing uarg or NULL (for not SOCK_STREAM).
-> >
-> >So I don't see when that condition can happen.
-> >
->
-> On skb_zcopy(skb), we returns the existing uarg iff (uarg->id + uarg->len == atomic_read(&sk->sk_zckey)) in sock_zerocopy_realloc. So we may get a newly allocated
-> uarg via sock_zerocopy_alloc(). Though we may not trigger this codepath now, it's still a potential problem that we may missed the right trace to uarg.
+There is an issue with Kitakami eMMCs dying when a quirk
+isn't addressed. Until that happens, disable it.
 
-I don't think that can happen.
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+This supersides my previous "mmc: host: msm: Add optional full power cycle property."
+series in which I incorrectly addressed the issue NOT solving the cause.
 
-The question is when this branch is false
+ arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-                next = (u32)atomic_read(&sk->sk_zckey);
-                if ((u32)(uarg->id + uarg->len) == next) {
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+index 30cb3aa7d734..5496590dee33 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+@@ -428,7 +428,12 @@ pmi8994_bby: boost-bypass {
+ };
+ 
+ &sdhc1 {
+-	status = "okay";
++	/* There is an issue with the eMMC causing permanent
++	 * damage to the card if a quirk isn't addressed.
++	 * Until it's fixed, disable the MMC so as not to brick
++	 * devices.
++	 */
++	status = "disabled";
+ 
+ 	/* Downstream pushes 2.95V to the sdhci device,
+ 	 * but upstream driver REALLY wants to make vmmc 1.8v
+-- 
+2.28.0
 
-I cannot come up with a case. I think it might be vestigial. The goal
-is to ensure to append only a consecutive range of notification IDs.
-Each notification ID corresponds to a sendmsg invocation with
-MSG_ZEROCOPY. In both TCP and UDP with corking, data is ordered and
-access to changes to these fields happen together as a transaction:
-
-                /* realloc only when socket is locked (TCP, UDP cork),
-                 * so uarg->len and sk_zckey access is serialized
-                 */
