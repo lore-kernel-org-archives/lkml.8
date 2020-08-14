@@ -2,103 +2,154 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3617C2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7b1AFLE"
+	by mail.kernel.org (Postfix) with ESMTP id A3C3520791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597421469;
+	bh=1eHtnTQKd6vwBqrROLmEzpSpv+XROEYdwyl4yv71Ks8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Bcd46xmDfZOcNIQUwlFQXe5Xlk3GgE1ZYPkAf0QE8MRbe8wRuZtwR3K1bNBq2lOln
+	 jTIzCgpnh00PFYJnWTxA899DbCfqReQwcUGeB2VGxGtUqQVUaHYQoH3f3JsYYo7fDO
+	 1FV6F3XtVBSW8ZHtBZhd7aZr+worKmY5pryDUYp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgHNQIk (ORCPT
+        id S1728148AbgHNQLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgHNQIQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:08:16 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C7BC061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:08:16 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id u63so8566840oie.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
-        b=A7b1AFLEdYJMUBJufiROZGagwsw9MKsgAlYJ2at68KUus+KO4FnTq7s99tj3255glk
-         0mcR5QfAvpui7uyg9C7uhaZRTRWWzP1vQQv4iRRk75b4Otu/Pdq5+OnTeXaus1lz3eUA
-         iRE5I8oQfGQedATtZxV7S5NtrCsVbvH5Zm+xgkisSWff8iK9kpoLS6i+sNlwtIuEs/Yi
-         wQIlF9cLAWCjHPOOvHI/CTKxvQmMYIMt1MvxJVbiY0z+vDPCAW7rvdU+RVeIQKkHekLv
-         rrMuHK8c9xRSTKa9wE6A/lnbTAlg0ulIUQ7E+620VRrM8jnkKY0F+QsNzUzdlAJpV+mV
-         sxoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
-        b=XXIyx9FC/FxthJETR57DbNHUxZGCOcWqGiIvx5duv01XAP2bau+PxscLsP9sMh0aM8
-         4UQDwslv9bL8ZWgowEU0Hekv4e7qVJXbgIvkJwVmN7QR/7M0IDE0RKDu+Qx+MgTXS3DT
-         zJ5tgtvIiaX09zm08pzczzEPknlm2EljLI4HURV4FeCko7fD433mIgQuAfPLYi563l0i
-         A8X2pdl/efswHFC36xB4ddvgkAW2UkIkYKjytKC3FfJ78SXHH4AuS5ADuNF06bBzIpM+
-         ghXNLAiOL98kLIdHd6O2GtN48LkSicSGxY0vyrUIdwSb/uXPWIkHbus6dHt0Hvap/cyn
-         GZcQ==
-X-Gm-Message-State: AOAM533Viq21w1yDkbmR7gcliTUlpAX2sZG/ssa14dh8AyF+CYOePASA
-        HNQu3539FnHqZAyGFqR9LBQ=
-X-Google-Smtp-Source: ABdhPJzaRBSFFR6TAPd4qAaVsJoeJP7a+jauGczShtyYAzEfw9qRT+nBEQGL0QsOzcn1iUPB3XGfbA==
-X-Received: by 2002:aca:4996:: with SMTP id w144mr1882058oia.119.1597421295127;
-        Fri, 14 Aug 2020 09:08:15 -0700 (PDT)
-Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id 143sm1900648oie.11.2020.08.14.09.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:08:14 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 2/2] dyndbg: give %3u width in pr-format, cosmetic only
-Date:   Fri, 14 Aug 2020 10:08:00 -0600
-Message-Id: <20200814160800.3298765-3-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200814160800.3298765-1-jim.cromie@gmail.com>
-References: <20200814160800.3298765-1-jim.cromie@gmail.com>
+        Fri, 14 Aug 2020 12:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726742AbgHNQLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 12:11:07 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CCB72078D;
+        Fri, 14 Aug 2020 16:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597421467;
+        bh=1eHtnTQKd6vwBqrROLmEzpSpv+XROEYdwyl4yv71Ks8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Y6z5CY1nwi7oy57gblgg9EAFAoluxSg6wt4kSl2xd4o66tgT04GaKNVnM+9ED/gV0
+         wUTN14LksC3gedJTY60VNrKRLnpO3SY7UcY/xYH40sU+YxoYi4rFKMtvPM9ki/pFgk
+         29u7pPcFm2QM3eIcNWhmVBOnRVYgtat6UnBX+hh4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C4F1E3522A0E; Fri, 14 Aug 2020 09:11:06 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 09:11:06 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814161106.GA13853@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813182618.GX2674@hirez.programming.kicks-ass.net>
+ <20200813185257.GF4295@paulmck-ThinkPad-P72>
+ <20200813220619.GA2674@hirez.programming.kicks-ass.net>
+ <875z9m3xo7.fsf@nanos.tec.linutronix.de>
+ <20200814083037.GD3982@worktop.programming.kicks-ass.net>
+ <20200814141425.GM4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814141425.GM4295@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the print-width so log entries line up nicely.
+On Fri, Aug 14, 2020 at 07:14:25AM -0700, Paul E. McKenney wrote:
+> On Fri, Aug 14, 2020 at 10:30:37AM +0200, Peter Zijlstra wrote:
+> > On Fri, Aug 14, 2020 at 01:59:04AM +0200, Thomas Gleixner wrote:
 
-no functional changes.
+[ . . . ]
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 3.	Reusing existing GFP_ flags/values/whatever to communicate
+> > > >	the raw-context information that was to be communicated by
+> > > >	the new GFP_ flag.
+> > > >
+> > > > 4.	Making lockdep forgive acquiring spinlocks while holding
+> > > >	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
+> > 
+> > Uhh, !CONFIG_PREEMPT_RT, the rest is 'fine'.
+> 
+> I would be OK with either.  In CONFIG_PREEMPT_NONE=n kernels, the
+> kfree_rcu() code could use preemptible() to determine whether it was safe
+> to invoke the allocator.  The code in kfree_rcu() might look like this:
+> 
+> 	mem = NULL;
+> 	if (IS_ENABLED(CONFIG_PREEMPT_NONE) || preemptible())
+> 		mem = __get_free_page(...);
+> 
+> Is your point is that the usual mistakes would then be caught by the
+> usual testing on CONFIG_PREEMPT_NONE=n kernels?
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 1d012e597cc3..01b7d0210412 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -947,7 +947,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 	list_add(&dt->link, &ddebug_tables);
- 	mutex_unlock(&ddebug_lock);
+Just to make sure we are talking about the same thing, please see below
+for an untested patch that illustrates how I was interpreting your words.
+Was this what you had in mind?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 62a382d..42d0ff1 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -579,7 +579,7 @@ do {									\
+ # define lockdep_assert_preemption_disabled() do { } while (0)
+ #endif
  
--	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
-+	v2pr_info("%3u debug prints in module %s\n", n, dt->mod_name);
- 	return 0;
- }
+-#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
++#ifdef CONFIG_PROVE_RAW_LOCK_NESTING_EFFECTIVE
  
--- 
-2.26.2
-
+ # define lockdep_assert_RT_in_threaded_ctx() do {			\
+ 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+index bb35b44..70867d58 100644
+--- a/include/linux/lockdep_types.h
++++ b/include/linux/lockdep_types.h
+@@ -20,7 +20,7 @@ enum lockdep_wait_type {
+ 	LD_WAIT_FREE,		/* wait free, rcu etc.. */
+ 	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
+ 
+-#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
++#ifdef PROVE_RAW_LOCK_NESTING_EFFECTIVE
+ 	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
+ #else
+ 	LD_WAIT_CONFIG = LD_WAIT_SPIN,
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index e068c3c..e02de40 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1215,6 +1215,9 @@ config PROVE_RAW_LOCK_NESTING
+ 
+ 	 If unsure, select N.
+ 
++config PROVE_RAW_LOCK_NESTING_EFFECTIVE
++	def_bool PROVE_RAW_LOCK_NESTING && !PREEMPTION
++
+ config LOCK_STAT
+ 	bool "Lock usage statistics"
+ 	depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
