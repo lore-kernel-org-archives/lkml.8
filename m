@@ -2,133 +2,130 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65CED2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8530F2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFwZiGgG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iI8H0DkK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sCwH9e6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHNQih (ORCPT
+        id S1728016AbgHNQjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgHNQig (ORCPT
+        Fri, 14 Aug 2020 12:39:42 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:54860 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgHNQji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:38:36 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2ABCC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:38:35 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k20so8434712wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=SBRnLFjikbgUE3zhul5CZPoOJXI826l4dDRWqFfAQRw=;
-        b=KFwZiGgGsHOEQTkED76nmBtiNDbHKD6KDhybIgSAGbZvZJg0xNdODvEI53hyV7GVQq
-         fv6hqAIMlvAzZZ/H+0svImJXztuW8n+06vvlckdkmKFvtA30QhP8xutcoXJqrxq0GxXk
-         1b5uZAP095ez+KqvWry9UQgjiMeVB4IZkisACV1h9qlAVFN59iLGEeuij5V7ciNXqLrR
-         DAHbNYpEOpitJZR4USDa+8UbITYPbhO6VHr6Rvfmo8CEKofCfAyITHcfBbrxc2szZznV
-         FGGP9j5NnYrV6b8JVilkN+og4BUDJJIFUNq1WvIqeKb8lPc+kwlIO3BQdDraGHhz5SQL
-         0UTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=SBRnLFjikbgUE3zhul5CZPoOJXI826l4dDRWqFfAQRw=;
-        b=WlALew3wFKQlrZB/QWteERFMRtY4KfbSOQPKxgRaPGNr004mJhaikEeOwtzKCxdEHd
-         vs/9UiZOCQOABFW8qF8RxEYPXnHRtvrk8rFVOiCuBY62HlSE3J5bP1FtQjk4jCWqYwYS
-         degk+ULgwFCDjsBpORmJdrSXgpzk9eSBZDdZtIaogNEX+UTPpx7wwhHtno02/gMUdeVB
-         FM/0FkJkwksBse/ZvYd6GOjKnt36/Q392JOEjpShukG5ga+wqrkbf5lmbg1UO8fpMIGi
-         wS65V84RcfXCQhCUV7NlIn/f7KeRBVqK5CCiPOEhFLfTojnM0Ga16bYn4cErIN5dce+J
-         VvRw==
-X-Gm-Message-State: AOAM530eMwch3fweBqp1iQTiwHF9tA7PFIKfHsNJA15bIqqx6oXgGMd2
-        gcJu2ophhXgqno4HqmJ9fbeYcZwujHpwxQ==
-X-Google-Smtp-Source: ABdhPJzibn0jjmtjzLY2ilhQ9fx+rMUtqgQREpZcOlyPu6KoHh7sYeqxx1ZLF1RbiozQAYxr3iNwGQ==
-X-Received: by 2002:a1c:3285:: with SMTP id y127mr3273780wmy.104.1597423114464;
-        Fri, 14 Aug 2020 09:38:34 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id r22sm16053717wmh.45.2020.08.14.09.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:38:33 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 17:38:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        Fabrice Bellet <fabrice@bellet.info>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding
- style issues
-Message-ID: <20200814163831.GN4354@dell>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <20200814113933.1903438-13-lee.jones@linaro.org>
- <87r1s9l0mc.fsf@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r1s9l0mc.fsf@codeaurora.org>
+        Fri, 14 Aug 2020 12:39:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 24EE18EE1F3;
+        Fri, 14 Aug 2020 09:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597423178;
+        bh=1GeTo5+kI1ZRhYo/3Dw/Az7CcWr7NSXW8xvPXgcpISU=;
+        h=Subject:From:To:Cc:Date:From;
+        b=iI8H0DkK++J37msJ9f6ACFP7e1R+IODPSjhA8pUglwnGcp7EoF2M9319bJgwM/Ite
+         I28WzqEZnaXza1FcndALl9dOzinw2uIH1Ij4URNyeoloejjaW2pIiTt8HyZroWUWUL
+         R9W8mEB2NSminaRLx4C8rWueOa/k5SQanSfl4kQ8=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nngdI4FgmOnG; Fri, 14 Aug 2020 09:39:38 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9F5588EE0E4;
+        Fri, 14 Aug 2020 09:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597423177;
+        bh=1GeTo5+kI1ZRhYo/3Dw/Az7CcWr7NSXW8xvPXgcpISU=;
+        h=Subject:From:To:Cc:Date:From;
+        b=sCwH9e6aAh50PKxfabdr/J/CWbC/3CWTHrBKiSRKmNFfte003LOMJu95qtA0D683w
+         puVfzTz+s31X6NW8prOQbWHEIsHEXwB47xrt6Wcf1dPCBakOfX6fgY4qwXAvQiXASk
+         621a1HPxLMu8MDW4eH0eazQ7fF7fLdsWzumZKqiM=
+Message-ID: <1597423176.3916.19.camel@HansenPartnership.com>
+Subject: [GIT PULL] final round of SCSI updates for the 5.8+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 14 Aug 2020 09:39:36 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020, Kalle Valo wrote:
+This is the set of patches which arrived too late to stabilise in -next
+for the first pull.  It's really just an lpfc driver update and an
+assortment of minor fixes, all in drivers.  The only core update is to
+the zone block device driver, which isn't the one most people use.
 
-> Lee Jones <lee.jones@linaro.org> writes:
-> 
-> >  - Ensure spaces appear after {for, if, while, etc}
-> >  - Ensure spaces to not appear after '('
-> >  - Ensure spaces to not appear before ')'
-> >  - Ensure spaces appear between ')' and '{'
-> >  - Ensure spaces appear after ','
-> >  - Ensure spaces do not appear before ','
-> >  - Ensure spaces appear either side of '='
-> >  - Ensure '{'s which open functions are on a new line
-> >  - Remove trailing whitespace
-> >
-> > There are still a whole host of issues with this file, but this
-> > patch certainly breaks the back of them.
-> >
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Benjamin Reed <breed@users.sourceforge.net>
-> > Cc: Javier Achirica <achirica@users.sourceforge.net>
-> > Cc: Jean Tourrilhes <jt@hpl.hp.com>
-> > Cc: Fabrice Bellet <fabrice@bellet.info>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/net/wireless/cisco/airo.c | 897 ++++++++++++++++--------------
-> >  1 file changed, 467 insertions(+), 430 deletions(-)
-> 
-> This is a driver for ancient hardware, I'm not sure if it's worth trying
-> to fix any style issues. Is anyone even using it? Should we instead just
-> remove the driver?
+The patch is available here:
 
-Sounds like a reasonable solution to me.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-I'm also happy to do it, if there are no objections.
+The short changelog is:
 
-As it stands, it's polluting the code-base and the build-log, so
-something should be done.
+Damien Le Moal (1):
+      scsi: sd_zbc: Improve zone revalidation
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Dick Kennedy (8):
+      scsi: lpfc: Update lpfc version to 12.8.0.3
+      scsi: lpfc: Fix LUN loss after cable pull
+      scsi: lpfc: Fix validation of bsg reply lengths
+      scsi: lpfc: Fix retry of PRLI when status indicates its unsupported
+      scsi: lpfc: Fix oops when unloading driver while running mds diags
+      scsi: lpfc: Fix RSCN timeout due to incorrect gidft counter
+      scsi: lpfc: Fix no message shown for lpfc_hdw_queue out of range value
+      scsi: lpfc: Fix FCoE speed reporting
+
+Ewan D. Milne (1):
+      scsi: lpfc: nvmet: Avoid hang / use-after-free again when destroying targetport
+
+Javed Hasan (2):
+      scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+      scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
+
+Jing Xiangfeng (1):
+      scsi: lpfc: Add missing misc_deregister() for lpfc_init()
+
+Max Gurtovoy (1):
+      scsi: target: Make iscsit_register_transport() return void
+
+Xiang Chen (1):
+      scsi: scsi_transport_sas: Add spaces around binary operator "|"
+
+And the diffstat:
+
+ drivers/scsi/fcoe/fcoe_ctlr.c                 |  2 +-
+ drivers/scsi/libfc/fc_disc.c                  | 12 +++-
+ drivers/scsi/lpfc/lpfc_attr.c                 | 26 +++++++-
+ drivers/scsi/lpfc/lpfc_bsg.c                  | 21 +++---
+ drivers/scsi/lpfc/lpfc_ct.c                   | 22 +++++--
+ drivers/scsi/lpfc/lpfc_els.c                  | 10 ++-
+ drivers/scsi/lpfc/lpfc_init.c                 | 25 +++++--
+ drivers/scsi/lpfc/lpfc_nportdisc.c            |  8 ++-
+ drivers/scsi/lpfc/lpfc_nvmet.c                |  2 +-
+ drivers/scsi/lpfc/lpfc_sli.c                  | 11 +++-
+ drivers/scsi/lpfc/lpfc_version.h              |  2 +-
+ drivers/scsi/scsi_transport_sas.c             |  2 +-
+ drivers/scsi/sd.c                             | 10 ++-
+ drivers/scsi/sd.h                             | 11 +++-
+ drivers/scsi/sd_zbc.c                         | 93 +++++++++++++--------------
+ drivers/target/iscsi/iscsi_target_transport.c |  4 +-
+ include/target/iscsi/iscsi_transport.h        |  2 +-
+ 17 files changed, 165 insertions(+), 98 deletions(-)
+
+James
+
