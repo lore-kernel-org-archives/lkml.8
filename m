@@ -2,145 +2,194 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE253C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2CB20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0D120838
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:25:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJREn4cU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOPsv7f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgHNGTl (ORCPT
+        id S1726270AbgHNGZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47166 "EHLO
+        Fri, 14 Aug 2020 02:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgHNGTk (ORCPT
+        with ESMTP id S1726122AbgHNGZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:19:40 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6855C061757;
-        Thu, 13 Aug 2020 23:19:39 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id m20so6017961eds.2;
-        Thu, 13 Aug 2020 23:19:39 -0700 (PDT)
+        Fri, 14 Aug 2020 02:25:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0877C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 23:25:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so3731288plt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 23:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UXT1flf+cw02X+05sr2H1r1+otkr90aq0IsOI5+Wa0I=;
-        b=oJREn4cU3O1rw40AArW6Z81miwvHWgeTAeOuCZwcGRdzjwbMGlJiJzVMO6kHSg92KQ
-         +X3lAjCIy6el5qQZmr/wcM3uyTXrttad09f+difG5wi9uxZl5UZUkeQoS260D+M2ymVJ
-         lAwxngVc3XRwsSfDD/5nIAJqN0lkxSRqlO63r0+/7qeshTgU3p3RRj4FzFWhdLJxnqjx
-         nKKJfIzbXEqoq3OPg6tfkSG3P0YW0prIvDSDfRW37ayGp+zoEZkCfwK90yCh/lRaZ+og
-         ADUpw1j3AwXS147XD7x61UHTIwJDq7A/c9aO2aWzY34veRUFr/Jb4ulLjIfYQStydsYM
-         dlaQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pwDOHGKYvCi61mHFneVF0EduuTKfnrQsk03HbkNHX20=;
+        b=dOPsv7f/wEuHeXmKjjFDeLAv02B1ounW5ulazhQV8hHqRYaoJ6XQBCnvtser32aA0E
+         lgWuqqXH8kA0synMTCgHcFY7N2wuxSKoFOHOV6kqBkcKr5CSJ0fDOOolLuankz4PSiHm
+         g+oRPe6gRdVqcAEnDUy6PIBRaTLR1LZZEGpxq4/ei7DQd0f9nkuuUli4Irvpx6e132Ev
+         KKUCcTypG0YxXTabLVsyduvK5KJXFsR2GNAFoPL+SZGzbV9iiCoUhTMcAOa0EfqUFfJT
+         LfhJ8/iUXz/Nfy9Wl7PPWVm2+2qUjp++JKg7RGAM5d8BbrjLDB9TujIrQQZgqMVHr1gt
+         0Mig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UXT1flf+cw02X+05sr2H1r1+otkr90aq0IsOI5+Wa0I=;
-        b=E690AmMUj1+jx6oZ5XVsd7x4mWYPdax/wuzhiy2FqUH0bzTm4cmFE8ZHhjFzZgP7Et
-         5+0VRMPClL9fGppWgH7pQkdA7eZiv5RLOvC/+G9+KTPfEjE2+GXC9Qbx7Eu9XPYNisQ5
-         tOhZJ6TNAkwe6JsNDM6QkGLuctjUIti6zageWnNv+Lg2UJQ5QhZm+Md+t2z9xJLmqoxM
-         zDNGvy5joQ2zJ7nQhvtk+/uuwPGjjon5i25PXrBAV4GzHXqlgCCtoFomQph3LSztVQOJ
-         Qs9unniq93kGME8c27La8JAW4iUJqVXNGAcCDov9bzxuKXQkfC/f45f7X6GufgmHhJdM
-         UhOg==
-X-Gm-Message-State: AOAM530vrLStXSkmN3XuTeHs0Q5TOPuP1/3fg8e10x0GektY1QEJh1K6
-        Ay2FGGLdpSgjRTfhiXaCv5Ufuq5wEbQH7A==
-X-Google-Smtp-Source: ABdhPJz5pfQrOZ4FllnHVJ9ZLobKzbFsyza5qcMiYnCr5rzk+hPcTwUMgR05Pc/ScRwSaincGS2+yQ==
-X-Received: by 2002:a05:6402:16:: with SMTP id d22mr860616edu.175.1597385978107;
-        Thu, 13 Aug 2020 23:19:38 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:10c4:47b:9d52:cd78? (p200300ea8f23570010c4047b9d52cd78.dip0.t-ipconnect.de. [2003:ea:8f23:5700:10c4:47b:9d52:cd78])
-        by smtp.googlemail.com with ESMTPSA id d9sm4979917edt.20.2020.08.13.23.19.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 23:19:37 -0700 (PDT)
-Subject: Re: fsl_espi errors on v5.7.15
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "tiago.brusamarello@datacom.ind.br" 
-        <tiago.brusamarello@datacom.ind.br>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <c43a23bd-33ec-4ef2-2ca5-730342248db3@gmail.com>
-Date:   Fri, 14 Aug 2020 08:19:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pwDOHGKYvCi61mHFneVF0EduuTKfnrQsk03HbkNHX20=;
+        b=MGiThlk2bD8AfCxuRRZpZ6UaHuf8mPZMmhvt4wvjujvs22C+Pq/u1W/AI1l1wAvtzN
+         4dCbFJv9UGqi9JqdqMsOGHbzKMN2hzNqhfTvBnPCrRxAPZBO8C2n0mjGLUbOXCQWTkZR
+         6Izk4MYhRCO7yZGIMDNiiDwAUJvwgHnh7BtxDpor8BAFk0fu5dCp7u07JWgdiKFjWWEj
+         dd0/NpwgSO0peBvjjYQerru2lK5F5zkkM+Xq1tYYH5qBZI25dauR8VhKcVqMaLbc0zbR
+         +HbwNNskHo2a+1J2pq5vCs02BigdMLuo9nEAwNApAdMdQxcgA7hTY0hzu9sKOw5c1qaj
+         c1lw==
+X-Gm-Message-State: AOAM531Ns6ujUer6Aal7sIkxOlslhiokrjFP0xSDK/dyqFEzhZa7hUyQ
+        sqkn4297ZyrM1XRU3ossipv8LAEFPH4s1Q==
+X-Google-Smtp-Source: ABdhPJxnGWB4G0BauuF1CXzPhUUlFpGdCXVBwviMTN5qRwfvr9KZRSe4Mu5Ey8K87w5P6jwDUx+ihA==
+X-Received: by 2002:a17:90b:1254:: with SMTP id gx20mr1133241pjb.117.1597386302081;
+        Thu, 13 Aug 2020 23:25:02 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id z4sm7651496pfb.55.2020.08.13.23.25.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 23:25:01 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [RFC][PATCH v2 1/2] dma-heap: Keep track of the heap device struct
+Date:   Fri, 14 Aug 2020 06:24:57 +0000
+Message-Id: <20200814062458.53049-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.08.2020 04:48, Chris Packham wrote:
-> Hi,
-> 
-> I'm seeing a problem with accessing spi-nor after upgrading a T2081 
-> based system to linux v5.7.15
-> 
-> For this board u-boot and the u-boot environment live on spi-nor.
-> 
-> When I use fw_setenv from userspace I get the following kernel logs
-> 
-> # fw_setenv foo=1
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
-> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
-> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
-> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
-> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
-> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
-> ...
-> 
+Keep track of the heap device struct.
 
-This error reporting doesn't exist yet in 4.4. So you may have an issue
-under 4.4 too, it's just not reported.
-Did you verify that under 4.4 fw_setenv actually has an effect?
+This will be useful for special DMA allocations
+and actions.
 
-> If I run fw_printenv (before getting it into a bad state) it is able to 
-> display the content of the boards u-boot environment.
-> 
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Laura Abbott <labbott@kernel.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/dma-buf/dma-heap.c | 33 +++++++++++++++++++++++++--------
+ include/linux/dma-heap.h   |  9 +++++++++
+ 2 files changed, 34 insertions(+), 8 deletions(-)
 
-This might indicate an issue with spi being locked. I've seen related
-questions, just use the search engine of your choice and check for
-fw_setenv and locked.
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index afd22c9dbdcf..72c746755d89 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -30,6 +30,7 @@
+  * @heap_devt		heap device node
+  * @list		list head connecting to list of heaps
+  * @heap_cdev		heap char device
++ * @heap_dev		heap device struct
+  *
+  * Represents a heap of memory from which buffers can be made.
+  */
+@@ -40,6 +41,7 @@ struct dma_heap {
+ 	dev_t heap_devt;
+ 	struct list_head list;
+ 	struct cdev heap_cdev;
++	struct device *heap_dev;
+ };
+ 
+ static LIST_HEAD(heap_list);
+@@ -190,10 +192,21 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+ 	return heap->priv;
+ }
+ 
++/**
++ * dma_heap_get_dev() - get device struct for the heap
++ * @heap: DMA-Heap to retrieve device struct from
++ *
++ * Returns:
++ * The device struct for the heap.
++ */
++struct device *dma_heap_get_dev(struct dma_heap *heap)
++{
++	return heap->heap_dev;
++}
++
+ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ {
+ 	struct dma_heap *heap, *h, *err_ret;
+-	struct device *dev_ret;
+ 	unsigned int minor;
+ 	int ret;
+ 
+@@ -247,16 +260,20 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ 		goto err1;
+ 	}
+ 
+-	dev_ret = device_create(dma_heap_class,
+-				NULL,
+-				heap->heap_devt,
+-				NULL,
+-				heap->name);
+-	if (IS_ERR(dev_ret)) {
++	heap->heap_dev = device_create(dma_heap_class,
++				       NULL,
++				       heap->heap_devt,
++				       NULL,
++				       heap->name);
++	if (IS_ERR(heap->heap_dev)) {
+ 		pr_err("dma_heap: Unable to create device\n");
+-		err_ret = ERR_CAST(dev_ret);
++		err_ret = ERR_CAST(heap->heap_dev);
+ 		goto err2;
+ 	}
++
++	/* Make sure it doesn't disappear on us */
++	heap->heap_dev = get_device(heap->heap_dev);
++
+ 	/* Add heap to the list */
+ 	mutex_lock(&heap_list_lock);
+ 	list_add(&heap->list, &heap_list);
+diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
+index 454e354d1ffb..82857e096910 100644
+--- a/include/linux/dma-heap.h
++++ b/include/linux/dma-heap.h
+@@ -50,6 +50,15 @@ struct dma_heap_export_info {
+  */
+ void *dma_heap_get_drvdata(struct dma_heap *heap);
+ 
++/**
++ * dma_heap_get_dev() - get device struct for the heap
++ * @heap: DMA-Heap to retrieve device struct from
++ *
++ * Returns:
++ * The device struct for the heap.
++ */
++struct device *dma_heap_get_dev(struct dma_heap *heap);
++
+ /**
+  * dma_heap_add - adds a heap to dmabuf heaps
+  * @exp_info:		information needed to register this heap
+-- 
+2.17.1
 
-> If been unsuccessful in producing a setup for bisecting the issue. I do 
-> know the issue doesn't occur on the old 4.4.x based kernel but that's 
-> probably not much help.
-> 
-> Any pointers on what the issue (and/or solution) might be.
-> 
-> Thanks,
-> Chris
-> 
-
-Heiner
