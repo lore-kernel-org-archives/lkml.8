@@ -2,123 +2,112 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D81C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F986C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B08E20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709F52087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597409709;
+	bh=gw7rdxx7qRx6ls9E5NgLwr5dfYEgtMjHhpG+X4+ZMNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vlbT9QSunLWdbGEyQ8hFfoar7jG5gmetWqdbJBllRAv4eFndzhiJzGUVMYJC1sdDA
+	 kgJYXLM+BNTF9rdzeM2prkNi7u69RyfiG/LySd6RL366QnJU3G9QThgWeUC+atmM2V
+	 sO7PkUERhMWMMo86JM0qYD63JQOJjmhqJnXF47d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgHNMym (ORCPT
+        id S1728502AbgHNMzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:54:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47986 "EHLO mx2.suse.de"
+        Fri, 14 Aug 2020 08:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNMym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:54:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EF0B4B039;
-        Fri, 14 Aug 2020 12:55:02 +0000 (UTC)
-Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-3-roger.pau@citrix.com>
- <20200813073337.GA16160@infradead.org> <20200813075420.GC975@Air-de-Roger>
- <20200814072920.GA6126@infradead.org> <20200814095629.GJ975@Air-de-Roger>
- <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
- <20200814124724.GK975@Air-de-Roger>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <fc10d3a5-fe79-335e-353a-1bf480af7c7c@suse.com>
-Date:   Fri, 14 Aug 2020 14:54:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726313AbgHNMzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:55:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C622087D;
+        Fri, 14 Aug 2020 12:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597409706;
+        bh=gw7rdxx7qRx6ls9E5NgLwr5dfYEgtMjHhpG+X4+ZMNQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zpGs7qmzEQT7OcQlDZTfqYPK9uYlu8FApfGV+1wC6vlVyojHb8266I4ZviTV45lHm
+         iL0t6iF0wj1rTjUHdJjixr4lr2HjlVnmgwgyD2CKfRouGiNqcKnEK0WxB59G8SIRkS
+         kCYzZRi4NEOOBt6LIYKMXLKTG9FhGGDigCFMZT2o=
+Date:   Fri, 14 Aug 2020 14:55:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200814125528.GA56456@kroah.com>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200814124724.GK975@Air-de-Roger>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814123856.3880009-2-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.08.20 14:47, Roger Pau Monné wrote:
-> On Fri, Aug 14, 2020 at 12:27:32PM +0200, Jürgen Groß wrote:
->> On 14.08.20 11:56, Roger Pau Monné wrote:
->>> On Fri, Aug 14, 2020 at 08:29:20AM +0100, Christoph Hellwig wrote:
->>>> On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
->>>>> On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
->>>>>> On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
->>>>>>> If enabled (because ZONE_DEVICE is supported) the usage of the new
->>>>>>> functionality untangles Xen balloon and RAM hotplug from the usage of
->>>>>>> unpopulated physical memory ranges to map foreign pages, which is the
->>>>>>> correct thing to do in order to avoid mappings of foreign pages depend
->>>>>>> on memory hotplug.
->>>>>>
->>>>>> So please just select ZONE_DEVICE if this is so much better rather
->>>>>> than maintaining two variants.
->>>>>
->>>>> We still need to other variant for Arm at least, so both need to be
->>>>> maintained anyway, even if we force ZONE_DEVICE on x86.
->>>>
->>>> Well, it still really helps reproducability if you stick to one
->>>> implementation of x86.
->>>>
->>>> The alternative would be an explicit config option to opt into it,
->>>> but just getting a different implementation based on a random
->>>> kernel option is strange.
->>>
->>> Would adding something like the chunk below to the patch be OK?
->>>
->>> ---8<---
->>> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
->>> index 018020b91baa..5f321a1319e6 100644
->>> --- a/drivers/xen/Kconfig
->>> +++ b/drivers/xen/Kconfig
->>> @@ -328,7 +328,14 @@ config XEN_FRONT_PGDIR_SHBUF
->>>    	tristate
->>>    config XEN_UNPOPULATED_ALLOC
->>> -	bool
->>> -	default y if ZONE_DEVICE && !ARM && !ARM64
->>> +	bool "Use unpopulated memory ranges for guest mappings"
->>> +	depends on X86
->>> +	select ZONE_DEVICE
->>> +	default y
->>
->> I'd rather use "default XEN_BACKEND" here, as mappings of other guest's
->> memory is rarely used for non-backend guests.
+On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> Add support for a Hyper-V based vGPU implementation that exposes the
+> DirectX API to Linux userspace.
 > 
-> There's also the privcmd and gnt devices which make heavy use of this,
-> so I'm not sure only selecting by default on XEN_BACKEND is the best
-> option.
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-I just want to avoid that kernels built for running as Xen guest, but
-not as dom0, will be forced to select ZONE_DEVICE.
+Better, but what is this mess:
 
-As privcmd is dom0-only, this is no problem.
+> +#define ISERROR(ret)					(ret < 0)
 
-In case you are worrying about gnt devices, I'd be fine to switch to
+?
 
-default XEN_BACKEND || XEN_GNTDEV
+> +#define EINTERNALERROR					EINVAL
 
+And that?
 
-Juergen
+> +
+> +#define DXGKRNL_ASSERT(exp)
+> +#define UNUSED(x) (void)(x)
 
+Ick, no, please.
+
+> +#undef pr_fmt
+
+In a .h file?
+
+> +#define pr_fmt(fmt)	"dxgk:err: " fmt
+> +#define pr_fmt1(fmt)	"dxgk: " fmt
+> +#define pr_fmt2(fmt)	"dxgk:    " fmt
+
+Why?
+
+> +
+> +#define DXGKDEBUG 1
+> +/* #define USEPRINTK 1 */
+> +
+> +#ifndef DXGKDEBUG
+> +#define TRACE_DEBUG(...)
+> +#define TRACE_DEFINE(...)
+> +#define TRACE_FUNC_ENTER(...)
+> +#define TRACE_FUNC_EXIT(...)
+
+No, please do not to custom "trace" printk messages, that is what ftrace
+is for, no individual driver should ever need to do that.
+
+Just use the normal dev_*() calls for error messages and the like, do
+not try to come up with a custom tracing framework for one tiny
+individual driver.  If every driver in kernel did that, we would have a
+nightmare...
+
+thanks,
+
+greg k-h
