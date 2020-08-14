@@ -2,139 +2,106 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98443C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D321F20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506EB2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGgqXBAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgHNWyZ convert rfc822-to-8bit (ORCPT
+        id S1728194AbgHNW5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 18:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNWyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 18:54:25 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62DCC20838;
-        Fri, 14 Aug 2020 22:54:23 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 18:54:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Question on 5.4.55 merge into 5.4-rt
-Message-ID: <20200814185421.74b1ddc8@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Aug 2020 18:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNW5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 18:57:19 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAA0C061385;
+        Fri, 14 Aug 2020 15:57:18 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d188so5255818pfd.2;
+        Fri, 14 Aug 2020 15:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OIWJj9zW4KG8oMM7dhJRCde1cAcexSQbE9o5aOfo5vA=;
+        b=dGgqXBAbhFwTauGBYV/gCxewQKhaBNsC0nOWPlYbBDxPHN2hCbWMJkHQ2xJrCbK9Ia
+         LdIIX9Z+9vctGiw7fQLl+MCr+4YyjSFqpxTfcWGedQ+oOfxkCjq6iz43OOriPGuFsK+E
+         MRk+TFW7XM6Yi59luiDbrbuZFN79x5o2dDNCXs3mhAcP/3sn9pG45eGkzeIEPSKb2ZYv
+         Y704TRUOJA3CMzgzkIcBkJeWVu6EdT+lQOilTWYFacWyGqqxiKxwVsmAsx1MQtIvb+ie
+         Ai1ZwLV/ymuGm13J3sBYQq7TI6QFSzqZX4w1EUM+4Yf4wM6NBHmWwXoRbgnbt6+CvfEr
+         DWQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OIWJj9zW4KG8oMM7dhJRCde1cAcexSQbE9o5aOfo5vA=;
+        b=hCOUfAeI/snOIHgk/pOG8Pp2is+nvDmkY1gynqec3T45iPC3zc0BsGcn+723LcL3oX
+         Cf4lgOKf13mDIBT3HawNf5IkRLwASuVqZSHfT096IYfJbykcx0LJ64NwDXKfU7gxDASx
+         h4T9CY7y0W158BYZ85KT9XAMIq1bOcbuJpeyE82TYHVO2DO6AtYXUkP88tzKU/AsML2I
+         8v/TWtnGe+86blPLRc0uxcsg2wwjWB+RJqCUe5UTj4Mam/yCmbslR7UGgTD12bfBZg3O
+         KvoGKD0AFH821yonduM5khUDGZDyKPuDvQrgbwyJYLwD3+yuLjsxTv5/OgyyTxpQpkYU
+         pm8w==
+X-Gm-Message-State: AOAM5337J4WX6V9AcpfU0eljQNvyDzyvbM/s8yULEgeFAZ2JS6tkRWx6
+        gDtGW+Cu8nmYVdcEPvHef3g=
+X-Google-Smtp-Source: ABdhPJyyUomKHl7OaS+/Kq2abnv3emMTEKzTtaGOrEFfHJCFWkEwyRGk9MqSlpboMZU4uybJx3AHvA==
+X-Received: by 2002:a65:6287:: with SMTP id f7mr3180416pgv.307.1597445838256;
+        Fri, 14 Aug 2020 15:57:18 -0700 (PDT)
+Received: from localhost.localdomain ([167.179.71.198])
+        by smtp.gmail.com with ESMTPSA id s185sm9633347pgc.18.2020.08.14.15.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 15:57:17 -0700 (PDT)
+From:   Qi Zheng <arch0.zheng@gmail.com>
+To:     robh+dt@kernel.org, frowand.list@gmail.com, robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qi Zheng <arch0.zheng@gmail.com>
+Subject: [PATCH] of/fdt: Remove duplicate check in early_init_dt_scan_memory()
+Date:   Sat, 15 Aug 2020 06:56:37 +0800
+Message-Id: <20200814225637.702584-1-arch0.zheng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When the value of the first reg is not NULL, there will be
+two repeated checks. So modify it.
 
-When merging 5.4.55 into 5.4-rt I hit the following conflict:
+Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+---
+ drivers/of/fdt.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-static void flush_backlog(struct work_struct *work)
-{
-	struct sk_buff *skb, *tmp;
-	struct softnet_data *sd;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4602e467ca8b..f54412c00642 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1002,10 +1002,11 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 		return 0;
+ 
+ 	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
+-	if (reg == NULL)
++	if (reg == NULL) {
+ 		reg = of_get_flat_dt_prop(node, "reg", &l);
+-	if (reg == NULL)
+-		return 0;
++		if (reg == NULL)
++			return 0;
++	}
+ 
+ 	endp = reg + (l / sizeof(__be32));
+ 	hotpluggable = of_get_flat_dt_prop(node, "hotpluggable", NULL);
+-- 
+2.25.1
 
-	local_bh_disable();
-	sd = this_cpu_ptr(&softnet_data);
-
-	local_irq_disable();
-	rps_lock(sd);
-	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
-		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-			__skb_unlink(skb, &sd->input_pkt_queue);
-<<<<<<< HEAD
-			__skb_queue_tail(&sd->tofree_queue, skb);
-=======
-			dev_kfree_skb_irq(skb);
->>>>>>> v5.4.55
-			input_queue_head_incr(sd);
-		}
-	}
-
-The diff of 5.4.54 -> 5.4.55 of this code is:
-
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5229,7 +5229,7 @@ static void flush_backlog(struct work_struct *work)
-        skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
-                if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-                        __skb_unlink(skb, &sd->input_pkt_queue);
--                       kfree_skb(skb);
-+                       dev_kfree_skb_irq(skb);
-                        input_queue_head_incr(sd);
-                }
-        }
-
-
-From upstream commit:
-
-7df5cb75cfb8a ("dev: Defer free of skbs in flush_backlog")
-
-According to that commit, it looks like kfree_skb() shouldn't be called
-with irqs disabled (yeah for RT!). It now calls dev_kfree_skb_irq()
-which puts the skb on the softnet_data.completion_queue, and raises the
-NET_TX_SOFTIRQ to do the freeing.
-
-
-This is similar to what v5.4-rt does, which a diff of 5.4.54 -> v5.4-rt:
-
-@@ -5229,7 +5234,7 @@ static void flush_backlog(struct work_struct *work)
-        skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
-                if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-                        __skb_unlink(skb, &sd->input_pkt_queue);
--                       kfree_skb(skb);
-+                       __skb_queue_tail(&sd->tofree_queue, skb);
-                        input_queue_head_incr(sd);
-                }
-        }
-@@ -5239,11 +5244,14 @@ static void flush_backlog(struct work_struct *work)
-        skb_queue_walk_safe(&sd->process_queue, skb, tmp) {
-                if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-                        __skb_unlink(skb, &sd->process_queue);
--                       kfree_skb(skb);
-+                       __skb_queue_tail(&sd->tofree_queue, skb);
-                        input_queue_head_incr(sd);
-                }
-        }
-+       if (!skb_queue_empty(&sd->tofree_queue))
-+               raise_softirq_irqoff(NET_RX_SOFTIRQ);
-        local_bh_enable();
-+
- }
-
-
-Where we are doing something slightly different. Placing the skb on the
-sd->tofree_queue and raising NET_RX_SOFTIQ instead.
-
-Now that the vanilla stable 5.4 kernel doesn't call kfree_skb() from
-irqs_disabled, can I safely revert this entire change?
-
-Is it safe to call kfree_skb() from local_bh_disable()?
-
-I'm assuming it is, but just want to clarify. I'll be continuing
-merging latest stable (with this revert), but please yell if you think
-it will break?
-
-Thanks!
-
--- Steve
