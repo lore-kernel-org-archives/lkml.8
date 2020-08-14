@@ -2,270 +2,129 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03210C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA848208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597407178;
-	bh=g386NwDbsu7lGV2HBJwv/hxldaBAgNVPoUH35WpXzFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQVvtfexylaAkoKwGyhL/ZXs7u94uh6rNQnMIN95UbfYORbw7z5auLLwjiSZ/Ehce
-	 dYwEblwb8xD08GwYLfr1UugyLBALnjoP+LUURdvweMlK1l29LPlBMJtdaXOv/GDnSJ
-	 2eBGo0UX5IqfiPqcBK3P3p041af3bces6iMvfXWs=
+	by mail.kernel.org (Postfix) with ESMTP id 5F8F0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pW09kmDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHNMM4 (ORCPT
+        id S1726658AbgHNMPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbgHNMMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:12:53 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 885BC206B2;
-        Fri, 14 Aug 2020 12:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597407172;
-        bh=g386NwDbsu7lGV2HBJwv/hxldaBAgNVPoUH35WpXzFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ly7Z3vrHtSCkRWNCsQYYg6E7KwZlXOrRZHAL5OUh6aJiry69YQ1piB4ltcKqAdZpz
-         NXOea3l5v4u9szvIVmZb1EknQbswzvW/zDuoAWFBzxd9YI5bh4rStKyUjd3mV6crdM
-         xEqrkiVP0nH0sh26hzWsxBvbcfv/RBzc96v7FImY=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 998CA40D3D; Fri, 14 Aug 2020 09:12:50 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:12:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/18] perf ftrace: add option '-m/--buffer-size' to
- set per-cpu buffer size
-Message-ID: <20200814121250.GX13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-5-changbin.du@gmail.com>
- <20200814115318.GT13995@kernel.org>
+        Fri, 14 Aug 2020 08:15:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgHNMPt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:15:49 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77393C061384;
+        Fri, 14 Aug 2020 05:15:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v9so9703509ljk.6;
+        Fri, 14 Aug 2020 05:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PgYt5IIzJArLnCvs1n8uTpEleBnGmJTMqA1M8YX4wEU=;
+        b=pW09kmDoa4gKDugL6xl+TVMKGaf7wLNlIKtlhhUsi/4ioWA8XoGrmj4Kk+fdwgq0Qi
+         GVJ9GhvIpIg1EON4lybae3+l5zysAnKnJSN2lyyaQGmYpqkmTKoJe7dXK9D/ZNT77sP2
+         FUBf3xgg0E58CZk6iz4kLInaZHnN/6R6LDszBeEczLflS+Du3W2yBT2YpcSUe5veDmx3
+         dnA6NwWHrN32xmxiQkgRdcLIrx3uZwRRngZHmGwF8Qs/nJ8mk4bFAiKVJM4clB+MHG4Q
+         udN4nBAcTtC97GZv/HADvl3g5p+W127Y594a5FxQsUBVfyQ1696P7BPCrKFM73PHBzVj
+         khfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PgYt5IIzJArLnCvs1n8uTpEleBnGmJTMqA1M8YX4wEU=;
+        b=TywOWb8aYJNur/AvtQO51j3cCMj5/nj/LpZjtabXWvXCDWtzWo0Dol641o4T2oYbHU
+         Uj+zYfdTE94ovzj0G6VqX22deKD7FByayQ5tD7LGYp6jsB4myv/XIPNyZtZt3CKtB+FA
+         ogqGR1kQ/eCQHKLjpUeOS+6gR0bj/6jpExpV6v9rL5w38Mh7P7xSG8gUSIhsNAeXYc+F
+         3F8w2ES0tpGQWRnyZBSC8HS6GQurY/PBbL+Wgo5PSRcbRy34jVBhSAfhwZQ69lMFzpbA
+         gUl/xuXzP27WAIUUrNFJwXjuDDehmidtx4jknntJ0X59h9NYsInNaJ6uH7eQz48HdfZI
+         xeYA==
+X-Gm-Message-State: AOAM532XkM+9T1m53xSnfJk0NbxWKkaeopYqvFwdUPUe7XEpyUD93Hsr
+        6dKrIGstEL+4SxImPJDv/8s=
+X-Google-Smtp-Source: ABdhPJwE/bPWMvgjVP9ZxlbqmeOPZEiQ5IhiGO0gRA8dm9/zjFVxWrS71UHXu39G/zIWhzfaElHxwQ==
+X-Received: by 2002:a2e:80c9:: with SMTP id r9mr1069440ljg.95.1597407347365;
+        Fri, 14 Aug 2020 05:15:47 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id n29sm1896654lfi.9.2020.08.14.05.15.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 05:15:46 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 14 Aug 2020 14:15:44 +0200
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814121544.GA32598@pc636>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <87lfiitquu.fsf@nanos.tec.linutronix.de>
+ <20200814071750.GZ9477@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200814115318.GT13995@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200814071750.GZ9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 14, 2020 at 08:53:18AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Sat, Aug 08, 2020 at 10:31:27AM +0800, Changbin Du escreveu:
-> > This adds an option '-m/--buffer-size' to allow us set the size of per-cpu
-> > tracing buffer.
+> On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
+> > Michal Hocko <mhocko@suse.com> writes:
+> [...]
+> > > Why should we limit the functionality of the allocator for something
+> > > that is not a real problem?
 > > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > We'd limit the allocator for exactly ONE new user which was aware of
+> > this problem _before_ the code hit mainline. And that ONE user is
+> > prepared to handle the fail.
 > 
-> So this is a little bit confusing, i.e. if I don't specify a suffix (B,
-> K, M, G) I get:
+> If we are to limit the functionality to this one particular user then
+> I would consider a dedicated gfp flag a huge overkill. It would be much
+> more easier to have a preallocated pool of pages and use those and
+> completely avoid the core allocator. That would certainly only shift the
+> complexity to the caller but if it is expected there would be only that
+> single user then it would be probably better than opening a can of worms
+> like allocator usable from raw spin locks.
 > 
->   # perf ftrace -m 2048
->   
->    Usage: perf ftrace [<options>] [<command>]
->       or: perf ftrace [<options>] -- <command> [<options>]
->   
->       -m, --buffer-size <size>
->                             size of per cpu buffer
->   #
-> 
->   Which is not very helpful, and you also forgot to add an entry to 'man
->   perf-ftrace' (tools/perf/Documentation/perf-ftrace.txt), so only by
+Vlastimil raised same question earlier, i answered, but let me answer again:
 
-I must be blind, the entry _was_ added to perf-ftrace.txt, nevermind :-)
-But the other points still stand :)
+It is hard to achieve because the logic does not stick to certain static test
+case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
+on that, "how heavily" - number of pages are formed, until the drain/reclaimer
+thread frees them.
 
->   looking at the patch I was able to figure out that a suffix is
->   required.
-> 
->   Now look how 'perf trace' works:
-> 
->   # perf trace -m 2048 -e open* --max-events 1
->      0.772 sh/343169 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC) = 3
->   # 
-> 
-> I.e. it doesn't require a unit suffix, which is more natural.
-> 
->   # perf trace -h -m
-> 
->     -m, --mmap-pages <pages>
->                           number of mmap data pages
-> 
->   #
-> 
-> It indicates that the argument is in units of 'pages', while you don't
-> state that in:
->   
->   $ perf ftrace -h -m
->   
->       -m, --buffer-size <size>
->                             size of per cpu buffer
->   
->   $ 
-> 
-> So please improve the option description and add its longer explanation
-> in the man page, also I suggest you interpret:
-> 
->   # perf ftrace -m 2048
-> 
-> as asking for 2048K since the file as _kb in its name, so people used to
-> ftrace will get what they ask for, i.e. N kb. Please add this to the one
-> line description in 'perf ftrace -h', namely that the default unit os
-> 'K'.
-> 
-> All this can be made on top of this series, so I'm applying it now to
-> make progress.
-> 
-> - Arnaldo
-> 
-> > ---
-> > v2: support units as a suffix.
-> > ---
-> >  tools/perf/Documentation/perf-ftrace.txt |  5 +++
-> >  tools/perf/builtin-ftrace.c              | 55 ++++++++++++++++++++++++
-> >  2 files changed, 60 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> > index 4f5628445a63..7a5d915f60b0 100644
-> > --- a/tools/perf/Documentation/perf-ftrace.txt
-> > +++ b/tools/perf/Documentation/perf-ftrace.txt
-> > @@ -53,6 +53,11 @@ OPTIONS
-> >  	Ranges of CPUs are specified with -: 0-2.
-> >  	Default is to trace on all online CPUs.
-> >  
-> > +-m::
-> > +--buffer-size::
-> > +	Set the size of per-cpu tracing buffer, <size> is expected to
-> > +	be a number with appended unit character - B/K/M/G.
-> > +
-> >  -T::
-> >  --trace-funcs=::
-> >  	Select function tracer and set function filter on the given
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 4b3fcee5725a..a3a4f4be9dde 100644
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -26,6 +26,7 @@
-> >  #include "thread_map.h"
-> >  #include "util/cap.h"
-> >  #include "util/config.h"
-> > +#include "util/units.h"
-> >  
-> >  #define DEFAULT_TRACER  "function_graph"
-> >  
-> > @@ -39,6 +40,7 @@ struct perf_ftrace {
-> >  	struct list_head	graph_funcs;
-> >  	struct list_head	nograph_funcs;
-> >  	int			graph_depth;
-> > +	unsigned long		percpu_buffer_size;
-> >  };
-> >  
-> >  struct filter_entry {
-> > @@ -324,6 +326,21 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
-> >  	return 0;
-> >  }
-> >  
-> > +static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (ftrace->percpu_buffer_size == 0)
-> > +		return 0;
-> > +
-> > +	ret = write_tracing_file_int("buffer_size_kb",
-> > +				     ftrace->percpu_buffer_size / 1024);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  {
-> >  	char *trace_file;
-> > @@ -388,6 +405,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  		goto out_reset;
-> >  	}
-> >  
-> > +	if (set_tracing_percpu_buffer_size(ftrace) < 0) {
-> > +		pr_err("failed to set tracing per-cpu buffer size\n");
-> > +		goto out_reset;
-> > +	}
-> > +
-> >  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
-> >  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
-> >  		goto out_reset;
-> > @@ -506,6 +528,37 @@ static void delete_filter_func(struct list_head *head)
-> >  	}
-> >  }
-> >  
-> > +static int parse_buffer_size(const struct option *opt,
-> > +			     const char *str, int unset)
-> > +{
-> > +	unsigned long *s = (unsigned long *)opt->value;
-> > +	static struct parse_tag tags_size[] = {
-> > +		{ .tag  = 'B', .mult = 1       },
-> > +		{ .tag  = 'K', .mult = 1 << 10 },
-> > +		{ .tag  = 'M', .mult = 1 << 20 },
-> > +		{ .tag  = 'G', .mult = 1 << 30 },
-> > +		{ .tag  = 0 },
-> > +	};
-> > +	unsigned long val;
-> > +
-> > +	if (unset) {
-> > +		*s = 0;
-> > +		return 0;
-> > +	}
-> > +
-> > +	val = parse_tag_value(str, tags_size);
-> > +	if (val != (unsigned long) -1) {
-> > +		if (val < 1024) {
-> > +			pr_err("buffer size too small, must larger than 1KB.");
-> > +			return -1;
-> > +		}
-> > +		*s = val;
-> > +		return 0;
-> > +	}
-> > +
-> > +	return -1;
-> > +}
-> > +
-> >  static void select_tracer(struct perf_ftrace *ftrace)
-> >  {
-> >  	bool graph = !list_empty(&ftrace->graph_funcs) ||
-> > @@ -560,6 +613,8 @@ int cmd_ftrace(int argc, const char **argv)
-> >  		     "Set nograph filter on given functions", parse_filter_func),
-> >  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
-> >  		    "Max depth for function graph tracer"),
-> > +	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
-> > +		     "size of per cpu buffer", parse_buffer_size),
-> >  	OPT_END()
-> >  	};
-> >  
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+Preloading pages and keeping them for internal use, IMHO, seems not optimal
+from the point of resources wasting. It is better to have a fast mechanism to
+request a page and release it back for needs of others. As described about
+we do not know how much we will need.
 
--- 
-
-- Arnaldo
+--
+Vlad Rezki
