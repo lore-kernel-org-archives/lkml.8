@@ -2,137 +2,235 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D54320774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5227120791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597427244;
-	bh=akv/UmJpcxiw7tC5PwlDZdR2KC9Vs7eUyK1bJfdTthU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ejkYDJaR9UhafACIYWLt+Ia8z3ZlM2RC5liHOwATxir+M+UT1pxrrLKsEYGjRaTx9
-	 +jBXLoGP1ed56DMcL9d7ndNI133UnEyKEM+JGaiXCNxPp7h26TPbValNK4SqGLoXWq
-	 7yC4dOnpttcVqDVBS+FtjDjp/sBcqcp+TOjVpZNg=
+	s=default; t=1597427372;
+	bh=Coqo1xHd2B2ZUyMip7nMx5cTmVEYsq9NDJf0hNeB40U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RJpg9H+s4n0e5AsqyT2DeqTxeswSvEAmo7WkvxCYgHui/XvU4T9/Pi9X7BbHahwTR
+	 TL/ra1csZC/jKz31M7ohL1W7PRzetM5NsfCmuBB1sfIo7c0p+3QgG+u3eYo10mNCMz
+	 Bm1YuHLuELWMTnkgF5Y4yWZyThv9J7R1KCo0sR3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgHNRrW (ORCPT
+        id S1728497AbgHNRtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 13:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbgHNRrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:47:09 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726713AbgHNRt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:49:29 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6482A20885
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E6D720774;
+        Fri, 14 Aug 2020 17:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597427228;
-        bh=akv/UmJpcxiw7tC5PwlDZdR2KC9Vs7eUyK1bJfdTthU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M1BVD6SnLlAB2txByxPfGzUWpVOp3wq3n7nM5a54Y2PQJRoJlEXq4f0QbkFagm6pg
-         9dBY7bMOODEevE6mAvxFYo35Mi9HPTiws8gRQ5R225rEKUaODsFf8AGNqWHm7C1l6j
-         PV+URg/mt57tVczx/6gYBnLYKuLv/hYkJ1cGVOd8=
-Received: by mail-wr1-f52.google.com with SMTP id f7so9079516wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:47:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5329retzUHMWEiLlrROY+ZIQBEvtqnVJWuZLKw0trga6u6DdsYG+
-        HY0UBR6RjeX/1nsS2tCcpPdPi94JZ7S+2g51RHkRkg==
-X-Google-Smtp-Source: ABdhPJyUWIngePPeonF9Qb5pi4t0BlSXHz3udbBaINEYqUbzO/kdzoB39Yt/n/fFkRBlsagQA4nriALJiUYA+FrSZsE=
-X-Received: by 2002:adf:e90f:: with SMTP id f15mr3752426wrm.18.1597427226974;
- Fri, 14 Aug 2020 10:47:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200130162340.GA14232@rapoport-lnx>
-In-Reply-To: <20200130162340.GA14232@rapoport-lnx>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 14 Aug 2020 10:46:55 -0700
-X-Gmail-Original-Message-ID: <CALCETrVOWodgnRBFpPLEnc_Bfg=fgfAJiD1p-eE1uwCMc6c9Tg@mail.gmail.com>
-Message-ID: <CALCETrVOWodgnRBFpPLEnc_Bfg=fgfAJiD1p-eE1uwCMc6c9Tg@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret"
- memory areas
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        s=default; t=1597427368;
+        bh=Coqo1xHd2B2ZUyMip7nMx5cTmVEYsq9NDJf0hNeB40U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=y2dlQgIutqdfRs8sLslX5NKLSQhpy7CcKFiBf2wDsZqx4zjpy4SXaX85bvTTCar88
+         Y1e9vFHY7ne3/Ih16Lqb86f3Ig9Hhh/6Uy1j6aTY6zu44LiacAjENpLi5ftcMDD8G0
+         hLcgC2wr3YhOwlbgMQ5EYw1yIAmZGXfcb8T6lDuo=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        Colin King <colin.king@canonical.com>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        David Ahern <dsahern@kernel.org>,
+        "Frank Ch . Eigler" <fche@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Paul Clarke <pc@us.ibm.com>, Peng Fan <fanpeng@loongson.cn>,
+        Rob Herring <robh@kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [GIT PULL] perf tool changes for v5.9: 2nd batch
+Date:   Fri, 14 Aug 2020 14:49:17 -0300
+Message-Id: <20200814174917.2591425-1-acme@kernel.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 8:23 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> Hi,
->
-> This is essentially a resend of my attempt to implement "secret" mappings
-> using a file descriptor [1].
->
-> I've done a couple of experiments with secret/exclusive/whatever
-> memory backed by a file-descriptor using a chardev and memfd_create
-> syscall. There is indeed no need for VM_ flag, but there are still places
-> that would require special care, e.g vm_normal_page(), madvise(DO_FORK), so
-> it won't be completely free of core mm modifications.
->
-> Below is a POC that implements extension to memfd_create() that allows
-> mapping of a "secret" memory. The "secrecy" mode should be explicitly set
-> using ioctl(), for now I've implemented exclusive and uncached mappings.
+Hi Linus,
 
-Hi-
+	Please consider pulling,
 
-Sorry for the extremely delayed response.
+Best regards,
 
-I like the general concept, and I like the exclusive concept.  While
-it is certainly annoying for the kernel to manage non-direct-mapped
-pages, I think it's the future.  But I have serious concerns about the
-uncached part.  Here are some concerns.
+- Arnaldo
 
-If it's done at all, I think it should be MFD_SECRET_X86_UNCACHED.  I
-think that uncached memory is outside the scope of things that can
-reasonably be considered to be architecture-neutral.  (For example, on
-x86, UC and WC have very different semantics, and UC has quite
-different properties than WB for things like atomics.  Also, the
-performance of UC is interesting at best, and the ways to even
-moderately efficiently read from UC memory or write to UC memory are
-highly x86-specific.)
+The following changes since commit fb893de323e2d39f7a1f6df425703a2edbdf56ea:
 
-I'm a little unconvinced about the security benefits.  As far as I
-know, UC memory will not end up in cache by any means (unless
-aliased), but it's going to be tough to do much with UC data with
-anything resembling reasonable performance without derived values
-getting cached.  It's likely entirely impossible to do it reliably
-without asm.  But even with plain WB memory, getting it into L1 really
-should not be that bad unless major new vulnerabilities are
-discovered.  And there are other approaches that could be more
-arch-neutral and more performant.  For example, there could be an
-option to flush a few cache lines on schedule out.  This way a task
-could work on some (exclusive but WB) secret memory and have the cache
-lines flushed if anything interrupts it.  Combined with turning SMT
-off, this could offer comparable protection with much less overhead.
+  Merge tag 'tag-chrome-platform-for-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux (2020-08-11 17:28:32 -0700)
 
-UC also doesn't seem reliable on x86, sadly.  From asking around,
-there are at least a handful of scenarios under which the kernel can
-ask the CPU for UC but get WB anyway.  Apparently Xen hypervisors will
-do this unless the domain has privileged MMIO access, and ESXi will do
-it under some set of common circumstances.  So unless we probe somehow
-or have fancy enumeration or administrative configuration, I'm not
-sure we can even get predictable behavior if we hand userspace a
-supposedly UC mapping.  Giving user code WB when it thinks it has UC
-could end badly.
+are available in the Git repository at:
 
---Andy
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-14
+
+for you to fetch changes up to 492e4edba6e2fc0620a69266d33f29c4a1f9ac1e:
+
+  perf ftrace: Make option description initials all capital letters (2020-08-14 09:55:33 -0300)
+
+----------------------------------------------------------------
+perf tools changes for v5.9: 2nd batch
+
+Fixes:
+
+- Fixes for 'perf bench numa'.
+
+- Always memset source before memcpy in 'perf bench mem'.
+
+- Quote CC and CXX for their arguments to fix build in environments using
+  those variables to pass more than just the compiler names.
+
+- Fix module symbol processing, addressing regression detected via "perf test".
+
+- Allow multiple probes in record+script_probe_vfs_getname.sh 'perf test' entry.
+
+Improvements:
+
+- Add script to autogenerate socket family name id->string table from copy of
+  kernel header, used so far in 'perf trace'.
+
+- 'perf ftrace' improvements to provide similar options for this utility so
+  that one can go from 'perf record', 'perf trace', etc to 'perf ftrace' just
+  by changing the name of the subcommand.
+
+- Prefer new "sched:sched_waking" trace event when it exists in 'perf sched'
+  post processing.
+
+- Update POWER9 metrics to utilize other metrics.
+
+- Fall back to querying debuginfod if debuginfo not found locally.
+
+Miscellaneous:
+
+- Sync various kvm headers with kernel sources.
+
+Alexander Gordeev (4):
+      perf bench numa: Fix number of processes in "2x3-convergence" test
+      perf bench numa: Fix benchmark names
+      perf bench numa: Fix cpumask memory leak in node_has_cpus()
+      perf bench numa: Use numa_node_to_cpus() to bind tasks to nodes
+
+Arnaldo Carvalho de Melo (6):
+      perf trace beauty: Add script to autogenerate socket families table
+      perf trace beauty: Use the autogenerated protocol family table
+      tools headers kvm s390: Sync headers with the kernel sources
+      tools include UAPI: Sync linux/vhost.h with the kernel sources
+      tools headers UAPI: Sync kvm.h headers with the kernel sources
+      perf ftrace: Make option description initials all capital letters
+
+Changbin Du (18):
+      perf ftrace: Select function/function_graph tracer automatically
+      perf ftrace: Add option '-F/--funcs' to list available functions
+      perf ftrace: Factor out function write_tracing_file_int()
+      perf ftrace: Add option '-m/--buffer-size' to set per-cpu buffer size
+      perf ftrace: Show trace column header
+      perf ftrace: Add option '--inherit' to trace children processes
+      perf tools: Add general function to parse sublevel options
+      perf ftrace: Add support for tracing option 'func_stack_trace'
+      perf ftrace: Add support for trace option sleep-time
+      perf ftrace: Add support for trace option funcgraph-irqs
+      perf ftrace: Add support for tracing option 'irq-info'
+      perf ftrace: Add option 'verbose' to show more info for graph tracer
+      perf ftrace: Add support for trace option tracing_thresh
+      perf: ftrace: Allow set graph depth by '--graph-opts'
+      perf ftrace: Add option -D/--delay to delay tracing
+      perf ftrace: Add option --tid to filter by thread id
+      perf: ftrace: Add set_tracing_options() to set all trace options
+      perf ftrace: Add change log
+
+Colin Ian King (1):
+      perf bench: Fix a couple of spelling mistakes in options text
+
+Daniel Díaz (1):
+      tools build feature: Quote CC and CXX for their arguments
+
+David Ahern (1):
+      perf sched: Prefer sched_waking event when it exists
+
+Frank Ch. Eigler (1):
+      perf build-ids: Fall back to debuginfod query if debuginfo not found
+
+Jiri Olsa (2):
+      perf tools: Rename 'enum dso_kernel_type' to 'enum dso_space_type'
+      perf tools: Fix module symbol processing
+
+Michael Petlan (1):
+      perf test: Allow multiple probes in record+script_probe_vfs_getname.sh
+
+Paul A. Clarke (1):
+      perf stat: Update POWER9 metrics to utilize other metrics
+
+Peng Fan (1):
+      perf bench numa: Remove dead code in parse_nodes_opt()
+
+Rob Herring (2):
+      libperf: Fix man page typos
+      MAINTAINERS: Add missing tools/lib/perf/ path to perf maintainers
+
+Vincent Whitchurch (1):
+      perf bench mem: Always memset source before memcpy
+
+ MAINTAINERS                                        |   1 +
+ tools/arch/s390/include/uapi/asm/kvm.h             |   7 +-
+ tools/build/Makefile.feature                       |   5 +-
+ tools/build/feature/Makefile                       |   4 +
+ tools/build/feature/test-libdebuginfod.c           |   8 +
+ tools/include/uapi/linux/kvm.h                     |   4 +
+ tools/include/uapi/linux/vhost.h                   |   2 +
+ tools/lib/perf/Documentation/libperf-counting.txt  |  14 +-
+ tools/lib/perf/Documentation/libperf-sampling.txt  |  13 +-
+ tools/lib/perf/Documentation/libperf.txt           |   4 +-
+ tools/perf/Documentation/perf-config.txt           |   5 +-
+ tools/perf/Documentation/perf-ftrace.txt           |  75 +++-
+ tools/perf/Makefile.config                         |   8 +
+ tools/perf/Makefile.perf                           |  11 +
+ tools/perf/bench/find-bit-bench.c                  |   4 +-
+ tools/perf/bench/mem-functions.c                   |  21 +-
+ tools/perf/bench/numa.c                            |  77 ++--
+ tools/perf/builtin-ftrace.c                        | 436 ++++++++++++++++++--
+ tools/perf/builtin-sched.c                         |  32 +-
+ tools/perf/check-headers.sh                        |   3 +
+ .../pmu-events/arch/powerpc/power9/metrics.json    |  48 +--
+ .../tests/shell/record+script_probe_vfs_getname.sh |   4 +-
+ tools/perf/trace/beauty/include/linux/socket.h     | 442 +++++++++++++++++++++
+ tools/perf/trace/beauty/sockaddr.c                 |   9 +-
+ tools/perf/trace/beauty/socket.sh                  |  24 ++
+ tools/perf/util/Build                              |   1 +
+ tools/perf/util/build-id.c                         |  19 +
+ tools/perf/util/debug.c                            |  61 +--
+ tools/perf/util/dso.c                              |   2 +-
+ tools/perf/util/dso.h                              |  10 +-
+ tools/perf/util/header.c                           |  13 +-
+ tools/perf/util/machine.c                          |  16 +-
+ tools/perf/util/map.c                              |   4 +-
+ tools/perf/util/parse-sublevel-options.c           |  70 ++++
+ tools/perf/util/parse-sublevel-options.h           |  11 +
+ tools/perf/util/symbol-elf.c                       |   8 +-
+ tools/perf/util/symbol.c                           |  24 +-
+ 37 files changed, 1253 insertions(+), 247 deletions(-)
+ create mode 100644 tools/build/feature/test-libdebuginfod.c
+ create mode 100644 tools/perf/trace/beauty/include/linux/socket.h
+ create mode 100755 tools/perf/trace/beauty/socket.sh
+ create mode 100644 tools/perf/util/parse-sublevel-options.c
+ create mode 100644 tools/perf/util/parse-sublevel-options.h
