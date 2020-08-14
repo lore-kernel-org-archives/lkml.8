@@ -2,222 +2,189 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4EEC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DE7C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F722078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vW8RyoKX"
+	by mail.kernel.org (Postfix) with ESMTP id BF7CB207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgHNAHK (ORCPT
+        id S1726593AbgHNAUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgHNAHF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:07:05 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD61DC061757;
-        Thu, 13 Aug 2020 17:07:04 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m15so3945672lfp.7;
-        Thu, 13 Aug 2020 17:07:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GzwPBWKoPZ93pmT563Pm8pvnNRCDr3XhtwSAAffNp+g=;
-        b=vW8RyoKXC5N6mmAV8wm0TZ8yPsu/Ji7O2Cn13Bd79Cd42Pb5GaNBLUjJmyc6waWyzc
-         WazNsjrYQQwh6Zxn9fuMfDsIoixjwivKaTv+9Grqarjo4WpmNZHX/sJgxqpZtvPKZhju
-         lzlD8dkqJaUA5Tmm3q2mWvRg2plL3Pge0W20QBJCUc3AsZ44Yv6owL1CZmziVOdpkAh8
-         BnFXQ4/nhwNwSOS0aN3cIsQtrs9S3F6sp57UTuCX0ZE+ohNxhsUTSgxCUzDfrXSs4xo9
-         Fn80+b2XW/Wg0Nh1Gcqgr01NUljvYVRy2AxyZnTDSIreIwxQ8SoYZYBnpe2TrObBw42u
-         9eLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GzwPBWKoPZ93pmT563Pm8pvnNRCDr3XhtwSAAffNp+g=;
-        b=hxJgylNaIxDps05nbI/RGEMlnwaHJ6Xdlb4ZFZnSjv/h29LsuzCUh/1szozzDHzo77
-         CkuiKq5+8g1hqt0VWeaYacP82e79CShNwg0Yr5oeCxRZmsjUwBZ83pj8/4YjNrCYYD+r
-         Z8pcRW2/MLIk/Go11VaN0lTecmzNrrPTmZs3IRM6zaG/+oX+n9VKgDdvVcf3CIi9jUY0
-         1Oic9eIPeuz/i4tu8D+6DXDvZQcu/BTQacXlA8RUhdoplyMauUCL+HgOjqDFnOQuL2TF
-         krH1JTKJd6r6P+lP6cTSwiKPj14ZAml/7GG6P7HWqAUIgZbqa+K4oV9jkIi/R4hUc3Pu
-         vk1w==
-X-Gm-Message-State: AOAM53263UcSZSCbIqY5KUxQ4y6jaRm10gnYAGTxTw0Vf9+8TgYnrjol
-        C6YMKEET/G2DBU68aBnal6M=
-X-Google-Smtp-Source: ABdhPJyzug7TO+hMI9vCnuMuqXozGMwz0dka1d8pWNh3nWAb7JbR6TfWED153vnUZj7rM65tQ/DdRw==
-X-Received: by 2002:a19:8295:: with SMTP id e143mr425088lfd.95.1597363623205;
-        Thu, 13 Aug 2020 17:07:03 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 17:07:02 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v5 02/36] clk: tegra: Remove Memory Controller lock
-Date:   Fri, 14 Aug 2020 03:05:47 +0300
-Message-Id: <20200814000621.8415-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200814000621.8415-1-digetx@gmail.com>
-References: <20200814000621.8415-1-digetx@gmail.com>
+        Thu, 13 Aug 2020 20:20:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50634 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgHNAU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 20:20:29 -0400
+IronPort-SDR: VPW+bCF1l/feV5yn9skm7SrXd8KTiVh5JTtjt6hrfNFUW+g7uBa5vDaPpTsWPSHKH7ncSq3eeN
+ vrupzJwyzfxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="239170830"
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="239170830"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 17:20:29 -0700
+IronPort-SDR: cMk4owmHfj467wayQdmksG1kA1w0lyVLyfiXLZzcEeSV7K5zmieMhvIMN/JGzE4raA8nNJnpac
+ 74OjwRuYVKbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="495567030"
+Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2020 17:20:28 -0700
+Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k6NSN-0000t8-Hw; Fri, 14 Aug 2020 00:20:27 +0000
+Date:   Fri, 14 Aug 2020 08:19:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ a6d996cbd38b42341ad3fce74506b9fdc280e395
+Message-ID: <5f35d896.L2Nv1aKm4j0lzhlL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The shared Memory Controller lock isn't needed since the time when
-Memory Clock was made read-only. The lock could be removed safely now.
-Hence let's remove it, this will help a tad to make further patches
-cleaner.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: a6d996cbd38b42341ad3fce74506b9fdc280e395  x86/alternatives: Acquire pte lock with interrupts enabled
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+elapsed time: 723m
+
+configs tested: 118
+configs skipped: 55
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                            xcep_defconfig
+mips                          ath25_defconfig
+sh                           se7619_defconfig
+powerpc                        cell_defconfig
+m68k                          multi_defconfig
+m68k                          atari_defconfig
+openrisc                            defconfig
+sh                        sh7763rdp_defconfig
+arm                      pxa255-idp_defconfig
+h8300                     edosk2674_defconfig
+sh                         ap325rxa_defconfig
+arm                            pleb_defconfig
+sh                           se7780_defconfig
+sh                           se7750_defconfig
+xtensa                    xip_kc705_defconfig
+csky                             alldefconfig
+m68k                       bvme6000_defconfig
+arm                            lart_defconfig
+sh                            migor_defconfig
+sh                        sh7785lcr_defconfig
+mips                malta_kvm_guest_defconfig
+sh                           se7722_defconfig
+powerpc                             defconfig
+mips                      malta_kvm_defconfig
+mips                         mpc30x_defconfig
+arm                          ixp4xx_defconfig
+sh                          landisk_defconfig
+sh                          urquell_defconfig
+mips                      pic32mzda_defconfig
+arm                           viper_defconfig
+arc                          axs101_defconfig
+arm                        shmobile_defconfig
+arm                             mxs_defconfig
+sparc64                          alldefconfig
+arm                          lpd270_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200813
+x86_64               randconfig-a001-20200813
+x86_64               randconfig-a005-20200813
+x86_64               randconfig-a003-20200813
+x86_64               randconfig-a004-20200813
+x86_64               randconfig-a002-20200813
+i386                 randconfig-a005-20200813
+i386                 randconfig-a001-20200813
+i386                 randconfig-a002-20200813
+i386                 randconfig-a003-20200813
+i386                 randconfig-a006-20200813
+i386                 randconfig-a004-20200813
+i386                 randconfig-a005-20200812
+i386                 randconfig-a001-20200812
+i386                 randconfig-a002-20200812
+i386                 randconfig-a003-20200812
+i386                 randconfig-a006-20200812
+i386                 randconfig-a004-20200812
+i386                 randconfig-a005-20200811
+i386                 randconfig-a001-20200811
+i386                 randconfig-a002-20200811
+i386                 randconfig-a003-20200811
+i386                 randconfig-a006-20200811
+i386                 randconfig-a004-20200811
+i386                 randconfig-a016-20200813
+i386                 randconfig-a011-20200813
+i386                 randconfig-a013-20200813
+i386                 randconfig-a015-20200813
+i386                 randconfig-a012-20200813
+i386                 randconfig-a014-20200813
+i386                 randconfig-a016-20200811
+i386                 randconfig-a011-20200811
+i386                 randconfig-a015-20200811
+i386                 randconfig-a013-20200811
+i386                 randconfig-a012-20200811
+i386                 randconfig-a014-20200811
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- drivers/clk/tegra/clk-divider.c  | 4 ++--
- drivers/clk/tegra/clk-tegra114.c | 6 ++----
- drivers/clk/tegra/clk-tegra124.c | 7 ++-----
- drivers/clk/tegra/clk-tegra20.c  | 3 +--
- drivers/clk/tegra/clk-tegra30.c  | 3 +--
- drivers/clk/tegra/clk.h          | 2 +-
- 6 files changed, 9 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index 38daf483ddf1..56adb01638cc 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -177,10 +177,10 @@ static const struct clk_div_table mc_div_table[] = {
- };
- 
- struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
--				  void __iomem *reg, spinlock_t *lock)
-+				  void __iomem *reg)
- {
- 	return clk_register_divider_table(NULL, name, parent_name,
- 					  CLK_IS_CRITICAL,
- 					  reg, 16, 1, CLK_DIVIDER_READ_ONLY,
--					  mc_div_table, lock);
-+					  mc_div_table, NULL);
- }
-diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
-index bc9e47a4cb60..ca8d9737d301 100644
---- a/drivers/clk/tegra/clk-tegra114.c
-+++ b/drivers/clk/tegra/clk-tegra114.c
-@@ -134,7 +134,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
- static DEFINE_SPINLOCK(pll_d2_lock);
- static DEFINE_SPINLOCK(pll_u_lock);
- static DEFINE_SPINLOCK(pll_re_lock);
--static DEFINE_SPINLOCK(emc_lock);
- 
- static struct div_nmp pllxc_nmp = {
- 	.divm_shift = 0,
-@@ -1050,10 +1049,9 @@ static __init void tegra114_periph_clk_init(void __iomem *clk_base,
- 			       ARRAY_SIZE(mux_pllmcp_clkm),
- 			       CLK_SET_RATE_NO_REPARENT,
- 			       clk_base + CLK_SOURCE_EMC,
--			       29, 3, 0, &emc_lock);
-+			       29, 3, 0, NULL);
- 
--	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
--				    &emc_lock);
-+	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA114_CLK_MC] = clk;
- 
- 	clk = tegra_clk_register_periph_gate("mipi-cal", "clk_m", 0, clk_base,
-diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
-index e931319dcc9d..0c956e14b9ca 100644
---- a/drivers/clk/tegra/clk-tegra124.c
-+++ b/drivers/clk/tegra/clk-tegra124.c
-@@ -126,7 +126,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
- static DEFINE_SPINLOCK(pll_e_lock);
- static DEFINE_SPINLOCK(pll_re_lock);
- static DEFINE_SPINLOCK(pll_u_lock);
--static DEFINE_SPINLOCK(emc_lock);
- static DEFINE_SPINLOCK(sor0_lock);
- 
- /* possible OSC frequencies in Hz */
-@@ -1050,8 +1049,7 @@ static __init void tegra124_periph_clk_init(void __iomem *clk_base,
- 					     periph_clk_enb_refcnt);
- 	clks[TEGRA124_CLK_DSIB] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    &emc_lock);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA124_CLK_MC] = clk;
- 
- 	/* cml0 */
-@@ -1518,8 +1516,7 @@ static void __init tegra124_132_clock_init_post(struct device_node *np)
- 				  tegra124_reset_deassert);
- 	tegra_add_of_provider(np, of_clk_src_onecell_get);
- 
--	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np,
--							&emc_lock);
-+	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np, NULL);
- 
- 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
- 
-diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-index 3efc651b42e3..2f8b6de4198f 100644
---- a/drivers/clk/tegra/clk-tegra20.c
-+++ b/drivers/clk/tegra/clk-tegra20.c
-@@ -802,8 +802,7 @@ static void __init tegra20_periph_clk_init(void)
- 
- 	clks[TEGRA20_CLK_EMC] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    NULL);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA20_CLK_MC] = clk;
- 
- 	/* dsi */
-diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-index 37244a7e68c2..88e8c485f8ae 100644
---- a/drivers/clk/tegra/clk-tegra30.c
-+++ b/drivers/clk/tegra/clk-tegra30.c
-@@ -1042,8 +1042,7 @@ static void __init tegra30_periph_clk_init(void)
- 
- 	clks[TEGRA30_CLK_EMC] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    NULL);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA30_CLK_MC] = clk;
- 
- 	/* cml0 */
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 6b565f6b5f66..5ed8b95d331c 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -136,7 +136,7 @@ struct clk *tegra_clk_register_divider(const char *name,
- 		unsigned long flags, u8 clk_divider_flags, u8 shift, u8 width,
- 		u8 frac_width, spinlock_t *lock);
- struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
--				  void __iomem *reg, spinlock_t *lock);
-+				  void __iomem *reg);
- 
- /*
-  * Tegra PLL:
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
