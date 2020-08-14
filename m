@@ -2,122 +2,99 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F6620781
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597398249;
-	bh=lOAtx8/5R1QSMK92PFjGC5sa51WTZfT/efb3BSgBdy0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wsOCXwgL1be6TqNAFo4rezRHVVRuB8qqyWojmZOBCkEt5BoTTv+uHQDGfSapbnF0W
-	 5okJaC2wRRrFwSmFzImgLlTSu9xVk9sEbhMjMS1nK+4dl42bElMto9XaKEWNROTARw
-	 fmAqB0vNhPCkQBccNbjYby4MBfTPjwJ6/RvdobTE=
+	by mail.kernel.org (Postfix) with ESMTP id 6866C204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHNJoH (ORCPT
+        id S1726923AbgHNJuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 05:44:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36335 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgHNJoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 05:44:07 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so7411390wmi.1;
-        Fri, 14 Aug 2020 02:44:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qxju5gCtdZfDOIWTLAir45a9M2m86cvcOQuRF45cqVw=;
-        b=CMp1fYrl6DpF1s/9XOdxxhJKjN12LzlVhxLnPmMQ8C07MjHniaTu0xvGX6W/ahER4c
-         KnzqT6AGxuwS9pgcYw4lVPzSXo9b/gG1itYluFRUt+akcyNW75chpUNM31RQj8Kb/Cxa
-         CZVsU6wmj08mvApqsQyNnN/AErSpvei8cpOv/ze5DMc0IH+qDom6nkD+JI6uc4uxMn23
-         CDn4eRubMsRv2HKKsGWeku3r1Yc20qVw0Lu7u5JRX2P8tP7MsVltqBflgItIu7eAWuhf
-         e40z+pXd0JsSRncsm45zinFwlxZixZRz14XB2kPiaRoWBa5pLVccxDKERh1J1w1FGJfY
-         R2Eg==
-X-Gm-Message-State: AOAM533u1y6TH3Sy/k7x9WGCme1nvUk3BGWFhOJZBgy71XYaTgfnWJ5j
-        zB8Wqf4roKd0OuCuaE265Ng=
-X-Google-Smtp-Source: ABdhPJxCVxYpk7RwkD/3Vl6aY71IkXz6sNRRIKFHFxjDmASbOU7JKqDHKDrU6WuIbO04S1M8Q6/PRg==
-X-Received: by 2002:a1c:6a03:: with SMTP id f3mr1857480wmc.181.1597398245369;
-        Fri, 14 Aug 2020 02:44:05 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id i7sm15001164wrs.25.2020.08.14.02.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 02:44:04 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 09:44:03 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt
- in ACPI DSDT
-Message-ID: <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
-References: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
+        Fri, 14 Aug 2020 05:50:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33078 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgHNJue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 05:50:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DD077AD1B;
+        Fri, 14 Aug 2020 09:50:55 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 11:50:31 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, zhang.lyra@gmail.com,
+        ruifeng.zhang1@unisoc.com, cixi.geng1@unisoc.com,
+        Orson Zhai <orson.zhai@unisoc.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jon DeVree <nuxi@vault24.org>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
+ and real
+Message-ID: <20200814095031.GM6215@alley>
+References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
+ <20200811094413.GA12903@alley>
+ <87zh7175hj.fsf@nanos.tec.linutronix.de>
+ <20200811130218.GI6215@alley>
+ <20200813015500.GC2020879@jagdpanzerIV.localdomain>
+ <20200813102258.GL12903@alley>
+ <20200813113155.GA483@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200813113155.GA483@jagdpanzerIV.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 04:51:19PM -0700, Michael Kelley wrote:
-> On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
-> in the ACPI DSDT.  This information is not used on x86 because the
-> interrupt vector must be hardcoded.  But update the generic
-> VMbus driver to do the parsing and pass the information to the
-> architecture specific code that sets up the Linux IRQ.  Update
-> consumers of the interrupt to get it from an architecture specific
-> function.
+On Thu 2020-08-13 20:31:55, Sergey Senozhatsky wrote:
+> On (20/08/13 12:22), Petr Mladek wrote:
+> >
+> >   + would take more space (prefix + text vs. binary representation)
 > 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  arch/x86/include/asm/mshyperv.h |  1 +
->  arch/x86/kernel/cpu/mshyperv.c  |  3 ++-
->  drivers/hv/hv.c                 |  2 +-
->  drivers/hv/vmbus_drv.c          | 30 +++++++++++++++++++++++++++---
->  include/asm-generic/mshyperv.h  |  4 +++-
->  5 files changed, 34 insertions(+), 6 deletions(-)
+> Dict buffer is allocated regardless of how we use it, and only printks
+> from drivers/* (dev_printk*) add dict payload. It might be the case
+> that on some (if not most) systems dict pages are not used 90% of times
+> (if not 99%).
 > 
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 4f77b8f..ffc2899 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -54,6 +54,7 @@ typedef int (*hyperv_fill_flush_list_func)(
->  #define hv_enable_vdso_clocksource() \
->  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
->  #define hv_get_raw_timer() rdtsc_ordered()
-> +#define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
->  
->  /*
->   * Reference to pv_ops must be inline so objtool
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index 3112544..538aa87 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -55,9 +55,10 @@
->  	set_irq_regs(old_regs);
->  }
->  
-> -void hv_setup_vmbus_irq(void (*handler)(void))
-> +int hv_setup_vmbus_irq(int irq, void (*handler)(void))
->  {
+> >   + not reliable because dict is currently dropped when no space
+> 
+> Well, in the perfect world this is a problem, but "maybe not having
+> alternative timestamps sometimes" can be OK approach for people who
+> wants to use those triplet timestamps.
 
-irq is not used here. Did you perhaps forget to commit a chunk of code?
+I am afraid the people would see missing timestamps as a bug.
+They want it because they want to corelate kernel and userspace logs.
+The timestamps from realtime clock are supposed to make it
+straightforward.
 
->  	vmbus_handler = handler;
-> +	return 0;
->  }
+More importantly. I do not see a reasonable way how to handle it.
+No timestamp is worse than timestamps from non-synchronized clock.
+Mixing timestamps from different clocks (as fallback) would cause
+a lot of confusion (more harm than good).
 
-Wei.
+> But, in general, how real this problem is? What I sae so far (on my boxes)
+> was that printk messages are longer than dict payload.
+
+Yeah, I think that dict are less used on normal systems. But it might
+be very different when a driver gets more verbose during debugging
+and the amount of dev_printk() calls is much higher.
+
+Best Regards,
+Petr
