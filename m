@@ -2,175 +2,145 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DAAC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69A420791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546BD20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jdnHWE9r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4hTwEsgl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kDeKObwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgHNNcP (ORCPT
+        id S1728529AbgHNNci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:32:15 -0400
-Received: from mail-co1nam11on2103.outbound.protection.outlook.com ([40.107.220.103]:38849
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726237AbgHNNcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:32:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fDLCgp/yBHGCNpY9J2JV+2HcosIiWPrXmU3RNl0pyJ3DYCXfdV9l8mp4qdZj/ZUhSvo+ZTmFbMGx/XOw06z0M1a6OS2cC7EQzriGnVG6y8UvhL5nZNA993nPFluOedEgj/gXak++RAP5dzscVR/tVjarDDKVDGNWeUdCrzLmGx9iGjkbCWJPhi1iV5A0kzcEqfFOrqAWvrn6MSNVotqyUSZ5BECqWs4ui1BdiachPpmuHonCEpmaXtc4En6GjeEBf3khAK+d/qnkDz2dRBx+J2gWiG1Hk8biC8Ii8GGUVD2I+12zz8erz7LXU6zgQH3FJryUIqU4gUKlxU+DOBmhWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p7fk+nE1Is0N7kHr8pE0x+NwB2o4qD3Ib6jzhrh2oYU=;
- b=nfMclI9SN02kWHB7FaW26gvH21kP+WOKkzLaHmC44H6t/RIW/1K2iOPFWP/axr68FFrkz2hpAfNHcdV494CLMEw7csIFcxsH1cnZrKlor4IEsuJz0tRNE21/PEUjTT2r5CSU9C/qaOOZSQoXtgKV1/eOYjM7YSW6D8NZoBA5KrecZOQMisigqFA5BeoJ5cGk6BL+cRacvCb1c8JE4ks0EWmF71D3rIuP49sYftlT/vzwSdTO91eNelJqp6yLpuKNf9zkPkpTiOjK5VoXn7Rr06QL+4ittY+WFEjUZlelitqoNIb6TZcfx+6i8LPM3tJjkXufmDkMsOxGdzSlWusaOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p7fk+nE1Is0N7kHr8pE0x+NwB2o4qD3Ib6jzhrh2oYU=;
- b=jdnHWE9r/2Z0cV3KulCL6DFVnQp+92iLLBQ/kR1BUg5nkOwdv3QVg+1+WA5SXsc7408uFSOsDTq+MlTBYx1XnlM5cGu1CpzjMpq7lCZOO53wVJ1Xif6/pnIzNnVPWV+PIgi/DojaWoc3a+SEU2fiGyi/dgx1qAI8KO1qf+r29LM=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0923.namprd21.prod.outlook.com (2603:10b6:302:10::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.5; Fri, 14 Aug
- 2020 13:32:12 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407%9]) with mapi id 15.20.3305.017; Fri, 14 Aug 2020
- 13:32:12 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>
-Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt in
- ACPI DSDT
-Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt
- in ACPI DSDT
-Thread-Index: AQHWcczKSYf6p85IYUulglZB/fkqp6k3W0mAgAA+3SA=
-Date:   Fri, 14 Aug 2020 13:32:11 +0000
-Message-ID: <MW2PR2101MB1052649114BC9A0396FB8905D7400@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
- <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
-In-Reply-To: <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-08-14T13:32:10Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0d044122-5ea9-480e-8b20-24288e093990;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eab0303b-cac2-4dfe-620f-08d84056736f
-x-ms-traffictypediagnostic: MW2PR2101MB0923:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0923AEAFCCE5B21FF58D3122D7400@MW2PR2101MB0923.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:549;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZhIj5Zz/X3Jh82jQS2t8tkB/I9LfMzhAxgn5vpHauesEo6Y8uOfa49mAzuhbnFqUAdWt6wAM7DlzJmxux3H/G/ZWk/LYEEX3Nyuu40abK4tWuxOGd5m84xLVi3Nrno7wASyulSp0RJ6k7KBndSMlvWpNQ8o97W+k8w3iG4fDAH2iyDByYSMKyxfOQ5IHtgqNRjYH30YacGzlS3EPj+9YuDy8lSxl1vE4KhfrHlbU5HJj0FKBfOQsLJdN9nd5O/xRtD5Aucm2oa5vV842UG97ZE79koh+wxRb7YwhE8TCyF+zTdgeDWO79+m+mkblEIK/2KfMdnQVfZzcFgQDJV7Zyw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(33656002)(6506007)(4326008)(66446008)(52536014)(186003)(5660300002)(82950400001)(82960400001)(10290500003)(76116006)(26005)(64756008)(66476007)(7696005)(66946007)(66556008)(71200400001)(6916009)(8990500004)(2906002)(8676002)(9686003)(86362001)(55016002)(8936002)(478600001)(83380400001)(316002)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: lAwr1jZNQxo1j+7A8H/2I8c/t4Q+Lil0OB35jKUQuZnFk/D0zZKwV6TYAqgJ7r/12IOJZ1S80BQMk9Euxdjt201W0AbbzBg0UySahYVPnlKJT79WSv4hh6Qr2xoc8TjTYSZV2jjzaGrMbaYLAJuLOXcnK3NC28YT7THKUjtQ59V2O5SEkE7zEa/yulGA8QfTXvX5RJ0SskOB0lFPEZX2vVhrC1JUCAQTMGBXLbceprpN6cguSWy6K1GuX+duq4UrifEZ+7/11Uddff8si8hup7xqvWv7Vk/QmsblHU/m8CN0Blh+WPFqEMFpNcfaWvIgWeWv11U7Bqr3P5dmqEx+hsLqY9QETEOMdnWdGevgqyS77kF2H7ws6WP20AJJGkFmQyU1kXpu61qwnpCSAR7rQQr8i0I8nRgaimnONzq83SmzIlQF7LLYCPVQQfw/K8nmIvcYvWwOn/vSPR/bum4w6KYrZr6jIQ/6fDYGZ09Pc9jKB6HAI/g+d1O6C8VSzynu8WaHmYcLv4sfFfUyGeO6YFfPhxcZUzqto3j2zXbW4qtV+VETsH/mCzEltFcwXaza6XuCoiwM3+4OtXKPDbxAHwW9cWDRfC3T/7LWOooguVVHGh5inB5t+X80JTR15uA/5kQYSXihiahVsLhUurLg4g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 14 Aug 2020 09:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgHNNch (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:32:37 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09694C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:32:36 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597411955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WZojXpF4CtFVHLmarhLq1h1iKcdgxc2RpfZdaP2LUC8=;
+        b=4hTwEsgl4HcRIxSII5/fwGY8GDZ+WrKb+QiRIB95G4B6ixEAbwfJG+dOxycUIN4bFB2vKo
+        TS5klI4Yh6uw4dSkjjyI2mn7/Sn8orOjYGewGYm6fr3T+7S63HBDN9ZJaWUQJZmSEA9ZNe
+        IIZ6+h89d7ACBO8/WZB4lzrWBqdz6lSIsDUyblT4Kt+QzrgMZySm9F5LdDenFPfE/HnIfU
+        Ff+eE7GC0YOkxK865WapnnLYDfFaStTU47hj7xRDtwSCU7so+lTleqczoN1Lbyget2pldW
+        EqzYt5OKRC1IiJf7BpruQd3zNVkV0gjGPbFY8KK1wJmzDKAjzau3yzTlqBTdsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597411955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WZojXpF4CtFVHLmarhLq1h1iKcdgxc2RpfZdaP2LUC8=;
+        b=kDeKObwQFo5U/wxKAaE1swO/ff/4Gw8C5nGHWBCJCPiOyEqPYR9VJGuoaXpmfhXI71CMWT
+        HGitrbMtHddq2jDA==
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Subject: Re: fs/ocfs2/suballoc.c:2430:2-8: preceding lock on line 2413
+In-Reply-To: <202008141412.mP88ccpD%lkp@intel.com>
+References: <202008141412.mP88ccpD%lkp@intel.com>
+Date:   Fri, 14 Aug 2020 15:32:35 +0200
+Message-ID: <878sehl5e4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eab0303b-cac2-4dfe-620f-08d84056736f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2020 13:32:12.0180
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8Eg/3OBimhlYhlKVoYjSTqtzfkY4W1heQTfMZZpuWASj7+E5Bp+31VBopKDt8SEbIm7Ag9p/nsSbpcG0eK7s3WzHrs/gXcDDiiCFWxloJ1w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0923
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Liu <wei.liu@kernel.org> Sent: Friday, August 14, 2020 2:44 AM
->=20
-> On Thu, Aug 13, 2020 at 04:51:19PM -0700, Michael Kelley wrote:
-> > On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
-> > in the ACPI DSDT.  This information is not used on x86 because the
-> > interrupt vector must be hardcoded.  But update the generic
-> > VMbus driver to do the parsing and pass the information to the
-> > architecture specific code that sets up the Linux IRQ.  Update
-> > consumers of the interrupt to get it from an architecture specific
-> > function.
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >  arch/x86/include/asm/mshyperv.h |  1 +
-> >  arch/x86/kernel/cpu/mshyperv.c  |  3 ++-
-> >  drivers/hv/hv.c                 |  2 +-
-> >  drivers/hv/vmbus_drv.c          | 30 +++++++++++++++++++++++++++---
-> >  include/asm-generic/mshyperv.h  |  4 +++-
-> >  5 files changed, 34 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/msh=
-yperv.h
-> > index 4f77b8f..ffc2899 100644
-> > --- a/arch/x86/include/asm/mshyperv.h
-> > +++ b/arch/x86/include/asm/mshyperv.h
-> > @@ -54,6 +54,7 @@ typedef int (*hyperv_fill_flush_list_func)(
-> >  #define hv_enable_vdso_clocksource() \
-> >  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
-> >  #define hv_get_raw_timer() rdtsc_ordered()
-> > +#define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
-> >
-> >  /*
-> >   * Reference to pv_ops must be inline so objtool
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyp=
-erv.c
-> > index 3112544..538aa87 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -55,9 +55,10 @@
-> >  	set_irq_regs(old_regs);
-> >  }
-> >
-> > -void hv_setup_vmbus_irq(void (*handler)(void))
-> > +int hv_setup_vmbus_irq(int irq, void (*handler)(void))
-> >  {
->=20
-> irq is not used here. Did you perhaps forget to commit a chunk of code?
+On Fri, Aug 14 2020 at 14:11, kernel test robot wrote:
+>
+> coccinelle warnings: (new ones prefixed by >>)
+>
+>>> fs/ocfs2/suballoc.c:2430:2-8: preceding lock on line 2413
+>
+> vim +2430 fs/ocfs2/suballoc.c
+>
+> 415cb800375cc4 Mark Fasheh     2007-09-16  2379  
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2380  static int ocfs2_block_group_clear_bits(handle_t *handle,
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2381  					struct inode *alloc_inode,
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2382  					struct ocfs2_group_desc *bg,
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2383  					struct buffer_head *group_bh,
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2384  					unsigned int bit_off,
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2385  					unsigned int num_bits,
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2386  					void (*undo_fn)(unsigned int bit,
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2387  							unsigned long *bmap))
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2388  {
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2389  	int status;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2390  	unsigned int tmp;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2391  	struct ocfs2_group_desc *undo_bg = NULL;
+> 464170647b5648 Thomas Gleixner 2019-08-09  2392  	struct journal_head *jh;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2393  
+> 42035306132802 Joel Becker     2008-11-13  2394  	/* The caller got this descriptor from
+> 42035306132802 Joel Becker     2008-11-13  2395  	 * ocfs2_read_group_descriptor().  Any corruption is a code bug. */
+> 42035306132802 Joel Becker     2008-11-13  2396  	BUG_ON(!OCFS2_IS_VALID_GROUP_DESC(bg));
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2397  
+> 2f73e135b83c50 Tao Ma          2011-02-22  2398  	trace_ocfs2_block_group_clear_bits(bit_off, num_bits);
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2399  
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2400  	BUG_ON(undo_fn && !ocfs2_is_cluster_bitmap(alloc_inode));
+> 0cf2f7632b1789 Joel Becker     2009-02-12  2401  	status = ocfs2_journal_access_gd(handle, INODE_CACHE(alloc_inode),
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2402  					 group_bh,
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2403  					 undo_fn ?
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2404  					 OCFS2_JOURNAL_ACCESS_UNDO :
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2405  					 OCFS2_JOURNAL_ACCESS_WRITE);
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2406  	if (status < 0) {
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2407  		mlog_errno(status);
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2408  		goto bail;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2409  	}
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2410  
+> 464170647b5648 Thomas Gleixner 2019-08-09  2411  	jh = bh2jh(group_bh);
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2412  	if (undo_fn) {
+> 464170647b5648 Thomas Gleixner 2019-08-09 @2413  		spin_lock(&jh->b_state_lock);
+> 464170647b5648 Thomas Gleixner 2019-08-09  2414  		undo_bg = (struct ocfs2_group_desc *) jh->b_committed_data;
+> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2415  		BUG_ON(!undo_bg);
+> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2416  	}
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2417  
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2418  	tmp = num_bits;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2419  	while(tmp--) {
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2420  		ocfs2_clear_bit((bit_off + tmp),
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2421  				(unsigned long *) bg->bg_bitmap);
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2422  		if (undo_fn)
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2423  			undo_fn(bit_off + tmp,
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2424  				(unsigned long *) undo_bg->bg_bitmap);
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2425  	}
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2426  	le16_add_cpu(&bg->bg_free_bits_count, num_bits);
+> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2427  	if (le16_to_cpu(bg->bg_free_bits_count) > le16_to_cpu(bg->bg_bits)) {
+> e75ed71be4f2f7 Changwei Ge     2018-01-31  2428  		if (undo_fn)
+> 464170647b5648 Thomas Gleixner 2019-08-09  2429  			spin_unlock(&jh->b_state_lock);
+> 7ecef14ab1db96 Joe Perches     2015-09-04 @2430  		return ocfs2_error(alloc_inode->i_sb, "Group descriptor # %llu has bit count %u but claims %u are freed. num_bits %d\n",
+> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2431  				   (unsigned long long)le64_to_cpu(bg->bg_blkno),
+> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2432  				   le16_to_cpu(bg->bg_bits),
+> 7ecef14ab1db96 Joe Perches     2015-09-04  2433  				   le16_to_cpu(bg->bg_free_bits_count),
+> 7ecef14ab1db96 Joe Perches     2015-09-04  2434  				   num_bits);
+> 9b5cd10e4c14a1 Srinivas Eeda   2010-10-05  2435  	}
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2436  
+> b4414eea0e7b9c Mark Fasheh     2010-03-11  2437  	if (undo_fn)
+> 464170647b5648 Thomas Gleixner 2019-08-09  2438  		spin_unlock(&jh->b_state_lock);
+> 94e41ecfe0f202 Sunil Mushran   2009-06-19  2439  
+> ec20cec7a35158 Joel Becker     2010-03-19  2440  	ocfs2_journal_dirty(handle, group_bh);
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2441  bail:
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2442  	return status;
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2443  }
+> ccd979bdbce9fb Mark Fasheh     2005-12-15  2444  
 
-No, this is correct.  Per the commit message, the irq information
-parsed from the DSDT is not used in the x86 code.  But it is used on the
-ARM64 side.  I should add a comment to that effect here in the x86
-code so there's no confusion.
+That's clearly a false positive. Is there anything what can be done to
+help that cocci script here?
 
-Michael
+Thanks,
 
->=20
-> >  	vmbus_handler =3D handler;
-> > +	return 0;
-> >  }
->=20
-> Wei.
+        tglx
