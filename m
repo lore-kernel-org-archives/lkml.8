@@ -2,141 +2,214 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24494C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9633CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F268C206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DE4206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 20:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GAvytVLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjTMQwHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHNT5f (ORCPT
+        id S1727041AbgHNUHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 15:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60472 "EHLO
+        Fri, 14 Aug 2020 16:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgHNT5e (ORCPT
+        with ESMTP id S1726265AbgHNUHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:57:34 -0400
+        Fri, 14 Aug 2020 16:07:36 -0400
 Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8969C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:57:34 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t7so8530116otp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:57:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C61C061385;
+        Fri, 14 Aug 2020 13:07:36 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id r21so8507748ota.10;
+        Fri, 14 Aug 2020 13:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=/HUkdNM84ljYVpfdQwsu/yQY6q4YRBxXm3BX9/rPigE=;
-        b=GAvytVLoP1qHrSPjrY7AvPriL14EDS2LCXNorZdppdkMv6K/LZxo1h/EuzLi3SXVNi
-         M6CS7DnFvAbtqX+J63O3C1V6T9+yKxrKLzx/qaF9zojFvtZ8gB2P5UK68H33Hph3w1cP
-         dr0yOx7Q3ZzaJoXZYJrk8JcCCA9mJ1SGOKUITcQlZtslndFbmIqY5xDddbNqu0KwQmHn
-         g7lYfVLtQMLwcrAPGlizolRKf6l8oAHACQ+K7IqCHagXujF9UeIYMDCY+YvAWGTADUPH
-         YDzE5+swXhEtYXl2xOwaJ2MLIJ1aXEFutNfWQSZTIwGLAoDuMWsi8fyNc7BLEg2HknkV
-         xG9A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HiYOL/T1huNoqPIDdiz/g4I/4oQL0zNRwFDNOHIA1vU=;
+        b=OjTMQwHr+IuhO5yT3Lfpke+Ef/oxA1iUmTzW9eQjK8CmgwTxrgjaVWSHmC+KMKN1ol
+         ZcnzFRVza9A3CrbMDgrxvQ9U6ucW7IV1fPGg+UxCOs6SwNmu15bkNqI3HlrPzewry3A+
+         CVk1udcph4o4XseIkDw830SDix1aBBSerOhelOf12p0Gs1mOlkGttK6VlSyphlcWbSEV
+         etlPaY29KybfqgmKRMOurZ8x48LOV9/gBPRpfApDHfgNSXUkrBVFdyoS3TTgGGcyNEbu
+         RmvvUoHXw4VFvsfNwvIBX/mj2nqFFLo5ok3UlKBLH59PE8xWZzfFxV1SXP4hTmX4MM3A
+         P67g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=/HUkdNM84ljYVpfdQwsu/yQY6q4YRBxXm3BX9/rPigE=;
-        b=Btv8WeHlV49f35LAUZfBQID+L4YJQQdMrpK1vfwXsLT2yK5Wn2/GF5yMcGE9PdCNv2
-         374IoQYdXBRJrQ1Pn/nx3UakkLuED06uC6iFuqwtBMu55AW9fDzZJNGDm+hGVKvq6Xik
-         fGVT6K2KXoHkhCd1SFKKDb2KWKTX4HvUgn9y68iDX0FcZj+r1XmLq3Brb7OhtWZXlWQ0
-         0GmX3eVOtjxb3xfpNFjwxAIa5VCdxwHUiGwfjJ9+lorWIFT3RZbZ+6eAWUMtd1TPoCeT
-         LFbXbVmZzptVTtTkAsdotBdCPREOPn3EYXqYzBTDJGTF1G0taF8krWR3+tguhPG076Fp
-         0yXA==
-X-Gm-Message-State: AOAM533zSAtoz655RcMEAiU1v5ZCzsPRqt1TGADDwNih/XntSrcj7qr4
-        yWizJv3SOdev4+QUwhbGHi9hTjfLOzHDMwAtAqgR/A==
-X-Google-Smtp-Source: ABdhPJzaxdfMlB6Bm1WN+v5lpzzD5kVu7pW83mo4jMtukonjI/VP7GLaCaH0UsUwHhBd8Q1OWNYhXdAlBVPuN5eETs4=
-X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr3306479ots.102.1597435054060;
- Fri, 14 Aug 2020 12:57:34 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=HiYOL/T1huNoqPIDdiz/g4I/4oQL0zNRwFDNOHIA1vU=;
+        b=LMxa0hrUB0yeJfzCPvOW4BTRmJlFD/ebH3Gi3a7wOZgHro3roIUPIyr8Dzzdw6tpOG
+         /SdbmPZrlo9YaMCNcxNTnqN46umk1/DsS6uE1MGL+SuA5MydBWFEKvqFo/A0Sxpbrele
+         DJmBjs6JGXgU54+xK4nModNKM9rTFwPPwaB5fGRUzuPznqSAF0yRiIIK5ItFRwIRqnx7
+         AHAC6SjrqrhcplT1Xcj+o5cmweHCRCXzWHbuJJsu91fC0Q/xwk4+5spbVPo68jfZB+36
+         TgHTkW7lC+SjRUoG7y2bHpCw1ed99gWaeYBqAXPL4EO/FLcD5R41NI8kmvNtQTlo0UvF
+         fddg==
+X-Gm-Message-State: AOAM533zyUvyCzErxdVCel0cAqqqKzmLWC1RVAgRtk82u1m8BhwC7WJp
+        nGHw96yFD6jOhDoiQ3n82u3MmS4w1bxw9m/yZikDVGw5238H1Q==
+X-Google-Smtp-Source: ABdhPJxN3wN9ulvlSIWvknHDwGRLtdC5dBgL/A0mhtKTxbAQBOS0rGZzcQ2r/gikFIWbAqJ9JqLK9HsZ1Y1ZlpC8kxg=
+X-Received: by 2002:a9d:24e7:: with SMTP id z94mr3123897ota.91.1597435655540;
+ Fri, 14 Aug 2020 13:07:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814062458.53049-1-john.stultz@linaro.org>
- <20200814062458.53049-2-john.stultz@linaro.org> <20200814091713.GO2352366@phenom.ffwll.local>
-In-Reply-To: <20200814091713.GO2352366@phenom.ffwll.local>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 14 Aug 2020 12:57:22 -0700
-Message-ID: <CALAqxLV6pRJRrZOZm0iMxNxCua2+_YQM9YC91UkQboRagRb98g@mail.gmail.com>
-Subject: Re: [RFC][PATCH v2 2/2] dma-heap: Add a system-uncached heap
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        "Andrew F . Davis" <afd@ti.com>, Laura Abbott <labbott@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-media@vger.kernel.org
+References: <20200813084129.332730-1-josephsih@chromium.org> <20200813164059.v1.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
+In-Reply-To: <20200813164059.v1.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
+From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date:   Fri, 14 Aug 2020 13:07:25 -0700
+Message-ID: <CABBYNZ+GPmHuVe_TCUwCVYuOzH8m0=Nmwv48Tn-by_5PnqqwOg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: define HCI packet sizes of USB Alts
+To:     Joseph Hwang <josephsih@chromium.org>
+Cc:     "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Joseph Hwang <josephsih@google.com>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 2:17 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+Hi Joseph,
+
+On Thu, Aug 13, 2020 at 1:42 AM Joseph Hwang <josephsih@chromium.org> wrote:
 >
-> On Fri, Aug 14, 2020 at 06:24:58AM +0000, John Stultz wrote:
-> > This adds a heap that allocates non-contiguous buffers that are
-> > marked as writecombined, so they are not cached by the CPU.
-> >
-> > This is useful, as most graphics buffers are usually not touched
-> > by the CPU or only written into once by the CPU. So when mapping
-> > the buffer over and over between devices, we can skip the CPU
-> > syncing, which saves a lot of cache management overhead, greatly
-> > improving performance.
-> >
-> > For folk using ION, there was a ION_FLAG_CACHED flag, which
-> > signaled if the returned buffer should be CPU cacheable or not.
-> > With DMA-BUF heaps, we have no such flag, and by default the
-> > current heaps (system and cma) produce CPU cachable buffers.
-> > So for folks transitioning from ION to DMA-BUF Heaps, this fills
-> > in some of that missing functionality.
-> >
-> > This does have a few "ugly" bits that were required to get
-> > the buffer properly flushed out initially which I'd like to
-> > improve. So feedback would be very welcome!
-> >
-> > Many thanks to Liam Mark for his help to get this working.
-> >
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > Cc: Andrew F. Davis <afd@ti.com>
-> > Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > Cc: Liam Mark <lmark@codeaurora.org>
-> > Cc: Laura Abbott <labbott@kernel.org>
-> > Cc: Brian Starkey <Brian.Starkey@arm.com>
-> > Cc: Hridya Valsaraju <hridya@google.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> > v2:
-> > * Fix build issue on sh reported-by: kernel test robot <lkp@intel.com>
-> > * Rework to use for_each_sgtable_sg(), dma_map_sgtable(), and
-> >   for_each_sg_page() along with numerous other cleanups suggested
-> >   by Robin Murphy
+> It is desirable to define the HCI packet payload sizes of
+> USB alternate settings so that they can be exposed to user
+> space.
 >
-> Mildly annoying me, but where's the userspace for this? Do we have a
-> gralloc somewhere that works with open driver stacks and uses this?
+> Reviewed-by: Alain Michaud <alainm@chromium.org>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> ---
+>
+>  drivers/bluetooth/btusb.c        | 43 ++++++++++++++++++++++++--------
+>  include/net/bluetooth/hci_core.h |  1 +
+>  2 files changed, 33 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 8d2608ddfd0875..df7cadf6385868 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -459,6 +459,22 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
+>  #define BTUSB_WAKEUP_DISABLE   14
+>  #define BTUSB_USE_ALT1_FOR_WBS 15
+>
+> +/* Per core spec 5, vol 4, part B, table 2.1,
+> + * list the hci packet payload sizes for various ALT settings.
+> + * This is used to set the packet length for the wideband speech.
+> + * If a controller does not probe its usb alt setting, the default
+> + * value will be 0. Any clients at upper layers should interpret it
+> + * as a default value and set a proper packet length accordingly.
+> + *
+> + * To calculate the HCI packet payload length:
+> + *   for alternate settings 1 - 5:
+> + *     hci_packet_size = suggested_max_packet_size * 3 (packets) -
+> + *                       3 (HCI header octets)
+> + *   for alternate setting 6:
+> + *     hci_packet_size = suggested_max_packet_size - 3 (HCI header octets)
+> + */
+> +static const int hci_packet_size_usb_alt[] = { 0, 24, 48, 72, 96, 144, 60 };
+> +
+>  struct btusb_data {
+>         struct hci_dev       *hdev;
+>         struct usb_device    *udev;
+> @@ -3958,6 +3974,15 @@ static int btusb_probe(struct usb_interface *intf,
+>         hdev->notify = btusb_notify;
+>         hdev->prevent_wake = btusb_prevent_wake;
+>
+> +       if (id->driver_info & BTUSB_AMP) {
+> +               /* AMP controllers do not support SCO packets */
+> +               data->isoc = NULL;
+> +       } else {
+> +               /* Interface orders are hardcoded in the specification */
+> +               data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+> +               data->isoc_ifnum = ifnum_base + 1;
+> +       }
+> +
+>  #ifdef CONFIG_PM
+>         err = btusb_config_oob_wake(hdev);
+>         if (err)
+> @@ -4021,6 +4046,10 @@ static int btusb_probe(struct usb_interface *intf,
+>                 hdev->set_diag = btintel_set_diag;
+>                 hdev->set_bdaddr = btintel_set_bdaddr;
+>                 hdev->cmd_timeout = btusb_intel_cmd_timeout;
+> +
+> +               if (btusb_find_altsetting(data, 6))
+> +                       hdev->sco_pkt_len = hci_packet_size_usb_alt[6];
+> +
+>                 set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
+>                 set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>                 set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+> @@ -4062,15 +4091,6 @@ static int btusb_probe(struct usb_interface *intf,
+>                 btusb_check_needs_reset_resume(intf);
+>         }
+>
+> -       if (id->driver_info & BTUSB_AMP) {
+> -               /* AMP controllers do not support SCO packets */
+> -               data->isoc = NULL;
+> -       } else {
+> -               /* Interface orders are hardcoded in the specification */
+> -               data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+> -               data->isoc_ifnum = ifnum_base + 1;
+> -       }
+> -
+>         if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
+>             (id->driver_info & BTUSB_REALTEK)) {
+>                 hdev->setup = btrtl_setup_realtek;
+> @@ -4082,9 +4102,10 @@ static int btusb_probe(struct usb_interface *intf,
+>                  * (DEVICE_REMOTE_WAKEUP)
+>                  */
+>                 set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
+> -               if (btusb_find_altsetting(data, 1))
+> +               if (btusb_find_altsetting(data, 1)) {
+>                         set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
+> -               else
+> +                       hdev->sco_pkt_len = hci_packet_size_usb_alt[1];
+> +               } else
+>                         bt_dev_err(hdev, "Device does not support ALT setting 1");
+>         }
+>
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index 8caac20556b499..0624496328fc09 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -417,6 +417,7 @@ struct hci_dev {
+>         unsigned int    acl_pkts;
+>         unsigned int    sco_pkts;
+>         unsigned int    le_pkts;
+> +       unsigned int    sco_pkt_len;
 
-So this is still early RFC, but I've added support to the HiKey960
-gralloc, and have pending patches (following DRM rules) I pushed here:
-  https://android-review.googlesource.com/c/device/linaro/hikey/+/1399519
+Id use sco_mtu to so the following check actually does what it intended to do:
 
-And avoiding the cache syncing overhead improves performance nicely on
-that board.
+https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/tree/net/bluetooth/sco.c#n283
 
-There is also work in progress to change the codec2 implementation in
-AOSP (which uses ion directly), to move over to DMA BUF heaps and as
-it used the !ION_FLAG_CACHED case there this heap would be useful to
-match ION's functionality.
+Right now it seems we are using the buffer length as MTU but I think
+we should actually use the packet length if it is lower than the
+buffer length, actually it doesn't seems SCO packets can be fragmented
+so the buffer length must always be big enough to carry a full packet
+so I assume setting the packet length as conn->mtu will always be
+correct.
 
-The latest patches for that are here:
-https://android-review.googlesource.com/c/platform/frameworks/av/+/1360640
-(though I'm expecting a deeper rework on those)
+>
+>         __u16           block_len;
+>         __u16           block_mtu;
+> --
+> 2.28.0.236.gb10cc79966-goog
+>
 
-thanks
--john
+
+-- 
+Luiz Augusto von Dentz
