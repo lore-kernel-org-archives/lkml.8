@@ -2,160 +2,73 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52966C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C99420771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597429296;
-	bh=byesp7nJC1JbkmKEenD/7UKydY3gVcGD/Yd1EnJiwqM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nMwyfukbr7RiH4IFyWFbIP8c2UKa7brdW97zPcNcP5itP2Zne6cAXLNGuZ29n2G0d
-	 ibxWApn84AUdQCNjovzqj7gVlZS1IugTGY0V4VfdXGG7LXN7XHeIzvAofDSm67pPlp
-	 MyElTgBUmtnpLT7mi+KXiSepXedxfQ80GrD5w7+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 74FE22078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHNSVf (ORCPT
+        id S1728675AbgHNSay convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 14:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 14:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgHNSVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 14:21:34 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726320AbgHNSax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:30:53 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD83720768;
-        Fri, 14 Aug 2020 18:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597429293;
-        bh=byesp7nJC1JbkmKEenD/7UKydY3gVcGD/Yd1EnJiwqM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q5bgXLAMQS3eLaGcePUfo7IoWRuJ2XUPL4ofLAMGlhZ3P61+/LIe0qetWIwrXjkfX
-         oQATgwk2XtAoVUe+jm8yexzVZuUEhGmIP192I6nMPURrdXlDwLFjlS52/Ai2z8s7xl
-         CFaHfpMdciMh6nyG+khp0JNtEhU5hY3pLWQkzXG8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6eKZ-002Dom-QY; Fri, 14 Aug 2020 19:21:31 +0100
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD7220774;
+        Fri, 14 Aug 2020 18:30:51 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 14:30:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        =?UTF-8?B?VGhpw6li?= =?UTF-8?B?YXVk?= Weksteen 
+        <tweek@google.com>, Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] selinux: add tracepoint on denials
+Message-ID: <20200814143050.2bda2830@oasis.local.home>
+In-Reply-To: <6e36d3ca-ba2b-d80d-dffd-205521f39573@sony.com>
+References: <20200813144914.737306-1-tweek@google.com>
+        <15e2e26d-fe4b-679c-b5c0-c96d56e09853@gmail.com>
+        <CA+zpnLcf94HGmE=CGH6nT8ya0oax5orXc5nP1qToUgaca6FeQg@mail.gmail.com>
+        <CAEjxPJ50vrauP7dd-ek15vwnMN1kvAyvYSc0fhR4xwCJEQSFxQ@mail.gmail.com>
+        <ad64b5af-93de-e84e-17ca-40d8dd3cfe44@sony.com>
+        <CAEjxPJ67G24T1a5WitmMqL4RUpjOgQFwpQ8unO1-OXSS=35V4Q@mail.gmail.com>
+        <3518887d-9083-2836-a8db-c7c27a70c990@sony.com>
+        <20200814134653.0ba7f64e@oasis.local.home>
+        <6e36d3ca-ba2b-d80d-dffd-205521f39573@sony.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 19:21:31 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-mips@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v4 1/5] of_address: Add bus type match for pci ranges
- parser
-In-Reply-To: <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
- <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <889508bae5da3c55690a7adbd101a5cd@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, robh+dt@kernel.org, frowand.list@gmail.com, linux-mips@vger.kernel.org, robh@kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, paulburton@kernel.org, arnd@arndb.de, natechancellor@gmail.com, ndesaulniers@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, 14 Aug 2020 20:06:34 +0200
+peter enderborg <peter.enderborg@sony.com> wrote:
 
-On 2020-07-28 16:36, Jiaxun Yang wrote:
-> So the parser can be used to parse range property of ISA bus.
+> Im find with that, but then you  can not do filtering? I would be
+> pretty neat with a filter saying tclass=file permission=write.
 > 
-> As they're all using PCI-like method of range property, there is no 
-> need
-> start a new parser.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-This patch, although it looks correct, breaks the RK3399-based
-systems, as they miss the (now required) 'device_type = "pci";'
-property.
+Well, if the mapping is stable, you could do:
 
-We can fix the in-tree DT, but that's not really an option
-if someone relies on the DT being provided by the firmware
-(I for one definitely do).
+	(tclass == 6) && (audited & 0x4)
 
-I came up with the following hack, which solves the issue for
-me. Definitely not my finest hour, but I really need this box
-to keep going. I will post a patch fixing the DT separately.
-
-Thanks,
-
-         M.
-
- From ceef5fd9c4d2005eb577505c68868ebe527c098f Mon Sep 17 00:00:00 2001
- From: Marc Zyngier <maz@kernel.org>
-Date: Fri, 14 Aug 2020 19:10:12 +0100
-Subject: [PATCH] of: address: Workaround broken DTs missing the 
-'device_type =
-  "pci"' property
-
-Recent changes to the PCI bus parsing made it mandatory for
-device trees nodes describing a PCI controller to have the
-'device_type = "pci"' property for the node to be matched.
-
-Although this is compliant with the specification, it breaks
-existing device-trees that have been working fine for years
-(the Rockchip rk3399-based systems being a prime example of
-such breakage).
-
-In order to paper over the blunder, let's also match nodes
-that have the "linux,pci-domain" property, as they are
-pretty likely to be PCI nodes. This fixes the issue for
-systems such as the above platforms.
-
-Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges 
-parser")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
-  drivers/of/address.c | 5 ++++-
-  1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 590493e04b01..712e03781a2a 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -134,9 +134,12 @@ static int of_bus_pci_match(struct device_node *np)
-   	 * "pciex" is PCI Express
-  	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
-  	 * "ht" is hypertransport
-+	 * "linux,pci-domain" is a workaround for broken device trees
-+	 * lacking the required "device_type" property.
-  	 */
-  	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
--		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
-+		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
-+		of_find_property(np, "linux,pci-domain", NULL);
-  }
-
-  static void of_bus_pci_count_cells(struct device_node *np,
--- 
-2.27.0
-
-
--- 
-Jazz is not dead. It just smells funny...
+-- Steve
