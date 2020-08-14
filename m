@@ -2,111 +2,85 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2211C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92CAE207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OFCQVMh5"
+	by mail.kernel.org (Postfix) with ESMTP id 2BEDE20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgHNR1g (ORCPT
+        id S1728664AbgHNRbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgHNR1a (ORCPT
+        Fri, 14 Aug 2020 13:31:47 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:58950 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728346AbgHNRbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:27:30 -0400
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0BAC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:29 -0700 (PDT)
-Received: by mail-wr1-x449.google.com with SMTP id f14so3570552wrm.22
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=g4f+/WfnZkrMe/HqGvZOb2vGCvbeoVKA+YRTcEBLbjI=;
-        b=OFCQVMh5lzbnBQRKf9DzZ6/nqGpqP5QdzE3+Go27TRAD1wu9FUmQBIqrtwtXp033kL
-         ueoA2WLGaoGyWIQtb/uaZ1WXmF09DPSdo8U3sxzgxw2qcTqsz7jq7MG5mrYoxawUZbjF
-         9uodD7HWUHhEC3SjuGmyyo3Typ7gaCqV9/oPMpxYLYrSyjobie1Gray9lIlWuyRLOYG6
-         E24uIjoP3jNnPxN0RDvyabdUCLRZUwcW9o7YkLDNy+9+4Epf/d8gA2R2U1I0lPCdd0fS
-         ZCXwv38NAlJrbYxWdy2lcvetzJF+9zGRhAnTYuRi0OG5ZxfPrVSHlqMaOZfnSMWuRJy6
-         UkBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=g4f+/WfnZkrMe/HqGvZOb2vGCvbeoVKA+YRTcEBLbjI=;
-        b=nBwsgXF267sClSdKS8v2t5BmXiGfgtPLKFmZKCI2islVmDkcy5Ju5/SbtmO94CIOOh
-         k3+xEa0v+E55YcVn6QX7nYOF/egPG6Bd/UwJs/AAIhJWNAghDRjEoL/4xDMu5NssnPoi
-         x1lsoGQme6Nc07YEDcH65dOF1vr5iCkDV9wtTlVP+19FkZ25c7RRQ9QgaBvPdoEgI+Si
-         eXyXpNIIpFjrIFdBeG72IVD2tUGKJLhe2O5XruJXRBGw6dst/h6fCpCiwE7DLBx4yYgx
-         9FHpaGWEsnqdAhYwmHeIZxjTKG1+gWFXOGs1lJlRt1ntufV9OAkJnHu93vlvjdpG5iJn
-         k3Xw==
-X-Gm-Message-State: AOAM5331OsGSnv5Mf3WjQ8sL3ffBYk+5cFbQtAZhZtrY8fRzwC3NYRJJ
-        bmJswzvdn8dA4DMA4Kv42lS043uqTxQwBO1W
-X-Google-Smtp-Source: ABdhPJxOR7vAGPMjFiP7k8NtFovu5yIEAl2ydWx6+eJUUnvoGiIE7kwWWrEIbMIlI3WWHWNdSqg3gZl1Rx7j+UKA
-X-Received: by 2002:a7b:cd97:: with SMTP id y23mr3561956wmj.21.1597426046055;
- Fri, 14 Aug 2020 10:27:26 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:26:43 +0200
-In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <c36842a403be0fbf3dd63b16a7cd231ebd6d4d5b.1597425745.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1597425745.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 01/35] kasan: KASAN_VMALLOC depends on KASAN_GENERIC
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        kasan-dev@googlegroups.com
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Aug 2020 13:31:46 -0400
+X-IronPort-AV: E=Sophos;i="5.76,313,1592838000"; 
+   d="scan'208";a="54383282"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 15 Aug 2020 02:31:44 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B7E5F40061B7;
+        Sat, 15 Aug 2020 02:31:40 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: [PATCH 0/5] Add PCIe EP nodes on RZ/G2[EMN]
+Date:   Fri, 14 Aug 2020 18:30:32 +0100
+Message-Id: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently only generic KASAN mode supports vmalloc, reflect that
-in the config.
+Hi All,
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- lib/Kconfig.kasan | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series adds support for PCIe EP nodes to Renesas r8a774a1,
+r8a774b1 and r8a774c0 SoC's.
 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 047b53dbfd58..e1d55331b618 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -156,7 +156,7 @@ config KASAN_SW_TAGS_IDENTIFY
- 
- config KASAN_VMALLOC
- 	bool "Back mappings in vmalloc space with real shadow memory"
--	depends on HAVE_ARCH_KASAN_VMALLOC
-+	depends on KASAN_GENERIC && HAVE_ARCH_KASAN_VMALLOC
- 	help
- 	  By default, the shadow region for vmalloc space is the read-only
- 	  zero page. This means that KASAN cannot detect errors involving
+Patches are based on top of [1].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/
+    pci.git/log/?h=next
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (5):
+  dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1
+  misc: pci_endpoint_test: Add Device ID for RZ/G2M and RZ/G2N PCIe
+    controllers
+  arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
+  arm64: dts: renesas: r8a774b1: Add PCIe EP nodes
+  arm64: dts: renesas: r8a774c0: Add PCIe EP node
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |  7 +++-
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi     | 38 +++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi     | 38 +++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi     | 19 ++++++++++
+ drivers/misc/pci_endpoint_test.c              |  7 +++-
+ 5 files changed, 105 insertions(+), 4 deletions(-)
+
 -- 
-2.28.0.220.ged08abb693-goog
+2.17.1
 
