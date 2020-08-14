@@ -2,412 +2,136 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C860C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE51C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E27420708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539AC20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I4mzE3pG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IG14Xl21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgHNK4I (ORCPT
+        id S1728040AbgHNK4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:56:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55647 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgHNK4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:56:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597402565; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=zXIW/VWs4aF3XA2tNuD5iaHNKVHneYAhBLPG1fC5jHk=; b=I4mzE3pGGp0QMbR8IdAditjOPGdOJDeIDSLUGxrb1K1IjBz1wmRBI9mV5dO4JsimBgddHi3n
- qVsn2t/IlktamewCdy3vkP/TuLLwu6khVfJb7mJFtdbFLDYFRPh4TCykjvQokJTLGsufMrwu
- hWx7OCJdtFB+5MCnAeDYTpyyWbM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f366d84d96d28d61e3510af (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:55:00
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 87301C433B1; Fri, 14 Aug 2020 10:54:59 +0000 (UTC)
-Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79B59C43449;
-        Fri, 14 Aug 2020 10:54:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79B59C43449
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-From:   Rohit kumar <rohitkr@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Fri, 14 Aug 2020 06:56:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49482 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgHNK4k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:56:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07EAm0ED019383;
+        Fri, 14 Aug 2020 10:56:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=YVf5FoCiDmx//g4f29YFy952k+cHe4okX6wlg0hwp/8=;
+ b=IG14Xl21IEnwYwIzRgqIoe+8REtaKqUG4vtnbIdEzeK8+4FIHQrAHvVHN1D4/T33VBGV
+ 6LHPCA5O2RmFqhXNpU76jDEwfCvLlsUbMsj7lfzLASiWi4WUk1gdM33U6QdWJ924jO89
+ kL7UnM3ZwO3/Y0RfAp/qqTojBfp8MkdjvlCUoHSN6hLwajTrV0q5ffW9EaS3nRT299ln
+ ILcGu8wdE1zdwYDJAArU29Ct5CbT4kBCq2vHxB2zkwgi20D4OnAs4hNzFa9lqCVuWGbM
+ jHl27kj5UJ5bEPuT5bauYDsV4SEmpMBJRG//sU53UqD+LWkaXy5b4lHA5UoTCDaVBzjn 5g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32t2ye431r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Aug 2020 10:56:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07EArWCi040932;
+        Fri, 14 Aug 2020 10:56:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32t5ycahmr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Aug 2020 10:56:27 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07EAuOtO012838;
+        Fri, 14 Aug 2020 10:56:25 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Aug 2020 10:56:23 +0000
+Date:   Fri, 14 Aug 2020 13:56:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        Colin Ian King <colin.king@canonical.com>,
         linux-kernel@vger.kernel.org
-Cc:     Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v6 12/12] dt-bindings: sound: lpass-cpu: Move to yaml format
-Date:   Fri, 14 Aug 2020 16:23:08 +0530
-Message-Id: <1597402388-14112-13-git-send-email-rohitkr@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
-References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
+Subject: Re: [PATCH v2] staging: greybus: audio: fix uninitialized value issue
+Message-ID: <20200814105616.GP1793@kadam>
+References: <b6a5c28b6812232c90426f77cbe60600f9a91019.1597389343.git.vaibhav.sr@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6a5c28b6812232c90426f77cbe60600f9a91019.1597389343.git.vaibhav.sr@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008140084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008140083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update lpass-cpu binding with yaml formats.
+On Fri, Aug 14, 2020 at 01:07:20PM +0530, Vaibhav Agarwal wrote:
+> The current implementation for gbcodec_mixer_dapm_ctl_put() uses
+> uninitialized gbvalue for comparison with updated value. This was found
+> using static analysis with coverity.
+> 
+> Uninitialized scalar variable (UNINIT)
+> 11. uninit_use: Using uninitialized value
+> gbvalue.value.integer_value[0].
+> 460        if (gbvalue.value.integer_value[0] != val) {
+> 
+> This patch fixes the issue with fetching the gbvalue before using it for
+>     comparision.
+> 
+> Fixes: 6339d2322c47 ("greybus: audio: Add topology parser for GB codec")
+> Reported-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+> ---
+> Changelog:
+> v2: Fix the missing check for return value after get_control.
+> ---
+>  drivers/staging/greybus/audio_topology.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_topology.c b/drivers/staging/greybus/audio_topology.c
+> index 2f9fdbdcd547..9f98691b2f5f 100644
+> --- a/drivers/staging/greybus/audio_topology.c
+> +++ b/drivers/staging/greybus/audio_topology.c
+> @@ -456,6 +456,18 @@ static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
+>  	val = ucontrol->value.integer.value[0] & mask;
+>  	connect = !!val;
+>  
+> +	ret = gb_pm_runtime_get_sync(bundle);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gb_audio_gb_get_control(module->mgmt_connection, data->ctl_id,
+> +				      GB_AUDIO_INVALID_INDEX, &gbvalue);
+> +	if (ret) {
+> +		dev_err_ratelimited(codec_dev, "%d:Error in %s for %s\n", ret,
+> +				    __func__, kcontrol->id.name);
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
- .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 130 --------------
- .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 189 +++++++++++++++++++++
- 2 files changed, 189 insertions(+), 130 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+gb_pm_runtime_put_autosuspend(bundle) on this error path?
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-deleted file mode 100644
-index c07202c..00000000
---- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-+++ /dev/null
-@@ -1,130 +0,0 @@
--* Qualcomm Technologies LPASS CPU DAI
--
--This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
--
--Required properties:
--
--- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
--			  "qcom,sc7180-lpass-cpu"
--- clocks		: Must contain an entry for each entry in clock-names.
--- clock-names		: A list which must include the following entries:
--				* "ahbix-clk"
--				* "mi2s-osr-clk"
--				* "mi2s-bit-clk"
--			: required clocks for "qcom,lpass-cpu-apq8016"
--				* "ahbix-clk"
--				* "mi2s-bit-clk0"
--				* "mi2s-bit-clk1"
--				* "mi2s-bit-clk2"
--				* "mi2s-bit-clk3"
--				* "pcnoc-mport-clk"
--				* "pcnoc-sway-clk"
--			: required clocks for "qcom,lpass-cpu-sc7180"
--				* "audio-core"
--				* "mclk0"
--				* "mi2s-bit-clk0"
--				* "mi2s-bit-clk1"
--				* "pcnoc-sway-clk"
--				* "pcnoc-mport-clk"
--
--- interrupts		: Must contain an entry for each entry in
--			  interrupt-names.
--- interrupt-names	: A list which must include the following entries:
--				* "lpass-irq-lpaif"
--- pinctrl-N		: One property must exist for each entry in
--			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
--			  for details of the property values.
--- pinctrl-names		: Must contain a "default" entry.
--- reg			: Must contain an address for each entry in reg-names.
--- reg-names		: A list which must include the following entries:
--				* "lpass-lpaif"
--- #address-cells	: Must be 1
--- #size-cells		: Must be 0
--
--
--
--Optional properties:
--
--- qcom,adsp		: Phandle for the audio DSP node
--
--By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
--The SD lines to use can be configured by adding subnodes for each of the DAIs.
--
--Required properties for each DAI (represented by a subnode):
--- reg			: Must be one of the DAI IDs
--			  (usually part of dt-bindings header)
--- qcom,playback-sd-lines: List of serial data lines to use for playback
--			  Each SD line should be represented by a number from 0-3.
--- qcom,capture-sd-lines	: List of serial data lines to use for capture
--			  Each SD line should be represented by a number from 0-3.
--
--Note that adding a subnode changes the default to "no lines configured",
--so both playback and capture lines should be configured when a subnode is added.
--
--Examples:
--1)
--
--lpass@28100000 {
--	compatible = "qcom,lpass-cpu";
--	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
--	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
--	interrupts = <0 85 1>;
--	interrupt-names = "lpass-irq-lpaif";
--	pinctrl-names = "default", "idle";
--	pinctrl-0 = <&mi2s_default>;
--	pinctrl-1 = <&mi2s_idle>;
--	reg = <0x28100000 0x10000>;
--	reg-names = "lpass-lpaif";
--	qcom,adsp = <&adsp>;
--
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	/* Optional to set different MI2S SD lines */
--	dai@3 {
--		reg = <MI2S_QUATERNARY>;
--		qcom,playback-sd-lines = <0 1>;
--	};
--};
--
--2)
--
--#include <dt-bindings/sound/sc7180-lpass.h>
--
--lpass_cpu: lpass {
--	compatible = "qcom,sc7180-lpass-cpu";
--
--	reg = <0 0x62F00000 0 0x29000>;
--
--	iommus = <&apps_smmu 0x1020 0>;
--
--	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
--	clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
--		<&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
--		<&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
--		<&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
--		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
--		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
--	clock-names = "pcnoc-sway-clk", "audio-core",
--			"mclk0", "pcnoc-mport-clk",
--			"mi2s-bit-clk0", "mi2s-bit-clk1";
--	interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "lpass-irq-lpaif";
--
--
--	#sound-dai-cells = <1>;
--
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	mi2s-primary@0 {
--		reg = <MI2S_PRIMARY>;
--		qcom,playback-sd-lines = <1>;
--		qcom,capture-sd-lines = <0>;
--	};
--
--	mi2s-secondary@1 {
--		reg = <MI2S_SECONDARY>;
--		qcom,playback-sd-lines = <0>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-new file mode 100644
-index 00000000..09c9bd2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-@@ -0,0 +1,189 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies Inc. LPASS CPU dai driver bindings
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+  - Rohit kumar <rohitkr@codeaurora.org>
-+
-+description: |
-+  Qualcomm Technologies Inc. SOC Low-Power Audio SubSystem (LPASS) that consist
-+  of MI2S interface for audio data transfer on external codecs. LPASS cpu driver
-+  is a module to configure Low-Power Audio Interface(LPAIF) core registers
-+  across different IP versions.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,lpass-cpu
-+      - qcom,apq8016-lpass-cpu
-+      - qcom,sc7180-lpass-cpu
-+
-+  reg:
-+    maxItems: 1
-+    description: LPAIF core registers
-+
-+  clocks:
-+    minItems: 3
-+    maxItems: 6
-+
-+  clock-names:
-+    minItems: 3
-+    maxItems: 6
-+
-+  interrupts:
-+    maxItems: 1
-+    description: LPAIF DMA buffer interrupt
-+
-+  qcom,adsp:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle for the audio DSP node
-+
-+  iommus:
-+    maxItems: 1
-+    description: Phandle to apps_smmu node with sid mask
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  '#sound-dai-cells':
-+    const: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+patternProperties:
-+  "(^mi2s-[0-9a-f]$|mi2s)":
-+    type: object
-+    description: Required properties for each DAI
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description: Must be one of the DAI ID
-+
-+      qcom,playback-sd-lines:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description: list of MI2S data lines for playback
-+
-+      qcom,capture-sd-lines:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description: list of MI2S data lines for capture
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - '#sound-dai-cells'
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: qcom,lpass-cpu
-+
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: ahbix-clk
-+            - const: mi2s-osr-clk
-+            - const: mi2s-bit-clk
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: qcom,apq8016-lpass-cpu
-+
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: ahbix-clk
-+            - const: mi2s-bit-clk0
-+            - const: mi2s-bit-clk1
-+            - const: mi2s-bit-clk2
-+            - const: mi2s-bit-clk3
-+            - const: pcnoc-mport-clk
-+            - const: pcnoc-sway-clk
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: qcom,sc7180-lpass-cpu
-+
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pcnoc-sway-clk
-+            - const: audio-core
-+            - const: mclk0
-+            - const: pcnoc-mport-clk
-+            - const: mi2s-bit-clk0
-+            - const: mi2s-bit-clk1
-+      required:
-+        - iommus
-+        - power-domains
-+
-+examples:
-+  - |
-+    #include <dt-bindings/sound/sc7180-lpass.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        lpass@62f00000 {
-+            compatible = "qcom,sc7180-lpass-cpu";
-+
-+            reg = <0 0x62f00000  0 0x29000>;
-+
-+            iommus = <&apps_smmu 0x1020 0>;
-+            power-domains = <&lpass_hm 0>;
-+
-+            clocks = <&gcc 131>,
-+                 <&lpasscorecc 6>,
-+                 <&lpasscorecc 7>,
-+                 <&lpasscorecc 10>,
-+                 <&lpasscorecc 8>,
-+                 <&lpasscorecc 9>;
-+
-+            clock-names = "pcnoc-sway-clk", "audio-core",
-+                          "mclk0", "pcnoc-mport-clk",
-+                          "mi2s-bit-clk0", "mi2s-bit-clk1";
-+
-+            interrupts = <0 160 1>;
-+
-+            #sound-dai-cells = <1>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            /* Optional to set different MI2S SD lines */
-+            mi2s-primary@0 {
-+                reg = <MI2S_PRIMARY>;
-+                qcom,playback-sd-lines = <1>;
-+                qcom,capture-sd-lines = <0>;
-+            };
-+        };
-+    };
-+
-+...
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> +		return ret;
+> +	}
+
+regards,
+dan carpenter
 
