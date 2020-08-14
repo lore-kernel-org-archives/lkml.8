@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57043C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F04C206B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4600206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgHNMLE (ORCPT
+        id S1728394AbgHNMLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:11:04 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38344 "EHLO inva020.nxp.com"
+        Fri, 14 Aug 2020 08:11:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38294 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgHNMJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:09:58 -0400
+        id S1728121AbgHNMJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:09:56 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9BC271A04C3;
-        Fri, 14 Aug 2020 14:09:56 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5DB651A0B20;
+        Fri, 14 Aug 2020 14:09:54 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C7C01A0446;
-        Fri, 14 Aug 2020 14:09:56 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4DD5A1A03F1;
+        Fri, 14 Aug 2020 14:09:54 +0200 (CEST)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DB6522030E;
-        Fri, 14 Aug 2020 14:09:55 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 93E29203B5;
+        Fri, 14 Aug 2020 14:09:53 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 10/17] Documentation: bindings: clk: Add bindings for i.MX BLK_CTRL
-Date:   Fri, 14 Aug 2020 15:09:19 +0300
-Message-Id: <1597406966-13740-11-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 07/17] dt-bindings: reset: imx8mp: Add hdmi blk_ctrl reset IDs
+Date:   Fri, 14 Aug 2020 15:09:16 +0300
+Message-Id: <1597406966-13740-8-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
 References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
@@ -56,80 +56,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the i.MX BLK_CTRL with its devicetree properties.
+These will be used imx8mp for blk-ctrl driver.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/clock/fsl,imx-blk-ctrl.yaml           | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
+ include/dt-bindings/reset/imx8mp-reset.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-new file mode 100644
-index 00000000..b47590c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/fsl,imx-blk-ctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/include/dt-bindings/reset/imx8mp-reset.h b/include/dt-bindings/reset/imx8mp-reset.h
+index 13e56dd..c1ca79c 100644
+--- a/include/dt-bindings/reset/imx8mp-reset.h
++++ b/include/dt-bindings/reset/imx8mp-reset.h
+@@ -80,4 +80,16 @@
+ 
+ #define IMX8MP_MEDIA_BLK_CTRL_RESET_NUM			25
+ 
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_TX_RESET		0
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_PHY_RESET		1
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_PAI_RESET		2
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_PVI_RESET		3
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_TRNG_RESET		4
++#define IMX8MP_HDMI_BLK_CTRL_IRQ_STEER_RESET		5
++#define IMX8MP_HDMI_BLK_CTRL_HDMI_HDCP_RESET		6
++#define IMX8MP_HDMI_BLK_CTRL_LCDIF_RESET		7
 +
-+title: NXP i.MX BLK_CTRL
++#define IMX8MP_HDMI_BLK_CTRL_RESET_NUM			8
 +
-+maintainers:
-+  - Abel Vesa <abel.vesa@nxp.com>
 +
-+description:
-+  i.MX BLK_CTRL is a conglomerate of different GPRs that are
-+  dedicated to a specific subsystem. Because it usually contains
-+  clocks amongst other things, it needs access to the i.MX clocks
-+  API. All the other functionalities it provides can work just fine
-+  from the clock subsystem tree.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+         - fsl,imx8mp-audio-blk-ctrl
-+         - fsl,imx8mp-hdmi-blk-ctrl
-+         - fsl,imx8mp-media-blk-ctrl
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - power-domains
-+  - '#clock-cells'
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8mp-clock.h>
-+
-+    audio_blk_ctrl: clock-controller@30e20000 {
-+       compatible = "fsl,imx8mp-audio-blk-ctrl", "syscon";
-+       reg = <0x30e20000 0x10000>;
-+       power-domains = <&audiomix_pd>;
-+
-+       #clock-cells = <1>;
-+       #reset-cells = <1>;
-+    };
+ #endif
 -- 
 2.7.4
 
