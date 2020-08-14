@@ -5,74 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E13EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589DE20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C94420829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+111kqH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A2CVs4qx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgHNLjt (ORCPT
+        id S1728128AbgHNLjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39634 "EHLO
+        Fri, 14 Aug 2020 07:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgHNLjo (ORCPT
+        with ESMTP id S1728060AbgHNLjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:39:44 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D34C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k8so7668770wma.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:43 -0700 (PDT)
+        Fri, 14 Aug 2020 07:39:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCE1C061387
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:44 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c15so8037209wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MUV+yz+bHDDxU9QUealM8/lB5IQK1oTN3Rz5yVKFYm4=;
-        b=l+111kqHdNB0lIDK3r++LA2g+EZA//8R6aznyiwvdp+j0MKetNqHwbb7cuk9RrKa2E
-         8JEl3bytLKvZNB/Kxrxwcx0aPjN7M2y+bOQJkVsEiBcXovmpYZgNBqtD6uN8FUb9juC4
-         ejvTWSUKwvqTKg/RZkPj8akPf09yu4PUEvPnRRoVS4e5LN87uJ5aMmSjKUKFY9bkIP+I
-         mSSQkwqKtAL2BuvfF57rSKTwc30gSoz3RwUrZHckDSPhZpBbmMAtNleFt3ViyH/499aK
-         3sVD5bU402VDJaCJNhhN0gQnHRlothsgZqgQA7s3EBeQu5SpL3otQ7BRPB+1QHx7p2qW
-         2Dnw==
+        bh=hkxne9wZTlAVbAAYNmpFWLXf7r4C/SN/Gq+uNhys7UA=;
+        b=A2CVs4qxFTnXi4JQ4bVs4AIscTO7tdyd0Y7OF/MjFR4l5/KzuytVtCzuwG0uMy1YhR
+         DUCeyZjBaqB/vwjoz0z1VSI/Px1LMQmWIwfl6jpcAFavd+m4XCXkwdeQ7HwjDQPDG9bO
+         GY+fqeWNegJlFO86lIvjBLHy5oIc1tgzzJKq361YEBP8mdl1S0+yOdkr07LRGXMD9Ssk
+         gAGj8iYy3g5kWrBJ+xDi/RPn0IhOgFVIFMb/1cJgruW1nOHYdRx2KCASsrSSR2oA3c6h
+         LgYnaHN4GtwF8UBmS8EksivSmqKxeJ9rQ1H9ZlXQWhp9s63+0+sUmC3NRrynKgnKzMs7
+         4v/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MUV+yz+bHDDxU9QUealM8/lB5IQK1oTN3Rz5yVKFYm4=;
-        b=OUvTii6oA9RV+4ubljVVtnD6kQdl6x3edi2MPieJbPjwMy79QgQTTMU6Oi3D8JPu9u
-         GIdLoqG96PRcbqVlmQRrizSQNh9OlKwWMQlnik3gLmPpzKGBwEK8TtbVItfM93A19yLK
-         9XfkcP6Vb4HNaVzE32BxSOPxZayy0lYnxM/iBUEF42qEcRO00q2p7/sIuZWWuoFnHChe
-         I2mS2O0bc6QUxBaPlvXOEwENZiEe/JxxSloKifTIInUIpVc2iV5jIIVP8bvv+6uCVFh1
-         vWmtTo6tL/0bgEUXSwMkm2FLgf3sEZhy2/N1pZKgM+C/Ov90JBDdhgMC43pSZT/LfeGs
-         w4SQ==
-X-Gm-Message-State: AOAM532cZpnd84sk+R7gZefSKtryK9550/XRJZlF7Pkk2ZzayyS8pGm2
-        h/1IsC55bEAi4FJJbG9ZgLNhNg==
-X-Google-Smtp-Source: ABdhPJzL3xmyXx+1jDTkp7IuUawasCOHs8oE9JoXge8m6lDvNsUquUCvs2Sem2m06iG2L4QTo3QEZQ==
-X-Received: by 2002:a1c:7405:: with SMTP id p5mr2151480wmc.130.1597405182109;
-        Fri, 14 Aug 2020 04:39:42 -0700 (PDT)
+        bh=hkxne9wZTlAVbAAYNmpFWLXf7r4C/SN/Gq+uNhys7UA=;
+        b=AdHDDB0LkmCdEqy7lB2JRHZCaEYXbJFT0n/zybipbP10FVMJR5Yq0bB9DAqMgtT2tC
+         nsx2/5kBk8Wzq89+HXjL0qwsjciljMPW2w7xHKGXY5NXdOgrHSkJihwrhCG4KMYDncl2
+         hM4YSHoQr+EJZYWC2bjcbinuQFCVGdSByVo1RNs2E1WsmFwZVakZcFYzwyeu2g344dDS
+         KFI0+dGGrmIvIZM/eBB4agSk2TAYq3f3FzMzvZA4m0SWI374NsRthLVPnF4xVur2ZmYG
+         RTmdn9In62XSsnEoTVybnSYevYDnNY17kMj45vp3hIYVHcQ8X6jspr4iDAIPSHy3en4q
+         DPNg==
+X-Gm-Message-State: AOAM533B+BoaXTPBkLeiCDlRBjgwo9FoLPVbYnKXYVKrPaK1ke7JL5sr
+        2dfkFTf1dPq0saUJiGRRufF2qQ==
+X-Google-Smtp-Source: ABdhPJwLmOXhCjKwnbD4sN+QT/fUjAaEM4Cn4FQbAWshbJyzZUGynsmCSNUg5tiuz3J2GoPw9JFdQQ==
+X-Received: by 2002:a5d:6a09:: with SMTP id m9mr470749wru.383.1597405183375;
+        Fri, 14 Aug 2020 04:39:43 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.39.41
+        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 04:39:41 -0700 (PDT)
+        Fri, 14 Aug 2020 04:39:42 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Thomas Davis <tadavis@lbl.gov>, netdev@vger.kernel.org
-Subject: [PATCH 02/30] net: bonding: bond_main: Document 'proto' and rename 'new_active' parameters
-Date:   Fri, 14 Aug 2020 12:39:05 +0100
-Message-Id: <20200814113933.1903438-3-lee.jones@linaro.org>
+        Shannon Nelson <snelson@pensando.io>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Donald Becker <becker@scyld.com>,
+        David Hinds <dahinds@users.sourceforge.net>,
+        netdev@vger.kernel.org
+Subject: [PATCH 03/30] net: ethernet: 3com: 3c574_cs: Remove set but unused variables 'tx' and 'rx'
+Date:   Fri, 14 Aug 2020 12:39:06 +0100
+Message-Id: <20200814113933.1903438-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200814113933.1903438-1-lee.jones@linaro.org>
 References: <20200814113933.1903438-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,52 +85,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/bonding/bond_main.c:329: warning: Function parameter or member 'proto' not described in 'bond_vlan_rx_add_vid'
- drivers/net/bonding/bond_main.c:362: warning: Function parameter or member 'proto' not described in 'bond_vlan_rx_kill_vid'
- drivers/net/bonding/bond_main.c:964: warning: Function parameter or member 'new_active' not described in 'bond_change_active_slave'
- drivers/net/bonding/bond_main.c:964: warning: Excess function parameter 'new' description in 'bond_change_active_slave'
+ drivers/net/ethernet/3com/3c574_cs.c: In function ‘update_stats’:
+ drivers/net/ethernet/3com/3c574_cs.c:954:9: warning: variable ‘tx’ set but not used [-Wunused-but-set-variable]
+ 954 | u8 rx, tx, up;
+ | ^~
+ drivers/net/ethernet/3com/3c574_cs.c:954:5: warning: variable ‘rx’ set but not used [-Wunused-but-set-variable]
+ 954 | u8 rx, tx, up;
+ | ^~
 
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Thomas Davis <tadavis@lbl.gov>
+Cc: Shannon Nelson <snelson@pensando.io>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Martin Habets <mhabets@solarflare.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Donald Becker <becker@scyld.com>
+Cc: David Hinds <dahinds@users.sourceforge.net>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/bonding/bond_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/3com/3c574_cs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 5ad43aaf76e56..a448467d8789a 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -322,6 +322,7 @@ netdev_tx_t bond_dev_queue_xmit(struct bonding *bond, struct sk_buff *skb,
- /**
-  * bond_vlan_rx_add_vid - Propagates adding an id to slaves
-  * @bond_dev: bonding net device that got called
-+ * @proto: network protocol ID
-  * @vid: vlan id being added
-  */
- static int bond_vlan_rx_add_vid(struct net_device *bond_dev,
-@@ -355,6 +356,7 @@ static int bond_vlan_rx_add_vid(struct net_device *bond_dev,
- /**
-  * bond_vlan_rx_kill_vid - Propagates deleting an id to slaves
-  * @bond_dev: bonding net device that got called
-+ * @proto: network protocol ID
-  * @vid: vlan id being removed
-  */
- static int bond_vlan_rx_kill_vid(struct net_device *bond_dev,
-@@ -948,7 +950,7 @@ static bool bond_should_notify_peers(struct bonding *bond)
- /**
-  * change_active_interface - change the active slave into the specified one
-  * @bond: our bonding struct
-- * @new: the new slave to make the active one
-+ * @new_active: the new slave to make the active one
-  *
-  * Set the new slave to the bond's settings and unset them on the old
-  * curr_active_slave.
+diff --git a/drivers/net/ethernet/3com/3c574_cs.c b/drivers/net/ethernet/3com/3c574_cs.c
+index ef1c3151fbb24..bd0ada4e81b0f 100644
+--- a/drivers/net/ethernet/3com/3c574_cs.c
++++ b/drivers/net/ethernet/3com/3c574_cs.c
+@@ -951,7 +951,7 @@ static struct net_device_stats *el3_get_stats(struct net_device *dev)
+ static void update_stats(struct net_device *dev)
+ {
+ 	unsigned int ioaddr = dev->base_addr;
+-	u8 rx, tx, up;
++	u8 up;
+ 
+ 	pr_debug("%s: updating the statistics.\n", dev->name);
+ 
+@@ -972,8 +972,8 @@ static void update_stats(struct net_device *dev)
+ 	dev->stats.tx_packets			+= (up&0x30) << 4;
+ 	/* Rx packets   */			   inb(ioaddr + 7);
+ 	/* Tx deferrals */			   inb(ioaddr + 8);
+-	rx		 			 = inw(ioaddr + 10);
+-	tx					 = inw(ioaddr + 12);
++	/* rx */				   inw(ioaddr + 10);
++	/* tx */				   inw(ioaddr + 12);
+ 
+ 	EL3WINDOW(4);
+ 	/* BadSSD */				   inb(ioaddr + 12);
 -- 
 2.25.1
 
