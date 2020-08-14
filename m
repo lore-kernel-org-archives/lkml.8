@@ -2,79 +2,118 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2481C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98005206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A23C20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEgesqFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHNKfc (ORCPT
+        id S1726820AbgHNKjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:35:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47424 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgHNKfa (ORCPT
+        Fri, 14 Aug 2020 06:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgHNKj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:35:30 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k6X3M-00050T-G5; Fri, 14 Aug 2020 10:35:16 +0000
-Date:   Fri, 14 Aug 2020 12:35:15 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     oleg@redhat.com, ebiederm@xmission.com, viro@zeniv.linux.org.uk,
-        pavel@ucw.cz, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] signal: Convert to use the preferred fallthrough macro
-Message-ID: <20200814103515.tobuao5kd42lcryn@wittgenstein>
-References: <20200814083932.4975-1-linmiaohe@huawei.com>
+        Fri, 14 Aug 2020 06:39:27 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9DEC061384;
+        Fri, 14 Aug 2020 03:39:27 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id t10so9412878ejs.8;
+        Fri, 14 Aug 2020 03:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=P/IMbVVazwp69IEiF2BxdVyE/bB073q/0Zsieh45SU4=;
+        b=YEgesqFOIJssOUsE3Ax30Jh1IoNlR6jOhwvHnnpivHHNXQu109DBtK1qFXl5b0obs6
+         C5DY5jFHQMR7v15+JIsTefeqgMsCwQwMQTTLoBVUxIF95RSzkpZkzk1apQx5JqLfKnXV
+         KuasG5Y5ZNkkd1GH82aAJiBKtP/X13oGVGl3/5oCGEBvLQ7iqFuk27+MoHIOgOLPoalA
+         Ch5ikNAgfZX/GszT/+s1uha/M5i7oVf9Naxt8Rf/L0bVo/jpp/AJqVaON1l8g1n0Nxgn
+         KhqTPmSkFyRjsQDi/0mI7Va+mVASIgWQzNnh7WbpgWuA9IDVjBcVu/fLMneVxG7Tf4II
+         11jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P/IMbVVazwp69IEiF2BxdVyE/bB073q/0Zsieh45SU4=;
+        b=BzyZ0MUq+dX/u+v6uu80XNnmAqTi2J2B1UYuyyzBgA/j7yM0RB7ytQi6/lZi6BNF1n
+         ht7tQbFiJnk/xRyrxyNzrOInyx+w9mkr2FEq4W7IqL/KG8IzhnrS4CXozw8BJUu07AAJ
+         CMvnw6XVmUpcRim7Ihas9uefVUOW/g5W+a9crwSRdxOBVRB9I7/1yU4NReObuiZrXmJd
+         0/AkveT0RAZ6EKY7SIgln0TEygrOpzOVsd6CsaZ4RVGmG7B2FPShgjJh8sqsNs7cp+4M
+         gnfuqVGI9l/q+HIT/RR5eH0ygX+JuI496M+x3aYJsWPAHHB0TlhcIBm8oanAP1ldSuIp
+         LxXw==
+X-Gm-Message-State: AOAM532hurth9pRLwIZwXF1DwfwFSjV5kK6kBxioFnjnlygXwLeC+cjt
+        n4iVa0Cv20XpPdh0YtEFSxo=
+X-Google-Smtp-Source: ABdhPJw5ITev1EgaRJCI88O4PzjGE8Uuux2A7OMbU/mNY0Gmu8uV3kvpdkdB6849WNTExc9cU7Vfbw==
+X-Received: by 2002:a17:906:841:: with SMTP id f1mr1821223ejd.158.1597401565729;
+        Fri, 14 Aug 2020 03:39:25 -0700 (PDT)
+Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id e8sm5675092edy.68.2020.08.14.03.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 03:39:25 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 12:39:19 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Andres Beltran <lkmlabelt@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] hv_netvsc: Add validation for untrusted Hyper-V values
+Message-ID: <20200814103919.GA12689@andrea>
+References: <20200728225321.26570-1-lkmlabelt@gmail.com>
+ <BL0PR2101MB0930BC0130F6AE5775E62604CA4C0@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200814083932.4975-1-linmiaohe@huawei.com>
+In-Reply-To: <BL0PR2101MB0930BC0130F6AE5775E62604CA4C0@BL0PR2101MB0930.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 04:39:32AM -0400, Miaohe Lin wrote:
-> Convert the uses of fallthrough comments to fallthrough macro.
+Hi Haiyang,
+
+[I'm resuming this work by Andres.  Sorry for the delay.]
+
+
+> >  	switch (nvsp_packet->hdr.msg_type) {
+> >  	case NVSP_MSG_TYPE_INIT_COMPLETE:
+> >  	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
+> >  	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
+> >  	case NVSP_MSG5_TYPE_SUBCHANNEL:
+> > +		if (msglen < sizeof(struct nvsp_message)) {
+> > +			netdev_err(ndev, "nvsp_msg5 length too small: %u\n",
+> > +				   msglen);
+> > +			return;
+> > +		}
 > 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
+> struct nvsp_message includes all message types, so its length is the longest type,
+> The messages from older host version are not necessarily reaching the 
+> sizeof(struct nvsp_message).
 
-This matches what we have documented in:
+I split the check above into several checks, one for each "case", using
+(what I understand are) the corresponding structures/sizeofs...
 
-Documentation/process/deprecated.rst
-Documentation/process/coding-style.rst
-
-I'm going to reference that info in the commit message.
-
-Applied, queueing for post rc1.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
->  kernel/signal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 6f16f7c5d375..27505ca5be2d 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -851,7 +851,7 @@ static int check_kill_permission(int sig, struct kernel_siginfo *info,
->  			 */
->  			if (!sid || sid == task_session(current))
->  				break;
-> -			/* fall through */
-> +			fallthrough;
->  		default:
->  			return -EPERM;
->  		}
-> -- 
-> 2.19.1
-> 
+> Testing on both new and older hosts are recommended, in case I didn't find out all issues
+> like this one.
+
+Sure, will do.
+
+Thanks,
+  Andrea
