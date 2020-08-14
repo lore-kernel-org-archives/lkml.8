@@ -4,72 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C140C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F22EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7AF20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215E5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K8YakLwQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFwPVGLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgHNLlH (ORCPT
+        id S1727112AbgHNLlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39776 "EHLO
+        Fri, 14 Aug 2020 07:41:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgHNLkX (ORCPT
+        with ESMTP id S1728230AbgHNLkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:40:23 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4112C06135C
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so8096650wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:20 -0700 (PDT)
+        Fri, 14 Aug 2020 07:40:22 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64271C061342
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l2so8062261wrc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BETUm1VsjAHaE9mSTvIErHbihrcPaijwVnn2xiQgls0=;
-        b=K8YakLwQXGOsqfx28gwRQ+anspeFLdTWsKZ6Hb88B6w5tU+DE5CK/TOOil0CWNCXAu
-         ffYdufP1kx1qwkJ9ouyEhwkIbzXcRkmsDWQzq8/XqtLXPy+y2Z/XVOEFa6gMxPEDeVkQ
-         EQwSXEVmpKzK+GkwMptcX26ANSi3nFbr9aVTK5wZQCsCDzE2+QL9xl89zjqrAg4YsvIa
-         sTUNe6XZMX14B4JRRT+6QRuodGaw/82z76iu5tYITweWAhbl/2R7Z3F2od1mKqeyRL1Z
-         N+onSwvPoF7x4ZQ+YvnZKM+HsR5b5nGc24k7RD5a30ek24EIU4pOHZ1eag5gc52ATru8
-         gvLw==
+        bh=YFgXjYQQ0+xg2jvt5uv0D8nLYp5jF/FJWwM+q4+R5DE=;
+        b=GFwPVGLxXf/mpStDrwQbhZhhGdubhcLGe+9QBE3auyMrhgHAOnfF9/382XpY9WzAAy
+         erGIGgYbUKa0VY9jyzkDnooZ6tWkoEPH3xTCvwbUgzwtQFCfVUMsdD2xluztnlnPHvPk
+         Wj4O4gMCgAcc6ALZu71VEc8S4IQ8s/EONoLx4Y9Fs3Vy8yIAaRcJBYmeiVyQ6GUffrlz
+         TPa7yzxScLbZHbr9ozFnhXH0Kf/XqZHFzqZSosAFH3TrtyEWg4/ZPY3GopviOpzQoUln
+         DBDzrWxAlV0KS4t0N5dOKAnzYmh2hN8EI/wPGmyITJ1kTzwUkB9iwLfiNipfsuCEf+W4
+         dWVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BETUm1VsjAHaE9mSTvIErHbihrcPaijwVnn2xiQgls0=;
-        b=b4mS67Rc0xTu9GddXNXZpHdOZ4LUJEk/MIpsIQLnQYkdiyE4JgHZ1riysG+Qhh4eYR
-         aZ2gG2QXrrxHRY/bCGV4f7c6Q1CX/ddb178m9fDV3LOFYCJZYZ7s0K2Nvkg1/qqbH3Oj
-         8ZEghVvXmE7bYrX4BHUPOiqvo4UsS4b3NcYLc3JAfcYtrsKYci5trWJMw0GOxHr3Yi7z
-         K1qQTXWd9MQBcFupC4P8Cl5w3HI8QpAQDCMxDSggBX1AivIzF/Sy+hkLo74CvsoVKNuY
-         ZcgxCQbXkLgTtW2HfSfhUoL9IIUcBcF1qT1HEFBdBA6mur/n3SCkIR8Mu4GmBvzs39R8
-         A2xQ==
-X-Gm-Message-State: AOAM531uivoNQBJoICi/yR/ycsIhwQw+9rZzspMHJ/0jC5h491PplPrx
-        FdZMsYYXDZu6jj7Gkp9lpGv1Xg==
-X-Google-Smtp-Source: ABdhPJxIxjXAMbNxjAnHnCJBk/QJ0q8XoyiBfmFbg2rseOQ463H3p0d/reKBasOyl/LNP6JUO29kqQ==
-X-Received: by 2002:a5d:4b11:: with SMTP id v17mr2343043wrq.224.1597405219704;
-        Fri, 14 Aug 2020 04:40:19 -0700 (PDT)
-Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=YFgXjYQQ0+xg2jvt5uv0D8nLYp5jF/FJWwM+q4+R5DE=;
+        b=ZdKcapGOd4eXLrfFsSajC0KsL3oTP2Shgm1la1dPVVfwSio6oabubShvX1FkvGo/Lv
+         FLBW8qZLAGOI9BSKJzFrAKwe1EMKUK9ugkkCER+qowsmzhJp9LoZJhrjNFM0WxVvygNv
+         Tr+tY1fMZ5hpXYFyUJKhDFS/M7KO/CZ+51uTHYxM0RRKYzM/44k6gwTIPbJucr35flZl
+         FniMu+MVN0EANf3EDSvGZ55LwPtCdZTjUiwQxxxqwT1mxfsJ7s+r5qOiQkLr7df54ore
+         YN71FqrHKh74fb8Vq8U4MbjQntmiEIkChj4IxIyTW0DTYpuD4FcK2NMzKOaHDZW1J6Us
+         DEqg==
+X-Gm-Message-State: AOAM532MnfW46VPBfh4w0UNqXED1ASmn3gL/Ekrh2AOKTt1qR1Cl6bhY
+        AuC5o4wI2YXKfCHUHb9paW708w==
+X-Google-Smtp-Source: ABdhPJyYbghJq3Vbytc+37vzZWS3PlyxtAiIzUiiOcVh5+jOzFITVoKVkNX94BOY56UhZmaJvfCDEw==
+X-Received: by 2002:a5d:5746:: with SMTP id q6mr2377308wrw.59.1597405218092;
         Fri, 14 Aug 2020 04:40:18 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id 32sm16409129wrh.18.2020.08.14.04.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 04:40:17 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
         Kalle Valo <kvalo@codeaurora.org>,
-        Gerald Combs <gerald@ethereal.com>,
-        Linux Wireless <ilw@linux.intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 25/30] net: wireless: intel: ipw2x00: ipw2200: Demote lots of nonconformant kerneldoc comments
-Date:   Fri, 14 Aug 2020 12:39:28 +0100
-Message-Id: <20200814113933.1903438-26-lee.jones@linaro.org>
+        Johannes Berg <johannes.berg@intel.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH 24/30] net: wireless: broadcom: brcm80211: brcmsmac: mac80211_if: Demote a few non-conformant kerneldoc headers
+Date:   Fri, 14 Aug 2020 12:39:27 +0100
+Message-Id: <20200814113933.1903438-25-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200814113933.1903438-1-lee.jones@linaro.org>
 References: <20200814113933.1903438-1-lee.jones@linaro.org>
@@ -80,185 +86,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lots of these are either completely wrong or do not even attempt to
-document any of the parameters.  Others use an incorrect/dated format
-which is not recognised by the kernel (... and are also wrong and
-suffering from docrot).
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3011: warning: Function parameter or member 'priv' not described in 'ipw_alive'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3693: warning: Incorrect use of kernel-doc format:  * Driver allocates buffers of this size for Rx
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3697: warning: Incorrect use of kernel-doc format:  * ipw_rx_queue_space - Return number of free slots available in queue.
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3700: warning: Function parameter or member 'q' not described in 'ipw_rx_queue_space'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'priv' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'q' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'count' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'read' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'write' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'base' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3743: warning: Function parameter or member 'size' not described in 'ipw_queue_init'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3800: warning: Function parameter or member 'priv' not described in 'ipw_queue_tx_free_tfd'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3800: warning: Function parameter or member 'txq' not described in 'ipw_queue_tx_free_tfd'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3841: warning: Function parameter or member 'priv' not described in 'ipw_queue_tx_free'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3841: warning: Function parameter or member 'txq' not described in 'ipw_queue_tx_free'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:3869: warning: Function parameter or member 'priv' not described in 'ipw_tx_queue_free'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:4474: warning: Function parameter or member 'priv' not described in 'ipw_rx_notification'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:4474: warning: Function parameter or member 'notif' not described in 'ipw_rx_notification'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:4935: warning: Function parameter or member 'priv' not described in 'ipw_queue_reset'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:5008: warning: Function parameter or member 'priv' not described in 'ipw_queue_tx_reclaim'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:5008: warning: Function parameter or member 'txq' not described in 'ipw_queue_tx_reclaim'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:5008: warning: Function parameter or member 'qindex' not described in 'ipw_queue_tx_reclaim'
- drivers/net/wireless/intel/ipw2x00/ipw2200.c:8456: warning: Function parameter or member 'priv' not described in 'ipw_sw_reset'
+ In file included from drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:30:
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:288: warning: Function parameter or member 'wl' not described in 'brcms_free'
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:1127: warning: Function parameter or member 'pdev' not described in 'brcms_attach'
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:1222: warning: Function parameter or member 'pdev' not described in 'brcms_bcma_probe'
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:1301: warning: Function parameter or member 'work' not described in 'brcms_driver_init'
 
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Gerald Combs <gerald@ethereal.com>
-Cc: Linux Wireless <ilw@linux.intel.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
 Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intel/ipw2x00/ipw2200.c | 30 ++++++++++----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ .../broadcom/brcm80211/brcmsmac/mac80211_if.c         | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index 5345f90837f5f..e7680702e1602 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -2998,7 +2998,7 @@ static void ipw_remove_current_network(struct ipw_priv *priv)
- 	spin_unlock_irqrestore(&priv->ieee->lock, flags);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index 648efcbc819fa..29a834ea45eb8 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -275,14 +275,13 @@ static void brcms_set_basic_rate(struct brcm_rateset *rs, u16 rate, bool is_br)
+ 	}
  }
  
 -/**
 +/*
-  * Check that card is still alive.
-  * Reads debug register from domain0.
-  * If card is present, pre-defined value should
-@@ -3113,7 +3113,7 @@ static int ipw_load_ucode(struct ipw_priv *priv, u8 * data, size_t len)
- 	mdelay(1);
- 
- 	/* write ucode */
--	/**
-+	/*
- 	 * @bug
- 	 * Do NOT set indirect address register once and then
- 	 * store data to indirect data register in the loop.
-@@ -3666,7 +3666,7 @@ static int ipw_load(struct ipw_priv *priv)
- 	return rc;
- }
- 
--/**
-+/*
-  * DMA services
+  * This function frees the WL per-device resources.
   *
-  * Theory of operation
-@@ -3689,11 +3689,11 @@ static int ipw_load(struct ipw_priv *priv)
-  * we only utilize the first data transmit queue (queue1).
+  * This function frees resources owned by the WL device pointed to
+  * by the wl parameter.
+  *
+  * precondition: can both be called locked and unlocked
+- *
   */
- 
--/**
-+/*
-  * Driver allocates buffers of this size for Rx
-  */
- 
--/**
-+/*
-  * ipw_rx_queue_space - Return number of free slots available in queue.
-  */
- static int ipw_rx_queue_space(const struct ipw_rx_queue *q)
-@@ -3724,7 +3724,7 @@ static inline int ipw_queue_inc_wrap(int index, int n_bd)
- 	return (++index == n_bd) ? 0 : index;
+ static void brcms_free(struct brcms_info *wl)
+ {
+@@ -1115,7 +1114,7 @@ static int ieee_hw_init(struct ieee80211_hw *hw)
+ 	return ieee_hw_rate_init(hw);
  }
  
 -/**
 +/*
-  * Initialize common DMA queue structure
+  * attach to the WL device.
   *
-  * @param q                queue to init
-@@ -3788,7 +3788,7 @@ static int ipw_queue_tx_init(struct ipw_priv *priv,
+  * Attach to the WL device identified by vendor and device parameters.
+@@ -1210,7 +1209,7 @@ static struct brcms_info *brcms_attach(struct bcma_device *pdev)
+ 
+ 
+ 
+-/**
++/*
+  * determines if a device is a WL device, and if so, attaches it.
+  *
+  * This function determines if a device pointed to by pdev is a WL device,
+@@ -1290,7 +1289,7 @@ static struct bcma_driver brcms_bcma_driver = {
+ 	.id_table = brcms_coreid_table,
+ };
+ 
+-/**
++/*
+  * This is the main entry point for the brcmsmac driver.
+  *
+  * This function is scheduled upon module initialization and
+@@ -1317,7 +1316,7 @@ static int __init brcms_module_init(void)
  	return 0;
  }
  
 -/**
 +/*
-  * Free one TFD, those at index [txq->q.last_used].
-  * Do NOT advance any indexes
+  * This function unloads the brcmsmac driver from the system.
   *
-@@ -3811,7 +3811,7 @@ static void ipw_queue_tx_free_tfd(struct ipw_priv *priv,
- 	if (le32_to_cpu(bd->u.data.num_chunks) > NUM_TFD_CHUNKS) {
- 		IPW_ERROR("Too many chunks: %i\n",
- 			  le32_to_cpu(bd->u.data.num_chunks));
--		/** @todo issue fatal error, it is quite serious situation */
-+		/* @todo issue fatal error, it is quite serious situation */
- 		return;
- 	}
- 
-@@ -3828,7 +3828,7 @@ static void ipw_queue_tx_free_tfd(struct ipw_priv *priv,
- 	}
- }
- 
--/**
-+/*
-  * Deallocate DMA queue.
-  *
-  * Empty queue by removing and destroying all BD's.
-@@ -3860,7 +3860,7 @@ static void ipw_queue_tx_free(struct ipw_priv *priv, struct clx2_tx_queue *txq)
- 	memset(txq, 0, sizeof(*txq));
- }
- 
--/**
-+/*
-  * Destroy all DMA queues and structures
-  *
-  * @param priv
-@@ -4465,7 +4465,7 @@ static void handle_scan_event(struct ipw_priv *priv)
- 	}
- }
- 
--/**
-+/*
-  * Handle host notification packet.
-  * Called from interrupt routine
-  */
-@@ -4925,7 +4925,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
- 	}
- }
- 
--/**
-+/*
-  * Destroys all DMA structures and initialise them again
-  *
-  * @param priv
-@@ -4934,7 +4934,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
- static int ipw_queue_reset(struct ipw_priv *priv)
- {
- 	int rc = 0;
--	/** @todo customize queue sizes */
-+	/* @todo customize queue sizes */
- 	int nTx = 64, nTxCmd = 8;
- 	ipw_tx_queue_free(priv);
- 	/* Tx CMD queue */
-@@ -4990,7 +4990,7 @@ static int ipw_queue_reset(struct ipw_priv *priv)
- 	return rc;
- }
- 
--/**
-+/*
-  * Reclaim Tx queue entries no more used by NIC.
-  *
-  * When FW advances 'R' index, all entries between old and
-@@ -8445,7 +8445,7 @@ static void ipw_rx(struct ipw_priv *priv)
- #define	DEFAULT_SHORT_RETRY_LIMIT 7U
- #define	DEFAULT_LONG_RETRY_LIMIT  4U
- 
--/**
-+/*
-  * ipw_sw_reset
-  * @option: options to control different reset behaviour
-  * 	    0 = reset everything except the 'disable' module_param
+  * This function unconditionally unloads the brcmsmac driver module from the
 -- 
 2.25.1
 
