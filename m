@@ -2,195 +2,97 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A74C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB080C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD3A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37D920866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597418786;
+	bh=BuFd0GUohYMykV0bEdLt1waKCKM21ZGzCtbhCO68IFc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hOpQMYRzwE5IugVR5iJD/Jvd5VGz9nMBfFVuF50MfUCijV3d9g38zsGEcEbATL60n
+	 747jJfffMvGBojuM7IyPcdK3sMY9Wh4JTyGSS7biYFzdCuQ6XWcCwHfA4CBja+i+8O
+	 pHLh4X/I7LEyVZvrOokbDWt5aXzE2J8rbHxe/iig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHNPZg (ORCPT
+        id S1726897AbgHNP0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:25:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43004 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgHNPZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:25:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id v21so7832799otj.9;
-        Fri, 14 Aug 2020 08:25:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=skIVLAyvKMa0ooMTMPg8Y4Q1LXoIBirrRYMcwceQjTk=;
-        b=L3mctKB1PRi2rpWDa0/WxbhOg2RBy1solSLWAB1fjcITbSV6OYAL6/C5lJy0j0Qd0c
-         4vRmkm5x/zaAEm99lhFjZh2ccWU/WyeKLg9Y1tuNCGaS94sFZn9XeLK2OhRTGFtqSOnC
-         RLc/LtAWQ/vc4BLyMcLXychW4XlDnJQaPEP2/feBivZjLLRQM+VjCR4FLeSNAN3A5Pyu
-         sBnravA4yek0zIQoxEyB24z9R19laeVYmxsmvzPgNpPTDC+sBZbkownaOv7b1YsApUXn
-         xsUfuBcopEiL6ohLJThUpE7fhW867EJ7xBT8wHs28XxEkST9SeBwpr6/AuPrLkhrr2dx
-         t7eA==
-X-Gm-Message-State: AOAM532UNu5215v47mFcZNRpoH1FxEqRjGvAw3qR/0VFfF7r5raj8C0t
-        lcJ6vUI6rJgcb/7nJh9jkzFMD0e2z6A17ysyaM0j9sMWrBM=
-X-Google-Smtp-Source: ABdhPJymFA5geQaFjcXCc0ybte3AFiZ24GktW5jXhgw1d3psf1WmdfHpZjbMqgmyRm4wioeEJto8RAwmMAXMi/vB8oQ=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr2226098otl.145.1597418734202;
- Fri, 14 Aug 2020 08:25:34 -0700 (PDT)
+        Fri, 14 Aug 2020 11:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgHNP0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:26:24 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02285207DA;
+        Fri, 14 Aug 2020 15:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597418784;
+        bh=BuFd0GUohYMykV0bEdLt1waKCKM21ZGzCtbhCO68IFc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=IIINUl+lN73fm93kQbcZAXjSlQanUn+3mjuNuD3Nidj6TRiHH1x8JytdH4XNdcU58
+         9vtGYsGEm0hgOvf4QSYePNsgOTrf5uahsMt09h8BEg99lleRxbDlvyFEdc/ZArMpHw
+         ShSpemX1MWdH1Tp9ugrVarn7gsSnCw5beyosMS8U=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CDEEE3522A0E; Fri, 14 Aug 2020 08:26:23 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 08:26:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814152623.GN4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813182618.GX2674@hirez.programming.kicks-ass.net>
+ <20200813185257.GF4295@paulmck-ThinkPad-P72>
+ <20200813220619.GA2674@hirez.programming.kicks-ass.net>
+ <875z9m3xo7.fsf@nanos.tec.linutronix.de>
+ <20200814083037.GD3982@worktop.programming.kicks-ass.net>
+ <20200814102306.GK35926@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
- <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
- <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
- <CA+V-a8vPn_z_j1Vwr_1F=dCw8H=g5UMWvWxgRqBeVR7dzHPz8Q@mail.gmail.com>
- <CAMuHMdWc9q9NjQuAuy5M=v_x=i8XxVg5JZHswjvPsgNzhHfO0w@mail.gmail.com> <CAMuHMdUyV58t3eihBJv2xex5gW1Oef37Jo3FHoJstU=SspmpHA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUyV58t3eihBJv2xex5gW1Oef37Jo3FHoJstU=SspmpHA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 14 Aug 2020 17:25:23 +0200
-Message-ID: <CAMuHMdU0EiQuk_bWx1yrmbBTXg8mL-PeN2=P61xQ5Ucb5QmYYg@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
- in correct sequence
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hao Bui <hao.bui.yg@renesas.com>,
-        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Rob Landley <rob@landley.net>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814102306.GK35926@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 2:36 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Apr 2, 2020 at 5:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Apr 2, 2020 at 1:28 PM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Wed, Apr 1, 2020 at 1:43 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
-> > > > > > <kazuhiro.fujita.jg@renesas.com> wrote:
-> > > > > > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
-> > > > > > > data that is to be read next from SCxRDR register, But where as for
-> > > > > > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
-> > > > > > > previously read from SCxRDR register.
-> > > > > > >
-> > > > > > > This patch makes sure the status register is read depending on the port
-> > > > > > > types so that errors are caught accordingly.
-> > > > > > >
-> > > > > > > Cc: <stable@vger.kernel.org>
-> > > > > > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-> > > > > > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
-> > > > > > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
-> > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > > > Nevertheless, this patch will need some testing on various hardware.
-> > > > > > Do you have a test case to verify the broken/fixed behavior?
-> > > > > >
-> > > > > Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
-> > > >
-> > > > This can easily be tested on the console.  Basic testing can even be
-> > > > done with an unmodified kernel, as there is already a "parity error"
-> > > > notice message in the driver.
-> > > >
-> > > > Enable even parity on the console:
-> > > >
-> > > > $ stty evenp
-> > > >
-> > > > (use "oddp" for odd parity, and invert all below)
-> > > >
-> > > > Typing e.g. a single "p" should trigger a parity error.
-> > > > Typing "o" shouldn't.
-> > > > Without this patch, no parity error is detected on SCIF.
-> > > >
-> > > > Likewise, pasting a sequence of "p" characters should trigger a lot of
-> > > > parity errors, "o" shouldn't.
-> > > > Without this patch, parity errors are detected on SCIF, except for the
-> > > > first character.
-> > > >
-> > > > For more advanced testing, make the following change to the driver:
-> > > >
-> > > > - dev_notice(port->dev, "parity error\n");
-> > > > + dev_notice(port->dev, "parity error for char 0x%02x hweight %u\n",
-> > > > c, hweight8(c));
-> > > >
-> > > > Pasting an alternating sequence of "p" and "o" characters should trigger
-> > > > parity errors for the "p" characters.
-> > > > Without this patch, they are triggered for the "o" characters instead.
-> > > >
-> > > Thank you that makes life easier.
-> > >
-> > > > With this patch, the issues above are fixed on SCIF.
-> > > > This has been verified on:
-> > > >   1. SCIF on R-Car Gen 2,
-> > > >   2. SCIF on R-Car Gen3
-> > > >   3. SCIF on RZ/A1H,
-> > > >   4. SCIF on RZ/A2M.
->
-> > If I disable DMA for HSCIF1 in the .dtsi, parity errors are detected
-> > as expected.
->
-> So HSCIF on R-Car Gen3 is affected, and fixed by this patch.
->
-> > Hence the driver does not support parity checking when DMA is enabled.
-> > I also think it's not easy to add support for that, if possible at all.
-> >
-> > > > I haven't tested it yet on:
-> > > >   1. SCIFB on SH/R-Mobile (needs wiring up),
->
-> SCIFB on R-Mobile A1 is not affected, and works before/after, as expected.
->
-> > > >   2. SCIFA, SCIFB, and HSCIF on R-Car Gen2 (needs wiring up),
->
-> Same for SCIFA, SCIFB on R-Car M2-W.
->
-> HSCIF on R-Car M2-W is affected, and fixed by this patch.
->
-> This means the modern platforms we care about are handled fine, so
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> That leaves us with testing on a few legacy platforms...
->
-> > > >   3. (H)SCIF on R-Car Gen1 (remote boards unaccessible at the moment),
-> > > >   4. SuperH (only remote Migo-R available, but unaccessible).
-> > > >
-> > > > I can test 1 and 2 (and perhaps 3 and 4) later, if needed.
-> > > probably testing this on SuperH is gonna be a pain due to lack of
-> > > hardware availability,
-> > > (it needs to be tested on 19 platforms)
-> > > how about #ifdef CONFIG_ARCH_RENESAS || CONFIG_H8300 and the fix ?
-> >
-> > I had a look at a few SuperH docs w.r.t. framing/parity error behavior:
-> >   - SCIF(A) on SH7724: similar to R-Car Gen2,
-> >   - H(SCIF) on SH7734: same as on R-Car Gen2,
-> >   - SCIF on SH7751: conflict between status register ("to be read next")
-> >     and flowchart ("read from").
+On Fri, Aug 14, 2020 at 12:23:06PM +0200, peterz@infradead.org wrote:
+> On Fri, Aug 14, 2020 at 10:30:37AM +0200, Peter Zijlstra wrote:
+> > > > 1.	Prohibit invoking allocators from raw atomic context, such
+> > > >	as when holding a raw spinlock.
+> > > 
+> > >   Clearly the simplest solution but not Pauls favourite and
+> > >   unfortunately he has a good reason.
+> > 
+> > Which isn't actually stated anywhere I suppose ?
+> 
+> Introduce raw_kfree_rcu() that doesn't do the allocation, and fix the
+> few wonky callsites.
 
-FTR, I gave it a try on the SH7751R-based I-O DATA USL-5P aka Landisk:
-SCIF is affected, and fixed by commit 3dc4db3662366306 ("serial: sh-sci:
-Make sure status register SCxSR is read in correct sequence").
+The problem with that is common code along with the tendency of people
+to just use the one that "works everywhere".
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+							Thanx, Paul
