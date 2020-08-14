@@ -2,111 +2,74 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF2C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D402E20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597400661;
-	bh=xpEWHoqKcEB494GdnCC72/J441Ze+im3K0PAdDimVq0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zeSsvyg9efcr/F1ISN1UOPi2N5nCni7HDNi1zkAHrA160v7cYxX30JPT3RNgchKv9
-	 wzVP1GxTQfsz8LJn0ujnwpxpMImJybguuJ3YL6rEG3DWicDCxAsq3FXN/lssta5mHe
-	 EOGfsxPBri+c/z0GwZHHnwvTH8xw0J6ghOtBdokg=
+	by mail.kernel.org (Postfix) with ESMTP id 4D46C206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgHNKYU (ORCPT
+        id S1726889AbgHNK0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 06:26:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54340 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgHNKYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:24:19 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04BBC20829;
-        Fri, 14 Aug 2020 10:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597400659;
-        bh=xpEWHoqKcEB494GdnCC72/J441Ze+im3K0PAdDimVq0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CnO/lzW0GFCUo4JqS9GDRNFB2dK1h9YMMqYKm818t96yYflwsyZ4bg1pTvfIE5EtJ
-         g1hd0zbKOHR2ipHVWd1xvHRSNNqkZcAGMFIfr/6yZuah9iYO8UFxwqJF0Hagu4fMto
-         iLa/QIp1378FN0gCIDqTNrbrN/MVSJwm5j7SE7ig=
-Received: by mail-ot1-f46.google.com with SMTP id v21so7166721otj.9;
-        Fri, 14 Aug 2020 03:24:18 -0700 (PDT)
-X-Gm-Message-State: AOAM530sFrhnFAYV2a7F88zEdRfRi0AzP2KmZKEMn+32BTdhovfieQcu
-        W1jtwP28DzQqoKh8RutKb2CRotrLbHrAHSqhZXA=
-X-Google-Smtp-Source: ABdhPJwlY3BdEYsGjQjte9jImnyQYoMB7rPQOzQJEyh+CfsWC1HyIJKedgF0lx0hhUi6itI6Q335i0wtkxMA/k66lKE=
-X-Received: by 2002:a05:6830:1d8c:: with SMTP id y12mr1452059oti.77.1597400658377;
- Fri, 14 Aug 2020 03:24:18 -0700 (PDT)
+        id S1726012AbgHNK0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:26:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BE8F5ACB5;
+        Fri, 14 Aug 2020 10:26:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     amit.pundir@linaro.org, hch@lst.de, linux-kernel@vger.kernel.org
+Cc:     rientjes@google.com, jeremy.linton@arm.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH v4 0/2] dma-pool fixes
+Date:   Fri, 14 Aug 2020 12:26:22 +0200
+Message-Id: <20200814102625.25599-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200811143130.0ca95b8d@canb.auug.org.au> <CAMj1kXGvfjO_e7AgurJ-81o6e4rBC8HkXi3Kkb+ZZfy-MoKcyQ@mail.gmail.com>
- <20200814102206.GB2367157@gmail.com>
-In-Reply-To: <20200814102206.GB2367157@gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 14 Aug 2020 12:24:07 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFrtjw5JdOsjJi0mw=S0H8KJEufOdv+GCYCwqhPSaf3eQ@mail.gmail.com>
-Message-ID: <CAMj1kXFrtjw5JdOsjJi0mw=S0H8KJEufOdv+GCYCwqhPSaf3eQ@mail.gmail.com>
-Subject: Re: linux-next: new build warnings after binutils update
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 12:22, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> > (+ Arvind, Kees)
-> >
-> > On Thu, 13 Aug 2020 at 22:58, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > After upgading some software, builds of Linus' tree now produce these warnings:
-> > >
-> > > x86_64-linux-gnu-ld: arch/x86/boot/compressed/head_64.o: warning: relocation in read-only section `.head.text'
-> > > x86_64-linux-gnu-ld: warning: creating DT_TEXTREL in a PIE
-> > >
-> > > I upgraded binutils from 2.34-8 to 2.35-1 (Debian versions).
-> > >
-> > > $ x86_64-linux-gnu-gcc --version
-> > > x86_64-linux-gnu-gcc (Debian 9.3.0-13) 9.3.0
-> > >
-> > > Any ideas?
-> > >
-> >
-> > Arvind and I have some patches on the list that fix various relocation
-> > issues in the decompressor binary.
-> >
-> > As far as I can tell, Arvind's patch to suppress runtime relocations
-> > [0] addresses this exact issue.
-> >
-> > Unfortunately, in spite of various pings and attempts to get the x86
-> > maintainers to notice this series, it has been ignored so far. Perhaps
-> > this is a good time to merge it for -rc1/2?
-> >
-> > [0] https://lore.kernel.org/lkml/20200731202738.2577854-6-nivedita@alum.mit.edu/
->
-> It all looked good to me but was a bit late for v5.9, will pick up
-> after -rc1.
->
+Now that we have an explanation to Amir's issue, we can re-spin this
+series.
 
-Thanks Ingo.
+---
+Changes since v3:
+ - Do not use memblock_start_of_DRAM()
+
+Changes since v2:
+ - Go back to v1's behavior for patch #2
+
+Changes since v1:
+ - Make cma_in_zone() more strict, GFP_KERNEL doesn't default to true
+   now
+
+ - Check if phys_addr_ok() exists prior calling it
+
+Christoph Hellwig (1):
+  dma-pool: fix coherent pool allocations for IOMMU mappings
+
+Nicolas Saenz Julienne (1):
+  dma-pool: Only allocate from CMA when in same memory zone
+
+ drivers/iommu/dma-iommu.c   |   4 +-
+ include/linux/dma-direct.h  |   3 -
+ include/linux/dma-mapping.h |   5 +-
+ kernel/dma/direct.c         |  13 +++-
+ kernel/dma/pool.c           | 145 +++++++++++++++++++-----------------
+ 5 files changed, 92 insertions(+), 78 deletions(-)
+
+-- 
+2.28.0
+
