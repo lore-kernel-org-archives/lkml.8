@@ -2,69 +2,79 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14317C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99232C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCC2C20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B70D20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgHNNP6 (ORCPT
+        id S1726444AbgHNNRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:15:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33256 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgHNNP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:15:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CC73FAE16;
-        Fri, 14 Aug 2020 13:16:19 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 14:15:54 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     ????????? <tianchen.dingtianc@alibaba-inc.com>
-Cc:     'Ingo Molnar' <mingo@redhat.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>,
-        'Ben Segall' <bsegall@google.com>,
-        'linux-kernel' <linux-kernel@vger.kernel.org>,
-        '??????' <yun.wang@linux.alibaba.com>
-Subject: Re: [RFC PATCH] sched/numa: fix bug in update_task_scan_period
-Message-ID: <20200814131554.GH3510@suse.de>
-References: <44875b14-00ea-4e61-aba7-4809808c4b2a.tianchen.dingtianc@alibaba-inc.com>
- <20200811110154.GY3510@suse.de>
- <000401d6705b$eba56bf0$c2f043d0$@alibaba-inc.com>
+        Fri, 14 Aug 2020 09:17:12 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:51150 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgHNNRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:17:08 -0400
+Received: by mail-il1-f199.google.com with SMTP id t20so6548241ill.17
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 06:17:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=IH2yFUwfReDyb+ZllS6U8RBdlomdqdJ/qVk5KbqvAis=;
+        b=YlOczIz1RrPJz5d59PCiLPr8UgSefrpKH9tgQI8zgi1FqbTeldwzwtMdp3R+uavGSK
+         qUqTZW6uw+krRJrD48fWtWDSILyotAFRd4BPsjEDTbudnk8az87G4ZmrCfENymFnMfvQ
+         qhpWnmXjMvCZIUeBF8p/d9n84V1zIi5GCYLkMa9DRy4KGFR0ZEzjOVivxF4WF7K64rLm
+         iA51aaPliJS4k16adFZS61sYjaqypzbDMHoC5yzwQgnvNonYghvxuZakO6IzsXcln9AO
+         //5jimNJa7BcfO2PNxFRrUEAE3YqluK0bhI5W6pjXYtClH4TGroU3HlY1HP0ivO91A56
+         YVYQ==
+X-Gm-Message-State: AOAM531QsgthXCXO4S7h584UwMZ//pJKKZDber9i55GfiGKo9GmpEoKB
+        VK2clh7Mhys/5F6SjgQTWGG1Pwi53KOXCiauwhE7YeM7OETx
+X-Google-Smtp-Source: ABdhPJw0DlrmX1wRwvc5QY6U9kAZSrT6vpFGHl67k3p4ysMpI61y/3sf2z41wWaLsVc2vLfboRZmffcWc+uADhjTbkL89fyq6HPG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <000401d6705b$eba56bf0$c2f043d0$@alibaba-inc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:d588:: with SMTP id a8mr2552007iln.146.1597411027574;
+ Fri, 14 Aug 2020 06:17:07 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 06:17:07 -0700
+In-Reply-To: <0000000000006dc0290581ca413e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dbe6ee05acd63ca2@google.com>
+Subject: Re: WARNING: locking bug in try_to_grab_pending
+From:   syzbot <syzbot+2b713236b28823cd4dff@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, edumazet@google.com, jmaloy@redhat.com,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 11:51:54AM +0800, ????????? wrote:
-> OK. Thanks for your advice and I'll use label instead.
-> In the case of migration failures, if there are still new failures after
-> clearing (meaning the node is still overloaded), the scanning period would
-> be doubled, just like not using this patch. However, if the failures do not
-> increase again, then the scanning period should be adjusted according to the
-> following rules (i.e., ps and lr ratio). I believe this is the original
-> design idea, right?
-> 
+syzbot suspects this issue was fixed by commit:
 
-The original idea was to simply throttle scanning if the faults were
-useless. Your patch is probably correct but I would still like to see
-some evidence of the user-visible impact. What tests have you conducted
-to make sure it behaves better (or is at least neutral in most cases)?
+commit 1378817486d6860f6a927f573491afe65287abf1
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu May 21 18:29:58 2020 +0000
 
--- 
-Mel Gorman
-SUSE Labs
+    tipc: block BH before using dst_cache
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175599f6900000
+start commit:   6663cf82 flow_offload: Fix flow action infrastructure
+git tree:       net-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8572a6e4661225f4
+dashboard link: https://syzkaller.appspot.com/bug?extid=2b713236b28823cd4dff
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e932a8c00000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: tipc: block BH before using dst_cache
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
