@@ -2,126 +2,119 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5334FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF7F207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F18207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlhTnBiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgHNL2c (ORCPT
+        id S1727996AbgHNL3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:28:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:33292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNL2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:28:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9919B1063;
-        Fri, 14 Aug 2020 04:28:31 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.33.165])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A90F3F6CF;
-        Fri, 14 Aug 2020 04:28:29 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 12:28:26 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 8/8] locking/atomics: Use read-write instrumentation for
- atomic RMWs
-Message-ID: <20200814112826.GB68877@C02TD0UTHF1T.local>
-References: <20200721103016.3287832-1-elver@google.com>
- <20200721103016.3287832-9-elver@google.com>
- <20200721141859.GC10769@hirez.programming.kicks-ass.net>
- <CANpmjNM6C6QtrtLhRkbmfc3jLqYaQOvvM_vKA6UyrkWadkdzNQ@mail.gmail.com>
+        Fri, 14 Aug 2020 07:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgHNL3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 07:29:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD329C061384;
+        Fri, 14 Aug 2020 04:29:43 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d22so4429329pfn.5;
+        Fri, 14 Aug 2020 04:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fXOinOaTouuyiTu5KQ5LuIo8RHDIe9EoPbZlWHPA1JU=;
+        b=rlhTnBiZ8K2eBbck5IB3aNnAR5FTPR0KAiW+6tR9Im9zHxo+6GlmB5fjSp1V7+Pj6S
+         J2osKBlMlu44c79JAYMheyH+o5Go2q8xjFrEqgapm23dQeIXe/r6mdnCW3fC/1A68gnA
+         Dq9dQTs5mfjueofG2+JZasPg70UY2SjR4AB0KMsVs30CWyNs949vyllcQIxGAcZwZzJ1
+         ndvJHpSgCy7hZZSvfLeivmCyu5h57E+MoCEoSGoUo+J2FRJtfzbPQkUXEvHApMVgEOV2
+         /FpKhhLFLNYK/VBiQx08st4iBlciCwlZFPj1hMU+S4laOVufJMNzljOoiya84WKyjVOQ
+         gTpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fXOinOaTouuyiTu5KQ5LuIo8RHDIe9EoPbZlWHPA1JU=;
+        b=Vokh9IR6eF+gmngYfrHabczKy6n7qI9Md0waR0WaqJKeaqRRpHLPgqcWHDv9jA478E
+         uOc4EM7ZF0HqbIVaHu1DND0pTwHL9Z7VoGO7LOiIO0M8zGn6GLsWYIB6qqkw7x9pFTNw
+         XObX6kadedGJNpBdaykKV3aakFGrPkEK9EWK8AB6Aoenb6AunXQiMvhPlKkwUg3PwabY
+         lKOIxbPqwFjePzSONYT+IjUfcVhVfQjqV0JsKeFcfDHCTEdXdkM8+ZGo85tzJD/SkQG7
+         ILaOnCV2Ez0Py2/L9e/YutWyRsHOS1ZY8ghF01TJUGN2a4gxNEAac405Jh80EnVb+3Qi
+         d+Vw==
+X-Gm-Message-State: AOAM533FKs/VZoTpgD0GEMa/N91ACVIiJRi92uoD1Yw63wDlmK8sa72o
+        JPNFvfXq3jpPVduEG4dvNQ0=
+X-Google-Smtp-Source: ABdhPJzn9QLZpKp4csa5TzJLh8t2TQR9+PJQAkQl7G2w8uBxX2ZL2hYKEud9Pj0mESc9RQHy3lTomQ==
+X-Received: by 2002:a63:1a51:: with SMTP id a17mr1409425pgm.309.1597404583242;
+        Fri, 14 Aug 2020 04:29:43 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id o192sm9642743pfg.81.2020.08.14.04.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 04:29:42 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 20:29:40 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] uart:8250: change lock order in serial8250_do_startup()
+Message-ID: <20200814112940.GB582@jagdpanzerIV.localdomain>
+References: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
+ <20200814095928.GK1891694@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNM6C6QtrtLhRkbmfc3jLqYaQOvvM_vKA6UyrkWadkdzNQ@mail.gmail.com>
+In-Reply-To: <20200814095928.GK1891694@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Sorry to come to this rather late -- this comment equally applies to v2
-so I'm replying here to have context.
-
-On Wed, Jul 22, 2020 at 12:11:18PM +0200, Marco Elver wrote:
-> On Tue, 21 Jul 2020 at 16:19, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, Jul 21, 2020 at 12:30:16PM +0200, Marco Elver wrote:
-> >
-> > > diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
-> > > index 6afadf73da17..5cdcce703660 100755
-> > > --- a/scripts/atomic/gen-atomic-instrumented.sh
-> > > +++ b/scripts/atomic/gen-atomic-instrumented.sh
-> > > @@ -5,9 +5,10 @@ ATOMICDIR=$(dirname $0)
-> > >
-> > >  . ${ATOMICDIR}/atomic-tbl.sh
-> > >
-> > > -#gen_param_check(arg)
-> > > +#gen_param_check(meta, arg)
-> > >  gen_param_check()
-> > >  {
-> > > +     local meta="$1"; shift
-> > >       local arg="$1"; shift
-> > >       local type="${arg%%:*}"
-> > >       local name="$(gen_param_name "${arg}")"
-> > > @@ -17,17 +18,24 @@ gen_param_check()
-> > >       i) return;;
-> > >       esac
-> > >
-> > > -     # We don't write to constant parameters
-> > > -     [ ${type#c} != ${type} ] && rw="read"
-> > > +     if [ ${type#c} != ${type} ]; then
-> > > +             # We don't write to constant parameters
-> > > +             rw="read"
-> > > +     elif [ "${meta}" != "s" ]; then
-> > > +             # Atomic RMW
-> > > +             rw="read_write"
-> > > +     fi
-> >
-> > If we have meta, should we then not be consistent and use it for read
-> > too? Mark?
+On (20/08/14 12:59), Andy Shevchenko wrote:
+> > ---
+> >  drivers/tty/serial/8250/8250_port.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> > index 09475695effd..67f1a4f31093 100644
+> > --- a/drivers/tty/serial/8250/8250_port.c
+> > +++ b/drivers/tty/serial/8250/8250_port.c
+> > @@ -2275,6 +2275,11 @@ int serial8250_do_startup(struct uart_port *port)
+> >  
+> >  	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+> >  		unsigned char iir1;
 > 
-> gen_param_check seems to want to generate an 'instrument_' check per
-> pointer argument. So if we have 1 argument that is a constant pointer,
-> and one that isn't, it should generate different instrumentation for
-> each. By checking the argument type, we get that behaviour. Although
-> we are making the assumption that if meta indicates it's not a 's'tore
-> (with void return), it's always a read-write access on all non-const
-> pointers.
+> > +		bool irq_shared = up->port.irqflags & IRQF_SHARED;
 > 
-> Switching over to checking only meta would always generate the same
-> 'instrument_' call for each argument. Although right now that would
-> seem to work because we don't yet have an atomic that accepts a
-> constant pointer and a non-const one.
-> 
-> Preferences?
+> I'm wondering why we need a temporary variable? This flag is not supposed to be
+> changed in between, can we leave original conditionals?
 
-Given the only non-rmw cases use the 'l' and 's' meta values, and those
-only have a single argument, I reckon it's preferable to special-case
-those specifically, e.g.
+No particular reason. We can keep the original (long) ones, I guess.
 
-	case "{meta}" in
-	l) rw="read";;	
-	s) rw="write";;
-	*) rw="read_write";;
-	esac
+> Nevertheless I noticed an inconsistency of the dereference of the flags which
+> seems to be brough by dfe42443ea1d ("serial: reduce number of indirections in
+> 8250 code").
+>
+> I think we can stick with newer:
+>
+> 		if (port->irqflags & IRQF_SHARED)
 
-... then we can rework that in future if we ever need to handle multiple
-atomic variables that have distinct r/w/rw access types.
+I'll take a look.
 
-Thanks,
-Mark.
+	-ss
