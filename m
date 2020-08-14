@@ -2,164 +2,175 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61702C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514B220866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597408114;
-	bh=P7av6s6abXr/7wGMfslLn8S1fP4ii34kLGB77dbKxL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D5nVuqazUtsNGe0SYp3nMIMQe2VWsL6HjurNk9fGHuKGXI/tNN+lo7R850DJVzsbv
-	 rufUqTF/tTrRNesmoq+KjNoQstPMi6UGDiJGyLG+CrYydrjPOcLZhIZu/+96DcKY9Z
-	 jy4jc7A6bNK82kXHdqEEfMXGpux8eTJ8SFoEtZlA=
+	by mail.kernel.org (Postfix) with ESMTP id 4864522BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHNM21 (ORCPT
+        id S1728163AbgHNM2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNM2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:28:11 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3878E20866;
-        Fri, 14 Aug 2020 12:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597408090;
-        bh=P7av6s6abXr/7wGMfslLn8S1fP4ii34kLGB77dbKxL4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X36Byv/QPmZ8n9I/VjyV2N334zGlawYGTDj76Y+bG1WkvGfn1zR4BvxvcUjfqaeuB
-         qKOCOipvUmpScTWFVPuU+AFaev57FVpYJDc+AGR6tDN7nt8Tj6gRf/w3KL5/bcOX/c
-         o4axnltwC0ZJgIsEGcHTqfeTjdJEStQBZgtwAKN0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 81AE040D3D; Fri, 14 Aug 2020 09:28:07 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:28:07 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 11/18] perf ftrace: add support for tracing option
- 'irq-info'
-Message-ID: <20200814122807.GB13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-12-changbin.du@gmail.com>
+        Fri, 14 Aug 2020 08:28:34 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55521 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgHNM2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:28:21 -0400
+X-Originating-IP: 93.0.49.108
+Received: from [192.168.1.34] (108.49.0.93.rev.sfr.net [93.0.49.108])
+        (Authenticated sender: maxime.chretien@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0652620009;
+        Fri, 14 Aug 2020 12:28:14 +0000 (UTC)
+From:   Maxime Chretien <maxime.chretien@bootlin.com>
+Subject: Re: [PATCH] kconfig qconf: Add grey background for hidden options
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200708133015.12286-1-maxime.chretien@bootlin.com>
+ <CAK7LNASpZ=By_-5KKps_q3emHuLBNv7AneLh9eNwBqbZToivSA@mail.gmail.com>
+Message-ID: <889cd38e-8c70-f359-c2ca-c63911bec601@bootlin.com>
+Date:   Fri, 14 Aug 2020 14:28:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-12-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAK7LNASpZ=By_-5KKps_q3emHuLBNv7AneLh9eNwBqbZToivSA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:34AM +0800, Changbin Du escreveu:
-> This adds support to display irq context info for function tracer. To do
-> this, just specify a '--func-opts irq-info' option.
+On 07/08/2020 15:54, Masahiro Yamada wrote:
+> On Wed, Jul 8, 2020 at 10:30 PM Maxime Chretien
+> <maxime.chretien@bootlin.com>  wrote:
+>> This is useful to see which configuration parameters can be edited
+>> or not when "Show All Options" is enabled.
+>>
+>> Signed-off-by: Maxime Chretien<maxime.chretien@bootlin.com>
+>> ---
+>>   scripts/kconfig/qconf.cc | 7 +++++++
+>>   scripts/kconfig/qconf.h  | 4 ++++
+>>   2 files changed, 11 insertions(+)
+> I like the idea, but
+> maybe this patch could be improved?
+>
+> For example, in the following test code,
+> BAR is correctly painted grey when CONFIG_FOO=n,
+> but "my menu" is always white despite of
+> "depends on FOO"
+>
+> ----(test code)------
+>
+> config FOO
+>         bool "foo"
+>
+> config BAR
+>         bool "bar"
+>         depends on FOO
+>
+> menu "my menu"
+>         depends on FOO
+>
+> endmenu
+>
+> -------(test code end)----
 
-Applied, ditto about adding an example to perf-ftrace.txt
- 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  1 +
->  tools/perf/builtin-ftrace.c              | 21 ++++++++++++++++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index fca55ac55ff3..37ea3ea97922 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -79,6 +79,7 @@ OPTIONS
->  --func-opts::
->  	List of options allowed to set:
->  	  call-graph - Display kernel stack trace for function tracer.
-> +	  irq-info   - Display irq context info for function tracer.
->  
->  -G::
->  --graph-funcs=::
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index b4c821be4fb5..d1241febe143 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -44,6 +44,7 @@ struct perf_ftrace {
->  	unsigned long		percpu_buffer_size;
->  	bool			inherit;
->  	int			func_stack_trace;
-> +	int			func_irq_info;
->  	int			graph_nosleep_time;
->  	int			graph_noirqs;
->  };
-> @@ -209,6 +210,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
->  	write_tracing_option_file("func_stack_trace", "0");
->  	write_tracing_option_file("sleep-time", "1");
->  	write_tracing_option_file("funcgraph-irqs", "1");
-> +	write_tracing_option_file("irq-info", "0");
->  }
->  
->  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-> @@ -296,6 +298,17 @@ static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
->  	return 0;
->  }
->  
-> +static int set_tracing_func_irqinfo(struct perf_ftrace *ftrace)
-> +{
-> +	if (!ftrace->func_irq_info)
-> +		return 0;
-> +
-> +	if (write_tracing_option_file("irq-info", "1") < 0)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
->  static int reset_tracing_cpu(void)
->  {
->  	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
-> @@ -471,6 +484,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  		goto out_reset;
->  	}
->  
-> +	if (set_tracing_func_irqinfo(ftrace) < 0) {
-> +		pr_err("failed to set tracing option irq-info\n");
-> +		goto out_reset;
-> +	}
-> +
->  	if (set_tracing_filters(ftrace) < 0) {
->  		pr_err("failed to set tracing filters\n");
->  		goto out_reset;
-> @@ -660,6 +678,7 @@ static int parse_func_tracer_opts(const struct option *opt,
->  	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
->  	struct sublevel_option func_tracer_opts[] = {
->  		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
-> +		{ .name = "irq-info",	.value_ptr = &ftrace->func_irq_info },
->  		{ .name = NULL, }
->  	};
->  
-> @@ -742,7 +761,7 @@ int cmd_ftrace(int argc, const char **argv)
->  	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
->  		     "do not trace given functions", parse_filter_func),
->  	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
-> -		     "function tracer options, available options: call-graph",
-> +		     "function tracer options, available options: call-graph,irq-info",
->  		     parse_func_tracer_opts),
->  	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
->  		     "trace given functions using function_graph tracer",
-> -- 
-> 2.25.1
-> 
 
--- 
+It could probably be improved.
+Maybe the "visible" state of the menu can be changed
+or maybe we should use another element in the test
+to grey out menus that needs to be greyed out.
 
-- Arnaldo
+
+>> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+>> index c0ac8f7b5f1a..be9ff4651da1 100644
+>> --- a/scripts/kconfig/qconf.cc
+>> +++ b/scripts/kconfig/qconf.cc
+>> @@ -208,6 +208,13 @@ void ConfigItem::updateMenu(void)
+>>          }
+>>          if (!sym_has_value(sym) && visible)
+>>                  prompt += " (NEW)";
+>> +
+>> +       if(!visible) {
+>> +               setBackground(promptColIdx, QBrush(QColor("#E0E0E0")));
+>> +       } else {
+>> +               setBackground(promptColIdx, QBrush());
+>> +       }
+>> +
+> I think all the columns should be grey-grounded.
+> Please note you can click other columns to
+> toggle y/m/n.
+>
+>
+> How about something like this?
+>
+>
+>
+> QBrush brush;
+>
+> if (visible)
+>          brush = QBrush()
+> else
+>          brush = QBrush(QColor("#E0E0E0"));
+>
+> setBackground(promptColIdx, brush);
+> setBackground(nameColIdx, brush);
+> setBackground(noColIdx, brush);
+> setBackground(modColIdx, brush);
+> setBackground(yesColIdx, brush);
+> setBackground(dataColIdx, brush);
+
+
+Yes I agree should be better like that so that we can
+see what's grey or not even if we have scrolled far
+from the first column.
+
+
+>
+>
+>>   set_prompt:
+>>          setText(promptColIdx, prompt);
+>>   }
+>> diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+>> index c879d79ce817..79e47e8c1ae7 100644
+>> --- a/scripts/kconfig/qconf.h
+>> +++ b/scripts/kconfig/qconf.h
+>> @@ -174,6 +174,10 @@ class ConfigItem : public QTreeWidgetItem {
+>>          {
+>>                  return Parent::text(idx);
+>>          }
+>> +       void setBackground(colIdx idx, const QBrush& brush)
+>> +       {
+>> +               Parent::setBackground(idx, brush);
+>> +       }
+> I do not understand why this wrapper is useful...
+>
+
+
+Well we need to use "Parent" to have access to the "setBackground" function
+and I thought it was the way to use it has it's done with "setPixmap" 
+just under it.
+
+Maybe there is a better way to do that, I'm a beginner in linux development
+so I'm not totally aware of all the rules and ways to add new things.
+
+
+>>          void setPixmap(colIdx idx, const QIcon &icon)
+>>          {
+>>                  Parent::setIcon(idx, icon);
+>> --
+>> 2.27.0
+>>
+
+
+Thanks for reviewing this.
+
+Best regards
+Maxime Chretien
