@@ -2,97 +2,99 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFBFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B525B20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0294720829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597426470;
+	bh=p9RPNZ/R7rWyyN3RiR5vHHD2NOiO8XWQfiGGLdzSRZY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BmLYgyPAgUABSwt7CEJ7LKd3zavvBQADyWa7ErcviRYAA8XPJMCrddPVRJoUd4Rlw
+	 4/WkZ0WcWMWjdsWccrzsH7BpsP0i0+87q3Z/DrAwcwJzcRJ2A30aJMMrEdILwcPASZ
+	 psK634ZB7nTjHlSt3ApflDjDiVcFoM/xA3hHRrxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgHNReR (ORCPT
+        id S1728827AbgHNRe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:34:17 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:6977 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726241AbgHNReP (ORCPT
+        Fri, 14 Aug 2020 13:34:28 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35118 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbgHNReV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:34:15 -0400
-X-IronPort-AV: E=Sophos;i="5.76,313,1592838000"; 
-   d="scan'208";a="54383380"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Aug 2020 02:34:14 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id F3F5540062AC;
-        Sat, 15 Aug 2020 02:34:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH 5/5] arm64: dts: renesas: r8a774c0: Add PCIe EP node
-Date:   Fri, 14 Aug 2020 18:30:37 +0100
-Message-Id: <20200814173037.17822-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 14 Aug 2020 13:34:21 -0400
+Received: by mail-il1-f194.google.com with SMTP id q14so5670246ilm.2;
+        Fri, 14 Aug 2020 10:34:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3l69ln56x0NYyOcK12UG1i2L2ctArBHsZcQkVLntWAw=;
+        b=JvZNKUX7ajrYA2652rREivlZ8aaAX3pVh7wumpmDnTZb40OA7x8phwhSmG4eeSnTia
+         gZCr0hUWwNQuLCXgq2110bz0t213BGc1QD44r8vUh0I4+hyLm0XhmbpERI8e8r1xJF5x
+         XlCxaczngeGZoziPqtYs5Sph/uy7veLEN9xXQwQ5lwrIBcJ7IALpMupV0JeHyRqpvWfH
+         8YyUP4FH8ssudqW4vICc/gftQtApg4hAtCRHVatQipcp763TXtNfp0owMKSQCPmNNft+
+         LrarsoZkmfEc7V5+eOMQX0JZNg+GnKoCd/tJiv/lHIEMFAuzaFXUt7j6KtyaGdWFATx7
+         Y7DA==
+X-Gm-Message-State: AOAM532m3RX7ZCFuGd2xh4DMdG0Jdnp7DZuUMd7QI1FmBGSa7PFH0K+p
+        Nf9rGAAbh/ujFF5pzm6i2TGWu7fRpw==
+X-Google-Smtp-Source: ABdhPJxxLL7yRNC36Ygm+ALbPdp7Nw/SGCafVwq2SvEv8AZIF9Noh/jTuBedxyPaerDZjL+LJs1TIg==
+X-Received: by 2002:a92:874a:: with SMTP id d10mr3423940ilm.273.1597426460524;
+        Fri, 14 Aug 2020 10:34:20 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id x185sm4637575iof.41.2020.08.14.10.34.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 10:34:20 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrei Ziureaev <andrei.ziureaev@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/3] dt-bindings: Bump minimum version of dtschema to 2020.8
+Date:   Fri, 14 Aug 2020 11:34:15 -0600
+Message-Id: <20200814173417.2322509-2-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200814173417.2322509-1-robh@kernel.org>
+References: <20200814173417.2322509-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe EP node to R8A774C0 (RZ/G2E) SoC dtsi.
+dtschema release 2020.8 gained several additions to help performance.
+dt-doc-validate can now take a list of files and directories, and
+dt-mk-schema can store the processed schema in JSON which is much faster
+to parse than YAML. Utilizing both of these changes results in a 4-5x
+speed improvement in running dt_binding_check.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+There's also additional meta-schema checks which binding schemas should
+be checked against.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 5c72a7efbb03..81f218539688 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -1698,6 +1698,25 @@
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 91c4d00e96d3..6a678eb5b5cd 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -3,7 +3,7 @@ DT_DOC_CHECKER ?= dt-doc-validate
+ DT_EXTRACT_EX ?= dt-extract-example
+ DT_MK_SCHEMA ?= dt-mk-schema
  
-+		pciec0_ep: pcie_ep@fe000000 {
-+			compatible = "renesas,r8a774c0-pcie-ep",
-+				     "renesas,rcar-gen3-pcie-ep";
-+			reg = <0x0 0xfe000000 0 0x80000>,
-+			      <0x0 0xfe100000 0 0x100000>,
-+			      <0x0 0xfe200000 0 0x200000>,
-+			      <0x0 0x30000000 0 0x8000000>,
-+			      <0x0 0x38000000 0 0x8000000>;
-+			reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 319>;
-+			clock-names = "pcie";
-+			resets = <&cpg 319>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
- 		vspb0: vsp@fe960000 {
- 			compatible = "renesas,vsp2";
- 			reg = <0 0xfe960000 0 0x8000>;
+-DT_SCHEMA_MIN_VERSION = 2020.5
++DT_SCHEMA_MIN_VERSION = 2020.8
+ 
+ PHONY += check_dtschema_version
+ check_dtschema_version:
 -- 
-2.17.1
+2.25.1
 
