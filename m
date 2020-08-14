@@ -2,82 +2,104 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DCFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 475B520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE33120675
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YyhnSndu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgHNFDB (ORCPT
+        id S1726283AbgHNFJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 01:03:01 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55214 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgHNFDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 01:03:01 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D0C61A018C;
-        Fri, 14 Aug 2020 07:02:58 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C7E931A01FB;
-        Fri, 14 Aug 2020 07:02:53 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCDA2402C9;
-        Fri, 14 Aug 2020 07:02:47 +0200 (CEST)
-From:   Jiafei Pan <Jiafei.Pan@nxp.com>
-To:     peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, romain.perier@gmail.com, will@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        jiafei.pan@nxp.com, leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        Jiafei Pan <Jiafei.Pan@nxp.com>
-Subject: [PATCH v2] softirq: add irq off checking for __raise_softirq_irqoff
-Date:   Fri, 14 Aug 2020 12:55:22 +0800
-Message-Id: <20200814045522.45719-1-Jiafei.Pan@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 14 Aug 2020 01:09:22 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:28703 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgHNFJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 01:09:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597381761; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=VeWbi+16wYbZZqduDvhUZ1AT4GOjuU763k6XIGoWzBQ=;
+ b=YyhnSndutpS+Yo2pq5EKpYRGltMX6OrkijxKhfG9QwI8lOi3UTPW+yU8n63W2yM/fR5fngbY
+ 6lFePYgNNABeMlZ0ekVQoO/okAmMZ9Bf/JrcOV4TiOs7McU0hCtTR74pKlVt6XopIYlcOeN+
+ +dZ2NskgGGUPuw5J0cSjc+eFbG8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f361c0203528d40248f6b1c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 05:07:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0E394C433CB; Fri, 14 Aug 2020 05:07:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78E4BC433C9;
+        Fri, 14 Aug 2020 05:07:13 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Aug 2020 10:37:13 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: socinfo: add SC7180 entry to soc_id array
+In-Reply-To: <20200813080345.1.I85bb28f9ea3fa3bf797ecaf0a5218ced4cfaa6e2@changeid>
+References: <20200813080345.1.I85bb28f9ea3fa3bf797ecaf0a5218ced4cfaa6e2@changeid>
+Message-ID: <87c217e5fc01c73fe008179274fa373f@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__raise_softirq_irqoff() will update per-CPU mask of pending softirqs,
-it need to be called in irq disabled context in order to keep it atomic
-operation, otherwise it will be interrupted by hardware interrupt,
-and per-CPU softirqs pending mask will be corrupted, the result is
-there will be unexpected issue, for example hrtimer soft irq will
-be losed and soft hrtimer will never be expire and handled.
+On 2020-08-13 20:33, Douglas Anderson wrote:
+> Add an entry for SC7180 SoC.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  drivers/soc/qcom/socinfo.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> index e19102f46302..e56eea29615c 100644
+> --- a/drivers/soc/qcom/socinfo.c
+> +++ b/drivers/soc/qcom/socinfo.c
+> @@ -223,6 +223,7 @@ static const struct soc_id soc_id[] = {
+>  	{ 321, "SDM845" },
+>  	{ 341, "SDA845" },
+>  	{ 356, "SM8250" },
+> +	{ 425, "SC7180" },
+>  };
+> 
+>  static const char *socinfo_machine(struct device *dev, unsigned int 
+> id)
 
-Enable CONFIG_PROVE_LOCKING to use lockdep_assert_irqs_disabled() to
-check hardirqs and softirqs status, and provide warning in irqs enabled
-context.
+ From the chipinfo document that I have at hand, this is correct soc id 
+for SC7180, so
 
-Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
----
-Changes in v2:
-- use lockdep_assert_irqs_disabled()
-- removed extra comments
-- changed commit message
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
- kernel/softirq.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index bf88d7f62433..09229ad82209 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -481,6 +481,7 @@ void raise_softirq(unsigned int nr)
- 
- void __raise_softirq_irqoff(unsigned int nr)
- {
-+	lockdep_assert_irqs_disabled();
- 	trace_softirq_raise(nr);
- 	or_softirq_pending(1UL << nr);
- }
+Thanks,
+Sai
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
