@@ -2,141 +2,187 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B456C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC46C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 779EF22B4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597412093;
-	bh=2k7wrk2A5zGJi+fRb0tRgIS913bmaCEjSwO77FwaKMk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=O5C7/Ht43xf72CAblxlNuG31O0vONPjCiRSstFUMGmiPz2Ui5/Q3YLbWCsYFa1st+
-	 YQVZoCwz1Sav4FAQ+mLXtppLRntIrv72Uh2iyjFCfWeVuS2SQEGZow8Ob5jOu9rgSu
-	 GPnXNXWC9XKfdcUSOZVmUWX1AVnAWMcyYw6f4kQM=
+	by mail.kernel.org (Postfix) with ESMTP id 02B0B2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fGd5UiLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgHNNew (ORCPT
+        id S1728594AbgHNNf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:34:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgHNNev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:34:51 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 340AC20791;
-        Fri, 14 Aug 2020 13:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597412090;
-        bh=2k7wrk2A5zGJi+fRb0tRgIS913bmaCEjSwO77FwaKMk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YlODcCPqwINvpVojzhyjjz9MxMddRD2aNthmQFLCxvr7+MUtcFPc4z91us+eHTIZL
-         8OAsOl83Enw+lY6w5D+/XQorw3v+fsiNEbXVHM41up30924ZTOKcGKcAYTDgwjyQyO
-         rPTylFhazdcgJuUxq+EO5IuraNs79rfZrW/FBJPI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1485D3522A0E; Fri, 14 Aug 2020 06:34:50 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 06:34:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200814133450.GK4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <87lfiitquu.fsf@nanos.tec.linutronix.de>
- <20200814071750.GZ9477@dhcp22.suse.cz>
- <20200814121544.GA32598@pc636>
- <20200814124832.GD9477@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Fri, 14 Aug 2020 09:35:29 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19826 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgHNNf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:35:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3692e80000>; Fri, 14 Aug 2020 06:34:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Aug 2020 06:35:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Aug 2020 06:35:27 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Aug
+ 2020 13:35:26 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
+ by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 14 Aug 2020 13:35:26 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m4H3kLRdNN6F8oOjsdhwk2sOWok0hDkeGbgqDEN+lcgxdO4pulhE85W/dbZW/Msgl4EvB+Cl2YQtXm3FN2mauOWI0psPAmp60M/u/MZEwz4yiVrTJyJJZcoBPy64HpFkFwa2CsyxZGJNbYmmVao+a1CPpvEDXohKjmZEPHDJtoqaG+2tcuR4xoYb7x0IDyf1wHaXRhK+fA1sH00YH35tjxcF2juNlif2sMAVmI9YjNrepOy0qrGygN3mnjmswolmBybpQHQKRP+jMMC/w38dyG0dV3osKgh0+HLOLltLSETWZyl6ElYiNEi+xfYPrDF3/7fQD2IoTCOBWqzan7laIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xQgIVKo6fzkOwdqUsyq8/I0P+tpE4OWeO1KsRqtsH6s=;
+ b=nIwpmDZ9ZBhT9Em336S9+2FC5YeZZxQaP0TQkSamORHsZhNcIa/QpVc/MDY3rbm65iEd9S9xDKdXMEKAn1gTaAexjqkCXBzLt6la0IwLiI1Xw+9A7T38GYBGDf8irIeCKsmxOXWwbnKkjEEvYEHgVy4sXAF8t5QWlKnN8B60OKJabebbJTqG55vpEqieZ7e811ZQPAg20qiUr2SuK9mSgUFdoaPWH7Yl6FkjuKimavebaNybksa/Z6Zl8ES6uRmKtxjW2E3eD0T6zLhsfaDhODnhzoWNbApX8YLGS7MDD08CFlbc4HFJ7KHn6rnB5CLmGlePEYKcfstTCFywDTtcxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB2858.namprd12.prod.outlook.com (2603:10b6:5:182::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Fri, 14 Aug
+ 2020 13:35:25 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3283.022; Fri, 14 Aug 2020
+ 13:35:25 +0000
+Date:   Fri, 14 Aug 2020 10:35:22 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Message-ID: <20200814133522.GE1152540@nvidia.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200814124832.GD9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+X-ClientProxiedBy: YT1PR01CA0021.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::34)
+ To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0021.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 13:35:24 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k6Zre-006gGT-Ah; Fri, 14 Aug 2020 10:35:22 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 73105564-1236-47ef-24c8-08d84056e60c
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2858:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB28583BE093FF570C8C7AB281C2400@DM6PR12MB2858.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xfhFI+LDyy0GWo756LjFOYYmxKj2VC/OrQW5Z0w+Sgg0TFgeiWJQdY7YbCvF+rnhpF/JpYM6TL4VLzXKDoRcnlmrG3hEhUCMdYuVwG+xnjclylWbNCYg/po5iuZeNRqPHIpDZpzNtswJecJQonENXY1/2MmtSTSWjSVdKs8JAp6zvn2b24MetvLvW0PNWID9xBeH+e8lJ3ESwJHuk1L7pHaRxQD/WFiUK4JT/xikDbRaKbR0fl1oggd0O/u5oWtUOD2JCBPHLXL8VnSeZvRqIqK1lbSr2cimGav9wZhQQeYzjLNA7xjSu+jOr1y9xPnO
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(86362001)(8676002)(2906002)(6916009)(478600001)(316002)(54906003)(8936002)(7416002)(7406005)(9786002)(2616005)(1076003)(186003)(426003)(4744005)(33656002)(9746002)(4326008)(26005)(66476007)(66946007)(66556008)(36756003)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: YcldZ/jqWFVO4ZWMmAcfknwGOItCNW393eBPf9Ged5ghhsepUJzul3c186NQnFuIjelXm8Dcahq6nljXcPs5ZEUSS+lpCcDWft1oDN5lSgmow2pu01ZUzyt3DDgWWJHydeqnth4Ma3SqmIDi6ZWJFq6/KT8HqECM6gnHWozjA7G7hcvJQUr/JILmx5QklnVKdT9+uhxv/nzwfp6KPe4RaXjErvGMetatJgP+7l7AqsDT/Q1D3o9UR97k5YBoJ8MMMkSyWb+pbgvPgULuuSCkiaMBpZAmvZDiIBCT099EOUONlHyqF+QOGpSD6TN1m85Kd2zrJKh+jlcoVdhg4TNLDNH8Aa30GULk+6LS70+ECPEsVO40VrpMfMptRrpbt3CEhEFoYBQdErHbdtTozA/ZDLIHzK1PxSfJlyryJYvtnFwe4Vjsoqv9BO10oyy2GANtM/M1ifA4CyYOD6oJaswi9bp8ylj1tZ1LyFb/ojLM9GojQbI3rswtC6TCBFQ9WVSAaz50AxGqso0pjyJDILJ96KTcU+N0KMtE8r4vRxsGYnkhs2C27iAAPAuXDZMjhZDJ1EBxIejeGqCYTNUr5Zo5FPuWBMWYPVvoeZciNnv5jQpTenGGlCGHm4xD7V0sJASsMPNs5C8+yYr82x1FL/kdMA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73105564-1236-47ef-24c8-08d84056e60c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 13:35:24.9372
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9ASUEzdfZ57dSg2arMGADMdvFsplcHYQkmHDbLuduOnB3IQV2QKZNsgrJatUZ/Oe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2858
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597412072; bh=xQgIVKo6fzkOwdqUsyq8/I0P+tpE4OWeO1KsRqtsH6s=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
+         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=fGd5UiLKqZvWeQIT/m+MOaJJAW8Z90KwIxKTCCj7HzaCBCql4CUw203isD9TAv0Py
+         2sKOHVN9EuM4yy5ZDMXjk5l39x40gFC74dg6gKbh59CDT7xVkxa86Ldr9SyXzOHraZ
+         m8zd7hfnG/gXoJUkaqh3GeHUtnac844S6dmNEvzy+TpnTZPcqoXbrPVbXjexZUlEcz
+         aYKmeofP3PhxvxdCI7tD1pN9a5ulikQtZ8dYAe3kjZ/JhuYLwowJ2qbnC52HIU4/uB
+         DQ8lHWYHDEaqAZ1RICGnNugDCLNysiR7JYJR2cETkp5Q5S2KU/apK22a9ORxr4samh
+         O+T21a+0btvKw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 02:48:32PM +0200, Michal Hocko wrote:
-> On Fri 14-08-20 14:15:44, Uladzislau Rezki wrote:
-> > > On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
-> > > > Michal Hocko <mhocko@suse.com> writes:
-> > > [...]
-> > > > > Why should we limit the functionality of the allocator for something
-> > > > > that is not a real problem?
-> > > > 
-> > > > We'd limit the allocator for exactly ONE new user which was aware of
-> > > > this problem _before_ the code hit mainline. And that ONE user is
-> > > > prepared to handle the fail.
-> > > 
-> > > If we are to limit the functionality to this one particular user then
-> > > I would consider a dedicated gfp flag a huge overkill. It would be much
-> > > more easier to have a preallocated pool of pages and use those and
-> > > completely avoid the core allocator. That would certainly only shift the
-> > > complexity to the caller but if it is expected there would be only that
-> > > single user then it would be probably better than opening a can of worms
-> > > like allocator usable from raw spin locks.
-> > > 
-> > Vlastimil raised same question earlier, i answered, but let me answer again:
-> > 
-> > It is hard to achieve because the logic does not stick to certain static test
-> > case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
-> > on that, "how heavily" - number of pages are formed, until the drain/reclaimer
-> > thread frees them.
+On Mon, Aug 10, 2020 at 07:32:24AM +0000, Tian, Kevin wrote:
+
+> > I would prefer to see that the existing userspace interface have the
+> > extra needed bits for virtualization (eg by having appropriate
+> > internal kernel APIs to make this easy) and all the emulation to build
+> > the synthetic PCI device be done in userspace.
 > 
-> How many pages are talking about - ball park? 100s, 1000s?
+> In the end what decides the direction is the amount of changes that
+> we have to put in kernel, not whether we call it 'emulation'. 
 
-Under normal operation, a couple of pages per CPU, which would make
-preallocation entirely reasonable.  Except that if someone does something
-that floods RCU callbacks (close(open) in a tight userspace loop, for but
-one example), then 2000 per CPU might not be enough, which on a 64-CPU
-system comes to about 500MB.  This is beyond excessive for preallocation
-on the systems I am familiar with.
+No, this is not right. The decision should be based on what will end
+up more maintable in the long run.
 
-And the flooding case is where you most want the reclamation to be
-efficient, and thus where you want the pages.
+Yes it would be more code to dis-aggregate some of the things
+currently only bundled as uAPI inside VFIO (eg your vSVA argument
+above) but once it is disaggregated the maintability of the whole
+solution will be better overall, and more drivers will be able to use
+this functionality.
 
-This of course raises the question of how much memory the lockless caches
-contain, but fortunately these RCU callback flooding scenarios also
-involve process-context allocation of the memory that is being passed
-to kfree_rcu().  That allocation should keep the lockless caches from
-going empty in the common case, correct?
-
-Please note that we will also need to apply this same optimization to
-call_rcu(), which will have the same constraints.
-
-> > Preloading pages and keeping them for internal use, IMHO, seems not optimal
-> > from the point of resources wasting. It is better to have a fast mechanism to
-> > request a page and release it back for needs of others. As described about
-> > we do not know how much we will need.
-> 
-> It would be wasted memory but if we are talking about relatively small
-> number of pages. Note that there are not that many pages on the
-> allocator's pcp list anyway.
-
-Indeed, if we were talking a maximum of (say) 10 pages per CPU, we would
-not be having this conversation.  ;-)
-
-							Thanx, Paul
+Jason
