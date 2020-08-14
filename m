@@ -2,131 +2,120 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB57320774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C4F20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGYgJqsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHNJR3 (ORCPT
+        id S1727830AbgHNJRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 05:17:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55184 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726012AbgHNJR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 05:17:29 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 439A98782C52AFCEDB9D;
-        Fri, 14 Aug 2020 17:17:26 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 14 Aug 2020
- 17:17:18 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <hawk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
-Subject: [PATCH] bpf: Convert to use the preferred fallthrough macro
-Date:   Fri, 14 Aug 2020 05:16:15 -0400
-Message-ID: <20200814091615.21821-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+        Fri, 14 Aug 2020 05:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgHNJRl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 05:17:41 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5928C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 02:17:41 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id a14so9537723ybm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 02:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=QsRsOCpoXcwdRIsVUMLGWKWsf8QgiczNEiWX1UbiUY4=;
+        b=oGYgJqsYuUV0Hms2m3LZF+iq+NfQ6YoaeJQuq9z72NuNFa7OMslSlpLVFCZsmBJKNY
+         ZaWg1WLV+vs/Ii/09pl7wGF+m/bB3EF5lLW7WI/pC3dVEM2c1ZuHHEsSSup17xqCh0Ec
+         uCnsrdpI/LkrE0aBV+2tu7VnODtCWhubakNAmOVfig+qZvz/xH1E4BYlCJRCCqkq2PKD
+         D7+5oFEyqcp7GrBssXUJh+wS72z4rB+PKi04rD25p4gCEkOgi9S3CC0BBwPFSrgw2CS8
+         o3D4+7jfC777vMMakgcTIm1i2mvi2D1nyoPJL9heKLuQ0bfK6llK/R6otOm3LGuJNKRJ
+         vOgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=QsRsOCpoXcwdRIsVUMLGWKWsf8QgiczNEiWX1UbiUY4=;
+        b=qwB8QWGNbNBuNE8bD4RsBe/sOLnQrzoKNr1KEsGhP9IbsYl5SYg97DrcOwMRxs6GzN
+         wKhAgN0PRSfnKuE5SXOVRFCpbWHT0MJmxPCO896HQ1C36aa8hy7Wo254gZsA+qSGTmJf
+         z5ybxw2DI/0x1L4PHbzvm3bcsfM8bknZO7udxZQs1Vl/B4uw94HkFXGQbiz9Qc/dtyim
+         fUX+/MrCCnDyqnX1Bjyfq20G+Bb8uZxbAUqp1ZKA/TJ2yJGIHoi3vL7uPTxGobK5OcdW
+         l/eJXjkiwlvgKQb7OXEfxniTfzs/bKHn81d9e+2UpuoCUqGZ1pV6K6+P2PoHzEnaSj0P
+         P3Ig==
+X-Gm-Message-State: AOAM531QIt0nItbNsVFhdfxUtgQoCyouzTsvzjjMm0IrzDkbmQsujlAO
+        B0ZOEce2524C20Mqz4l8apzZ9PUgEBUnE5KV+ry00Q9EL5EtjPfXIJD+Ug5/uMdWL+SsdkdlUTd
+        QNO3WFxr/iSrjhEgTpPJn6ZAX0xtvQUOMSYRLiX4jmT9/oy1VfmXiRXzI7ZPQGfyk35tpGZuvtK
+        wbAqqG
+X-Google-Smtp-Source: ABdhPJyqUdHa5EmOBsxJ8UelCFoy6G5Gk4fPgGTLmQMMoD2fMMoqIo1HcRzpjCoZNQJBP39oDw+oJT22mnXtWQ4J
+X-Received: by 2002:a25:3556:: with SMTP id c83mr2374756yba.412.1597396659823;
+ Fri, 14 Aug 2020 02:17:39 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:17:30 +1000
+Message-Id: <20200814191654.v2.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH v2] rtc: cmos: zero-init wkalrm when reading from CMOS
+From:   Victor Ding <victording@google.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Victor Ding <victording@google.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro.
+cmos_read_alarm() may leave certain fields of a struct rtc_wkalrm
+untouched; therefore, these fields contain garbage if not properly
+initialized, leading to inconsistent values when converting into
+time64_t. This patch to zero initialize the struct before calling
+cmos_read_alarm().
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Note that this patch is not intended to produce a correct time64_t, it
+is only to produce a consistent value. In the case of suspend/resume, a
+correct time64_t is not necessary; a consistent value is sufficient to
+correctly perform an equality test for t_current_expires and
+t_saved_expires. Logic to deduce a correct time64_t is expensive and
+hence should be avoided.
+
+Signed-off-by: Victor Ding <victording@google.com>
 ---
- kernel/bpf/cgroup.c   | 2 +-
- kernel/bpf/cpumap.c   | 2 +-
- kernel/bpf/syscall.c  | 2 +-
- kernel/bpf/verifier.c | 6 +++---
- 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 83ff127ef7ae..e21de4f1754c 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1794,7 +1794,7 @@ static bool cg_sockopt_is_valid_access(int off, int size,
- 			return prog->expected_attach_type ==
- 				BPF_CGROUP_GETSOCKOPT;
- 		case offsetof(struct bpf_sockopt, optname):
--			/* fallthrough */
-+			fallthrough;
- 		case offsetof(struct bpf_sockopt, level):
- 			if (size != size_default)
- 				return false;
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index f1c46529929b..6386b7bb98f2 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -279,7 +279,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
- 			break;
- 		default:
- 			bpf_warn_invalid_xdp_action(act);
--			/* fallthrough */
-+			fallthrough;
- 		case XDP_DROP:
- 			xdp_return_frame(xdpf);
- 			stats->drop++;
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 86299a292214..1bf960aa615c 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2029,7 +2029,7 @@ bpf_prog_load_check_attach(enum bpf_prog_type prog_type,
- 	case BPF_PROG_TYPE_EXT:
- 		if (expected_attach_type)
- 			return -EINVAL;
--		/* fallthrough */
-+		fallthrough;
- 	default:
- 		return 0;
+Changes in v2:
+    - Initialize the struct to 0 instead of -1;
+    - Initialize the whole struct rtc_wkalrm.
+
+ drivers/rtc/rtc-cmos.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+index bcc96ab7793f..c633319cdb91 100644
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
+ 			enable_irq_wake(cmos->irq);
  	}
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ef938f17b944..1e7f34663f86 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2639,7 +2639,7 @@ static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
- 	case BPF_PROG_TYPE_CGROUP_SKB:
- 		if (t == BPF_WRITE)
- 			return false;
--		/* fallthrough */
-+		fallthrough;
  
- 	/* Program types with direct read + write access go here! */
- 	case BPF_PROG_TYPE_SCHED_CLS:
-@@ -5236,7 +5236,7 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
- 				off_reg == dst_reg ? dst : src);
- 			return -EACCES;
- 		}
--		/* fall-through */
-+		fallthrough;
- 	default:
- 		break;
++	memset(&cmos->saved_wkalrm, 0, sizeof(struct rtc_wkalrm));
+ 	cmos_read_alarm(dev, &cmos->saved_wkalrm);
+ 
+ 	dev_dbg(dev, "suspend%s, ctrl %02x\n",
+@@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
+ 		return;
  	}
-@@ -10988,7 +10988,7 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 	default:
- 		if (!prog_extension)
- 			return -EINVAL;
--		/* fallthrough */
-+		fallthrough;
- 	case BPF_MODIFY_RETURN:
- 	case BPF_LSM_MAC:
- 	case BPF_TRACE_FENTRY:
+ 
++	memset(&current_alarm, 0, sizeof(struct rtc_wkalrm));
+ 	cmos_read_alarm(dev, &current_alarm);
+ 	t_current_expires = rtc_tm_to_time64(&current_alarm.time);
+ 	t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
 -- 
-2.19.1
+2.28.0.220.ged08abb693-goog
 
