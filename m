@@ -2,85 +2,183 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5880C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C580AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D9B20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08DE20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597386545;
-	bh=fc91yarCTH69Zspbg59v1kAG6yeSpGx3fAOjqMTPChg=;
+	s=default; t=1597386838;
+	bh=szZVAba7Oq2urndYZFVNoJlOG9FToXK2RKzK7uibqWY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YOxQByBGG9LUdHS3eaqbqiUO2jXGZgF5IO0tuYOuJHZldpc/USFM3XSZ59Da6Wj2F
-	 cH5d7zAmpB4URgyfNscRdc5Dlxq3I958iMeVODzwECI/5rfHtkzzwW6fPVGlT72Urs
-	 up1SefHsddz9M5olaHyA3vXPC5A2QYsleit8fimw=
+	b=zGVBKrauPiE+vagmN39q+/PGK4amrsJfhC3s/yoskXDX9eV4LSH6nPxq8sBP/kpMS
+	 LTlR/2DVbmatVriM9X0402Qp/hUCQl/jqWD/Ho92WhFatFMk/YiZGSRgdE6h58q46Q
+	 kDvycmFGqt7BqST6MwiRY7H/9qf6mJ9JiJJAtrIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgHNG3E (ORCPT
+        id S1726265AbgHNGd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37074 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 02:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgHNG3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:29:04 -0400
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+        id S1726006AbgHNGd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:33:57 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F8520791;
-        Fri, 14 Aug 2020 06:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1742177B;
+        Fri, 14 Aug 2020 06:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597386544;
-        bh=fc91yarCTH69Zspbg59v1kAG6yeSpGx3fAOjqMTPChg=;
+        s=default; t=1597386836;
+        bh=szZVAba7Oq2urndYZFVNoJlOG9FToXK2RKzK7uibqWY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V18J4pcBcdCcPtSyF0uEXxRQtdLTKmx7pEOZrJ/23cW/niZUEps9Dw7gYVjwGZ9Ax
-         GAUYT6LP2nKMm6EDQUsEkS7YZj3DpKiJVWEs4ghiSVLKY4VkifNbq2mbmEkpylbejW
-         CIabmmSklawld1ymXmOXpVtQ9r0EdgBG74MA+GCg=
-Received: by mail-oo1-f46.google.com with SMTP id g1so1715269oop.11;
-        Thu, 13 Aug 2020 23:29:04 -0700 (PDT)
-X-Gm-Message-State: AOAM530E7VRYiD+elXr+aMmN8p7V9QFxrIEQBlH9vWkxZf787p8YP24b
-        V4MyNJKQEZ9MxvnSix7MzWABoSWVDzLiLlTti9Q=
-X-Google-Smtp-Source: ABdhPJws8LyTKFi25MNWfpNV7vUpa0UMsbjSu95Uhsc10Q3iQ02/+cjRY0CrMDG+0ew42fMo8w9tjkkR89gq9jOAAVo=
-X-Received: by 2002:a4a:da4c:: with SMTP id f12mr681160oou.41.1597386543479;
- Thu, 13 Aug 2020 23:29:03 -0700 (PDT)
+        b=zsSyY/P+ITjhGuDeJwHufz9L96uH/2992vz1r0+NgX5ZnxsIQAkGGFcPOBxyrZa1S
+         55VOwt67P4v3JJfoWYZQvTNuhysvuYp9Gs3krEg61GnMacBmR3Cznx/bcEqMmj2D6U
+         xD96a2sgFGj1f4La4B6AF3oadOuq0mkSTeJOqTUY=
+Received: by mail-oi1-f170.google.com with SMTP id h3so7280801oie.11;
+        Thu, 13 Aug 2020 23:33:55 -0700 (PDT)
+X-Gm-Message-State: AOAM5331GdxWprbfEFjwQMGWZYh3/jkui+aTIVoEbrcx7ryxCePqWzW3
+        g/U9Ck7W2d/LEwyMYcnyoNR9QpNuEH86xIx7TVc=
+X-Google-Smtp-Source: ABdhPJz/fvSohK7N7lGNcLlz41tAlbnCFYoufNW9lNS3Xjm8ipo4hwja7N+I5i2hiJRdru3XqqBpkh8SkUwtfz6u03Y=
+X-Received: by 2002:a05:6808:b:: with SMTP id u11mr685223oic.33.1597386835187;
+ Thu, 13 Aug 2020 23:33:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200813185811.554051-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200813185811.554051-1-nivedita@alum.mit.edu>
+References: <20200727181445.111002-1-alex.kluver@hpe.com>
+In-Reply-To: <20200727181445.111002-1-alex.kluver@hpe.com>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 14 Aug 2020 08:28:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFm8xZ2Sk9r5XZQuRN2BoCGcysOaEq14MChS1T7zqj1PA@mail.gmail.com>
-Message-ID: <CAMj1kXFm8xZ2Sk9r5XZQuRN2BoCGcysOaEq14MChS1T7zqj1PA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Three small fixes to cmdline parsing
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 14 Aug 2020 08:33:44 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHtz5wvKCmJwQ_Q8sn43bHtEq0BmMc6AndswOnt1_CG6Q@mail.gmail.com>
+Message-ID: <CAMj1kXHtz5wvKCmJwQ_Q8sn43bHtEq0BmMc6AndswOnt1_CG6Q@mail.gmail.com>
+Subject: Re: [PATCH] edac,ghes,cper: Add Row Extension to Memory Error Record
+To:     Alex Kluver <alex.kluver@hpe.com>
+Cc:     linux-edac@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mchehab@kernel.org, russ.anderson@hpe.com,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 at 20:58, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Mon, 27 Jul 2020 at 20:15, Alex Kluver <alex.kluver@hpe.com> wrote:
 >
-> First 2 are resends:
-> https://lore.kernel.org/linux-efi/20200725155916.1376773-1-nivedita@alum.mit.edu/
-> https://lore.kernel.org/linux-efi/20200729193300.598448-1-nivedita@alum.mit.edu/
+> Memory errors could be printed with incorrect row values since the DIMM
+> size has outgrown the 16 bit row field in the CPER structure. UEFI
+> Specification Version 2.8 has increased the size of row by allowing it to
+> use the first 2 bits from a previously reserved space within the structure.
 >
-> Arvind Sankar (3):
->   efi/libstub: Stop parsing arguments at "--"
->   efi/libstub: Handle NULL cmdline
->   efi/libstub: Handle unterminated cmdline
+> When needed, add the extension bits to the row value printed.
+>
+> Based on UEFI 2.8 Table 299. Memory Error Record
+>
+> Tested-by: Russ Anderson <russ.anderson@hpe.com>
+> Signed-off-by: Alex Kluver <alex.kluver@hpe.com>
+> ---
+>  drivers/edac/ghes_edac.c    | 10 ++++++++--
+>  drivers/firmware/efi/cper.c | 11 +++++++++--
+>  include/linux/cper.h        |  9 +++++++--
+>  3 files changed, 24 insertions(+), 6 deletions(-)
 >
 
-Thanks Arvind. I already applied #1 and #2 locally, so I will just
-pick up the last one.
+Unless any of the EDAC folks object, I will take this as a fix via the EFI tree.
+
+Thanks,
+Ard.
 
 
->  drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index cb3dab56a875..cfa3156300f5 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -337,8 +337,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>                 p += sprintf(p, "rank:%d ", mem_err->rank);
+>         if (mem_err->validation_bits & CPER_MEM_VALID_BANK)
+>                 p += sprintf(p, "bank:%d ", mem_err->bank);
+> -       if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
+> -               p += sprintf(p, "row:%d ", mem_err->row);
+> +       if (mem_err->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
+> +               u32 row_extended = 0;
+> +               if (mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT)
+> +                       row_extended = (mem_err->extended & CPER_MEM_EXT_ROW_MASK)
+> +                               <<CPER_MEM_EXT_ROW_SHIFT;
+> +               row_extended |= mem_err->row;
+> +               p += sprintf(p, "row:%d ", row_extended);
+> +       }
+>         if (mem_err->validation_bits & CPER_MEM_VALID_COLUMN)
+>                 p += sprintf(p, "col:%d ", mem_err->column);
+>         if (mem_err->validation_bits & CPER_MEM_VALID_BIT_POSITION)
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index f564e15fbc7e..5faaf6ecd659 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -234,8 +234,14 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
+>                 n += scnprintf(msg + n, len - n, "bank: %d ", mem->bank);
+>         if (mem->validation_bits & CPER_MEM_VALID_DEVICE)
+>                 n += scnprintf(msg + n, len - n, "device: %d ", mem->device);
+> -       if (mem->validation_bits & CPER_MEM_VALID_ROW)
+> -               n += scnprintf(msg + n, len - n, "row: %d ", mem->row);
+> +       if (mem->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
+> +               u32 row_extended = 0;
+> +               if (mem->validation_bits & CPER_MEM_VALID_ROW_EXT)
+> +                       row_extended = (mem->extended & CPER_MEM_EXT_ROW_MASK)
+> +                               <<CPER_MEM_EXT_ROW_SHIFT;
+> +               row_extended |= mem->row;
+> +               n += scnprintf(msg + n, len - n, "row: %d ", row_extended);
+> +       }
+>         if (mem->validation_bits & CPER_MEM_VALID_COLUMN)
+>                 n += scnprintf(msg + n, len - n, "column: %d ", mem->column);
+>         if (mem->validation_bits & CPER_MEM_VALID_BIT_POSITION)
+> @@ -292,6 +298,7 @@ void cper_mem_err_pack(const struct cper_sec_mem_err *mem,
+>         cmem->requestor_id = mem->requestor_id;
+>         cmem->responder_id = mem->responder_id;
+>         cmem->target_id = mem->target_id;
+> +       cmem->extended = mem->extended;
+>         cmem->rank = mem->rank;
+>         cmem->mem_array_handle = mem->mem_array_handle;
+>         cmem->mem_dev_handle = mem->mem_dev_handle;
+> diff --git a/include/linux/cper.h b/include/linux/cper.h
+> index 8537e9282a65..c8313753ee49 100644
+> --- a/include/linux/cper.h
+> +++ b/include/linux/cper.h
+> @@ -230,6 +230,10 @@ enum {
+>  #define CPER_MEM_VALID_RANK_NUMBER             0x8000
+>  #define CPER_MEM_VALID_CARD_HANDLE             0x10000
+>  #define CPER_MEM_VALID_MODULE_HANDLE           0x20000
+> +#define CPER_MEM_VALID_ROW_EXT                 0x40000
+> +
+> +#define CPER_MEM_EXT_ROW_MASK                  0x3
+> +#define CPER_MEM_EXT_ROW_SHIFT                 16
 >
-> --
-> 2.26.2
+>  #define CPER_PCIE_VALID_PORT_TYPE              0x0001
+>  #define CPER_PCIE_VALID_VERSION                        0x0002
+> @@ -443,7 +447,7 @@ struct cper_sec_mem_err_old {
+>         u8      error_type;
+>  };
 >
+> -/* Memory Error Section (UEFI >= v2.3), UEFI v2.7 sec N.2.5 */
+> +/* Memory Error Section (UEFI >= v2.3), UEFI v2.8 sec N.2.5 */
+>  struct cper_sec_mem_err {
+>         u64     validation_bits;
+>         u64     error_status;
+> @@ -461,7 +465,7 @@ struct cper_sec_mem_err {
+>         u64     responder_id;
+>         u64     target_id;
+>         u8      error_type;
+> -       u8      reserved;
+> +       u8      extended;
+>         u16     rank;
+>         u16     mem_array_handle;       /* "card handle" in UEFI 2.4 */
+>         u16     mem_dev_handle;         /* "module handle" in UEFI 2.4 */
+> @@ -483,6 +487,7 @@ struct cper_mem_err_compact {
+>         u16     rank;
+>         u16     mem_array_handle;
+>         u16     mem_dev_handle;
+> +       u8      extended;
+>  };
+>
+>  /* PCI Express Error Section, UEFI v2.7 sec N.2.7 */
