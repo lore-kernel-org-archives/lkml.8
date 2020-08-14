@@ -2,80 +2,92 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BF0C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56263C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A068B20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264B120639
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 07:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R3lBnAZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgHNHZ7 (ORCPT
+        id S1726285AbgHNH30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 03:25:59 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:45953 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbgHNHZ7 (ORCPT
+        Fri, 14 Aug 2020 03:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgHNH3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:25:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5j8GEh_1597389951;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5j8GEh_1597389951)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 14 Aug 2020 15:25:53 +0800
-Subject: Re: [RFC PATCH 1/3] mm: Drop locked from isolate_migratepages_block
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
- <20200813040224.13054.96724.stgit@localhost.localdomain>
- <8ea9e186-b223-fb1b-5c82-2aa43c5e9f10@linux.alibaba.com>
- <CAKgT0UcRFqXUOJ+QjgtjdQE6A7EMgAc_v9b7+mXy-ZJLvG2AgQ@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <d56ee23c-3c79-33e4-6702-a7d586acb0ac@linux.alibaba.com>
-Date:   Fri, 14 Aug 2020 15:25:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 14 Aug 2020 03:29:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BECC061757
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 00:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AfrMrkrA2HZxTkg5Cv0NWjTzaYh5Z28RiUGGto0tVJU=; b=R3lBnAZpajlKS+ZYCmzCTpzXZE
+        WGskKYnrQlnWOI08brF1QFByRNy9vewCqurBe8Sf7S6fS7hkYLfKSbxupKlE9RPQT9NbuzcWIwtfe
+        +5b6TguaGGXn5Lcg34eWFhwMbYdHtbmQAHk8+UgjKsuOR5zYxZthbEqKTZgd7Q+IXKUIaTDTTy6hi
+        EKm9u0BgGFiEAtjVzo/4P5mO2SjqiAw7Pb8SEMSUEqUKekpbo6VERpfF1Eai1/PwpiNTcC7tdq8M2
+        5DDK5kk5wuflH/Kkdc/b25Aln3IQ3Kt2ErsOFEzjpFNp7ioD/PZIfZc2H1Ob+lJhV/YbogoRFnlP0
+        SXuEMMGw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6U9Q-0001lh-7m; Fri, 14 Aug 2020 07:29:20 +0000
+Date:   Fri, 14 Aug 2020 08:29:20 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Roger Pau Monn?? <roger.pau@citrix.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200814072920.GA6126@infradead.org>
+References: <20200811094447.31208-1-roger.pau@citrix.com>
+ <20200811094447.31208-3-roger.pau@citrix.com>
+ <20200813073337.GA16160@infradead.org>
+ <20200813075420.GC975@Air-de-Roger>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UcRFqXUOJ+QjgtjdQE6A7EMgAc_v9b7+mXy-ZJLvG2AgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813075420.GC975@Air-de-Roger>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
+> On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
+> > On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
+> > > If enabled (because ZONE_DEVICE is supported) the usage of the new
+> > > functionality untangles Xen balloon and RAM hotplug from the usage of
+> > > unpopulated physical memory ranges to map foreign pages, which is the
+> > > correct thing to do in order to avoid mappings of foreign pages depend
+> > > on memory hotplug.
+> > 
+> > So please just select ZONE_DEVICE if this is so much better rather
+> > than maintaining two variants.
+> 
+> We still need to other variant for Arm at least, so both need to be
+> maintained anyway, even if we force ZONE_DEVICE on x86.
 
+Well, it still really helps reproducability if you stick to one
+implementation of x86.
 
-在 2020/8/13 下午10:32, Alexander Duyck 写道:
->> Thanks a lot!
->> Don't know if community is ok if we keep the patch following whole patchset alone?
-> I am fine with you squashing it with another patch if you want. In
-> theory this could probably be squashed in with the earlier patch I
-> submitted that introduced lruvec_holds_page_lru_lock or some other
-> patch. It is mostly just a cleanup anyway as it gets us away from
-> needing to hold the RCU read lock in the case that we already have the
-> correct lruvec.
-
-Hi Alexander,
-
-Thanks a lot! look like it's better to fold it in patch 17.
-
-Alex
+The alternative would be an explicit config option to opt into it,
+but just getting a different implementation based on a random
+kernel option is strange.
