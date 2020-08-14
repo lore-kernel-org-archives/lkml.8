@@ -2,106 +2,108 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518CA20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="RZhdiK1W"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFDB2087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597409831;
+	bh=TP+P9nfWKVvkUwmjSCx4BCEcuRAeVQe+bmzohmFGECY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GdTwsVyv2N4lYfbkAPbNjA/+jBOYntEmowrFYBY9ze9Maw+/U10lOvLb2kpvVL4AR
+	 edAAlmhf8Z6TWiOguArBqOlNSeNgso03AbYg4eREd9sXezNhfItknjUJShJL+Lzr6Q
+	 indkkXm4Rffc7I2gJAu6JQzdFxvMLWIOS9l+jFtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgHNM4L (ORCPT
+        id S1728512AbgHNM5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:56:11 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37175 "EHLO ozlabs.org"
+        Fri, 14 Aug 2020 08:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNM4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:56:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728224AbgHNM5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:57:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BSk2Z3KXkz9sTQ;
-        Fri, 14 Aug 2020 22:56:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1597409767;
-        bh=bogzDs0eFlK9z17SgplhUpIaznIoXiLERASJ9R6Xlzc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RZhdiK1WUFC6v9LI3nKxMo+BGaO9Axqm+Z+u2H/hMWvE2pbVZsResCNCziDBRUZuO
-         lZGAYGgiLxgKyvV6kyLIoPfwgZ+xtlitSzN4aGJzAP8NhaMM/kOPYOQVIHHoO85mu3
-         zAfhox0nvoFd76EEAvmAjjYfGCs9Hgi/JOkjPwqVm2zVkDArAhzN0XfHTQ7PuCm+SR
-         BMR5etLd+GuBlYepUF+bEVqg9kyPdaKY+KDorMNJrwvMKHeMbHl6L+hoiGwE0qAV8Y
-         jkUh7GKVqOQt1nzCgctCa/eh3djXnsH5joP1y/L0JHl4sspj1uMWS7AsncWwzR9kmF
-         thau5OFCN0Hiw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aneesh.kumar@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.9-2 tag
-Date:   Fri, 14 Aug 2020 22:56:04 +1000
-Message-ID: <87ft8p9yjf.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id D5ED92087D;
+        Fri, 14 Aug 2020 12:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597409827;
+        bh=TP+P9nfWKVvkUwmjSCx4BCEcuRAeVQe+bmzohmFGECY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YaQueDJdQ8b8HIFDT4cXha3uhm5ghbDmGc4cJKFJjhIJuQ9r1L97wgehp7V0HIh6o
+         AEjrINpDTxiJo/EKDf2yIiOZTh1s1x/VotefABzO4lq3H56zIfyl2bDE+4qMUnvVxv
+         nPxlRF9X319+Dc6dSiXXUebrJJWmEtOZ7oUuQSkA=
+Date:   Fri, 14 Aug 2020 14:57:29 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200814125729.GB56456@kroah.com>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814123856.3880009-2-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> Add support for a Hyper-V based vGPU implementation that exposes the
+> DirectX API to Linux userspace.
 
-Hi Linus,
+Api questions:
 
-Please pull a powerpc fix for 5.9:
+> +struct d3dkmthandle {
+> +	union {
+> +		struct {
+> +			u32 instance	:  6;
+> +			u32 index	: 24;
+> +			u32 unique	: 2;
 
-The following changes since commit 7b9de97711225559af213dc52b6ea883ef1ea7a8:
+What is the endian of this?
 
-  powerpc/ptrace: Fix build error in pkey_get() (2020-08-07 18:27:26 -0700)
+> +		};
+> +		u32 v;
+> +	};
+> +};
+> +
+> +extern const struct d3dkmthandle zerohandle;
+> +
+> +struct ntstatus {
+> +	union {
+> +		struct {
+> +			int code	: 16;
+> +			int facility	: 13;
+> +			int customer	: 1;
+> +			int severity	: 2;
 
-are available in the git repository at:
+Same here.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.9-2
+Are these things that cross the user/kernel boundry?
 
-for you to fetch changes up to 6553fb799f601497ca0703682e2aff131197dc5c:
+And why int on one and u32 on the other?
 
-  powerpc/pkeys: Fix boot failures with Nemo board (A-EON AmigaOne X1000) (2020-08-10 23:07:21 +1000)
+> +		};
+> +		int v;
+> +	};
+> +};
+> +
+> +struct winluid {
+> +	uint a;
+> +	uint b;
 
-- ------------------------------------------------------------------
-powerpc fixes for 5.9 #2
+And now uint?  Come on, be consistent please :)
 
-One fix for a boot crash on some platforms introduced by the recent pkey
-refactoring.
+thanks,
 
-Thanks to:
-  Christian Zigotzky, Aneesh Kumar K.V.
-
-- ------------------------------------------------------------------
-Aneesh Kumar K.V (1):
-      powerpc/pkeys: Fix boot failures with Nemo board (A-EON AmigaOne X1000)
-
-
- arch/powerpc/mm/book3s64/hash_utils.c |  5 ++---
- arch/powerpc/mm/book3s64/pkeys.c      | 12 ++++++------
- 2 files changed, 8 insertions(+), 9 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl82iYIACgkQUevqPMjh
-pYAlBQ/7BXZI6UMWb9QS4QDu3CaBEEmVtnOnHmN1OsLnyjWArf+MLkipuoEiNeBc
-bZIr7Zah2tE4/ZpOEaELu4Vgr+AAk2HGzRw19eYHMewgjfdO1n1jmORrGnfECkKL
-0ygQv/g7rKTpSDoK3qNT0n0BRMCzmdlzsdhE9Oj4gMSTy+ThJnakS7Js79aqHaFz
-obZbytwDDE2jSoKl4T+AlokDDiXpUm9OXIxSuyzGSrljm/vwQxGI7TH7IjZUwE9v
-rPtxPJyvEkmXa4cVrTrY7AxP3yMvoJTd4EMISxtrqKSghSpVjAmm0Ie2fa6+8yCB
-aI7nRp4fIoTKr8o7rjBwraNNQejq8aFE/EHBKPamgZ7F+yNqenNJREjPTJpC2RKF
-N33aX6hqK2vuL2KRN5KPAaSDys1TsMot0Xlghvu/hzopVGGnNkP03jBLT6uFk1aD
-tEW3ZModf/SJoXb88Y5+oWvgSbzheWv+DlnfLKZ5Uvuf/dOlUWOmcElC/rD99SMz
-IFEW3XarOcMBcpFLF1+ZTCRzgkmYyLyJh3mK/4ykxm8XP9bi8Yv3VqPEEUk4tPWj
-BUoviQHDgJ8TUgkAqmecJQDi0iYmQwUe3CfQb8FB5k7itQawWuK+exdqZhJpbPLO
-mdM8+/RyjPfYSRvrtBRcWOAkxGrzC/eT7eLAEwQFIYhLDJL2rYI=
-=Rgq5
------END PGP SIGNATURE-----
+greg k-h
