@@ -2,71 +2,143 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23679C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A587C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D282074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:17:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YiTlwITG"
+	by mail.kernel.org (Postfix) with ESMTP id 16F52206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgHNIRr (ORCPT
+        id S1727807AbgHNIR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgHNIRr (ORCPT
+        Fri, 14 Aug 2020 04:17:59 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:33459 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgHNIR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:17:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595B0C061383
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=g8PSEAUA7x2opNJ9a7x6NEXmPCi+/BopzEM5tlmpuYw=; b=YiTlwITG20aDN876I+mE/JX+xS
-        AeqYqW0mEmRrrc6vwVasr/wMYwOG3IBnH8h2+s46OQyWKhMp98c3i4/GlMAg/O5QBj+dJ+DNZ3ZuF
-        OhN8mNTpmBBvJIHzMJ3YdU0+El1b1sqM9yS1H1bhKaKVSWQbJgaDZDXcAuimgx0Hys8Swl7hyGjKT
-        QyjMs8b0FMM/Zobo6kAaxW6s0CHJGIXk1qa+Y9EZuYvflAikGe1fBA2LoMDUAMcCoQBRDlBRz8oZV
-        +uq86/ahtS6IhUc9nPLV11BilFUb52dwDczoHFcvjg8k3gvPjmyBkVZd39iZmCDDh3yy4x74tJZDI
-        JiRKFEQA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6Utl-0004nA-DH; Fri, 14 Aug 2020 08:17:13 +0000
-Date:   Fri, 14 Aug 2020 09:17:13 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     james.smart@broadcom.com, kbusch@kernel.org, axboe@fb.com,
-        hch@lst.de, sagi@grimberg.me, jthumshirn@suse.de,
-        james_p_freyensee@linux.intel.com, tianjia.zhang@alibaba.com,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH] nvme-fc: Fix wrong return value in
- __nvme_fc_init_request()
-Message-ID: <20200814081713.GA18371@infradead.org>
-References: <20200802111545.5566-1-tianjia.zhang@linux.alibaba.com>
+        Fri, 14 Aug 2020 04:17:58 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.125])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id DAA47482392;
+        Fri, 14 Aug 2020 16:17:54 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Bernard Zhao <bernard@vivo.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+Subject: [PATCH] drm/msm/adreno: remove return value of function XX_print
+Date:   Fri, 14 Aug 2020 01:17:44 -0700
+Message-Id: <20200814081747.8624-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802111545.5566-1-tianjia.zhang@linux.alibaba.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZHhpDHRoYT05CQh5PVkpOQkxIQkhLTE5JSE9VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NSo6Fhw6Aj8qAjoQIiIOLSlN
+        EwwaFExVSlVKTkJMSEJIS0xOTUxOVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSU5ZV1kIAVlBT0pPQzcG
+X-HM-Tid: 0a73ec0bfb9193bakuwsdaa47482392
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 07:15:45PM +0800, Tianjia Zhang wrote:
-> On an error exit path, a negative error code should be returned
-> instead of a positive return value.
-> 
-> Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
-> Cc: James Smart <jsmart2021@gmail.com>
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+XX_print like pfp_print/me_print/meq_print/roq_print are just
+used in file a5xx_debugfs.c. And these function always return
+0, this return value is meaningless.
+This change is to make the code a bit more readable.
 
-Looks good:
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/gpu/drm/msm/adreno/a5xx_debugfs.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
+index 68eddac7771c..fc2c905b6c9e 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
+@@ -11,7 +11,7 @@
+ 
+ #include "a5xx_gpu.h"
+ 
+-static int pfp_print(struct msm_gpu *gpu, struct drm_printer *p)
++static void pfp_print(struct msm_gpu *gpu, struct drm_printer *p)
+ {
+ 	int i;
+ 
+@@ -22,11 +22,9 @@ static int pfp_print(struct msm_gpu *gpu, struct drm_printer *p)
+ 		drm_printf(p, "  %02x: %08x\n", i,
+ 			gpu_read(gpu, REG_A5XX_CP_PFP_STAT_DATA));
+ 	}
+-
+-	return 0;
+ }
+ 
+-static int me_print(struct msm_gpu *gpu, struct drm_printer *p)
++static void me_print(struct msm_gpu *gpu, struct drm_printer *p)
+ {
+ 	int i;
+ 
+@@ -37,11 +35,9 @@ static int me_print(struct msm_gpu *gpu, struct drm_printer *p)
+ 		drm_printf(p, "  %02x: %08x\n", i,
+ 			gpu_read(gpu, REG_A5XX_CP_ME_STAT_DATA));
+ 	}
+-
+-	return 0;
+ }
+ 
+-static int meq_print(struct msm_gpu *gpu, struct drm_printer *p)
++static void meq_print(struct msm_gpu *gpu, struct drm_printer *p)
+ {
+ 	int i;
+ 
+@@ -52,11 +48,9 @@ static int meq_print(struct msm_gpu *gpu, struct drm_printer *p)
+ 		drm_printf(p, "  %02x: %08x\n", i,
+ 			gpu_read(gpu, REG_A5XX_CP_MEQ_DBG_DATA));
+ 	}
+-
+-	return 0;
+ }
+ 
+-static int roq_print(struct msm_gpu *gpu, struct drm_printer *p)
++static void roq_print(struct msm_gpu *gpu, struct drm_printer *p)
+ {
+ 	int i;
+ 
+@@ -71,8 +65,6 @@ static int roq_print(struct msm_gpu *gpu, struct drm_printer *p)
+ 		drm_printf(p, "  %02x: %08x %08x %08x %08x\n", i,
+ 			val[0], val[1], val[2], val[3]);
+ 	}
+-
+-	return 0;
+ }
+ 
+ static int show(struct seq_file *m, void *arg)
+@@ -81,10 +73,11 @@ static int show(struct seq_file *m, void *arg)
+ 	struct drm_device *dev = node->minor->dev;
+ 	struct msm_drm_private *priv = dev->dev_private;
+ 	struct drm_printer p = drm_seq_file_printer(m);
+-	int (*show)(struct msm_gpu *gpu, struct drm_printer *p) =
++	void (*show)(struct msm_gpu *gpu, struct drm_printer *p) =
+ 		node->info_ent->data;
+ 
+-	return show(priv->gpu, &p);
++	show(priv->gpu, &p);
++	return 0;
+ }
+ 
+ #define ENT(n) { .name = #n, .show = show, .data = n ##_print }
+-- 
+2.26.2
+
