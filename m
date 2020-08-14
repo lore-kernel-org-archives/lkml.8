@@ -2,128 +2,119 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE272074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C50E2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rZxG6g7i"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="H25HU0x0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHNQhF (ORCPT
+        id S1727890AbgHNQh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHNQhE (ORCPT
+        Fri, 14 Aug 2020 12:37:27 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49651 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbgHNQhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:37:04 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A324BC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:37:03 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c80so7982948wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=94xphIsJGhPowpoY48RBThw20r0QnhFcY0RxwYnSUxE=;
-        b=rZxG6g7i2t7ZyPQH9ddRiiqgEUlrl1us85HkTolZef9PkcJ+vXPHdQdAbGmN+HDvM8
-         XIAA+sY2nuMt2YFYdoyaKe1PnCA79G0wCya2n02BwUSRV1nBMgi2I0DSwNR84avsue4/
-         wsgvZtYAwY/Gqu45ewvrfV+1Wd97y19Fze5JXzxxpKQeYV7l/XGIwdMbnG6VMYY7gqJd
-         gS0Luw6N6QtvqmNyoxCLPIYmwMFaN3szIY5nSszR/QE/FDrLeF1EGcIHybAmNGOiepIY
-         UDXopiEYjEfHgTSTK7n8J5yHE29xE8QLBDosrjimTi6QsPsoPa3UzxkHQMxFCEjrSEV8
-         tr6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=94xphIsJGhPowpoY48RBThw20r0QnhFcY0RxwYnSUxE=;
-        b=UFo97/1CyOkALtJjAXM4W71eF91BBFzJ0tjKNCtU8E++WrdoKcLVPDY6PXj30TFd7Z
-         glpp3rFh84scLBgjxsNMvlA7mFaLg4kUB3ydqfr4uSJyuGfQ6DLFNE4uAw+sTQ5VCurr
-         jAnocwbHx7Ugb2s0ku9u5eCGiejHJT8EDz+ofXGfXHSeQGrW4lTAsouynQ6M4olLM15x
-         k9F4UGSdYS/HGU4S+H9Yv1IAFbT5+W6Lx32s/oF8QiCJgqATc/x6HBnBE1BVJv5ew6S7
-         WITJxBu38j5LUptgT2JLSiK6PNuxCI4gquTrR1s8C4VGuUiV0o2OLRKkHPVQH74v8tmH
-         +7ug==
-X-Gm-Message-State: AOAM533IofWGAzWn0CZGpDr8O7QO5qZ8QZWYseTEp2IoG3yF2d6lZGvM
-        X5jWKxxqkTp+NnUjKIddUsH3Dg==
-X-Google-Smtp-Source: ABdhPJxRz3mfR2pumE3rZxAsXJD1/Q56aR5OA66D2mmZLO5u8H0oQFcSdXmrbiyEBBP667ke8NFu+g==
-X-Received: by 2002:a1c:24d5:: with SMTP id k204mr3127126wmk.159.1597423017663;
-        Fri, 14 Aug 2020 09:36:57 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id n24sm15304070wmi.36.2020.08.14.09.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:36:56 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 17:36:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Artur Dubrovsky <dubrovsky.mail@gmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, Michael Buesch <m@bues.ch>,
-        Stefano Brivio <stefano.brivio@polimi.it>,
-        Andreas Jaggi <andreas.jaggi@waterwave.ch>,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, b43-dev@lists.infradead.org,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Martin Langer <martin-langer@gmx.de>,
-        van Dyk <kugelfang@gentoo.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 26/30] net: wireless: broadcom: b43: phy_common: Demote
- non-conformant kerneldoc header
-Message-ID: <20200814163654.GM4354@dell>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <20200814113933.1903438-27-lee.jones@linaro.org>
- <CAJrvBf00yQQ7F1p1utBuq1oWc2RwnqXijBjaJ+FuxG0mS0TvOA@mail.gmail.com>
+        Fri, 14 Aug 2020 12:37:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597423043; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=4xiBrWPGNBnaNNIAe493itARuZ6OD6wP68Tooso72rw=; b=H25HU0x05F3LYs6q8co46Pg2ryfOomRtYZiJEvcQ0Dx7Q6FOcSUuSRwXz2YTU+OzT6QXA1Mp
+ FLWUCcd/CrgC1wzGxwiukrqyQ+y6QnXm4f40zgc7g+jnYWpzTkZyuNg+iwbbF6C+1xT6GWoz
+ ex5xLf7SE5PatVEBHogE7Q1mqow=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f36bdbaba4c2cd367fe044a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 16:37:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E8464C433B1; Fri, 14 Aug 2020 16:37:12 +0000 (UTC)
+Received: from asutoshd-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E414C433CA;
+        Fri, 14 Aug 2020 16:37:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E414C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Date:   Fri, 14 Aug 2020 09:37:04 -0700
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scsi: ufs: change ufshcd_comp_devman_upiu() to
+ ufshcd_compose_devman_upiu()
+Message-ID: <20200814163704.GA1217@asutoshd-linux1.qualcomm.com>
+References: <20200814095034.20709-1-huobean@gmail.com>
+ <20200814095034.20709-2-huobean@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJrvBf00yQQ7F1p1utBuq1oWc2RwnqXijBjaJ+FuxG0mS0TvOA@mail.gmail.com>
+In-Reply-To: <20200814095034.20709-2-huobean@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020, Artur Dubrovsky wrote:
+On Fri, Aug 14 2020 at 02:50 -0700, Bean Huo wrote:
+>From: Bean Huo <beanhuo@micron.com>
+>
+>ufshcd_comp_devman_upiu() alwasy make me confuse that it is a request
+>completion calling function. Change it to ufshcd_compose_devman_upiu().
+>
+>Signed-off-by: Bean Huo <beanhuo@micron.com>
+>Acked-by: Avri Altman <avri.altman@wdc.com>
+>---
 
-> remove me from mailing list
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-I guess you have to remove yourself:
-
-http://lists.infradead.org/mailman/listinfo/b43-dev
-
-> пт, 14 авг. 2020 г. в 14:43, Lee Jones <lee.jones@linaro.org>:
-> 
-> > Fixes the following W=1 kernel build warning(s):
-> >
-> >  drivers/net/wireless/broadcom/b43/phy_common.c:467: warning: Function
-> > parameter or member 'work' not described in 'b43_phy_txpower_adjust_work'
-> >
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-> > Cc: Martin Langer <martin-langer@gmx.de>
-> > Cc: Stefano Brivio <stefano.brivio@polimi.it>
-> > Cc: Michael Buesch <m@bues.ch>
-> > Cc: van Dyk <kugelfang@gentoo.org>
-> > Cc: Andreas Jaggi <andreas.jaggi@waterwave.ch>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: b43-dev@lists.infradead.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/net/wireless/broadcom/b43/phy_common.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-
-[...]
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> drivers/scsi/ufs/ufshcd.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+>
+>diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>index 5f09cda7b21c..e3663b85e8ee 100644
+>--- a/drivers/scsi/ufs/ufshcd.c
+>+++ b/drivers/scsi/ufs/ufshcd.c
+>@@ -2391,12 +2391,13 @@ static inline void ufshcd_prepare_utp_nop_upiu(struct ufshcd_lrb *lrbp)
+> }
+>
+> /**
+>- * ufshcd_comp_devman_upiu - UFS Protocol Information Unit(UPIU)
+>+ * ufshcd_compose_devman_upiu - UFS Protocol Information Unit(UPIU)
+>  *			     for Device Management Purposes
+>  * @hba: per adapter instance
+>  * @lrbp: pointer to local reference block
+>  */
+>-static int ufshcd_comp_devman_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+>+static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
+>+				      struct ufshcd_lrb *lrbp)
+> {
+> 	u8 upiu_flags;
+> 	int ret = 0;
+>@@ -2590,7 +2591,7 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
+> 	ufshcd_prepare_lrbp_crypto(NULL, lrbp);
+> 	hba->dev_cmd.type = cmd_type;
+>
+>-	return ufshcd_comp_devman_upiu(hba, lrbp);
+>+	return ufshcd_compose_devman_upiu(hba, lrbp);
+> }
+>
+> static int
+>-- 
+>2.17.1
+>
