@@ -2,89 +2,153 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A832C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD7E20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597409945;
-	bh=uCL4x9xTPvVEHKN35nipD9lH7F/vIt/ze5bD2j/N9GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KiktrbGAwoIGSPo1BlGhyJFoz0KiGPHdkGXw7C9DR5xZhH8TxPNo08BwZDuGuQUGh
-	 V9Tegep6a5+aGIsBSzfZD7/Msv/y87Z2tOzJxpbOQY/B1+OvrJmWvLzQHMO0hi6UPd
-	 hfbRuOopgnSgSHJD7LdtfAPfADN5hzSq2oshdC1g=
+	by mail.kernel.org (Postfix) with ESMTP id 89848206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcRrC2Hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgHNM7E (ORCPT
+        id S1728327AbgHNNDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:59:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNM7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:59:03 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638AB2087D;
-        Fri, 14 Aug 2020 12:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597409943;
-        bh=uCL4x9xTPvVEHKN35nipD9lH7F/vIt/ze5bD2j/N9GQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iMEjP/RdEuWZVyI7GuEkSAskYgOyi7JToMCTTm3e9yBHyde4okZk7PQ+WueEmtX7c
-         NfbrTQroZ7+GlrRXN6NNfBegWhk6CotUDFjMxkJNcMOkW1cWlNY2Ltn8Kk0/jXoOOK
-         E7hIL6hctIQKieVNkFIbnwx7Y9Gauvpri0x60Elo=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1A1F340D3D; Fri, 14 Aug 2020 09:59:00 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:58:59 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/18] perf ftrace: add option '-m/--buffer-size' to
- set per-cpu buffer size
-Message-ID: <20200814125859.GH13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-5-changbin.du@gmail.com>
- <20200814115318.GT13995@kernel.org>
- <20200814121250.GX13995@kernel.org>
+        Fri, 14 Aug 2020 09:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgHNNDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:03:37 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB08EC061384;
+        Fri, 14 Aug 2020 06:03:36 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id p14so7420152wmg.1;
+        Fri, 14 Aug 2020 06:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YjeThY52rXpwMKfP2wevk8gHf5Xz/Qc/OsJwCnOcXD8=;
+        b=BcRrC2HmiDGeWy5XNjDuKjr5ulFMr0fZBAldTKaMCIBx3XK9+HnUUzXqMJWF273PQl
+         q6dYxXzYryLby3BgE5/F6MYr/poybHtSrAXPnZU8SPhXY64gqEAKyyTjpXXmKcM98C9J
+         km/bhv0cXlzPWI6lyyM7tazPN+nQV6g+eoqJBK0RuoBZ/u86vllWrnCFabu+eIEAMQhV
+         0IZx/xQvS3tRpYvLrceAtxIUnP5TRQp2348FLRZko/fvA3OXUrTGwMOZ+c1PvDIHkVi1
+         Io9x2Whwl8FzkEU4LMLpnUdQuyyFemqWGtMDADl8pI5nRWysU0ezfSW+ujU3YzC8YU/T
+         oTKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YjeThY52rXpwMKfP2wevk8gHf5Xz/Qc/OsJwCnOcXD8=;
+        b=joAVxGZOfmXwDuQbaY31jboYdIBd8yef+/ofw1NICbRNlDPUyny2qpDhUaR5dIi92/
+         +jajCCUVfinJtjTCVthShYAB3e0OKnUgXKPA4mNNm1QQ2jjaOTAHJtJbBH56UlM20bv5
+         O1oc/UhcXs8etaNQS0+bJcMpERN6O/nnvxfrk2m5w/9Q1xfhLisiAl4LZs2aO+yTnkw/
+         GYcpbbauKQUom4XlERLv8YuwX051ZkA5bc70aKDc0sjJT60pJ0qwBJuAwgp0d43VQhxY
+         3ZHtTe9xYEZjc9tXZfsPbJFAFBNg5fehUImCOeSZ1qOwdSsth2yQqgpEZgH36pd5cFyH
+         msvA==
+X-Gm-Message-State: AOAM530PENH3fdQDXBwXG8/DrHA6DNbgdOWq1iTovKev+Dx0kksxqdZ9
+        eoqg+msNu0Np/bvifmJvRxQ=
+X-Google-Smtp-Source: ABdhPJynBgjlJD314NI3Pbn1hXJMX2Bk1/F8iskEG/6SXz5gOGWKq5X5fMsr1XAZhHwM0zMV8WA7Dw==
+X-Received: by 2002:a1c:4c17:: with SMTP id z23mr2593430wmf.49.1597410214760;
+        Fri, 14 Aug 2020 06:03:34 -0700 (PDT)
+Received: from localhost (p200300e41f10ca00f451c56750ebc625.dip0.t-ipconnect.de. [2003:e4:1f10:ca00:f451:c567:50eb:c625])
+        by smtp.gmail.com with ESMTPSA id l18sm15673647wrm.52.2020.08.14.06.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 06:03:33 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Changes for v5.9-rc1
+Date:   Fri, 14 Aug 2020 15:03:32 +0200
+Message-Id: <20200814130332.557034-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814121250.GX13995@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 14, 2020 at 09:12:50AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > It indicates that the argument is in units of 'pages', while you don't
-> > state that in:
-> >   
-> >   $ perf ftrace -h -m
-> >   
-> >       -m, --buffer-size <size>
-> >                             size of per cpu buffer
+Hi Linus,
 
-I did this already:
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-  # perf ftrace -h -m
-  
-   Usage: perf ftrace [<options>] [<command>]
-      or: perf ftrace [<options>] -- <command> [<options>]
-  
-      -m, --buffer-size <size>
-                            Size of per cpu buffer, needs to use a B, K, M or G suffix.
-  
-  #
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-- Arnaldo
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.9-rc1
+
+for you to fetch changes up to 6ced5ff0be8e94871ba846dfbddf69d21363f3d7:
+
+  pwm: bcm-iproc: handle clk_get_rate() return (2020-07-30 11:27:13 +0200)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Changes for v5.9-rc1
+
+The majority of this batch is conversion of the PWM period and duty
+cycle to 64-bit unsigned integers, which is required so that some types
+of hardware can generate the full range of signals that they're capable
+of. The remainder is mostly minor fixes and cleanups.
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      pwm: Replace HTTP links with HTTPS ones
+
+Guru Das Srinagesh (10):
+      drm/i915: Use 64-bit division macro
+      hwmon: pwm-fan: Use 64-bit division macro
+      pwm: clps711x: Use 64-bit division macro
+      pwm: imx-tpm: Use 64-bit division macro
+      pwm: imx27: Use 64-bit division macro
+      pwm: sifive: Use 64-bit division macro
+      pwm: sun4i: Use nsecs_to_jiffies to avoid a division
+      backlight: pwm_bl: Use 64-bit division function
+      clk: pwm: Use 64-bit division function
+      pwm: Convert period and duty cycle to u64
+
+Lee Jones (4):
+      pwm: bcm-iproc: Remove impossible comparison when validating duty cycle
+      pwm: bcm-kona: Remove impossible comparison when validating duty cycle
+      pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
+      pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc header
+
+Rayagonda Kokatanur (1):
+      pwm: bcm-iproc: handle clk_get_rate() return
+
+Thierry Reding (2):
+      pwm: iqs620a: Use 64-bit division
+      pwm: iqs620a: Use lowercase hexadecimal literals for consistency
+
+ drivers/clk/clk-pwm.c                      |  7 ++++++-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/pwm/core.c                         | 14 +++++++-------
+ drivers/pwm/pwm-bcm-iproc.c                | 12 ++++++++----
+ drivers/pwm/pwm-bcm-kona.c                 |  2 +-
+ drivers/pwm/pwm-clps711x.c                 |  2 +-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    |  2 +-
+ drivers/pwm/pwm-iqs620a.c                  | 15 ++++++++-------
+ drivers/pwm/pwm-mediatek.c                 |  1 +
+ drivers/pwm/pwm-omap-dmtimer.c             |  4 ++--
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/pwm-tiecap.c                   |  2 +-
+ drivers/pwm/pwm-tiehrpwm.c                 |  2 +-
+ drivers/pwm/sysfs.c                        |  8 ++++----
+ drivers/video/backlight/pwm_bl.c           |  3 ++-
+ drivers/video/fbdev/ssd1307fb.c            |  2 +-
+ include/linux/pwm.h                        | 12 ++++++------
+ 21 files changed, 56 insertions(+), 44 deletions(-)
