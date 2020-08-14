@@ -2,192 +2,255 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA5EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B80C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECD5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597407142;
-	bh=a5cJXZnxRDDWp6/4Bwx3wvRp2g4eKgki2u8fzNxfEbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YuCspc8YMMDSzIcAQNxLrpC1XE8e1IJ7Xd6lT3MtGDH1Xd/WmFcFSWAlFzoVYAkNl
-	 5oGA5IOVhJv5TOySAFdAK1SawfAnxqZBi+zFodcVl0xdGkScvf5/z17fshlEkjOzRe
-	 MCtMbPW1m4jjSDvJMaS8VayWiOGuZSDnOQ8ccm1A=
+	by mail.kernel.org (Postfix) with ESMTP id 5205520B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Wrh2Q3EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgHNMMT (ORCPT
+        id S1728459AbgHNMMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgHNMME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:12:04 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA2E206B2;
-        Fri, 14 Aug 2020 12:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597407124;
-        bh=a5cJXZnxRDDWp6/4Bwx3wvRp2g4eKgki2u8fzNxfEbk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJUNcTifHZNi4npz33OGkqn4gVcmbiYMkBaQ4q3na8rZczaZO6icimF6VFFL8WqBy
-         e1rxEpf9qn7hiW1Q0Z4nW4tJl2oG1O8BFUCyBkwP8VEz4PBHrYdhsOFyRv+0NjWn2E
-         LUTkTvmwXqVWomSczKWaYYf0oXA6A44y0ahhbEPw=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3618640D3D; Fri, 14 Aug 2020 09:12:02 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:12:02 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 06/18] perf ftrace: add option '--inherit' to trace
- children processes
-Message-ID: <20200814121202.GW13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-7-changbin.du@gmail.com>
+        Fri, 14 Aug 2020 08:12:25 -0400
+Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:63068 "EHLO
+        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbgHNMMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:12:14 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 08:12:11 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=6326; q=dns/txt; s=iport;
+  t=1597407132; x=1598616732;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Sx0AGTN3wxNErboCy8QrXuEeasRN2v7iq0kZlP8Hku4=;
+  b=Wrh2Q3EJl2gr/jyy+ED5yTjDItmwS6dZ2GDZRBy8DHYHEFUy3a3pywQV
+   NoOTNwfwfzIRqyLXDpqUFIby9yc/EiL6m5Lo/bVxqKT39DVH6nVmq63Bg
+   WyDFvbhuKu3dOktBjwG5GR5jvfdkbEtT+J6jjfrDpyyCMPcROkUW7ustA
+   w=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BWBADkfDZf/4oNJK1fHgEBCxIMgX8?=
+ =?us-ascii?q?LgXU1gUQBMiyvcIF9CwEBAQ4vBAEBhEyCRwIkNgcOAgMBAQsBAQUBAQECAQY?=
+ =?us-ascii?q?EbYVohh8LAUaBDUSDJoJ9sWGBdTOJJoFAFIEkiCGEeRqBQT+EX4o0BJJCh0S?=
+ =?us-ascii?q?Bapo+gmyaEA8hoB4BshyBWgYtgVczGggbFTuCaVAZDY4rF45EIQMwNwIGCgE?=
+ =?us-ascii?q?BAwmRPgEB?=
+X-IronPort-AV: E=Sophos;i="5.76,312,1592870400"; 
+   d="scan'208";a="811846502"
+Received: from alln-core-5.cisco.com ([173.36.13.138])
+  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 14 Aug 2020 12:05:01 +0000
+Received: from sjc-ads-9103.cisco.com (sjc-ads-9103.cisco.com [10.30.208.113])
+        by alln-core-5.cisco.com (8.15.2/8.15.2) with ESMTP id 07EC50DL007126;
+        Fri, 14 Aug 2020 12:05:01 GMT
+Received: by sjc-ads-9103.cisco.com (Postfix, from userid 487941)
+        id C60701588; Fri, 14 Aug 2020 05:05:00 -0700 (PDT)
+From:   Denys Zagorui <dzagorui@cisco.com>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, xe-linux-external@cisco.com,
+        xiyou.wangcong@gmail.com, ap420073@gmail.com,
+        richardcochran@gmail.com, f.fainelli@gmail.com, andrew@lunn.ch,
+        mkubecek@suse.cz, linux-kernel@vger.kernel.org
+Subject: [RFC][PATCH] net: core: SIOCADDMULTI/SIOCDELMULTI distinguish between uc and mc
+Date:   Fri, 14 Aug 2020 05:05:00 -0700
+Message-Id: <20200814120500.46875-1-dzagorui@cisco.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-7-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.30.208.113, sjc-ads-9103.cisco.com
+X-Outbound-Node: alln-core-5.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:29AM +0800, Changbin Du escreveu:
-> This adds an option '--inherit' to allow us trace children
-> processes spawned by our target.
+SIOCADDMULTI API allows adding multicast/unicast mac addresses but
+doesn't deferentiate them so if someone tries to add secondary
+unicast mac addr it will be added to multicast netdev list which is
+confusing. There is at least one user that allows adding secondary
+unicast through this API.
+(2f41f3358672 i40e/i40evf: fix unicast mac address add)
 
-One thing I'm missing from your commit log messages is the exact
-sequence of commands and the outputs for the options you're introducing.
+This patch adds check whether passed mac addr is uc or mc and adds
+this mac addr to the corresponding list. Add 'global' variant for
+adding/removing uc addresses similarly to mc.
 
-- Arnaldo
+Signed-off-by: Denys Zagorui <dzagorui@cisco.com>
+---
+ include/linux/netdevice.h    |  2 +
+ include/uapi/linux/sockios.h |  2 +-
+ net/core/dev_addr_lists.c    | 75 +++++++++++++++++++++++++++---------
+ net/core/dev_ioctl.c         | 10 ++++-
+ 4 files changed, 68 insertions(+), 21 deletions(-)
+
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index b0e303f6603f..9394f369be33 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -4345,8 +4345,10 @@ int dev_addr_init(struct net_device *dev);
  
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
-> ---
-> v2: option name '--trace-children' -> '--inherit'.
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  3 ++
->  tools/perf/builtin-ftrace.c              | 38 ++++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 7a5d915f60b0..c46d0a09b38c 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -58,6 +58,9 @@ OPTIONS
->  	Set the size of per-cpu tracing buffer, <size> is expected to
->  	be a number with appended unit character - B/K/M/G.
->  
-> +--inherit::
-> +	Trace children processes spawned by our target.
-> +
->  -T::
->  --trace-funcs=::
->  	Select function tracer and set function filter on the given
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 39c694be2b71..07b81d0c1658 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -41,6 +41,7 @@ struct perf_ftrace {
->  	struct list_head	nograph_funcs;
->  	int			graph_depth;
->  	unsigned long		percpu_buffer_size;
-> +	bool			inherit;
->  };
->  
->  struct filter_entry {
-> @@ -182,9 +183,27 @@ static int write_tracing_file_int(const char *name, int value)
->  	return 0;
->  }
->  
-> +static int write_tracing_option_file(const char *name, const char *val)
-> +{
-> +	char *file;
-> +	int ret;
-> +
-> +	if (asprintf(&file, "options/%s", name) < 0)
-> +		return -1;
-> +
-> +	ret = __write_tracing_file(file, val, false);
-> +	free(file);
-> +	return ret;
-> +}
-> +
->  static int reset_tracing_cpu(void);
->  static void reset_tracing_filters(void);
->  
-> +static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
-> +{
-> +	write_tracing_option_file("function-fork", "0");
-> +}
-> +
->  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
->  {
->  	if (write_tracing_file("tracing_on", "0") < 0)
-> @@ -203,6 +222,7 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
->  		return -1;
->  
->  	reset_tracing_filters();
-> +	reset_tracing_options(ftrace);
->  	return 0;
->  }
->  
-> @@ -341,6 +361,17 @@ static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
->  	return 0;
->  }
->  
-> +static int set_tracing_trace_inherit(struct perf_ftrace *ftrace)
-> +{
-> +	if (!ftrace->inherit)
-> +		return 0;
-> +
-> +	if (write_tracing_option_file("function-fork", "1") < 0)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
->  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  {
->  	char *trace_file;
-> @@ -410,6 +441,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  		goto out_reset;
->  	}
->  
-> +	if (set_tracing_trace_inherit(ftrace) < 0) {
-> +		pr_err("failed to set tracing option function-fork\n");
-> +		goto out_reset;
-> +	}
-> +
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
->  		goto out_reset;
-> @@ -618,6 +654,8 @@ int cmd_ftrace(int argc, const char **argv)
->  		    "Max depth for function graph tracer"),
->  	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
->  		     "size of per cpu buffer", parse_buffer_size),
-> +	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
-> +		    "trace children processes"),
->  	OPT_END()
->  	};
->  
-> -- 
-> 2.25.1
-> 
-
+ /* Functions used for unicast addresses handling */
+ int dev_uc_add(struct net_device *dev, const unsigned char *addr);
++int dev_uc_add_global(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_del(struct net_device *dev, const unsigned char *addr);
++int dev_uc_del_global(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_sync(struct net_device *to, struct net_device *from);
+ int dev_uc_sync_multiple(struct net_device *to, struct net_device *from);
+ void dev_uc_unsync(struct net_device *to, struct net_device *from);
+diff --git a/include/uapi/linux/sockios.h b/include/uapi/linux/sockios.h
+index 7d1bccbbef78..f41b152b0268 100644
+--- a/include/uapi/linux/sockios.h
++++ b/include/uapi/linux/sockios.h
+@@ -80,7 +80,7 @@
+ #define SIOCGIFHWADDR	0x8927		/* Get hardware address		*/
+ #define SIOCGIFSLAVE	0x8929		/* Driver slaving support	*/
+ #define SIOCSIFSLAVE	0x8930
+-#define SIOCADDMULTI	0x8931		/* Multicast address lists	*/
++#define SIOCADDMULTI	0x8931		/* Mac address lists	*/
+ #define SIOCDELMULTI	0x8932
+ #define SIOCGIFINDEX	0x8933		/* name -> if_index mapping	*/
+ #define SIOGIFINDEX	SIOCGIFINDEX	/* misprint compatibility :-)	*/
+diff --git a/net/core/dev_addr_lists.c b/net/core/dev_addr_lists.c
+index 54cd568e7c2f..d150c2d84df4 100644
+--- a/net/core/dev_addr_lists.c
++++ b/net/core/dev_addr_lists.c
+@@ -573,6 +573,20 @@ int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr)
+ }
+ EXPORT_SYMBOL(dev_uc_add_excl);
+ 
++static int __dev_uc_add(struct net_device *dev, const unsigned char *addr,
++			bool global)
++{
++	int err;
++
++	netif_addr_lock_bh(dev);
++	err = __hw_addr_add_ex(&dev->uc, addr, dev->addr_len,
++			       NETDEV_HW_ADDR_T_UNICAST, global, false, 0);
++	if (!err)
++		__dev_set_rx_mode(dev);
++	netif_addr_unlock_bh(dev);
++	return err;
++}
++
+ /**
+  *	dev_uc_add - Add a secondary unicast address
+  *	@dev: device
+@@ -583,18 +597,37 @@ EXPORT_SYMBOL(dev_uc_add_excl);
+  */
+ int dev_uc_add(struct net_device *dev, const unsigned char *addr)
+ {
+-	int err;
+-
+-	netif_addr_lock_bh(dev);
+-	err = __hw_addr_add(&dev->uc, addr, dev->addr_len,
+-			    NETDEV_HW_ADDR_T_UNICAST);
+-	if (!err)
+-		__dev_set_rx_mode(dev);
+-	netif_addr_unlock_bh(dev);
+-	return err;
++	return __dev_uc_add(dev, addr, false);
+ }
+ EXPORT_SYMBOL(dev_uc_add);
+ 
++/**
++ *	dev_uc_add_global - Add a global unicast address
++ *	@dev: device
++ *	@addr: address to add
++ *
++ *	Add a global unicast address to the device.
++ */
++int dev_uc_add_global(struct net_device *dev, const unsigned char *addr)
++{
++	return __dev_uc_add(dev, addr, true);
++}
++EXPORT_SYMBOL(dev_uc_add_global);
++
++static int __dev_uc_del(struct net_device *dev, const unsigned char *addr,
++			bool global)
++{
++	int err;
++
++	netif_addr_lock_bh(dev);
++	err = __hw_addr_del_ex(&dev->uc, addr, dev->addr_len,
++			       NETDEV_HW_ADDR_T_UNICAST, global, false);
++	if (!err)
++		__dev_set_rx_mode(dev);
++	netif_addr_unlock_bh(dev);
++	return err;
++}
++
+ /**
+  *	dev_uc_del - Release secondary unicast address.
+  *	@dev: device
+@@ -605,18 +638,24 @@ EXPORT_SYMBOL(dev_uc_add);
+  */
+ int dev_uc_del(struct net_device *dev, const unsigned char *addr)
+ {
+-	int err;
+-
+-	netif_addr_lock_bh(dev);
+-	err = __hw_addr_del(&dev->uc, addr, dev->addr_len,
+-			    NETDEV_HW_ADDR_T_UNICAST);
+-	if (!err)
+-		__dev_set_rx_mode(dev);
+-	netif_addr_unlock_bh(dev);
+-	return err;
++	return __dev_uc_del(dev, addr, false);
+ }
+ EXPORT_SYMBOL(dev_uc_del);
+ 
++/**
++ *	dev_uc_del_global - Delete a global unicast address.
++ *	@dev: device
++ *	@addr: address to delete
++ *
++ *	Release reference to a unicast address and remove it
++ *	from the device if the reference count drops to zero.
++ */
++int dev_uc_del_global(struct net_device *dev, const unsigned char *addr)
++{
++	return __dev_uc_del(dev, addr, true);
++}
++EXPORT_SYMBOL(dev_uc_del_global);
++
+ /**
+  *	dev_uc_sync - Synchronize device's unicast list to another device
+  *	@to: destination device
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index b2cf9b7bb7b8..774418f64c05 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -299,7 +299,10 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
+ 			return -EINVAL;
+ 		if (!netif_device_present(dev))
+ 			return -ENODEV;
+-		return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
++		if (is_multicast_ether_addr(ifr->ifr_hwaddr.sa_data))
++			return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
++		else
++			return dev_uc_add_global(dev, ifr->ifr_hwaddr.sa_data);
+ 
+ 	case SIOCDELMULTI:
+ 		if (!ops->ndo_set_rx_mode ||
+@@ -307,7 +310,10 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
+ 			return -EINVAL;
+ 		if (!netif_device_present(dev))
+ 			return -ENODEV;
+-		return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
++		if (is_multicast_ether_addr(ifr->ifr_hwaddr.sa_data))
++			return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
++		else
++			return dev_uc_del_global(dev, ifr->ifr_hwaddr.sa_data);
+ 
+ 	case SIOCSIFTXQLEN:
+ 		if (ifr->ifr_qlen < 0)
 -- 
+2.19.1
 
-- Arnaldo
