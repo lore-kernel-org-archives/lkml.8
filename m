@@ -2,142 +2,66 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10845C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747B120771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E8F20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="chRbBMNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgHNBkQ (ORCPT
+        id S1726596AbgHNBoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 21:40:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15604 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgHNBkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 21:40:15 -0400
-IronPort-SDR: sw0LBl4GtSKKiuNby4RfQAjj3KETIgFTrOxaZdumOCQDlYOVJoeyn0JhWr8lu96NCMneLsGupm
- D5vhZaqmFkHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="154309079"
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="154309079"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 18:40:15 -0700
-IronPort-SDR: nn2/a2uT0dfmJs5glicqz7PZfMhJpugjrmgjWvIyz7YuOXGxPzQe/4+tNLDXxM2PX95RhtOOBc
- WiIigei2EWPA==
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="470421279"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 18:40:15 -0700
-Date:   Thu, 13 Aug 2020 18:40:14 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] KVM: x86: move kvm_vcpu_gfn_to_memslot() out of
- try_async_pf()
-Message-ID: <20200814014014.GA4845@linux.intel.com>
-References: <20200807141232.402895-1-vkuznets@redhat.com>
- <20200807141232.402895-2-vkuznets@redhat.com>
+        Thu, 13 Aug 2020 21:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgHNBoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 21:44:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493DEC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9iILY5y1o8sySmM5jW1ocYlCz9cV5k1VWj6M394hPzY=; b=chRbBMNE3S+gAyKkHqVo802ERf
+        JRJUzKQpBYv1LlDyK1YjXUNC8TizkJtZ6frMOfHhz4GltFUa1OPhjbc0VvM/FYDSn8YlL361v9Yo+
+        98hGjM184iXjjDz+SFBtomElAuD1P7GhabTpNX/5SLITEjPMVsoVhS3WTO6qCiNHKraJPNAZl/7Lk
+        tdTq3Ckv4RadQiBqbhYKJf0E2T8TKXlag1QUc/ZyosWRETetIAVmwCg3dpGDPgT2FBbuYxlCxPOAw
+        Rf+aI333+Nu8ZX+jgLKTrpQaWYgs4mOUEtAzitkl44bcuAp335/siqm2CaJz5NQBi2K9qNFEQ7HoF
+        EuJP1SSg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6Ol9-0008JE-BB; Fri, 14 Aug 2020 01:43:55 +0000
+Date:   Fri, 14 Aug 2020 02:43:55 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     Roman Gushchin <klamm@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm : update ra->ra_pages if it's NOT equal to
+ bdi->ra_pages
+Message-ID: <20200814014355.GS17456@casper.infradead.org>
+References: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807141232.402895-2-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 04:12:30PM +0200, Vitaly Kuznetsov wrote:
-> No functional change intended. Slot flags will need to be analyzed
-> prior to try_async_pf() when KVM_MEM_PCI_HOLE is implemented.
+On Fri, Aug 14, 2020 at 09:30:11AM +0800, Zhaoyang Huang wrote:
+> file->f_ra->ra_pages will remain the initialized value since it opend, which may
+> be NOT equal to bdi->ra_pages as the latter one is updated somehow(etc,
+> echo xxx > /sys/block/dm/queue/read_ahead_kb).So sync ra->ra_pages to the
+> updated value when sync read.
 
-Why?  Wouldn't it be just as easy, and arguably more appropriate, to add
-KVM_PFN_ERR_PCI_HOLE and update handle_abornmal_pfn() accordinaly?
-
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c         | 14 ++++++++------
->  arch/x86/kvm/mmu/paging_tmpl.h |  7 +++++--
->  2 files changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 862bf418214e..fef6956393f7 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4042,11 +4042,10 @@ static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
->  }
->  
-> -static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
-> -			 gpa_t cr2_or_gpa, kvm_pfn_t *pfn, bool write,
-> -			 bool *writable)
-> +static bool try_async_pf(struct kvm_vcpu *vcpu, struct kvm_memory_slot *slot,
-> +			 bool prefault, gfn_t gfn, gpa_t cr2_or_gpa,
-> +			 kvm_pfn_t *pfn, bool write, bool *writable)
->  {
-> -	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
->  	bool async;
->  
->  	/* Don't expose private memslots to L2. */
-> @@ -4082,7 +4081,7 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->  	bool exec = error_code & PFERR_FETCH_MASK;
->  	bool lpage_disallowed = exec && is_nx_huge_page_enabled();
->  	bool map_writable;
-> -
-> +	struct kvm_memory_slot *slot;
->  	gfn_t gfn = gpa >> PAGE_SHIFT;
->  	unsigned long mmu_seq;
->  	kvm_pfn_t pfn;
-> @@ -4104,7 +4103,10 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
->  	smp_rmb();
->  
-> -	if (try_async_pf(vcpu, prefault, gfn, gpa, &pfn, write, &map_writable))
-> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> +
-> +	if (try_async_pf(vcpu, slot, prefault, gfn, gpa, &pfn, write,
-> +			 &map_writable))
->  		return RET_PF_RETRY;
->  
->  	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r))
-> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> index 0172a949f6a7..5c6a895f67c3 100644
-> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> @@ -779,6 +779,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->  	int write_fault = error_code & PFERR_WRITE_MASK;
->  	int user_fault = error_code & PFERR_USER_MASK;
->  	struct guest_walker walker;
-> +	struct kvm_memory_slot *slot;
->  	int r;
->  	kvm_pfn_t pfn;
->  	unsigned long mmu_seq;
-> @@ -833,8 +834,10 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
->  	smp_rmb();
->  
-> -	if (try_async_pf(vcpu, prefault, walker.gfn, addr, &pfn, write_fault,
-> -			 &map_writable))
-> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, walker.gfn);
-> +
-> +	if (try_async_pf(vcpu, slot, prefault, walker.gfn, addr, &pfn,
-> +			 write_fault, &map_writable))
->  		return RET_PF_RETRY;
->  
->  	if (handle_abnormal_pfn(vcpu, addr, walker.gfn, pfn, walker.pte_access, &r))
-> -- 
-> 2.25.4
-> 
+It still ignores the work done by shrink_readahead_size_eio()
+and fadvise(POSIX_FADV_SEQUENTIAL).
