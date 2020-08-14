@@ -2,174 +2,388 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0371C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDDD207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA9A207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XTm4CnJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgHNOgk (ORCPT
+        id S1728846AbgHNOmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 10:36:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40165 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgHNOgk (ORCPT
+        Fri, 14 Aug 2020 10:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgHNOmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 10:36:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id m15so4924225lfp.7;
-        Fri, 14 Aug 2020 07:36:37 -0700 (PDT)
+        Fri, 14 Aug 2020 10:42:13 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B9AC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:42:13 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t14so8125953wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 07:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Yl1G/VWK1CNE49Md/itICc0B3b1iGHZpHbQFnK+4y7c=;
+        b=XTm4CnJmcol29c/L1LWgP71sOmq5iwlhwzLYsTY8FlF/s3jdyW9+mMtrs4bmj1Ub7p
+         nmwTCpuKv0bRIqqVH+df8STg2LVTSmF5j/Thb0kJMaJ5SRnDzmMIu4o1Mkr9sHclq4mh
+         7iPrQd8a5QESfIEusG+tBzfuGauswKPFja7T/ngf99i2Ff/wcVEbHmZEqPOEFH16D+0S
+         czf2Xm7oQtonSbG31rxy4qO7c8uvIZI12MqaKaw9nATZ8yjSqp9C6TtgTwDwuEgfwHfG
+         YCCYSnZtHGMzsxBMi8T1mXCua+KoYCRF7B7FChG/t25g90zMQKprsuC2SapkNOsbbnU5
+         GKRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NO9eozMTpwGqng8nuxmq3yXenUdC5M4ZNaIM3MPApoc=;
-        b=t85Q/X6sQIH7iPEeoNPjxbmhF8lviLw1h/whYTjA25Py2pQxP1XX+uNpUx+6mBcZSd
-         IqDfWZ2cQxnrkjTzk+Rr5Pwn+8/vbEi2DwwJaPgLx6Li13afPPmbOs5BCvDd05r9jdfg
-         4fXRp/f7irbcPsP2Z27+b0Cn+Gme0KYYylizRIbQ35P5g+7mQdRtz3NPELlj879XbsZm
-         xZr8gN1w+3rb7bXnPHNs2Y19DEJplts+QZRvphu4TCjylaN3BuadyZv4L58Orzg//j9e
-         UGzQzgRX2oRGp1m61rsN5GhucoL0jOIJqTkQoXMyfWq6NNYjlDHBC1OV+mTP9cB7EeXC
-         hOOA==
-X-Gm-Message-State: AOAM533kuzzGW+2RnESjfgkPz4rOLAIw/rSfHpK6s2OPYJVncHjBPbC9
-        ZmhtXks43EqN9+Kz3VwCr2TabpMgxI4=
-X-Google-Smtp-Source: ABdhPJwya6daZDg1709UAO+ZeAogK+wDgC0rCR3897JFviZd21xzcqM7b1cyMqFPpBPssXwfYKGtSQ==
-X-Received: by 2002:a19:6b0e:: with SMTP id d14mr1370001lfa.103.1597415796370;
-        Fri, 14 Aug 2020 07:36:36 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id t12sm1242709lfe.43.2020.08.14.07.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 07:36:35 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Julia Lawall <julia.lawall@inria.fr>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <ed9a8046-4c21-e849-f68b-9e08991b701d@web.de>
- <8e76e81f-970b-b1f7-840d-10506dc3311a@linux.com>
- <48ffa436-6e73-88b2-07bc-89942f3c6d8e@web.de>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH] coccinelle: api: add sprintf() support to
- device_attr_show
-Message-ID: <0a9015b6-9037-59c5-31f2-cd2b32c86b50@linux.com>
-Date:   Fri, 14 Aug 2020 17:36:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Yl1G/VWK1CNE49Md/itICc0B3b1iGHZpHbQFnK+4y7c=;
+        b=taO9hXKl/L+6TtCsiLxXsRHgmX4T/3tWtLdT9dNN8w1V9jwMbGiMiROeqT1GEwQMkK
+         fsLKflwfthZxVlXWjBOPmjK1QmLKsM+0LLypLN6JN2zioVoC56AdUGyi3upCye+H6CTd
+         7KoZSogredzmeS31Y4ssWk+yFzmlCWyKCMMy5WAgQHSywZJT7x7dGv3JyolwQD9YaUI7
+         FJ+MtsEKuaacKF7f1w0BrC1AJdt2lD/q2FGSMZOLx2Z7EHDlfMCajUR+mBs4bJ4UTRiE
+         qmwOkfYoFFxyD2sRjzX38jnOIimlbV/BQJkUb83CfDHPigvv4whHnDvZ3YrR0TCBCS40
+         ODRA==
+X-Gm-Message-State: AOAM532RvtBshacG3av9nUh7p9JDmo7XOldVQ6FFtXrERBH0KvQARbND
+        tk7svCd8rTlmp6bLjZo54Fin+g==
+X-Google-Smtp-Source: ABdhPJz3h9KpTkhab2czIoIGf2XLBCdcrFvF1QAk2TAc++EZpV3bI2FqdxKi9a29yTby+c50VqLp0w==
+X-Received: by 2002:a05:600c:2301:: with SMTP id 1mr2824954wmo.110.1597416131875;
+        Fri, 14 Aug 2020 07:42:11 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id g188sm16511592wma.5.2020.08.14.07.42.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 07:42:10 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 15:42:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL v2] MFD for v5.9
+Message-ID: <20200814144206.GL4354@dell>
+References: <20200811074637.GG4411@dell>
+ <CAHk-=wgF6Ld0-E0Ych_s=jyS4ssaabK08QR4NOzfRrde0LVHfg@mail.gmail.com>
+ <20200813071949.GG4354@dell>
 MIME-Version: 1.0
-In-Reply-To: <48ffa436-6e73-88b2-07bc-89942f3c6d8e@web.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200813071949.GG4354@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Good evening Linus,
 
-
-On 8/14/20 3:30 PM, Markus Elfring wrote:
->>> You propose to use a nested SmPL disjunction for desired adjustments.
->>> I suggest to start a corresponding case distinction behind
->>> the key word “return” instead of repeating it three times.
->>
->> It doesn't work.
+> > You can try again next merge window, by now it's too late to send me
+> > completely untested garbage and try to fix it up.
 > 
-> How do you think about to apply a SmPL rule variant like the following?
+> Could I please urge you to reconsider.  The branch is well tested (in
+> -next, by private 'kernel test robot' tests and by extensive TuxBuild
+> testing).  I have cleaned up the offending line (it was just one line
+> causing the 2 new 'unused variable' issues) and all of my tests are
+> now passing (with W=1 turned off).  The branch also extinguishes well
+> over 100 W=1 warnings to boot.  It certainly does more good than
+> harm.
 > 
-> @rp depends on patch@
-> identifier show, dev, attr, buf;
-> constant str;
-> @@
-> 
-> ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
-> {
-> 	<...
-> 	return
-> (
-> -		snprintf
-> +		sprintf
-> 			(
-> 			buf,
-> -			\(PAGE_SIZE\|PAGE_SIZE - 1\),
-> (			str
-> |
-> (			"%i"\|"%i\n"\|"%li"\|"%li\n"\|"%lli"\|"%lli\n"\|
-> 			"%d"\|"%d\n"\|"%ld"\|"%ld\n"\|"%lld"\|"%lld\n"\|
-> 			"%u"\|"%u\n"\|"%lu"\|"%lu\n"\|"%llu"\|"%llu\n"\|
-> 			"%x"\|"%x\n"\|"%lx"\|"%lx\n"\|"%llx"\|"%llx\n"\|
-> 			"%X"\|"%X\n"\|"%lX"\|"%lX\n"\|"%llX"\|"%llX\n"\|
-> 			"0x%x"\|"0x%x\n"\|"0x%lx"\|"0x%lx\n"\|"0x%llx"\|"0x%llx\n"\|
-> 			"0x%X"\|"0x%X\n"\|"0x%lX"\|"0x%lX\n"\|"0x%llX"\|"0x%llX\n"\|
-> 			"%02x\n"\|"%03x\n"\|"%04x\n"\|"%08x\n"\|
-> 			"%02X\n"\|"%03X\n"\|"%04X\n"\|"%08X\n"\|
-> 			"0x%02x\n"\|"0x%03x\n"\|"0x%04x\n"\|"0x%08x\n"\|
-> 			"0x%02X\n"\|"0x%03X\n"\|"0x%04X\n"\|"0x%08X\n"\|
-> 			"%zd"\|"%zd\n"\|"%zu"\|"%zu\n"\|"%zx"\|"%zx\n"\|
-> 			"%c"\|"%c\n"\|"%p"\|"%p\n"\|"%pU\n"\|"%pUl\n"\|"%hu\n"
-> )			,
-> 			...
-> )
-> 			)
-> |
-> -		snprintf
-> +		scnprintf
-> 			(...)
-> );
-> 	...>
-> }
-> 
+> If you decide stick with your decision however, I'll also understand.
 
-3 levels of nested disjunctions makes this pattern completely unreadable
-and gives no comparable benefits. I don't think we should care much about
-number of characters in the kernel sources, gzip will do a better job
-anyway.
+Here is the new pull request.  It has been tested; locally, by
+TuxBuild and the Intel 'kernel test robot' [0].  Please consider this for
+addition into v5.9.  All of these patches have also soak tested in
+-next for a considerable amount of time.
 
+[0] https://pastebin.ubuntu.com/p/CjwVcf4Nwd/
 
-Thanks,
-Denis
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.9-1
+
+for you to fetch changes up to e15d7f2b81d2e7d93115d46fa931b366c1cdebc2:
+
+  mfd: syscon: Use a unique name with regmap_config (2020-08-13 07:51:03 +0100)
+
+----------------------------------------------------------------
+ - Core Frameworks
+   - Make better attempt at matching device with the correct OF node
+   - Allow batch removal of hierarchical sub-devices
+
+ - New Drivers
+   - Add STM32 Clocksource driver
+   - Add support for Khadas System Control Microcontroller
+
+ - Driver Removal
+   - Remove unused driver for TI's SMSC ECE1099
+
+ - New Device Support
+   - Add support for Intel Emmitsburg PCH to Intel LPSS PCI
+   - Add support for Intel Tiger Lake PCH-H to Intel LPSS PCI
+   - Add support for Dialog DA revision to Dialog DA9063
+
+ - New Functionality
+   - Add support for AXP803 to be probed by I2C
+
+ - Fix-ups
+   - Numerous W=1 warning fixes
+   - Device Tree changes; stm32-lptimer, gateworks-gsc, khadas,mcu, stmfx, cros-ec, j721e-system-controller
+   - Enabled Regmap 'fast I/O'; stm32-lptimer
+   - Change BUG_ON to WARN_ON; arizona-core
+   - Remove superfluous code/initialisation; madera, max14577
+   - Trivial formatting/spelling issues; madera-core, madera-i2c, da9055, max77693-private
+   - Switch to of_platform_populate(); sprd-sc27xx-spi
+   - Expand out set/get brightness/pwm macros; lm3533-ctrlbank
+   - Disable IRQs on suspend; motorola-cpcap
+   - Clean-up error handling; intel_soc_pmic_mrfld
+   - Ensure correct removal order of sub-devices; madera
+   - Many s/HTTP/HTTPS/ link changes
+   - Ensure name used with Regmap is unique; syscon
+
+ - Bug Fixes
+   - Properly 'put' clock on unbind and error; arizona-core
+   - Fix revision handling; da9063
+   - Fix 'assignment of read-only location' error; kempld-core
+   - Avoid using the Regmap API when atomic; rn5t618
+   - Redefine volatile register description; rn5t618
+   - Use locking to protect event handler; dln2
+
+----------------------------------------------------------------
+Adam Thomson (2):
+      mfd: da9063: Fix revision handling to correctly select reg tables
+      mfd: da9063: Add support for latest DA silicon revision
+
+Alexander A. Klimov (1):
+      mfd: Replace HTTP links with HTTPS ones
+
+Andreas Kemnade (2):
+      mfd: rn5t618: Make restart handler atomic safe
+      mfd: rn5t618: Fix caching of battery related registers
+
+Andy Shevchenko (3):
+      mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
+      mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
+      mfd: dln2: Run event handler loop under spinlock
+
+Benjamin Gaignard (5):
+      dt-bindings: mfd: Document STM32 low power timer bindings
+      mfd: stm32: Add defines to be used for clkevent purpose
+      mfd: stm32: Enable regmap fast_io for stm32-lptimer
+      clocksource: Add Low Power STM32 timers driver
+      dt-bindings: mfd: Convert stmfx bindings to json-schema
+
+Charles Keepax (6):
+      mfd: arizona: Remove BUG_ON usage
+      mfd: arizona: Ensure 32k clock is put on driver unbind and error
+      mfd: madera: Remove unused forward declaration of madera_codec_pdata
+      mfd: madera: Fix minor formatting issues
+      mfd: mfd-core: Add mechanism for removal of a subset of children
+      mfd: madera: Improve handling of regulator unbinding
+
+Chunyan Zhang (1):
+      mfd: sprd: Populate sub-devices defined in DT
+
+Colin Ian King (1):
+      mfd: max14577: Remove redundant initialization of variable current_bits
+
+Fabio Estevam (2):
+      dt-bindings: mfd: st,stmfx: Remove extra additionalProperties
+      dt-bindings: mfd: st,stmfx: Remove I2C unit name
+
+Frank Lee (1):
+      mfd: axp20x: Allow the AXP803 to be probed by I2C
+
+Ikjoon Jang (1):
+      dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
+
+Johan Hovold (1):
+      mfd: lm3533: Expand control-bank accessors
+
+Lee Jones (36):
+      mfd: twl4030-irq: Fix incorrect type in assignment warning
+      mfd: twl4030-irq: Fix cast to restricted __le32 warning
+      mfd: tps6586x: Fix cast to restricted __le32 warning
+      mfd: altera-sysmgr: Fix physical address storing hacks
+      mfd: sprd-sc27xx-spi: Fix symbol 'sprd_pmic_detect_charger_type' was not declared warning
+      mfd: ab3100-core: Fix incompatible types in comparison expression warning
+      mfd: ab8500-debugfs: Fix incompatible types in comparison expression issue
+      mfd: tc3589x: Remove invalid use of kerneldoc syntax
+      mfd: wm8400-core: Supply description for wm8400_reset_codec_reg_cache's arg
+      mfd: wm831x-core: Supply description wm831x_reg_{un}lock args
+      mfd: wm8350-core: Supply description wm8350_reg_{un}lock args
+      mfd: mfd-core: Complete kerneldoc header for devm_mfd_add_devices()
+      mfd: db8500-prcmu: Add description for 'reset_reason' in kerneldoc
+      mfd: db8500-prcmu: Remove incorrect function header from .probe() function
+      mfd: omap-usb-host: Remove invalid use of kerneldoc syntax
+      mfd: omap-usb-host: Provide description for 'pdev' argument to .probe()
+      mfd: omap-usb-tll: Provide description for 'pdev' argument to .probe()
+      mfd: atmel-smc: Add missing colon(s) for 'conf' arguments
+      mfd: altera-sysmgr: Supply descriptions for 'np' and 'property' function args
+      mfd: cros_ec_dev: Fix cros_feature_to_{name,cells} struct descriptions
+      mfd: tps65218: Repair incorrect function argument name 's/tps65218/tps/'
+      mfd: tps65217: Repair incorrect function argument name 's/tps65217/tps/'
+      mfd: ab3100-otp: Add missing colon(s) for all documented kerneldoc arguments
+      mfd: tps65010: Remove delcared and set, but never used variable 'status'
+      mfd: si476x-cmd: Repair wrongly described function argument 's/response/resp'
+      mfd: si476x-cmd: Add missing colon(s) for all documented kerneldoc arguments
+      mfd: si476x-i2c: Add description for si476x_core_fwver_to_revision()'s arg 'func'
+      mfd: si476x-i2c: Fix spelling mistake in case() statement's FALLTHROUGH comment
+      mfd: si476x-cmd: Update si476x_cmd_am_rsq_status()'s kerneldoc
+      mfd: si476x-cmd: Add missing documentation for si476x_cmd_fm_rds_status()'s arg 'report'
+      mfd: rave-sp: Fix mistake in 'struct rave_sp_deframer's kerneldoc
+      mfd: sprd-sc27xx-spi: Fix-up bogus IRQ register offset and mask setting
+      mfd: axp20x-i2c: Do not define 'struct acpi_device_id' when !CONFIG_ACPI
+      mfd: core: Make a best effort attempt to match devices with the correct of_nodes
+      mfd: core: Fix formatting of MFD helpers
+      mfd: core: Add OF_MFD_CELL_REG() helper
+
+Matti Vaittinen (1):
+      MAINTAINERS: Add entry for ROHM Power Management ICs
+
+Michael Walle (1):
+      mfd: smsc-ece1099: Remove driver
+
+Neil Armstrong (4):
+      dt-bindings: mfd: Add Khadas Microcontroller bindings
+      mfd: Add support for the Khadas System control Microcontroller
+      thermal: Add support for the MCU controlled FAN on Khadas boards
+      MAINTAINERS: Add myself as maintainer for Khadas MCU drivers
+
+Randy Dunlap (2):
+      mfd: da9055: pdata.h: Drop a duplicated word
+      mfd: max77693-private: Drop a duplicated word
+
+Roger Quadros (1):
+      dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system controller
+
+Stephen Rothwell (1):
+      mfd: kempld-core: Fix 'assignment of read-only location' error
+
+Suman Anna (1):
+      mfd: syscon: Use a unique name with regmap_config
+
+Tim Harvey (1):
+      dt-bindings: mfd: gateworks-gsc: Add 16bit pre-scaled voltage mode
+
+Tony Lindgren (1):
+      mfd: motorola-cpcap: Disable interrupt for suspend
+
+Xu Wang (1):
+      mfd: intel_soc_pmic_mrfld: Simplify the return expression of intel_scu_ipc_dev_iowrite8()
+
+ Documentation/devicetree/bindings/mfd/cros-ec.txt  |  76 ------
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     |   5 +-
+ .../devicetree/bindings/mfd/google,cros-ec.yaml    | 129 ++++++++++
+ .../devicetree/bindings/mfd/khadas,mcu.yaml        |  44 ++++
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  |   5 +
+ .../devicetree/bindings/mfd/st,stmfx.yaml          | 122 ++++++++++
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 ---
+ .../bindings/mfd/ti,j721e-system-controller.yaml   |  74 ++++++
+ .../devicetree/bindings/mfd/twl-family.txt         |   2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 ---------
+ Documentation/driver-api/index.rst                 |   1 -
+ Documentation/driver-api/smsc_ece1099.rst          |  60 -----
+ MAINTAINERS                                        |  41 ++++
+ drivers/clocksource/Kconfig                        |   4 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-stm32-lp.c               | 221 +++++++++++++++++
+ drivers/mfd/Kconfig                                |  33 ++-
+ drivers/mfd/Makefile                               |   2 +-
+ drivers/mfd/ab3100-core.c                          |   2 +-
+ drivers/mfd/ab3100-otp.c                           |  20 +-
+ drivers/mfd/ab8500-debugfs.c                       |   2 +-
+ drivers/mfd/altera-sysmgr.c                        |  19 +-
+ drivers/mfd/arizona-core.c                         |  20 +-
+ drivers/mfd/atmel-smc.c                            |   4 +-
+ drivers/mfd/axp20x-i2c.c                           |   4 +
+ drivers/mfd/cros_ec_dev.c                          |   4 +-
+ drivers/mfd/da9063-core.c                          |  31 ---
+ drivers/mfd/da9063-i2c.c                           | 271 +++++++++++++++++++--
+ drivers/mfd/db8500-prcmu.c                         |   6 +-
+ drivers/mfd/dln2.c                                 |   4 +
+ drivers/mfd/hi6421-pmic-core.c                     |   2 +-
+ drivers/mfd/intel-lpss-pci.c                       |  19 ++
+ drivers/mfd/intel_soc_pmic_mrfld.c                 |   7 +-
+ drivers/mfd/kempld-core.c                          |  30 +--
+ drivers/mfd/khadas-mcu.c                           | 142 +++++++++++
+ drivers/mfd/lm3533-ctrlbank.c                      |  94 ++++---
+ drivers/mfd/lp873x.c                               |   2 +-
+ drivers/mfd/lp87565.c                              |   2 +-
+ drivers/mfd/madera-core.c                          |  33 ++-
+ drivers/mfd/madera-i2c.c                           |   1 -
+ drivers/mfd/max14577.c                             |   2 +-
+ drivers/mfd/mfd-core.c                             | 121 ++++++++-
+ drivers/mfd/motorola-cpcap.c                       |  23 ++
+ drivers/mfd/omap-usb-host.c                        |   6 +-
+ drivers/mfd/omap-usb-tll.c                         |   4 +-
+ drivers/mfd/rave-sp.c                              |   2 +-
+ drivers/mfd/rn5t618.c                              |  46 +++-
+ drivers/mfd/si476x-cmd.c                           |  74 +++---
+ drivers/mfd/si476x-i2c.c                           |   7 +-
+ drivers/mfd/smsc-ece1099.c                         |  87 -------
+ drivers/mfd/sprd-sc27xx-spi.c                      |  82 +------
+ drivers/mfd/stm32-lptimer.c                        |   1 +
+ drivers/mfd/syscon.c                               |   4 +-
+ drivers/mfd/tc3589x.c                              |   2 +-
+ drivers/mfd/ti_am335x_tscadc.c                     |   2 +-
+ drivers/mfd/tps65010.c                             |   5 +-
+ drivers/mfd/tps65086.c                             |   2 +-
+ drivers/mfd/tps65217.c                             |   6 +-
+ drivers/mfd/tps65218.c                             |   6 +-
+ drivers/mfd/tps6586x.c                             |   7 +-
+ drivers/mfd/tps65912-core.c                        |   2 +-
+ drivers/mfd/tps65912-i2c.c                         |   2 +-
+ drivers/mfd/tps65912-spi.c                         |   2 +-
+ drivers/mfd/twl4030-irq.c                          |   4 +-
+ drivers/mfd/wm831x-core.c                          |   4 +
+ drivers/mfd/wm8350-core.c                          |   4 +
+ drivers/mfd/wm8400-core.c                          |   2 +
+ drivers/thermal/Kconfig                            |  11 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/khadas_mcu_fan.c                   | 162 ++++++++++++
+ include/linux/mfd/core.h                           |  42 +++-
+ include/linux/mfd/da9055/pdata.h                   |   2 +-
+ include/linux/mfd/da9063/core.h                    |   1 +
+ include/linux/mfd/da9063/registers.h               |  15 +-
+ include/linux/mfd/hi6421-pmic.h                    |   2 +-
+ include/linux/mfd/khadas-mcu.h                     |  91 +++++++
+ include/linux/mfd/lp873x.h                         |   2 +-
+ include/linux/mfd/lp87565.h                        |   2 +-
+ include/linux/mfd/madera/pdata.h                   |   1 -
+ include/linux/mfd/max77693-private.h               |   2 +-
+ include/linux/mfd/smsc.h                           | 104 --------
+ include/linux/mfd/stm32-lptimer.h                  |   5 +
+ include/linux/mfd/ti_am335x_tscadc.h               |   2 +-
+ include/linux/mfd/tps65086.h                       |   2 +-
+ include/linux/mfd/tps65217.h                       |   2 +-
+ include/linux/mfd/tps65218.h                       |   2 +-
+ include/linux/mfd/tps65912.h                       |   2 +-
+ 87 files changed, 1799 insertions(+), 846 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+ delete mode 100644 Documentation/driver-api/smsc_ece1099.rst
+ create mode 100644 drivers/clocksource/timer-stm32-lp.c
+ create mode 100644 drivers/mfd/khadas-mcu.c
+ delete mode 100644 drivers/mfd/smsc-ece1099.c
+ create mode 100644 drivers/thermal/khadas_mcu_fan.c
+ create mode 100644 include/linux/mfd/khadas-mcu.h
+ delete mode 100644 include/linux/mfd/smsc.h
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
