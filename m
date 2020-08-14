@@ -4,134 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A326207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725B7207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHm26J+I"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Kam7TpDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgHNQn2 (ORCPT
+        id S1728223AbgHNQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgHNQn1 (ORCPT
+        Fri, 14 Aug 2020 12:44:06 -0400
+Received: from mail.efficios.com ([167.114.26.124]:58780 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgHNQoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:43:27 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966DBC061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:43:26 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id d190so7985948wmd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bw1Tir57DBh//uKbJmgY59q5qNNSVFGXpIBJzyrS4Lw=;
-        b=qHm26J+IwYUn5IJa2ysdzXpsHxc1KAt6rMFUFONUIDMIASRMSgivr98FjRGVhasvPQ
-         WOuffJNjFYuiO6PKizYbOKXKKNTHX5MrodACxfE93iH8gBsWtSvbMOKl16t3ArUkHyLT
-         mRKQgeWXiL1b0FE+8ST0nanOd9slb1k0HMgBryQWBktVC8lHcWezaXAyAZfE2ZRaph4Z
-         LPRj51ijyosSxSA7AAO8QZGKG7/oJyUchYsshMvm96tI0sVntS5LDM9bhfKAwsK7gbCA
-         CUa+Vw9/IPMPePnJKd6rzUbQSEXow1zb2E9HUKZrTSagHrfeUU2nhE2CiCP7CjLZ1GcI
-         fasw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bw1Tir57DBh//uKbJmgY59q5qNNSVFGXpIBJzyrS4Lw=;
-        b=V1GaOZeC6XcuMXDlOWdA2iXW0pPkQxT/WvKugY7Vc7yQS+IlGmLF99HS9oktfeseO7
-         q9QmhKFeuEiwunQ+0P0lCW42oc1C0ajRfRyWzKjNIEpqeMmVlkYjBQtyg4lT7ho+di1u
-         ERrgW95VzJ2/HjsF1A78IXymveeN4T8hiGkkWuQgQFoYw6kW5Ra7ZOjS21G3WRSqLhMc
-         rOcf/GwYG/Qek1I0Sy91Fv+J3qSyONUflRmkg+Plqp5oeLXpITWLEvMNaqMnIRouWjoO
-         GrTZuqHnU5R5YrWni8s9D0ovu2muMJz5l6IEoaKMDKsiufShiE4MoSQBIMc7Bv7slI1Z
-         r2lw==
-X-Gm-Message-State: AOAM533YI4Rlz7qIUATq2mVlQCPIBApwje6D2VZsfKdoieA50pJnrIXM
-        7xDoZK/FQlj+iMQkRQd81O/CuA==
-X-Google-Smtp-Source: ABdhPJwmidNzTZJLo6FoNt59fQ9wCqrOkTh1OvEDHY3GA0jq3pvnnNCUEsTLO6WWNVnFhJIs0j0Vxw==
-X-Received: by 2002:a7b:c7d5:: with SMTP id z21mr3391788wmk.145.1597423405005;
-        Fri, 14 Aug 2020 09:43:25 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id d11sm17098148wrw.77.2020.08.14.09.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:43:24 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 17:43:22 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Martin Langer <martin-langer@gmx.de>,
-        Stefano Brivio <stefano.brivio@polimi.it>,
-        Michael Buesch <m@bues.ch>, van Dyk <kugelfang@gentoo.org>,
-        Andreas Jaggi <andreas.jaggi@waterwave.ch>,
-        Albert Herranz <albert_herranz@yahoo.es>,
-        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 07/30] net: wireless: broadcom: b43: main: Add braces
- around empty statements
-Message-ID: <20200814164322.GP4354@dell>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <20200814113933.1903438-8-lee.jones@linaro.org>
- <87v9hll0ro.fsf@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87v9hll0ro.fsf@codeaurora.org>
+        Fri, 14 Aug 2020 12:44:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2CFC8298C61;
+        Fri, 14 Aug 2020 12:44:05 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1aC3aBf118nC; Fri, 14 Aug 2020 12:44:05 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E143E298A7E;
+        Fri, 14 Aug 2020 12:44:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E143E298A7E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1597423444;
+        bh=DswlVBKuKd2labIqCgEoG1MueK2NYXX+j88XAidVLtA=;
+        h=From:To:Date:Message-Id;
+        b=Kam7TpDtW8qARJT1zHH+eX3cD6Z15F9lutypm6NieFgdM+HBUP6mxEEoolqZ6H7z+
+         HXWYJT+aEmlIX/M5fDEZBv4z/1L3GyipuLMtwNOkAsP2neL4c0fnfuTac9R+ylxrO2
+         ckH9455z5mSz3DJqtr22C8/jwSxpfHnbhqwcvi6b06uz7IBHYCTGyiQVO2/YGrTxfP
+         ZAfIbwSrtYC6lVUcCcrTgJrua+nVuSyUrUYgHjXUSIGZzmDUPXmzOso/7SzaKj8IEs
+         WHa9y9OFOTOsKWBEmYYZBGPiFq62qJ1wNyk0n0Ow7RELBGuP0l0XHIt7qPs/MY59WY
+         MeVpvl2ZkZZAQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id hAjUmPJdomMi; Fri, 14 Aug 2020 12:44:04 -0400 (EDT)
+Received: from thinkos.internal.efficios.com (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 9FE97299002;
+        Fri, 14 Aug 2020 12:44:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH 0/3] sched: membarrier updates
+Date:   Fri, 14 Aug 2020 12:43:55 -0400
+Message-Id: <20200814164358.4783-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020, Kalle Valo wrote:
+Hi,
 
-> Lee Jones <lee.jones@linaro.org> writes:
-> 
-> > Fixes the following W=1 kernel build warning(s):
-> >
-> >  drivers/net/wireless/broadcom/b43/main.c: In function ‘b43_dummy_transmission’:
-> >  drivers/net/wireless/broadcom/b43/main.c:785:3: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> >  drivers/net/wireless/broadcom/b43/main.c: In function ‘b43_do_interrupt_thread’:
-> >  drivers/net/wireless/broadcom/b43/main.c:2017:3: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> >
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Martin Langer <martin-langer@gmx.de>
-> > Cc: Stefano Brivio <stefano.brivio@polimi.it>
-> > Cc: Michael Buesch <m@bues.ch>
-> > Cc: van Dyk <kugelfang@gentoo.org>
-> > Cc: Andreas Jaggi <andreas.jaggi@waterwave.ch>
-> > Cc: Albert Herranz <albert_herranz@yahoo.es>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: b43-dev@lists.infradead.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/net/wireless/broadcom/b43/main.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> Please don't copy the full directory structure to the title. I'll change
-> the title to more simple version:
-> 
-> b43: add braces around empty statements
+Please find those three changes based on our recent discussions about
+interaction between membarrier and exit_mm and kthread_use_mm. I added
+documentation of memory ordering scenarios to membarrier.c as well.
 
-This seems to go the other way.
+Thanks,
 
-"net: wireless: b43" seems sensible.
+Mathieu
 
-> I'll do similar changes to other wireless-drivers patches.
+Mathieu Desnoyers (3):
+  sched: fix exit_mm vs membarrier (v2)
+  sched: membarrier: cover kthread_use_mm (v2)
+  sched: membarrier: document memory ordering scenarios
 
-Thanks.
-
-Does that mean it's been applied, or is this future tense?
+ kernel/exit.c             |   8 +++
+ kernel/kthread.c          |  19 +++++++
+ kernel/sched/idle.c       |   1 +
+ kernel/sched/membarrier.c | 136 ++++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 158 insertions(+), 6 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
