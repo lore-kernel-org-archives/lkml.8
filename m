@@ -2,121 +2,69 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67890C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F54AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E44D21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKlqOFJn"
+	by mail.kernel.org (Postfix) with ESMTP id E5AF720866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 14:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgHNOYx (ORCPT
+        id S1728703AbgHNO0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 10:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgHNOYw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 10:24:52 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA93C061384;
-        Fri, 14 Aug 2020 07:24:52 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id e11so598282ils.10;
-        Fri, 14 Aug 2020 07:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ggMXgX7RUq22IK8MLaR6J65bRRwoutct0090dW6uEgw=;
-        b=IKlqOFJnaBfJOoWsHY8UwOXQ4vWIVHOQ9cHFWJ/Yj4+Q5myA06cA4pxzNHWNeVCEuj
-         K1C032wALPmBsr7wXqR/sGzkjo5MIplBaBt2+o6hjwJ0YMNuF8k4L0vg0kgsop05Wq3t
-         1VPqZHYz7U8Z2wT0h9HCgJkMoErzCNAPVxywOh5UNZ9D9tFVpSwIRLutCICVJ1At1Mx2
-         DnKIzOxQ23bC10EPBpdpg91/wXpp3J9vh4lJWRJwnkNB15+DpCOAKHNafy3tRm7gQN3F
-         FFRvxr8Sx/x1/7TrM1jkphLoqhfetY5yu8AE0VRah+1AJ0g/+jsjiTLSaIShPAV3qBVr
-         8/xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ggMXgX7RUq22IK8MLaR6J65bRRwoutct0090dW6uEgw=;
-        b=nv9tyzgnLvOfZZNHl3tBW63smTKZBhppHtwjlFUBbuxuF1DHbFmEEw+nXweWPUWVu/
-         RZ8te5UdGfOV9hWSKrSDMfBpij3SmVdcdBbOV7Qb2NFOXOD86UTBrY3dW1m6Q+PiZHhy
-         T0takF1y3jfvsNjreEj5diSQFJqqo7CiBIlT6pElt/jGwHT7Jgqh/tTTwaXRnNgXj3A+
-         Wcqh2SvzQ9QVipPORh9ozKXkjQpc4GvPtXDu8uM9HhM3hkAT7lFdDk/eNzakOAsdOjdX
-         2PsT/8KUin7OP9D8wnJzsbDRHEen8ujZJDFM5oZnis8xgaYQebacZbY8+dITrHGLiR3g
-         Z9WA==
-X-Gm-Message-State: AOAM5301PBgfEhVoXEioQf0y9WLJ7jALLUP/EL4Ta/uG2PXC5I+QDsPG
-        mp6N22gVXTWJ4K4zdx7eFHRa0kXpGIt4LpJ8fs4=
-X-Google-Smtp-Source: ABdhPJwiVqDpFE9EY+SU+lxLzSIFEiSNcLq5aeOYf0OBc+yqsDmi0262ufou83smjiKGswFbd1La404xNmJyHd+7seM=
-X-Received: by 2002:a05:6e02:143:: with SMTP id j3mr2472545ilr.97.1597415091428;
- Fri, 14 Aug 2020 07:24:51 -0700 (PDT)
+        Fri, 14 Aug 2020 10:26:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33740 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbgHNO0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 10:26:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AC8ADB1EF;
+        Fri, 14 Aug 2020 14:26:42 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 16:26:17 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/mm changes for v5.9
+Message-ID: <20200814142617.GD3786@suse.de>
+References: <20200803190354.GA1293087@gmail.com>
+ <20200805110348.GA108872@zx2c4.com>
+ <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
+ <20200806131034.GA2067370@gmail.com>
+ <20200806185723.GA24304@suse.de>
+ <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
+ <20200806212019.GA2149204@gmail.com>
+ <20200807084728.GA29510@suse.de>
+ <20200813193008.GB2338781@gmail.com>
 MIME-Version: 1.0
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
- <20200813040232.13054.82417.stgit@localhost.localdomain> <6c072332-ff16-757d-99dd-b8fbae131a0c@linux.alibaba.com>
-In-Reply-To: <6c072332-ff16-757d-99dd-b8fbae131a0c@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 14 Aug 2020 07:24:40 -0700
-Message-ID: <CAKgT0Uf0TbRBVsuGZ1bgh5rdFp+vARkP=+GgD4-DP3Gy6cj+pA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] mm: Drop use of test_and_set_skip in favor of
- just setting skip
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813193008.GB2338781@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:19 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
-e:
->
->
->
-> =E5=9C=A8 2020/8/13 =E4=B8=8B=E5=8D=8812:02, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> >
-> > Since we have dropped the late abort case we can drop the code that was
-> > clearing the LRU flag and calling page_put since the abort case will no=
-w
-> > not be holding a reference to a page.
-> >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->
-> seems the case-lru-file-mmap-read case drop about 3% on this patch in a r=
-ough testing.
-> on my 80 core machine.
+Hi Ingo,
 
-I'm not sure how it could have that much impact on the performance
-since the total effect would just be dropping what should be a
-redundant test since we tested the skip bit before we took the LRU
-bit, so we shouldn't need to test it again after.
+On Thu, Aug 13, 2020 at 09:30:08PM +0200, Ingo Molnar wrote:
+> Mind re-sending it, with an updated changelog that explains why it's 
+> now truly safe?
 
-I finally got my test setup working last night. I'll have to do some
-testing in my environment and I can start trying to see what is going
-on.
+I have updated the commit and will send it out later today, maybe
+together with a comment update in the preallocate_vmalloc_pages()
+function.
 
-Thanks.
+Thanks,
 
-- Alex
+	Joerg
+
