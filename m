@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA284C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C72C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61E920791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC25120791
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgHNG2K (ORCPT
+        id S1726285AbgHNG2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:28:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9803 "EHLO huawei.com"
+        Fri, 14 Aug 2020 02:28:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9804 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbgHNG2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:28:07 -0400
+        id S1726006AbgHNG2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:28:12 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0E26B9E5115403E9F7E9;
+        by Forcepoint Email with ESMTP id 12BF994CB70F7B40688F;
         Fri, 14 Aug 2020 14:28:03 +0800 (CST)
 Received: from huawei.com (10.44.142.101) by DGGEMS403-HUB.china.huawei.com
  (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 14 Aug 2020
@@ -32,12 +32,10 @@ To:     <kexec@lists.infradead.org>, <ebiederm@xmission.com>,
         <guohanjun@huawei.com>
 CC:     <zhuling8@huawei.com>, <luanjianhai@huawei.com>,
         <luchunhua@huawei.com>
-Subject: [PATCH 2/2] arm64: Reserve memory for quick kexec
-Date:   Fri, 14 Aug 2020 01:52:39 -0400
-Message-ID: <20200814055239.47348-2-sangyan@huawei.com>
+Subject: [PATCH 1/2] kexec: Add quick kexec support for kernel
+Date:   Fri, 14 Aug 2020 01:52:38 -0400
+Message-ID: <20200814055239.47348-1-sangyan@huawei.com>
 X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200814055239.47348-1-sangyan@huawei.com>
-References: <20200814055239.47348-1-sangyan@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.44.142.101]
@@ -47,93 +45,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reserve memory for quick kexec on arm64
-with cmdline "quickkexec=".
+In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
+copy all segments from vmalloced memory to kernel boot memory,
+because of disabled mmu.
+
+We introduce quick kexec to save time of copying memory as above,
+just like kdump(kexec on crash), by using reserved memory
+"Quick Kexec".
+
+Constructing quick kimage as the same as crash kernel,
+then simply copy all segments of kimage to reserved memroy.
+
+We also add this support in syscall kexec_load using flags
+of KEXEC_QUICK.
 
 Signed-off-by: Sang Yan <sangyan@huawei.com>
 ---
- arch/arm64/kernel/setup.c |  6 ++++++
- arch/arm64/mm/init.c      | 43 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+ arch/Kconfig               | 10 ++++++++++
+ include/linux/ioport.h     |  3 +++
+ include/linux/kexec.h      | 13 +++++++++++-
+ include/uapi/linux/kexec.h |  3 +++
+ kernel/kexec.c             | 10 ++++++++++
+ kernel/kexec_core.c        | 41 +++++++++++++++++++++++++++++---------
+ 6 files changed, 70 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 77c4c9bad1b8..2a5dc032d95e 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -369,6 +369,12 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
- 	 */
- 	init_task.thread_info.ttbr0 = __pa_symbol(empty_zero_page);
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 3329fa143637..eca782cb8e29 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -21,6 +21,16 @@ config KEXEC_CORE
+ config KEXEC_ELF
+ 	bool
+ 
++config QUICK_KEXEC
++	bool "Support for quick kexec"
++	depends on KEXEC_CORE
++	help
++	  Say y here to enable this feature.
++	  It use reserved memory to accelerate kexec, just like crash
++	  kexec, load new kernel and initrd to reserved memory, and
++	  boot new kernel on that memory. It will save the time of
++	  relocating kernel.
++
+ config HAVE_IMA_KEXEC
+ 	bool
+ 
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 6c2b06fe8beb..f37c632accbe 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -136,6 +136,9 @@ enum {
+ 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+ 	IORES_DESC_RESERVED			= 7,
+ 	IORES_DESC_SOFT_RESERVED		= 8,
++#ifdef CONFIG_QUICK_KEXEC
++	IORES_DESC_QUICK_KEXEC			= 9,
++#endif
+ };
+ 
+ /*
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 9e93bef52968..976bf9631070 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -269,9 +269,12 @@ struct kimage {
+ 	unsigned long control_page;
+ 
+ 	/* Flags to indicate special processing */
+-	unsigned int type : 1;
++	unsigned int type : 2;
+ #define KEXEC_TYPE_DEFAULT 0
+ #define KEXEC_TYPE_CRASH   1
++#ifdef CONFIG_QUICK_KEXEC
++#define KEXEC_TYPE_QUICK   2
++#endif
+ 	unsigned int preserve_context : 1;
+ 	/* If set, we are using file mode kexec syscall */
+ 	unsigned int file_mode:1;
+@@ -331,6 +334,11 @@ extern int kexec_load_disabled;
+ #define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
  #endif
+ 
 +#ifdef CONFIG_QUICK_KEXEC
-+		if (quick_kexec_res.end &&
-+		    quick_kexec_res.start >= res->start &&
-+		    quick_kexec_res.end <= res->end)
-+			request_resource(res, &quick_kexec_res);
++#undef KEXEC_FLAGS
++#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_QUICK)
++#endif
++
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+ 				 KEXEC_FILE_NO_INITRAMFS)
+@@ -340,6 +348,9 @@ extern int kexec_load_disabled;
+ extern struct resource crashk_res;
+ extern struct resource crashk_low_res;
+ extern note_buf_t __percpu *crash_notes;
++#ifdef CONFIG_QUICK_KEXEC
++extern struct resource quick_kexec_res;
 +#endif
  
- 	if (boot_args[1] || boot_args[2] || boot_args[3]) {
- 		pr_err("WARNING: x1-x3 nonzero in violation of boot protocol:\n"
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 481d22c32a2e..579acb93728f 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -130,6 +130,45 @@ static void __init reserve_crashkernel(void)
- }
- #endif /* CONFIG_KEXEC_CORE */
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 05669c87a0af..e3213614b713 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -12,6 +12,9 @@
+ /* kexec flags for different usage scenarios */
+ #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
++#ifdef CONFIG_QUICK_KEXEC
++#define KEXEC_QUICK		0x00000004
++#endif
+ #define KEXEC_ARCH_MASK		0xffff0000
+ 
+ /*
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index f977786fe498..428af4cd3e1a 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -44,6 +44,9 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+ 	int ret;
+ 	struct kimage *image;
+ 	bool kexec_on_panic = flags & KEXEC_ON_CRASH;
++#ifdef CONFIG_QUICK_KEXEC
++	bool kexec_on_quick = flags & KEXEC_QUICK;
++#endif
+ 
+ 	if (kexec_on_panic) {
+ 		/* Verify we have a valid entry point */
+@@ -69,6 +72,13 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+ 		image->type = KEXEC_TYPE_CRASH;
+ 	}
  
 +#ifdef CONFIG_QUICK_KEXEC
-+static int __init parse_quick_kexec(char *p)
-+{
-+	if (!p)
-+		return 0;
-+
-+	quick_kexec_res.end = PAGE_ALIGN(memparse(p, NULL));
-+
-+	return 0;
-+}
-+early_param("quickkexec", parse_quick_kexec);
-+
-+static void __init reserve_quick_kexec(void)
-+{
-+	unsigned long long mem_start, mem_len;
-+
-+	mem_len = quick_kexec_res.end;
-+	if (mem_len == 0)
-+		return;
-+
-+	/* Current arm64 boot protocol requires 2MB alignment */
-+	mem_start = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-+			mem_len, CRASH_ALIGN);
-+	if (mem_start == 0) {
-+		pr_warn("cannot allocate quick kexec mem (size:0x%llx)\n",
-+			mem_len);
-+		quick_kexec_res.end = 0;
-+		return;
++	if (kexec_on_quick) {
++		image->control_page = quick_kexec_res.start;
++		image->type = KEXEC_TYPE_QUICK;
 +	}
-+
-+	memblock_reserve(mem_start, mem_len);
-+	pr_info("quick kexec mem reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-+		mem_start, mem_start + mem_len,	mem_len >> 20);
-+
-+	quick_kexec_res.start = mem_start;
-+	quick_kexec_res.end = mem_start + mem_len - 1;
-+}
 +#endif
 +
- #ifdef CONFIG_CRASH_DUMP
- static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
- 		const char *uname, int depth, void *data)
-@@ -399,6 +438,10 @@ void __init arm64_memblock_init(void)
- 
- 	reserve_crashkernel();
+ 	ret = sanity_check_segment_list(image);
+ 	if (ret)
+ 		goto out_free_image;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c19c0dad1ebe..b73dd749368b 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -70,6 +70,16 @@ struct resource crashk_low_res = {
+ 	.desc  = IORES_DESC_CRASH_KERNEL
+ };
  
 +#ifdef CONFIG_QUICK_KEXEC
-+	reserve_quick_kexec();
++struct resource quick_kexec_res = {
++	.name  = "Quick kexec",
++	.start = 0,
++	.end   = 0,
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_QUICK_KEXEC
++};
 +#endif
 +
- 	reserve_elfcorehdr();
+ int kexec_should_crash(struct task_struct *p)
+ {
+ 	/*
+@@ -413,8 +423,10 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
+ 	return pages;
+ }
  
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+-static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+-						      unsigned int order)
++
++static struct page *kimage_alloc_special_control_pages(struct kimage *image,
++						       unsigned int order,
++						       unsigned long end)
+ {
+ 	/* Control pages are special, they are the intermediaries
+ 	 * that are needed while we copy the rest of the pages
+@@ -444,7 +456,7 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 	size = (1 << order) << PAGE_SHIFT;
+ 	hole_start = (image->control_page + (size - 1)) & ~(size - 1);
+ 	hole_end   = hole_start + size - 1;
+-	while (hole_end <= crashk_res.end) {
++	while (hole_end <= end) {
+ 		unsigned long i;
+ 
+ 		cond_resched();
+@@ -479,7 +491,6 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 	return pages;
+ }
+ 
+-
+ struct page *kimage_alloc_control_pages(struct kimage *image,
+ 					 unsigned int order)
+ {
+@@ -490,8 +501,15 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
+ 		pages = kimage_alloc_normal_control_pages(image, order);
+ 		break;
+ 	case KEXEC_TYPE_CRASH:
+-		pages = kimage_alloc_crash_control_pages(image, order);
++		pages = kimage_alloc_special_control_pages(image, order,
++							   crashk_res.end);
++		break;
++#ifdef CONFIG_QUICK_KEXEC
++	case KEXEC_TYPE_QUICK:
++		pages = kimage_alloc_special_control_pages(image, order,
++							   quick_kexec_res.end);
+ 		break;
++#endif
+ 	}
+ 
+ 	return pages;
+@@ -847,11 +865,11 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	return result;
+ }
+ 
+-static int kimage_load_crash_segment(struct kimage *image,
++static int kimage_load_special_segment(struct kimage *image,
+ 					struct kexec_segment *segment)
+ {
+-	/* For crash dumps kernels we simply copy the data from
+-	 * user space to it's destination.
++	/* For crash dumps kernels and quick kexec kernels
++	 * we simply copy the data from user space to it's destination.
+ 	 * We do things a page at a time for the sake of kmap.
+ 	 */
+ 	unsigned long maddr;
+@@ -925,8 +943,13 @@ int kimage_load_segment(struct kimage *image,
+ 		result = kimage_load_normal_segment(image, segment);
+ 		break;
+ 	case KEXEC_TYPE_CRASH:
+-		result = kimage_load_crash_segment(image, segment);
++		result = kimage_load_special_segment(image, segment);
++		break;
++#ifdef CONFIG_QUICK_KEXEC
++	case KEXEC_TYPE_QUICK:
++		result = kimage_load_special_segment(image, segment);
+ 		break;
++#endif
+ 	}
+ 
+ 	return result;
 -- 
 2.19.1
 
