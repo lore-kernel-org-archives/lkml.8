@@ -2,156 +2,114 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C19CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B60920791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAE620774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:56:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VK3To71e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgHNRxI (ORCPT
+        id S1728112AbgHNR45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:53:08 -0400
-Received: from smtprelay0005.hostedemail.com ([216.40.44.5]:60572 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728488AbgHNRxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:53:07 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D0B8918011AD1;
-        Fri, 14 Aug 2020 17:53:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fact19_1e1571126ffe
-X-Filterd-Recvd-Size: 4135
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 14 Aug 2020 17:53:04 +0000 (UTC)
-Message-ID: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
-Subject: [RFC PATCH] vsprintf: Add %pv extension replacement for
- print_vma_addr
-From:   Joe Perches <joe@perches.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Date:   Fri, 14 Aug 2020 10:53:03 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 14 Aug 2020 13:56:57 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12648 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbgHNR45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:56:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597427816; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=XT+q1w9uiKS96sq/j8DMN65NAPFFypW3SJhmAiivFh4=;
+ b=VK3To71e3UBSst0cj1jfGW8y0qVtuH6suBjbifvSU2ukxb513RbuQMrXhK9YwBXZPzLYkJbP
+ SDFvgsJm0+Jd+yNY4hTZRXHGaejT8LExCpI0qQVUK6h1v08ANTCQYSFCXT0K7ftNv/pp+sxo
+ A0r0anEnpS74r8Yv5qc0rzgXvrs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f36d066c85a1092b0a9d12b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 17:56:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB347C43395; Fri, 14 Aug 2020 17:56:53 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EC35C433C9;
+        Fri, 14 Aug 2020 17:56:53 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Aug 2020 10:56:52 -0700
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robdclark@gmail.com, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, seanpaul@chromium.org, daniel@ffwll.ch,
+        Guenter Roeck <groeck@chromium.org>,
+        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
+        freedreno@lists.freedesktop.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH v10 2/5] drm/msm/dp: add displayPort driver
+ support
+In-Reply-To: <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
+References: <20200812044223.19279-1-tanmay@codeaurora.org>
+ <20200812044223.19279-3-tanmay@codeaurora.org>
+ <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
+Message-ID: <db6a4104ba9fc00edaf5542693ac6bd9@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a print_vma_addr function used several places
-that requires KERN_CONT use.
+On 2020-08-14 10:12, Dmitry Baryshkov wrote:
+> Hello,
+> 
+> On 12/08/2020 07:42, Tanmay Shah wrote:
+>> From: Chandan Uddaraju <chandanu@codeaurora.org>
+> 
+> [skipped]
+> 
+>> +		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
+>> +			   dp_parser_check_prefix("stream", clk_name))  &&
+>> +			   ctrl_clk_index < ctrl_clk_count) {
+>> +			struct dss_clk *clk =
+>> +				&ctrl_power->clk_config[ctrl_clk_index];
+>> +			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
+>> +			ctrl_clk_index++;
+>> +
+>> +			if (!strncmp(clk_name, "ctrl_link",
+>> +					strlen("ctrl_link")) ||
+>> +					!strncmp(clk_name, "stream_pixel",
+>> +					strlen("ctrl_pixel")))
+> 
+> This should be "stream_pixel", I believe. I don't like macros, but
+> most probably it would help here. Also function/brace alignment could
+> be better (sorry, it really hides the issue here).
+> 
 
-Add a %pv mechanism to avoid the need for KERN_CONT.
+Thanks for reviews and good catch!! I completely missed it when I 
+renamed "ctrl_pixel".
+Use of "stream_pixel" is very limited. So, instead of macros direct name 
+is used.
+Fixing function and brace alignment sounds good idea insted.
 
-An example conversion is arch/x86/kernel/signal.c
+> 
 
-from:
-	if (show_unhandled_signals && printk_ratelimit()) {
-		printk("%s"
-		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx",
-		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-		       me->comm, me->pid, where, frame,
-		       regs->ip, regs->sp, regs->orig_ax);
-		print_vma_addr(KERN_CONT " in ", regs->ip);
-		pr_cont("\n");
-to:
-		printk("%s"
-		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx in %pv\n",
-		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-		       me->comm, me->pid, where, frame,
-		       regs->ip, regs->sp, regs->orig_ax, (void *)regs->ip);
----
- lib/vsprintf.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index c155769559ab..654402c43f8d 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -995,6 +995,12 @@ static const struct printf_spec default_dec_spec = {
- 	.precision = -1,
- };
- 
-+static const struct printf_spec default_hex_spec = {
-+	.base = 16,
-+	.precision = -1,
-+	.flags = SMALL,
-+};
-+
- static const struct printf_spec default_dec02_spec = {
- 	.base = 10,
- 	.field_width = 2,
-@@ -2089,6 +2095,50 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
- 	return widen_string(buf, buf - buf_start, end, spec);
- }
- 
-+static noinline_for_stack
-+char *vma_addr(char *buf, char *end, void *ip,
-+	       struct printf_spec spec, const char *fmt)
-+{
-+#ifdef CONFIG_MMU
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+
-+	/*
-+	 * we might be running from an atomic context so we cannot sleep
-+	 */
-+	if (!mmap_read_trylock(mm))
-+		return buf;
-+
-+	vma = find_vma(mm, (unsigned long)ip);
-+	if (vma && vma->vm_file) {
-+		char *p;
-+		struct file *f = vma->vm_file;
-+		char *page = (char *)__get_free_page(GFP_NOWAIT);
-+
-+		if (page) {
-+			p = file_path(f, page, PAGE_SIZE);
-+			if (IS_ERR(p))
-+				p = "?";
-+			buf = string(buf, end, kbasename(p), default_str_spec);
-+			buf = string_nocheck(buf, end, "[", default_str_spec);
-+			buf = pointer_string(buf, end,
-+					     (void *)vma->vm_start,
-+					     default_hex_spec);
-+			buf = string_nocheck(buf, end, "+", default_str_spec);
-+			buf = pointer_string(buf, end,
-+					     (void *)(vma->vm_end - vma->vm_start),
-+					     default_hex_spec);
-+			buf = string_nocheck(buf, end, "]", default_str_spec);
-+			free_page((unsigned long)page);
-+		}
-+	}
-+	mmap_read_unlock(mm);
-+#else
-+	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
-+#endif
-+	return buf;
-+}
-+
- /*
-  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
-  * by an extra set of alphanumeric characters that are extended format
-@@ -2254,6 +2304,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 		return uuid_string(buf, end, ptr, spec, fmt);
- 	case 'V':
- 		return va_format(buf, end, ptr, spec, fmt);
-+	case 'v':
-+		return vma_addr(buf, end, ptr, spec, fmt);
- 	case 'K':
- 		return restricted_pointer(buf, end, ptr, spec);
- 	case 'N':
-
-
+>> +				clk->type = DSS_CLK_PCLK;
+>> +			else
+>> +				clk->type = DSS_CLK_AHB;
+>> +		}
+>> +	}
