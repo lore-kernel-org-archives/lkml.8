@@ -2,153 +2,150 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D239C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22CE12068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A30F2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgHNNgk (ORCPT
+        id S1728683AbgHNNgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:36:40 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43846 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbgHNNgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:36:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BCE07FB04;
-        Fri, 14 Aug 2020 15:36:30 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zK71oykmh5Vx; Fri, 14 Aug 2020 15:36:28 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 098AA457CD; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] dt-bindings: Add Mantix MLAF057WE51-X panel bindings
-Date:   Fri, 14 Aug 2020 15:36:22 +0200
-Message-Id: <9345739df02b8b8630e7dccb61a80a7a7f692526.1597412076.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597412076.git.agx@sigxcpu.org>
-References: <cover.1597412076.git.agx@sigxcpu.org>
+        Fri, 14 Aug 2020 09:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728611AbgHNNgs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:36:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6879C061384;
+        Fri, 14 Aug 2020 06:36:47 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8446629A807
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v3 00/19] Clean H264 stateless uAPI
+Date:   Fri, 14 Aug 2020 10:36:15 -0300
+Message-Id: <20200814133634.95665-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The panel uses a Focaltech FT8006p, the touch part is handled by the
-already existing edt-ft5x06.
+One more round for the H.264 uAPI cleanup, which as discussed
+aims at being stabilized and promoted as a first-class public uAPI soon.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- .../display/panel/mantix,mlaf057we51-x.yaml   | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+The biggest change here is the rename (and implementation in drivers)
+of the V4L2_H264_PPS_FLAG_SCALING_MATRIX_PRESENT flag. The semantics
+of this flag are now properly specified and implemented as
+discussed on the mailing list, https://lkml.org/lkml/2020/8/11/888.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-new file mode 100644
-index 0000000000000..349f3380ac940
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/mantix,mlaf057we51-x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Mantix MLAF057WE51-X 5.7" 720x1440 TFT LCD panel
-+
-+maintainers:
-+  - Guido Günther <agx@sigxcpu.org>
-+
-+description: |
-+             Mantix MLAF057WE51 X is a 720x1440 TFT LCD panel
-+             connected using a MIPI-DSI video interface.
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mantix,mlaf057we51-x
-+
-+  port: true
-+  reg:
-+    maxItems: 1
-+    description: DSI virtual channel
-+
-+  avdd-supply:
-+    description: Positive analog power supply
-+
-+  avee-supply:
-+    description: Negative analog power supply
-+
-+  vddi-supply:
-+    description: 1.8V I/O voltage supply
-+
-+  reset-gpios:
-+    description: GPIO used for the reset pin
-+    maxItems: 1
-+
-+  backlight:
-+    description: Backlight used by the panel
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+required:
-+  - compatible
-+  - reg
-+  - avdd-supply
-+  - avee-supply
-+  - vddi-supply
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      panel@0 {
-+        compatible = "mantix,mlaf057we51-x";
-+        reg = <0>;
-+        avdd-supply = <&reg_avdd>;
-+        avee-supply = <&reg_avee>;
-+        vddi-supply = <&reg_1v8_p>;
-+        reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
-+        backlight = <&backlight>;
-+      };
-+    };
-+...
+Note that your favourite rabbit's video may omit a scaling matrix,
+as well as any video with a profile lower than High. So, proper testing
+of these patches requires a video that specifies some (non-flat) scaling matrix.
+
+It should be noted that there is already GStreamer native
+support for this interface, which will be part of 1.18,
+once it's released.
+
+I have pushed a branch porting GStreamer to
+support these interface changes:
+
+https://gitlab.freedesktop.org/ezequielgarcia/gst-plugins-bad/-/commits/for_h264_uapi_v4
+
+Changelog:
+
+v2->v3:
+* Clarify SCALING_MATRIX present flag.
+* Implement optional scaling matrix on hantro, rkvdec and cedrus.
+* Make prediction weight table properly optional on cedrus.
+* Rename field reference types.
+
+v1->v2:
+* Clean SLICE_PARAMS documentation, which we don't
+  expect to be part of an array anymore. 
+* Clarify how frame-based and slice-based modes
+  are expected to work.
+* Add Cedrus patches to fix field references,
+  as requested by Jernej.
+* Fix wrongly removed SPS in rkvdec.
+* Fix rkvdec DPB reference implementation.
+* Fix missing Cedrus and missing control member,
+  for prediction weight table control.
+* Say "raster scan" instead of "matrix" in the docs.
+* Drop duplicated macros and use v4l2_h264_dpb_reference
+  for the DPB reference signalling.
+
+RFC->v1: 
+* Split prediction weight table to a separate control.
+* Increase size of first_mb_in_slice field.
+* Cleanup DPB entry interface, to support field coding.
+* Increase of DPB entry pic_num field.
+* Move slice invariant fields to the per-frame control.
+
+Ezequiel Garcia (15):
+  media: uapi: h264: Further clarify scaling lists order
+  media: uapi: h264: Split prediction weight parameters
+  media: uapi: h264: Increase size of 'first_mb_in_slice' field
+  media: uapi: h264: Clean DPB entry interface
+  media: uapi: h264: Increase size of DPB entry pic_num
+  media: uapi: h264: Drop SLICE_PARAMS 'size' field
+  media: uapi: h264: Clarify SLICE_BASED mode
+  media: uapi: h264: Clean slice invariants syntax elements
+  media: uapi: h264: Rename and clarify PPS_FLAG_SCALING_MATRIX_PRESENT
+  media: hantro: Don't require unneeded H264_SLICE_PARAMS
+  media: rkvdec: Don't require unneeded H264_SLICE_PARAMS
+  media: rkvdec: Drop unneeded per_request driver-specific control flag
+  media: rkvdec: Use H264_SCALING_MATRIX only when required
+  media: hantro: Use H264_SCALING_MATRIX only when required
+  media: cedrus: Use H264_SCALING_MATRIX only when required
+
+Jernej Skrabec (3):
+  media: uapi: h264: Update reference lists
+  media: cedrus: h264: Properly configure reference field
+  media: cedrus: h264: Fix frame list construction
+
+Philipp Zabel (1):
+  media: uapi: h264: Clarify pic_order_cnt_bit_size field
+
+ .../media/v4l/ext-ctrls-codec.rst             | 229 ++++++++++--------
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  28 +++
+ drivers/media/v4l2-core/v4l2-h264.c           |  12 +-
+ drivers/staging/media/hantro/hantro_drv.c     |   5 -
+ .../staging/media/hantro/hantro_g1_h264_dec.c |  26 +-
+ drivers/staging/media/hantro/hantro_h264.c    |  12 +-
+ drivers/staging/media/hantro/hantro_hw.h      |   2 -
+ drivers/staging/media/rkvdec/rkvdec-h264.c    |  37 ++-
+ drivers/staging/media/rkvdec/rkvdec.c         |  12 +-
+ drivers/staging/media/rkvdec/rkvdec.h         |   1 -
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |   9 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |   1 +
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   2 +
+ .../staging/media/sunxi/cedrus/cedrus_h264.c  |  61 +++--
+ include/media/h264-ctrls.h                    |  89 ++++---
+ include/media/v4l2-ctrls.h                    |   2 +
+ include/media/v4l2-h264.h                     |   3 +-
+ 17 files changed, 290 insertions(+), 241 deletions(-)
+
 -- 
-2.26.2
+2.27.0
 
