@@ -2,100 +2,67 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6273420768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="T6qovZ6g"
+	by mail.kernel.org (Postfix) with ESMTP id BAA3F20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgHNRoO (ORCPT
+        id S1728450AbgHNRoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:44:14 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:31461 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgHNRoN (ORCPT
+        Fri, 14 Aug 2020 13:44:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36278 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgHNRoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:44:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597427052;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2Z0U+mcYwggZx3AXbVi+Ktpmy8/fEbXz6BZpJ2spCyk=;
-        b=T6qovZ6gGx69JQRtyLHctdG3hJraUesAIXLyWkY+Rh2miOeslHrTk9Mm3z0Bb/CknC
-        6mYko3Y0TrweA+wI9ImGEs0pqJT33isNkdkaWt+Xr/7tq988pfA6s70h5MfQ7nYDjBT+
-        //xJ0mmqVvX2sAc5LYUsZd0EyrdOv5P5TZ+vlX9uchpHiEFv5byKbIo5MD2GBZTMyGyH
-        jZ0/3oQGgdo3y0ERTsH7aluDgsl8E80SSVdKO8Oyp2FoJ1EcM7yxift3DGmziW2aZLzw
-        U7hPzBSZoax/LRie6Pp1qdkXEm8+uBHYJNWy6+6ZyC9p7DqX7Yi1RDnSBP4zzYHQevmz
-        qutA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j6Ic/MbIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew7EHi94lK
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 14 Aug 2020 19:44:09 +0200 (CEST)
-Date:   Fri, 14 Aug 2020 19:43:32 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com,
-        john.stultz@linaro.org
-Subject: Re: [PATCH] ASoC: msm8916-wcd-analog: fix register Interrupt offset
-Message-ID: <20200814174332.GA314820@gerhold.net>
-References: <20200811103452.20448-1-srinivas.kandagatla@linaro.org>
+        Fri, 14 Aug 2020 13:44:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m8so4902030pfh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:44:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fWFuYTJqC9rkuibyrHJcQDAS3jyBCGpQV/kBCTUIe94=;
+        b=Bam3cFJ9q9JHu+Ivk5YE3ASSepK3pI5SnzDiZTt4+vY/NDDlc9mLigPiFYBVMXemM6
+         6VQo3oP6Nm9MB3tGK7WP4ggOvgo7PZNCZ+BNLRDYJtbW8+mgow9p4r/w/N8XHlRBIiDT
+         kmwqbNhV4Pswn/iVilnUR9e65qS0ZqLiBaFZJBdGAws6Oebnk8W7LHhLDDRmq1EuOwbp
+         MPeB5ghNNSAZck++mEYZvplprrBn2ZdjYPmS5gz35c/FwdJtacd5qRuSktg/MMZO2xb1
+         nHZ3ZBGGDOICEuNfJAOKhkeOzNM2/+/OFRKQ3z9DMnlBqK2S8SB3TW2Z0mhSjMufYDTK
+         6i7w==
+X-Gm-Message-State: AOAM532/7oLGuJktKboPRcJk+taJS5+0pKMGlj0R5hob0FOq+WEHcQ9K
+        GeO2UcZxsMu83zNEe5us9GMbvKNSSY+ieg==
+X-Google-Smtp-Source: ABdhPJyPZcRJpy5TouzY8bBa430UZwwaPvWb3BbW9kH1Ug1Asy+9ksUce8bOyKs1QFgTwKp/2yay3Q==
+X-Received: by 2002:a65:538d:: with SMTP id x13mr2461766pgq.33.1597427053869;
+        Fri, 14 Aug 2020 10:44:13 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:51f:3472:bc7:2f4f? ([2601:647:4802:9070:51f:3472:bc7:2f4f])
+        by smtp.gmail.com with ESMTPSA id h24sm8778658pgi.85.2020.08.14.10.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2020 10:44:13 -0700 (PDT)
+Subject: Re: [PATCH] nvme-pci: Use u32 for nvme_dev.q_depth and
+ nvme_queue.q_depth
+To:     John Garry <john.garry@huawei.com>, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de
+Cc:     linux-nvme@lists.infradead.org, chaitanya.kulkarni@wdc.com,
+        linux-kernel@vger.kernel.org
+References: <1597419265-68122-1-git-send-email-john.garry@huawei.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <fd418829-251e-9ef6-d121-98556df9300a@grimberg.me>
+Date:   Fri, 14 Aug 2020 10:44:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811103452.20448-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1597419265-68122-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:34:52AM +0100, Srinivas Kandagatla wrote:
-> For some reason interrupt set and clear register offsets are
-> not set correctly.
-> This patch corrects them!
-> 
-> Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-> index 4428c62e25cf..3ddd822240e3 100644
-> --- a/sound/soc/codecs/msm8916-wcd-analog.c
-> +++ b/sound/soc/codecs/msm8916-wcd-analog.c
-> @@ -19,8 +19,8 @@
->  
->  #define CDC_D_REVISION1			(0xf000)
->  #define CDC_D_PERPH_SUBTYPE		(0xf005)
-> -#define CDC_D_INT_EN_SET		(0x015)
-> -#define CDC_D_INT_EN_CLR		(0x016)
-> +#define CDC_D_INT_EN_SET		(0xf015)
-> +#define CDC_D_INT_EN_CLR		(0xf016)
->  #define MBHC_SWITCH_INT			BIT(7)
->  #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
->  #define MBHC_BUTTON_PRESS_DET		BIT(5)
-> -- 
-> 2.21.0
-> 
-
-It's surprising that we didn't notice this before. Seems like the HW
-has exactly the IRQs we want enabled by default. Everything seems to be
-still working fine after this patch, so FWIW:
-
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-
-Thanks!
-Stephan
+queued to nvme-5.9-rc
