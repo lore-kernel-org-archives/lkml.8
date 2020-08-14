@@ -2,88 +2,78 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF74C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8532EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4896720774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B2920774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgHNRWS convert rfc822-to-8bit (ORCPT
+        id S1728413AbgHNRXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:22:18 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:4067 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727894AbgHNRWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:22:16 -0400
-Subject: Re: [PATCH v2 1/2] selinux: add tracepoint on denials
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-CC:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-References: <20200813144914.737306-1-tweek@google.com>
- <15e2e26d-fe4b-679c-b5c0-c96d56e09853@gmail.com>
- <CA+zpnLcf94HGmE=CGH6nT8ya0oax5orXc5nP1qToUgaca6FeQg@mail.gmail.com>
- <CAEjxPJ50vrauP7dd-ek15vwnMN1kvAyvYSc0fhR4xwCJEQSFxQ@mail.gmail.com>
- <ad64b5af-93de-e84e-17ca-40d8dd3cfe44@sony.com>
- <CAEjxPJ67G24T1a5WitmMqL4RUpjOgQFwpQ8unO1-OXSS=35V4Q@mail.gmail.com>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <3518887d-9083-2836-a8db-c7c27a70c990@sony.com>
-Date:   Fri, 14 Aug 2020 19:22:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 Aug 2020 13:23:24 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:47860 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgHNRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:23:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 0B015FB03;
+        Fri, 14 Aug 2020 19:23:22 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Cirbr_6XKokd; Fri, 14 Aug 2020 19:23:20 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 3D040457CC; Fri, 14 Aug 2020 19:23:20 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 19:23:20 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Camera LED on Librem 5 was Re: [PATCH] backlight: add
+ led-backlight driver
+Message-ID: <20200814172320.GA740513@bogon.m.sigxcpu.org>
+References: <20200219191412.GA15905@amd>
+ <20200220082956.GA3383@bogon.m.sigxcpu.org>
+ <20200220234151.GB1544@amd>
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ67G24T1a5WitmMqL4RUpjOgQFwpQ8unO1-OXSS=35V4Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=1XWaLZrsAAAA:8 a=pGLkceISAAAA:8 a=xtmVrf9aUzyO47Hdho8A:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220234151.GB1544@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/20 7:08 PM, Stephen Smalley wrote:
-> On Fri, Aug 14, 2020 at 1:07 PM peter enderborg
-> <peter.enderborg@sony.com> wrote:
->> On 8/14/20 6:51 PM, Stephen Smalley wrote:
->>> On Fri, Aug 14, 2020 at 9:05 AM ThiÃ©baud Weksteen <tweek@google.com> wrote:
->>>> On Thu, Aug 13, 2020 at 5:41 PM Stephen Smalley
->>>> <stephen.smalley.work@gmail.com> wrote:
->>>>> An explanation here of how one might go about decoding audited and
->>>>> tclass would be helpful to users (even better would be a script to do it
->>>>> for them).  Again, I know how to do that but not everyone using
->>>>> perf/ftrace will.
->>>> What about something along those lines:
->>>>
->>>> The tclass value can be mapped to a class by searching
->>>> security/selinux/flask.h. The audited value is a bit field of the
->>>> permissions described in security/selinux/av_permissions.h for the
->>>> corresponding class.
->>> Sure, I guess that works.  Would be nice if we just included the class
->>> and permission name(s) in the event itself but I guess you viewed that
->>> as too heavyweight?
->> The class name is added in part 2. Im not sure how a proper format for permission
->> would look like in trace terms. It is a list, right?
-> Yes.  See avc_audit_pre_callback() for example code to log the permission names.
+Hi Pavel,
+On Fri, Feb 21, 2020 at 12:41:51AM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > > This patch adds a led-backlight driver (led_bl), which is similar to
+> > > pwm_bl except the driver uses a LED class driver to adjust the
+> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
+> > 
+> > Tested-by: Guido Günther <agx@sigxcpu.org>
+> 
+> Thanks for testing!
+> 
+> I noticed blog post about using Librem 5 torch. Unfortunately, it used
+> very strange/non-standard interface, first using LED as a GPIO to
+> enable LED controller, then direct i2c access. That is not acceptable
+> interface for mainline, and it would be better not to advertise such
+> code, as it will likely become broken in future.
 
-I wrote about that on some of the previous sets. The problem is that trace format is quite fixed. So it is lists are not
-that easy to handle if you want to filter in them. You can have a trace event for each of them. You can also add
-additional trace event "selinux_audied_permission" for each permission. With that you can filter out tclass or permissions.
+I agree, there's a driver for the lm3560 in media/ but how would one
+expose the torch part as a LED? It seems you hit something similar in
 
-But the basic thing we would like at the moment is a event that we can debug in user space.
+    https://lkml.org/lkml/2018/5/6/30
 
+I also couldn't find an in tree driver that registers a flashlight
+as a v4l subdev. Did i miss that?
+
+Cheers,
+ -- Guido
