@@ -2,325 +2,297 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7EC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC336C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC8620771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9510A205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C1IQC4c5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewpTS6mv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHNBux (ORCPT
+        id S1726612AbgHNBy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 21:50:53 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:30571 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgHNBuw (ORCPT
+        Thu, 13 Aug 2020 21:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgHNBy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 21:50:52 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200814015047epoutp0414951f8fd1e4ebb50d434f1aee5258ae~q-2nLFPg70525605256epoutp04c
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:50:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200814015047epoutp0414951f8fd1e4ebb50d434f1aee5258ae~q-2nLFPg70525605256epoutp04c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597369847;
-        bh=gowD4C7TEEhxrbqbRyTMZ6cmvxjAoXc2kJkQv2udKKc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=C1IQC4c5onIp/ufU/ZhB6OrLtaeV+cHKVH3auLna8OouTVJ9QFK63dptEOTuFQ99+
-         alykeLieqfpeOUE1bc7h1SOsYUDQayMjCMZq8hswMUJu7o0/K4PnKdK0xH863wZ321
-         pgGFGJJ3xHem5ED6J5Qo1shYiH0F9DWMfQw0VuEw=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200814015045epcas1p30464b9319cb75a5e59ee92c3b56a9db7~q-2lMPHGU1837718377epcas1p3Z;
-        Fri, 14 Aug 2020 01:50:45 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4BSRGq16jszMqYlv; Fri, 14 Aug
-        2020 01:50:43 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        92.38.28578.3FDE53F5; Fri, 14 Aug 2020 10:50:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200814015040epcas1p4e841745e198e780a70a0c2e7a88bc247~q-2giQhvm0697606976epcas1p4a;
-        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200814015040epsmtrp1545ce583772938e12450f4c2cc378db7~q-2ghZaAz1653816538epsmtrp1e;
-        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-e4-5f35edf368e1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        85.1F.08303.0FDE53F5; Fri, 14 Aug 2020 10:50:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200814015040epsmtip2ed23f1a109fb486de020e525915be925~q-2gPshCb1260612606epsmtip20;
-        Fri, 14 Aug 2020 01:50:40 +0000 (GMT)
-Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
- building OPP table
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
-Date:   Fri, 14 Aug 2020 11:02:40 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 13 Aug 2020 21:54:27 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FAA7C061757;
+        Thu, 13 Aug 2020 18:54:27 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u10so3477926plr.7;
+        Thu, 13 Aug 2020 18:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JoMZTg2rQH5X7Un5bSU0CwmEe/eR3O98Jy/+xzlp9iE=;
+        b=ewpTS6mvUm57qdops8FwS5zQ47ZOhIarQlWHSvjJwn1hmvx+XiqhkoJisx/ShXjvfb
+         QD6iG7XghFMmFrNFXemhP4SmeD8Hm5S58Anee93A0qXBT4/kXPyWrL09H1/85O6BHWL6
+         eq1gmlmXGVWRLS7klEjdj1XY31T/Ou3MZ4qgbpiGWEfeeplehRYUs6AFOcTCWYI3q+jC
+         n0Z5VIYMLUHsPmxwk8RVfJj1E3T1Vt4an4HbuR8QnjeN8ajVSF8vXEfBdNOmdmUPPAwE
+         EvwUsu41//ZzSetxIbOs64GFzVpIBNlFbMXpjQLZKq3KdTlgdaC4BhyCgNhKnQtTg/R7
+         t2+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JoMZTg2rQH5X7Un5bSU0CwmEe/eR3O98Jy/+xzlp9iE=;
+        b=Y7XgAvwqe6t+wGv+qqa1hEb4mlIdUov10wNnSCIW4I1IS3VHRvcNf2E+QDyJGMBYBA
+         CZFIVg5OlY4ibXxwDulNuLbTU+q69ha0oKQmEGBGe5pf9Po/eXpHrAXq5Ks5tSz/IgXx
+         cG3U9EEW/BIy0MvwXggkDAgkYCJ3Adoq2/20APX6xb4QftMiqaIt9TD/N1BTRxUcAqec
+         WPBAWTlxPaqC5W08yMI4XIFiZ42MOx59sawXR/OJDsIg4M5bSPFkSa8uxwqPXso9idXg
+         1jBAZ1ddtzAMX45GpReHn+9csla9IJmI8NmtVTF6WwGJXBKZqeTnLQOGgtL7T1/Gf3tz
+         eL9Q==
+X-Gm-Message-State: AOAM533XO0xz2EpAm725ATIW7PrOvCbBnZ4C+L/poHXaYq7qOFrifi5B
+        /v58NR13Dr+Tl3wtkJGcXAxRI/aY
+X-Google-Smtp-Source: ABdhPJyH+lenXjex692PnKeGimQpml2RBBnI/Z2KeY5iViWT1pv54cEf9gd8HZKJKSF0szXgYl+07Q==
+X-Received: by 2002:a17:90b:1093:: with SMTP id gj19mr395914pjb.149.1597370066785;
+        Thu, 13 Aug 2020 18:54:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j13sm7108455pfn.166.2020.08.13.18.54.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Aug 2020 18:54:26 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 18:54:24 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] uart:8250: change lock order in serial8250_do_startup()
+Message-ID: <20200814015424.GA38268@roeck-us.net>
+References: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200814000621.8415-14-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRmVeSWpSXmKPExsWy7bCmru7nt6bxBqt2sFq8+/SU1WL+kXOs
-        Fqs/Pma0uPL1PZvF9L2b2CxaZi1isTjb9Ibd4vKuOWwWn3uPMFp0fpnFZnHxlKvF7cYVbBaT
-        1k5ltGjde4Td4t+1jSwWP3fNY3EQ8Hh/o5XdY+esu+wel879YfbYtKqTzePOtT1sHve7jzN5
-        9Da/Y/Po27KK0ePzJrkAzqhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE
-        3FRbJRefAF23zBygN5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BZYFesWJucWl
-        eel6yfm5VoYGBkamQIUJ2RkPXm1iLejQrvjUsJq5gfGzYhcjJ4eEgIlEZ9N1ti5GLg4hgR2M
-        EqubF7NDOJ8YJU4f+sUK4XxmlJh7ZCM7TMuHpWehqnYxSlz59oUZwnnPKPGq8SYrSJWwQIzE
-        mXkbwapEBI4wS6zuPM4IkmAWmMEocWePMojNJqAlsf/FDTYQm19AUeLqj8dANRwcvAJ2Egv/
-        2IGEWQRUJTZf3g22WVQgTOLkthawMbwCghInZz5hAbE5Bcwk+qdMYIIYLy5x68l8KFteYvvb
-        OWDHSQj855CY8O0Z1AsuEvcXHmOFsIUlXh3fAhWXknjZ3wZlV0usPHmEDaK5g1Fiy/4LUA3G
-        EvuXTmYCOZRZQFNi/S59iLCixM7fc6F+5JN497WHFaREQoBXoqNNCKJEWeLyg7tMELakxOL2
-        TrYJjEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBabI0b2JEZzGtSx3ME5/+0HvECMT
-        B+MhRgkOZiURXubLxvFCvCmJlVWpRfnxRaU5qcWHGE2BATyRWUo0OR+YSfJK4g1NjYyNjS1M
-        DM1MDQ2VxHkf3lKIFxJITyxJzU5NLUgtgulj4uCUamCawKS4b9/9Fadf7s2v7y97UnrAzFpT
-        5tt64wNWq1Ur8lVd0rkuu3gKCX/geGH+Ot46k1/Wae+DprT965N8XzdsLft4627Tp8PmLClM
-        1+fLZwpn+TvU3fJoej39y4+aQP33CVGbt0hOZ1gzQ8ZYdmrCyX9rOoN+XJnldON3q9RTrYIH
-        kc9SCgM28a7bMf3alvIpu5JEXjwrWb/+psXPaS8OsqeX2zb92esy/7avYafE9nnb2wPWJfmZ
-        H5lnezfB8HwkT3dbNIfsnAT12ycagiXlZ550uxhtfP5Qhl2dfo7iw83LBM+0f9K6sbhO6fUT
-        t9+f5vO6H3u4/Zpp9eekSZLB3klv7SUyffJPrdzNaOehxFKckWioxVxUnAgAP2VMZ2wEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvO6Ht6bxBmtOyFq8+/SU1WL+kXOs
-        Fqs/Pma0uPL1PZvF9L2b2CxaZi1isTjb9Ibd4vKuOWwWn3uPMFp0fpnFZnHxlKvF7cYVbBaT
-        1k5ltGjde4Td4t+1jSwWP3fNY3EQ8Hh/o5XdY+esu+wel879YfbYtKqTzePOtT1sHve7jzN5
-        9Da/Y/Po27KK0ePzJrkAzigum5TUnMyy1CJ9uwSujAevNrEWdGhXfGpYzdzA+Fmxi5GTQ0LA
-        ROLD0rPsXYxcHEICOxglTqyazQSRkJSYdvEocxcjB5AtLHH4cDFEzVtGiZVHu1lAaoQFYiTO
-        zNsI1iwicIxZYtPp00wgDrPADEaJPxs2Qo3dwiix/MUqdpAWNgEtif0vbrCB2PwCihJXfzxm
-        BFnBK2AnsfCPHUiYRUBVYvPl3WDlogJhEjuXPAa7iFdAUOLkzCdgmzkFzCT6p0wAizMLqEv8
-        mXeJGcIWl7j1ZD5UXF5i+9s5zBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst
-        1ytOzC0uzUvXS87P3cQIjmgtrR2Me1Z90DvEyMTBeIhRgoNZSYSX+bJxvBBvSmJlVWpRfnxR
-        aU5q8SFGaQ4WJXHer7MWxgkJpCeWpGanphakFsFkmTg4pRqYOtbpXvw441lZvskSXYZjSZfC
-        /mdWLW6Javgyr8f2wrKna6/PXC2dP8X1o/Fd57WvTm3p/yTC9D6Wya7qDFtM6+Rm8XBj7dkc
-        ZlyPL5vrztCtyfyiG7T/0sqO0Ow5Z7veXa7fq/dsn5ZYw9ffWw32Pjpz+Mm3Op4pSumqxWJr
-        Eo5mf3z/+ZZ5yknVe9ZbGFXXWxd/l12QaiV43JT7wqr2fsddZ9LumzVwf59j+NFrplcMs93L
-        WWtX5zBmsXu63PX3zb9ZdnTrLXedKM8J9ZKuDNMVJ3znfugeWrc8XXHBEQ65BD+2uhszmPSf
-        zp1fKxa0xeCm3Zy0qxe9hDNlClWS2lQMqmfsqzvu/mVxU3qDEktxRqKhFnNRcSIAQxz53lcD
-        AAA=
-X-CMS-MailID: 20200814015040epcas1p4e841745e198e780a70a0c2e7a88bc247
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818
-References: <20200814000621.8415-1-digetx@gmail.com>
-        <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
-        <20200814000621.8415-14-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-I add the minor comment. Except of some comments, it looks good to me.
-
-On 8/14/20 9:05 AM, Dmitry Osipenko wrote:
-> The clk_round_rate() won't be usable for building OPP table once
-> interconnect support will be added to the EMC driver because that CLK API
-> function limits the rounded rate based on the clk rate that is imposed by
-> active clk-users, and thus, the rounding won't work as expected if
-> interconnect will set the minimum EMC clock rate before devfreq driver is
-> loaded. The struct tegra_mc contains memory timings which could be used by
-> the devfreq driver for building up OPP table instead of rounding clock
-> rate, this patch implements this idea.
+On Fri, Aug 14, 2020 at 10:38:02AM +0900, Sergey Senozhatsky wrote:
+> We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
+> lockdep reports coming from 8250 driver; this causes a bit of trouble
+> to people, so let's fix it.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> The problem is reverse lock order in two different call paths:
+> 
+> chain #1:
+> 
+>  serial8250_do_startup()
+>   spin_lock_irqsave(&port->lock);
+>    disable_irq_nosync(port->irq);
+>     raw_spin_lock_irqsave(&desc->lock)
+> 
+> chain #2:
+> 
+>   __report_bad_irq()
+>    raw_spin_lock_irqsave(&desc->lock)
+>     for_each_action_of_desc()
+>      printk()
+>       spin_lock_irqsave(&port->lock);
+> 
+> Fix this by changing the order of locks in serial8250_do_startup():
+>  do disable_irq_nosync() first, which grabs desc->lock, and grab
+>  uart->port after that, so that chain #1 and chain #2 have same lock
+>  order.
+> 
+> Full lockdep splat:
+> 
+>  ======================================================
+>  WARNING: possible circular locking dependency detected
+>  5.4.39 #55 Not tainted
+>  ------------------------------------------------------
+>  swapper/0/0 is trying to acquire lock:
+>  ffffffffab65b6c0 (console_owner){-...}, at: console_lock_spinning_enable+0x31/0x57
+> 
+>  but task is already holding lock:
+>  ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+> 
+>  which lock already depends on the new lock.
+> 
+>  the existing dependency chain (in reverse order) is:
+> 
+>  -> #2 (&irq_desc_lock_class){-.-.}:
+>         _raw_spin_lock_irqsave+0x61/0x8d
+>         __irq_get_desc_lock+0x65/0x89
+>         __disable_irq_nosync+0x3b/0x93
+>         serial8250_do_startup+0x451/0x75c
+>         uart_startup+0x1b4/0x2ff
+>         uart_port_activate+0x73/0xa0
+>         tty_port_open+0xae/0x10a
+>         uart_open+0x1b/0x26
+>         tty_open+0x24d/0x3a0
+>         chrdev_open+0xd5/0x1cc
+>         do_dentry_open+0x299/0x3c8
+>         path_openat+0x434/0x1100
+>         do_filp_open+0x9b/0x10a
+>         do_sys_open+0x15f/0x3d7
+>         kernel_init_freeable+0x157/0x1dd
+>         kernel_init+0xe/0x105
+>         ret_from_fork+0x27/0x50
+> 
+>  -> #1 (&port_lock_key){-.-.}:
+>         _raw_spin_lock_irqsave+0x61/0x8d
+>         serial8250_console_write+0xa7/0x2a0
+>         console_unlock+0x3b7/0x528
+>         vprintk_emit+0x111/0x17f
+>         printk+0x59/0x73
+>         register_console+0x336/0x3a4
+>         uart_add_one_port+0x51b/0x5be
+>         serial8250_register_8250_port+0x454/0x55e
+>         dw8250_probe+0x4dc/0x5b9
+>         platform_drv_probe+0x67/0x8b
+>         really_probe+0x14a/0x422
+>         driver_probe_device+0x66/0x130
+>         device_driver_attach+0x42/0x5b
+>         __driver_attach+0xca/0x139
+>         bus_for_each_dev+0x97/0xc9
+>         bus_add_driver+0x12b/0x228
+>         driver_register+0x64/0xed
+>         do_one_initcall+0x20c/0x4a6
+>         do_initcall_level+0xb5/0xc5
+>         do_basic_setup+0x4c/0x58
+>         kernel_init_freeable+0x13f/0x1dd
+>         kernel_init+0xe/0x105
+>         ret_from_fork+0x27/0x50
+> 
+>  -> #0 (console_owner){-...}:
+>         __lock_acquire+0x118d/0x2714
+>         lock_acquire+0x203/0x258
+>         console_lock_spinning_enable+0x51/0x57
+>         console_unlock+0x25d/0x528
+>         vprintk_emit+0x111/0x17f
+>         printk+0x59/0x73
+>         __report_bad_irq+0xa3/0xba
+>         note_interrupt+0x19a/0x1d6
+>         handle_irq_event_percpu+0x57/0x79
+>         handle_irq_event+0x36/0x55
+>         handle_fasteoi_irq+0xc2/0x18a
+>         do_IRQ+0xb3/0x157
+>         ret_from_intr+0x0/0x1d
+>         cpuidle_enter_state+0x12f/0x1fd
+>         cpuidle_enter+0x2e/0x3d
+>         do_idle+0x1ce/0x2ce
+>         cpu_startup_entry+0x1d/0x1f
+>         start_kernel+0x406/0x46a
+>         secondary_startup_64+0xa4/0xb0
+> 
+>  other info that might help us debug this:
+> 
+>  Chain exists of:
+>    console_owner --> &port_lock_key --> &irq_desc_lock_class
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(&irq_desc_lock_class);
+>                                 lock(&port_lock_key);
+>                                 lock(&irq_desc_lock_class);
+>    lock(console_owner);
+> 
+>   *** DEADLOCK ***
+> 
+>  2 locks held by swapper/0/0:
+>   #0: ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+>   #1: ffffffffab65b5c0 (console_lock){+.+.}, at: console_trylock_spinning+0x20/0x181
+> 
+>  stack backtrace:
+>  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.39 #55
+>  Hardware name: XXXXXX
+>  Call Trace:
+>   <IRQ>
+>   dump_stack+0xbf/0x133
+>   ? print_circular_bug+0xd6/0xe9
+>   check_noncircular+0x1b9/0x1c3
+>   __lock_acquire+0x118d/0x2714
+>   lock_acquire+0x203/0x258
+>   ? console_lock_spinning_enable+0x31/0x57
+>   console_lock_spinning_enable+0x51/0x57
+>   ? console_lock_spinning_enable+0x31/0x57
+>   console_unlock+0x25d/0x528
+>   ? console_trylock+0x18/0x4e
+>   vprintk_emit+0x111/0x17f
+>   ? lock_acquire+0x203/0x258
+>   printk+0x59/0x73
+>   __report_bad_irq+0xa3/0xba
+>   note_interrupt+0x19a/0x1d6
+>   handle_irq_event_percpu+0x57/0x79
+>   handle_irq_event+0x36/0x55
+>   handle_fasteoi_irq+0xc2/0x18a
+>   do_IRQ+0xb3/0x157
+>   common_interrupt+0xf/0xf
+>   </IRQ>
+> 
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+
+For the time being:
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+I triggered complete set of test runs on chromeos-{4.4,4.14,4.19,5.4}.
+I'll send an update, hopefully by tomorrow morning, with results.
+
+Thanks,
+Guenter
+
 > ---
->  drivers/devfreq/tegra30-devfreq.c | 93 +++++++++++++++++++++----------
->  1 file changed, 65 insertions(+), 28 deletions(-)
+>  drivers/tty/serial/8250/8250_port.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 423dd35c95b3..6c2f56b34535 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -19,6 +19,8 @@
->  #include <linux/reset.h>
->  #include <linux/workqueue.h>
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 09475695effd..67f1a4f31093 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2275,6 +2275,11 @@ int serial8250_do_startup(struct uart_port *port)
 >  
-> +#include <soc/tegra/mc.h>
+>  	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+>  		unsigned char iir1;
+> +		bool irq_shared = up->port.irqflags & IRQF_SHARED;
 > +
->  #include "governor.h"
+> +		if (irq_shared)
+> +			disable_irq_nosync(port->irq);
+> +
+>  		/*
+>  		 * Test for UARTs that do not reassert THRE when the
+>  		 * transmitter is idle and the interrupt has already
+> @@ -2284,8 +2289,6 @@ int serial8250_do_startup(struct uart_port *port)
+>  		 * allow register changes to become visible.
+>  		 */
+>  		spin_lock_irqsave(&port->lock, flags);
+> -		if (up->port.irqflags & IRQF_SHARED)
+> -			disable_irq_nosync(port->irq);
 >  
->  #define ACTMON_GLB_STATUS					0x0
-> @@ -153,6 +155,18 @@ struct tegra_devfreq_device {
->  	unsigned long target_freq;
->  };
+>  		wait_for_xmitr(up, UART_LSR_THRE);
+>  		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> @@ -2297,9 +2300,9 @@ int serial8250_do_startup(struct uart_port *port)
+>  		iir = serial_port_in(port, UART_IIR);
+>  		serial_port_out(port, UART_IER, 0);
 >  
-> +struct tegra_devfreq_soc_data {
-> +	const char *mc_compatible;
-> +};
-> +
-> +static const struct tegra_devfreq_soc_data tegra30_soc = {
-> +	.mc_compatible = "nvidia,tegra30-mc",
-> +};
-> +
-> +static const struct tegra_devfreq_soc_data tegra124_soc = {
-> +	.mc_compatible = "nvidia,tegra124-mc",
-> +};
-> +
->  struct tegra_devfreq {
->  	struct devfreq		*devfreq;
+> -		if (port->irqflags & IRQF_SHARED)
+> -			enable_irq(port->irq);
+>  		spin_unlock_irqrestore(&port->lock, flags);
+> +		if (irq_shared)
+> +			enable_irq(port->irq);
 >  
-> @@ -771,15 +785,49 @@ static struct devfreq_governor tegra_devfreq_governor = {
->  	.interrupt_driven = true,
->  };
->  
-> +static struct tegra_mc *tegra_get_memory_controller(const char *compatible)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device_node *np;
-> +	struct tegra_mc *mc;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, compatible);
-> +	if (!np)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	pdev = of_find_device_by_node(np);
-> +	of_node_put(np);
-> +	if (!pdev)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	mc = platform_get_drvdata(pdev);
-> +	if (!mc)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	return mc;
-> +}
-> +
->  static int tegra_devfreq_probe(struct platform_device *pdev)
->  {
-> +	const struct tegra_devfreq_soc_data *soc_data;
->  	struct tegra_devfreq_device *dev;
->  	struct tegra_devfreq *tegra;
->  	struct devfreq *devfreq;
-> +	struct tegra_mc *mc;
->  	unsigned int i;
-> -	long rate;
->  	int err;
->  
-> +	soc_data = of_device_get_match_data(&pdev->dev);
-
-I think that better to check whether 'soc_data' is not NULL.
-
-
-> +
-> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
-> +	if (IS_ERR(mc))
-> +		return PTR_ERR(mc);
-
-You better to add error log.
-
-> +
-> +	if (!mc->num_timings) {
-> +		dev_info(&pdev->dev, "memory controller has no timings\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->  	if (!tegra)
->  		return -ENOMEM;
-> @@ -825,6 +873,20 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  		return err;
->  	}
->  
-> +	for (i = 0; i < mc->num_timings; i++) {
-> +		/*
-> +		 * Memory Controller timings are sorted in ascending clock
-> +		 * rate order, so the last timing will be the max freq.
-> +		 */
-> +		tegra->max_freq = mc->timings[i].rate / KHZ;
-> +
-> +		err = dev_pm_opp_add(&pdev->dev, tegra->max_freq, 0);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-> +			goto remove_opps;
-> +		}
-> +	}
-> +
->  	reset_control_assert(tegra->reset);
->  
->  	err = clk_prepare_enable(tegra->clock);
-> @@ -836,37 +898,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  
->  	reset_control_deassert(tegra->reset);
->  
-> -	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
-> -	if (rate < 0) {
-> -		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
-> -		return rate;
-> -	}
-> -
-> -	tegra->max_freq = rate / KHZ;
-> -
->  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
->  		dev = tegra->devices + i;
->  		dev->config = actmon_device_configs + i;
->  		dev->regs = tegra->regs + dev->config->offset;
->  	}
->  
-> -	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
-> -		rate = clk_round_rate(tegra->emc_clock, rate);
-> -
-> -		if (rate < 0) {
-> -			dev_err(&pdev->dev,
-> -				"Failed to round clock rate: %ld\n", rate);
-> -			err = rate;
-> -			goto remove_opps;
-> -		}
-> -
-> -		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
-> -		if (err) {
-> -			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-> -			goto remove_opps;
-> -		}
-> -	}
-> -
->  	platform_set_drvdata(pdev, tegra);
->  
->  	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
-> @@ -921,8 +958,8 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id tegra_devfreq_of_match[] = {
-> -	{ .compatible = "nvidia,tegra30-actmon" },
-> -	{ .compatible = "nvidia,tegra124-actmon" },
-> +	{ .compatible = "nvidia,tegra30-actmon",  .data = &tegra30_soc, },
-> +	{ .compatible = "nvidia,tegra124-actmon", .data = &tegra124_soc, },
->  	{ },
->  };
->  
+>  		/*
+>  		 * If the interrupt is not reasserted, or we otherwise
+> -- 
+> 2.28.0
 > 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
