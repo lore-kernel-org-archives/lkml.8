@@ -2,165 +2,163 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA691C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA613C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9594720838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597443441;
-	bh=50MT4w5TiZE5W7kv+5tPls0JCQfaUVXnZIje/GL0rWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HC12nd4dCXq/5d7W5qMIcfz9+bjic5JWLSvQ6f2CWSqbsxdsTZxJDrUa5RyMIeFSl
-	 IqaPnQqizk+QYh8ZF91kuC+45ZZMT5kbDpojuMDOyzcY/R6ZOGZ7Pxrq1L3Os/v8Ym
-	 eS8zY+UEMZ0y2HVLr42RR5zjWocpxvS6ol8an+Dw=
+	by mail.kernel.org (Postfix) with ESMTP id A87DD2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k73o73VN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgHNWRU (ORCPT
+        id S1727809AbgHNWXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 18:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        Fri, 14 Aug 2020 18:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgHNWRT (ORCPT
+        with ESMTP id S1726360AbgHNWXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 18:17:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9EAC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:17:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p37so5185531pgl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:17:19 -0700 (PDT)
+        Fri, 14 Aug 2020 18:23:44 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6859C061388
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k13so4784497plk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a4ibtvRrxAoVM/NN3yAdW+CNBTEGC3GLvqFI/rLefWY=;
-        b=S6ugoHFB19hswaDF7+sl0LqxfBR5gH3Qs1lHFTlv2ur9/qH60hWFtDCK0mGjTV/M7/
-         Ds5jeJSUtAUa0JwVvT2bJXc+mq1go2SGDmEO88HwtCVoWw2uoo1t5ks5d83pdW7wCDRe
-         sD08nt0GktPOZTcdaKozmgQu01XfpHLFK1uuD35njHAo3aNVDd5aYe4qPvhADaNvnnzW
-         EKnNz6Nni79odgWL8aosALhOYgqjbvDYAQHLnPRyxn9LCRpTsuszlUs46su1XVOf8gkQ
-         BMX2BGnKOY48pVHIIqCW+XAPqtJTBTaN5W7UhPNVQiIJ4oyRhjMGtaSkIPBXfQTT7YDU
-         jwcg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5jRl27RMtgZLeq7b/WHxRkukWBIOKeVCPevK+sNiPhQ=;
+        b=k73o73VNd0qn9M+iiKly87GFMMXb6KyBorDW4eREbb7tWN2jSXYRFziRAoYgSezuUF
+         FLz13Od/1weIFdHYZAkH4EE6DZ2zj7DIZfLAK/em3ojP/RtKqLTLGoQKKszjB6dJ4pV9
+         mte4YoB6Bc6FECyWkOAdnIkWLrrXIYtyO/yYs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=a4ibtvRrxAoVM/NN3yAdW+CNBTEGC3GLvqFI/rLefWY=;
-        b=mKCpEqmMtR0dWsDi2URlENDi/I63E0G60+hps9SfRAY55jrdAm0YuGOBTuc6e3FCMy
-         MzUp8gSfcbACUnUh91Qg5NZXVckdT1CpKbeInSWVICPPlHp7GJZiG5u32c0Li4cY/xIO
-         SSJdeLqOS1maw3eNE6fXqYu5LCUmVI6zdGX2XJDNIaL9NJzzf7H/NfayeMofZ9PG5iJq
-         DN1mg9vvsNuJKD9wJiY/XaKHNrNsOLnlVb4jfBxd5YSKWJ+NIbG+NaUGPh9caxxgUtrU
-         KSy7qXgKHWTeI4ArYxXE0VQZtI/8RDe+k3BKrfW3Ypr2FZzfxRzsletBTK4SgLPtrIsm
-         NQXQ==
-X-Gm-Message-State: AOAM530patr/n7o2y9R69WAsAXhzi5IzB6nvVgkco9G5AUuJ2cl5jePL
-        loJl3K3VrNtAte8J2fxYAog=
-X-Google-Smtp-Source: ABdhPJySVfX1y36ooWMxyTSGFMnmfvSsPaON68rV+0v2YSK1IRpYY32sA3uk9a+GhNtd/UPiXxTHRw==
-X-Received: by 2002:aa7:9468:: with SMTP id t8mr3163170pfq.182.1597443438653;
-        Fri, 14 Aug 2020 15:17:18 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
-        by smtp.gmail.com with ESMTPSA id t25sm10048324pfe.51.2020.08.14.15.17.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5jRl27RMtgZLeq7b/WHxRkukWBIOKeVCPevK+sNiPhQ=;
+        b=jBgdRzznfNLmoYPcO5+HPpkboy6plBsqd4h1QVUp87h2jBmk5KatyvLaDvwUEhhIzM
+         qmdWhwDwzax0TTJ7eCzpsXtylCxSI1CNh7vvkw4Us/AMm6Gy1XlFEMK/elXr15RVRvD9
+         KWZhi6n/rjwLadR618iXXXnwqiDLulwofDvYvlLRa6hE0D3uFO6IJKU49cZA4cQcSCi8
+         j2ro51T7doQF33Oq9b68YhXJZdO5lTOQKgourpQgNvGJe3kISEpuzMru95BguVSPCCfG
+         HwuoO3k7HoaJoP+Vzq+lrvbcALKoOMUFJPifJ6aAn42gla6ARX+CCu8lQHKwAE3FxWab
+         NSQw==
+X-Gm-Message-State: AOAM530syvcmflvglFz81PnhKnkk+Sl2yId6V6SBKTWpYl/owSaetTT4
+        //Uq9sKlRK8YddutYnXrHFzmaw==
+X-Google-Smtp-Source: ABdhPJw4VToGF1Qswjip3GwGa5R4xOuQDDzZR0q80w8U/1h/s8l757szCrDYF3vT/E21VzKADGZyYA==
+X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3422745plz.239.1597443823248;
+        Fri, 14 Aug 2020 15:23:43 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id a17sm9302460pgi.26.2020.08.14.15.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 15:17:17 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 15:17:15 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Zhaoyang Huang <huangzhaoyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <klamm@yandex-team.ru>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, liumartin@google.com,
-        fengguang.wu@intel.com
-Subject: Re: [PATCH] mm : update ra->ra_pages if it's NOT equal to
- bdi->ra_pages
-Message-ID: <20200814221715.GA2856780@google.com>
-References: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
- <20200814014355.GS17456@casper.infradead.org>
- <20200814020700.GT17456@casper.infradead.org>
- <CAGWkznEkTeTq4-wPKBcNsF2vF5SVaFc3xoZmceKSwg34vpkqbg@mail.gmail.com>
- <20200813193307.d5597367b7964d95f63e4580@linux-foundation.org>
- <CAGWkznFwDnrSqt68oMp+rcNFT_EgN3ke7-e0Tb1xfXreVXgHYw@mail.gmail.com>
- <20200814031929.GV17456@casper.infradead.org>
+        Fri, 14 Aug 2020 15:23:42 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        linux-bluetooth@vger.kernel.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Daniel Winkler <danielwinkler@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH] bluetooth: Set ext scan response only when it exists
+Date:   Fri, 14 Aug 2020 15:23:36 -0700
+Message-Id: <20200814152323.1.Ib022565452fde0c02fbcf619950ef868715dd243@changeid>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814031929.GV17456@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 04:19:29AM +0100, Matthew Wilcox wrote:
-> On Fri, Aug 14, 2020 at 10:45:37AM +0800, Zhaoyang Huang wrote:
-> > On Fri, Aug 14, 2020 at 10:33 AM Andrew Morton
-> > <akpm@linux-foundation.org> wrote:
-> > >
-> > > On Fri, 14 Aug 2020 10:20:11 +0800 Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
-> > >
-> > > > On Fri, Aug 14, 2020 at 10:07 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > >
-> > > > > On Fri, Aug 14, 2020 at 02:43:55AM +0100, Matthew Wilcox wrote:
-> > > > > > On Fri, Aug 14, 2020 at 09:30:11AM +0800, Zhaoyang Huang wrote:
-> > > > > > > file->f_ra->ra_pages will remain the initialized value since it opend, which may
-> > > > > > > be NOT equal to bdi->ra_pages as the latter one is updated somehow(etc,
-> > > > > > > echo xxx > /sys/block/dm/queue/read_ahead_kb).So sync ra->ra_pages to the
-> > > > > > > updated value when sync read.
-> > > > > >
-> > > > > > It still ignores the work done by shrink_readahead_size_eio()
-> > > > > > and fadvise(POSIX_FADV_SEQUENTIAL).
-> > > > >
-> > > > > ... by the way, if you're trying to update one particular file's readahead
-> > > > > state, you can just call fadvise(POSIX_FADV_NORMAL) on it.
-> > > > >
-> > > > > If you want to update every open file's ra_pages by writing to sysfs,
-> > > > > then just no.  We don't do that.
-> > > > No, What I want to fix is the file within one process's context  keeps
-> > > > using the initialized value when it is opened and not sync with new
-> > > > value when bdi->ra_pages changes.
-> > >
-> > > So you're saying that
-> > >
-> > >         echo xxx > /sys/block/dm/queue/read_ahead_kb
-> > >
-> > > does not affect presently-open files, and you believe that it should do
-> > > so?
-> > >
-> > > I guess that could be a reasonable thing to want - it's reasonable for
-> > > a user to expect that writing to a global tunable will take immediate
-> > > global effect.  I guess.
-> > >
-> > > But as Matthew says, it would help if you were to explain why this is
-> > > needed.  In full detail.  What operational problems is the present
-> > > implementation causing?
-> > The real scenario is some system(like android) will turbo read during
-> > startup via expanding the readahead window and then set it back to
-> > normal(128kb as usual). However, some files in the system process
-> > context will keep to be opened since it is opened up and has no chance
-> > to sync with the updated value as it is almost impossible to change
-> > the files attached to the inode(processes are unaware of these
-> > things). we have to fix it from a kernel perspective.
-> 
-> OK, this is a much more useful description of the problem, thank you!
+Only set extended scan response only when it exists. Otherwise, clear
+the scan response data.
 
-It's not the first time we brought up the issue.
-https://patchwork.kernel.org/patch/10866161/
-Hopefully, we have some solution at this time.
+Per the core spec v5.2, Vol 4, Part E, 7.8.55
 
-> 
-> I can think of two possibilities here.  One is that maybe our readahead
-> heuristics just don't work on modern phone hardware.  Perhaps we need
-> to ramp up more aggressively by default.
-> 
-> The other is that maybe it really is just a "boost at startup" kind
-> of situation and so we should support _that_.  Some interface where
-> we can set a ra_boost, and then do:
-> 
-> 	if (ra_boost)
-> 		newsize *= 2;
-> 
-> in get_init_ra_size().
+If the advertising set is non-scannable and the Host uses this command
+other than to discard existing data, the Controller shall return the
+error code Invalid HCI Command Parameters (0x12).
 
-With kernel boot paramter, it sounds good idea to me.
+On WCN3991, the controller correctly responds with Invalid Parameters
+when this is sent.  That error causes __hci_req_hci_power_on to fail
+with -EINVAL and LE devices can't connect because background scanning
+isn't configured.
+
+Here is an hci trace of where this issue occurs during power on:
+
+< HCI Command: LE Set Extended Advertising Parameters (0x08|0x0036) plen 25
+        Handle: 0x00
+        Properties: 0x0010
+          Use legacy advertising PDUs: ADV_NONCONN_IND
+        Min advertising interval: 181.250 msec (0x0122)
+        Max advertising interval: 181.250 msec (0x0122)
+        Channel map: 37, 38, 39 (0x07)
+        Own address type: Random (0x01)
+        Peer address type: Public (0x00)
+        Peer address: 00:00:00:00:00:00 (OUI 00-00-00)
+        Filter policy: Allow Scan Request from Any, Allow Connect...
+        TX power: 127 dbm (0x7f)
+        Primary PHY: LE 1M (0x01)
+        Secondary max skip: 0x00
+        Secondary PHY: LE 1M (0x01)
+        SID: 0x00
+        Scan request notifications: Disabled (0x00)
+> HCI Event: Command Complete (0x0e) plen 5
+      LE Set Extended Advertising Parameters (0x08|0x0036) ncmd 1
+        Status: Success (0x00)
+        TX power (selected): 9 dbm (0x09)
+< HCI Command: LE Set Advertising Set Random Address (0x08|0x0035) plen 7
+        Advertising handle: 0x00
+        Advertising random address: 08:FD:55:ED:22:28 (OUI 08-FD-55)
+> HCI Event: Command Complete (0x0e) plen 4
+      LE Set Advertising Set Random Address (0x08|0x0035) ncmd
+        Status: Success (0x00)
+< HCI Command: LE Set Extended Scan Response Data (0x08|0x0038) plen 35
+        Handle: 0x00
+        Operation: Complete scan response data (0x03)
+        Fragment preference: Minimize fragmentation (0x01)
+        Data length: 0x0d
+        Name (short): Chromebook
+> HCI Event: Command Complete (0x0e) plen 4
+      LE Set Extended Scan Response Data (0x08|0x0038) ncmd 1
+        Status: Invalid HCI Command Parameters (0x12)
+
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Daniel Winkler <danielwinkler@google.com>
+---
+
+ net/bluetooth/hci_request.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index e0269192f2e536..e17bc8a1c66ddd 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -1533,11 +1533,14 @@ void __hci_req_update_scan_rsp_data(struct hci_request *req, u8 instance)
+ 
+ 		memset(&cp, 0, sizeof(cp));
+ 
+-		if (instance)
++		/* Extended scan response data doesn't allow a response to be
++		 * set if the instance isn't scannable.
++		 */
++		if (get_adv_instance_scan_rsp_len(hdev, instance))
+ 			len = create_instance_scan_rsp_data(hdev, instance,
+ 							    cp.data);
+ 		else
+-			len = create_default_scan_rsp_data(hdev, cp.data);
++			len = 0;
+ 
+ 		if (hdev->scan_rsp_data_len == len &&
+ 		    !memcmp(cp.data, hdev->scan_rsp_data, len))
+-- 
+2.28.0.220.ged08abb693-goog
+
