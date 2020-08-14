@@ -2,260 +2,98 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5096CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6148C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A1E207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597406007;
-	bh=ktjPay3yFnO4JqZFYteRtnI9GZ/d+zijon3jWq6olDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PApdgUydvC6B8BGMYvAHqqf0UyOMcmWHZWldRLEtNAciMZuc3FupWXGRHZeB9LYWf
-	 HJ+8BJh5/cnM+DHCb8U858YyTy8LIsCFDGVowN6FqA8GqIi+tP9+4l+FHIghxtI3YJ
-	 amujhREIvNMu4mofZT0+QL5+88OytDPsDwaZqtv8=
+	by mail.kernel.org (Postfix) with ESMTP id BD76E20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZrXEjqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgHNLxZ (ORCPT
+        id S1727053AbgHNLxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgHNLxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:53:22 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED59F20716;
-        Fri, 14 Aug 2020 11:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597406001;
-        bh=ktjPay3yFnO4JqZFYteRtnI9GZ/d+zijon3jWq6olDI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wT4vU4kXSd/xx2GSftU0AV6SBaeOWY6BVThCYk2Svr5K8CVJfT21GMtjBy+ixIGjg
-         mFog/EqERhF0M0gekdZQz0HpBLVSJCQ1d+H/Ir+0jKclLaO/SnDYUITIAf6loEcQjT
-         GFfJ+k697I0TvO/lq2F+l6wYwwtvOWRwfgfLaB1E=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 91A7C4097F; Fri, 14 Aug 2020 08:53:18 -0300 (-03)
-Date:   Fri, 14 Aug 2020 08:53:18 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/18] perf ftrace: add option '-m/--buffer-size' to
- set per-cpu buffer size
-Message-ID: <20200814115318.GT13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-5-changbin.du@gmail.com>
+        Fri, 14 Aug 2020 07:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgHNLx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 07:53:27 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E68EC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:53:27 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g19so10454832ioh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8RJj+TkYMzHiac1xq1Tf3lQ5iLBSeYwuZiB6gfgnwbY=;
+        b=kZrXEjqMlHaOP2Jvq3YGRQ4GTNlXxHsusr71weGy/oFdmmSRzXfR3o4wkjIRXQiIZ/
+         6t2FmVkzYveIYXX0fnxAdmZgZhq/VX+bIiZqTQHYr8FIDkvkx6T4vyAXpFlFfmj0Y6Dx
+         XHRjn3Agg4TDT3zEe8+OjI+yJw4FrE3xhzk29qa2r5Xw0SxvrPnd7+7UzK3oY9uM30Pg
+         O6Q78vHKCkfRnwPQygOuWpBQI9stVRTDDMpU7btgIQ5capgMNBK6BGKNJ7LPa+cl9ccN
+         cbJGcwYjd0/uYXrO9BRullrXjFURQD0zsWiL7XSSg7Spemlq63Ff+Uqh58l1q7G06SMm
+         IvMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8RJj+TkYMzHiac1xq1Tf3lQ5iLBSeYwuZiB6gfgnwbY=;
+        b=ODzl4S6R8giUso6/yLv7q639CaL36ZHAqCnGZwleNi+ZqQjSkVDYFSqLsMYPqDsWjI
+         dLYV4K0Gxlbxik10rULTFDFtOEGRofM4MhVC1BVOzYldhbjIoIotAy99OyO2CWESoIzE
+         wkEZU3+/bS8kI07Ea7gh3VbOV3iIQprIjUeX77IQN4fhoDFFLr8dogticEzt5/hElmx4
+         rmKIYxnzfDmrWqOLV/ilT3XPBqT22fz43MD51ssvRDdNex75VPH2oXRO3rI62zD/P4aB
+         81o2tyYfBIaJJx6U6QF/TBwx+y/Yk/WNh7QQSzabRZUgAw/Q2Ww54EzW5b0bn2oZMVnM
+         vWDQ==
+X-Gm-Message-State: AOAM531rUrLGcm6KcPc9YRdXiCHZ1I1cdNzZFyPGvZuF8LFtZ8+Zsb/L
+        ey/fT9p//nHyHGIVAAM4kOX7dt1zNwp9SBKZ9SNyE/aVT05UYZ1G
+X-Google-Smtp-Source: ABdhPJwgpaBwFKnfbf8yPBtOw/1ZjX5D1yc5qFmBupXbTSR6wYkAeXzqmRCEIW7DAftD4q0gZBywXbirls+TkmKO4bY=
+X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr2518690jaj.7.1597406006482;
+ Fri, 14 Aug 2020 04:53:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-5-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200814071431.201400-1-ztong0001@gmail.com> <20200814081647.GA10347@lst.de>
+In-Reply-To: <20200814081647.GA10347@lst.de>
+From:   Tong Zhang <ztong0001@gmail.com>
+Date:   Fri, 14 Aug 2020 07:53:15 -0400
+Message-ID: <CAA5qM4BSMiFGe=N9H_YCK79Y2jSurUEbPmdTcaPnVu8cFgmGEA@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: cancel nvme device request before disabling
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:27AM +0800, Changbin Du escreveu:
-> This adds an option '-m/--buffer-size' to allow us set the size of per-cpu
-> tracing buffer.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Oops sorry for the duplicated email -- I forgot to turn off HTML when
+sending the previous one.
 
-So this is a little bit confusing, i.e. if I don't specify a suffix (B,
-K, M, G) I get:
+Thanks Christoph,
+I did a couple of fixes on the commit log, please see v2 patch.
+Thanks!
+-- Tong
 
-  # perf ftrace -m 2048
-  
-   Usage: perf ftrace [<options>] [<command>]
-      or: perf ftrace [<options>] -- <command> [<options>]
-  
-      -m, --buffer-size <size>
-                            size of per cpu buffer
-  #
 
-  Which is not very helpful, and you also forgot to add an entry to 'man
-  perf-ftrace' (tools/perf/Documentation/perf-ftrace.txt), so only by
-  looking at the patch I was able to figure out that a suffix is
-  required.
-
-  Now look how 'perf trace' works:
-
-  # perf trace -m 2048 -e open* --max-events 1
-     0.772 sh/343169 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC) = 3
-  # 
-
-I.e. it doesn't require a unit suffix, which is more natural.
-
-  # perf trace -h -m
-
-    -m, --mmap-pages <pages>
-                          number of mmap data pages
-
-  #
-
-It indicates that the argument is in units of 'pages', while you don't
-state that in:
-  
-  $ perf ftrace -h -m
-  
-      -m, --buffer-size <size>
-                            size of per cpu buffer
-  
-  $ 
-
-So please improve the option description and add its longer explanation
-in the man page, also I suggest you interpret:
-
-  # perf ftrace -m 2048
-
-as asking for 2048K since the file as _kb in its name, so people used to
-ftrace will get what they ask for, i.e. N kb. Please add this to the one
-line description in 'perf ftrace -h', namely that the default unit os
-'K'.
-
-All this can be made on top of this series, so I'm applying it now to
-make progress.
-
-- Arnaldo
-
-> ---
-> v2: support units as a suffix.
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  5 +++
->  tools/perf/builtin-ftrace.c              | 55 ++++++++++++++++++++++++
->  2 files changed, 60 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 4f5628445a63..7a5d915f60b0 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -53,6 +53,11 @@ OPTIONS
->  	Ranges of CPUs are specified with -: 0-2.
->  	Default is to trace on all online CPUs.
->  
-> +-m::
-> +--buffer-size::
-> +	Set the size of per-cpu tracing buffer, <size> is expected to
-> +	be a number with appended unit character - B/K/M/G.
-> +
->  -T::
->  --trace-funcs=::
->  	Select function tracer and set function filter on the given
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 4b3fcee5725a..a3a4f4be9dde 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -26,6 +26,7 @@
->  #include "thread_map.h"
->  #include "util/cap.h"
->  #include "util/config.h"
-> +#include "util/units.h"
->  
->  #define DEFAULT_TRACER  "function_graph"
->  
-> @@ -39,6 +40,7 @@ struct perf_ftrace {
->  	struct list_head	graph_funcs;
->  	struct list_head	nograph_funcs;
->  	int			graph_depth;
-> +	unsigned long		percpu_buffer_size;
->  };
->  
->  struct filter_entry {
-> @@ -324,6 +326,21 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
->  	return 0;
->  }
->  
-> +static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
-> +{
-> +	int ret;
-> +
-> +	if (ftrace->percpu_buffer_size == 0)
-> +		return 0;
-> +
-> +	ret = write_tracing_file_int("buffer_size_kb",
-> +				     ftrace->percpu_buffer_size / 1024);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  {
->  	char *trace_file;
-> @@ -388,6 +405,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  		goto out_reset;
->  	}
->  
-> +	if (set_tracing_percpu_buffer_size(ftrace) < 0) {
-> +		pr_err("failed to set tracing per-cpu buffer size\n");
-> +		goto out_reset;
-> +	}
-> +
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
->  		goto out_reset;
-> @@ -506,6 +528,37 @@ static void delete_filter_func(struct list_head *head)
->  	}
->  }
->  
-> +static int parse_buffer_size(const struct option *opt,
-> +			     const char *str, int unset)
-> +{
-> +	unsigned long *s = (unsigned long *)opt->value;
-> +	static struct parse_tag tags_size[] = {
-> +		{ .tag  = 'B', .mult = 1       },
-> +		{ .tag  = 'K', .mult = 1 << 10 },
-> +		{ .tag  = 'M', .mult = 1 << 20 },
-> +		{ .tag  = 'G', .mult = 1 << 30 },
-> +		{ .tag  = 0 },
-> +	};
-> +	unsigned long val;
-> +
-> +	if (unset) {
-> +		*s = 0;
-> +		return 0;
-> +	}
-> +
-> +	val = parse_tag_value(str, tags_size);
-> +	if (val != (unsigned long) -1) {
-> +		if (val < 1024) {
-> +			pr_err("buffer size too small, must larger than 1KB.");
-> +			return -1;
-> +		}
-> +		*s = val;
-> +		return 0;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
->  static void select_tracer(struct perf_ftrace *ftrace)
->  {
->  	bool graph = !list_empty(&ftrace->graph_funcs) ||
-> @@ -560,6 +613,8 @@ int cmd_ftrace(int argc, const char **argv)
->  		     "Set nograph filter on given functions", parse_filter_func),
->  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
->  		    "Max depth for function graph tracer"),
-> +	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
-> +		     "size of per cpu buffer", parse_buffer_size),
->  	OPT_END()
->  	};
->  
-> -- 
-> 2.25.1
-> 
-
--- 
-
-- Arnaldo
+On Fri, Aug 14, 2020 at 4:16 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Aug 14, 2020 at 03:14:31AM -0400, Tong Zhang wrote:
+> >   This patch addresses an irq free warning and null pointer dereference
+> >   error problem when nvme devices got timeout error during initialization.
+> >   This problem happens when nvme_timeout() function is called while
+> >   nvme_reset_work() is still in execution. This patch fixed the problem by
+> >   setting flag of the problematic request to NVME_REQ_CANCELLED before
+> >   calling nvme_dev_disable() to make sure __nvme_submit_sync_cmd() returns
+> >   an error code and let nvme_submit_sync_cmd() fail gracefully.
+> >   The following is console output.
+>
+> The commit log looks a little weird due to the extra indentation.
+>
+> The patch itself looks good, though:
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
