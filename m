@@ -2,79 +2,114 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA47C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD6EC2087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DF322B4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597408711;
-	bh=0gEuAbA7LGQra2UQlGQT0N95zldCnrwRgJMkV7BVvj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YLMWr/LxS+7Mb8OUFeACtyvfujIJbyQKSjsnyPsqKez0CQB85FoPdcy0wOb8kDzp2
-	 iyJH/iSPG4FvW07M0jDiKeOfj73N8cs1JYKbCfzn3WOgZU3vuhHoY/CmgOe6J1RBE1
-	 UG5SMJhR8BluaWFv3iGkx1VqqENtUlPdEGLgN01I=
+	s=default; t=1597408752;
+	bh=GMHi1FpPrR62ulxDK6MxZ6BFhwvKlixc4HoFmHzpW3k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bYSW9bQRV3rlChz83Q2nei+rSN+XzXwcNmGoyB4lqdo9wjctJFZi2h6mgRc7+lCMO
+	 22x1x8bFa/txSBreGAUVMp0FJ753qoxzznIimo4R02j3LR4GIr++R38Kkyq6LqbMtB
+	 UJ7015/PMFHZbUFulIbHUZdHpzJyaQlg6YLjSVls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgHNMia (ORCPT
+        id S1728223AbgHNMjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52126 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 08:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgHNMia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:38:30 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726285AbgHNMjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:39:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8256A20866;
-        Fri, 14 Aug 2020 12:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B26520866;
+        Fri, 14 Aug 2020 12:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597408709;
-        bh=0gEuAbA7LGQra2UQlGQT0N95zldCnrwRgJMkV7BVvj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0DUIdELL/bJx0/ZT+IqUeVos0XlFUxiB2XDX09sWyZwZ6ZSB4qGOtG2f3n9M4H2MB
-         D2Gpzfxk9VeMNeLe7Kj0YdXMnGjdXfMerXw/X+Gi59aHWnorE0CcR8DcPjUb5Ti6h4
-         5EtWRzX0CcUQBZ3FDm8AU2aivkrlbKpGxs2O698s=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7989340D3D; Fri, 14 Aug 2020 09:38:27 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:38:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/18] [PATCH v7 00/18] perf: ftrace enhancement
-Message-ID: <20200814123827.GD13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
+        s=default; t=1597408746;
+        bh=GMHi1FpPrR62ulxDK6MxZ6BFhwvKlixc4HoFmHzpW3k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lKf44wUf2Kc3v1KN9FqczPLbiNSEB3nE1ZqTbD+tfrxWnlmj+xpAZ8cSyY7SZoVM4
+         TAR8k//u7btxlzTAFfzmg6VtHFmHVA2UXlQqF9s677CPaz6UzyCwJYvc1NLgZ2JAk1
+         HpCTi2zCWQIRmZFDJ1c19CfkmFBZkopM0+xjDTe4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Cc:     gregkh@linuxfoundation.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 0/4] drivers: hv: Microsoft Virtual GPU Driver
+Date:   Fri, 14 Aug 2020 08:38:52 -0400
+Message-Id: <20200814123856.3880009-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-1-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:23AM +0800, Changbin Du escreveu:
-> The perf has basic kernel ftrace support but lack support of most tracing
-> options. This serias is target to enhance the perf ftrace functionality so
-> that we can make full use of kernel ftrace with perf.
-> 
-> In general, this serias be cataloged into two main changes:
->   1) Improve usability of existing functions. For example, we don't need to type
->      extra option to select the tracer.
->   2) Add new options to support all other ftrace functions.
+This is a follow-up on the RFC sent a few months back[1].
 
-Applied, sent review comments for further work, thanks!
+Changes since the RFC:
 
-Now it will go together with other changes to extensive build testing
-and then to Linus,
+ - Move to drivers/hv/
+ - Address comments from Greg KH
+   - Misc device initialization
+   - Remove typedefs/variable defines
+   - Use the kernel's ioctl declarations
+ - Clean up random code bugs.
 
-- Arnaldo
+
+[1] https://lore.kernel.org/lkml/20200519163234.226513-1-sashal@kernel.org/
+
+
+Sasha Levin (4):
+  drivers: hv: dxgkrnl: core code
+  drivers: hv: dxgkrnl: hook up dxgkrnl
+  drivers: hv: vmbus: hook up dxgkrnl
+  drivers: hv: dxgkrnl: create a MAINTAINERS entry
+
+ MAINTAINERS                     |    7 +
+ drivers/hv/Kconfig              |    2 +
+ drivers/hv/Makefile             |    1 +
+ drivers/hv/dxgkrnl/Kconfig      |   10 +
+ drivers/hv/dxgkrnl/Makefile     |   12 +
+ drivers/hv/dxgkrnl/d3dkmthk.h   | 1636 ++++++++++
+ drivers/hv/dxgkrnl/dxgadapter.c | 1406 ++++++++
+ drivers/hv/dxgkrnl/dxgkrnl.h    |  927 ++++++
+ drivers/hv/dxgkrnl/dxgmodule.c  |  656 ++++
+ drivers/hv/dxgkrnl/dxgprocess.c |  357 ++
+ drivers/hv/dxgkrnl/dxgvmbus.c   | 3084 ++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgvmbus.h   |  873 +++++
+ drivers/hv/dxgkrnl/hmgr.c       |  604 ++++
+ drivers/hv/dxgkrnl/hmgr.h       |  112 +
+ drivers/hv/dxgkrnl/ioctl.c      | 5413 +++++++++++++++++++++++++++++++
+ drivers/hv/dxgkrnl/misc.c       |  279 ++
+ drivers/hv/dxgkrnl/misc.h       |  309 ++
+ include/linux/hyperv.h          |   16 +
+ 18 files changed, 15704 insertions(+)
+ create mode 100644 drivers/hv/dxgkrnl/Kconfig
+ create mode 100644 drivers/hv/dxgkrnl/Makefile
+ create mode 100644 drivers/hv/dxgkrnl/d3dkmthk.h
+ create mode 100644 drivers/hv/dxgkrnl/dxgadapter.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgkrnl.h
+ create mode 100644 drivers/hv/dxgkrnl/dxgmodule.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgprocess.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgvmbus.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgvmbus.h
+ create mode 100644 drivers/hv/dxgkrnl/hmgr.c
+ create mode 100644 drivers/hv/dxgkrnl/hmgr.h
+ create mode 100644 drivers/hv/dxgkrnl/ioctl.c
+ create mode 100644 drivers/hv/dxgkrnl/misc.c
+ create mode 100644 drivers/hv/dxgkrnl/misc.h
+
+-- 
+2.25.1
+
