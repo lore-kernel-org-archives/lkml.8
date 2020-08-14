@@ -2,154 +2,95 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEBCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C3520791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597421469;
-	bh=1eHtnTQKd6vwBqrROLmEzpSpv+XROEYdwyl4yv71Ks8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Bcd46xmDfZOcNIQUwlFQXe5Xlk3GgE1ZYPkAf0QE8MRbe8wRuZtwR3K1bNBq2lOln
-	 jTIzCgpnh00PFYJnWTxA899DbCfqReQwcUGeB2VGxGtUqQVUaHYQoH3f3JsYYo7fDO
-	 1FV6F3XtVBSW8ZHtBZhd7aZr+worKmY5pryDUYp8=
+	by mail.kernel.org (Postfix) with ESMTP id 9E3922078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMGpp3Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgHNQLI (ORCPT
+        id S1728115AbgHNQMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:11:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbgHNQLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:11:07 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CCB72078D;
-        Fri, 14 Aug 2020 16:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597421467;
-        bh=1eHtnTQKd6vwBqrROLmEzpSpv+XROEYdwyl4yv71Ks8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Y6z5CY1nwi7oy57gblgg9EAFAoluxSg6wt4kSl2xd4o66tgT04GaKNVnM+9ED/gV0
-         wUTN14LksC3gedJTY60VNrKRLnpO3SY7UcY/xYH40sU+YxoYi4rFKMtvPM9ki/pFgk
-         29u7pPcFm2QM3eIcNWhmVBOnRVYgtat6UnBX+hh4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C4F1E3522A0E; Fri, 14 Aug 2020 09:11:06 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 09:11:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200814161106.GA13853@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813182618.GX2674@hirez.programming.kicks-ass.net>
- <20200813185257.GF4295@paulmck-ThinkPad-P72>
- <20200813220619.GA2674@hirez.programming.kicks-ass.net>
- <875z9m3xo7.fsf@nanos.tec.linutronix.de>
- <20200814083037.GD3982@worktop.programming.kicks-ass.net>
- <20200814141425.GM4295@paulmck-ThinkPad-P72>
+        Fri, 14 Aug 2020 12:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgHNQMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 12:12:10 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE645C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:12:09 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id q14so8885745ilj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 09:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gRQztR56iu3aM7IPkfJ9L3Boyqvrwwaj0DJy4n3MiCE=;
+        b=UMGpp3Q/qPHvVuL6uaJjaSEdhIz3jC/WbLrrgJGe5DhLnMP2ZpiMuRnI5GyTGS79Yz
+         RlflnIt7ZgWY9kMX1lvqjl6uy19GbzRrVvnn4uPQkvplYmr53tZqXxNlP88wAWQVh4Rf
+         Zd+rCnQ/rjwSQIx7KMcKTIkX9XVayS4q2Y+QdNZggMzBTFlWK+JCiXdG4LFW63gUlWKi
+         1blFBNsmh7mlYgL1aY3WjOo8YIEffbMxIQXOLbwXc/qPUwoks/Fdl/FtNuWDPPE7J3F1
+         8MScQLNczXCzU5nSeLfUzo/9t9HpsZFIU8Zp7ssST8H8YSLQq4G37Q22QIqvLoq5xSwJ
+         UOcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gRQztR56iu3aM7IPkfJ9L3Boyqvrwwaj0DJy4n3MiCE=;
+        b=RQUBe0EM5fPUYA1uNWbpdNSBBvlPRK8O5eyYS9YFJY0vXRKxhoZSRa/Obqobg4rI7+
+         ooFGp4exbejKqzpTdorkxWjP0lvXeklwU6j4RdwTGeNONY1G2+HZBxuFF0vfDfOkhleK
+         tjUhmBVcw9OBH1nKCShzIohNkgyoWJV6b0Q8e0FGDjFNH5v+XuWGOS9Yc0pVAJxXn2vf
+         Cvcc0EKzLyPMVKGGsdM5v1w/gpDXLRGdc/yYZ5R5UMD0jYJvXgQClsIxajqUCMKeFjM8
+         wLSUU6l6Z1o/6ucjDqZ8JEGRMHyaOXl25ltMhiE71pLXyjWnqf+eeM48plkvWcgVe22N
+         W3Ww==
+X-Gm-Message-State: AOAM5307yRgCMNjudOpAGwznRAQOA0eH8j/cAd598KIAqb7+Eo/mCO8k
+        C/yKaeSnifq72kMHC5hv3dXl6lMT8Bp90XNS8Sl/1MELRNPKXqft
+X-Google-Smtp-Source: ABdhPJzUHPJH7IZhco2y/VyghwJqsaIiBDeryQlRsIEB6CIoj/XJJXMd6IswCHBxvtEreYF7+XAIc9PMNoZTvhyg7NI=
+X-Received: by 2002:a92:ad01:: with SMTP id w1mr3264199ilh.301.1597421527773;
+ Fri, 14 Aug 2020 09:12:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814141425.GM4295@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200814071431.201400-1-ztong0001@gmail.com> <20200814150433.GA3498391@dhcp-10-100-145-180.wdl.wdc.com>
+ <CAA5qM4CctYiBe766-OnxAPHJWByyOo1rE7FzW-75ZcOib6niCA@mail.gmail.com> <20200814154233.GA3772144@dhcp-10-100-145-180.wdl.wdc.com>
+In-Reply-To: <20200814154233.GA3772144@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Tong Zhang <ztong0001@gmail.com>
+Date:   Fri, 14 Aug 2020 12:11:56 -0400
+Message-ID: <CAA5qM4CtnNgZDpT-8Wiwvs18-h4fmxv3jPmW4AqWXgT-BqNLYw@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: cancel nvme device request before disabling
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        axboe@fb.com, Christoph Hellwig <hch@lst.de>, sagi@grimberg.me
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:14:25AM -0700, Paul E. McKenney wrote:
-> On Fri, Aug 14, 2020 at 10:30:37AM +0200, Peter Zijlstra wrote:
-> > On Fri, Aug 14, 2020 at 01:59:04AM +0200, Thomas Gleixner wrote:
+On Fri, Aug 14, 2020 at 11:42 AM Keith Busch <kbusch@kernel.org> wrote:
+> > > On Fri, Aug 14, 2020 at 03:14:31AM -0400, Tong Zhang wrote:
+> > > > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > > > index ba725ae47305..c4f1ce0ee1e3 100644
+> > > > --- a/drivers/nvme/host/pci.c
+> > > > +++ b/drivers/nvme/host/pci.c
+> > > > @@ -1249,8 +1249,8 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+> > > >               dev_warn_ratelimited(dev->ctrl.device,
+> > > >                        "I/O %d QID %d timeout, disable controller\n",
+> > > >                        req->tag, nvmeq->qid);
+> > > > -             nvme_dev_disable(dev, true);
+> > > >               nvme_req(req)->flags |= NVME_REQ_CANCELLED;
+> > > > +             nvme_dev_disable(dev, true);
+> > > >               return BLK_EH_DONE;
 
-[ . . . ]
+> anymore. The driver is not reporting   non-response back for all
+> cancelled requests, and that is probably not what we should be doing.
 
-> > > > 3.	Reusing existing GFP_ flags/values/whatever to communicate
-> > > >	the raw-context information that was to be communicated by
-> > > >	the new GFP_ flag.
-> > > >
-> > > > 4.	Making lockdep forgive acquiring spinlocks while holding
-> > > >	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
-> > 
-> > Uhh, !CONFIG_PREEMPT_RT, the rest is 'fine'.
-> 
-> I would be OK with either.  In CONFIG_PREEMPT_NONE=n kernels, the
-> kfree_rcu() code could use preemptible() to determine whether it was safe
-> to invoke the allocator.  The code in kfree_rcu() might look like this:
-> 
-> 	mem = NULL;
-> 	if (IS_ENABLED(CONFIG_PREEMPT_NONE) || preemptible())
-> 		mem = __get_free_page(...);
-> 
-> Is your point is that the usual mistakes would then be caught by the
-> usual testing on CONFIG_PREEMPT_NONE=n kernels?
-
-Just to make sure we are talking about the same thing, please see below
-for an untested patch that illustrates how I was interpreting your words.
-Was this what you had in mind?
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 62a382d..42d0ff1 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -579,7 +579,7 @@ do {									\
- # define lockdep_assert_preemption_disabled() do { } while (0)
- #endif
- 
--#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING_EFFECTIVE
- 
- # define lockdep_assert_RT_in_threaded_ctx() do {			\
- 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-index bb35b44..70867d58 100644
---- a/include/linux/lockdep_types.h
-+++ b/include/linux/lockdep_types.h
-@@ -20,7 +20,7 @@ enum lockdep_wait_type {
- 	LD_WAIT_FREE,		/* wait free, rcu etc.. */
- 	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
- 
--#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+#ifdef PROVE_RAW_LOCK_NESTING_EFFECTIVE
- 	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
- #else
- 	LD_WAIT_CONFIG = LD_WAIT_SPIN,
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index e068c3c..e02de40 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1215,6 +1215,9 @@ config PROVE_RAW_LOCK_NESTING
- 
- 	 If unsure, select N.
- 
-+config PROVE_RAW_LOCK_NESTING_EFFECTIVE
-+	def_bool PROVE_RAW_LOCK_NESTING && !PREEMPTION
-+
- config LOCK_STAT
- 	bool "Lock usage statistics"
- 	depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
+OK, thanks for the explanation. I think the bottom line here is to let the
+probe function know and stop proceeding when there's an error.
+I also don't see an obvious reason to set NVME_REQ_CANCELLED
+after nvme_dev_disable(dev, true).
