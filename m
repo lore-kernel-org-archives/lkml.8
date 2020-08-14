@@ -2,153 +2,318 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89848206B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcRrC2Hm"
+	by mail.kernel.org (Postfix) with ESMTP id 33BE0206B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597410229;
+	bh=OaJzTXasYwLO/M+YYozR9BRANETxqbmfOLZ6r01jc3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vq3iaTsBKnMaWwFlaYkSoz0anboZkAT5Xf9RYHJ9lbHVL6fT33R0JYAiICD9Xw89S
+	 5eSIjZatrk1yGGR/jBixYzTkTKxpsrL5bTWKAjjzV7ZHtip8D2t8Nfeu3c7FZi5g2v
+	 Ha8NgA+guNbA/1OdYGYlT7u6qdn5M9YCgY87EWf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgHNNDp (ORCPT
+        id S1728522AbgHNNDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgHNNDh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:03:37 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB08EC061384;
-        Fri, 14 Aug 2020 06:03:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id p14so7420152wmg.1;
-        Fri, 14 Aug 2020 06:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YjeThY52rXpwMKfP2wevk8gHf5Xz/Qc/OsJwCnOcXD8=;
-        b=BcRrC2HmiDGeWy5XNjDuKjr5ulFMr0fZBAldTKaMCIBx3XK9+HnUUzXqMJWF273PQl
-         q6dYxXzYryLby3BgE5/F6MYr/poybHtSrAXPnZU8SPhXY64gqEAKyyTjpXXmKcM98C9J
-         km/bhv0cXlzPWI6lyyM7tazPN+nQV6g+eoqJBK0RuoBZ/u86vllWrnCFabu+eIEAMQhV
-         0IZx/xQvS3tRpYvLrceAtxIUnP5TRQp2348FLRZko/fvA3OXUrTGwMOZ+c1PvDIHkVi1
-         Io9x2Whwl8FzkEU4LMLpnUdQuyyFemqWGtMDADl8pI5nRWysU0ezfSW+ujU3YzC8YU/T
-         oTKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YjeThY52rXpwMKfP2wevk8gHf5Xz/Qc/OsJwCnOcXD8=;
-        b=joAVxGZOfmXwDuQbaY31jboYdIBd8yef+/ofw1NICbRNlDPUyny2qpDhUaR5dIi92/
-         +jajCCUVfinJtjTCVthShYAB3e0OKnUgXKPA4mNNm1QQ2jjaOTAHJtJbBH56UlM20bv5
-         O1oc/UhcXs8etaNQS0+bJcMpERN6O/nnvxfrk2m5w/9Q1xfhLisiAl4LZs2aO+yTnkw/
-         GYcpbbauKQUom4XlERLv8YuwX051ZkA5bc70aKDc0sjJT60pJ0qwBJuAwgp0d43VQhxY
-         3ZHtTe9xYEZjc9tXZfsPbJFAFBNg5fehUImCOeSZ1qOwdSsth2yQqgpEZgH36pd5cFyH
-         msvA==
-X-Gm-Message-State: AOAM530PENH3fdQDXBwXG8/DrHA6DNbgdOWq1iTovKev+Dx0kksxqdZ9
-        eoqg+msNu0Np/bvifmJvRxQ=
-X-Google-Smtp-Source: ABdhPJynBgjlJD314NI3Pbn1hXJMX2Bk1/F8iskEG/6SXz5gOGWKq5X5fMsr1XAZhHwM0zMV8WA7Dw==
-X-Received: by 2002:a1c:4c17:: with SMTP id z23mr2593430wmf.49.1597410214760;
-        Fri, 14 Aug 2020 06:03:34 -0700 (PDT)
-Received: from localhost (p200300e41f10ca00f451c56750ebc625.dip0.t-ipconnect.de. [2003:e4:1f10:ca00:f451:c567:50eb:c625])
-        by smtp.gmail.com with ESMTPSA id l18sm15673647wrm.52.2020.08.14.06.03.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 06:03:33 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.9-rc1
-Date:   Fri, 14 Aug 2020 15:03:32 +0200
-Message-Id: <20200814130332.557034-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 14 Aug 2020 09:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgHNNDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:03:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68468206B2;
+        Fri, 14 Aug 2020 13:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597410224;
+        bh=OaJzTXasYwLO/M+YYozR9BRANETxqbmfOLZ6r01jc3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jE5vMMpwk83Lxb3+ielGdIS4W2eXFb1YpXCJ1dJTZUXj+w3zzvHRq00qSpnvTYTy0
+         hf15Eu1wcrsMa4r1EZD5tdg3Oyr61Uite1TlDOLp+Xnftt6KnCGZf2wvFVHy7uarsy
+         NHKM78vQgdSxcOrdR3vMN2L1JvkRbLtR1bwobhx4=
+Date:   Fri, 14 Aug 2020 15:04:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200814130406.GC56456@kroah.com>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814123856.3880009-2-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> Add support for a Hyper-V based vGPU implementation that exposes the
+> DirectX API to Linux userspace.
+> 
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/hv/dxgkrnl/Kconfig      |   10 +
+>  drivers/hv/dxgkrnl/Makefile     |   12 +
+>  drivers/hv/dxgkrnl/d3dkmthk.h   | 1636 ++++++++++
+>  drivers/hv/dxgkrnl/dxgadapter.c | 1406 ++++++++
+>  drivers/hv/dxgkrnl/dxgkrnl.h    |  927 ++++++
+>  drivers/hv/dxgkrnl/dxgmodule.c  |  656 ++++
+>  drivers/hv/dxgkrnl/dxgprocess.c |  357 ++
+>  drivers/hv/dxgkrnl/dxgvmbus.c   | 3084 ++++++++++++++++++
+>  drivers/hv/dxgkrnl/dxgvmbus.h   |  873 +++++
+>  drivers/hv/dxgkrnl/hmgr.c       |  604 ++++
+>  drivers/hv/dxgkrnl/hmgr.h       |  112 +
+>  drivers/hv/dxgkrnl/ioctl.c      | 5413 +++++++++++++++++++++++++++++++
+>  drivers/hv/dxgkrnl/misc.c       |  279 ++
+>  drivers/hv/dxgkrnl/misc.h       |  309 ++
+>  14 files changed, 15678 insertions(+)
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+It's almost impossible to review 15k lines at once, please break this up
+into reviewable chunks next time.
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+> +++ b/drivers/hv/dxgkrnl/Kconfig
+> @@ -0,0 +1,10 @@
+> +#
+> +# dxgkrnl configuration
+> +#
+> +
+> +config DXGKRNL
+> +	tristate "Microsoft virtual GPU support"
+> +	depends on HYPERV
+> +	help
+> +	  This driver supports Microsoft virtual GPU.
+> +
 
-are available in the Git repository at:
+You need more text here, this isn't a staging driver submission :)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.9-rc1
+> diff --git a/drivers/hv/dxgkrnl/Makefile b/drivers/hv/dxgkrnl/Makefile
+> new file mode 100644
+> index 000000000000..11505a153d9d
+> --- /dev/null
+> +++ b/drivers/hv/dxgkrnl/Makefile
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Makefile for the Linux video drivers.
+> +# 5 Aug 1999, James Simmons, <mailto:jsimmons@users.sf.net>
+> +# Rewritten to use lists instead of if-statements.
 
-for you to fetch changes up to 6ced5ff0be8e94871ba846dfbddf69d21363f3d7:
+I really doubt these last 3 lines are relevant.
 
-  pwm: bcm-iproc: handle clk_get_rate() return (2020-07-30 11:27:13 +0200)
+> +
+> +# Each configuration option enables a list of files.
 
-Thanks,
-Thierry
+We know this.
 
-----------------------------------------------------------------
-pwm: Changes for v5.9-rc1
+> +
+> +# Uncomment to enable printing debug messages by default
+> +#ccflags-y := -DDEBUG
 
-The majority of this batch is conversion of the PWM period and duty
-cycle to 64-bit unsigned integers, which is required so that some types
-of hardware can generate the full range of signals that they're capable
-of. The remainder is mostly minor fixes and cleanups.
+No, don't do this please.
 
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      pwm: Replace HTTP links with HTTPS ones
+> +
+> +obj-$(CONFIG_DXGKRNL)	+= dxgkrnl.o
+> +dxgkrnl-y		:= dxgmodule.o hmgr.o misc.o dxgadapter.o ioctl.o dxgvmbus.o dxgprocess.o
+> diff --git a/drivers/hv/dxgkrnl/d3dkmthk.h b/drivers/hv/dxgkrnl/d3dkmthk.h
+> new file mode 100644
+> index 000000000000..90cf5134b361
+> --- /dev/null
+> +++ b/drivers/hv/dxgkrnl/d3dkmthk.h
+> @@ -0,0 +1,1636 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (c) 2019, Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Iouri Tarassov <iourit@microsoft.com>
+> + *
+> + * Dxgkrnl Graphics Port Driver user mode interface
+> + *
+> + */
+> +
+> +#ifndef _D3DKMTHK_H
+> +#define _D3DKMTHK_H
+> +
+> +#include "misc.h"
+> +
+> +#define D3DDDI_MAX_WRITTEN_PRIMARIES		16
+> +#define D3DDDI_MAX_MPO_PRESENT_DIRTY_RECTS	0xFFF
+> +
+> +#define D3DKMT_CREATEALLOCATION_MAX		1024
+> +#define D3DKMT_ADAPTERS_MAX			64
+> +#define D3DDDI_MAX_BROADCAST_CONTEXT		64
+> +#define D3DDDI_MAX_OBJECT_WAITED_ON		32
+> +#define D3DDDI_MAX_OBJECT_SIGNALED		32
+> +
+> +struct d3dkmt_adapterinfo {
+> +	struct d3dkmthandle		adapter_handle;
+> +	struct winluid			adapter_luid;
+> +	uint				num_sources;
+> +	uint				present_move_regions_preferred;
+> +};
+> +
+> +struct d3dkmt_enumadapters2 {
+> +	uint				num_adapters;
 
-Guru Das Srinagesh (10):
-      drm/i915: Use 64-bit division macro
-      hwmon: pwm-fan: Use 64-bit division macro
-      pwm: clps711x: Use 64-bit division macro
-      pwm: imx-tpm: Use 64-bit division macro
-      pwm: imx27: Use 64-bit division macro
-      pwm: sifive: Use 64-bit division macro
-      pwm: sun4i: Use nsecs_to_jiffies to avoid a division
-      backlight: pwm_bl: Use 64-bit division function
-      clk: pwm: Use 64-bit division function
-      pwm: Convert period and duty cycle to u64
+Use kernel types please, here and everywhere.  u32?
 
-Lee Jones (4):
-      pwm: bcm-iproc: Remove impossible comparison when validating duty cycle
-      pwm: bcm-kona: Remove impossible comparison when validating duty cycle
-      pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
-      pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc header
+> +	struct d3dkmt_adapterinfo	*adapters;
+> +};
+> +
+> +struct d3dkmt_closeadapter {
+> +	struct d3dkmthandle		adapter_handle;
+> +};
 
-Rayagonda Kokatanur (1):
-      pwm: bcm-iproc: handle clk_get_rate() return
+A "handle"?  And that has to be one of the most difficult structure
+names ever :)
 
-Thierry Reding (2):
-      pwm: iqs620a: Use 64-bit division
-      pwm: iqs620a: Use lowercase hexadecimal literals for consistency
+Why not just use the "handle" for the structure as obviously that's all
+that is needed here.
+> +
+> +struct d3dkmt_openadapterfromluid {
+> +	struct winluid			adapter_luid;
+> +	struct d3dkmthandle		adapter_handle;
+> +};
+> +
+> +struct d3dddi_allocationlist {
+> +	struct d3dkmthandle		allocation;
+> +	union {
+> +		struct {
+> +			uint		write_operation		:1;
+> +			uint		do_not_retire_instance	:1;
+> +			uint		offer_priority		:3;
+> +			uint		reserved		:27;
 
- drivers/clk/clk-pwm.c                      |  7 ++++++-
- drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
- drivers/hwmon/pwm-fan.c                    |  2 +-
- drivers/pwm/core.c                         | 14 +++++++-------
- drivers/pwm/pwm-bcm-iproc.c                | 12 ++++++++----
- drivers/pwm/pwm-bcm-kona.c                 |  2 +-
- drivers/pwm/pwm-clps711x.c                 |  2 +-
- drivers/pwm/pwm-imx-tpm.c                  |  2 +-
- drivers/pwm/pwm-imx27.c                    |  2 +-
- drivers/pwm/pwm-iqs620a.c                  | 15 ++++++++-------
- drivers/pwm/pwm-mediatek.c                 |  1 +
- drivers/pwm/pwm-omap-dmtimer.c             |  4 ++--
- drivers/pwm/pwm-sifive.c                   |  2 +-
- drivers/pwm/pwm-stm32-lp.c                 |  2 +-
- drivers/pwm/pwm-sun4i.c                    |  2 +-
- drivers/pwm/pwm-tiecap.c                   |  2 +-
- drivers/pwm/pwm-tiehrpwm.c                 |  2 +-
- drivers/pwm/sysfs.c                        |  8 ++++----
- drivers/video/backlight/pwm_bl.c           |  3 ++-
- drivers/video/fbdev/ssd1307fb.c            |  2 +-
- include/linux/pwm.h                        | 12 ++++++------
- 21 files changed, 56 insertions(+), 44 deletions(-)
+endian issues?
+
+If not, why are these bit fields?
+
+> +struct d3dkmt_destroydevice {
+> +	struct d3dkmthandle		device;
+> +};
+
+Again, single entity structures?
+
+Are you trying to pass around "handles" and cast them backwards?
+
+If so, great, but then use the real kernel structures for that like
+'struct device' if these are actually devices.
+
+
+> +
+> +enum d3dkmt_clienthint {
+> +	D3DKMT_CLIENTHINT_UNKNOWN	= 0,
+> +	D3DKMT_CLIENTHINT_OPENGL	= 1,
+> +	D3DKMT_CLIENTHINT_CDD		= 2,
+> +	D3DKMT_CLIENTHINT_DX7		= 7,
+> +	D3DKMT_CLIENTHINT_DX8		= 8,
+> +	D3DKMT_CLIENTHINT_DX9		= 9,
+> +	D3DKMT_CLIENTHINT_DX10		= 10,
+> +};
+> +
+> +struct d3dddi_createcontextflags {
+> +	union {
+> +		struct {
+> +			uint		null_rendering:1;
+> +			uint		initial_data:1;
+> +			uint		disable_gpu_timeout:1;
+> +			uint		synchronization_only:1;
+> +			uint		hw_queue_supported:1;
+> +			uint		reserved:27;
+
+Endian?
+
+> +		};
+> +		uint			value;
+> +	};
+> +};
+
+<...>
+
+
+> +static int dxgglobal_init_global_channel(struct hv_device *hdev)
+> +{
+> +	int ret = 0;
+> +
+> +	TRACE_DEBUG(1, "%s %x  %x", __func__, hdev->vendor_id, hdev->device_id);
+> +	{
+> +		TRACE_DEBUG(1, "device type   : %pUb\n", &hdev->dev_type);
+> +		TRACE_DEBUG(1, "device channel: %pUb %p primary: %p\n",
+> +			    &hdev->channel->offermsg.offer.if_type,
+> +			    hdev->channel, hdev->channel->primary_channel);
+> +	}
+> +
+> +	if (dxgglobal->hdev) {
+> +		/* This device should appear only once */
+> +		pr_err("dxgglobal already initialized\n");
+> +		ret = -EBADE;
+> +		goto error;
+> +	}
+> +
+> +	dxgglobal->hdev = hdev;
+> +
+> +	ret = dxgvmbuschannel_init(&dxgglobal->channel, hdev);
+> +	if (ret) {
+> +		pr_err("dxgvmbuschannel_init failed: %d\n", ret);
+> +		goto error;
+> +	}
+> +
+> +	ret = dxgglobal_getiospace(dxgglobal);
+> +	if (ret) {
+> +		pr_err("getiospace failed: %d\n", ret);
+> +		goto error;
+> +	}
+> +
+> +	ret = dxgvmb_send_set_iospace_region(dxgglobal->mmiospace_base,
+> +					     dxgglobal->mmiospace_size, 0);
+> +	if (ISERROR(ret)) {
+> +		pr_err("send_set_iospace_region failed");
+> +		goto error;
+
+You forgot to unwind from the things you initialized above :(
+
+> +	}
+> +
+> +	hv_set_drvdata(hdev, dxgglobal);
+> +
+> +	dxgglobal->dxgdevice.minor = MISC_DYNAMIC_MINOR;
+> +	dxgglobal->dxgdevice.name = "dxg";
+> +	dxgglobal->dxgdevice.fops = &dxgk_fops;
+> +	dxgglobal->dxgdevice.mode = 0666;
+> +	ret = misc_register(&dxgglobal->dxgdevice);
+> +	if (ret) {
+> +		pr_err("misc_register failed: %d", ret);
+> +		goto error;
+
+Again, no cleanups so you leak resources?  Not nice :(
+
+
+> +	}
+> +	dxgglobaldev = dxgglobal->dxgdevice.this_device;
+> +	dxgglobal->device_initialized = true;
+> +
+> +error:
+> +	return ret;
+> +}
+> +
+> +static void dxgglobal_destroy_global_channel(void)
+> +{
+> +	dxglockorder_acquire(DXGLOCK_GLOBAL_CHANNEL);
+> +	down_write(&dxgglobal->channel_lock);
+> +
+> +	TRACE_DEBUG(1, "%s", __func__);
+
+ftrace is your friend :)
+
