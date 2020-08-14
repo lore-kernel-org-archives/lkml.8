@@ -7,62 +7,66 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B36C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F4A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB14B207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QnAG3gq4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="voOAM7NT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0GLIesgr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vqhMjCWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgHNPXk (ORCPT
+        id S1728042AbgHNPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        Fri, 14 Aug 2020 11:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNPXf (ORCPT
+        with ESMTP id S1727880AbgHNPXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:23:35 -0400
+        Fri, 14 Aug 2020 11:23:40 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A421C061385;
-        Fri, 14 Aug 2020 08:23:35 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 15:23:29 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7749C061384;
+        Fri, 14 Aug 2020 08:23:39 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 15:23:37 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597418610;
+        s=2020; t=1597418618;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bdANNQMuUMseVByBrH26u9LG+YAJnlk/Tjr7L7O4PIs=;
-        b=QnAG3gq4gobyETTNKHTW1dco1DG94ooUMIwM0SzdbQifCVz8X/ldwsf5Mkg8uKnnItB3gn
-        yllx5pQRMrgcw4ebsowT4W8yDkQsDpaNTQr+kxiB7HLOyEs0pmjS1RSjzx+QE2ya1n1mTV
-        pS7MjwgaVhrr4PDsUBqYGe3QyF0ucllBNQPhJ31N2uQHyzPHIH8NILBuZgFLfva++6pxX7
-        acJunWiUIRO7y/6Tf74lkOoiA9H0P2A3YX91t+iMg7puNQ1aaijVewl+jRhMK+lPHcvn8p
-        etvizoncWPeB9t/loD1k3gL8EnROwLt0sCSYoQ5aE1dAw477y17V6p0coDuynA==
+        bh=tcGLjrKK2s7jARi/YghJPIhdOTU9H0AJVDfTuaQSh64=;
+        b=0GLIesgrdMPcHOC3PXjzJP259aT9K+hAEjf2XJdAJG7SAcZqxyntvasVV3dcRb5edGb/Ow
+        snt5LOpUflOrzyFkldpiJ0E2GgZRvhFHedjqCmuMkFN95H+3m4W2Ut73gnCZC0UaatUCPT
+        30JL5bS+U6KJtRb4CIBlcrEWOCQPlKltxICVMcvWxTW3RajWcj42otzZhVVLPsV/Nj4R4E
+        dp9hWYPxUa/9dLNLYthBmqLJvSsaHYKNrUvJJYAj0RZuYz2aMXZPjqy8THMb46ikdrV9E0
+        Cdb+X2EQV98xH4h1r/MpNYH23tDQrWOgfLy6Q9kGzmE/t1eNuXPt6Xsm0M/mqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597418610;
+        s=2020e; t=1597418618;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bdANNQMuUMseVByBrH26u9LG+YAJnlk/Tjr7L7O4PIs=;
-        b=voOAM7NTl/YqbQ5p1JFNMaXcq/RxVFNzpuoPb1uMAftB/qttKYfcSqBKSukvhNQIxR0Kf/
-        x+SEl9eOAvDcgIAQ==
-From:   "tip-bot2 for Zhang Rui" <tip-bot2@linutronix.de>
+        bh=tcGLjrKK2s7jARi/YghJPIhdOTU9H0AJVDfTuaQSh64=;
+        b=vqhMjCWYamyyAEIxZYQcZjBvi5jM9KYc+fcggvfB+cpbcnsLMvKX8mJuU1wlYL8mcFUeta
+        TdRrmAt8kQFFrZAw==
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/rapl: Support multiple RAPL unit quirks
-Cc:     Zhang Rui <rui.zhang@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Len Brown <len.brown@intel.com>, x86 <x86@kernel.org>,
+Subject: [tip: x86/boot] x86/boot: Check that there are no run-time relocations
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Fangrui Song <maskray@google.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200811153149.12242-3-rui.zhang@intel.com>
-References: <20200811153149.12242-3-rui.zhang@intel.com>
+In-Reply-To: <20200731230820.1742553-8-keescook@chromium.org>
+References: <20200731230820.1742553-8-keescook@chromium.org>
 MIME-Version: 1.0
-Message-ID: <159741860945.3192.12569144568856845688.tip-bot2@tip-bot2>
+Message-ID: <159741861758.3192.8517866921187234201.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,128 +76,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the x86/boot branch of tip:
 
-Commit-ID:     74f41adab0f4a61857833e1b6fa8e9ad12c251b6
-Gitweb:        https://git.kernel.org/tip/74f41adab0f4a61857833e1b6fa8e9ad12c251b6
-Author:        Zhang Rui <rui.zhang@intel.com>
-AuthorDate:    Tue, 11 Aug 2020 23:31:48 +08:00
+Commit-ID:     527afc212231ea9d585b7709c0ab73263ecf0c85
+Gitweb:        https://git.kernel.org/tip/527afc212231ea9d585b7709c0ab73263ecf0c85
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Fri, 31 Jul 2020 16:07:51 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 14 Aug 2020 12:35:12 +02:00
+CommitterDate: Fri, 14 Aug 2020 12:52:35 +02:00
 
-perf/x86/rapl: Support multiple RAPL unit quirks
+x86/boot: Check that there are no run-time relocations
 
-There will be more platforms with different fixed energy units.
-Enhance the code to support different RAPL unit quirks for different
-platforms.
+Add a linker script check that there are no run-time relocations, and
+remove the old one that tries to check via looking for specially-named
+sections in the object files.
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Drop the tests for -fPIE compiler option and -pie linker option, as they
+are available in all supported gcc and binutils versions (as well as
+clang and lld).
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Reviewed-by: Len Brown <len.brown@intel.com>
-Link: https://lore.kernel.org/r/20200811153149.12242-3-rui.zhang@intel.com
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+Link: https://lore.kernel.org/r/20200731230820.1742553-8-keescook@chromium.org
 ---
- arch/x86/events/rapl.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ arch/x86/boot/compressed/Makefile      | 28 ++-----------------------
+ arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++-
+ 2 files changed, 11 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index e972383..d0002eb 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -130,11 +130,16 @@ struct rapl_pmus {
- 	struct rapl_pmu		*pmus[];
- };
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 7d25089..753d572 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -29,7 +29,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+ 	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4 vmlinux.bin.zst
  
-+enum rapl_unit_quirk {
-+	RAPL_UNIT_QUIRK_NONE,
-+	RAPL_UNIT_QUIRK_INTEL_HSW,
-+};
-+
- struct rapl_model {
- 	struct perf_msr *rapl_msrs;
- 	unsigned long	events;
- 	unsigned int	msr_power_unit;
--	bool		apply_quirk;
-+	enum rapl_unit_quirk	unit_quirk;
- };
+ KBUILD_CFLAGS := -m$(BITS) -O2
+-KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
++KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+ cflags-$(CONFIG_X86_64) := -mcmodel=small
+@@ -52,7 +52,7 @@ UBSAN_SANITIZE :=n
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+ # Compressed kernel should be built as PIE since it may be loaded at any
+ # address by the bootloader.
+-LDFLAGS_vmlinux := $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
++LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
+ LDFLAGS_vmlinux += -T
  
-  /* 1/2^hw_unit Joule */
-@@ -612,14 +617,20 @@ static int rapl_check_hw_unit(struct rapl_model *rm)
- 	for (i = 0; i < NR_RAPL_DOMAINS; i++)
- 		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+ hostprogs	:= mkpiggy
+@@ -87,30 +87,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+ efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
  
-+	switch (rm->unit_quirk) {
- 	/*
- 	 * DRAM domain on HSW server and KNL has fixed energy unit which can be
- 	 * different than the unit from power unit MSR. See
- 	 * "Intel Xeon Processor E5-1600 and E5-2600 v3 Product Families, V2
- 	 * of 2. Datasheet, September 2014, Reference Number: 330784-001 "
- 	 */
--	if (rm->apply_quirk)
-+	case RAPL_UNIT_QUIRK_INTEL_HSW:
- 		rapl_hw_unit[PERF_RAPL_RAM] = 16;
-+		break;
-+	default:
-+		break;
+-# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+-# can place it anywhere in memory and it will still run. However, since
+-# it is executed as-is without any ELF relocation processing performed
+-# (and has already had all relocation sections stripped from the binary),
+-# none of the code can use data relocations (e.g. static assignments of
+-# pointer values), since they will be meaningless at runtime. This check
+-# will refuse to link the vmlinux if any of these relocations are found.
+-quiet_cmd_check_data_rel = DATAREL $@
+-define cmd_check_data_rel
+-	for obj in $(filter %.o,$^); do \
+-		$(READELF) -S $$obj | grep -qF .rel.local && { \
+-			echo "error: $$obj has data relocations!" >&2; \
+-			exit 1; \
+-		} || true; \
+-	done
+-endef
+-
+-# We need to run two commands under "if_changed", so merge them into a
+-# single invocation.
+-quiet_cmd_check-and-link-vmlinux = LD      $@
+-      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+-
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
+-	$(call if_changed,check-and-link-vmlinux)
++	$(call if_changed,ld)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+ $(obj)/vmlinux.bin: vmlinux FORCE
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index a4a4a59..29df99b 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -42,6 +42,12 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
++	.rel.dyn : {
++		*(.rel.*)
 +	}
++	.rela.dyn : {
++		*(.rela.*)
++	}
+ 	.got : {
+ 		*(.got)
+ 	}
+@@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+ #else
+ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+ #endif
 +
- 
- 	/*
- 	 * Calculate the timer rate:
-@@ -698,7 +709,6 @@ static struct rapl_model model_snb = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_PP1),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -707,7 +717,6 @@ static struct rapl_model model_snbep = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -717,7 +726,6 @@ static struct rapl_model model_hsw = {
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM) |
- 			  BIT(PERF_RAPL_PP1),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -726,7 +734,7 @@ static struct rapl_model model_hsx = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= true,
-+	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -734,7 +742,7 @@ static struct rapl_model model_hsx = {
- static struct rapl_model model_knl = {
- 	.events		= BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= true,
-+	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -745,14 +753,12 @@ static struct rapl_model model_skl = {
- 			  BIT(PERF_RAPL_RAM) |
- 			  BIT(PERF_RAPL_PP1) |
- 			  BIT(PERF_RAPL_PSYS),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_amd_fam17h = {
- 	.events		= BIT(PERF_RAPL_PKG),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
- 	.rapl_msrs      = amd_rapl_msrs,
- };
++ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
