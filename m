@@ -5,25 +5,25 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B429AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E965CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2D92068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42332068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgHNNh6 (ORCPT
+        id S1728897AbgHNNiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:37:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43382 "EHLO
+        Fri, 14 Aug 2020 09:38:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43430 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgHNNhs (ORCPT
+        with ESMTP id S1728275AbgHNNh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:37:48 -0400
+        Fri, 14 Aug 2020 09:37:58 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id C476029A807
+        with ESMTPSA id 68E7529A825
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
@@ -35,10 +35,11 @@ Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Maxime Ripard <mripard@kernel.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v3 14/19] media: cedrus: h264: Properly configure reference field
-Date:   Fri, 14 Aug 2020 10:36:29 -0300
-Message-Id: <20200814133634.95665-15-ezequiel@collabora.com>
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v3 16/19] media: rkvdec: Drop unneeded per_request driver-specific control flag
+Date:   Fri, 14 Aug 2020 10:36:31 -0300
+Message-Id: <20200814133634.95665-17-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200814133634.95665-1-ezequiel@collabora.com>
 References: <20200814133634.95665-1-ezequiel@collabora.com>
@@ -49,48 +50,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Currently, the drivers makes no distinction between per_request
+and mandatory, as both are used in the same request validate check.
 
-When interlaced H264 content is being decoded, references must indicate
-which field is being referenced. Currently this was done by checking
-capture buffer flags. However, that is not correct because capture
-buffer may hold both fields.
+The driver only cares to know if a given control is
+required to be part of a request, so only one flag is needed.
 
-Fix this by checking newly introduced flags in reference lists.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec.c | 6 +-----
+ drivers/staging/media/rkvdec/rkvdec.h | 1 -
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-index c8f626fdd3dd..1e89a8438f36 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -182,7 +182,6 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
- 	for (i = 0; i < num_ref; i++) {
- 		const struct v4l2_h264_dpb_entry *dpb;
- 		const struct cedrus_buffer *cedrus_buf;
--		const struct vb2_v4l2_buffer *ref_buf;
- 		unsigned int position;
- 		int buf_idx;
- 		u8 dpb_idx;
-@@ -197,12 +196,11 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
- 		if (buf_idx < 0)
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index 7c5129593921..cd720d726d7f 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -55,23 +55,19 @@ static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+ 
+ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+ 	{
+-		.per_request = true,
+ 		.mandatory = true,
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
+ 	},
+ 	{
+-		.per_request = true,
+ 		.mandatory = true,
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
+ 		.cfg.ops = &rkvdec_ctrl_ops,
+ 	},
+ 	{
+-		.per_request = true,
+ 		.mandatory = true,
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PPS,
+ 	},
+ 	{
+-		.per_request = true,
+ 		.mandatory = true,
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
+ 	},
+@@ -615,7 +611,7 @@ static int rkvdec_request_validate(struct media_request *req)
+ 		u32 id = ctrls->ctrls[i].cfg.id;
+ 		struct v4l2_ctrl *ctrl;
+ 
+-		if (!ctrls->ctrls[i].per_request || !ctrls->ctrls[i].mandatory)
++		if (!ctrls->ctrls[i].mandatory)
  			continue;
  
--		ref_buf = to_vb2_v4l2_buffer(cap_q->bufs[buf_idx]);
--		cedrus_buf = vb2_v4l2_to_cedrus_buffer(ref_buf);
-+		cedrus_buf = vb2_to_cedrus_buffer(cap_q->bufs[buf_idx]);
- 		position = cedrus_buf->codec.h264.position;
+ 		ctrl = v4l2_ctrl_request_hdl_ctrl_find(hdl, id);
+diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+index 2fc9f46b6910..77a137cca88e 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.h
++++ b/drivers/staging/media/rkvdec/rkvdec.h
+@@ -25,7 +25,6 @@
+ struct rkvdec_ctx;
  
- 		sram_array[i] |= position << 1;
--		if (ref_buf->field == V4L2_FIELD_BOTTOM)
-+		if (ref_list[i].fields & V4L2_H264_BOTTOM_FIELD_REF)
- 			sram_array[i] |= BIT(0);
- 	}
- 
+ struct rkvdec_ctrl_desc {
+-	u32 per_request : 1;
+ 	u32 mandatory : 1;
+ 	struct v4l2_ctrl_config cfg;
+ };
 -- 
 2.27.0
 
