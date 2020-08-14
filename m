@@ -2,138 +2,100 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D115820838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273420768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gth4o4u+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="T6qovZ6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgHNRes (ORCPT
+        id S1728380AbgHNRoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbgHNReq (ORCPT
+        Fri, 14 Aug 2020 13:44:14 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:31461 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgHNRoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:34:46 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354AFC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:34:45 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id p137so2074228oop.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BeRR5BzKObBdnK+fwz2UMgE1kYYlUJPk1LUN7o/xOdo=;
-        b=Gth4o4u+BkS4uuzbxWgDAcemzHF6oW0a+jDbxQPWhywWdFUx49bWOeLvc6PLgn90wj
-         4E7Bdbqv/daLEB0xpvYOdkpXThby+VgfCQe3UnYzRrFhXDykNwL5mVrk2U+GZKQ54ImZ
-         Yf6KRxLhyDeFkhq58rqwAmSDDkIGJQuoNXgDoT3vORVXbTtS8hrsQH7IA5thm0SUbb3A
-         c0QPfqvoHjsom0u/nNnIWhGY6GsGhsp7yZ39jLqFBxNDgz2oLrSR9KgAAw3VMoAbdnyF
-         ozpOZQOlPvK7YalbqVTpyRJd3qUjMEJGnH/paK0pON6yTCpaGy4m16p0xPch9xhCydrU
-         KbcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BeRR5BzKObBdnK+fwz2UMgE1kYYlUJPk1LUN7o/xOdo=;
-        b=ndzyfVp1xt5fddRi+Vp1DvcyMo3R1+GLzzm2Bqo60qnf2G3lBEWlSKBWiQnd1Nog5Q
-         x1nk10aSslTQMZpwzX1Ahl7IVVgf8ekXJgejxJqO8V2xss5eEDoa0tu8QOfSUzU8hEAS
-         BXloGq0Ek71aElSsummTxnDsxBsGXCgRE7tMRihYcFTuBzp8q5OlRgrHtR0JA39ZhA63
-         3gzwn9Rki5I3IN7e3rLVqA5xMHAJc9gDsRYTNa7j2TDRkxMwgP1crCe+a+6pD5aYEMJy
-         FB0UHUMEtoJnOOMkEVnxaUYMFWUhjBD/Jh/5nnhY59MaI/eeltyAWssytjBYzdny8auk
-         Gx7Q==
-X-Gm-Message-State: AOAM5314/NOTQRC5CHB+mHvt7EgqOAs11g1asgFDJfPObVed51SdqgKd
-        MEI6hfF9Z22JU5xorL9oy4nD4Y9Y3UcqB8IxigeXNw==
-X-Google-Smtp-Source: ABdhPJyLWTN75DpWp2qFiCaZKdEgDOflg7ol6OkLKr1Zd+Luii22yLm5tIh0B4PTsZxpUYFSv0cqBDfdxqw2lwuqd6E=
-X-Received: by 2002:a4a:87c8:: with SMTP id c8mr2455742ooi.81.1597426484278;
- Fri, 14 Aug 2020 10:34:44 -0700 (PDT)
+        Fri, 14 Aug 2020 13:44:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597427052;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=2Z0U+mcYwggZx3AXbVi+Ktpmy8/fEbXz6BZpJ2spCyk=;
+        b=T6qovZ6gGx69JQRtyLHctdG3hJraUesAIXLyWkY+Rh2miOeslHrTk9Mm3z0Bb/CknC
+        6mYko3Y0TrweA+wI9ImGEs0pqJT33isNkdkaWt+Xr/7tq988pfA6s70h5MfQ7nYDjBT+
+        //xJ0mmqVvX2sAc5LYUsZd0EyrdOv5P5TZ+vlX9uchpHiEFv5byKbIo5MD2GBZTMyGyH
+        jZ0/3oQGgdo3y0ERTsH7aluDgsl8E80SSVdKO8Oyp2FoJ1EcM7yxift3DGmziW2aZLzw
+        U7hPzBSZoax/LRie6Pp1qdkXEm8+uBHYJNWy6+6ZyC9p7DqX7Yi1RDnSBP4zzYHQevmz
+        qutA==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j6Ic/MbIo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id Y0939ew7EHi94lK
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 14 Aug 2020 19:44:09 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 19:43:32 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com,
+        john.stultz@linaro.org
+Subject: Re: [PATCH] ASoC: msm8916-wcd-analog: fix register Interrupt offset
+Message-ID: <20200814174332.GA314820@gerhold.net>
+References: <20200811103452.20448-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-8-chenyi.qiang@intel.com>
- <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
- <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com> <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
- <ae2191a7-a165-3b50-2c8d-e2ddb4505455@intel.com>
-In-Reply-To: <ae2191a7-a165-3b50-2c8d-e2ddb4505455@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 14 Aug 2020 10:34:33 -0700
-Message-ID: <CALMp9eSXGjVLXBFmvyVn5RLKOMkVxvVLiR5Sy4abyMiHkeNmdA@mail.gmail.com>
-Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
-To:     Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811103452.20448-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 3:09 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->
->
->
-> On 8/14/2020 1:52 AM, Jim Mattson wrote:
-> > On Wed, Aug 12, 2020 at 9:54 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >>
-> >>
-> >>
-> >> On 8/11/2020 8:05 AM, Jim Mattson wrote:
-> >>> On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >>>>
-> >>>> PKS MSR passes through guest directly. Configure the MSR to match the
-> >>>> L0/L1 settings so that nested VM runs PKS properly.
-> >>>>
-> >>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> >>>> ---
-> >
-> >>>> +           (!vmx->nested.nested_run_pending ||
-> >>>> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
-> >>>> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
-> >>>
-> >>> This doesn't seem right to me. On the target of a live migration, with
-> >>> L2 active at the time the snapshot was taken (i.e.,
-> >>> vmx->nested.nested_run_pending=0), it looks like we're going to try to
-> >>> overwrite the current L2 PKRS value with L1's PKRS value (except that
-> >>> in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
-> >>> 0). Am I missing something?
-> >>>
-> >>
-> >> We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS.
-> >> Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's
-> >> PKRS to L2.
-> >
-> > I'm thinking of the case where vmx->nested.nested_run_pending is
-> > false, and we are processing a KVM_SET_NESTED_STATE ioctl, yet
-> > VM_ENTRY_LOAD_IA32_PKRS *is* set in the vmcs12.
-> >
->
-> Oh, I miss this case. What I'm still confused here is that the
-> restoration for GUEST_IA32_DEBUGCTL and GUEST_BNDCFGS have the same
-> issue, right? or I miss something.
+On Tue, Aug 11, 2020 at 11:34:52AM +0100, Srinivas Kandagatla wrote:
+> For some reason interrupt set and clear register offsets are
+> not set correctly.
+> This patch corrects them!
+> 
+> Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+> index 4428c62e25cf..3ddd822240e3 100644
+> --- a/sound/soc/codecs/msm8916-wcd-analog.c
+> +++ b/sound/soc/codecs/msm8916-wcd-analog.c
+> @@ -19,8 +19,8 @@
+>  
+>  #define CDC_D_REVISION1			(0xf000)
+>  #define CDC_D_PERPH_SUBTYPE		(0xf005)
+> -#define CDC_D_INT_EN_SET		(0x015)
+> -#define CDC_D_INT_EN_CLR		(0x016)
+> +#define CDC_D_INT_EN_SET		(0xf015)
+> +#define CDC_D_INT_EN_CLR		(0xf016)
+>  #define MBHC_SWITCH_INT			BIT(7)
+>  #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
+>  #define MBHC_BUTTON_PRESS_DET		BIT(5)
+> -- 
+> 2.21.0
+> 
 
-I take it back. This does work, assuming that userspace calls
-KVM_SET_MSRS before calling KVM_SET_NESTED_STATE. Assuming L2 is
-active when the checkpoint is taken, the MSR values saved will be the
-L2 values. When restoring the MSRs with KVM_SET_MSRS, the L2 MSR
-values will be written into vmcs01. They don't belong there, but we're
-never going to launch vmcs01 with those MSR values. Instead, when
-userspace calls KVM_SET_NESTED_STATE, those values will be transferred
-first to the vmcs01_<msr> fields of the vmx->nested struct, and then
-to vmcs02.
+It's surprising that we didn't notice this before. Seems like the HW
+has exactly the IRQs we want enabled by default. Everything seems to be
+still working fine after this patch, so FWIW:
 
-This is subtle, and I don't think it's documented anywhere that
-KVM_SET_NESTED_STATE must be called after KVM_SET_MSRS. In fact, there
-are probably a number of dependencies among the various KVM_SET_*
-functions that aren't documented anywhere.
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+
+Thanks!
+Stephan
