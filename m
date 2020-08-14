@@ -2,241 +2,80 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0241EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413C620838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:07:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PnfV4lPQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8djcXSCw"
+	by mail.kernel.org (Postfix) with ESMTP id DFE472078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgHNCH2 (ORCPT
+        id S1726653AbgHNCId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:07:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33804 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgHNCH2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 22:07:28 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597370844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HszWUUJvd7EBksBKgBPNU6CHj9iNJBuG0ewO8MkRWQo=;
-        b=PnfV4lPQzaJJb7IiJlarS8hzjvDJVXqlY+OVzhtgxRcx79krwkGJVBLMfYWlZm3GLrMFoR
-        lshTb/yUYkutjbic0ygOtGFtykF7RsaQLSfOMs8He1AKWY7Ltn0Rz7368uBmYkyYw3rRuZ
-        MIVhUAEZzPpLCPqfLXkjye5xlgz4sDXyonelO5JX4vs5J7KgEDioduJyqI9jwbWD30xIyC
-        ig7LPzzqFD32Oh8ta5JZNV+RKtxAsGHTQJTnya9SALzf9IhbNyPIibUsuJfjUaFYlv+9e7
-        9KfmN3FS0QZahnivJW4TE8/Zx8Fx8+YcBtD19dJ3QJ0n1zcKzZjdrZdnv2npvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597370844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HszWUUJvd7EBksBKgBPNU6CHj9iNJBuG0ewO8MkRWQo=;
-        b=8djcXSCwB2u6hXA0mZQiZdIbTIgZlbVqk7umcsx0bo7yoDutngofTNKJcvogcrTHaiTokb
-        laHR4gkeKsBbB7BQ==
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-In-Reply-To: <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de> <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com> <878sei42ql.fsf@nanos.tec.linutronix.de> <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-Date:   Fri, 14 Aug 2020 04:07:24 +0200
-Message-ID: <87364q3rqb.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 13 Aug 2020 22:08:33 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57514 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726522AbgHNCId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 22:08:33 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj8cP8jVfdbUIAA--.30S2;
+        Fri, 14 Aug 2020 10:08:16 +0800 (CST)
+From:   Zejiang Tang <tangzejiang@loongson.cn>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: ftrace: Remove redundant #ifdef CONFIG_DYNAMIC_FTRAC
+Date:   Fri, 14 Aug 2020 10:08:15 +0800
+Message-Id: <1597370895-5412-1-git-send-email-tangzejiang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxj8cP8jVfdbUIAA--.30S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gry3uryxKr47tw43Xry5urg_yoW3JFb_Xr
+        12vw40kryrCw1v9398X3yrX345CwsIgrZ3u3WDurWYva90yw45XFW7Jwn8Wrn0va1kZFs8
+        ZwnxWryDJayayjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbc8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr1l42xK
+        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
+        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
+        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4zuWDUUUU
+X-CM-SenderInfo: pwdqw6phmlt03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug,
+There exists redundant #ifdef CONFIG_DYNAMIC_FTRAC in ftrace.c, remove it.
 
-On Thu, Aug 13 2020 at 15:58, Doug Anderson wrote:
-> On Thu, Aug 13, 2020 at 3:09 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > * If this interrupt fires while the system is suspended then please
->> > wake the system up.
->>
->> Well, that's kinda contradicting itself. If the interrupt is masked then
->> what is the point? I'm surely missing something subtle here.
->
-> This is how I've always been told that the API works and there are at
-> least a handful of drivers in the kernel whose suspend routines both
-> enable wakeup and call disable_irq().  Isn't this also documented as
-> of commit f9f21cea3113 ("genirq: Clarify that irq wake state is
-> orthogonal to enable/disable")?
+Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
+---
+ arch/mips/kernel/ftrace.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Fair enough. The wording there is unfortunate and I probably should have
-spent more brain cycles before applying it. It suggests that this is a
-pure driver problem. I should have asked some of the questions I asked
-now back then :(
-
->> If that's the main problem which is solved in these callbacks, then I
->> really have to ask why this has not been raised years ago. Why can't
->> people talk?
->
-> Not all of us have the big picture that you do to know how things
-> ought to work, I guess.  If nothing else someone looking at this
-> problem would think: "this must be a common problem, let's go see how
-> all the other places do it" and then they find how everyone else is
-> doing it and do it that way.  It requires the grander picture that a
-> maintainer has in order to say: whoa, everyone's copying the same
-> hack--let's come up with a better solution.
-
-That's not the point. I know how these things happen, but I fail to
-understand why nobody ever looks at this and says: OMG, I need to do yet
-another variant of copy&pasta of the same thing every other driver
-does. Why is there no infrastructure for that? 
-
-Asking that question does not require a maintainer who always encouraged
-people to talk about exactly these kind of things instead of going off
-and creating the gazillionst broken copy of the same thing with yet
-another wart working around core code problems and thereby violating
-layering and introducing bugs which wouldn't exist otherwise.
-
-Spare me all the $corp reasons. I've heard all of them and if not then
-the not yet known reason won't be any more convincing. :)
-
-One of the most underutilized strengths of FOSS is that you can go and
-ask someone who has the big picture in his head before you go off and
-waste time on distangling copy&pasta, dealing with the resulting obvious
-bugs and then the latent ones which only surface 3 month after the
-product has shipped. Or like in this case figure out that the copy&pasta
-road is a dead end and then create something new without seeing the big
-picture and having analyzed completely what consequences this might have.
-
-I don't know how much hours you and others spent on this. I surely know
-that after you gave me proper context it took me less than an hour to
-figure out that one problem you were trying to solve was already solved
-and the other one was just a matter of doing the counterpart of it. I
-definitely spent way more time on reviewing and debating.
-
-So if you had asked upfront, I probably would have spent quite some time
-on it as well depending on the quality of the question and explanation
-but the total amount on both sides would have been significantly lower,
-which I consider a win-win situation.
-
-Of course I know that my $corp MBA foo is close to zero, so I just can
-be sure that it would have been a win for me :)
-
-Seriously, we need to promote a 'talk to each other' culture very
-actively. The people with the big picture in their head, aka
-maintainers, are happy to answer questions and they also want that
-others come forth and say "this makes no sense" instead of silently
-accepting that the five other drivers do something stupid. This would
-help to solve some of the well known problems:
-
- - Maintainer scalability
-
-   I rather discuss a problem with you at the conceptual level upfront
-   instead of reviewing patches after the fact and having to tell you
-   that it's all wrong. The latter takes way more time.
-
-   Having a quick and dirty POC for illustration is fine and usually
-   useful.
-
- - Maintainer blinders
+diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+index 2625232..f57e68f 100644
+--- a/arch/mips/kernel/ftrace.c
++++ b/arch/mips/kernel/ftrace.c
+@@ -37,10 +37,6 @@ void arch_ftrace_update_code(int command)
+ 	ftrace_modify_all_code(command);
+ }
  
-   Maintainers need input from the outside as any other people because
-   they become blind to shortcomings in the area they are responsible
-   for as any other person. Especially if they maintain complex and
-   highly active subsystems.
+-#endif
+-
+-#ifdef CONFIG_DYNAMIC_FTRACE
+-
+ #define JAL 0x0c000000		/* jump & link: ip --> ra, jump to target */
+ #define ADDR_MASK 0x03ffffff	/*  op_code|addr : 31...26|25 ....0 */
+ #define JUMP_RANGE_MASK ((1UL << 28) - 1)
+-- 
+2.1.0
 
- - Submitter frustration
-
-   You spent a huge amount of time to come up with a solution for
-   something and then you get told by the maintainer/reviewer that the
-   time spent was wasted and your solution is crap. It does not matter
-   much what the politeness level of that message is. It sets you back
-   and causes frustration on both ends.
-
- - Turn around times
-
-   A lot of time can be spared by talking to each other early. A half
-   baken POC patch is fine for opening such a discussion, but going down
-   all the way and then having the talk over the final patch review is
-   more than suboptimal and causes grief on both sides.
-
->>   "These two callbacks are interesting because sometimes an irq chip
->>    needs to know about suspend/resume."
->>
->> Really valuable and precise technical information.
->
-> Funny to get yelled at for not providing a detailed enough changelog.
-> Usually people complain that my changelogs are too detailed.  Sigh.
-
-The complaint you might get from me about an overly detailed changelog
-is that it has redundant or pointless information in it, e.g.
-
-  - the 500 lines of debug dump containing about 10 lines of valuable
-    information which you already decoded and condensed in order to
-    figure the problem out.
-
-  - anecdotes around the discovery which carry zero information and
-    often show that that the scope of the problem was not fully
-    understood.
-
-  - pointless examples of how to trigger the fail
-
-  - In depth explanaations of what the patch does instead of a concise
-    explanation at the conceptual level.
-
-You won't hear me complain about a concise and coherent in depth
-technical explanation of a problem.
-
-Writing changelogs is an art and I surely look at some of my own
-changelogs written long ago and yell at myself from time to time.
-
-Reading a patch goes top down obviously:
-
-      1) Subject line
-      2) Changelog
-      3) Patch.
-
-If I have to rumage for my crystal ball before #3 then I already spent
-more time than necessary. If the thing is some random feature then I
-might just say: try again. But if I get the sense that it is about a bug
-or  has some smell of a shorrcoming in the core code then I have to bite
-the bullet and decode it the hard way. Not the most efficient way. And
-from experience I can tell you that if #1 and #2 are already problematic
-then #3 needs some serious scrutiny in most cases.
-
->> Hint: "Sometimes a chip needs to know" does not qualify :)
->
-> Clearly I am not coherent.  ;-)  My only goal was to help enable
-> interrupts that were disabled / marked as wakeup (as per above,
-> documented to be OK) to work on Qualcomm chips.  This specifically
-> affects me because a driver that I need to work (cros_ec) does this.
-
-Mission acoomplished :)
-
-> If IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND is good to add then it sounds like
-> a great plan to me.
-
-If it solves the problem and from what you explained it should do so
-then this is definitely the right way to go.
-
-Thanks,
-
-        tglx
