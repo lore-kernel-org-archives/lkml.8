@@ -2,183 +2,164 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA23C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F5AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA5F20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faTDxKkz"
+	by mail.kernel.org (Postfix) with ESMTP id 9F6042074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgHNQXM (ORCPT
+        id S1728433AbgHNQaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgHNQXJ (ORCPT
+        Fri, 14 Aug 2020 12:30:30 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58597 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728099AbgHNQa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:23:09 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA4DC061384;
-        Fri, 14 Aug 2020 09:23:09 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i80so5083450lfi.13;
-        Fri, 14 Aug 2020 09:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5XUom1+N8VJF984pWSuHb/mTQ8k7XQqK3c1GXB5JLrs=;
-        b=faTDxKkzEvzVfjje1Z55vXJsrvhO0hFBHdcT5Ih7idzEgEh4TTk7+M3nWvv7GVMmib
-         wSctTzmweNycw0D4wGGCytA/5j2IQaYcu5deIMNFcs9Asa9AT9CSE9Tr1Ylj+EMYdmfo
-         y9iJ6UJUJ74yd8avbXuUWecvZj30MAdXs81cjzDeWoAZPFNVMen/JGEbPQHBVnRio8pr
-         RM9GALxhjZLq8h411eAzEiQNwHwNzhuG1guE4Zj8IVWLLpeFGZQ3UD3eS/Y81JgmQyrE
-         ugNLHnQMJFaFjQI64FQEuXCKHRNNLp5qMXS4l2WlpYIqXlZV8Sw4LdQUVNUWSMLckDvT
-         eDvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5XUom1+N8VJF984pWSuHb/mTQ8k7XQqK3c1GXB5JLrs=;
-        b=c6IdHfQbsLvFN4RutFOdADrf/b+PeXc9u4+xbX/tC8ooFgANGTBvDsw8gr3fDyiyox
-         +hm6ObglNov0yBNimJNGlTrUkCfKmrOtDZtid51WfzquniL6JZ1sblR8rIfJ1/L8tf1b
-         AFtlptlj4HN3/4JpXPynu99AnJ2i2cCI1v9D3GzfIVAjTT/IcsOdkrdfBfsezqkBtHLL
-         lg9X+OdZOOt17hqr715SQp2uH4IPB9XVv8MqfXhSD0xJXsSvOwdvO2Xq/0mU11WjxPjz
-         VeooGYwyWemqortBgBqFAorwA1BIeQO+v8yj6/MbjxY9GuZBjM+fDQ6Vr8wRMWddMBvp
-         TiWA==
-X-Gm-Message-State: AOAM533+Px4mCY5AloKJIkLqWh7RComV6wnP3+7ERitYnXZQNlwMbYB2
-        1OYA2SEwD4RPgqC8D5MJv8E=
-X-Google-Smtp-Source: ABdhPJxmowXg0NDxMUTsjwWOYeEN/ouIAg/BQuR2y27kS5zC+cBqFm2eDK4gW0JuFeMHGisvMYxWVg==
-X-Received: by 2002:ac2:58c6:: with SMTP id u6mr1574772lfo.105.1597422187536;
-        Fri, 14 Aug 2020 09:23:07 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id v14sm1846577ljk.10.2020.08.14.09.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:23:06 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3] iommu/tegra-smmu: Add missing locks around mapping operations
-Date:   Fri, 14 Aug 2020 19:22:52 +0300
-Message-Id: <20200814162252.31965-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 14 Aug 2020 12:30:27 -0400
+Received: from [37.160.38.175] (port=40734 helo=[192.168.42.162])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1k6cay-0001mB-F9; Fri, 14 Aug 2020 18:30:20 +0200
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+References: <20200812203618.2656699-1-robh@kernel.org>
+ <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
+ <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <f1963eb9-283f-e903-2a3a-4f324d71d418@lucaceresoli.net>
+Date:   Fri, 14 Aug 2020 18:30:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mapping operations of the Tegra SMMU driver are subjected to a race
-condition issues because SMMU Address Space isn't allocated and freed
-atomically, while it should be. This patch makes the mapping operations
-atomic, it fixes an accidentally released Host1x Address Space problem
-which happens while running multiple graphics tests in parallel on
-Tegra30, i.e. by having multiple threads racing with each other in the
-Host1x's submission and completion code paths, performing IOVA mappings
-and unmappings in parallel.
+Hi,
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+On 14/08/20 16:51, Rob Herring wrote:
+> On Thu, Aug 13, 2020 at 4:31 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 12/08/20 22:36, Rob Herring wrote:
+>>> Clean-up incorrect indentation, extra spaces, long lines, and missing
+>>> EOF newline in schema files. Most of the clean-ups are for list
+>>> indentation which should always be 2 spaces more than the preceding
+>>> keyword.
+>>>
+>>> Found with yamllint (which I plan to integrate into the checks).
+>>
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> index 3d4e1685cc55..28c6461b9a9a 100644
+>>> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> @@ -95,10 +95,10 @@ allOf:
+>>>        # Devices without builtin crystal
+>>>        properties:
+>>>          clock-names:
+>>> -            minItems: 1
+>>> -            maxItems: 2
+>>> -            items:
+>>> -              enum: [ xin, clkin ]
+>>> +          minItems: 1
+>>> +          maxItems: 2
+>>> +          items:
+>>> +            enum: [ xin, clkin ]
+>>>          clocks:
+>>>            minItems: 1
+>>>            maxItems: 2
+>>
+>> Thanks for noticing, LGTM.
+>>
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> index d7dac16a3960..36dc7b56a453 100644
+>>> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> @@ -33,8 +33,8 @@ properties:
+>>>      $ref: /schemas/types.yaml#/definitions/uint32
+>>>
+>>>    touchscreen-min-pressure:
+>>> -    description: minimum pressure on the touchscreen to be achieved in order for the
+>>> -                 touchscreen driver to report a touch event.
+>>> +    description: minimum pressure on the touchscreen to be achieved in order
+>>> +      for the touchscreen driver to report a touch event.
+>>
+>> Out of personal taste, I find the original layout more pleasant and
+>> readable. This third option is also good, especially for long descriptions:
+>>
+>>   description:
+>>     minimum pressure on the touchscreen to be achieved in order for the
+>>     touchscreen driver to report a touch event.
+>>
+>> At first glance yamllint seems to support exactly these two by default:
+>>
+>>> With indentation: {spaces: 4, check-multi-line-strings: true}
+> 
+> Turning on check-multi-line-strings results in 10K+ warnings, so no.
+> 
+> The other issue is the style ruamel.yaml wants to write out is as the
+> patch does above. This matters when doing some scripted
+> transformations where we read in the files and write them back out. I
+> can somewhat work around that by first doing a pass with no changes
+> and then another pass with the actual changes, but that's completely
+> scriptable. Hopefully, ruamel learns to preserve the style better.
 
-Changelog:
+Kind of sad, but I understand the reason as far as my understanding of
+the yaml world allows. Thanks for the explanation.
 
-v3: - No changes. Resending for visibility, please apply.
+[For idt,versaclock5.yaml, plus an overview of whole patch]
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-v2: - Now using mutex instead of spinlock.
-
-    - The _locked postfix is replaced with the underscores prefix.
-
-
- drivers/iommu/tegra-smmu.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 124c8848ab7e..4315b6381354 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -49,6 +49,7 @@ struct tegra_smmu_as {
- 	struct iommu_domain domain;
- 	struct tegra_smmu *smmu;
- 	unsigned int use_count;
-+	struct mutex lock;
- 	u32 *count;
- 	struct page **pts;
- 	struct page *pd;
-@@ -308,6 +309,8 @@ static struct iommu_domain *tegra_smmu_domain_alloc(unsigned type)
- 		return NULL;
- 	}
- 
-+	mutex_init(&as->lock);
-+
- 	/* setup aperture */
- 	as->domain.geometry.aperture_start = 0;
- 	as->domain.geometry.aperture_end = 0xffffffff;
-@@ -655,8 +658,9 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
- 	smmu_flush(smmu);
- }
- 
--static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
--			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+static int
-+__tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+		 phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-@@ -685,8 +689,9 @@ static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 	return 0;
- }
- 
--static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
--			       size_t size, struct iommu_iotlb_gather *gather)
-+static size_t
-+__tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+		   size_t size, struct iommu_iotlb_gather *gather)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-@@ -702,6 +707,31 @@ static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
- 	return size;
- }
- 
-+static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+	int ret;
-+
-+	mutex_lock(&as->lock);
-+	ret = __tegra_smmu_map(domain, iova, paddr, size, prot, gfp);
-+	mutex_unlock(&as->lock);
-+
-+	return ret;
-+}
-+
-+static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+			       size_t size, struct iommu_iotlb_gather *gather)
-+{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+
-+	mutex_lock(&as->lock);
-+	size = __tegra_smmu_unmap(domain, iova, size, gather);
-+	mutex_unlock(&as->lock);
-+
-+	return size;
-+}
-+
- static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
- 					   dma_addr_t iova)
- {
 -- 
-2.27.0
-
+Luca
