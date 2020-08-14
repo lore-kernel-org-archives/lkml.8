@@ -2,254 +2,94 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B416AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F21C20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3C920768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597439665;
+	bh=QYjU/vHFCS41bzi+vPXXQqe7RJtvplWROO45G4OWvcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jWXo47+5NIoyaCo1Gs+kv4Y7upu50qQ+mLv/y5vM8kalBIqRVd0snd/o2gtc1VMXk
+	 /5IDt78Q148mtg00FFK1v2GlgpOcyWFtICF4MknT6jsqfItzIJlHfvQbprVxUnWorb
+	 Y32y2d99LCFccl5wmLcPywDKltZk32tEGlbm5VeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHNVBM (ORCPT
+        id S1728111AbgHNVOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 17:01:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43508 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgHNVBL (ORCPT
+        Fri, 14 Aug 2020 17:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgHNVOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 17:01:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a15so9432664wrh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 14:01:09 -0700 (PDT)
+        Fri, 14 Aug 2020 17:14:22 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B802C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 14:14:22 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id j22so5509417lfm.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 14:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XgZPud1OIYmjyYOBhbQEPVHjGt1NvY50k3PH2MTBtqk=;
+        b=FGa0IGjC4TVqgiFWylWQmY8BmKxOmj299ALM3yNzYBOUo9Qm+T3JLEWp37temhIOmX
+         7o4lGyY5vOmKC1s7j1N3lL37qW+vElX617XBb1kjarrJMkPVyjjjzMar/SPE2fqlZhCB
+         oWnAhWqpFOYT3k3fYk8Nz2dcriDiVqZO8V8rI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pG3PD5q7lYnvp9GuLkcW6/Z3cuMbx52ESrO1Q4ZBpJ0=;
-        b=HmPaTrRW8JcVCXmo/ugo+8kOGLK95TRiH9cMzBUcfQH2rlkuqsqc2SZdqxIC8fYptn
-         iH4i5TN16Pu4a+IRyBcsLgw2NK1pVZtaARUkQBb+ddqBL80q38bmt+YNuMYVhhb9BMs/
-         2pO5m0VKiCBkwAl01VtoIUFE/Q7FR60dAQrG8bfYDqwHZIqTo+hj01g8eq9k36nr4cAP
-         ezWB2Lo/0WzasyK/l/vAgsEjKuwjHluswkSziFEwnIz/aHf27CRMyihRpS2imno7/EZg
-         4AFYj1ijaa19puv8D7WEVAjw6Fe1GIuiCRrAd6X4GG9vLOKOgRGNqurzjGEBLJLlWWUB
-         GjfA==
-X-Gm-Message-State: AOAM533wqWAMXQwZH3xKRqFEXyLJ81wZw102WpSMrhTMzO2gRnVsAWwA
-        lP/wW/1K4Cnqh6yngNawv4k=
-X-Google-Smtp-Source: ABdhPJyp9qEN+VtsU1SeeafU7f39HH3Vg7MPA5kcbAPpyaVhJwMIwmbO27RDjfET2bpzjG4Hxssd3Q==
-X-Received: by 2002:a5d:6646:: with SMTP id f6mr4180198wrw.155.1597438868343;
-        Fri, 14 Aug 2020 14:01:08 -0700 (PDT)
-Received: from [10.9.0.18] ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id r11sm17017268wrw.78.2020.08.14.14.01.04
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XgZPud1OIYmjyYOBhbQEPVHjGt1NvY50k3PH2MTBtqk=;
+        b=G0wnnvLxVdz7Jua25xBgUgQNuCsZ1d2i+HXXL4HNQ+watThmDzmkAkCYZ+4T3QTXMV
+         58zsYdy6tp/k2D9zjJ92IhPLsj8UGe1A0HOC49GMtZrFcg4cbnFlsCOUd39te6JvsCAd
+         vRClyJS+tY6VG8ABG8zhCxMbcXyt4SY705ScDH6O9H7pyuPwae0EuhdABXd37cdZB5aE
+         Ixsc0+G+UPcZRLf6LYn9NCIB2NFNcWjXS/PbCVp4IZo223PW14weaOF/PTI73WWn6DAm
+         T7asZi2oEQxSm1d3q3u/69InNYxv7q9WXbnMOrrai5Hv12IP7blwuJpXU3WH63SG4U9M
+         wgAA==
+X-Gm-Message-State: AOAM532DmZKTu7N30TsnDNJedpwVMtCYVWO9AZGP20PcZ2wSD9JK0BmL
+        BZJCjfSW3qr5Vy4KEcUWSgwcHF2ABsKjwA==
+X-Google-Smtp-Source: ABdhPJypGzLkx4v8Qz9R86gRIlq7WL6XbSmRfjqPWLVibzliImTi2mH5t25qzRDEnLPdYa5POziiIg==
+X-Received: by 2002:ac2:5991:: with SMTP id w17mr2062912lfn.153.1597439660522;
+        Fri, 14 Aug 2020 14:14:20 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id v10sm2121658lfo.11.2020.08.14.14.14.19
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 14:01:07 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH RFC 0/2] Break heap spraying needed for exploiting
- use-after-free
-To:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Will Deacon <will@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Popov <alex.popov@linux.com>
-Cc:     notify@kernel.org
-References: <20200813151922.1093791-1-alex.popov@linux.com>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <4bc8bb86-613b-1217-6804-cb21a3356bff@linux.com>
-Date:   Sat, 15 Aug 2020 00:01:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 Aug 2020 14:14:19 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id y2so2338043ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 14:14:19 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr1861612ljk.421.1597439659164;
+ Fri, 14 Aug 2020 14:14:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200813151922.1093791-1-alex.popov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <159742071192.30851.2328227964586183297.tglx@nanos>
+In-Reply-To: <159742071192.30851.2328227964586183297.tglx@nanos>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 14 Aug 2020 14:14:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjUx-DOx8kL91PmPwCbA6K7-9LXZ_+bkoa4SuQ6_zbaPA@mail.gmail.com>
+Message-ID: <CAHk-=wjUx-DOx8kL91PmPwCbA6K7-9LXZ_+bkoa4SuQ6_zbaPA@mail.gmail.com>
+Subject: Re: [GIT pull] irq/urgent for v5.9-rc1
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.08.2020 18:19, Alexander Popov wrote:
-> Hello everyone! Requesting for your comments.
-> 
-> Use-after-free vulnerabilities in the Linux kernel are very popular for
-> exploitation. A few examples:
->  https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
->  https://googleprojectzero.blogspot.com/2019/11/bad-binder-android-in-wild-exploit.html?m=1
->  https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
-> 
-> Use-after-free exploits usually employ heap spraying technique.
-> Generally it aims to put controlled bytes at a predetermined memory
-> location on the heap. Heap spraying for exploiting use-after-free in
-> the Linux kernel relies on the fact that on kmalloc(), the slab allocator
-> returns the address of the memory that was recently freed. So allocating
-> a kernel object with the same size and controlled contents allows
-> overwriting the vulnerable freed object.
-> 
-> I've found an easy way to break heap spraying for use-after-free
-> exploitation. I simply extracted slab freelist quarantine from KASAN
-> functionality and called it CONFIG_SLAB_QUARANTINE. Please see patch 1.
-> 
-> If this feature is enabled, freed allocations are stored in the quarantine
-> and can't be instantly reallocated and overwritten by the exploit
-> performing heap spraying.
-> 
-> In patch 2 you can see the lkdtm test showing how CONFIG_SLAB_QUARANTINE
-> prevents immediate reallocation of a freed heap object.
-> 
-> I tested this patch series both for CONFIG_SLUB and CONFIG_SLAB.
-> 
-> CONFIG_SLAB_QUARANTINE disabled:
->   # echo HEAP_SPRAY > /sys/kernel/debug/provoke-crash/DIRECT
->   lkdtm: Performing direct entry HEAP_SPRAY
->   lkdtm: Performing heap spraying...
->   lkdtm: attempt 0: spray alloc addr 00000000f8699c7d vs freed addr 00000000f8699c7d
->   lkdtm: freed addr is reallocated!
->   lkdtm: FAIL! Heap spraying succeed :(
-> 
-> CONFIG_SLAB_QUARANTINE enabled:
->   # echo HEAP_SPRAY > /sys/kernel/debug/provoke-crash/DIRECT
->   lkdtm: Performing direct entry HEAP_SPRAY
->   lkdtm: Performing heap spraying...
->   lkdtm: attempt 0: spray alloc addr 000000009cafb63f vs freed addr 00000000173cce94
->   lkdtm: attempt 1: spray alloc addr 000000003096911f vs freed addr 00000000173cce94
->   lkdtm: attempt 2: spray alloc addr 00000000da60d755 vs freed addr 00000000173cce94
->   lkdtm: attempt 3: spray alloc addr 000000000b415070 vs freed addr 00000000173cce94
->   ...
->   lkdtm: attempt 126: spray alloc addr 00000000e80ef807 vs freed addr 00000000173cce94
->   lkdtm: attempt 127: spray alloc addr 00000000398fe535 vs freed addr 00000000173cce94
->   lkdtm: OK! Heap spraying hasn't succeed :)
-> 
-> I did a brief performance evaluation of this feature.
-> 
-> 1. Memory consumption. KASAN quarantine uses 1/32 of the memory.
-> CONFIG_SLAB_QUARANTINE disabled:
->   # free -m
->                 total        used        free      shared  buff/cache   available
->   Mem:           1987          39        1862          10          86        1907
->   Swap:             0           0           0
-> CONFIG_SLAB_QUARANTINE enabled:
->   # free -m
->                 total        used        free      shared  buff/cache   available
->   Mem:           1987         140        1760          10          87        1805
->   Swap:             0           0           0
-> 
-> 2. Performance penalty. I used `hackbench -s 256 -l 200 -g 15 -f 25 -P`.
-> CONFIG_SLAB_QUARANTINE disabled (x86_64, CONFIG_SLUB):
->   Times: 3.088, 3.103, 3.068, 3.103, 3.107
->   Mean: 3.0938
->   Standard deviation: 0.0144
-> CONFIG_SLAB_QUARANTINE enabled (x86_64, CONFIG_SLUB):
->   Times: 3.303, 3.329, 3.356, 3.314, 3.292
->   Mean: 3.3188 (+7.3%)
->   Standard deviation: 0.0223
-> 
-> I would appreciate your feedback!
+On Fri, Aug 14, 2020 at 9:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Two fixes in the core interrupt code which ensure that all error exits
+> unlock the descriptor lock.
 
-While waiting for the feedback on these RFC patches, I compiled a list of topics
-for further research:
+No diffstat?
 
- - Possible ways to overwrite a quarantined heap object by making a large amount
-of allocations (with/without freeing them)
+I've pulled it, but please check what went wrong..
 
- - How init_on_free=1 affects heap spraying on a system with the heap quarantine
-
- - How releasing batches of quarantine objects right away affects heap spraying
-reliability
-
- - Heap spraying on multi-core systems with the heap quarantine
-
- - More precise performance evaluation
-
- - Possible ways to improve the security properties and performance results
-(KASAN quarantine has some interesting settings)
-
-Best regards,
-Alexander
-
-> Alexander Popov (2):
->   mm: Extract SLAB_QUARANTINE from KASAN
->   lkdtm: Add heap spraying test
-> 
->  drivers/misc/lkdtm/core.c  |   1 +
->  drivers/misc/lkdtm/heap.c  |  40 ++++++++++++++
->  drivers/misc/lkdtm/lkdtm.h |   1 +
->  include/linux/kasan.h      | 107 ++++++++++++++++++++-----------------
->  include/linux/slab_def.h   |   2 +-
->  include/linux/slub_def.h   |   2 +-
->  init/Kconfig               |  11 ++++
->  mm/Makefile                |   3 +-
->  mm/kasan/Makefile          |   2 +
->  mm/kasan/kasan.h           |  75 +++++++++++++-------------
->  mm/kasan/quarantine.c      |   2 +
->  mm/kasan/slab_quarantine.c |  99 ++++++++++++++++++++++++++++++++++
->  mm/slub.c                  |   2 +-
->  13 files changed, 258 insertions(+), 89 deletions(-)
->  create mode 100644 mm/kasan/slab_quarantine.c
-> 
-
+                Linus
