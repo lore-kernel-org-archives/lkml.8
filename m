@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE650C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A265F20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB1C20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHNIvX (ORCPT
+        id S1727112AbgHNIv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:51:23 -0400
-Received: from mga17.intel.com ([192.55.52.151]:19732 "EHLO mga17.intel.com"
+        Fri, 14 Aug 2020 04:51:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32814 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbgHNIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:51:23 -0400
-IronPort-SDR: WZ6GBbrofKjHfCVzGWYz3OD0/Mauqc+bjmHFyUP5IXVijWYfynmUqZw7buN5aQJCVkJmE8rc53
- QRWH4+7U5dGA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="134434675"
+        id S1726360AbgHNIvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:51:24 -0400
+IronPort-SDR: nztm2C5Bqs5KenR9GtNcdE1trUPv41Xe9u3to+mGBcJx8mbx/KexR/6YhCsIyt8SGbQ/N9sf9o
+ /VG3zp7PNiqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="142219195"
 X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="134434675"
+   d="scan'208";a="142219195"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 01:51:22 -0700
-IronPort-SDR: JWgbMXlxrmVOsSScBX6OAH0ZClJkIDH8FhZdNulxHyD4yuPZBFYmwY9gE7IQXp5+GvrcpSMY8I
- n5gXWBT6CSTA==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 01:51:23 -0700
+IronPort-SDR: Oso102xheNUmfzTjzAVu2A4mMF+vbx666UN0JyRkrLkrXQLGkxQtQA0VbkH/r3zkS5L9BuPlRN
+ mpq2U6roSqSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
-   d="scan'208";a="369852159"
+   d="scan'208";a="309327188"
 Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 14 Aug 2020 01:51:21 -0700
+  by orsmga002.jf.intel.com with ESMTP; 14 Aug 2020 01:51:21 -0700
 Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1k6VQm-00016K-Jr; Fri, 14 Aug 2020 08:51:20 +0000
-Date:   Fri, 14 Aug 2020 16:50:59 +0800
+        id 1k6VQm-00016I-JM; Fri, 14 Aug 2020 08:51:20 +0000
+Date:   Fri, 14 Aug 2020 16:50:55 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 979c323f950d5aed4330bc010c57455b49861415
-Message-ID: <5f365073.s5SGgWrvPSH/Ix5L%lkp@intel.com>
+Subject: [tip:locking/urgent] BUILD SUCCESS
+ 405fa8ac89e7aaa87282df659e525992f2639e76
+Message-ID: <5f36506f.TA/w/OpaZTBWJhRf%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,10 +55,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 979c323f950d5aed4330bc010c57455b49861415  Merge branch 'irq/urgent'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
+branch HEAD: 405fa8ac89e7aaa87282df659e525992f2639e76  futex: Convert to use the preferred 'fallthrough' macro
 
-elapsed time: 722m
+elapsed time: 723m
 
 configs tested: 106
 configs skipped: 5
