@@ -2,67 +2,67 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A55C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE322078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74F92078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r3Pq4Nw/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LuGw15Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgHNR23 (ORCPT
+        id S1728795AbgHNR2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
+        Fri, 14 Aug 2020 13:28:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgHNR2O (ORCPT
+        with ESMTP id S1728590AbgHNR2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:14 -0400
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A4EC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:13 -0700 (PDT)
-Received: by mail-wr1-x449.google.com with SMTP id d6so3591552wrv.23
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:13 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:31 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC466C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:30 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id d9so6485986qvl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Riwx46dUdQZCUBoIKFQK30aeY6nxibjjbFZQvhGTSVk=;
-        b=r3Pq4Nw/CaoWG6G6om2TkSeS2q3clDVrI1jCJZUuPgJWrFW56RmBaxQJTKiw8RDwkv
-         SXknHXxNubQ/xsH4JUduXI8P7Ao0rNKHTmxWSLd6+rR3L+eMVGvfYsQZCNJcqno+0SvU
-         tQTCc0IaZnYqxsGgZIWb6dR600zBkz4ATNFlZXN0oodOskMVMbwApFhSiSS8Hc5kEo1o
-         2keQXF4RswsJN9aziL4F/HMIxE1tLyJyZehyXq70N4BsfEQC2/qJApII530XcFa6vDo9
-         umF+SAHHeQEUyeUJl91ZaJnkzhY9dZLQUxwtVJNYU4o96vxe2Ib/F+vtqvgmZyDaI9I/
-         HVjQ==
+        bh=Aq2upZC9S5Ys9XP2AH7I4ISIryYXBDc2x7o0GoeV4Tk=;
+        b=LuGw15Zke5Ae/pDbTgYTpYfh2zw7zg1gh8rl6NeN4AGUiGtOgQrWlvhHdiP01WtjeF
+         gPbZdiTHKtVlNBMURMqJKH70HLuFDCcyY7K63iFcHcfiTqAy72YPVXO2s7tj6WUdasie
+         LSNN56Qt2JsZQI6RoEJ6bqi8ZSk+tbIUZAyB0NyWM5Q+cWE4kks5klNCVCuWUA2AwdED
+         Iiogfds/x//LanybCwaVx43Gg8FX0gPl+FenU8VBpe3VwGcqyx6IKKwcLN4CjN2/b8lW
+         ezTn1x2aDEYLo2sh3zAh2430UJfQVAECwvvHTa7cQAdEt7xYMD1jNBIJBb2Z5DxWQroL
+         oNww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Riwx46dUdQZCUBoIKFQK30aeY6nxibjjbFZQvhGTSVk=;
-        b=RHYRnOWPv/lY25tY+4Z9k28BaQUUOXI4TFdI3dun4QhGj5noI+OcmUClF80sCCZbDz
-         tFjy0vm69PQ7z88vbQeokxa9/eBAzDsiF6oId9ha3SFaep9QHLB3Bz9NrNxSUypKGavv
-         6dXuiz4WxdpcOMdkwc4impOCf/V1hK95yDxWFUBaQWUupPxE5hwfesQJErSxmYrKKDp/
-         +fp2nlSHv89uA53oFsfWjJZXctYQWQ/VW7EOAnBXEEqDFo51yjm7JIzuFBq9wPl72sXJ
-         kV7C1sTPdbOxvDM5PSTrb+gmlT4mYjTmrcyGA1+6xmfM0Yzu1oaBAy6lDj0FHBH3/Utl
-         jjOg==
-X-Gm-Message-State: AOAM5324p9/R0FRHfSuomuGpvbUGZRxxwPn6Bt6Ug7xcWxepDFcxb3pk
-        /hdAqzZqTADNN652nS249uewzQ55EzSyiXHr
-X-Google-Smtp-Source: ABdhPJw/jNH9QPIZc2t+4rbadjLlOE44b7TKGySp7yNB+Ni/K8pn2eaB/l/BXc2r60vcjhzOsBbB8v3UAMZ+9JJW
-X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr424057wmm.1.1597426091488;
- Fri, 14 Aug 2020 10:28:11 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:27:02 +0200
+        bh=Aq2upZC9S5Ys9XP2AH7I4ISIryYXBDc2x7o0GoeV4Tk=;
+        b=daYM8q+A1pKUbEKazmDEb/58GpRuW4M8Q0IhKDpfNDZEzCtvLTFNr8BWnPVWo8z+1U
+         8Ta3uaYRyXCOSukBUZMaqvetQbdZKXKE//dmz2H55AgDiq9XhbFsk9CIleQ08wnlLOV7
+         S5c5Qm2pP4puAptyZU4VJTXCntBbWHpxIG92Az8tpqeIj6DlJyZ8sZl7cCJZTP7hYFQH
+         nuspJqR0oxMxTHSZS7SkoS4+Xp9DubBuwTKSVghg7Rg9lBorFwja7FbZM6kReVdyumVQ
+         ZXfk9aEQRDrSkRxjejKtF5Ud09I6jhJx9QiyRsqXYTlNmND2Ld4j5UTdF02l1uIaY+pJ
+         NMzg==
+X-Gm-Message-State: AOAM532Q0R+qYVQHcPkRa+zRl3JZbTOHDy9Kyxsek+j+SamTAAGxKKHc
+        N4e8GJoTWupERy0dWtpRTWwbeU3HuR/7E1On
+X-Google-Smtp-Source: ABdhPJztNAgwVlYKdx1N8aglSzF1FROrdQbV1VPur/Gdjkp6gFX4cRqk46lqcix5COecb/sqk/aIJq04YlccAYyo
+X-Received: by 2002:a0c:e883:: with SMTP id b3mr3537357qvo.133.1597426109995;
+ Fri, 14 Aug 2020 10:28:29 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:27:10 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <2cf260bdc20793419e32240d2a3e692b0adf1f80.1597425745.git.andreyknvl@google.com>
+Message-Id: <07455abaab13824579c1b8e50cc038cf8a0f3369.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 20/35] arm64: mte: Add in-kernel MTE helpers
+Subject: [PATCH 28/35] kasan: define KASAN_GRANULE_SIZE for HW_TAGS
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -86,249 +86,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Hardware tag-based KASAN has granules of MTE_GRANULE_SIZE. Define
+KASAN_GRANULE_SIZE to MTE_GRANULE_SIZE for CONFIG_KASAN_HW_TAGS.
 
-Provide helper functions to manipulate allocation and pointer tags for
-kernel addresses.
-
-Low-level helper functions (mte_assign_*, written in assembly) operate
-tag values from the [0x0, 0xF] range. High-level helper functions
-(mte_get/set_*) use the [0xF0, 0xFF] range to preserve compatibility
-with normal kernel pointers that have 0xFF in their top byte.
-
-MTE_GRANULE_SIZE definition is moved to mte_asm.h header that doesn't
-have any dependencies and is safe to include into any low-level header.
-
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Co-developed-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/arm64/include/asm/esr.h     |  1 +
- arch/arm64/include/asm/mte.h     | 46 +++++++++++++++++++++++++++++---
- arch/arm64/include/asm/mte_asm.h | 10 +++++++
- arch/arm64/kernel/mte.c          | 43 +++++++++++++++++++++++++++++
- arch/arm64/lib/mte.S             | 41 ++++++++++++++++++++++++++++
- 5 files changed, 138 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/include/asm/mte_asm.h
+ mm/kasan/kasan.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-index 035003acfa87..bc0dc66a6a27 100644
---- a/arch/arm64/include/asm/esr.h
-+++ b/arch/arm64/include/asm/esr.h
-@@ -103,6 +103,7 @@
- #define ESR_ELx_FSC		(0x3F)
- #define ESR_ELx_FSC_TYPE	(0x3C)
- #define ESR_ELx_FSC_EXTABT	(0x10)
-+#define ESR_ELx_FSC_MTE		(0x11)
- #define ESR_ELx_FSC_SERROR	(0x11)
- #define ESR_ELx_FSC_ACCESS	(0x08)
- #define ESR_ELx_FSC_FAULT	(0x04)
-diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-index 1c99fcadb58c..733be1cb5c95 100644
---- a/arch/arm64/include/asm/mte.h
-+++ b/arch/arm64/include/asm/mte.h
-@@ -5,14 +5,19 @@
- #ifndef __ASM_MTE_H
- #define __ASM_MTE_H
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index 1d3c7c6ce771..4d8e229f8e01 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -5,7 +5,13 @@
+ #include <linux/kasan.h>
+ #include <linux/stackdepot.h>
  
--#define MTE_GRANULE_SIZE	UL(16)
-+#include <asm/mte_asm.h>
++#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ #define KASAN_GRANULE_SIZE	(1UL << KASAN_SHADOW_SCALE_SHIFT)
++#else
++#include <asm/mte.h>
++#define KASAN_GRANULE_SIZE	(MTE_GRANULE_SIZE)
++#endif
 +
- #define MTE_GRANULE_MASK	(~(MTE_GRANULE_SIZE - 1))
- #define MTE_TAG_SHIFT		56
- #define MTE_TAG_SIZE		4
-+#define MTE_TAG_MASK		GENMASK((MTE_TAG_SHIFT + (MTE_TAG_SIZE - 1)), MTE_TAG_SHIFT)
-+#define MTE_TAG_MAX		(MTE_TAG_MASK >> MTE_TAG_SHIFT)
+ #define KASAN_GRANULE_MASK	(KASAN_GRANULE_SIZE - 1)
  
- #ifndef __ASSEMBLY__
- 
-+#include <linux/bitfield.h>
- #include <linux/page-flags.h>
-+#include <linux/types.h>
- 
- #include <asm/pgtable-types.h>
- 
-@@ -45,7 +50,16 @@ long get_mte_ctrl(struct task_struct *task);
- int mte_ptrace_copy_tags(struct task_struct *child, long request,
- 			 unsigned long addr, unsigned long data);
- 
--#else
-+void *mte_assign_valid_ptr_tag(void *ptr);
-+void *mte_assign_random_ptr_tag(void *ptr);
-+void mte_assign_mem_tag_range(void *addr, size_t size);
-+
-+#define mte_get_ptr_tag(ptr)	((u8)(((u64)(ptr)) >> MTE_TAG_SHIFT))
-+u8 mte_get_mem_tag(void *addr);
-+u8 mte_get_random_tag(void);
-+void *mte_set_mem_tag_range(void *addr, size_t size, u8 tag);
-+
-+#else /* CONFIG_ARM64_MTE */
- 
- /* unused if !CONFIG_ARM64_MTE, silence the compiler */
- #define PG_mte_tagged	0
-@@ -80,7 +94,33 @@ static inline int mte_ptrace_copy_tags(struct task_struct *child,
- 	return -EIO;
- }
- 
--#endif
-+static inline void *mte_assign_valid_ptr_tag(void *ptr)
-+{
-+	return ptr;
-+}
-+static inline void *mte_assign_random_ptr_tag(void *ptr)
-+{
-+	return ptr;
-+}
-+static inline void mte_assign_mem_tag_range(void *addr, size_t size)
-+{
-+}
-+
-+#define mte_get_ptr_tag(ptr)	0xFF
-+static inline u8 mte_get_mem_tag(void *addr)
-+{
-+	return 0xFF;
-+}
-+static inline u8 mte_get_random_tag(void)
-+{
-+	return 0xFF;
-+}
-+static inline void *mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
-+{
-+	return addr;
-+}
-+
-+#endif /* CONFIG_ARM64_MTE */
- 
- #endif /* __ASSEMBLY__ */
- #endif /* __ASM_MTE_H  */
-diff --git a/arch/arm64/include/asm/mte_asm.h b/arch/arm64/include/asm/mte_asm.h
-new file mode 100644
-index 000000000000..aa532c1851e1
---- /dev/null
-+++ b/arch/arm64/include/asm/mte_asm.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020 ARM Ltd.
-+ */
-+#ifndef __ASM_MTE_ASM_H
-+#define __ASM_MTE_ASM_H
-+
-+#define MTE_GRANULE_SIZE	UL(16)
-+
-+#endif /* __ASM_MTE_ASM_H  */
-diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index eb39504e390a..e2d708b4583d 100644
---- a/arch/arm64/kernel/mte.c
-+++ b/arch/arm64/kernel/mte.c
-@@ -13,8 +13,10 @@
- #include <linux/swap.h>
- #include <linux/swapops.h>
- #include <linux/thread_info.h>
-+#include <linux/types.h>
- #include <linux/uio.h>
- 
-+#include <asm/barrier.h>
- #include <asm/cpufeature.h>
- #include <asm/mte.h>
- #include <asm/ptrace.h>
-@@ -72,6 +74,47 @@ int memcmp_pages(struct page *page1, struct page *page2)
- 	return ret;
- }
- 
-+u8 mte_get_mem_tag(void *addr)
-+{
-+	if (system_supports_mte())
-+		addr = mte_assign_valid_ptr_tag(addr);
-+
-+	return 0xF0 | mte_get_ptr_tag(addr);
-+}
-+
-+u8 mte_get_random_tag(void)
-+{
-+	u8 tag = 0xF;
-+
-+	if (system_supports_mte())
-+		tag = mte_get_ptr_tag(mte_assign_random_ptr_tag(NULL));
-+
-+	return 0xF0 | tag;
-+}
-+
-+void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
-+{
-+	void *ptr = addr;
-+
-+	if ((!system_supports_mte()) || (size == 0))
-+		return addr;
-+
-+	tag = 0xF0 | (tag & 0xF);
-+	ptr = (void *)__tag_set(ptr, tag);
-+	size = ALIGN(size, MTE_GRANULE_SIZE);
-+
-+	mte_assign_mem_tag_range(ptr, size);
-+
-+	/*
-+	 * mte_assign_mem_tag_range() can be invoked in a multi-threaded
-+	 * context, ensure that tags are written in memory before the
-+	 * reference is used.
-+	 */
-+	smp_wmb();
-+
-+	return ptr;
-+}
-+
- static void update_sctlr_el1_tcf0(u64 tcf0)
- {
- 	/* ISB required for the kernel uaccess routines */
-diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
-index 03ca6d8b8670..8c743540e32c 100644
---- a/arch/arm64/lib/mte.S
-+++ b/arch/arm64/lib/mte.S
-@@ -149,3 +149,44 @@ SYM_FUNC_START(mte_restore_page_tags)
- 
- 	ret
- SYM_FUNC_END(mte_restore_page_tags)
-+
-+/*
-+ * Assign pointer tag based on the allocation tag
-+ *   x0 - source pointer
-+ * Returns:
-+ *   x0 - pointer with the correct tag to access memory
-+ */
-+SYM_FUNC_START(mte_assign_valid_ptr_tag)
-+	ldg	x0, [x0]
-+	ret
-+SYM_FUNC_END(mte_assign_valid_ptr_tag)
-+
-+/*
-+ * Assign random pointer tag
-+ *   x0 - source pointer
-+ * Returns:
-+ *   x0 - pointer with a random tag
-+ */
-+SYM_FUNC_START(mte_assign_random_ptr_tag)
-+	irg	x0, x0
-+	ret
-+SYM_FUNC_END(mte_assign_random_ptr_tag)
-+
-+/*
-+ * Assign allocation tags for a region of memory based on the pointer tag
-+ *   x0 - source pointer
-+ *   x1 - size
-+ *
-+ * Note: size is expected to be MTE_GRANULE_SIZE aligned
-+ */
-+SYM_FUNC_START(mte_assign_mem_tag_range)
-+	/* if (src == NULL) return; */
-+	cbz	x0, 2f
-+	/* if (size == 0) return; */
-+	cbz	x1, 2f
-+1:	stg	x0, [x0]
-+	add	x0, x0, #MTE_GRANULE_SIZE
-+	sub	x1, x1, #MTE_GRANULE_SIZE
-+	cbnz	x1, 1b
-+2:	ret
-+SYM_FUNC_END(mte_assign_mem_tag_range)
+ #define KASAN_TAG_KERNEL	0xFF /* native kernel pointers tag */
 -- 
 2.28.0.220.ged08abb693-goog
 
