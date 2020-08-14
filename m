@@ -2,141 +2,81 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE85C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A927FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209F220708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EFE20885
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597385388;
+	bh=c/lfw5JZTqHPS72/1poOsY6BXX2T5S4whSMwu1pt5eI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ektVppgXE4P++JoSd7ZRaix73M7Xg3a1LxChH2kXRngccye+8gDgWjXt1EYCWUkny
+	 UgIj2NiKhMAOu7cL/r9TyIvY5/mQ2+0A75peDsv9fb5yZ0PU/wA+Nuu686XVpjuVxk
+	 amrgJJO43H2bUTokMgorPGuUB5TWGLOb21Q9uoPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgHNGHV (ORCPT
+        id S1726408AbgHNGJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:07:21 -0400
-Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:36584 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726139AbgHNGHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:07:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8B783180188BD;
-        Fri, 14 Aug 2020 06:07:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shirt72_4110c3e26ffa
-X-Filterd-Recvd-Size: 3581
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 14 Aug 2020 06:07:17 +0000 (UTC)
-Message-ID: <d1414df440b872ab7792946725991cb948537654.camel@perches.com>
-Subject: Re: [PATCH] kexec: Delete an unnecessary comparison
-From:   Joe Perches <joe@perches.com>
-To:     Youling Tang <tangyouling@loongson.cn>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Thu, 13 Aug 2020 23:07:16 -0700
-In-Reply-To: <1597322730-3881-1-git-send-email-tangyouling@loongson.cn>
-References: <1597322730-3881-1-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 14 Aug 2020 02:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgHNGJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:09:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB34420708;
+        Fri, 14 Aug 2020 06:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597385386;
+        bh=c/lfw5JZTqHPS72/1poOsY6BXX2T5S4whSMwu1pt5eI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P+8afEJYPSe8D5GzWDR+rbuzJP74xvyOyWi7jinVsDT4D5lcLOtbNCwVRwvg+JX/A
+         SQMtwV3zfdxM5yW7ytNYJhgPEJ4PsLkF14iD7jhk860pQrsJnR1Z5gms4QRYoBvUpK
+         7dt+cWsB70NvtYK+nqIHnY1AU/URLUWfbCIn2pCc=
+Date:   Fri, 14 Aug 2020 08:09:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Qiwu Huang <yanziily@gmail.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200814060909.GD1409566@kroah.com>
+References: <cover.1597376585.git.huangqiwu@xiaomi.com>
+ <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-13 at 20:45 +0800, Youling Tang wrote:
-> Regardless of whether the ret value is zero or non-zero, the trajectory
-> of the program execution is the same, so there is no need to compare.
+On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
+> From: Qiwu Huang <huangqiwu@xiaomi.com>
 > 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Reports the kind of quick charge type based on
+> different adapter power.
+> 
+> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
 > ---
->  kernel/kexec_file.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 78c0837..3ad0ae2 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -800,8 +800,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  
->  		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
->  						     digest, SHA256_DIGEST_SIZE, 0);
-> -		if (ret)
-> -			goto out_free_digest;
->  	}
->  
->  out_free_digest:
+>  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
+>  drivers/power/supply/power_supply_sysfs.c   |  1 +
+>  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
+>  include/linux/power_supply.h                | 14 ++++++
+>  4 files changed, 87 insertions(+)
 
-If you really want to change the function, then
-you could change a couple of breaks to gotos,
-remove multiple unnecessary tests, and unindent
-a block of code too.
+You should also submit your driver that uses these new attributes at the
+same time.  What happened to that request?  Otherwise no one really
+knows how these are being used, or if they even are used by anyone.
 
----
- kernel/kexec_file.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+thanks,
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index ca40bef75a61..34a025e85887 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -763,7 +763,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
- 					  ksegment->bufsz);
- 		if (ret)
--			break;
-+			goto out_free_digest;
- 
- 		/*
- 		 * Assume rest of the buffer is filled with zero and
-@@ -777,32 +777,26 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 				bytes = zero_buf_sz;
- 			ret = crypto_shash_update(desc, zero_buf, bytes);
- 			if (ret)
--				break;
-+				goto out_free_digest;
- 			nullsz -= bytes;
- 		}
- 
--		if (ret)
--			break;
--
- 		sha_regions[j].start = ksegment->mem;
- 		sha_regions[j].len = ksegment->memsz;
- 		j++;
- 	}
- 
--	if (!ret) {
--		ret = crypto_shash_final(desc, digest);
--		if (ret)
--			goto out_free_digest;
--		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
--						     sha_regions, sha_region_sz, 0);
--		if (ret)
--			goto out_free_digest;
-+	ret = crypto_shash_final(desc, digest);
-+	if (ret)
-+		goto out_free_digest;
- 
--		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
--						     digest, SHA256_DIGEST_SIZE, 0);
--		if (ret)
--			goto out_free_digest;
--	}
-+	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
-+					     sha_regions, sha_region_sz, 0);
-+	if (ret)
-+		goto out_free_digest;
-+
-+	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
-+					     digest, SHA256_DIGEST_SIZE, 0);
- 
- out_free_digest:
- 	kfree(digest);
-
-
+greg k-h
