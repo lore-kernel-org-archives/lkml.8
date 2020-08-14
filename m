@@ -2,102 +2,83 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4236C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 947DF20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8185C20708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHNFwP (ORCPT
+        id S1726513AbgHNFzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 01:52:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:13652 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgHNFwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 01:52:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BSXdR3zfHz9vD2y;
-        Fri, 14 Aug 2020 07:52:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Fa354yKAlT20; Fri, 14 Aug 2020 07:52:11 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BSXdR2fQMz9vD2x;
-        Fri, 14 Aug 2020 07:52:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E8668B775;
-        Fri, 14 Aug 2020 07:52:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id P3ttainyg2_X; Fri, 14 Aug 2020 07:52:12 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E3E8B8B767;
-        Fri, 14 Aug 2020 07:52:11 +0200 (CEST)
-Subject: Re: [PATCH 1/5] powerpc: Remove flush_instruction_cache for book3s/32
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <11a330af231af22874c006302a945388846f8112.1597313510.git.christophe.leroy@csgroup.eu>
- <20200813121308.GA16237@infradead.org> <20200813121403.GB16237@infradead.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <a0f7d4a2-d2c8-0edc-bc29-47508d4d17e2@csgroup.eu>
-Date:   Fri, 14 Aug 2020 07:52:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 14 Aug 2020 01:55:10 -0400
+Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:20468 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgHNFzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 01:55:10 -0400
+Received: from localhost.localdomain ([93.23.15.18])
+        by mwinf5d35 with ME
+        id FHv3230030PNgoV03Hv3rb; Fri, 14 Aug 2020 07:55:08 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 14 Aug 2020 07:55:08 +0200
+X-ME-IP: 93.23.15.18
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        sudhakar.panneerselvam@oracle.com, jpawar@cadence.com,
+        gustavoars@kernel.org, Thinh.Nguyen@synopsys.com,
+        bigeasy@linutronix.de, nab@linux-iscsi.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] usb: gadget: f_tcm: Fix some resource leaks in some error paths
+Date:   Fri, 14 Aug 2020 07:55:01 +0200
+Message-Id: <20200814055501.763821-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200813121403.GB16237@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If a memory allocation fails within a 'usb_ep_alloc_request()' call, the
+already allocated memory must be released.
 
+Fix a mix-up in the code and free the correct requests.
 
-Le 13/08/2020 à 14:14, Christoph Hellwig a écrit :
-> On Thu, Aug 13, 2020 at 01:13:08PM +0100, Christoph Hellwig wrote:
->> On Thu, Aug 13, 2020 at 10:12:00AM +0000, Christophe Leroy wrote:
->>> -#ifndef CONFIG_PPC_8xx
->>> +#if !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC_BOOK3S_32)
->>>   _GLOBAL(flush_instruction_cache)
->>>   #if defined(CONFIG_4xx)
->>>   	lis	r3, KERNELBASE@h
->>> @@ -290,18 +289,11 @@ _GLOBAL(flush_instruction_cache)
->>>   	mfspr	r3,SPRN_L1CSR1
->>>   	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
->>>   	mtspr	SPRN_L1CSR1,r3
->>> -#elif defined(CONFIG_PPC_BOOK3S_601)
->>> -	blr			/* for 601, do nothing */
->>> -#else
->>> -	/* 603/604 processor - use invalidate-all bit in HID0 */
->>> -	mfspr	r3,SPRN_HID0
->>> -	ori	r3,r3,HID0_ICFI
->>> -	mtspr	SPRN_HID0,r3
->>>   #endif /* CONFIG_4xx */
->>>   	isync
->>>   	blr
->>>   EXPORT_SYMBOL(flush_instruction_cache)
->>> -#endif /* CONFIG_PPC_8xx */
->>> +#endif /* CONFIG_PPC_8xx || CONFIG_PPC_BOOK3S_32 */
->>
->> What about untangling this into entirely separate versions instead
->> of the ifdef mess?  Also the export does not seem to be needed at all.
-> 
-> Ok, I see that you do that later, sorry.
-> 
+Fixes: c52661d60f63 ("usb-gadget: Initial merge of target module for UASP + BOT")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/usb/gadget/function/f_tcm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-In v2, I drop the untangling patch, because the series completely 
-dismantles flush_instruction_cache() so there is no need for an 
-ephemeral untanggled version of it.
+diff --git a/drivers/usb/gadget/function/f_tcm.c b/drivers/usb/gadget/function/f_tcm.c
+index d94b814328c8..184165e27908 100644
+--- a/drivers/usb/gadget/function/f_tcm.c
++++ b/drivers/usb/gadget/function/f_tcm.c
+@@ -753,12 +753,13 @@ static int uasp_alloc_stream_res(struct f_uas *fu, struct uas_stream *stream)
+ 		goto err_sts;
+ 
+ 	return 0;
++
+ err_sts:
+-	usb_ep_free_request(fu->ep_status, stream->req_status);
+-	stream->req_status = NULL;
+-err_out:
+ 	usb_ep_free_request(fu->ep_out, stream->req_out);
+ 	stream->req_out = NULL;
++err_out:
++	usb_ep_free_request(fu->ep_in, stream->req_in);
++	stream->req_in = NULL;
+ out:
+ 	return -ENOMEM;
+ }
+-- 
+2.25.1
 
-Christophe
