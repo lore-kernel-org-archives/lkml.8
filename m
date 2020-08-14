@@ -2,174 +2,109 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7E6C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA37C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0F520885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O76nyJuh"
+	by mail.kernel.org (Postfix) with ESMTP id D5037207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597418955;
+	bh=Hij014ULnJWEoKB27ougW8LrTHCuOQS5HxLs2kfi0Gg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x+rkGGjSxQjDmhHmuZVZiK/pK1xBOnj9Qmb/vfU2XJjtge2N61fGNGksGzIaWehhi
+	 Cgk6Q9hK4WgTGVXzfkbJZnnkdfZYhVIN+kdw3GP0dO4wlWnvWsQzfQFwGrL47GeQZW
+	 XSUM872xR6KAwOpNHa+jaYoLvE/Kdy/kAN+CO9P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgHNP1l (ORCPT
+        id S1727911AbgHNP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgHNP1c (ORCPT
+        Fri, 14 Aug 2020 11:29:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32910 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgHNP3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:27:32 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76C4C061384;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id kr4so4565608pjb.2;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=O76nyJuh6dYc3AfGQiI2e4GIdFCY3x7gmOVCCsTTQV0lAgkJw+1y/MMb5FedAKzsuo
-         aj/CwOywfjMuI8YUACO2TJpCrLKyOhQbe/Wa8j5jqTkaU4ckLZolvTt1GHcpR2QKdxry
-         j/zzN5BU+cbWzQ6Lk7AAcl9CQE49t8MsuQDTQJqSItqVZa2gSO5BGYVfSxIeUXCpQ1xR
-         0KlwM4wclq7JMyAFpH2Pa3zn0ZM4CrUryyzn30NfR6jJhlyMyhKlhHzBOjt8eqQaoLjh
-         e3gnB4ho7UILB7rgWRwLuy7oBJ/FhpprDcMUDGoPhyE9Kt2nhy41OA2NfYNHW2KgSk3q
-         aIOQ==
+        Fri, 14 Aug 2020 11:29:04 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t7so7876482otp.0;
+        Fri, 14 Aug 2020 08:29:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=Bs84XP1lrwRV8xJP7RZJduyWFXlNHNHtI9d6pf/bZBEN26kw8hie+6867td7dnI69E
-         EikQzsEWNML0DsxRloya0h+HCjdx2ihxRVoZycSpwsNMLyO0T0Mg0NzslNW8Fd2gGN8y
-         Tq1w4PJ6ibBJvnroX3GdCjEs/wggPhOwPHE8sqDon/Nl1iirjkfTu6DldJwRAcCUmcXD
-         ThQamZ+FuiO2aEOpOjfxDLt2KLnfLdjTtpLhzF84yqGh6w2BdaepF+dheBAKLt9k+dgh
-         IzZglDf8SSkKjLRz7IsDKAzxZPeJNWXOj2g+pvZczXogus6Jp2n6KbC7vzCHp/prPeOl
-         Yoaw==
-X-Gm-Message-State: AOAM533de9J8dAPZbC/BWjozZVzbsFVRuC+b/NTV+UI9FQX4GKB0uS7M
-        3rtglpzSv7nBiP0pEJXXlxmfz14Scuj/nA==
-X-Google-Smtp-Source: ABdhPJy07YWFlf32d911u1V/Z3Dit1CKk0fwAUiZ1rNlw48UgAyEdE/vzK+F1KnB6yLxG345YBvwng==
-X-Received: by 2002:a17:90b:2092:: with SMTP id hb18mr2805438pjb.118.1597418851374;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
-Received: from localhost.localdomain ([123.110.251.91])
-        by smtp.gmail.com with ESMTPSA id e29sm9746680pfj.92.2020.08.14.08.27.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Aug 2020 08:27:30 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/2] regulator: rt4801: Add DT binding documentation
-Date:   Fri, 14 Aug 2020 23:27:04 +0800
-Message-Id: <1597418824-15906-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
-References: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vBVBMvKKxks/kGkJ4ndBszEEsQk9CsCHA7aFPfw0OnY=;
+        b=ZiGghja38wB46vjSAhPbNDcDO67HuzxVsxaTnxsqrwYqpappI5vA74zYA8elDpnbHO
+         b6eolEASrnyrgCDCS+7HKZQtyNuFJQPEk0ITo5flWZb0FaE6R9qTkC+hIDScY7ODWr+V
+         Rtp7UVzhzmQOd0ZcdfTXEdIoCe/H5/m46pGNNci3+xQtZ4SU4R4lNeOCSFyUGCs/os9c
+         PYOraUS+bKHElG91GQF9qbMLfJDyZeymRRxyzNgvohqJL1GJ4bc9Ua1OT4xUNJ2u5qAV
+         4DeBr/p5w+s8t95VpFb5i9v8DDm4bFy1euWoKMt9loO+x83L4JVoY3k2aZ6/xhZeSVPP
+         4QCQ==
+X-Gm-Message-State: AOAM533fuZLW30hpxtL7P76Y1ruhROffX6yKCpvyiPPeIfu3gG2ouafR
+        qUOwRU61GgZjfshUY77aq62JKG5akJZgQiCrBbg=
+X-Google-Smtp-Source: ABdhPJz1T4tJ8ofzUGM0XQjCNBZ6PvK5Zq6i4UC8Y+eAkenmq/nx3KmnaWGeq6j/7fuAaFaAt8U6C3Dv5bPtU6dw8Nw=
+X-Received: by 2002:a05:6830:1c74:: with SMTP id s20mr2165582otg.167.1597418944007;
+ Fri, 14 Aug 2020 08:29:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597286952-5706-1-git-send-email-wangqing@vivo.com>
+In-Reply-To: <1597286952-5706-1-git-send-email-wangqing@vivo.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 14 Aug 2020 17:28:52 +0200
+Message-ID: <CAJZ5v0h=UmD33X_i80X3ww7nC=xQL7V8XaoNq2XvU_XcdQGfZQ@mail.gmail.com>
+Subject: Re: [PATCH] acpi/nfit: Use kobj_to_dev() instead
+To:     Wang Qing <wangqing@vivo.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+On Thu, Aug 13, 2020 at 4:54 AM Wang Qing <wangqing@vivo.com> wrote:
+>
+> Use kobj_to_dev() instead of container_of()
+>
+> Signed-off-by: Wang Qing <wangqing@vivo.com>
 
-Add a devicetree binding documentation for the rt4801 regulator driver.
+LGTM
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
- .../regulator/richtek,rt4801-regulator.yaml        | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+Dan, any objections?
 
-diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-new file mode 100644
-index 00000000..28d30e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/richtek,rt4801-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Richtek RT4801 Display Bias regulators
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Regulator nodes should be named to DSVP and DSVN. The
-+  definition for each of these nodes is defined using the standard
-+  binding for regulators at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  Datasheet is available at
-+  https://www.richtek.com/assets/product_file/RT4801H/DS4801H-00.pdf
-+
-+#The valid names for RT4801 regulator nodes are:
-+#DSVP, DSVN
-+
-+properties:
-+  compatible:
-+    enum:
-+      - richtek,rt4801
-+
-+  reg:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: GPIOs to use to enable DSVP/DSVN regulator.
-+      The first one is ENP to enable DSVP, and second one is ENM to enable DSVN.
-+      Number of GPIO in the array list could be 1 or 2.
-+      If only one gpio is specified, only one gpio used to control ENP/ENM.
-+      Else both are spefied, DSVP/DSVN could be controlled individually.
-+      Othersie, this property not specified. treat both as always-on regulator.
-+    minItems: 1
-+    maxItems: 2
-+
-+patternProperties:
-+  "^DSV(P|N)$":
-+    type: object
-+    $ref: regulator.yaml#
-+    description:
-+      Properties for single display bias regulator.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties:
-+  - enable-gpios
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        rt4801@73 {
-+            compatible = "richtek,rt4801";
-+            reg = <0x73>;
-+            enable-gpios = <&gpio26 2 0>, <&gpio26 3 0>;
-+
-+            dsvp: DSVP {
-+                regulator-name = "rt4801,dsvp";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+            dsvn: DSVN {
-+                regulator-name = "rt4801,dsvn";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+
-+        };
-+    };
--- 
-2.7.4
-
+> ---
+>  drivers/acpi/nfit/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> index fa4500f..3bb350b
+> --- a/drivers/acpi/nfit/core.c
+> +++ b/drivers/acpi/nfit/core.c
+> @@ -1382,7 +1382,7 @@ static bool ars_supported(struct nvdimm_bus *nvdimm_bus)
+>
+>  static umode_t nfit_visible(struct kobject *kobj, struct attribute *a, int n)
+>  {
+> -       struct device *dev = container_of(kobj, struct device, kobj);
+> +       struct device *dev = kobj_to_dev(kobj);
+>         struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
+>
+>         if (a == &dev_attr_scrub.attr && !ars_supported(nvdimm_bus))
+> @@ -1667,7 +1667,7 @@ static struct attribute *acpi_nfit_dimm_attributes[] = {
+>  static umode_t acpi_nfit_dimm_attr_visible(struct kobject *kobj,
+>                 struct attribute *a, int n)
+>  {
+> -       struct device *dev = container_of(kobj, struct device, kobj);
+> +       struct device *dev = kobj_to_dev(kobj);
+>         struct nvdimm *nvdimm = to_nvdimm(dev);
+>         struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
+>
+> --
+> 2.7.4
+>
