@@ -2,67 +2,102 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A04C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F241C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A8620885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0472068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgHNNkL (ORCPT
+        id S1727118AbgHNNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:40:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2607 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbgHNNkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:40:10 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 7163B571FFE3D7393BC5;
-        Fri, 14 Aug 2020 14:40:08 +0100 (IST)
-Received: from [127.0.0.1] (10.47.4.107) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 14 Aug
- 2020 14:40:07 +0100
-Subject: Re: nvme crash - Re: linux-next: Tree for Aug 13
-From:   John Garry <john.garry@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        <chaitanya.kulkarni@wdc.com>
-References: <20200813155009.GA2303@infradead.org>
- <81e42d30-ede3-d7b0-ad7b-8192bcf27a4c@huawei.com>
- <20200814120824.GB1872@infradead.org>
- <895b0c2f-52eb-bd72-7cbf-aa6808c018d2@huawei.com>
-Message-ID: <4f01dd86-62da-84bd-0ae4-7e31b5484514@huawei.com>
-Date:   Fri, 14 Aug 2020 14:37:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 14 Aug 2020 09:42:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43210 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgHNNmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:42:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7BB76AFBF;
+        Fri, 14 Aug 2020 13:42:23 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 7C143DA6EF; Fri, 14 Aug 2020 15:40:57 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 15:40:57 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Message-ID: <20200814134056.GV2026@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
 MIME-Version: 1.0
-In-Reply-To: <895b0c2f-52eb-bd72-7cbf-aa6808c018d2@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.4.107]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2020 14:07, John Garry wrote:
+On Fri, Aug 14, 2020 at 12:29:01PM +0000, Konstantin Komarov wrote:
+> This patch adds NTFS Read-Write driver to fs/ntfs3.
 > 
-> BTW, as for the DMA/sg scatterlist code, it so happens in this case that 
-> we try the dma alloc for size=0 in nvme_alloc_queue() - I know an 
-> allocation for size=0 makes no sense, but couldn't we bit a bit more 
-> robust?
+> Having decades of expertise in commercial file systems development and huge
+> test coverage, we at Paragon Software GmbH want to make our contribution to
+> the Open Source Community by providing implementation of NTFS Read-Write
+> driver for the Linux Kernel.
+> 
+> This is fully functional NTFS Read-Write driver. Current version works with
+> NTFS(including v3.1) normal/compressed/sparse files and supports journal replaying.
+> 
+> We plan to support this version after the codebase once merged, and add new
+> features and fix bugs. For example, full journaling support over JBD will be
+> added in later updates.
+> 
+> The patch is too big to handle it within an e-mail body, so it is available to download 
+> on our server: https://dl.paragon-software.com/ntfs3/ntfs3.patch
+> 
+> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-it's giving ZERO_SIZE_PTR, which we deference, so ignore me...
+In case somebody wants to compile it, this fixup is needed to let 'make
+fs/ntfs3/' actually work, besides enabling it in the config.
+
+diff --git a/fs/Makefile b/fs/Makefile
+index 1c7b0e3f6daa..b0b4ad8affa0 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -100,6 +100,7 @@ obj-$(CONFIG_SYSV_FS)		+= sysv/
+ obj-$(CONFIG_CIFS)		+= cifs/
+ obj-$(CONFIG_HPFS_FS)		+= hpfs/
+ obj-$(CONFIG_NTFS_FS)		+= ntfs/
++obj-$(CONFIG_NTFS3_FS)		+= ntfs3/
+ obj-$(CONFIG_UFS_FS)		+= ufs/
+ obj-$(CONFIG_EFS_FS)		+= efs/
+ obj-$(CONFIG_JFFS2_FS)		+= jffs2/
+diff --git a/fs/ntfs3/Makefile b/fs/ntfs3/Makefile
+index 4d4fe198b8b8..d99dd1af43aa 100644
+--- a/fs/ntfs3/Makefile
++++ b/fs/ntfs3/Makefile
+@@ -5,7 +5,7 @@
+ 
+ obj-$(CONFIG_NTFS3_FS) += ntfs3.o
+ 
+-ntfs3-objs := bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
++ntfs3-y := bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
+ 	    index.o attrlist.o record.o attrib.o run.o xattr.o\
+ 	    upcase.o super.o file.o dir.o namei.o lznt.o\
+ 	    fslog.o
+---
