@@ -2,172 +2,105 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A0320771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876E020768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YHuXBoLt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ug8CUPyX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="duCnFkXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgHNXO4 (ORCPT
+        id S1727955AbgHNXUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:14:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39602 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgHNXO4 (ORCPT
+        Fri, 14 Aug 2020 19:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNXUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:14:56 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597446893;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=K5QW3exzHL8KDx4u+BgSGpyR6VanL3c8Yzy1ofxD9zM=;
-        b=YHuXBoLtgIAUjJafXipuiAXQpZ1pb7hK/0ek1ICliMV8kHNGNlS5inxh4pRh1BrRwHc3YF
-        BALdU7KhDHkoRrhwPe7NYZn7VbDJZezUpg/Ngy2u9iHf/6g9qpKIPM8JheUSDn/6FgnYxB
-        xJ+yuUAaUnKh9bMlU+kJTeH0Yzts5aoeefV/CMug/ihlRYgPp7up2miTfXV9ttYCfK9e4Q
-        etPpJgJNmgi28JvG66rCkkSNewU5fSUebaBEdV/XVGqfOd5qNZKH7lR2Ar9ERiqaRIeApD
-        DLb7BmbCLPanDn4/OwaXRiJ067ADf8MbI8S+VVK+iJvRGsgcINh28vDPwi1prg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597446893;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=K5QW3exzHL8KDx4u+BgSGpyR6VanL3c8Yzy1ofxD9zM=;
-        b=ug8CUPyXjQ1YNWjX9lBB9/qLboibnoi2Ai4G2KOgEttAyWCikIxum+PhoSbtJkGIcbDJP9
-        KJczEmzkE9xxaJCg==
-To:     paulmck@kernel.org, Michal Hocko <mhocko@suse.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200814180141.GP4295@paulmck-ThinkPad-P72>
-Date:   Sat, 15 Aug 2020 01:14:53 +0200
-Message-ID: <87tux4kefm.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Aug 2020 19:20:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E7C8C061385;
+        Fri, 14 Aug 2020 16:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=/k+FCjWU06VGb2159RBI2JE7ici1nTwl6uGEUcvW8u8=; b=duCnFkXKHIs9RUqJo10Z/9LP6f
+        kHPvfdSST7h1NCcFpY5ySDUPo3g0vY2bpH3A56OvTGU1LDVT3T4FXY5AggTQmUznP3FyyVh8+sUxX
+        m3CjcwehIAA6UcUrrEDU3+MFrCwox9hnSBUuJSwSHpVIHbYCw9+is3FeOqe3xN7a6b/4ht95PrydZ
+        iyuZlh3txnvSFXxeaWP0dOwcXyyFk3/aOhRCMKXNkycUrt+mq2mHLJlAn2HDCN9IJ53quej40LTDz
+        1MxgS3T3C3ycfhDdyrysm9QBxQ/ogQXHwJSc6z6eywFjNDjzGqEBmf95qbiUvNHc6Oxj+cYVI6rrx
+        RGhUjLyA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6izE-0003Yk-MW; Fri, 14 Aug 2020 23:19:49 +0000
+Subject: Re: [RFC/RFT PATCH 1/6] numa: Move numa implementation to common code
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anup Patel <Anup.Patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200814214725.28818-1-atish.patra@wdc.com>
+ <20200814214725.28818-2-atish.patra@wdc.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <abc3e4de-f58e-98c9-b289-477663f64997@infradead.org>
+Date:   Fri, 14 Aug 2020 16:19:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200814214725.28818-2-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul,
+On 8/14/20 2:47 PM, Atish Patra wrote:
+> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> index 8d7001712062..73c2151de194 100644
+> --- a/drivers/base/Kconfig
+> +++ b/drivers/base/Kconfig
+> @@ -210,4 +210,10 @@ config GENERIC_ARCH_TOPOLOGY
+>  	  appropriate scaling, sysfs interface for reading capacity values at
+>  	  runtime.
+>  
+> +config GENERIC_ARCH_NUMA
+> +	bool
+> +	help
+> +	  Enable support for generic numa implementation. Currently, RISC-V
 
-On Fri, Aug 14 2020 at 11:01, Paul E. McKenney wrote:
-> On Fri, Aug 14, 2020 at 04:06:04PM +0200, Michal Hocko wrote:
->> > > > Vlastimil raised same question earlier, i answered, but let me answer again:
->> > > > 
->> > > > It is hard to achieve because the logic does not stick to certain static test
->> > > > case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
->> > > > on that, "how heavily" - number of pages are formed, until the drain/reclaimer
->> > > > thread frees them.
->> > > 
->> > > How many pages are talking about - ball park? 100s, 1000s?
->> > 
->> > Under normal operation, a couple of pages per CPU, which would make
->> > preallocation entirely reasonable.  Except that if someone does something
->> > that floods RCU callbacks (close(open) in a tight userspace loop, for but
->> > one example), then 2000 per CPU might not be enough, which on a 64-CPU
->> > system comes to about 500MB.  This is beyond excessive for preallocation
->> > on the systems I am familiar with.
->> > 
->> > And the flooding case is where you most want the reclamation to be
->> > efficient, and thus where you want the pages.
+	                             NUMA
 
-As we now established that taking zone lock is impossible at all
-independent of raw/non-raw ordering and independent of RT/PREEMPT
-configs, can we just take a step back and look at the problem from
-scratch again?
+> +	  and ARM64 uses it.
 
-As a matter of fact I assume^Wdeclare that removing struct rcu_head which
-provides a fallback is not an option at all. I know that you want to,
-but it wont work ever. Dream on, but as we agreed on recently there is
-this thing called reality which ruins everything.
+	            use it.
 
-For normal operations a couple of pages which can be preallocated are
-enough. What you are concerned of is the case where you run out of
-pointer storage space.
+> +
+>  endmenu
 
-There are two reasons why that can happen:
+thanks.
+-- 
+~Randy
 
-      1) RCU call flooding
-      2) RCU not being able to run and mop up the backlog
-
-#1 is observable by looking at the remaining storage space and the RCU
-   call frequency
-
-#2 is uninteresting because it's caused by RCU being stalled / delayed
-   e.g. by a runaway of some sorts or a plain RCU usage bug.
-   
-   Allocating more memory in that case does not solve or improve anything.
-
-So the interesting case is #1. Which means we need to look at the
-potential sources of the flooding:
-
-    1) User space via syscalls, e.g. open/close
-    2) Kernel thread
-    3) Softirq
-    4) Device interrupt
-    5) System interrupts, deep atomic context, NMI ...
-
-#1 trivial fix is to force switching to an high prio thread or a soft
-   interrupt which does the allocation
-
-#2 Similar to #1 unless that thread loops with interrupts, softirqs or
-   preemption disabled. If that's the case then running out of RCU
-   storage space is the least of your worries.
-
-#3 Similar to #2. The obvious candidates (e.g. NET) for monopolizing a
-   CPU have loop limits in place already. If there is a bug which fails
-   to care about the limit, why would RCU care and allocate more memory?
-
-#4 Similar to #3. If the interrupt handler loops forever or if the
-   interrupt is a runaway which prevents task/softirq processing then
-   RCU free performance is the least of your worries.
-
-#5 Clearly a bug and making RCU accomodate for that is beyond silly.
-
-So if call_rcu() detects that the remaining storage space for pointers
-goes below the critical point or if it observes high frequency calls
-then it simply should force a soft interrupt which does the allocation.
-
-Allocating from softirq context obviously without holding the raw lock
-which is used inside call_rcu() is safe on all configurations.
-
-If call_rcu() is forced to use the fallback for a few calls until this
-happens then that's not the end of the world. It is not going to be a
-problem ever for the most obvious issue #1, user space madness, because
-that case cannot delay the softirq processing unless there is a kernel
-bug which makes again RCU free performance irrelevant.
-
-So this will cure the problem for the most interesting case #1 and
-handle all sane variants of the other possible flooding sources.
-
-The other insane reasons do not justify any attempt to increase RCU
-performance at all.
-
-Watching the remaining storage space is good enough IMO. It clearly
-covers #1 and for all others the occasional fallback wont hurt. If it
-really matters for any case > #1 then doing a frequency based prediction
-is a straight forward optimization.
-
-As usual I might be missing something, but as this is the second day
-with reasonable temperatures here that would be caused by my ignorance
-and not be excusable by brain usage outside of specified temperature
-range.
-
-Thanks,
-
-        tglx
