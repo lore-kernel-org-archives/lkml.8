@@ -2,145 +2,239 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC25CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E0C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816572074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF7020829
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JRy5m+qT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="C4ZRvomB";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="RGPaDGnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgHNIX5 (ORCPT
+        id S1726792AbgHNI1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:23:57 -0400
-Received: from mail-mw2nam12on2059.outbound.protection.outlook.com ([40.107.244.59]:60161
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726268AbgHNIX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:23:56 -0400
+        Fri, 14 Aug 2020 04:27:19 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:60111 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgHNI1S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:27:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1597393637; x=1628929637;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Oo0f9Mk9zMH4JUXFuE9qY5xunAF/Mf5A2XnOhkrDxQo=;
+  b=C4ZRvomB5o2WwEJZD+dOchNQOJe+dmIPnetqmHnJraCdbQ2Y1MYDgTdz
+   bYjAYqC/x+Vqp7aosKwXwmkrc4ADHQci897znEU7rDct6L74kkF9X6ODG
+   5pC6PrrFWu2UkjSuLn7cMkQGHNIt1oOtR7jCDPZnwlVWEsq/8UF7hMggo
+   xCbd1o6dg3ZwdOgHKDgu6Kj9LWdyiVwbLMelcCaGS8TipHhJ5TubOtqdP
+   m5z+QaBY/W+mH31HgJVyK7QIuk2cGc3SCrmAPA6ZhMhpsxCgCSiA5C0qY
+   i7olOCpyhJg1vMruZOzNF5wYJlbZSXK1ZJ+VJ2Vs7ewj8nBFbZZpsSqKr
+   g==;
+IronPort-SDR: k/pLI4Sv4qHTyphAzvqjysy1i9QoiK7reL9cUIGjnwo2xZo80OLE0IZWGQOZEkyHWdDhsq47DH
+ cypej5kgsYeDMlvuP2smQv2rGdOp8NkiuJDjSINne7TdsZr/cTpvnDQ8RVSKH5WYV0fRzPbFUz
+ UqyTzP5EjflBoHc9mh5W35d8JCC0or/0fv9iz2Wkn9KBT8Tb6vdpsDCxjEF3uoWKkzMAYRYcMD
+ LoRJ8grsN45ojOGFRqOEyMDyrh+J4BskqW+JkYsDvEewI67OesPmgQjQjwW0nQ45as6ePbAkOc
+ 5Zg=
+X-IronPort-AV: E=Sophos;i="5.76,311,1592841600"; 
+   d="scan'208";a="254345869"
+Received: from mail-dm6nam11lp2169.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.169])
+  by ob1.hgst.iphmx.com with ESMTP; 14 Aug 2020 16:27:15 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m6Mtf82+h+DG/AzxrPFUZ5C8yPKJVhjs/EDAESdoCbBqlv1N4UvW2AxJ5l3GU/XiFWEAl+GfyTQRnmxUwnsPJFzETtyw2iSyOyADGD5mt44IsadZ4uPLZTy+4NmciW9d3LpGFSs1cJ4ll8Nzh+FkmaiG5Gq0aBTrk1WpfEg6We6sclR4v/QZL6l68pEjspPOMuiIN3bNgBnzrHzzYtgBbjS6IrMQqXwJqZkOgDyKKjPajUPhH6q0tRlz5d/gGRh1b3LPQvlBt8JpJISQCnMG/B1e5Ll+LLOXqBqJr2UWVpVKrWDEKWoknqml4U8FAJfChekKXeZoKOT4btO/7gCWyA==
+ b=SxdCxN3ub2LYWnq4znV9nanN9SlX6maRifDgK0Yt5O2988/SfplaeusoyF1ZnZvhUNKC2RLHoJVP0O9QYPHNdRPi+Ahy4n1wVmeNkniSxPsTA/9h9621qV8TrCAV8CyT9jBOXPSIPTS5qWpmbxqzop1WLa1ebn3hoFQJEboCWcPl0bRu8YiuNyhvRuHSRD2oK3lLCiCVxhTnOvXvMsHQ15+GYG7eoc/0OOleOIShHe+Lnzp33FD5ZWlNmXHp+am6C/7dl/5XpffV9V+19p40KD9ptpJ+uI60Z9X+9iefjKtGH5nJd5Ocg40fF3HMmPbtLoX9pcidwX1Pa+VfJHh3zw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVqek+tcpWLWmxNT2tjZrwKaxpHxJIcWdAcNTBsBRAM=;
- b=FHidzzODtSxCaMQ2ZhgXcgMWVSnuPZQhugG4Pqq9jH7UBe2ZKbvWCZInQl5yW2njVAzf+ri2h2No4deGvA1KU9oOoKiNzOkdQLghdO0AyfVN3ysVfs2B5MZxs2uQ4n/y3fWDRuRpUMozeJwEkBhFyfzICBSp3VQ/f2U6+rp8wnL5p5B6qkQHBMWKaLOM3mumZSbmJ+0JSDxhy1hFdBTjcrcGzHpFc4kQkHKiK27/TA1t6xzbTedXHwlgfXf+jRnXSdcLVdwPCvTeOayx4s5JQ2Qnj4mFsGZuQ/+YjPS+IrkVTGGrvFKhXOTU7xWOSSM70/z0LS60Wuz4+eNyjqNASQ==
+ bh=Nuefnf2xje4g4Tsecj7wFAY2Akwzz0AA1g1Frn/Z5uI=;
+ b=UmCxzUih8JGKWGzYk1BJr6/GG/glIoPf1fYLOgsArutB/TMo8nX/vOiOLkQIS4w4L3WS2sANWpFSYyvurVvi+ye/P0m+q+XvFE22fCay7PHSiTOabBvCkIooAlie9lFcwZQGt4116UN/wto3I7RWzk1juVPN+soS/fFD9kY8sQ7S75SNtXdlvhYi44qwR1Ne7vUyYGaFtCl6+Xt7hNuhpNNDwau3IgjwM6q3xzOeHUCSZeXpbcxvYFjvEf7vu/lKu4KeJHJ16BoMyrb887xgSvr7m0t3P/97Jr1vNm3a1lHg5wKkgGJBiK6HE5n4UMKRKEXVvhXjXh0uOUZibuhdIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVqek+tcpWLWmxNT2tjZrwKaxpHxJIcWdAcNTBsBRAM=;
- b=JRy5m+qTqHi7QhHyQC/7CYpGSjpoM0jXhKIHOMfQEqUMK5gQf8rgl7s1OB6EW+lcrl0oYFkaqFtcmPZ2iFOjsjr2+hkfnW1uEEYvz+/New4gxvtAIJJYvAXOBZx1muOEh3cwND5sQxMYTysFvRiwChsNhFRmCAeQuiuxRhmkplc=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=amd.com;
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
- by MN2PR12MB4112.namprd12.prod.outlook.com (2603:10b6:208:19a::9) with
+ bh=Nuefnf2xje4g4Tsecj7wFAY2Akwzz0AA1g1Frn/Z5uI=;
+ b=RGPaDGnpzOXs2RB4HAxf/ZwYfm710th11AH9cq2q0ydqSrW/gvUGbb6ziiEQDdNxv661MIfYiyn3q5B0iBB+92nmiYlHGkGhoEMNrsFCX+nrWPU+75rS0//VtOGlecyO9ITEBYQUZoUc1XA9B4mjc1LVNjrhqpw9i+yrX0LfDEI=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR04MB1033.namprd04.prod.outlook.com (2603:10b6:910:54::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 14 Aug
- 2020 08:23:54 +0000
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.015; Fri, 14 Aug 2020
- 08:23:54 +0000
-Subject: Re: [BUG] drm/ttm: Warning during suspend/freeze
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc:     Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-References: <87zh6x3b16.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <7a8edb0a-350e-b19a-aabb-ec66922313c0@amd.com>
-Date:   Fri, 14 Aug 2020 10:23:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <87zh6x3b16.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.22; Fri, 14 Aug
+ 2020 08:27:13 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2%12]) with mapi id 15.20.3283.016; Fri, 14 Aug
+ 2020 08:27:13 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+Thread-Topic: [PATCH v4 6/6] io_uring: add support for zone-append
+Thread-Index: AQHWYdbcc0q15qREKECGO7brHi6zEg==
+Date:   Fri, 14 Aug 2020 08:27:13 +0000
+Message-ID: <CY4PR04MB3751DE1ECCA4099902AABAA6E7400@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200731064526.GA25674@infradead.org>
+ <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731091416.GA29634@infradead.org>
+ <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731094135.GA4104@infradead.org>
+ <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731125110.GA11500@infradead.org>
+ <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200814081411.GA16943@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-X-ClientProxiedBy: AM0PR04CA0096.eurprd04.prod.outlook.com
- (2603:10a6:208:be::37) To MN2PR12MB3775.namprd12.prod.outlook.com
- (2603:10b6:208:159::19)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2400:2411:43c0:6000:28a1:79eb:9c3c:a78e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b3f2aec5-95de-4316-1988-08d8402bd898
+x-ms-traffictypediagnostic: CY4PR04MB1033:
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR04MB10335C3589BBEA3C1E378294E7400@CY4PR04MB1033.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uUIPcXKI51tmcJOP8x+IpoiWEaBdXpCOKSHZ4ejlFCXOVeTUCooTpLK17mcMWZbIgNUrkgZtDLIWTA8m/FT+cxlz50ffTndKVvCSS5ROqo5q8JSRjxl4hf2QVnGNgXLiqpNH6KqAwYGZBCTjLPzgH15GrNUnZ5hYc+ANnybWf8bEOHuRztzNJhQDEygvQED1nBTabnNMdRVqYkX+kLulZ8Y/Pjz3MyYJZcAaKZxf+7P0Zr9PvdPtCRyT2fUK17H4olBwrStnYCC7IE/zwtX+wrW+OEk0Fdz0PpAemTYZAwyJ2umV1tn3x8DzAk0e5Qy8Oag/BN0SAH2rjukOXP6VPg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(39860400002)(346002)(136003)(396003)(64756008)(76116006)(91956017)(66556008)(66476007)(66446008)(7416002)(2906002)(52536014)(5660300002)(8936002)(6916009)(66946007)(8676002)(33656002)(83380400001)(6506007)(53546011)(54906003)(7696005)(316002)(478600001)(71200400001)(9686003)(186003)(55016002)(86362001)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: dR3Mcc58b1uHIJSUAHzaQ9b1fkCZdutxIHzUxhqF0nlXLF9srksTvlqp4lfwWCnKW0rFmtBvk+/LEPQZVAV0vPKmnGb1PjYUUXd0+ayvuxRaj4GNn1esYYm3SHA1sjfIF3fGupLGjTzCezPq9tdfgkrWqIkDoMpe85bdf2NMNeL+E3mdtIuqfvHqQ7J56QVpgMjuvCn+zr7sbbScTgOCZcEw4cF2wCQIcCaSeVgu5JpTWc14zPFUM4iw6S58tqFmzuvTOnbONBj0vVRbDX8ihWkFTTw3L7LbQoG6oelPG7/jYTjDE5xpdeyAUSlqw0C62irdgwXNsaHqMFsDHHV9yFe7fdRDOnOmGIp61bA2UDJ/yQE9j6pMekrSMM9zhiMq3qoX8jWj6qPJ34hJWSSiwSUbH1h9Zawk3Ctxjw3wEpn9r72ToK1a0ommwb3qGFNVsJdwRwxe3aTA9Pw70L6zWvnaE20GfhdQW6IR2OWUWUbBrZ0o4Y1/mrU7LrXeJe3t+e5/DNjqwQvpwcFR/HFA/VhSypxMzG44MCYS6uvnor+0SWL/C0EyMrBuRitqdBTwP7940+89oLAKYnQQ5v4wJQm6fDt4ce0oO9jZeTSk3PMpH52O4PsU8x65MmVnu66m7Y+fbqGgfA2u4M2L3+DuhKjohHXpL/P61M/MWM7vqV/9g14tRB+6dmQMZ2mvcG5moJsxRjnXpbohFsbrypzjjg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR04CA0096.eurprd04.prod.outlook.com (2603:10a6:208:be::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 08:23:51 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 740b692f-aa74-4bf3-063e-08d8402b6187
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4112:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4112FA55497CA0C9BE6E3CD683400@MN2PR12MB4112.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YJW14Iuz9QjfMfv5MBOrKAaPmIPZhAo3jc5LfQhbK87hxP5Fyi2PrML5tEFZoC8ccLffTK1Pysu8wOhFqVxeXDriSuWrSF5iy9CIPEzvBB7RI1q9XOgeGTmo3t2rmgS9ZLos9P0x+7v+QtB82otgZ5wkGsHnZ+Uikxjin4CY19e37kSe/5wcbKqhgxwZrk//J1K6KbB0NVtfLrei4DL/RQmow0+hpE2+mugXMI+Br+11bRLLuN/OHdgw0TUTQC/EeKyRtBgM9Rtm5x2cNfRVEbJe71yFXyHNsy9WR7Iz8bA7jW96jlnkfsgu9IA+VypZGk6pET4B91PmiNBFZDJa3ptFUTzFiMbNuc5nbWilELDF4X7H+/mJq0oamWKpPj1i
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(4326008)(31686004)(86362001)(6666004)(54906003)(31696002)(52116002)(15650500001)(66556008)(66476007)(5660300002)(316002)(2906002)(2616005)(8676002)(66946007)(36756003)(6486002)(16526019)(186003)(8936002)(83380400001)(45080400002)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: fVAsVvEBv8XC1ac8O6imN7w3RiFfIwdx5S1cwlV4LXye4yWdNdsTik1I+bduhQTbEwfxOle2Ev6Hk8ugexFyAsog8sMAUpQ2BFyfq98I27GfmaAwzkkEDNEQgepRwd9VHrjks0mycsd35zG8Z+b/dHDKQdBRna9VXUFTI/06741XLedhare1keSWhlkq7TJUqc4JMbyKv3uAVJ+GrShA75sqG/KKL6Le9vZ59qGoopQNwx5wO3pLWorZUdDEhaj8b4ZWwlsur/W8FpYINU+GeK+m27XCko/rDqmaJFLG5j2+JwWMj1SfIY1ZgwDMU0AiHoZiVHJ+dfhx1pU5X62Pb+aVSR5xsXZ2XEiV7Zd8cmASC3004T85r43xV2dFCWg501D2InpuAVmBDfSGRN2W3HdtNFGs8hOEiFInBTuT9DK7mSZegtYh2RX57E3OkKg2Q7iUzJk28doSxlonC5CnhGLzeHRt7Pj8964+myOgiw6FI7xC+7KzC/SgAjqq22y94s3bPylZgo/dFYDr9rOxWAhlXzDagOa2PAhjn90YyawuytuG01LAFQFR0MeECB5lfMohaGZXPWTBwKDaLQAy+Uj0R+jhZcrjqThbyTjE2h0n1yLblIHniJLH34ZYmAkcwSm9PHQS9zjF/YH83Wkce1OjDomLvKJEmysrcfpB6pzRDWwGR0wN+tZ63kvjGcBLaC6llUJ3SggKshmc84g2XQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 740b692f-aa74-4bf3-063e-08d8402b6187
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 08:23:53.9743
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3f2aec5-95de-4316-1988-08d8402bd898
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2020 08:27:13.2884
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZFYh0nQF7ELjsD6Cijzk6mo4ZeMEl5uuGyWc635D044tiRMPuKIJk9bY8eNwK448
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4112
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r2lQ9zUUgC2hzw+B8OLSUOevj5dcZWGC66awE4RBb0COw9oIor7J92zN9ET7FPcJCtJfQsFf3wgwuyoi/FvQ2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-well I added a new assertion to catch cases when a driver tries to kmap 
-a BO without grabbing the lock.
-
-Looks like QXL is doing exactly that here.
-
-Regards,
-Christian.
-
-Am 14.08.20 um 10:08 schrieb Thomas Gleixner:
-> Suspending or freezing a KVM guest triggers the following warning
-> reliably on current mainline:
->
-> [56691.550343] printk: Suspending console(s) (use no_console_suspend to debug)
-> [56691.578735] WARNING: CPU: 37 PID: 462 at drivers/gpu/drm/ttm/ttm_tt.c:51 ttm_tt_create+0xb6/0xe0 [ttm]
-> [56692.795234] Modules linked in: snd_hda_codec_generic(E) qxl(E) drm_ttm_helper(E) ttm(E) snd_hda_intel(E) snd_intel_dspcfg(E) snd_hda_codec(E) drm_kms_helper(E) snd_hwdep(E) snd_hda_core(E) cec(E) snd_pcm(E) snd_timer(E) drm(E) joydev
-> (E) snd(E) pcspkr(E) sg(E) evdev(E) virtio_balloon(E) serio_raw(E) virtio_console(E) soundcore(E) button(E) virtio_rng(E) rng_core(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) hid_generic(E) usbhid(E) hid(E) virtio_net(E) net_failover(E) failover(E) uhci_hcd(E) virtio_blk(E) sr_mod(E) cdrom(E) ata_generic(E) ehci_pci(E) ata_piix(E) ehci_hcd(E) libata(E) virtio_pci(E) usbcore(E) psmouse(E) virtio_ring(E) scsi_mod(E) i2c_piix4(E) virtio(E) floppy(E)
-> [56691.578781] CPU: 37 PID: 462 Comm: kworker/37:1 Tainted: G            E     5.8.0+ #8217
-> [56691.578784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [56692.795348] Workqueue: events drm_fb_helper_dirty_work [drm_kms_helper]
-> [56691.578872] RIP: 0010:ttm_tt_create+0xb6/0xe0 [ttm]
-> [56691.578903] Call Trace:
-> [56691.578912]  ttm_bo_kmap+0x13c/0x260 [ttm]
-> [56691.578942]  qxl_bo_kmap+0x40/0x70 [qxl]
-> [56691.578947]  qxl_gem_prime_vmap+0x21/0x50 [qxl]
-> [56691.579060]  drm_gem_vmap+0x1f/0x50 [drm]
-> [56691.579073]  drm_client_buffer_vmap+0x1c/0x30 [drm]
-> [56691.579083]  drm_fb_helper_dirty_work+0xb2/0x1c0 [drm_kms_helper]
-> [56691.579091]  process_one_work+0x246/0x580
-> [56691.579099]  ? process_one_work+0x580/0x580
-> [56691.579101]  worker_thread+0x30/0x370
-> [56691.579104]  ? process_one_work+0x580/0x580
-> [56691.579107]  kthread+0x12a/0x140
-> [56691.579110]  ? kthread_park+0x80/0x80
-> [56691.579118]  ret_from_fork+0x22/0x30
->
-> Have not had time to figure out whether this is a regression or an older
-> issue. If you need further info please let me know.
->
-> Thanks,
->
->          tglx
-
+On 2020/08/14 17:14, hch@infradead.org wrote:=0A=
+> On Wed, Aug 05, 2020 at 07:35:28AM +0000, Damien Le Moal wrote:=0A=
+>>> the write pointer.  The only interesting addition is that we also want=
+=0A=
+>>> to report where we wrote.  So I'd rather have RWF_REPORT_OFFSET or so.=
+=0A=
+>>=0A=
+>> That works for me. But that rules out having the same interface for raw =
+block=0A=
+>> devices since O_APPEND has no meaning in that case. So for raw block dev=
+ices, it=0A=
+>> will have to be through zonefs. That works for me, and I think it was yo=
+ur idea=0A=
+>> all along. Can you confirm please ?=0A=
+> =0A=
+> Yes.  I don't think think raw syscall level access to the zone append=0A=
+> primitive makes sense.  Either use zonefs for a file-like API, or=0A=
+> use the NVMe pass through interface for 100% raw access.=0A=
+> =0A=
+>>>  - take the exclusive per-inode (zone) lock and just issue either norma=
+l=0A=
+>>>    writes or zone append at your choice, relying on the lock to=0A=
+>>>    serialize other writers.  For the async case this means we need a=0A=
+>>>    lock than can be release in a different context than it was acquired=
+,=0A=
+>>>    which is a little ugly but can be done.=0A=
+>>=0A=
+>> Yes, that would be possible. But likely, this will also need calls to=0A=
+>> inode_dio_wait() to avoid ending up with a mix of regular write and zone=
+ append=0A=
+>> writes in flight (which likely would result in the regular write failing=
+ as the=0A=
+>> zone append writes would go straight to the device without waiting for t=
+he zone=0A=
+>> write lock like regular writes do).=0A=
+> =0A=
+> inode_dio_wait is a really bad implementation of almost a lock.  I've=0A=
+> started some work that I need to finish to just replace it with proper=0A=
+> non-owner rwsems (or even the range locks Dave has been looking into).=0A=
+=0A=
+OK.=0A=
+=0A=
+>> This all sound sensible to me. One last point though, specific to zonefs=
+: if the=0A=
+>> user opens a zone file with O_APPEND, I do want to have that necessarily=
+ mean=0A=
+>> "use zone append". And same for the "RWF_REPORT_OFFSET". The point here =
+is that=0A=
+>> both O_APPEND and RWF_REPORT_OFFSET can be used with both regular writes=
+ and=0A=
+>> zone append writes, but none of them actually clearly specify if the=0A=
+>> application/user tolerates writing data to disk in a different order tha=
+n the=0A=
+>> issuing order... So another flag to indicate "atomic out-of-order writes=
+" (=3D=3D=0A=
+>> zone append) ?=0A=
+> =0A=
+> O_APPEND pretty much implies out of order, as there is no way for an=0A=
+> application to know which thread wins the race to write the next chunk.=
+=0A=
+=0A=
+Yes and no. If the application threads do not synchronize their calls to=0A=
+io_submit(), then yes indeed, things can get out of order. But if the=0A=
+application threads are synchronized, then the offset set for each append A=
+IO=0A=
+will be in sequence of submission, so the user will not see its writes=0A=
+completing at different write offsets than this implied offsets.=0A=
+=0A=
+If O_APPEND is the sole flag that triggers the use of zone append, then we =
+loose=0A=
+this current implied and predictable positioning of the writes. Even for a=
+=0A=
+single thread by the way.=0A=
+=0A=
+Hence my thinking to preserve this, meaning that O_APPEND alone will see zo=
+nefs=0A=
+using regular writes. O_APPEND or RWF_APPEND + RWF_SOME_NICELY_NAMED_FLAG_f=
+or_ZA=0A=
+would trigger the use of zone append, with the implied effect that writes m=
+ay=0A=
+not end up in the same order as they are submitted. So the flag name could =
+be:=0A=
+RWF_RELAXED_ORDER or something like that (I am bad at naming...).=0A=
+=0A=
+And we also have RWF_REPORT_OFFSET which applies to all cases of append wri=
+tes,=0A=
+regardless of the command used.=0A=
+=0A=
+Does this make sense ?=0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
