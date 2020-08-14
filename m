@@ -2,154 +2,186 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 762EE206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DDA206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFSJI9uL"
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="eN8v/Zpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgHNT4R (ORCPT
+        id S1728089AbgHNT4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 15:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgHNT4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:56:17 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 416D3C061385;
-        Fri, 14 Aug 2020 12:56:16 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id h22so8483275otq.11;
-        Fri, 14 Aug 2020 12:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sD1hZF2WdFP1115pTPAq+FgT6KZuW8nyCloT6zbSfds=;
-        b=OFSJI9uLzODA4OcY1hVAe6WHCPZQZoKwaxcAlkY3h7E+FIVyKNBc+LitG0bJce7GM9
-         MI8t2RVPG1bPqQYEhRkPl1B+ZisQwqamhVZY4Ugayj54oXPxzK2O+cNz9fGv6nNdkDUP
-         KuiJInYJstOMsOVbUgEOlknsCJUzx3pYpBMpRGc6JCryU79HxqGybFK8Tm1xNlAYhgZ6
-         gy6LCOMb1V1bv1NyGvwCvuMzCVGXDq+xt1yH5R2lvCLiMIrImA5MFQT2ZOiBBknFfHLI
-         JgupdGsIcdpLUlGfmyFxvVPXrb//GWhVPfCJAsUt1fX/ngEu3//rAr2eUBRUSxIraJgy
-         x1sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sD1hZF2WdFP1115pTPAq+FgT6KZuW8nyCloT6zbSfds=;
-        b=Tlqk1UT5RWSvffk2oZ23mchyfhuXwP2RJVYpQipoikXRBhhXLzcbjNR8mEOqHkxEKs
-         M4C0Kw4VRDnMnM2OYWzuVF0BunJuHn992AtfMqyEKJ8Dyve+WOeo6luvDqKzCHey2KdC
-         KxzZWJDWbXXEk/+nYVakQ46rEB4A2TzLnPiCKoVULRv8mD+W/ZIgi1krhN+mYrUiwAvU
-         LQxrmlymmqIYEgD1T1Mvav6KabVEidPe9yCRFVlnJgpm3khJV800hmh5Z0LCFXaDBJeB
-         HvgHz5TXb3Mvtx7PnulPkZ6juwM+8CzZE40AlMNT/4s4iOjCOULGiCLEYb4zdj3AJ1CE
-         5WHw==
-X-Gm-Message-State: AOAM532vXKp9yoauLdxlxdKBtsbdY7UDY/+LsOHiZTYyFuD70Rn72NCP
-        bUUmVZYAiuy+N+U/yji1tVWKlrdEBCU25gRQyg8=
-X-Google-Smtp-Source: ABdhPJy6y8VniNbwmMIOoU7RwRwYzrIN3Z8PfE0Fq+Prr4D1B0V/OsFpi82tLiD5BIDc6eUrhcwgYOzjKVvfaC/2Ms0=
-X-Received: by 2002:a9d:6053:: with SMTP id v19mr2981691otj.362.1597434976086;
- Fri, 14 Aug 2020 12:56:16 -0700 (PDT)
+        Fri, 14 Aug 2020 15:56:40 -0400
+Received: from mx3.wp.pl ([212.77.101.9]:25734 "EHLO mx3.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgHNT4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 15:56:39 -0400
+X-Greylist: delayed 405 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 15:56:37 EDT
+Received: (wp-smtpd smtp.wp.pl 27067 invoked from network); 14 Aug 2020 21:49:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1597434590; bh=6hs6TPHFIz1kOVdD6LgU8CRUVT9Umoi+c/8YAc/xC4M=;
+          h=From:To:Cc:Subject;
+          b=eN8v/ZpcBq4H7jMtxIUpXjF98kThu7jSSm54P6uuEch+cVb48QelKmg460BIds1/A
+           09ptcadME72tw3bbC4ztUfVtLh4894huexGOo0favP0554YmvmDTG1OIM83ZXOlqUc
+           YrFZWYGVS6fGIh+lzVQvM1LIiY30f+Dck1J+7KTk=
+Received: from riviera.nat.student.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-gpio@vger.kernel.org>; 14 Aug 2020 21:49:50 +0200
+From:   Aleksander Jan Bajkowski <olek2@wp.pl>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, john@phrozen.org
+Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH] gpio: stp-xway: automatically drive GPHY leds on ar10 and grx390
+Date:   Fri, 14 Aug 2020 21:48:47 +0200
+Message-Id: <20200814194847.3171-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200813084129.332730-1-josephsih@chromium.org> <20200813164059.v1.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-In-Reply-To: <20200813164059.v1.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date:   Fri, 14 Aug 2020 12:56:05 -0700
-Message-ID: <CABBYNZJ-nBXeujF2WkMEPYPQhXAphqKCV39gr-QYFdTC3GvjXg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] Bluetooth: sco: expose WBS packet length in socket option
-To:     Joseph Hwang <josephsih@chromium.org>
-Cc:     "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Joseph Hwang <josephsih@google.com>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: 51f58ab8618c49ec09034a6d961ab25c
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [MXMQ]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joseph,
+Ar10 (xr300) has 3 and grx390 (xrx330) has 4 built-in GPHY. PHY LEDs are
+connected via STP. STP is a peripheral controller used to drive external
+shift register cascades. The hardware is able to allow the GPHY to drive
+some GPIO of the cascade automatically.This patch allows for this on ar10
+and grx390.
 
-On Thu, Aug 13, 2020 at 1:42 AM Joseph Hwang <josephsih@chromium.org> wrote:
->
-> It is desirable to expose the wideband speech packet length via
-> a socket option to the user space so that the user space can set
-> the value correctly in configuring the sco connection.
->
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> ---
->
->  include/net/bluetooth/bluetooth.h | 2 ++
->  net/bluetooth/sco.c               | 8 ++++++++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bluetooth.h
-> index 9125effbf4483d..922cc03143def4 100644
-> --- a/include/net/bluetooth/bluetooth.h
-> +++ b/include/net/bluetooth/bluetooth.h
-> @@ -153,6 +153,8 @@ struct bt_voice {
->
->  #define BT_SCM_PKT_STATUS      0x03
->
-> +#define BT_SCO_PKT_LEN         17
-> +
->  __printf(1, 2)
->  void bt_info(const char *fmt, ...);
->  __printf(1, 2)
-> diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
-> index dcf7f96ff417e6..97e4e7c7b8cf62 100644
-> --- a/net/bluetooth/sco.c
-> +++ b/net/bluetooth/sco.c
-> @@ -67,6 +67,7 @@ struct sco_pinfo {
->         __u32           flags;
->         __u16           setting;
->         __u8            cmsg_mask;
-> +       __u32           pkt_len;
->         struct sco_conn *conn;
->  };
->
-> @@ -267,6 +268,8 @@ static int sco_connect(struct sock *sk)
->                 sco_sock_set_timer(sk, sk->sk_sndtimeo);
->         }
->
-> +       sco_pi(sk)->pkt_len = hdev->sco_pkt_len;
-> +
->  done:
->         hci_dev_unlock(hdev);
->         hci_dev_put(hdev);
-> @@ -1001,6 +1004,11 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
->                         err = -EFAULT;
->                 break;
->
-> +       case BT_SCO_PKT_LEN:
-> +               if (put_user(sco_pi(sk)->pkt_len, (u32 __user *)optval))
-> +                       err = -EFAULT;
-> +               break;
+Tested on D-Link DWR-966 with OpenWRT.
 
-Couldn't we expose this via BT_SNDMTU/BT_RCVMTU?
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ drivers/gpio/gpio-stp-xway.c | 54 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
->         default:
->                 err = -ENOPROTOOPT;
->                 break;
-> --
-> 2.28.0.236.gb10cc79966-goog
->
-
-
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index 9e23a5ae8108..0ce1543426a4 100644
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -41,7 +41,10 @@
+ #define XWAY_STP_4HZ		BIT(23)
+ #define XWAY_STP_8HZ		BIT(24)
+ #define XWAY_STP_10HZ		(BIT(24) | BIT(23))
+-#define XWAY_STP_SPEED_MASK	(0xf << 23)
++#define XWAY_STP_SPEED_MASK	(BIT(23) | BIT(24) | BIT(25) | BIT(26) | BIT(27))
++
++#define XWAY_STP_FPIS_VALUE	BIT(21)
++#define XWAY_STP_FPIS_MASK	(BIT(20) | BIT(21))
+ 
+ /* clock source for automatic update */
+ #define XWAY_STP_UPD_FPI	BIT(31)
+@@ -54,7 +57,9 @@
+ /* 2 groups of 3 bits can be driven by the phys */
+ #define XWAY_STP_PHY_MASK	0x7
+ #define XWAY_STP_PHY1_SHIFT	27
+-#define XWAY_STP_PHY2_SHIFT	15
++#define XWAY_STP_PHY2_SHIFT	3
++#define XWAY_STP_PHY3_SHIFT	6
++#define XWAY_STP_PHY4_SHIFT	15
+ 
+ /* STP has 3 groups of 8 bits */
+ #define XWAY_STP_GROUP0		BIT(0)
+@@ -80,6 +85,8 @@ struct xway_stp {
+ 	u8 dsl;		/* the 2 LSBs can be driven by the dsl core */
+ 	u8 phy1;	/* 3 bits can be driven by phy1 */
+ 	u8 phy2;	/* 3 bits can be driven by phy2 */
++	u8 phy3;	/* 3 bits can be driven by phy3 */
++	u8 phy4;	/* 3 bits can be driven by phy4 */
+ 	u8 reserved;	/* mask out the hw driven bits in gpio_request */
+ };
+ 
+@@ -114,7 +121,8 @@ static void xway_stp_set(struct gpio_chip *gc, unsigned gpio, int val)
+ 	else
+ 		chip->shadow &= ~BIT(gpio);
+ 	xway_stp_w32(chip->virt, chip->shadow, XWAY_STP_CPU0);
+-	xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
++	if (!chip->reserved)
++		xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
+ }
+ 
+ /**
+@@ -188,16 +196,37 @@ static void xway_stp_hw_init(struct xway_stp *chip)
+ 			chip->phy2 << XWAY_STP_PHY2_SHIFT,
+ 			XWAY_STP_CON1);
+ 
++	if (of_machine_is_compatible("lantiq,grx390")
++	    || of_machine_is_compatible("lantiq,ar10")) {
++		xway_stp_w32_mask(chip->virt,
++				XWAY_STP_PHY_MASK << XWAY_STP_PHY3_SHIFT,
++				chip->phy3 << XWAY_STP_PHY3_SHIFT,
++				XWAY_STP_CON1);
++	}
++
++	if (of_machine_is_compatible("lantiq,grx390")) {
++		xway_stp_w32_mask(chip->virt,
++				XWAY_STP_PHY_MASK << XWAY_STP_PHY4_SHIFT,
++				chip->phy4 << XWAY_STP_PHY4_SHIFT,
++				XWAY_STP_CON1);
++	}
++
+ 	/* mask out the hw driven bits in gpio_request */
+-	chip->reserved = (chip->phy2 << 5) | (chip->phy1 << 2) | chip->dsl;
++	chip->reserved = (chip->phy4 << 11) | (chip->phy3 << 8) | (chip->phy2 << 5)
++		| (chip->phy1 << 2) | chip->dsl;
+ 
+ 	/*
+ 	 * if we have pins that are driven by hw, we need to tell the stp what
+ 	 * clock to use as a timer.
+ 	 */
+-	if (chip->reserved)
++	if (chip->reserved) {
+ 		xway_stp_w32_mask(chip->virt, XWAY_STP_UPD_MASK,
+ 			XWAY_STP_UPD_FPI, XWAY_STP_CON1);
++		xway_stp_w32_mask(chip->virt, XWAY_STP_SPEED_MASK,
++			XWAY_STP_10HZ, XWAY_STP_CON1);
++		xway_stp_w32_mask(chip->virt, XWAY_STP_FPIS_MASK,
++			XWAY_STP_FPIS_VALUE, XWAY_STP_CON1);
++	}
+ }
+ 
+ static int xway_stp_probe(struct platform_device *pdev)
+@@ -242,13 +271,26 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	/* find out which gpios are controlled by the phys */
+ 	if (of_machine_is_compatible("lantiq,ar9") ||
+ 			of_machine_is_compatible("lantiq,gr9") ||
+-			of_machine_is_compatible("lantiq,vr9")) {
++			of_machine_is_compatible("lantiq,vr9") ||
++			of_machine_is_compatible("lantiq,ar10") ||
++			of_machine_is_compatible("lantiq,grx390")) {
+ 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy1", &phy))
+ 			chip->phy1 = phy & XWAY_STP_PHY_MASK;
+ 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy2", &phy))
+ 			chip->phy2 = phy & XWAY_STP_PHY_MASK;
+ 	}
+ 
++	if (of_machine_is_compatible("lantiq,ar10") ||
++			of_machine_is_compatible("lantiq,grx390")) {
++		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy3", &phy))
++			chip->phy3 = phy & XWAY_STP_PHY_MASK;
++	}
++
++	if (of_machine_is_compatible("lantiq,grx390")) {
++		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy4", &phy))
++			chip->phy4 = phy & XWAY_STP_PHY_MASK;
++	}
++
+ 	/* check which edge trigger we should use, default to a falling edge */
+ 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
+ 		chip->edge = XWAY_STP_FALLING;
 -- 
-Luiz Augusto von Dentz
+2.20.1
+
