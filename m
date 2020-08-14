@@ -2,111 +2,118 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4351C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10EDE20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597385471;
-	bh=sXqxn17Ji4agz3DcSXOOpYy8haJnA9Hug1dQgMfh6LA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BNow4uEmbuuS8BvAgrWa6O1c9IhfVgVWkmMIzK3PKQlYUnw3zKfqBUvIWZIK3GF3T
-	 CjHnrSOUSLqsqSURe+VEmQy1z/Fmi9JgKiwwmQXUUh7lVmZYb4pZRlysvrcrfMQWG4
-	 SObosw5MaI3RVA8fednoWKpN58zD6JvTV/sKSenQ=
+	by mail.kernel.org (Postfix) with ESMTP id BDB5220838
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgHNGLJ (ORCPT
+        id S1726313AbgHNGTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 02:19:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15966 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgHNGLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:11:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B0B20708;
-        Fri, 14 Aug 2020 06:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597385468;
-        bh=sXqxn17Ji4agz3DcSXOOpYy8haJnA9Hug1dQgMfh6LA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fjkvJBkNFtRmFsrkuQO3mQq9UPvk/L+JCX3yfli0s3CgT/bnDh+LDirmFLmjNxLBk
-         4myKFL0kMUEsAvSY7GF/d7xVQy9P8IjZKuSfS2CwEsSs2qMMi6Z94COImcbBbttqBu
-         llok/yhehuEZmnKBjdiAuUdk8J3ehd3s5APM7W0Q=
-Date:   Fri, 14 Aug 2020 08:11:05 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de,
-        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
-Message-ID: <20200814061105.GG1409566@kroah.com>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
- <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
+        id S1726185AbgHNGTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:19:22 -0400
+IronPort-SDR: qc3QO0RWv3PDkKWWUnzAvTB3m1g11J8gI61bOogi8VRRUGjjDdgIhsv142EBIXi6bIpJGyw9t9
+ Ku0mZ16r6Rxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="155474553"
+X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
+   d="scan'208";a="155474553"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 23:19:21 -0700
+IronPort-SDR: 545gqfD32bKwafgjhPqXEZJ/MY8MH2jMl8R6xD4Y1UwfyHWY5cxN1DzxA7dp7Ew+2hDGUaO/P8
+ hx+H8DlmnLWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
+   d="scan'208";a="318784992"
+Received: from ipu5-build.bj.intel.com (HELO [10.238.232.196]) ([10.238.232.196])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2020 23:19:17 -0700
+Subject: Re: [PATCH v5 0/6] Support running driver's probe for a device
+ powered off
+From:   Bingbu Cao <bingbu.cao@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
+Message-ID: <aca32190-076e-d047-6988-1a5858f84945@linux.intel.com>
+Date:   Fri, 14 Aug 2020 14:18:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
+In-Reply-To: <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:17:49PM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
-> > Hi everyone.
-> > 
-> > On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
-> > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> > > loaded directly from an EEPROM or, if not present, by the SoC's
-> > > co-processor, VideoCore. This series reworks how we handle this.
-> > > 
-> > > The previous solution makes use of PCI quirks and exporting platform
-> > > specific functions. Albeit functional it feels pretty shoehorned. This
-> > > proposes an alternative way of handling the triggering of the xHCI chip
-> > > initialization trough means of a reset controller.
-> > > 
-> > > The benefits are pretty evident: less platform churn in core xHCI code,
-> > > and no explicit device dependency management in pcie-brcmstb.
-> > > 
-> > > Note that patch #1 depends on another series[1], that was just applied
-> > > into the clk maintainer's tree.
-> > > 
-> > > The series is based on v5.8-rc3
-> > > 
-> > > v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
-> > > v2: https://lkml.org/lkml/2020/6/9/875
-> > > v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
-> > > 
-> > > [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
-> > > 
-> > > ---
-> > 
-> > We were waiting on a dependency to be merged upstream to get this. They are now
-> > in, so could we move things forward?
-> > 
-> > I can take the device tree patches, I guess philipp can take the reset
-> > controller code. But I'm not so sure who should be taking the PCI/USB
-> > counterparts.
-> 
-> Should we route everything through the USB tree since that is where the
-> changes that do require synchronization with other subsystems and DTS is
-> needed the most?
-> -- 
-> Florian
 
-That's fine with me, if everyone else is ok with it :)
+
+On 8/14/20 12:11 PM, Bingbu Cao wrote:
+> 
+> 
+> On 8/10/20 10:27 PM, Sakari Ailus wrote:
+>> Hi all,
+>>
+> ...snip...
+>>
+>> The use case is such that there is a privacy LED next to an integrated
+>> user-facing laptop camera, and this LED is there to signal the user that
+>> the camera is recording a video or capturing images. That LED also happens
+>> to be wired to one of the power supplies of the camera, so whenever you
+>> power on the camera, the LED will be lit, whether images are captured from
+>> the camera --- or not. There's no way to implement this differently
+>> without additional software control (allowing of which is itself a
+>> hardware design decision) on most CSI-2-connected camera sensors as they
+>> simply have no pin to signal the camera streaming state.
+>>
+>> This is also what happens during driver probe: the camera will be powered
+>> on by the I²C subsystem calling dev_pm_domain_attach() and the device is
+>> already powered on when the driver's own probe function is called. To the
+>> user this visible during the boot process as a blink of the privacy LED,
+>> suggesting that the camera is recording without the user having used an
+>> application to do that. From the end user's point of view the behaviour is
+>> not expected and for someone unfamiliar with internal workings of a
+>> computer surely seems quite suspicious --- even if images are not being
+>> actually captured.
+>>
+>> I've tested these on linux-next master. They also apply to Wolfram's
+>> i2c/for-next branch, there's a patch that affects the I²C core changes
+>> here (see below). The patches apart from that apply to Bartosz's
+>> at24/for-next as well as Mauro's linux-media master branch.
+> 
+> Sakari, we meet one issue - once the vcm sub-device registered, the user space
+> will try to open the VCM (I have not figure out who did that), it will also
+> trigger the acpi pm resume/suspend, as the VCM always shares same power rail
+> with camera sensor, so the privacy LED still has a blink.
+Sakari, please ignore my previous comment, it is not related to this change. I
+see the sub device open is caused by v4l_id program from udev.
+
+> 
+>>
+> ...snip...
+> 
+
+-- 
+Best regards,
+Bingbu Cao
