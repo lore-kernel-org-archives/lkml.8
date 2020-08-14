@@ -2,75 +2,76 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4310AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C56C20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1963520838
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 03:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAKgRkSH"
+	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="bu8dsCQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgHNDtZ (ORCPT
+        id S1726623AbgHND5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 23:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        Thu, 13 Aug 2020 23:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgHNDtU (ORCPT
+        with ESMTP id S1726570AbgHND5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 23:49:20 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03847C061757;
-        Thu, 13 Aug 2020 20:49:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so3567417plk.13;
-        Thu, 13 Aug 2020 20:49:19 -0700 (PDT)
+        Thu, 13 Aug 2020 23:57:12 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EAE3C061384
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 20:57:12 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n129so7308843qkd.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 20:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oPTjuwCthUmMjgvx3f4uFfhVGWQpGsk/v4Ea0sfsyl0=;
-        b=hAKgRkSH/6PMrPtIMt5D/2HyLgw1nx1w8QsuOtGxkorVAlvocHGDgWeB3uwEmDCmdH
-         ZO5ZmwqRef9KFkTVvhJkxF5UEhbI1LoQRoISXYGEzpdN7Vx1RnnnAD517/SfocQjZghS
-         9q3oFlOi1ON1PDdC3clmkLQcPDoJ8hW6fMSDXKgs83xrf4usH8mx0RaEUHCjWaTprDtZ
-         CIFjeF6Kefk3qwouAJId+o2WI9Xw13IErzQBc52oXXS9a7BPYvWg1FKPgZG+1KnU1a70
-         /zvtxMsDQRBj/9SXUgHMA5MrOz17YkUsv5qnRjdi83NwZOfoVlJmKr1H3zobvisHJJvd
-         NrZw==
+        d=tfz-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5MTuDeV+j3fzgYR5SGPLvxT4ilKSMnNxei9P2lIEnWw=;
+        b=bu8dsCQKjF9Ov1Nw/qa5ydaYlZbu9Dh6UcAUBcJTG+6J6AyB2e+pghxSPQTGxvMXmN
+         XgviDf2W8ZDKqcRpdH5TvHcp+8GApJWFRHcEQ6S7IJXUnssSYf2dR9SWehMkLbAT1wUQ
+         9UZXldPpU5EV/UCSMyOkw2IToGLNbo7hbaUmnAOjUhKVZaQzXhCBaEnP5usyxGLZO5by
+         wch6njTGkPo3xSmEXOPemOmVWFz8sOXB99nynjJ1Z29b6FQfh/hqjnx+xEh8eq48VoW9
+         kgGwTdhfawQmH/3mx2OmEyZevcwsSLEiEhgZ4uTIh9S1L/l1mN6hbeOj2E4Nb68IKO7q
+         LF4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oPTjuwCthUmMjgvx3f4uFfhVGWQpGsk/v4Ea0sfsyl0=;
-        b=sPJhHCWcTAZd6YlQZzdad4+AvUsjkXKcrnF5cPX97izv6kBCcA30Y/XiwahX0W08wi
-         3Szg1/svMhmGaxMg987w9GhKJsYHPd1F6wgcffgmKVE61vSAeiuLOurfLcmxtTxHwHon
-         P2zF/rQIcLu4J9lU7YnE1cS4MEYn+B64++k+YeHIO30SVNBNA5LOAdDT8SFc8uSmg7nh
-         H8v7e2/lq70lDtxCzJbYCvdj6IUd6fwEhQbITAyVEZapdHpSJVuDnQpbiZip5uXb+CZl
-         0d+/jrzALPNCSVsW/eX6wjhUthn/7zT4rwM1dRLuEURm1/KIYyhHimTKf0GzyEOd8koG
-         KbTg==
-X-Gm-Message-State: AOAM533J7HL5PRvx0AmT8FbTcFbLv93wI80sXi0LKOWD4b1yZs7x3Znc
-        TpghXy1gtRQxSpoSKVIfuBs=
-X-Google-Smtp-Source: ABdhPJxjQHL0mKcWYfxZ3F3tQhatvGe4Ll3O6vfmxy6A9yrK1Mu16y8GRzXlXiMDTdealruB4F06Xw==
-X-Received: by 2002:a17:90a:c58b:: with SMTP id l11mr677696pjt.195.1597376959558;
-        Thu, 13 Aug 2020 20:49:19 -0700 (PDT)
-Received: from xiaomi.mioffice.cn ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id n26sm7253385pff.30.2020.08.13.20.49.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5MTuDeV+j3fzgYR5SGPLvxT4ilKSMnNxei9P2lIEnWw=;
+        b=nLKrXxJEV2NLT1merUyjeXCFHKd4k3qP1AehKvhpOczvyC3+NOQGjgZy+fsfi46DSS
+         H8UOTESiniGVa8qQLzZqSSeLexZy6oLwfFHXFORBrEtw1QATHkBD9gZgzPY5fKwoaZOj
+         5hHE9t2LUC20bLe6RvkGPvvQpe+3KJQJ0XWJ7w3vu6F+VqjZM11+kf6mcTvSNkfDzCey
+         5mSsVBbI2baxJPL9at/2bVTgklzk8XAMHH92O9KhRV+te04qt87HK9RojgZ4oUu2KrMZ
+         8qTxH+xZrC8Av9ozPLwjOrupaPuS+cBG3xp24S3HhcyQh46ed8nP3qLsbxyoLMEQx66A
+         McFg==
+X-Gm-Message-State: AOAM532xM4x25drGbn91QBCLLoFMJSVTv7OkSMYHmD017QaRTHTOpHai
+        Rc9BG3kLtPTOpouyqeRi+0fMp6ufII3iAmOe
+X-Google-Smtp-Source: ABdhPJwgDgLg7M2DAbRGUL+XBzE0jRtctTh0Je1JKmoNwZ7TJym5ipZUwDFbNJ2SYTiezA6zG1uDlA==
+X-Received: by 2002:a37:5b41:: with SMTP id p62mr387011qkb.369.1597377431112;
+        Thu, 13 Aug 2020 20:57:11 -0700 (PDT)
+Received: from foo.attlocal.net (108-232-117-128.lightspeed.sntcca.sbcglobal.net. [108.232.117.128])
+        by smtp.gmail.com with ESMTPSA id k11sm7229460qkk.93.2020.08.13.20.57.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 20:49:18 -0700 (PDT)
-From:   Qiwu Huang <yanziily@gmail.com>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: [PATCH v8 4/4] power: supply: core: property to control reverse charge
-Date:   Fri, 14 Aug 2020 11:46:57 +0800
-Message-Id: <9cc6413e866cce78d9d2612b5f71276abbde57d7.1597376585.git.huangqiwu@xiaomi.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1597376585.git.huangqiwu@xiaomi.com>
-References: <cover.1597376585.git.huangqiwu@xiaomi.com>
+        Thu, 13 Aug 2020 20:57:10 -0700 (PDT)
+From:   Pascal Bouchareine <kalou@tfz.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        "Jeff Layton" <jlayton@poochiereds.net>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Pascal Bouchareine" <kalou@tfz.net>
+Subject: [PATCH v4 0/2] proc,fcntl: introduce F_SET_DESCRIPTION
+Date:   Thu, 13 Aug 2020 20:54:51 -0700
+Message-Id: <20200814035453.210716-1-kalou@tfz.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,63 +79,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiwu Huang <huangqiwu@xiaomi.com>
+This is a first attempt at taking Alexey's comments into account
 
-Interface to control wireless reverse charge.
+This goes against v5.8
 
-Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
----
- Documentation/ABI/testing/sysfs-class-power | 14 ++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                |  1 +
- 3 files changed, 16 insertions(+)
+tl;dr in commit 2/2 but motivation is also described a bit in
+https://lore.kernel.org/linux-api/CAGbU3_nVvuzMn2wo4_ZKufWcGfmGsopVujzTWw-Bbeky=xS+GA@mail.gmail.com/
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 4459b720feb2..8840fdf483a7 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -779,3 +779,17 @@ Description:
- 
- 		Access: Read-Only
- 		Valid values: 0 - 100
-+
-+What:		/sys/class/power_supply/<supply_name>/reverse_chg_mode
-+Date:		Jul 2020
-+Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-+Description:
-+		Some devices support wireless reverse charge function which
-+		charge other devices.The property provider interface to
-+		enable/disable wireless reverse charge.If enabled, start TX
-+		mode and detect RX. Disabled when timeout or manual setting.
-+
-+		Access: Read, Write
-+		Valid values:
-+		- 1: enabled
-+		- 0: disabled
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index e420a453095e..81916b6b6ccf 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -209,6 +209,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(QUICK_CHARGE_TYPE),
- 	POWER_SUPPLY_ATTR(TX_ADAPTER),
- 	POWER_SUPPLY_ATTR(SIGNAL_STRENGTH),
-+	POWER_SUPPLY_ATTR(REVERSE_CHG_MODE),
- };
- 
- static struct attribute *
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 747338118fa1..988d3f05ea1c 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -170,6 +170,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
- 	POWER_SUPPLY_PROP_TX_ADAPTER,
- 	POWER_SUPPLY_PROP_SIGNAL_STRENGTH,
-+	POWER_SUPPLY_PROP_REVERSE_CHG_MODE,
- };
- 
- enum power_supply_type {
--- 
-2.28.0
 
