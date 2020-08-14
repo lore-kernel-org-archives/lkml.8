@@ -2,492 +2,474 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E29EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A4F205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3112065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ml+HPTtv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="si4qNXU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgHNTPT (ORCPT
+        id S1728128AbgHNTVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 15:15:19 -0400
-Received: from mail-bn8nam11on2081.outbound.protection.outlook.com ([40.107.236.81]:57313
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726652AbgHNTPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:15:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PsdN9bAZHQ2YCxx9ViiOolA8UNkOR98Cn7KnC1BhTN9zUy6G6LNXcGrgEwf9kSeRI9c828vQBOVZwr1r4NiiY8Ivnp3i87vAPXn6VNFW2MP8hKqoOBNvCAux7f5ZsrtKaRjRzeSokk66g3nfvwaoTUZ4G1T9UyPXrxKdEZggN8HJtDUWajmL/pkFp93MQ02Ta9d2PdQYpbBKJhbJNpxMlZeeXslVO2/vLnn/zHmPUedCp4cTGlHBKp5BLmatCJz0krwcMIsoAdmAlodUaxm7Xq3cJRZZFOr8WfugREZkSHNGWhpQLJabMAHQYUp+jxkbCIjusAEtiyEjKe3cLNrcGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmaskd4xjiGmx9bMh2hwtW+v0R+TImpeqHnUFqBFfn4=;
- b=XoCYyL9LSv8T5tpoaM0hIHFC0SjWFHis+szs5b8Eo06rmaSgJtHILJvln7drs16+0+RvVGCx/DzQ5QfI6wY5tN/CAofOfRD07k/RLgPee8dAD+Eu4DXjYvfiDAgdWolvhjfSFiHXuzknDTYivjwtaDnhRWXTvhEyyXfEjm2cQJcMxCXsPTQgPSFSlzrzG0FXg2PauBodLmeCDoMzyQr+GeyRwerw2M8ZUxCN6DUEIN4YWm9Sco3l+WEgpVQLeOmmWqn2eOFia5g29eSkvQyHApvojOnq3XRtmgKHWy9ktbH2yVOklxrEJbIjKe9mTIFcnYyjWxOoJU1oEif4Xx9GXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 14 Aug 2020 15:21:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728084AbgHNTVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 15:21:07 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7925C061385;
+        Fri, 14 Aug 2020 12:21:07 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 189so4349784pgg.13;
+        Fri, 14 Aug 2020 12:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmaskd4xjiGmx9bMh2hwtW+v0R+TImpeqHnUFqBFfn4=;
- b=ml+HPTtv/OdB6jp+qABGmqQwjynHt4XZZNDSUNraOKTMeMAXeXmTEbc5Q1p+opWd7EJu5aUBlA5tPxziMng7k/E4gix77HHr1wC6Oy095Te0veVyJJa9IecLrorVsgg3dAHo/0RER9nyVveJqS1kKGskPlJedQPNXZN8CEo+wTg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by BN6PR12MB1700.namprd12.prod.outlook.com (2603:10b6:404:108::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Fri, 14 Aug
- 2020 19:15:05 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0%4]) with mapi id 15.20.3283.015; Fri, 14 Aug 2020
- 19:15:04 +0000
-From:   Yazen Ghannam <Yazen.Ghannam@amd.com>
-To:     linux-edac@vger.kernel.org
-Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        linux-kernel@vger.kernel.org, bp@suse.de, tony.luck@intel.com,
-        x86@kernel.org, Smita.KoralahalliChannabasappa@amd.com
-Subject: [PATCH 2/2] x86/MCE/AMD Support new memory interleaving schemes during address translation
-Date:   Fri, 14 Aug 2020 19:14:49 +0000
-Message-Id: <20200814191449.183998-3-Yazen.Ghannam@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200814191449.183998-1-Yazen.Ghannam@amd.com>
-References: <20200814191449.183998-1-Yazen.Ghannam@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN1PR12CA0087.namprd12.prod.outlook.com
- (2603:10b6:802:21::22) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=BOFo4EH3UQuPNgXM//NC/uoEp+BV2I/+vMICPRyEGmM=;
+        b=si4qNXU5WygxEYgBtFXGnzLg54t+42rIqo9e1znA1RE6x9uXz3kAshTMnJT1XAcpu+
+         sl2pKpqvVjBeQKlaFAtZTLRoJ8gYge9WyGdRMHwoap6/uJlfH4A18CR6TA85s6VQ5ryZ
+         ZW3G7iSYOdLotJtA8oN0pP4iwvMunpQjfDFSNEvza5JcCwSVxFY5xFIooY7husNlBB1n
+         lLzS8ORkevXZluMKr/z8Owps2xxTAJzpNIgWXNMO0SLAqX2xVtn8hTG4Nzw6h6jI5zK8
+         a/Lc8fOp6o4lJ0GV/kn/5D6+rTBLTQJ9xYgHQJyr0OlpW2/aaogFU0+z+JY0/HM6hHO/
+         tPGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BOFo4EH3UQuPNgXM//NC/uoEp+BV2I/+vMICPRyEGmM=;
+        b=bUU1z6lcSijt4Ek93W/HOAKWUlZv8DgHe7wbIvQWQp9yXntDddI/SfpoyEDO3IRrSP
+         +R7FQL5AmR7DdtkibughD+WCcJ8nNrALrVmnPR3WWa0/oJBLKWM+h9LQA1YQHLtc7BRB
+         FO8sAcIInDpEOd+v3rgvLN3vpNLZQt86C63AAdwcRWAtxEu+X3cKf2vB8KnxFuGa7QJq
+         +9oFs+Zl3XiwHjPnRSVxAy4PUVECS0aL606GoxHBvz8UpPjYcGl4OH3g+cMgjO4dsFfr
+         GgNr00CifVLTvRB5ag23PenETPb1LaGlcVBUN9n6z+lb05Tzr2m1yd/Fqq/pt6h9L1s4
+         BHMA==
+X-Gm-Message-State: AOAM5301fKzNQJ7ldN31CJiIBRBGBYHUBF+TZNhFN/z4tf4YtDSpPEEK
+        HUUZ8prebaCF6Ckynp4Dd38=
+X-Google-Smtp-Source: ABdhPJxCOsxfpBGZERQNlFJ0I+Y0XeCDbeM3lAE3ostD+HGheGaejlKsdYUHr6r57fWO2Qg8Do0TCw==
+X-Received: by 2002:a63:4b10:: with SMTP id y16mr1119782pga.93.1597432866601;
+        Fri, 14 Aug 2020 12:21:06 -0700 (PDT)
+Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
+        by smtp.gmail.com with ESMTPSA id z2sm10149892pfq.46.2020.08.14.12.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 12:21:04 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 12:21:02 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     adobriyan@gmail.com, "Eric W. Biederman" <ebiederm@xmission.com>,
+        viro@zeniv.linux.org.uk, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+Message-ID: <20200814192102.GA786465@gmail.com>
+References: <875za43b3w.fsf@x220.int.ebiederm.org>
+ <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
+ <20200806080540.GA18865@gmail.com>
+ <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+ <20200810173431.GA68662@gmail.com>
+ <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
+ <20200812175338.GA596568@gmail.com>
+ <8f3c9414-9efc-cc01-fb2a-4d83266e96b2@virtuozzo.com>
+ <20200814011649.GA611947@gmail.com>
+ <0af3f2fa-f2c3-fb7d-b57e-9c41fe94ca58@virtuozzo.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yaz-ethanolx.amd.com (165.204.78.2) by SN1PR12CA0087.namprd12.prod.outlook.com (2603:10b6:802:21::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Fri, 14 Aug 2020 19:15:02 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1a046cc1-1bce-4274-3160-08d8408658ee
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1700:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR12MB170016E547912D2337728D1CF8400@BN6PR12MB1700.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:194;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +0aSXLrJSHeLDpzR8rDMMjPjlnTy6UGM/WiHc5kMF358i8tjHeO179JOHN6fH43fNBPnCgBicfaxDCN+Xiwtarr46N+uftuxdbMAFK1oomNq96jQ6m+6tknlzVyzbE7NPcYzP2BB0LfKBsCmAYA0kaEKhLtv3XbErTRZJym1Xyz5YeEP8N3TWWVHwVP6Pq2rmT3AtxJnIPS2oAOFPGy2sGnPeXP4tDDBCaR0JMRttK7o8DLW1tvxghZGfQIRWvdp93Pkw/7SEwZ3pMueZjxe4cDfmHr1J6vseJmtfY9IICeO4Kldn1ppnJd0C5hZtk3FHFuXDFoW6DMVChfJddP8Zw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(30864003)(66556008)(36756003)(5660300002)(83380400001)(66476007)(66946007)(1076003)(2906002)(316002)(478600001)(16526019)(26005)(186003)(956004)(4326008)(6486002)(8676002)(52116002)(7696005)(8936002)(2616005)(6666004)(86362001)(6916009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: qvyYz7LmM6quSZwmgpiTJRKXXdb0nN046maHt35CFjnM/ek2+dBeL4aMr2Pc+YXeib+3B/kPJylJJIAkdQRd/4sRyY8CQYdRfwCAn7CcqsJAoUfA0VNL6dHVEX+jDgyBdqPwWfV0KMqQHRvKxzbFbnzgE7MIGMIety7fj93pShHk382s7xZL3tF8GjFRvvIdqYgOoeIGURvpt9hmzNtivOIBZI5hxutcdi6x6CEwK2+/oFdwyrUZMGTjjHos9Fq9B7feo7lzXKK//T1pb0qcLYasPQ1iMPFdRS0FDu9Ql5ITTgafFFtrLSIsyLjaM06M8fRfcI3/tYLpaf02UJTHqIJn4EE2wcGhGGHXd2lLab+tARuADfmVzKaJwi5cjc5MwLkh8w+DeCrEyhwdxD++/azScO83RFZkiVtSyZiaIUyKbe+f651wGuDUb4G1WiAMIPonQol7uTXisjVO+c3sDKUCus1Jjhj85173Gf+2P+MBeWiL0yhONX+m8PL+m70TqfGs/9vXqF8xaUJIdROy/DmNHBa/UwcHOi1GN1+LR9i1tlsBycShbraMZXGC488UYraAJQc58RAva+EYekJRoOBz93w0iwOvmxMhkzrDnmnLZk4yoQlYbSxMimkycV/MW7Wr0XA8BNzItQ1VeZpPcg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a046cc1-1bce-4274-3160-08d8408658ee
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 19:15:04.4420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jAs5WfpWIGMFK/NolHSPaGetRAPDockHXqwFFWIWEUg6V9rzTsmOG8/LL/oYmiGn+knSwnYyFEWJCAHxgIq3Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1700
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0af3f2fa-f2c3-fb7d-b57e-9c41fe94ca58@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muralidhara M K <muralidhara.mk@amd.com>
+On Fri, Aug 14, 2020 at 06:11:58PM +0300, Kirill Tkhai wrote:
+> On 14.08.2020 04:16, Andrei Vagin wrote:
+> > On Thu, Aug 13, 2020 at 11:12:45AM +0300, Kirill Tkhai wrote:
+> >> On 12.08.2020 20:53, Andrei Vagin wrote:
+> >>> On Tue, Aug 11, 2020 at 01:23:35PM +0300, Kirill Tkhai wrote:
+> >>>> On 10.08.2020 20:34, Andrei Vagin wrote:
+> >>>>> On Fri, Aug 07, 2020 at 11:47:57AM +0300, Kirill Tkhai wrote:
+> >>>>>> On 06.08.2020 11:05, Andrei Vagin wrote:
+> >>>>>>> On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
+> >>>>>>>> On 31.07.2020 01:13, Eric W. Biederman wrote:
+> >>>>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> >>>>>>>>>
+> >>>>>>>>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
+> >>>>>>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> >>>>>>>>>>>
+> >>>>>>>>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
+> >>>>>>>>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+> >>>>>>>>>>>> but some also may be as open files, which are not attached to a process.
+> >>>>>>>>>>>> When a namespace open fd is sent over unix socket and then closed, it is
+> >>>>>>>>>>>> impossible to know whether the namespace exists or not.
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Also, even if namespace is exposed as attached to a process or as open file,
+> >>>>>>>>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+> >>>>>>>>>>>> this multiplies at tasks and fds number.
+> >>>>>>>>>>>
+> >>>>>>>>>>> I am very dubious about this.
+> >>>>>>>>>>>
+> >>>>>>>>>>> I have been avoiding exactly this kind of interface because it can
+> >>>>>>>>>>> create rather fundamental problems with checkpoint restart.
+> >>>>>>>>>>
+> >>>>>>>>>> restart/restore :)
+> >>>>>>>>>>
+> >>>>>>>>>>> You do have some filtering and the filtering is not based on current.
+> >>>>>>>>>>> Which is good.
+> >>>>>>>>>>>
+> >>>>>>>>>>> A view that is relative to a user namespace might be ok.    It almost
+> >>>>>>>>>>> certainly does better as it's own little filesystem than as an extension
+> >>>>>>>>>>> to proc though.
+> >>>>>>>>>>>
+> >>>>>>>>>>> The big thing we want to ensure is that if you migrate you can restore
+> >>>>>>>>>>> everything.  I don't see how you will be able to restore these files
+> >>>>>>>>>>> after migration.  Anything like this without having a complete
+> >>>>>>>>>>> checkpoint/restore story is a non-starter.
+> >>>>>>>>>>
+> >>>>>>>>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
+> >>>>>>>>>>
+> >>>>>>>>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
+> >>>>>>>>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
+> >>>>>>>>>> problem here.
+> >>>>>>>>>
+> >>>>>>>>> An obvious diffference is that you are adding the inode to the inode to
+> >>>>>>>>> the file name.  Which means that now you really do have to preserve the
+> >>>>>>>>> inode numbers during process migration.
+> >>>>>>>>>
+> >>>>>>>>> Which means now we have to do all of the work to make inode number
+> >>>>>>>>> restoration possible.  Which means now we need to have multiple
+> >>>>>>>>> instances of nsfs so that we can restore inode numbers.
+> >>>>>>>>>
+> >>>>>>>>> I think this is still possible but we have been delaying figuring out
+> >>>>>>>>> how to restore inode numbers long enough that may be actual technical
+> >>>>>>>>> problems making it happen.
+> >>>>>>>>
+> >>>>>>>> Yeah, this matters. But it looks like here is not a dead end. We just need
+> >>>>>>>> change the names the namespaces are exported to particular fs and to support
+> >>>>>>>> rename().
+> >>>>>>>>
+> >>>>>>>> Before introduction a principally new filesystem type for this, can't
+> >>>>>>>> this be solved in current /proc?
+> >>>>>>>
+> >>>>>>> do you mean to introduce names for namespaces which users will be able
+> >>>>>>> to change? By default, this can be uuid.
+> >>>>>>
+> >>>>>> Yes, I mean this.
+> >>>>>>
+> >>>>>> Currently I won't give a final answer about UUID, but I planned to show some
+> >>>>>> default names, which based on namespace type and inode num. Completely custom
+> >>>>>> names for any /proc by default will waste too much memory.
+> >>>>>>
+> >>>>>> So, I think the good way will be:
+> >>>>>>
+> >>>>>> 1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
+> >>>>>> random seed, which is generated on boot;
+> >>>>>>
+> >>>>>> 2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
+> >>>>>>
+> >>>>>> 3)Allow rename, and allocate space only for renamed names.
+> >>>>>>
+> >>>>>> Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
+> >>>>>>
+> >>>>>>> And I have a suggestion about the structure of /proc/namespaces/.
+> >>>>>>>
+> >>>>>>> Each namespace is owned by one of user namespaces. Maybe it makes sense
+> >>>>>>> to group namespaces by their user-namespaces?
+> >>>>>>>
+> >>>>>>> /proc/namespaces/
+> >>>>>>>                  user
+> >>>>>>>                  mnt-X
+> >>>>>>>                  mnt-Y
+> >>>>>>>                  pid-X
+> >>>>>>>                  uts-Z
+> >>>>>>>                  user-X/
+> >>>>>>>                         user
+> >>>>>>>                         mnt-A
+> >>>>>>>                         mnt-B
+> >>>>>>>                         user-C
+> >>>>>>>                         user-C/
+> >>>>>>>                                user
+> >>>>>>>                  user-Y/
+> >>>>>>>                         user
+> >>>>>>
+> >>>>>> Hm, I don't think that user namespace is a generic key value for everybody.
+> >>>>>> For generic people tasks a user namespace is just a namespace among another
+> >>>>>> namespace types. For me it will look a bit strage to iterate some user namespaces
+> >>>>>> to build container net topology.
+> >>>>>
+> >>>>> I can’t agree with you that the user namespace is one of others. It is
+> >>>>> the namespace for namespaces. It sets security boundaries in the system
+> >>>>> and we need to know them to understand the whole system.
+> >>>>>
+> >>>>> If user namespaces are not used in the system or on a container, you
+> >>>>> will see all namespaces in one directory. But if the system has a more
+> >>>>> complicated structure, you will be able to build a full picture of it.
+> >>>>>
+> >>>>> You said that one of the users of this feature is CRIU (the tool to
+> >>>>> checkpoint/restore containers)  and you said that it would be good if
+> >>>>> CRIU will be able to collect all container namespaces before dumping
+> >>>>> processes, sockets, files etc. But how will we be able to do this if we
+> >>>>> will list all namespaces in one directory?
+> >>>>
+> >>>> There is no a problem, this looks rather simple. Two cases are possible:
+> >>>>
+> >>>> 1)a container has dedicated namespaces set, and CRIU just has to iterate
+> >>>>   files in /proc/namespaces of root pid namespace of the container.
+> >>>>   The relationships between parents and childs of pid and user namespaces
+> >>>>   are founded via ioctl(NS_GET_PARENT).
+> >>>>   
+> >>>> 2)container has no dedicated namespaces set. Then CRIU just has to iterate
+> >>>>   all host namespaces. There is no another way to do that, because container
+> >>>>   may have any host namespaces, and hierarchy in /proc/namespaces won't
+> >>>>   help you.
+> >>>>
+> >>>>> Here are my thoughts why we need to the suggested structure is better
+> >>>>> than just a list of namespaces:
+> >>>>>
+> >>>>> * Users will be able to understand securies bondaries in the system.
+> >>>>>   Each namespace in the system is owned by one of user namespace and we
+> >>>>>   need to know these relationshipts to understand the whole system.
+> >>>>
+> >>>> Here are already NS_GET_PARENT and NS_GET_USERNS. What is the problem to use
+> >>>> this interfaces?
+> >>>
+> >>> We can use these ioctl-s, but we will need to enumerate all namespaces in
+> >>> the system to build a view of the namespace hierarchy. This will be very
+> >>> expensive. The kernel can show this hierarchy without additional cost.
+> >>
+> >> No. We will have to iterate /proc/namespaces of a specific container to get
+> >> its namespaces. It's a subset of all namespaces in system, and these all the
+> >> namespaces, which are potentially allowed for the container.
+> > 
+> > """
+> > Every /proc is related to a pid_namespace, and the pid_namespace
+> > is related to a user_namespace. The items, we show in this
+> > /proc/namespaces/ directory, are the namespaces,
+> > whose user_namespaces are the same as /proc's user_namespace,
+> > or their descendants.
+> > """ // [PATCH 11/23] fs: Add /proc/namespaces/ directory
+> > 
+> > This means that if a user want to find out all container namespaces, it
+> > has to have access to the container procfs and the container should
+> > a separate pid namespace.
+> > 
+> > I would say these are two big limitations. The first one will not affect
+> > CRIU and I agree CRIU can use this interface in its current form.
+> > 
+> > The second one will be still the issue for CRIU. And they both will
+> > affect other users.
+> > 
+> > For end users, it will be a pain. They will need to create a pid
+> > namespaces in a specified user-namespace, if a container doesn't have
+> > its own. Then they will need to mount /proc from the container pid
+> > namespace and only then they will be able to enumerate namespaces.
+> 
+> In case of a container does not have its own pid namespace, CRIU already
+> sucks. Every file in /proc directory is not reliable after restore,
+> so /proc/namespaces is just one of them. Container, who may access files
+> in /proc, does have to have its own pid namespace.
 
-Add support for new memory interleaving schemes used in current AMD
-systems.
+Can you be more detailed here? What files are not reliable? And why we
+don't need to think about this use-case? If we have any issues here,
+maybe we need to think how to fix them instead of adding a new one.
 
-Check if the system is using a current Data Fabric version or a legacy
-version as some bit and register definitions have changed.
+> 
+> Even if we imagine an unreal situation, when the rest of /proc files are reliable,
+> sub-directories won't help in this case also. In case of we introduce user ns
+> hierarchy, the namespaces names above container's user ns, will still
+> be unchangeble:
+> 
+> /proc/namespaces/parent_user_ns/container_user_ns/...
+> 
+> Path to container_user_ns is fixed. If container accesses /proc/namespace/parent_user_ns
+> file, it will suck a pow after restore again.
 
-Tested on AMD reference platforms with the following memory interleaving
-options.
 
-Naples
-- None
-- Channel
-- Die
-- Socket
+In case of user ns hierarchy, a container will see only its sub-tree and
+it will not know a name of its root namespace. It will look like this:
 
-Rome (NPS = Nodes per Socket)
-- None
-- NPS0
-- NPS1
-- NPS2
-- NPS4
+From host:
+/proc/namespaces/user_ns_ct1/user1
+                             user2
 
-The fixes tag refers to the commit that allows amd64_edac_mod to load on
-Rome systems. The module may report an incorrect system address on Rome
-systems depending on the interleaving option used.
+/proc/namespaces/user_ns_ct2/user1
+                             user2
 
-Fixes: 6e846239e548 ("EDAC/amd64: Add Family 17h Model 30h PCI IDs")
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-Co-developed-by: Naveen Krishna Chtradhi <naveenkrishna.chatradhi@amd.com>
-Signed-off-by: Naveen Krishna Chtradhi <naveenkrishna.chatradhi@amd.com>
-Co-developed-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
- arch/x86/kernel/cpu/mce/amd.c | 237 +++++++++++++++++++++++++++-------
- 1 file changed, 188 insertions(+), 49 deletions(-)
+From ct1:
+/proc/namespaces/user1
+                 user2
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 524edf81e287..a687aa898fef 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -689,18 +689,25 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- {
- 	u64 dram_base_addr, dram_limit_addr, dram_hole_base;
-+
- 	/* We start from the normalized address */
- 	u64 ret_addr = norm_addr;
- 
- 	u32 tmp;
- 
--	u8 die_id_shift, die_id_mask, socket_id_shift, socket_id_mask;
-+	bool hash_enabled = false, split_normalized = false, legacy_df = false;
-+
- 	u8 intlv_num_dies, intlv_num_chan, intlv_num_sockets;
--	u8 intlv_addr_sel, intlv_addr_bit;
--	u8 num_intlv_bits, hashed_bit;
-+	u8 intlv_addr_sel, intlv_addr_bit, num_intlv_bits;
-+	u8 cs_mask, cs_id = 0, dst_fabric_id = 0;
- 	u8 lgcy_mmio_hole_en, base = 0;
--	u8 cs_mask, cs_id = 0;
--	bool hash_enabled = false;
-+
-+	/* Read D18F1x208 (System Fabric ID Mask 0). */
-+	if (amd_df_indirect_read(nid, 1, 0x208, umc, &tmp))
-+		goto out_err;
-+
-+	/* Determine if system is a legacy Data Fabric type. */
-+	legacy_df = !(tmp & 0xFF);
- 
- 	/* Read D18F0x1B4 (DramOffset), check if base 1 is used. */
- 	if (amd_df_indirect_read(nid, 0, 0x1B4, umc, &tmp))
-@@ -708,7 +715,12 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 
- 	/* Remove HiAddrOffset from normalized address, if enabled: */
- 	if (tmp & BIT(0)) {
--		u64 hi_addr_offset = (tmp & GENMASK_ULL(31, 20)) << 8;
-+		u8 hi_addr_offset_lsb = legacy_df ? 20 : 12;
-+		u64 hi_addr_offset = tmp & GENMASK_ULL(31, hi_addr_offset_lsb);
-+
-+		/* Align to bit 28 regardless of the LSB used. */
-+		hi_addr_offset >>= hi_addr_offset_lsb;
-+		hi_addr_offset <<= 28;
- 
- 		if (norm_addr >= hi_addr_offset) {
- 			ret_addr -= hi_addr_offset;
-@@ -728,23 +740,31 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 	}
- 
- 	lgcy_mmio_hole_en = tmp & BIT(1);
--	intlv_num_chan	  = (tmp >> 4) & 0xF;
--	intlv_addr_sel	  = (tmp >> 8) & 0x7;
--	dram_base_addr	  = (tmp & GENMASK_ULL(31, 12)) << 16;
- 
--	/* {0, 1, 2, 3} map to address bits {8, 9, 10, 11} respectively */
--	if (intlv_addr_sel > 3) {
--		pr_err("%s: Invalid interleave address select %d.\n",
--			__func__, intlv_addr_sel);
--		goto out_err;
-+	if (legacy_df) {
-+		intlv_num_chan	  = (tmp >> 4) & 0xF;
-+		intlv_addr_sel	  = (tmp >> 8) & 0x7;
-+	} else {
-+		intlv_num_chan    = (tmp >> 2) & 0xF;
-+		intlv_num_dies	  = (tmp >> 6) & 0x3;
-+		intlv_num_sockets = (tmp >> 8) & 0x1;
-+		intlv_addr_sel	  = (tmp >> 9) & 0x7;
- 	}
- 
-+	dram_base_addr	  = (tmp & GENMASK_ULL(31, 12)) << 16;
-+
- 	/* Read D18F0x114 (DramLimitAddress). */
- 	if (amd_df_indirect_read(nid, 0, 0x114 + (8 * base), umc, &tmp))
- 		goto out_err;
- 
--	intlv_num_sockets = (tmp >> 8) & 0x1;
--	intlv_num_dies	  = (tmp >> 10) & 0x3;
-+	if (legacy_df) {
-+		intlv_num_sockets = (tmp >> 8) & 0x1;
-+		intlv_num_dies	  = (tmp >> 10) & 0x3;
-+		dst_fabric_id	  = tmp & 0xFF;
-+	} else {
-+		dst_fabric_id	  = tmp & 0x3FF;
-+	}
-+
- 	dram_limit_addr	  = ((tmp & GENMASK_ULL(31, 12)) << 16) | GENMASK_ULL(27, 0);
- 
- 	intlv_addr_bit = intlv_addr_sel + 8;
-@@ -757,8 +777,27 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 	case 5:	intlv_num_chan = 3; break;
- 	case 7:	intlv_num_chan = 4; break;
- 
--	case 8: intlv_num_chan = 1;
-+	case 8:
-+		if (legacy_df) {
-+			intlv_num_chan = 1;
-+			hash_enabled = true;
-+		} else {
-+			intlv_num_chan = 5;
-+		}
-+		break;
-+	case 12:
-+		intlv_num_chan = 1;
-+		hash_enabled = true;
-+		break;
-+	case 13:
-+		intlv_num_chan = 2;
-+		hash_enabled = true;
-+		split_normalized = true;
-+		break;
-+	case 14:
-+		intlv_num_chan = 3;
- 		hash_enabled = true;
-+		split_normalized = true;
- 		break;
- 	default:
- 		pr_err("%s: Invalid number of interleaved channels %d.\n",
-@@ -766,18 +805,14 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 		goto out_err;
- 	}
- 
--	num_intlv_bits = intlv_num_chan;
--
--	if (intlv_num_dies > 2) {
--		pr_err("%s: Invalid number of interleaved nodes/dies %d.\n",
--			__func__, intlv_num_dies);
-+	/* Assert interleave address bit is 8 or 9 for hashing cases. */
-+	if (hash_enabled && intlv_addr_bit != 8 && intlv_addr_bit != 9) {
-+		pr_err("%s: Invalid interleave address bit for hashing %d.\n",
-+			__func__, intlv_addr_bit);
- 		goto out_err;
- 	}
- 
--	num_intlv_bits += intlv_num_dies;
--
--	/* Add a bit if sockets are interleaved. */
--	num_intlv_bits += intlv_num_sockets;
-+	num_intlv_bits = intlv_num_chan + intlv_num_dies + intlv_num_sockets;
- 
- 	/* Assert num_intlv_bits <= 4 */
- 	if (num_intlv_bits > 4) {
-@@ -787,8 +822,10 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 	}
- 
- 	if (num_intlv_bits > 0) {
--		u64 temp_addr_x, temp_addr_i, temp_addr_y;
-+		u8 cs_fabric_id_mask = legacy_df ? 0xFF : 0x3F;
- 		u8 die_id_bit, sock_id_bit, cs_fabric_id;
-+		u64 addr_x, addr_y, addr_z;
-+		u8 node_id_shift = 0;
- 
- 		/*
- 		 * Read FabricBlockInstanceInformation3_CS[BlockFabricID].
-@@ -799,7 +836,7 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 		if (amd_df_indirect_read(nid, 0, 0x50, umc, &tmp))
- 			goto out_err;
- 
--		cs_fabric_id = (tmp >> 8) & 0xFF;
-+		cs_fabric_id = (tmp >> 8) & cs_fabric_id_mask;
- 		die_id_bit   = 0;
- 
- 		/* If interleaved over more than 1 channel: */
-@@ -807,44 +844,94 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 			die_id_bit = intlv_num_chan;
- 			cs_mask	   = (1 << die_id_bit) - 1;
- 			cs_id	   = cs_fabric_id & cs_mask;
-+			cs_id	  -= dst_fabric_id & cs_mask;
- 		}
- 
- 		sock_id_bit = die_id_bit;
- 
--		/* Read D18F1x208 (SystemFabricIdMask). */
--		if (intlv_num_dies || intlv_num_sockets)
--			if (amd_df_indirect_read(nid, 1, 0x208, umc, &tmp))
-+		if (intlv_num_dies || intlv_num_sockets) {
-+			u16 offset = 0;
-+
-+			if (legacy_df) {
-+				/* Read D18F1x208 (SystemFabricIdMask). */
-+				offset = 0x208;
-+			} else {
-+				/* Read D18F1x20C (SystemFabricIdMask1). */
-+				offset = 0x20C;
-+			}
-+
-+			if (amd_df_indirect_read(nid, 1, offset, umc, &tmp))
- 				goto out_err;
- 
-+			if (!legacy_df)
-+				node_id_shift = tmp & 0xF;
-+		}
-+
- 		/* If interleaved over more than 1 die. */
- 		if (intlv_num_dies) {
-+			u8 die_id_shift, die_id_mask;
-+
- 			sock_id_bit  = die_id_bit + intlv_num_dies;
--			die_id_shift = (tmp >> 24) & 0xF;
--			die_id_mask  = (tmp >> 8) & 0xFF;
-+
-+			if (legacy_df) {
-+				die_id_shift = (tmp >> 24) & 0xF;
-+				die_id_mask  = (tmp >> 8) & 0xFF;
-+			} else {
-+				die_id_shift = (tmp & 0xF) + node_id_shift;
-+
-+				die_id_mask  = (tmp >> 16) & 0x7;
-+				die_id_mask <<= node_id_shift;
-+			}
- 
- 			cs_id |= ((cs_fabric_id & die_id_mask) >> die_id_shift) << die_id_bit;
- 		}
- 
- 		/* If interleaved over more than 1 socket. */
- 		if (intlv_num_sockets) {
--			socket_id_shift	= (tmp >> 28) & 0xF;
--			socket_id_mask	= (tmp >> 16) & 0xFF;
-+			u8 socket_id_shift, socket_id_mask;
-+
-+			if (legacy_df) {
-+				socket_id_shift	= (tmp >> 28) & 0xF;
-+				socket_id_mask	= (tmp >> 16) & 0xFF;
-+			} else {
-+				socket_id_shift	= (tmp >> 8) & 0x3;
-+				socket_id_shift += node_id_shift;
-+
-+				socket_id_mask	= (tmp >> 24) & 0x7;
-+				socket_id_mask <<= node_id_shift;
-+			}
- 
- 			cs_id |= ((cs_fabric_id & socket_id_mask) >> socket_id_shift) << sock_id_bit;
- 		}
- 
- 		/*
- 		 * The pre-interleaved address consists of XXXXXXIIIYYYYY
--		 * where III is the ID for this CS, and XXXXXXYYYYY are the
--		 * address bits from the post-interleaved address.
--		 * "num_intlv_bits" has been calculated to tell us how many "I"
--		 * bits there are. "intlv_addr_bit" tells us how many "Y" bits
--		 * there are (where "I" starts).
-+		 * or XXXXXXIIZZZIYYY where III is the ID for this CS, and
-+		 * XXXXXXZZZYYYYY are the address bits from the post-interleaved
-+		 * address. "num_intlv_bits" has been calculated to tell us how
-+		 * many "I" bits there are. "intlv_addr_bit" tells us how many
-+		 * "Y" bits there are (where "I" starts).
-+		 *
-+		 * The "split" III is only used in the COD modes, where there
-+		 * is one bit I at "intlv_addr_bit", and the remaining CS bits
-+		 * are higher up starting at bit 12.
- 		 */
--		temp_addr_y = ret_addr & GENMASK_ULL(intlv_addr_bit-1, 0);
--		temp_addr_i = (cs_id << intlv_addr_bit);
--		temp_addr_x = (ret_addr & GENMASK_ULL(63, intlv_addr_bit)) << num_intlv_bits;
--		ret_addr    = temp_addr_x | temp_addr_i | temp_addr_y;
-+		addr_y = ret_addr & GENMASK_ULL(intlv_addr_bit - 1, 0);
-+
-+		if (split_normalized) {
-+			addr_x = ret_addr & GENMASK_ULL(63, 11);
-+			addr_x <<= num_intlv_bits;
-+
-+			addr_z = ret_addr & GENMASK_ULL(10, intlv_addr_bit);
-+			addr_z <<= 1;
-+		} else {
-+			addr_x = ret_addr & GENMASK_ULL(63, intlv_addr_bit);
-+			addr_x <<= num_intlv_bits;
-+
-+			addr_z = 0;
-+		}
-+
-+		ret_addr = addr_x | addr_z | addr_y;
- 	}
- 
- 	/* Add dram base address */
-@@ -860,18 +947,70 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
- 			ret_addr += (BIT_ULL(32) - dram_hole_base);
- 	}
- 
--	if (hash_enabled) {
--		/* Save some parentheses and grab ls-bit at the end. */
--		hashed_bit =	(ret_addr >> 12) ^
-+	/*
-+	 * There are three cases for hashing:
-+	 * 1) No Hashing
-+	 * 2) Legacy Hashing
-+	 * 3) Cluster-on-Die (COD) Hashing
-+	 */
-+	if (!hash_enabled) {
-+		/* Fill in the interleave bit. */
-+		if (intlv_num_chan)
-+			ret_addr |= (cs_id << intlv_addr_bit);
-+	} else if (legacy_df) {
-+		/* Legacy 2ch hash. */
-+		u8 hashed_bit =	(ret_addr >> 12) ^
- 				(ret_addr >> 18) ^
- 				(ret_addr >> 21) ^
- 				(ret_addr >> 30) ^
- 				cs_id;
- 
- 		hashed_bit &= BIT(0);
-+		ret_addr ^= hashed_bit << intlv_addr_bit;
-+	} else {
-+		u8 hashed_bit, hash_ctl_64K, hash_ctl_2M, hash_ctl_1G;
-+
-+		/* Read D18F0x3F8 (DfGlobalCtrl)). */
-+		if (amd_df_indirect_read(nid, 0, 0x3F8, umc, &tmp))
-+			goto out_err;
-+
-+		hash_ctl_64K = !!(tmp & BIT(20));
-+		hash_ctl_2M  = !!(tmp & BIT(21));
-+		hash_ctl_1G  = !!(tmp & BIT(22));
-+
-+		/* COD with 2ch, 4ch, or 8ch hash. */
-+		hashed_bit =	(ret_addr >> 14) ^
-+				((ret_addr >> 18) & hash_ctl_64K) ^
-+				((ret_addr >> 23) & hash_ctl_2M) ^
-+				((ret_addr >> 32) & hash_ctl_1G) ^
-+				cs_id;
-+
-+		hashed_bit &= BIT(0);
-+		ret_addr ^= hashed_bit << intlv_addr_bit;
-+
-+		/* COD with 4ch or 8ch hash. */
-+		if ((intlv_num_chan == 2) || (intlv_num_chan == 3)) {
-+			hashed_bit =	(ret_addr >> 12) ^
-+					((ret_addr >> 16) & hash_ctl_64K) ^
-+					((ret_addr >> 21) & hash_ctl_2M) ^
-+					((ret_addr >> 30) & hash_ctl_1G) ^
-+					(cs_id >> 1);
-+
-+			hashed_bit &= BIT(0);
-+			ret_addr ^= hashed_bit << 12;
-+		}
-+
-+		/* COD with 8ch hash. */
-+		if (intlv_num_chan == 3) {
-+			hashed_bit =	(ret_addr >> 13) ^
-+					((ret_addr >> 17) & hash_ctl_64K) ^
-+					((ret_addr >> 22) & hash_ctl_2M) ^
-+					((ret_addr >> 31) & hash_ctl_1G) ^
-+					(cs_id >> 2);
- 
--		if (hashed_bit != ((ret_addr >> intlv_addr_bit) & BIT(0)))
--			ret_addr ^= BIT(intlv_addr_bit);
-+			hashed_bit &= BIT(0);
-+			ret_addr ^= hashed_bit << 13;
-+		}
- 	}
- 
- 	/* Is calculated system address is above DRAM limit address? */
--- 
-2.25.1
+And now could you explain how you are going to solve this problem with
+your interface?
 
+> 
+> So, the suggested sub-directories just don't work.
+
+I am sure it will work.
+
+> 
+> > But to build a view of a hierarchy of these namespaces, they will need to
+> > use a binary tool which will open each of these namespaces, call
+> > NS_GET_PARENT and NS_GET_USERNS ioctl-s and build a tree.
+> 
+> Yes, it's the same way we have on a construction of tasks tree.
+> 
+> Linear /proc/namespaces is rather natural way. The sense is "all namespaces,
+> which are available for tasks in this /proc directory".
+> 
+> Grouping by user ns directories looks odd. CRIU is only util, who needs
+> such the grouping. But even for CRIU performance advantages look dubious.
+
+I can't agree with you here. This isn't about CRIU. Grouping by user ns
+doesn't look odd for me, because this is how namespaces are grouped in
+the kernel.
+
+> 
+> For another utils, the preference of user ns grouping over another hierarchy
+> namespaces looks just weirdy weird.
+> 
+> I can agree with an idea of separate top-level sub-directories for different
+> namespaces types like:
+> 
+> /proc/namespaces/uts/
+> /proc/namespaces/user/
+> /proc/namespaces/pid/
+> ...
+> 
+> But grouping of all another namespaces by user ns sub-directories absolutely
+> does not look sane for me.
+
+I think we are stuck here and we need to ask an opinion of someone else.
+
+>  
+> >>
+> >>>>
+> >>>>> * This is simplify collecting namespaces which belong to one container.
+> >>>>>
+> >>>>> For example, CRIU collects all namespaces before dumping file
+> >>>>> descriptors. Then it collects all sockets with socket-diag in network
+> >>>>> namespaces and collects mount points via /proc/pid/mountinfo in mount
+> >>>>> namesapces. Then these information is used to dump socket file
+> >>>>> descriptors and opened files.
+> >>>>
+> >>>> This is just the thing I say. This allows to avoid writing recursive dump.
+> >>>
+> >>> I don't understand this. How are you going to collect namespaces in CRIU
+> >>> without knowing which are used by a dumped container?
+> >>
+> >> My patchset exports only the namespaces, which are allowed for a specific
+> >> container, and no more above this. All exported namespaces are alive,
+> >> so someone holds a reference on every of it. So they are used.
+> >>
+> >> It seems you haven't understood the way I suggested here. See patch [11/23]
+> >> for the details. It's about permissions, and the subset of exported namespaces
+> >> is formalized there.
+> > 
+> > Honestly, I have not read all patches in this series and you didn't
+> > describe this behavior in the cover letter. Thank you for pointing out
+> > to the 11 patch, but I still think it doesn't solve the problem
+> > completely. More details is in the comment which is a few lines above
+> > this one.
+> > 
+> >>
+> >>>> But this has nothing about advantages of hierarchy in /proc/namespaces.
+> > 
+> > Yes, it has. For example, in cases when a container doesn't have its own
+> > pid namespaces.
+> > 
+> >>>
+> >>> Really? You said that you implemented this series to help CRIU dumping
+> >>> namespaces. I think we need to implement the CRIU part to prove that
+> >>> this interface is usable for this case. Right now, I have doubts about
+> >>> this.
+> >>
+> >> Yes, really. See my comment above and patch [11/23].
+> >>
+> >>>>
+> >>>>> * We are going to assign names to namespaces. But this means that we
+> >>>>> need to guarantee that all names in one directory are unique. The
+> >>>>> initial proposal was to enumerate all namespaces in one proc directory,
+> >>>>> that means names of all namespaces have to be unique. This can be
+> >>>>> problematic in some cases. For example, we may want to dump a container
+> >>>>> and then restore it more than once on the same host. How are we going to
+> >>>>> avoid namespace name conficts in such cases?
+> >>>>
+> >>>> Previous message I wrote about .rename of proc files, Alexey Dobriyan
+> >>>> said this is not a taboo. Are there problem which doesn't cover the case
+> >>>> you point?
+> >>>
+> >>> Yes, there is. Namespace names will be visible from a container, so they
+> >>> have to be restored. But this means that two containers can't be
+> >>> restored from the same snapshot due to namespace name conflicts.
+> >>>
+> >>> But if we will show namespaces how I suggest, each container will see
+> >>> only its sub-tree of namespaces and we will be able to specify any name
+> >>> for the container root user namespace.
+> >>
+> >> Now I'm sure you missed my idea. See proc_namespaces_readdir() in [11/23].
+> >>
+> >> I do export sub-tree.
+> > 
+> > I got your idea, but it is unclear how your are going to avoid name
+> > conflicts.
+> > 
+> > In the root container, you will show all namespaces in the system. These
+> > means that all namespaces have to have unique names. This means we will
+> > not able to restore two containers from the same snapshot without
+> > renaming namespaces. But we can't change namespace names, because they
+> > are visible from containers and container processes can use them.
+> 
+> Grouping by user ns sub-directories does not solve a problem with names
+> of containers w/o own pid ns. See above.
+
+It solves, you just doesn't understand how it works. See above.
+
+> 
+> >>
+> >>>>
+> >>>>> If we will have per-user-namespace directories, we will need to
+> >>>>> guarantee that names are unique only inside one user namespace.
+> >>>>
+> >>>> Unique names inside one user namespace won't introduce a new /proc
+> >>>> mount. You can't pass a sub-directory of /proc/namespaces/ to a specific
+> >>>> container. To give a virtualized name you have to have a dedicated pid ns.
+> >>>>
+> >>>> Let we have in one /proc mount:
+> >>>>
+> >>>> /mnt1/proc/namespaces/userns1/.../[namespaceX_name1 -- inode XXX]
+> >>>>
+> >>>> In another another /proc mount we have:
+> >>>>
+> >>>> /mnt2/proc/namespaces/userns1/.../[namespaceX_name1_synonym -- inode XXX]
+> >>>>
+> >>>> The virtualization is made per /proc (i.e., per pid ns). Container should
+> >>>> receive either /mnt1/proc or /mnt2/proc on restore as it's /proc.
+> >>>>
+> >>>> There is no a sense of directory hierarchy for virtualization, since
+> >>>> you can't use specific sub-directory as a root directory of /proc/namespaces
+> >>>> to a container. You still have to introduce a new pid ns to have virtualized
+> >>>> /proc.
+> >>>
+> >>> I think we can figure out how to implement this. As the first idea, we
+> >>> can use the same way how /proc/net is implemented.
+> >>>
+> >>>>
+> >>>>> * With the suggested structure, for each user namepsace, we will show
+> >>>>>   only its subtree of namespaces. This looks more natural than
+> >>>>>   filltering content of one directory.
+> >>>>
+> >>>> It's rather subjectively I think. /proc is related to pid ns, and user ns
+> >>>> hierarchy does not look more natural for me.
+> >>>
+> >>> or /proc is wrong place for this
+> 
