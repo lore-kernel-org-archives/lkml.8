@@ -2,111 +2,116 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF68C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB709206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5874A206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597400240;
+	bh=tDbXWVerMAt2vjvC+x0gHEGyEhYx1t9KNHKj5mxL/F8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=z1MxL8ZmZFKrCvHs2oq1/VW7lVVV+UrNwEuXOod+hAP9wRcca7pdyWKduSORnyuJJ
+	 FYoTD4mCONNr4inNRLNepIMc9bCTCi3P2Bi0PIguKsIy1/Nyk3mPfYc4pWzgVUGu0c
+	 iOU3blhrfdn0yXZ4yECSRNRNOqXNd3//xndq4stU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgHNKQC (ORCPT
+        id S1726848AbgHNKRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:16:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:32858 "EHLO foss.arm.com"
+        Fri, 14 Aug 2020 06:17:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgHNKQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:16:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAF991063;
-        Fri, 14 Aug 2020 03:16:00 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF8E53F6CF;
-        Fri, 14 Aug 2020 03:15:58 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 11:15:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de,
-        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com
-Subject: Re: [PATCH v5 9/9] Revert "PCI: brcmstb: Wait for Raspberry Pi's
- firmware when present"
-Message-ID: <20200814101556.GB19387@e121166-lin.cambridge.arm.com>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <20200629161845.6021-10-nsaenzjulienne@suse.de>
+        id S1726012AbgHNKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:17:18 -0400
+Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11244206DA;
+        Fri, 14 Aug 2020 10:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597400237;
+        bh=tDbXWVerMAt2vjvC+x0gHEGyEhYx1t9KNHKj5mxL/F8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Zkr2JzbN8DWPmzw4ecUEfwbw2tOPKadI4VKIFKmB7FCzEE1zL+QyclAimXfPGNY//
+         tHF0q5NwuElgwBiy0XIr1uWGR068ezx9jcfEUFW8HBiDQuHKCaDfwSefwghuIFIL9F
+         7fDsOghhm7Txc0XiAARkKk+Hlb0kyg26aFtitS4o=
+Date:   Fri, 14 Aug 2020 12:17:14 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules updates for v5.9
+Message-ID: <20200814101712.GA32330@linux-8ccs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200629161845.6021-10-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OS:   Linux linux-8ccs 5.8.0-rc6-lp150.12.61-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:18:45PM +0200, Nicolas Saenz Julienne wrote:
-> This reverts commit 44331189f9082c7e659697bbac1747db3def73e7.
-> 
-> Now that the VL805 init routine is run through a reset controller driver
-> the device dependencies are being taken care of by the device core. No
-> need to do it manually here.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 17 -----------------
->  1 file changed, 17 deletions(-)
+Hi Linus,
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Please pull below to receive modules updates for the v5.9 merge window.
+The most important change would be Christoph Hellwig's patch implementing
+proprietary taint inheritance, in an effort to discourage the creation of
+GPL "shim" modules that interface between GPL symbols and proprietary
+symbols. A recent example cited from the discussion can be found here:
 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 7730ea845ff2..752f5b331579 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -28,8 +28,6 @@
->  #include <linux/string.h>
->  #include <linux/types.h>
->  
-> -#include <soc/bcm2835/raspberrypi-firmware.h>
-> -
->  #include "../pci.h"
->  
->  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-> @@ -931,26 +929,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node, *msi_np;
->  	struct pci_host_bridge *bridge;
-> -	struct device_node *fw_np;
->  	struct brcm_pcie *pcie;
->  	struct pci_bus *child;
->  	struct resource *res;
->  	int ret;
->  
-> -	/*
-> -	 * We have to wait for Raspberry Pi's firmware interface to be up as a
-> -	 * PCI fixup, rpi_firmware_init_vl805(), depends on it. This driver's
-> -	 * probe can race with the firmware interface's (see
-> -	 * drivers/firmware/raspberrypi.c) and potentially break the PCI fixup.
-> -	 */
-> -	fw_np = of_find_compatible_node(NULL, NULL,
-> -					"raspberrypi,bcm2835-firmware");
-> -	if (fw_np && !rpi_firmware_get(fw_np)) {
-> -		of_node_put(fw_np);
-> -		return -EPROBE_DEFER;
-> -	}
-> -	of_node_put(fw_np);
-> -
->  	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
->  	if (!bridge)
->  		return -ENOMEM;
-> -- 
-> 2.27.0
-> 
+   https://lore.kernel.org/netdev/6376CA34-BC6F-45DE-9FFD-7E32664C7569@fb.com/T/#md514322fdfa212afe9f1d3eb4e5f7eaefece36eb
+
+Thank you,
+
+Jessica
+--
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.9
+
+for you to fetch changes up to 262e6ae7081df304fc625cf368d5c2cbba2bb991:
+
+  modules: inherit TAINT_PROPRIETARY_MODULE (2020-08-05 10:31:28 +0200)
+
+----------------------------------------------------------------
+Modules updates for v5.9
+
+Summary of modules changes for the 5.9 merge window:
+
+- Have modules that use symbols from proprietary modules inherit the
+  TAINT_PROPRIETARY_MODULE taint, in an effort to prevent GPL shim modules that
+  are used to circumvent _GPL exports. These are modules that claim to be GPL
+  licensed while also using symbols from proprietary modules. Such modules will
+  be rejected while non-GPL modules will inherit the proprietary taint.
+
+- Module export space cleanup. Unexport symbols that are unused outside of
+  module.c or otherwise used in only built-in code.
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+----------------------------------------------------------------
+Christoph Hellwig (8):
+      modules: mark ref_module static
+      modules: mark find_symbol static
+      modules: mark each_symbol_section static
+      modules: unexport __module_text_address
+      modules: unexport __module_address
+      modules: rename the licence field in struct symsearch to license
+      modules: return licensing information from find_symbol
+      modules: inherit TAINT_PROPRIETARY_MODULE
+
+Randy Dunlap (1):
+      modules: linux/moduleparam.h: drop duplicated word in a comment
+
+ include/linux/module.h      | 26 +++-----------------
+ include/linux/moduleparam.h |  2 +-
+ kernel/module.c             | 60 ++++++++++++++++++++++++++++++++-------------
+ 3 files changed, 47 insertions(+), 41 deletions(-)
