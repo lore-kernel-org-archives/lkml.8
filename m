@@ -7,66 +7,62 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C940C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B36C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7476E207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F4A207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kEPKwc99";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vj6m/fjZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QnAG3gq4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="voOAM7NT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgHNPXy (ORCPT
+        id S1727885AbgHNPXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46060 "EHLO
+        Fri, 14 Aug 2020 11:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbgHNPXn (ORCPT
+        with ESMTP id S1726270AbgHNPXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:23:43 -0400
+        Fri, 14 Aug 2020 11:23:35 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2812FC061384;
-        Fri, 14 Aug 2020 08:23:43 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 15:23:40 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A421C061385;
+        Fri, 14 Aug 2020 08:23:35 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 15:23:29 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597418621;
+        s=2020; t=1597418610;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OpwF0ezxNnJRH1EzzqXaJI767Fgm8ET3DDmGPuxhi4M=;
-        b=kEPKwc998bARCNhozu0yT+aomyJTVYwEhFfpH+7eDwU0IsSOh60TzG/eO6Drysa26zd1Cn
-        1gObYd/9qQoBAguBMeed2SypWyets6kdCxFih6e2yCsEuLXj12Is7H1I3NGIUvhDtvgvTc
-        CiWpOHixctHPgaTMzX5dGm31Dp0OGiA2WFA5uM/Y/zPF6fRWcTjDoqVfAGQDiWrbK9RUU6
-        ouX3WWeNoDGSXLffFg3qe/JP0ew3eG3GazwLb+bTPSE9Eh8PU3cjR2UQSJ+lcB6TXZXy1y
-        Gd5MjbsW6UDmkJzgW11BnzcyaIwEg2GuSHPCJYz9XoZ0cVm2xFU1Gj2DdyfnpA==
+        bh=bdANNQMuUMseVByBrH26u9LG+YAJnlk/Tjr7L7O4PIs=;
+        b=QnAG3gq4gobyETTNKHTW1dco1DG94ooUMIwM0SzdbQifCVz8X/ldwsf5Mkg8uKnnItB3gn
+        yllx5pQRMrgcw4ebsowT4W8yDkQsDpaNTQr+kxiB7HLOyEs0pmjS1RSjzx+QE2ya1n1mTV
+        pS7MjwgaVhrr4PDsUBqYGe3QyF0ucllBNQPhJ31N2uQHyzPHIH8NILBuZgFLfva++6pxX7
+        acJunWiUIRO7y/6Tf74lkOoiA9H0P2A3YX91t+iMg7puNQ1aaijVewl+jRhMK+lPHcvn8p
+        etvizoncWPeB9t/loD1k3gL8EnROwLt0sCSYoQ5aE1dAw477y17V6p0coDuynA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597418621;
+        s=2020e; t=1597418610;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OpwF0ezxNnJRH1EzzqXaJI767Fgm8ET3DDmGPuxhi4M=;
-        b=Vj6m/fjZvoIwN42fdwYVLw+fQ7geootdrQd4Nw71ChBAy6Gt747xxduATLZ0Pn6zm7+MTU
-        XTT6ndTGogwlDyCw==
-From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+        bh=bdANNQMuUMseVByBrH26u9LG+YAJnlk/Tjr7L7O4PIs=;
+        b=voOAM7NTl/YqbQ5p1JFNMaXcq/RxVFNzpuoPb1uMAftB/qttKYfcSqBKSukvhNQIxR0Kf/
+        x+SEl9eOAvDcgIAQ==
+From:   "tip-bot2 for Zhang Rui" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot/compressed: Force hidden visibility for all
- symbol references
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>, x86 <x86@kernel.org>,
+Subject: [tip: perf/urgent] perf/x86/rapl: Support multiple RAPL unit quirks
+Cc:     Zhang Rui <rui.zhang@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Len Brown <len.brown@intel.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200731230820.1742553-3-keescook@chromium.org>
-References: <20200731230820.1742553-3-keescook@chromium.org>
+In-Reply-To: <20200811153149.12242-3-rui.zhang@intel.com>
+References: <20200811153149.12242-3-rui.zhang@intel.com>
 MIME-Version: 1.0
-Message-ID: <159741862091.3192.5315750890786366138.tip-bot2@tip-bot2>
+Message-ID: <159741860945.3192.12569144568856845688.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -76,118 +72,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/boot branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     e544ea57ac0734bca752eb2d8635fecbe932c356
-Gitweb:        https://git.kernel.org/tip/e544ea57ac0734bca752eb2d8635fecbe932c356
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Fri, 31 Jul 2020 16:07:46 -07:00
+Commit-ID:     74f41adab0f4a61857833e1b6fa8e9ad12c251b6
+Gitweb:        https://git.kernel.org/tip/74f41adab0f4a61857833e1b6fa8e9ad12c251b6
+Author:        Zhang Rui <rui.zhang@intel.com>
+AuthorDate:    Tue, 11 Aug 2020 23:31:48 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 14 Aug 2020 12:52:34 +02:00
+CommitterDate: Fri, 14 Aug 2020 12:35:12 +02:00
 
-x86/boot/compressed: Force hidden visibility for all symbol references
+perf/x86/rapl: Support multiple RAPL unit quirks
 
-Eliminate all GOT entries in the decompressor binary, by forcing hidden
-visibility for all symbol references, which informs the compiler that
-such references will be resolved at link time without the need for
-allocating GOT entries.
+There will be more platforms with different fixed energy units.
+Enhance the code to support different RAPL unit quirks for different
+platforms.
 
-To ensure that no GOT entries will creep back in, add an assertion to
-the decompressor linker script that will fire if the .got section has
-a non-zero size.
-
-[Arvind: move hidden.h to include/linux instead of making a copy]
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200731230820.1742553-3-keescook@chromium.org
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Len Brown <len.brown@intel.com>
+Link: https://lore.kernel.org/r/20200811153149.12242-3-rui.zhang@intel.com
 ---
- arch/x86/boot/compressed/Makefile      |  1 +
- arch/x86/boot/compressed/vmlinux.lds.S |  1 +
- drivers/firmware/efi/libstub/Makefile  |  2 +-
- drivers/firmware/efi/libstub/hidden.h  |  6 ------
- include/linux/hidden.h                 | 19 +++++++++++++++++++
- 5 files changed, 22 insertions(+), 7 deletions(-)
- delete mode 100644 drivers/firmware/efi/libstub/hidden.h
- create mode 100644 include/linux/hidden.h
+ arch/x86/events/rapl.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 3962f59..7c687a7 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -43,6 +43,7 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-+KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index e972383..d0002eb 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -130,11 +130,16 @@ struct rapl_pmus {
+ 	struct rapl_pmu		*pmus[];
+ };
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index b17d218..4bcc943 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -81,6 +81,7 @@ SECTIONS
- 	DISCARDS
- }
- 
-+ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
- #ifdef CONFIG_X86_64
- ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
- #else
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 296b18f..5eefd60 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -26,7 +26,7 @@ cflags-$(CONFIG_ARM)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
- cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
- 
- KBUILD_CFLAGS			:= $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
--				   -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
-+				   -include $(srctree)/include/linux/hidden.h \
- 				   -D__NO_FORTIFY \
- 				   -ffreestanding \
- 				   -fno-stack-protector \
-diff --git a/drivers/firmware/efi/libstub/hidden.h b/drivers/firmware/efi/libstub/hidden.h
-deleted file mode 100644
-index 3493b04..0000000
---- a/drivers/firmware/efi/libstub/hidden.h
-+++ /dev/null
-@@ -1,6 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * To prevent the compiler from emitting GOT-indirected (and thus absolute)
-- * references to any global symbols, override their visibility as 'hidden'
-- */
--#pragma GCC visibility push(hidden)
-diff --git a/include/linux/hidden.h b/include/linux/hidden.h
-new file mode 100644
-index 0000000..49a17b6
---- /dev/null
-+++ b/include/linux/hidden.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * When building position independent code with GCC using the -fPIC option,
-+ * (or even the -fPIE one on older versions), it will assume that we are
-+ * building a dynamic object (either a shared library or an executable) that
-+ * may have symbol references that can only be resolved at load time. For a
-+ * variety of reasons (ELF symbol preemption, the CoW footprint of the section
-+ * that is modified by the loader), this results in all references to symbols
-+ * with external linkage to go via entries in the Global Offset Table (GOT),
-+ * which carries absolute addresses which need to be fixed up when the
-+ * executable image is loaded at an offset which is different from its link
-+ * time offset.
-+ *
-+ * Fortunately, there is a way to inform the compiler that such symbol
-+ * references will be satisfied at link time rather than at load time, by
-+ * giving them 'hidden' visibility.
-+ */
++enum rapl_unit_quirk {
++	RAPL_UNIT_QUIRK_NONE,
++	RAPL_UNIT_QUIRK_INTEL_HSW,
++};
 +
-+#pragma GCC visibility push(hidden)
+ struct rapl_model {
+ 	struct perf_msr *rapl_msrs;
+ 	unsigned long	events;
+ 	unsigned int	msr_power_unit;
+-	bool		apply_quirk;
++	enum rapl_unit_quirk	unit_quirk;
+ };
+ 
+  /* 1/2^hw_unit Joule */
+@@ -612,14 +617,20 @@ static int rapl_check_hw_unit(struct rapl_model *rm)
+ 	for (i = 0; i < NR_RAPL_DOMAINS; i++)
+ 		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+ 
++	switch (rm->unit_quirk) {
+ 	/*
+ 	 * DRAM domain on HSW server and KNL has fixed energy unit which can be
+ 	 * different than the unit from power unit MSR. See
+ 	 * "Intel Xeon Processor E5-1600 and E5-2600 v3 Product Families, V2
+ 	 * of 2. Datasheet, September 2014, Reference Number: 330784-001 "
+ 	 */
+-	if (rm->apply_quirk)
++	case RAPL_UNIT_QUIRK_INTEL_HSW:
+ 		rapl_hw_unit[PERF_RAPL_RAM] = 16;
++		break;
++	default:
++		break;
++	}
++
+ 
+ 	/*
+ 	 * Calculate the timer rate:
+@@ -698,7 +709,6 @@ static struct rapl_model model_snb = {
+ 	.events		= BIT(PERF_RAPL_PP0) |
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_PP1),
+-	.apply_quirk	= false,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+@@ -707,7 +717,6 @@ static struct rapl_model model_snbep = {
+ 	.events		= BIT(PERF_RAPL_PP0) |
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+-	.apply_quirk	= false,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+@@ -717,7 +726,6 @@ static struct rapl_model model_hsw = {
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM) |
+ 			  BIT(PERF_RAPL_PP1),
+-	.apply_quirk	= false,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+@@ -726,7 +734,7 @@ static struct rapl_model model_hsx = {
+ 	.events		= BIT(PERF_RAPL_PP0) |
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+-	.apply_quirk	= true,
++	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+@@ -734,7 +742,7 @@ static struct rapl_model model_hsx = {
+ static struct rapl_model model_knl = {
+ 	.events		= BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+-	.apply_quirk	= true,
++	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+@@ -745,14 +753,12 @@ static struct rapl_model model_skl = {
+ 			  BIT(PERF_RAPL_RAM) |
+ 			  BIT(PERF_RAPL_PP1) |
+ 			  BIT(PERF_RAPL_PSYS),
+-	.apply_quirk	= false,
+ 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_amd_fam17h = {
+ 	.events		= BIT(PERF_RAPL_PKG),
+-	.apply_quirk	= false,
+ 	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
+ 	.rapl_msrs      = amd_rapl_msrs,
+ };
