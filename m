@@ -2,99 +2,140 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB45DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D74C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8003220774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C0B20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KxLYcD+i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qop568My"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgHNPHH (ORCPT
+        id S1728721AbgHNPHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:07:07 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55589 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgHNPHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:07:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597417625; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=keU1IkAaHe8KBZmZnzwH0xtfGCXWKBz39FSBCFKQ0ss=;
- b=KxLYcD+it16r9uhvtUfh6RrJMP3P3PBwfXHXcC1KVO6AMqhXTauEJn7V6U5gsmshFBVqgmQU
- daAKhFTb3I/5kD9w+wt9mwfWJW/n2SzD/pxmOkF8/BYbA8D1qFbjQNHMSUgj5VdUokHjqN+1
- bfekdyeFj1gYEypwvY1hWSp9TBo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f36a88b46ed996674e6aa54 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 15:06:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99459C43395; Fri, 14 Aug 2020 15:06:50 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01A17C433C9;
-        Fri, 14 Aug 2020 15:06:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01A17C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 14 Aug 2020 11:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgHNPHn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:07:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8D7C061384;
+        Fri, 14 Aug 2020 08:07:42 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so4532329pjb.4;
+        Fri, 14 Aug 2020 08:07:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2WJZmb/9j/lJrYy6XUlCDvRD3jn20ajzn+B7UCjANxM=;
+        b=Qop568MyWRB5QTovtH7OrJYXTCmm6Qj4e+13BqR/UKZOMzCMCiVnjq0d+gDv0cZWpX
+         wTOH8Sg4KcXScYvhCcmPZKSZi1rSC0SNo36a1TmTiFwA7tB2kVBuUMYI4RTVoAOuAprz
+         kIu+ZV7jvt4KJRGNo6/InNGXZYUwi4eKTQioKa9MK5VX60DiExplvsMNahexNj2MVYAH
+         puM6l1SlM2SGgLMe9S6B0LnX6UPS7Rz7APj40q/cyVUC65sI1DG2Ki0kIxHa17TJCk6D
+         Nx+bKMMXvja0hZEnu4CZ3mq4dHs8tCRSzChlg+rChJfPmKQEQyLEDpzKfWbepIqoSLoD
+         MI1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2WJZmb/9j/lJrYy6XUlCDvRD3jn20ajzn+B7UCjANxM=;
+        b=DDPbklnHdTTAZa2gn7Gup+DyG4cLDz9ut4UN7n+vYYNegnaxnvXMckBoDxJyfaB5K+
+         Z6Bba4ARFmxNGM62tQ36SQGd8oh2LNS+P8euH/DFevalOhAm6fyUzZ4FOG1XCmEbonYe
+         kQKKmEp6hsYWJIV+VExWClTK3byEqpiol/wHIty+YOBBYYufUawcevLqo5r/xUOlmzGW
+         zjA82+pDO7GJb4Ddc//zpgSid7dNPEGMEYbd3vHXYx4RrKCwCUm+FCjw3DUBmbSb7sjc
+         c8Hpx/IsbyYwb8VxOSIvZdpEC66eLuLMqAceT3mCx8NOQ7kU0geL7+65RfXcaf5vN6Yh
+         PQNw==
+X-Gm-Message-State: AOAM5306sp2GgT69W9dda83XAW3jgRwraQEC7wLTw//DpqFajBzzqOhi
+        exHGndSRoly7d3cNe5PllF8=
+X-Google-Smtp-Source: ABdhPJzlzLWOXtIs1V7663bJTcD63HqfEjrZ/ghq+Np2jwvKZAcrugJaaveQhtLGEQXSnx1qiE3pyA==
+X-Received: by 2002:a17:902:9787:: with SMTP id q7mr2446876plp.0.1597417662360;
+        Fri, 14 Aug 2020 08:07:42 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 193sm9665437pfu.169.2020.08.14.08.07.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Aug 2020 08:07:41 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 08:07:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+Subject: Re: [PATCH] drivers: watchdog: pc87413_wdt: Fix Race condition bug
+Message-ID: <20200814150740.GA254327@roeck-us.net>
+References: <20200813125451.19118-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH for v5.9] ath5k: Replace HTTP links with HTTPS ones
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200719104041.57916-1-grandmaster@al2klimov.de>
-References: <20200719104041.57916-1-grandmaster@al2klimov.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     jirislaby@gmail.com, mickflemm@gmail.com, mcgrof@kernel.org,
-        davem@davemloft.net, kuba@kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200814150650.99459C43395@smtp.codeaurora.org>
-Date:   Fri, 14 Aug 2020 15:06:50 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813125451.19118-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Thu, Aug 13, 2020 at 06:24:51PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> After misc_register the open() callback can be called.
+> However the base address (swc_base_addr) is set after misc_register()
+> in init.
+> As a result, if open callback is called before pc87413_get_swc_base_addr()
+> then in the following call chain: pc87413_open() -> pc87413_refresh() ->
+> pc87413_swc_bank3() : The value of swc_base_addr will be -1.
+> Therefore, do misc_register() after pc87413_get_swc_base_addr().
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Patch applied to ath-next branch of ath.git, thanks.
+Another candidate for removal. The entire driver is at the very least
+questionable: It hard enables the watchdog after registering it, making it
+mandatory to open it within one minute or the system will reboot. Also,
+the driver doesn't even check if the hardware even exists; it just assumes
+that it does. And then it reconfigures that potentially non-existing
+hardware to use a specific chip pin as wdt output, as if that would be
+useful if that pin is not wired up. Worst case that driver may actually
+break something if it is loaded on an arbitrary system.
 
-5b525ce88af9 ath5k: Replace HTTP links with HTTPS ones
+I really don't see the point of trying to patch it up unless there are users
+left who can confirm that it even works on existing hardware, and then I'd
+prefer to have it fixed for good and not just patched up.
 
--- 
-https://patchwork.kernel.org/patch/11672417/
+Thanks,
+Guenter
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> ---
+>  drivers/watchdog/pc87413_wdt.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
+> index 73fbfc99083b..ad8b8af2bdc0 100644
+> --- a/drivers/watchdog/pc87413_wdt.c
+> +++ b/drivers/watchdog/pc87413_wdt.c
+> @@ -512,6 +512,10 @@ static int __init pc87413_init(void)
+>  	if (ret != 0)
+>  		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+>  
+> +	pc87413_select_wdt_out();
+> +	pc87413_enable_swc();
+> +	pc87413_get_swc_base_addr();
+> +
+>  	ret = misc_register(&pc87413_miscdev);
+>  	if (ret != 0) {
+>  		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+> @@ -520,10 +524,6 @@ static int __init pc87413_init(void)
+>  	}
+>  	pr_info("initialized. timeout=%d min\n", timeout);
+>  
+> -	pc87413_select_wdt_out();
+> -	pc87413_enable_swc();
+> -	pc87413_get_swc_base_addr();
+> -
+>  	if (!request_region(swc_base_addr, 0x20, MODNAME)) {
+>  		pr_err("cannot request SWC region at 0x%x\n", swc_base_addr);
+>  		ret = -EBUSY;
