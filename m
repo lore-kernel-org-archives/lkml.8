@@ -2,215 +2,119 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B46D206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD9F20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWgJmUCe"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SAuPo0kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgHNRFs (ORCPT
+        id S1728269AbgHNRHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        Fri, 14 Aug 2020 13:07:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgHNRFq (ORCPT
+        with ESMTP id S1726641AbgHNRHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:05:46 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A33C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:05:46 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b11so5164083lfe.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:05:46 -0700 (PDT)
+        Fri, 14 Aug 2020 13:07:11 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D98BC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:07:11 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x12so7454797qtp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8+3+utw2qoRZvLkLueDeqTz6MAU6wAFy/JkEJxDI190=;
-        b=ZWgJmUCeihHACbWSIyHdS2NjmGo8wzQS/+58lG4r5mWLm1gQC1nYxuKqBjHlBt4RRE
-         LlB2pub5ZH77qfJALXBdntKeIM5bZNGksNs0tUjbtOgWMrXftXIyPNho2DFZuIe37v+N
-         WdIouqpi54ottOqyWtTG+nEmeuhTcfdLH4ngm9XT9+Ddx0Rb7Mvw1osKqoZxU0xSDLxd
-         N20VI1G+tCE04FOKIviXBz/Hd9sfpoP11wGv8qFO1MTVACWSXi3++1UqBonAp/9Q/Wpy
-         dR2Bz71icKsujFWb6KuQr26VCZqwvCasATC1iCKC2hrgYejXnjoiq2yMiKkGstTF09/G
-         zw2g==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9dxlpovzJD+TOEGVVjsD+xHktzeJbFiQKOPQEqkZM9M=;
+        b=SAuPo0kB4++laPCsa/UJIFJ7sqnHBPnVC3kGXEza9f04NT29/1K9uJRiw/r7EK5U5u
+         zO/yYdx38sU0we9d3cmvxhWEZKc5X6nwQ/XjLLeohAaIKY06PuBJaqR1trbDdIYnsGTH
+         08eXLh8G+WR8e7CRlVIWWg1gEoZlYpFZ7hcOUzARI4KKmlviDtCF6F18vHxsBasvE2t6
+         wAfTnGKPlE22dFrFIEH3weBYO2fU04//eTyCHDLLU0FvqwcgyhvTr+Y77w5T9pNVui0I
+         fqiFrISZhNZ6ri+OWInsJI2CF2gs+c3eTR46kGxaCeZCwXLm7ay2e+mDwN+n2xutul2m
+         3UYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8+3+utw2qoRZvLkLueDeqTz6MAU6wAFy/JkEJxDI190=;
-        b=pE1G1H9DaCBbJW9OTvbaJa7f9lKGxGzRVFuUGEQzL1HKHSgRvkinwDEU1kAOOzwHFH
-         Q2cb2Wr2GonwWuzo6YIzC/Y77FAPLKcJv+mguC4py2ZqxjyOQhpzZYA4L2Q/U/GHACdQ
-         Q7qGr21bJHw6Ve5BEvdb8cOm1B1AUcLY499+iQB3MrFLOzSAmawluh8M6Mw/8ePsbIhN
-         up7aFoJ0MmbsT2gbJ7mhVTcALnQQdd4WRuMakdz/FsqFf4sR1StiTSovwhPdPc0M9NEd
-         VAALppG4KkH1e6JFgFywa5aISwtRa69EXtDuNVJg/VzeY8h1aQSHVvGOlinllCItAm0y
-         p0wQ==
-X-Gm-Message-State: AOAM533FDLII1nWkqypyX0sZn0iaiHIZg7GxSrrrsxlzhu2NKWxbLrwc
-        y3o6m5BO+H8V0+lKBO/cldPQBA==
-X-Google-Smtp-Source: ABdhPJzaklkyPmJ9zd43OPheLnHOE8PZBUWYTxxslFUIk7wE8Tgst5f8HCTE8QoQCCHx2a6NzMJ0AQ==
-X-Received: by 2002:ac2:5dc1:: with SMTP id x1mr1622219lfq.217.1597424744650;
-        Fri, 14 Aug 2020 10:05:44 -0700 (PDT)
-Received: from [192.168.43.7] ([188.162.64.200])
-        by smtp.gmail.com with ESMTPSA id m64sm2056913lfd.0.2020.08.14.10.05.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 10:05:43 -0700 (PDT)
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Tanmay Shah <tanmay@codeaurora.org>, swboyd@chromium.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robdclark@gmail.com
-Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-Date:   Fri, 14 Aug 2020 20:05:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9dxlpovzJD+TOEGVVjsD+xHktzeJbFiQKOPQEqkZM9M=;
+        b=nDyTYMzc8ecThSHhs4Z7TR0CiB52+WDxevDTIUPxYy3aEbkO4NfTO+J0ivaEuEQolQ
+         QKADG5jZlxkuaXA+x4hMGz0jZc9GqMllZJ9swNIKCvpz3aNnoIqo6jX8PwIPifQ1f8rd
+         j8/kLeiwQjXcDua29PpfR2N2qY4t0ZgW8QOJV1ELtJLwgtGftOLtp5XXguJVZ6U7HjuE
+         8ad9dzRD8khwRvlnYQftPzfc5m4QHL8qcS/unZCU+D+SgqpfLVHqHlHeT8wuKOcECyHn
+         LdhHxhN9ywhfnjgjFw7LZuOuGyNP+2RigRdQlfubWz0VskGukyRWAWfFpU9dc9HvzUvb
+         yuAw==
+X-Gm-Message-State: AOAM531nEQ0qjzPVx3vB/KSwg7kO8k54Lud+mk1gMGSZCz+YY5tl5py3
+        HnqOuEfCmZECf/4byiDMoOw19A==
+X-Google-Smtp-Source: ABdhPJxtxR/DpDD2wqT6cjrvAzJOAgKL557tPYvsOhNta+6vq5T+QXPHbnmTF7MBntLVhE9sMcpbrg==
+X-Received: by 2002:aed:33e7:: with SMTP id v94mr2860210qtd.18.1597424829705;
+        Fri, 14 Aug 2020 10:07:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id x29sm10363864qtv.80.2020.08.14.10.07.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 10:07:08 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k6dAZ-006l92-QG; Fri, 14 Aug 2020 14:07:07 -0300
+Date:   Fri, 14 Aug 2020 14:07:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jack Leadford <leadford.jack@gmail.com>
+Cc:     Joe Perches <joe@perches.com>, Leon Romanovsky <leon@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200814170707.GV24045@ziepe.ca>
+References: <20200731142148.GA1718799@kroah.com>
+ <20200731143604.GF24045@ziepe.ca>
+ <20200731171924.GA2014207@kroah.com>
+ <20200801053833.GK75549@unreal>
+ <20200802221020.GN24045@ziepe.ca>
+ <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
+ <20200802222843.GP24045@ziepe.ca>
+ <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
+ <20200803230627.GQ24045@ziepe.ca>
+ <ff066616-3bb8-b6c8-d329-7de5ab8ee982@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200812044223.19279-4-tanmay@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff066616-3bb8-b6c8-d329-7de5ab8ee982@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 08, 2020 at 03:57:33PM -0700, Jack Leadford wrote:
+> Hello!
+> 
+> Thanks to Jason for getting this conversation back on track.
+> 
+> Yes: in general, {} or a partial initializer /will/ zero padding bits.
+> 
+> However, there is a bug in some versions of GCC where {} will /not/ zero
+> padding bits; actually, Jason's test program in this mail
+> https://lore.kernel.org/lkml/20200731143604.GF24045@ziepe.ca/
+> has the right ingredients to trigger the bug, but the GCC
+> versions used are outside of the bug window. :)
 
-On 12/08/2020 07:42, Tanmay Shah wrote:
- > From: Chandan Uddaraju <chandanu@codeaurora.org>
- >
- > Add the needed DP PLL specific files to support
- > display port interface on msm targets.
+It seems fine, at least Godbolt doesn't show a bug with that code.
 
-[skipped]
+Can you share the test that does fail?
 
- > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
-b/drivers/gpu/drm/msm/dp/dp_pll_private.h
- > new file mode 100644
- > index 000000000000..475ba6ed59ab
- > --- /dev/null
- > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
- > @@ -0,0 +1,98 @@
- > +/* SPDX-License-Identifier: GPL-2.0-only */
- > +/*
- > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
- > + */
- > +
- > +#ifndef __DP_PLL_10NM_H
- > +#define __DP_PLL_10NM_H
- > +
- > +#include "dp_pll.h"
- > +#include "dp_reg.h"
- > +
- > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
- > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
- > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
- > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
- > +
- > +#define NUM_DP_CLOCKS_MAX            6
- > +
- > +#define DP_PHY_PLL_POLL_SLEEP_US        500
- > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
- > +
- > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
- > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
- > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
- > +
- > +struct dp_pll_vco_clk {
- > +    struct clk_hw hw;
- > +    unsigned long    rate;        /* current vco rate */
- > +    u64        min_rate;    /* min vco rate */
- > +    u64        max_rate;    /* max vco rate */
- > +    void        *priv;
- > +};
- > +
- > +struct dp_pll_db {
+This seems like the sort of security sensitive bug that should be
+addressed in gcc, not worked around in the kernel code :\
 
-This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for 
-example, will use slightly different structure.
-
- > +    struct msm_dp_pll *base;
- > +
- > +    int id;
- > +    struct platform_device *pdev;
- > +
- > +    /* private clocks: */
- > +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
- > +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
-
-Then these two fields can use exact number of clocks rather than 
-NUM_DP_CLOCKS_MAX.
-
- > +    u32 num_hws;
- > +
- > +    /* lane and orientation settings */
- > +    u8 lane_cnt;
- > +    u8 orientation;
- > +
- > +    /* COM PHY settings */
- > +    u32 hsclk_sel;
- > +    u32 dec_start_mode0;
- > +    u32 div_frac_start1_mode0;
- > +    u32 div_frac_start2_mode0;
- > +    u32 div_frac_start3_mode0;
- > +    u32 integloop_gain0_mode0;
- > +    u32 integloop_gain1_mode0;
- > +    u32 vco_tune_map;
- > +    u32 lock_cmp1_mode0;
- > +    u32 lock_cmp2_mode0;
- > +    u32 lock_cmp3_mode0;
- > +    u32 lock_cmp_en;
- > +
- > +    /* PHY vco divider */
- > +    u32 phy_vco_div;
- > +    /*
- > +     * Certain pll's needs to update the same vco rate after resume in
- > +     * suspend/resume scenario. Cached the vco rate for such plls.
- > +     */
- > +    unsigned long    vco_cached_rate;
- > +    u32        cached_cfg0;
- > +    u32        cached_cfg1;
- > +    u32        cached_outdiv;
- > +
- > +    uint32_t index;
- > +};
- > +
- > +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
- > +{
- > +    return container_of(hw, struct dp_pll_vco_clk, hw);
- > +}
- > +
- > +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
- > +
- > +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
- > +
- > +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
- > +                unsigned long parent_rate);
- > +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
- > +                unsigned long parent_rate);
- > +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
- > +                unsigned long *parent_rate);
- > +int dp_vco_prepare_10nm(struct clk_hw *hw);
- > +void dp_vco_unprepare_10nm(struct clk_hw *hw);
- > +
- > +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
- > +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
-
-These functions don't seem to be used outside of dp_pll_10nm. What about 
-making them static?
-
-
--- 
-With best wishes
-Dmitry
+Jason
