@@ -2,126 +2,205 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBBAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A109B20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9582078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V83dDb2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHNAqS (ORCPT
+        id S1726642AbgHNAsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:46:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:46745 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgHNAqS (ORCPT
+        Thu, 13 Aug 2020 20:48:52 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:50822 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgHNAsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:46:18 -0400
-Received: by mail-il1-f199.google.com with SMTP id q19so5553435ilt.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 17:46:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=oaxnNW/Br0LLMOJ1gnBQDMyfBMIIFqJZlMLKTFnUu0o=;
-        b=cYcHmENI5FiGH/ohLODJahFHnCxzRbgm4DjiJ604JFwV1Byvr4PzStk5LTMBHM6/9G
-         hYzTEnUG21YD6jz/KKF51teGWI7wBCQEZs+xcxxZdYrPv4bwaV2jCjhCSt8AYyZh0Dkg
-         1dTXfeNn3s2YUc89Z5uDG1edSmnKqjE4utWWmQimLg4YNxp7aq7ZLBuZLYARmf2DutBM
-         2nhDZ8xh5/nizxoz9b3PfHXJdU9ZiO0i85sIeQ6rwiH5Cm1Y1gKxrTILfuZx4iepK0L/
-         /74pHFeHfuvIZ1HuKg5aWig2KlBlUl1Msgv90O1N42I79xGynuZR9g3ruiZcuynQvd7r
-         2uDQ==
-X-Gm-Message-State: AOAM533x+Ju1LpDb1of9Wjt3/MwjNfSe2WW0c6Yx4lCJhc1dES0d4nVF
-        Mo60YTLZ360mR3OWojQkqKe58Z5RZJrBu50EK35vCpE/XvSs
-X-Google-Smtp-Source: ABdhPJxuz4pG1DV16E3mS5q0aQqyltRwPKU7IIryPXt38yJXXBDKlWhrriq+Srz37wqJFnLs3gRJwG8HSgDSGTlRan/8erXR0JZh
+        Thu, 13 Aug 2020 20:48:52 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200814004847epoutp04a03873b0b5d7a358f762aad9a02841a9~q-Ae7Jykm1585915859epoutp04f
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 00:48:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200814004847epoutp04a03873b0b5d7a358f762aad9a02841a9~q-Ae7Jykm1585915859epoutp04f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597366128;
+        bh=e4Xon6lpxSkKHbuO67+S1JkH0bpnqs6utJMAst9eaWQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=V83dDb2d69JHn7xuocrwp79il8KJhEnIrV4IBGMh+3b4LTwSgO27VDHzODIIaDAM/
+         tCQK0IJrXJMxp0mwO5pAb5ikB2W3disLYVyoXAB1YdRiykRvC3UI3KEa3KSFPeAKDm
+         v/pLJtm9xY632E5wBJaIFXGajG6Y2vrB8Yb2ivIg=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200814004847epcas1p202f4fea01ce691ab260db05de02f09b2~q-AedKpw52393723937epcas1p2v;
+        Fri, 14 Aug 2020 00:48:47 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BSPvK1nW3zMqYkY; Fri, 14 Aug
+        2020 00:48:45 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.06.29173.D6FD53F5; Fri, 14 Aug 2020 09:48:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200814004844epcas1p1b1a40e6e5106231df3abc92e5e5d5158~q-Ab9aMUX2057120571epcas1p1Y;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200814004844epsmtrp1d8e5fc0929ed11503a5c137a56580896~q-Ab8g-tE1694616946epsmtrp1C;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-ca-5f35df6d4f8f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B7.47.08303.C6FD53F5; Fri, 14 Aug 2020 09:48:44 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200814004844epsmtip2e3561dec68fbdd0d219f8de608946601~q-AbqMUbS0941709417epsmtip2a;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+Subject: Re: [PATCH v5 12/36] PM / devfreq: tegra20: Use MC timings for
+ building OPP table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <784f000f-17fd-550d-382c-1f9c11ce808b@samsung.com>
+Date:   Fri, 14 Aug 2020 10:00:45 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:134e:: with SMTP id k14mr393810ilr.271.1597365977225;
- Thu, 13 Aug 2020 17:46:17 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 17:46:17 -0700
-In-Reply-To: <000000000000fc7a3705ac9cf2e7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a61ed405accbbf76@google.com>
-Subject: Re: KMSAN: uninit-value in tda8083_attach
-From:   syzbot <syzbot+909a91e75919efd2b557@syzkaller.appspotmail.com>
-To:     glider@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, mchehab@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200814000621.8415-13-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRmVeSWpSXmKPExsWy7bCmvm7ufdN4g3eTOCzefXrKajH/yDlW
+        i9UfHzNaXPn6ns1i+t5NbBYtsxaxWJxtesNucXnXHDaLz71HGC06v8xis7h4ytXiduMKNotJ
+        a6cyWrTuPcJu8e/aRhaLn7vmsTgIeLy/0crusXPWXXaPS+f+MHtsWtXJ5nHn2h42j/vdx5k8
+        epvfsXn0bVnF6PF5k1wAZ1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5i
+        bqqtkotPgK5bZg7QG0oKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAssCveLE3OLS
+        vHS95PxcK0MDAyNToMKE7IwVV54xFfQLVfyac5mpgfEkXxcjJ4eEgInEh/MTWLoYuTiEBHYw
+        SsyZ2cUE4XxilNi5qgkq85lRYtbsD0wwLc9v7WeHSOxilJjYeB+q5T2jxPsVG9hAqoQFYiS2
+        L9jPCpIQETjCLLG68zgjSIJZYAajxJ09yiA2m4CWxP4XN8Aa+AUUJa7+eAxWwytgJ7G7+zsz
+        iM0ioCrx9vYrsBpRgTCJk9taoGoEJU7OfMICYnMKmEk839fOBjFfXOLWk/lMELa8xPa3c5gh
+        zv7PIdH0IhjCdpFYt2EPC4QtLPHq+BZ2CFtK4mV/G5RdLbHy5BE2kAckBDoYJbbsv8AKkTCW
+        2L90MtACDqAFmhLrd+lDhBUldv6eC/Ujn8S7rz2sICUSArwSHW1CECXKEpcf3IWGoqTE4vZO
+        tgmMSrOQfDMLyQezkHwwC2HZAkaWVYxiqQXFuempxYYFxsjRvYkRnMa1zHcwTnv7Qe8QIxMH
+        4yFGCQ5mJRFe5svG8UK8KYmVValF+fFFpTmpxYcYTYHhO5FZSjQ5H5hJ8kriDU2NjI2NLUwM
+        zUwNDZXEeR/eUogXEkhPLEnNTk0tSC2C6WPi4JRqYOKW2qRwNUCq8/XZJSvl7c+tWSi6XWDB
+        8rtXKtI2ehUV7N9yuvPPf3nf5JWiP1+3f85d5ZV1eltVOcNbqVCfKQ9PHJUqTIx6myTswLgx
+        uLH1DuvHp5leMhOf16lxHJue1qEj+Oh/o9uNfVuvrM+ez7zVf4vPPeaOztV556SPL/mcUPmn
+        1rQ8Y/ZzTubaDJ3/brJscjxT17+cYrKS2d83z7bMwe/+zsuPvPijZlg8Yk9hnJD2ITdlVnHG
+        2oqHdrJbys6Inbc8dXTruUtiR8QuiRkvLjW0+Pzs7K6o92t9101hauG2NljHVCag/NpwTtH0
+        ZepSzFKH3Z7dfnT1x7PAfrezSh+2+XzKvlrW8nirXpASS3FGoqEWc1FxIgC+/a0abAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvG7OfdN4g7nnNS3efXrKajH/yDlW
+        i9UfHzNaXPn6ns1i+t5NbBYtsxaxWJxtesNucXnXHDaLz71HGC06v8xis7h4ytXiduMKNotJ
+        a6cyWrTuPcJu8e/aRhaLn7vmsTgIeLy/0crusXPWXXaPS+f+MHtsWtXJ5nHn2h42j/vdx5k8
+        epvfsXn0bVnF6PF5k1wAZxSXTUpqTmZZapG+XQJXxoorz5gK+oUqfs25zNTAeJKvi5GTQ0LA
+        ROL5rf3sXYxcHEICOxglZt8+zAKRkJSYdvEocxcjB5AtLHH4cDFEzVtGid4jm5hBaoQFYiS2
+        L9jPCpIQETjGLLHp9GkmEIdZYAajxJ8NG9lBqoQEtjBKdD5jA7HZBLQk9r+4AWbzCyhKXP3x
+        mBHE5hWwk9jd/R1sKouAqsTb26/AakQFwiR2LnnMBFEjKHFy5hOw6zgFzCSe72sHq2EWUJf4
+        M+8SM4QtLnHryXwmCFteYvvbOcwTGIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMpL
+        LdcrTswtLs1L10vOz93ECI5oLa0djHtWfdA7xMjEwXiIUYKDWUmEl/mycbwQb0piZVVqUX58
+        UWlOavEhRmkOFiVx3q+zFsYJCaQnlqRmp6YWpBbBZJk4OKUamDYIzTkUVrH0YNyv26VXfJ+F
+        hiw3kkhZ7vZHTieDY3bSGt5Wu3cHDHhTHIxCjx19/135YfyRBflBzV+178u+Ebx1MPLa8q9N
+        bU9PLntbHXpvvV5i+W4tFc/fMwOE7zg2Mpkd+Rq1n8njC6flRb3r3AuXz9mVkOUqXPP11Zzs
+        j1/MzLYGRtyZv8vo4K/tOe/u+T488P5HVkGS3JPjJR0FQUGxnzf/WqLPzsJRxXV0zZ+X12/X
+        RUcYLHxssd6trf6SWvuaSZFsjWcmioYpR2zT/q4W18tkVp/g9Uq/WDF89hxl+7/BU9JzpHq7
+        eRcsDmOJ1XisYf1PqHvOGrVpf/dsVk54VNOZozlrotCroqxpZ5VYijMSDbWYi4oTAUv9ZlFX
+        AwAA
+X-CMS-MailID: 20200814004844epcas1p1b1a40e6e5106231df3abc92e5e5d5158
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200814000944epcas1p4da08e1a6b03c80013a997fdc856a9486
+References: <20200814000621.8415-1-digetx@gmail.com>
+        <CGME20200814000944epcas1p4da08e1a6b03c80013a997fdc856a9486@epcas1p4.samsung.com>
+        <20200814000621.8415-13-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Hi Dmitry,
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=164cd76a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=909a91e75919efd2b557
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160a9c7a900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=165d7f6a900000
+On 8/14/20 9:05 AM, Dmitry Osipenko wrote:
+> The clk_round_rate() won't be usable for building OPP table once
+> interconnect support will be added to the EMC driver because that CLK API
+> function limits the rounded rate based on the clk rate that is imposed by
+> active clk-users, and thus, the rounding won't work as expected if
+> interconnect will set the minimum EMC clock rate before devfreq driver is
+> loaded. The struct tegra_mc contains memory timings which could be used by
+> the devfreq driver for building up OPP table instead of rounding clock
+> rate, this patch implements this idea.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra20-devfreq.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+> index 6469dc69c5e0..a985f24098f5 100644
+> --- a/drivers/devfreq/tegra20-devfreq.c
+> +++ b/drivers/devfreq/tegra20-devfreq.c
+> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  {
+>  	struct tegra_devfreq *tegra;
+>  	struct tegra_mc *mc;
+> -	unsigned long max_rate;
+> -	unsigned long rate;
+> +	unsigned int i;
+>  	int err;
+>  
+>  	mc = tegra_get_memory_controller();
+> @@ -135,6 +134,11 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> +	if (!mc->num_timings) {
+> +		dev_info(&pdev->dev, "memory controller has no timings\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>  	if (!tegra)
+>  		return -ENOMEM;
+> @@ -151,12 +155,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	tegra->regs = mc->regs;
+>  
+> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> -
+> -	for (rate = 0; rate <= max_rate; rate++) {
+> -		rate = clk_round_rate(tegra->emc_clock, rate);
+> -
+> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+> +	for (i = 0; i < mc->num_timings; i++) {
+> +		err = dev_pm_opp_add(&pdev->dev, mc->timings[i].rate, 0);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
+>  			goto remove_opps;
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+909a91e75919efd2b557@syzkaller.appspotmail.com
+Ackded-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-usb 1-1: config 0 descriptor??
-usb 1-1: selecting invalid altsetting 1
-ttusb_init_controller: error
-dvbdev: DVB: registering new adapter (Technotrend/Hauppauge Nova-USB)
-=====================================================
-BUG: KMSAN: uninit-value in tda8083_attach+0x55a/0x6d0 drivers/media/dvb-frontends/tda8083.c:428
-CPU: 1 PID: 49 Comm: kworker/1:1 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- tda8083_attach+0x55a/0x6d0 drivers/media/dvb-frontends/tda8083.c:428
- frontend_init drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:1574 [inline]
- ttusb_probe+0x4238/0x5040 drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:1739
- usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
- usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Local variable ----reg1.addr.i.i@tda8083_attach created at:
- tda8083_readregs drivers/media/dvb-frontends/tda8083.c:425 [inline]
- tda8083_readreg drivers/media/dvb-frontends/tda8083.c:83 [inline]
- tda8083_attach+0x1af/0x6d0 drivers/media/dvb-frontends/tda8083.c:428
- tda8083_readregs drivers/media/dvb-frontends/tda8083.c:425 [inline]
- tda8083_readreg drivers/media/dvb-frontends/tda8083.c:83 [inline]
- tda8083_attach+0x1af/0x6d0 drivers/media/dvb-frontends/tda8083.c:428
-=====================================================
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
