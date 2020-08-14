@@ -2,98 +2,105 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409D1C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1A42074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1D32074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dnr4mLvl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D8IjU96X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHNIa6 (ORCPT
+        id S1726932AbgHNIdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgHNIax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:30:53 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3582CC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:30:53 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id i10so4773030ybt.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UnDVAQh+31C0t6VNGwQb4SjTxgNgsH3VtTdOtKZQqwA=;
-        b=dnr4mLvlqaTviMNIb+lJPY5U9aWlRKE8rBtF9/XEX9gNmzomc3qYCO99SFNJMqBShI
-         ID7CBkceR981pX1/9kqesB9Bqrrq5f2cFzFhV/5G2tyTb89F0zUk7JSbKaSZOw3HbQxf
-         Zhq0gHvWTQCikK3g4ur3M4TmpQw/a0u37kQEwnJw81wKmuuqaGmI6H+HbLINFx15X0H+
-         hOIxcXOllEOoPSzsZ0DKha77TGNiwyDY0h2iYQVxky7dQScxW7AX4U4wH+U/RcYsDB4c
-         4QTpivy51hJ8Xe0EnMzKIsjUXatzwM8w9PRIj3RFXCY7hXh0uWmamBOgCcOWMtRYHo/u
-         l8QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UnDVAQh+31C0t6VNGwQb4SjTxgNgsH3VtTdOtKZQqwA=;
-        b=WKShxSK8L+04skPrRcAkvsHTi2TbqeMTMN+Sklg64NdnZIJQRT1j99UzXgeqXFNFqC
-         lrcQvBiYfswkcbMEtwwHVSXy3ARBK9MHsjVuCrTB5Sr6mfAPOgJC0oXiQXC8Wp/wgg8k
-         L+hSDrVRehQDwfJhrtXwRcUzMwKlk4hS+VapZZV8JyrkkBICSHZtSP2fd7gtcCu2f8Jr
-         iX3oxT8WaD/2niu85dnCWYGk6UnrLv5luzyxsuUrQkZr7dqKVeZexrg4l6QFJlydSlmp
-         RsIw8w2ElnjADTBbDYKnw3N++uiIlO3HYGdPr+L/VoTKX633XfIOe9lrGtt4FRlUF5vx
-         V/6g==
-X-Gm-Message-State: AOAM5323kzexVEeyX47UAqMBEBFHlyzdxUzFtqeGUoKp+OK1tV74tNH1
-        lq2NzwHAzh8/AmH7zJ68BQESR0VVpPE+qZzWmlXfhg==
-X-Google-Smtp-Source: ABdhPJzFmN0idTb9mEjomYn0+86nKEa4RjZkPMilkwJ+OKxZWvgt6E6RuaAMSfAO02qLD8cIHXduF0Tu4Ob3gT084Vg=
-X-Received: by 2002:a25:ab0f:: with SMTP id u15mr2246861ybi.7.1597393852250;
- Fri, 14 Aug 2020 01:30:52 -0700 (PDT)
+        Fri, 14 Aug 2020 04:33:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62652 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgHNIdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:33:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597393991; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ZbUflztzbumxR+YGpdd5Mvz9JcJytRonUljimYaKv3Q=;
+ b=D8IjU96XH+xi2mMPSyDdKM5UvTisRHhE1cFiN2BvhkmdEB/lziVe/07wulXCOh3uaAWHiQ8L
+ 3cw+D8nVBQztFYjta7Lnvc90mhBCiiv639Her8F9f+Mt/icm0kk2MMdGdSJx58ckP4EwFppW
+ BzQAlxD2fUm06MI3tG2eDcCqfCM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f364c29440a07969acd27fb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 08:32:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D5943C43395; Fri, 14 Aug 2020 08:32:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67F40C433C6;
+        Fri, 14 Aug 2020 08:32:40 +0000 (UTC)
 MIME-Version: 1.0
-References: <1597284810-17454-1-git-send-email-chinwen.chang@mediatek.com> <1597284810-17454-2-git-send-email-chinwen.chang@mediatek.com>
-In-Reply-To: <1597284810-17454-2-git-send-email-chinwen.chang@mediatek.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Fri, 14 Aug 2020 01:30:39 -0700
-Message-ID: <CANN689FtXN-6tGkyGc9ja7rrZTTUEoW5omfEJ=PmOaft4YkaaA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] mmap locking API: add mmap_lock_is_contended()
-To:     Chinwen Chang <chinwen.chang@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Steven Price <steven.price@arm.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jimmy Assarsson <jimmyassarsson@gmail.com>,
-        Huang Ying <ying.huang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Aug 2020 14:02:40 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
+In-Reply-To: <961724681d6d3f8c37a4e3c8facbdea3@kernel.org>
+References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
+ <20200813090324.GB9829@willie-the-truck>
+ <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
+ <20200813094041.GA9894@willie-the-truck>
+ <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
+ <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
+ <8ffd22d5926aedda0c9fa6ea429fd84e@kernel.org>
+ <d4ad5ade9815632f450374c9b6bbe9d2@codeaurora.org>
+ <961724681d6d3f8c37a4e3c8facbdea3@kernel.org>
+Message-ID: <415406f86a54a99eccb364ab78200e57@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 7:14 PM Chinwen Chang
-<chinwen.chang@mediatek.com> wrote:
->
-> Add new API to query if someone wants to acquire mmap_lock
-> for write attempts.
->
-> Using this instead of rwsem_is_contended makes it more tolerant
-> of future changes to the lock type.
->
-> Signed-off-by: Chinwen Chang <chinwen.chang@mediatek.com>
+On 2020-08-14 13:47, Marc Zyngier wrote:
+> On 2020-08-14 05:34, Sai Prakash Ranjan wrote:
+>> On 2020-08-13 23:29, Marc Zyngier wrote:
+> 
+> [...]
+> 
+>>> We'd need to disable the late onlining of CPUs that would change
+>>> the mitigation state, and this is... ugly.
+>>> 
+>> 
+>> Ugh, yes indeed and here I was thinking that these things are 
+>> straightforward :(
+> 
+> It never is. Big-little is a broken concept. I'll try and think of
+> something next week, as I'm pretty swamped at the moment.
+> 
 
-Acked-by: Michel Lespinasse <walken@google.com>
+Sure no problem, thanks.
+
+-Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
