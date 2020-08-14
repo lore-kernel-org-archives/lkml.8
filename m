@@ -2,104 +2,255 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86321C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F214C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601C120791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597420912;
-	bh=bwt4I1Ivw+5s6OaoKYWYSNGKjE4/A6uymfb27r28z6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HYkafPJ6FB0aUfz60qhEjuYTa0ydyJvltn49O/miCVlN+1OXYKu8Yr85FF5y1mAPb
-	 CD7FOU+q3FHY+rlVhGULD0xXnUQkLUnTdRkP5ZgQ/wVutl7q6w68OdHQjPzJRMEKJy
-	 Dgk1roee/+8vGc3zEZ6Nr/NPq+9UZTdL7OagdMrQ=
+	by mail.kernel.org (Postfix) with ESMTP id D347D2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 16:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZIGW/jL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgHNQBt (ORCPT
+        id S1728071AbgHNQG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgHNQBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:01:44 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341332078D;
-        Fri, 14 Aug 2020 16:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597420903;
-        bh=bwt4I1Ivw+5s6OaoKYWYSNGKjE4/A6uymfb27r28z6c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fgHf/GGPT4X5Rh3a7QelbgRyOu9jbsHEgWPkF14MskZ4qfuSVe5YhbU4bvrSsNNjQ
-         JggiVYC73FnhPU2fZZ+iHhZXVtTw/Jb+a8JNUUCzUfE6Qucl5W+YW+7B04lXQfjyBu
-         BoBIz68fhhXmp9nCPVgQAaYoFxAdWulVUbR6KsGs=
-Date:   Fri, 14 Aug 2020 17:01:15 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc:     matthias.bgg@gmail.com, robh+dt@kernel.org, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, howie.huang@mediatek.com,
-        tzungbi@google.com, eason.yen@mediatek.com,
-        shane.chien@mediatek.com, bicycle.tasi@mediatek.com
-Subject: Re: [PATCH v3 1/2] WIP: ASoC: mediatek: mt6359: add codec driver
-Message-ID: <20200814160115.GC4783@sirena.org.uk>
-References: <1597401954-28388-1-git-send-email-jiaxin.yu@mediatek.com>
- <1597401954-28388-2-git-send-email-jiaxin.yu@mediatek.com>
+        Fri, 14 Aug 2020 12:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgHNQGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 12:06:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46DFCC061384;
+        Fri, 14 Aug 2020 09:06:21 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mw10so4597207pjb.2;
+        Fri, 14 Aug 2020 09:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SVVgujljZTtyJP6NnksQakHSy/XVCreM9mOqtMP8xFc=;
+        b=ZZIGW/jLmpzk1d8NA4T7bUfo0j+jVcUhskU2RVTwoT5W3++oJCwv4kxx/pSVQhR2D2
+         7bj0hFcWXTSgTQBNAKKv/wwS4sLjfq86l8EUsD6rVX7UopuQucjogCN1VsoXbPEM/2/N
+         3gksrhGnVSSTjdJD6w5hTJua7m8ryaM1egfphkOk5RV6U5r6A1CS27UuXwYKlF4zy5ey
+         bu04sjTeBTpesueoncTwVWJaBRtQF+CE488jmDuRstb2F0fPOrIYNHqWkSmY/iK5KytN
+         8AAZuvEEKGnMA10TANHHXOYTay/MXnO5lf2UxZSE7XVMzGmyrcSfFNahn8DmgmQ305lV
+         V70w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SVVgujljZTtyJP6NnksQakHSy/XVCreM9mOqtMP8xFc=;
+        b=Y2hUmGyn4Di8Cotjkl1tR2ZjyFbkp1jFZEnd1TCgTw5OzNNTJYn9HxUBlo9zFzdlpm
+         6H7HhRWY7OcG1ENnHL9zCO4ACjOkWSxcWVQnpsLZOW+IWYv5PhJDZpXdW28m8cHmDVbV
+         xXf96xDDUiy/svmdDsL0fXVDypcBRbLb1vrs6qaHVN8ooCTzQK0Wj0NFieeaq1g/cbBH
+         g9vg4hCo9iZzu64huUJYvG3dvLZKo0Y0n1NCvg88k1fWUp4VyKrD9qShsA+90XFZGMo+
+         voFK2L2MlrTS0xq9JZ+t7be8xyQ3tmKDhQEG2JZTmCQong0cQoXkXGkWPW6TKhCcx3h0
+         R8UA==
+X-Gm-Message-State: AOAM532+Pf6iNHnAabTDS49TvUrKtUEE0EXu2A2NaxXq+1VN05PsKYLu
+        4L+lWwX9XD8nccDYd6bN3qyyaGyeXvRMt4yBSyk=
+X-Google-Smtp-Source: ABdhPJzaWHQZ9DlZxR8aScqhOBpp10HepOQyWepHBDjcHkVmyg0GkAryg0PXMwKwf4QZhhkhZUe54A==
+X-Received: by 2002:a17:902:246:: with SMTP id 64mr2507754plc.70.1597421180418;
+        Fri, 14 Aug 2020 09:06:20 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id w130sm9834458pfd.104.2020.08.14.09.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 09:06:20 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Benjamin Poirier <benjamin.poirier@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org (open list),
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM)
+Subject: [RFC 1/3] Initialize devlink health dump framework for the dlge driver
+Date:   Sat, 15 Aug 2020 00:05:59 +0800
+Message-Id: <20200814160601.901682-2-coiby.xu@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200814160601.901682-1-coiby.xu@gmail.com>
+References: <20200814160601.901682-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
-Content-Disposition: inline
-In-Reply-To: <1597401954-28388-2-git-send-email-jiaxin.yu@mediatek.com>
-X-Cookie: Non-sequiturs make me eat lampshades.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Initialize devlink health dump framework for the dlge driver so the
+coredump could be done via devlink.
 
---Sr1nOIr3CvdE5hEN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+---
+ drivers/staging/qlge/Makefile      |  2 +-
+ drivers/staging/qlge/qlge.h        |  9 +++++++
+ drivers/staging/qlge/qlge_health.c | 43 ++++++++++++++++++++++++++++++
+ drivers/staging/qlge/qlge_health.h |  2 ++
+ drivers/staging/qlge/qlge_main.c   | 21 +++++++++++++++
+ 5 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/qlge/qlge_health.c
+ create mode 100644 drivers/staging/qlge/qlge_health.h
 
-On Fri, Aug 14, 2020 at 06:45:53PM +0800, Jiaxin Yu wrote:
+diff --git a/drivers/staging/qlge/Makefile b/drivers/staging/qlge/Makefile
+index 1dc2568e820c..0a1e4c8dd546 100644
+--- a/drivers/staging/qlge/Makefile
++++ b/drivers/staging/qlge/Makefile
+@@ -5,4 +5,4 @@
+ 
+ obj-$(CONFIG_QLGE) += qlge.o
+ 
+-qlge-objs := qlge_main.o qlge_dbg.o qlge_mpi.o qlge_ethtool.o
++qlge-objs := qlge_main.o qlge_dbg.o qlge_mpi.o qlge_ethtool.o qlge_health.o
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index fc8c5ca8935d..055ded6dab60 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -2061,6 +2061,14 @@ struct nic_operations {
+ 	int (*port_initialize) (struct ql_adapter *);
+ };
+ 
++
++
++struct qlge_devlink {
++        struct ql_adapter *qdev;
++        struct net_device *ndev;
++        struct devlink_health_reporter *reporter;
++};
++
+ /*
+  * The main Adapter structure definition.
+  * This structure has all fields relevant to the hardware.
+@@ -2078,6 +2086,7 @@ struct ql_adapter {
+ 	struct pci_dev *pdev;
+ 	struct net_device *ndev;	/* Parent NET device */
+ 
++	struct qlge_devlink *devlink;
+ 	/* Hardware information */
+ 	u32 chip_rev_id;
+ 	u32 fw_rev_id;
+diff --git a/drivers/staging/qlge/qlge_health.c b/drivers/staging/qlge/qlge_health.c
+new file mode 100644
+index 000000000000..292f6b1827e1
+--- /dev/null
++++ b/drivers/staging/qlge/qlge_health.c
+@@ -0,0 +1,43 @@
++#include "qlge.h"
++#include "qlge_health.h"
++
++static int
++qlge_reporter_coredump(struct devlink_health_reporter *reporter,
++			struct devlink_fmsg *fmsg, void *priv_ctx,
++			struct netlink_ext_ack *extack)
++{
++	return 0;
++}
++
++static const struct devlink_health_reporter_ops qlge_reporter_ops = {
++		.name = "dummy",
++		.dump = qlge_reporter_coredump,
++};
++
++int qlge_health_create_reporters(struct qlge_devlink *priv)
++{
++	int err;
++
++	struct devlink_health_reporter *reporter;
++	struct devlink *devlink;
++
++	devlink = priv_to_devlink(priv);
++	reporter =
++		devlink_health_reporter_create(devlink, &qlge_reporter_ops,
++					       0,
++					       priv);
++	if (IS_ERR(reporter)) {
++		netdev_warn(priv->ndev,
++			    "Failed to create reporter, err = %ld\n",
++			    PTR_ERR(reporter));
++		return PTR_ERR(reporter);
++	}
++	priv->reporter = reporter;
++
++	if (err)
++		return err;
++
++	return 0;
++}
++
++
+diff --git a/drivers/staging/qlge/qlge_health.h b/drivers/staging/qlge/qlge_health.h
+new file mode 100644
+index 000000000000..07d3bafab845
+--- /dev/null
++++ b/drivers/staging/qlge/qlge_health.h
+@@ -0,0 +1,2 @@
++#include <net/devlink.h>
++int qlge_health_create_reporters(struct qlge_devlink *priv);
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 1650de13842f..b2be7f4b7dd6 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -42,6 +42,7 @@
+ #include <net/ip6_checksum.h>
+ 
+ #include "qlge.h"
++#include "qlge_health.h"
+ 
+ char qlge_driver_name[] = DRV_NAME;
+ const char qlge_driver_version[] = DRV_VERSION;
+@@ -4550,6 +4551,8 @@ static void ql_timer(struct timer_list *t)
+ 	mod_timer(&qdev->timer, jiffies + (5 * HZ));
+ }
+ 
++static const struct devlink_ops qlge_devlink_ops;
++
+ static int qlge_probe(struct pci_dev *pdev,
+ 		      const struct pci_device_id *pci_entry)
+ {
+@@ -4557,6 +4560,13 @@ static int qlge_probe(struct pci_dev *pdev,
+ 	struct ql_adapter *qdev = NULL;
+ 	static int cards_found;
+ 	int err = 0;
++	struct devlink *devlink;
++	struct qlge_devlink *qlge_dl;
++
++	devlink = devlink_alloc(&qlge_devlink_ops, sizeof(struct qlge_devlink));
++	if (!devlink)
++		return -ENOMEM;
++	qlge_dl = devlink_priv(devlink);
+ 
+ 	ndev = alloc_etherdev_mq(sizeof(struct ql_adapter),
+ 				 min(MAX_CPUS,
+@@ -4615,6 +4625,15 @@ static int qlge_probe(struct pci_dev *pdev,
+ 		free_netdev(ndev);
+ 		return err;
+ 	}
++
++	err = devlink_register(devlink, &pdev->dev);
++	if (err)
++		devlink_free(devlink);
++
++	qlge_health_create_reporters(qlge_dl);
++	qlge_dl->qdev = qdev;
++	qlge_dl->ndev = ndev;
++	qdev->devlink = qlge_dl;
+ 	/* Start up the timer to trigger EEH if
+ 	 * the bus goes dead
+ 	 */
+@@ -4647,6 +4666,8 @@ static void qlge_remove(struct pci_dev *pdev)
+ 	unregister_netdev(ndev);
+ 	ql_release_all(pdev);
+ 	pci_disable_device(pdev);
++	devlink_unregister(priv_to_devlink(qdev->devlink));
++	devlink_health_reporter_destroy(qdev->devlink->reporter);
+ 	free_netdev(ndev);
+ }
+ 
+-- 
+2.27.0
 
-This looks mostly good, a couple of very small things:
-
-> +	ret = regulator_enable(priv->avdd_reg);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s(), failed to enable regulator!\n",
-> +			__func__);
-> +		return ret;
-> +	}
-
-You need a remove() function to undo this enable.
-
-> +	dev_info(&pdev->dev, "%s(), dev name %s\n",
-> +		 __func__, dev_name(&pdev->dev));
-
-This isn't really adding anything, just remove it - it's not reading
-info from the hardware or anything.
-
---Sr1nOIr3CvdE5hEN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl82tUoACgkQJNaLcl1U
-h9Azugf+KQT2qjv6S1GYzqybbbwsXf9EyoEnEt+nTpEnAUPp4fJMT8SboJ0j++fD
-4je+pUPhMO3oMDD+s7/1npVhSowHCaO1943wiq5X31lTnio2zcYYFiaI577/8E9Q
-jcrESOC0PUcLZjuUPGc4I8Ae2yh9uen2vMoJqmSDZaRYKW38a3V3vAjV5Ky51l2/
-vTw65kfnt87EVF7X18TiheJmgK3ZYWkgV4ugljUQ8FqWxnnUHtaQUUzF7Th5+khJ
-aAQM1NW022CE9MFXd8idK+RvGbWuQZBjv+MIOpy2eE5RpdQvbSUgrC+up6bDntjF
-FCirVs8xfLOqqP4ld/eJlZxW2vF3qg==
-=eI4S
------END PGP SIGNATURE-----
-
---Sr1nOIr3CvdE5hEN--
