@@ -2,99 +2,107 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9252C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28645C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3F02074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597399676;
-	bh=peydEDBLccc+s+QbRXOC5dMLUAgzOxxvPckkRPwZHpU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=pBtPM65mYVtAkNz67mRbQEBe1GZy2cMu6S80gjFL6UTgNmfTyc0AUE+VxP8LSWvFW
-	 7asdazAHER96WLDRvmJTMxHxZbIigtW/FHuup14zqZ8JVWUkgrhmhI/UKfhnDIrwyb
-	 rzLKUEShg9QbNq0mrs7iTVFLsHEz6ZHK7jxuYU2E=
+	by mail.kernel.org (Postfix) with ESMTP id 0270B2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgHNKHz (ORCPT
+        id S1726678AbgHNKJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:07:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42103 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgHNKHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:07:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so7812580wrx.9;
-        Fri, 14 Aug 2020 03:07:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wWMPlpEysbeh+9oHwzYIhWRMCYIYWjE6IREABOeiArU=;
-        b=IOuBBx9QXctSZrr9tpG9IiA4Pi8ucldh80uwBltf/xhz6TGhQaJ+PLL7Qy0He9YnD8
-         aR2ZjqYZDzrgooFQA4RY2UIbnEOUi0pWO0I+2W4tkB1f6DQN37a0iXYDMt8LcPGTIpj9
-         YpoiMi+HVN3J0z6hgagBuVXr7ZBMAJGFRsmRxGG/9DSFVZ5+HewxM/X3lQtJclYBAg6l
-         Xd9/sOonQItlsjASDlJmn0tbf1VV7uUUZld5LFESvOcJq99dten3zRKRmV6aTpdPNxdo
-         HklDJf5+6ABABFb0RacV1R5XDOqDfwvyLyTsggR2ecODdZsyhEjfiabKecTZneZY6wyU
-         p2Gw==
-X-Gm-Message-State: AOAM533wyoxKymoXab990mWeLPm6PdaMZRDfEUaAPzcOQCxyJ8ymXxz+
-        5zpDM4ygzUYpiP6eFRw6f4E=
-X-Google-Smtp-Source: ABdhPJzuvj4U+j94q6bEs1j/7eW78Dn92QuFxQgqHIMaRXZURUgroBp6V38HvMRvtwQGMqnHxLN3xQ==
-X-Received: by 2002:a5d:54ce:: with SMTP id x14mr2041299wrv.52.1597399673055;
-        Fri, 14 Aug 2020 03:07:53 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g16sm13131133wrs.88.2020.08.14.03.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 03:07:52 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 10:07:51 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V fixes for 5.9-rc1
-Message-ID: <20200814100751.uirns3llugywet2x@liuwe-devbox-debian-v2>
+        Fri, 14 Aug 2020 06:09:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39212 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgHNKJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:09:40 -0400
+IronPort-SDR: v9olPLzJFE8/D8EMOYiRzvBhLxyrqkWLDiVOc4HoyjvaYaCwpZ9V+Y+NH4RlhBbvm5TiXUaFaJ
+ /W9bzwc20Hyg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="142225727"
+X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
+   d="scan'208";a="142225727"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 03:09:40 -0700
+IronPort-SDR: Ybx8mk0552li0bdHdUB5/dPO86kL96paT7UAUsymjTxWeEEFMaHNyg4TVfG+hdQR/GllgXHLp9
+ 0J1o/mhb1tUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,311,1592895600"; 
+   d="scan'208";a="325687704"
+Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
+  by orsmga008.jf.intel.com with ESMTP; 14 Aug 2020 03:09:37 -0700
+Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200807084841.7112-1-chenyi.qiang@intel.com>
+ <20200807084841.7112-8-chenyi.qiang@intel.com>
+ <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
+ <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
+ <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+Message-ID: <ae2191a7-a165-3b50-2c8d-e2ddb4505455@intel.com>
+Date:   Fri, 14 Aug 2020 18:07:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
 
-Please pull the following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
 
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
+On 8/14/2020 1:52 AM, Jim Mattson wrote:
+> On Wed, Aug 12, 2020 at 9:54 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+>>
+>>
+>>
+>> On 8/11/2020 8:05 AM, Jim Mattson wrote:
+>>> On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+>>>>
+>>>> PKS MSR passes through guest directly. Configure the MSR to match the
+>>>> L0/L1 settings so that nested VM runs PKS properly.
+>>>>
+>>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+>>>> ---
+> 
+>>>> +           (!vmx->nested.nested_run_pending ||
+>>>> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
+>>>> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
+>>>
+>>> This doesn't seem right to me. On the target of a live migration, with
+>>> L2 active at the time the snapshot was taken (i.e.,
+>>> vmx->nested.nested_run_pending=0), it looks like we're going to try to
+>>> overwrite the current L2 PKRS value with L1's PKRS value (except that
+>>> in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
+>>> 0). Am I missing something?
+>>>
+>>
+>> We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS.
+>> Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's
+>> PKRS to L2.
+> 
+> I'm thinking of the case where vmx->nested.nested_run_pending is
+> false, and we are processing a KVM_SET_NESTED_STATE ioctl, yet
+> VM_ENTRY_LOAD_IA32_PKRS *is* set in the vmcs12.
+> 
 
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
-
-for you to fetch changes up to b9d8cf2eb3ceecdee3434b87763492aee9e28845:
-
-  x86/hyperv: Make hv_setup_sched_clock inline (2020-08-11 10:41:15 +0000)
-
-----------------------------------------------------------------
-hyperv-fixes for 5.9-rc
-  - One patch to fix oops reporting on Hyper-V
-  - One patch to make objtool happy
-
-----------------------------------------------------------------
-Michael Kelley (2):
-      Drivers: hv: vmbus: Only notify Hyper-V for die events that are oops
-      x86/hyperv: Make hv_setup_sched_clock inline
-
- arch/x86/include/asm/mshyperv.h | 12 ++++++++++++
- arch/x86/kernel/cpu/mshyperv.c  |  7 -------
- drivers/hv/vmbus_drv.c          |  4 ++++
- include/asm-generic/mshyperv.h  |  1 -
- 4 files changed, 16 insertions(+), 8 deletions(-)
+Oh, I miss this case. What I'm still confused here is that the 
+restoration for GUEST_IA32_DEBUGCTL and GUEST_BNDCFGS have the same 
+issue, right? or I miss something.
