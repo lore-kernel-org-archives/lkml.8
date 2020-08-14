@@ -2,103 +2,216 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B04C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435D2207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 11:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hu6Nw7Hu"
+	by mail.kernel.org (Postfix) with ESMTP id 3582320774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHNL7W (ORCPT
+        id S1727830AbgHNMCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 07:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgHNL7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 07:59:20 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA4DC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:59:20 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id v6so7308219ota.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 04:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JH6kRqU1JrNcyy+wqdaUc+Qi4AywqVy9VYsywI2jKC4=;
-        b=Hu6Nw7Hu8gfRjU0uxCY5ypd0wl/SaFstId/H02InWTfOh1qjNcvA7OEJQlw3IhBFYB
-         ZbDdyVhOAJfmgJPLz3PmRAehofZkwiWforKlGlPfVZQIxs3eCEuX4V2gDHWHM3H641P9
-         5/95uaTUUeEsQV99+U2SeqIJMG+fs5/ppn/EFQP55KtLY079BqtlK164t0WVWA5OqFb5
-         1lDfFXlAbAxHW6RF3Iwt9D61belaN+pbNqJ2YQHi6R4ezzBMyWU1/2akcilZkTOMaK+x
-         9NcEVvBOT/kpSK5KK9wGBG+pRvyZhrhPX+tolqxoNe1i5ESpRXzLfnkuMa1GsLGkrNPc
-         yiWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JH6kRqU1JrNcyy+wqdaUc+Qi4AywqVy9VYsywI2jKC4=;
-        b=E832+lCTVYW6EF1fyG1sJxS+cr1PD1kIfRLRP0Uv1eGlJfi+OVUEkny9NJTtitgkAp
-         LBegcIXu2qrznzdOS9hsxGjR9elzQZOc9GE+r0EtGlGu0kQSGRl2hBdMUhUAsPTCxHXn
-         wEOmbZ3ObdfmU18YdkqnBmaVkqATvLw6415FU0Xi+uFComNy/0C7Cu316e5rFlQEN3mO
-         vPKAotJHlR0TN2Ko+tJWXkbRqSDFf61kxcltsaDb8t06y0xs7zU+GflxFsaY4LoeZbje
-         k94i9u8k1cubZVSPlDWNOeogQK/B/IDRDxIMLAHNQsUGMI8M7w6drKsiMrXL/u6lfw/U
-         jm8A==
-X-Gm-Message-State: AOAM532ZslIQvakmi9e4+wQjbfa3WohoOFpiuy98fHIehAU8GJb5COa1
-        oN/XxG+55ynLsuO88S/hNSE023s/bHckRppBzm5vKA==
-X-Google-Smtp-Source: ABdhPJxPPgMpYvrWwruSOJ6rg0e4RTwqBnrs8Barm0/v/AauhxO/vwMhNciGBE2/TazprcJkQc2m1wlC4NQSO0JC60I=
-X-Received: by 2002:a05:6830:1612:: with SMTP id g18mr1480092otr.251.1597406359387;
- Fri, 14 Aug 2020 04:59:19 -0700 (PDT)
+        Fri, 14 Aug 2020 08:02:49 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2605 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbgHNMCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:02:48 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BDC3B1AA99F23CE61D1D;
+        Fri, 14 Aug 2020 13:02:46 +0100 (IST)
+Received: from [127.0.0.1] (10.47.4.107) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 14 Aug
+ 2020 13:02:46 +0100
+Subject: Re: nvme crash - Re: linux-next: Tree for Aug 13
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     linux-nvme <linux-nvme@lists.infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        <chaitanya.kulkarni@wdc.com>
+References: <20200813155009.GA2303@infradead.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <81e42d30-ede3-d7b0-ad7b-8192bcf27a4c@huawei.com>
+Date:   Fri, 14 Aug 2020 13:00:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200721103016.3287832-1-elver@google.com> <20200721103016.3287832-9-elver@google.com>
- <20200721141859.GC10769@hirez.programming.kicks-ass.net> <CANpmjNM6C6QtrtLhRkbmfc3jLqYaQOvvM_vKA6UyrkWadkdzNQ@mail.gmail.com>
- <20200814112826.GB68877@C02TD0UTHF1T.local> <20200814113149.GC68877@C02TD0UTHF1T.local>
-In-Reply-To: <20200814113149.GC68877@C02TD0UTHF1T.local>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 14 Aug 2020 13:59:08 +0200
-Message-ID: <CANpmjNNXXMXMBOqJqQTkDDoavggDVktNL6AZn-hLMbEPYzZ_0w@mail.gmail.com>
-Subject: Re: [PATCH 8/8] locking/atomics: Use read-write instrumentation for
- atomic RMWs
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200813155009.GA2303@infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.4.107]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 13:31, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Aug 14, 2020 at 12:28:26PM +0100, Mark Rutland wrote:
-> > Hi,
-> >
-> > Sorry to come to this rather late -- this comment equally applies to v2
-> > so I'm replying here to have context.
->
-> ... and now I see that was already applied, so please ignore this!
 
-Thank you for the comment anyway. If this is something urgent, we
-could send a separate patch to change.
+>> I have experienced this this crash below on linux-next for the last few days
+>> on my arm64 system. Linus' master branch today also has it.
+> Adding Robin and the iommu list as this seems to be in the dma-iommu
+> code.
+> 
+>> root@ubuntu:/home/john# insmod nvme.ko
+>> [148.254564] nvme 0000:81:00.0: Adding to iommu group 21
+>> [148.260973] nvme nvme0: pci function 0000:81:00.0
+>> root@ubuntu:/home/john# [148.272996] Unable to handle kernel NULL pointer
+>> dereference at virtual address 0000000000000010
+>> [148.281784] Mem abort info:
+>> [148.284584] ESR = 0x96000004
+>> [148.287641] EC = 0x25: DABT (current EL), IL = 32 bits
+>> [148.292950] SET = 0, FnV = 0
+>> [148.295998] EA = 0, S1PTW = 0
+>> [148.299126] Data abort info:
+>> [148.302003] ISV = 0, ISS = 0x00000004
+>> [148.305832] CM = 0, WnR = 0
+>> [148.308794] user pgtable: 4k pages, 48-bit VAs, pgdp=00000a27bf3c9000
+>> [148.315229] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
+>> [148.322016] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+>> [148.327577] Modules linked in: nvme nvme_core
+>> [148.331927] CPU: 56 PID: 256 Comm: kworker/u195:0 Not tainted
+>> 5.8.0-next-20200812 #27
+>> [148.339744] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 -
+>> V1.16.01 03/15/2019
+>> [148.348260] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
+>> [148.353822] pstate: 80c00009 (Nzcv daif +PAN +UAO BTYPE=--)
+>> [148.359390] pc : __sg_alloc_table_from_pages+0xec/0x238
+>> [148.364604] lr : __sg_alloc_table_from_pages+0xc8/0x238
+>> [148.369815] sp : ffff800013ccbad0
+>> [148.373116] x29: ffff800013ccbad0 x28: ffff0a27b3d380a8
+>> [148.378417] x27: 0000000000000000 x26: 0000000000002dc2
+>> [148.383718] x25: 0000000000000dc0 x24: 0000000000000000
+>> [148.389019] x23: 0000000000000000 x22: ffff800013ccbbe8
+>> [148.394320] x21: 0000000000000010 x20: 0000000000000000
+>> [148.399621] x19: 00000000fffff000 x18: ffffffffffffffff
+>> [148.404922] x17: 00000000000000c0 x16: fffffe289eaf6380
+>> [148.410223] x15: ffff800011b59948 x14: ffff002bc8fe98f8
+>> [148.415523] x13: ff00000000000000 x12: ffff8000114ca000
+>> [148.420824] x11: 0000000000000000 x10: ffffffffffffffff
+>> [148.426124] x9 : ffffffffffffffc0 x8 : ffff0a27b5f9b6a0
+>> [148.431425] x7 : 0000000000000000 x6 : 0000000000000001
+>> [148.436726] x5 : ffff0a27b5f9b680 x4 : 0000000000000000
+>> [148.442027] x3 : ffff0a27b5f9b680 x2 : 0000000000000000
+>> [148.447328] x1 : 0000000000000001 x0 : 0000000000000000
+>> [148.452629] Call trace:
+>> [148.455065]__sg_alloc_table_from_pages+0xec/0x238
+>> [148.459931]sg_alloc_table_from_pages+0x18/0x28
+>> [148.464541]iommu_dma_alloc+0x474/0x678
+>> [148.468455]dma_alloc_attrs+0xd8/0xf0
+>> [148.472193]nvme_alloc_queue+0x114/0x160 [nvme]
+>> [148.476798]nvme_reset_work+0xb34/0x14b4 [nvme]
+>> [148.481407]process_one_work+0x1e8/0x360
+>> [148.485405]worker_thread+0x44/0x478
+>> [148.489055]kthread+0x150/0x158
+>> [148.492273]ret_from_fork+0x10/0x34
+>> [148.495838] Code: f94002c3 6b01017f 540007c2 11000486 (f8645aa5)
+>> [148.501921] ---[ end trace 89bb2b72d59bf925 ]---
+>>
+>> Anything to worry about? I guess not since we're in the merge window, but
+>> mentioning just in case ...
 
-My argument in favour of keeping it as-is was that the alternative
-would throw away the "type" and we no longer recognize a difference
-between arguments (in fairness, currently not important though). If,
-say, we get an RMW that has a constant argument though, the current
-version would do the "right thing" as far as I can tell. Maybe I'm
-overly conservative here, but it saves us worrying about some future
-use-case breaking this more than before.
+I bisected, and this patch looks to fix it (note the comments below the 
+'---'):
 
-Thanks,
--- Marco
+ From 263891a760edc24b901085bf6e5fe2480808f86d Mon Sep 17 00:00:00 2001
+From: John Garry <john.garry@huawei.com>
+Date: Fri, 14 Aug 2020 12:45:18 +0100
+Subject: [PATCH] nvme-pci: Use u32 for nvme_dev.q_depth
+
+Recently nvme_dev.q_depth was changed from int to u16 type.
+
+This falls over for the queue depth calculation in nvme_pci_enable(),
+where NVME_CAP_MQES(dev->ctrl.cap) + 1 may overflow, as NVME_CAP_MQES()
+gives a 16b number also. That happens for me, and this is the result:
+
+root@ubuntu:/home/john# [148.272996] Unable to handle kernel NULL pointer
+dereference at virtual address 0000000000000010
+[148.281784] Mem abort info:
+[148.284584] ESR = 0x96000004
+[148.287641] EC = 0x25: DABT (current EL), IL = 32 bits
+[148.292950] SET = 0, FnV = 0
+[148.295998] EA = 0, S1PTW = 0
+[148.299126] Data abort info:
+[148.302003] ISV = 0, ISS = 0x00000004
+[148.305832] CM = 0, WnR = 0
+[148.308794] user pgtable: 4k pages, 48-bit VAs, pgdp=00000a27bf3c9000
+[148.315229] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
+[148.322016] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[148.327577] Modules linked in: nvme nvme_core
+[148.331927] CPU: 56 PID: 256 Comm: kworker/u195:0 Not tainted
+5.8.0-next-20200812 #27
+[148.339744] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 -
+V1.16.01 03/15/2019
+[148.348260] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
+[148.353822] pstate: 80c00009 (Nzcv daif +PAN +UAO BTYPE=--)
+[148.359390] pc : __sg_alloc_table_from_pages+0xec/0x238
+[148.364604] lr : __sg_alloc_table_from_pages+0xc8/0x238
+[148.369815] sp : ffff800013ccbad0
+[148.373116] x29: ffff800013ccbad0 x28: ffff0a27b3d380a8
+[148.378417] x27: 0000000000000000 x26: 0000000000002dc2
+[148.383718] x25: 0000000000000dc0 x24: 0000000000000000
+[148.389019] x23: 0000000000000000 x22: ffff800013ccbbe8
+[148.394320] x21: 0000000000000010 x20: 0000000000000000
+[148.399621] x19: 00000000fffff000 x18: ffffffffffffffff
+[148.404922] x17: 00000000000000c0 x16: fffffe289eaf6380
+[148.410223] x15: ffff800011b59948 x14: ffff002bc8fe98f8
+[148.415523] x13: ff00000000000000 x12: ffff8000114ca000
+[148.420824] x11: 0000000000000000 x10: ffffffffffffffff
+[148.426124] x9 : ffffffffffffffc0 x8 : ffff0a27b5f9b6a0
+[148.431425] x7 : 0000000000000000 x6 : 0000000000000001
+[148.436726] x5 : ffff0a27b5f9b680 x4 : 0000000000000000
+[148.442027] x3 : ffff0a27b5f9b680 x2 : 0000000000000000
+[148.447328] x1 : 0000000000000001 x0 : 0000000000000000
+[148.452629] Call trace:
+[148.455065]__sg_alloc_table_from_pages+0xec/0x238
+[148.459931]sg_alloc_table_from_pages+0x18/0x28
+[148.464541]iommu_dma_alloc+0x474/0x678
+[148.468455]dma_alloc_attrs+0xd8/0xf0
+[148.472193]nvme_alloc_queue+0x114/0x160 [nvme]
+[148.476798]nvme_reset_work+0xb34/0x14b4 [nvme]
+[148.481407]process_one_work+0x1e8/0x360
+[148.485405]worker_thread+0x44/0x478
+[148.489055]kthread+0x150/0x158
+[148.492273]ret_from_fork+0x10/0x34
+[148.495838] Code: f94002c3 6b01017f 540007c2 11000486 (f8645aa5)
+[148.501921] ---[ end trace 89bb2b72d59bf925 ]---
+
+Fix by making a u32.
+
+Fixes: 61f3b8963097 ("nvme-pci: use unsigned for io queue depth")
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+unsigned int may be better, and io_queue_depth() needs fixing also
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index ba725ae47305..72c1402abfc3 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -120,7 +120,7 @@ struct nvme_dev {
+  	unsigned max_qid;
+  	unsigned io_queues[HCTX_MAX_TYPES];
+  	unsigned int num_vecs;
+-	u16 q_depth;
++	u32 q_depth;
+  	int io_sqes;
+  	u32 db_stride;
+  	void __iomem *bar;
+@@ -2320,7 +2320,7 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+
+  	dev->ctrl.cap = lo_hi_readq(dev->bar + NVME_REG_CAP);
+
+-	dev->q_depth = min_t(u16, NVME_CAP_MQES(dev->ctrl.cap) + 1,
++	dev->q_depth = min_t(u32, NVME_CAP_MQES(dev->ctrl.cap) + 1,
+  				io_queue_depth);
+  	dev->ctrl.sqsize = dev->q_depth - 1; /* 0's based queue depth */
+  	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
