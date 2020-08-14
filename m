@@ -2,168 +2,190 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F12AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D1D20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597408057;
-	bh=qXZEi5/3wCG59wN+8zasH+1mGj1FqIwR4tCJVTq0T1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CkcZLDr0yM87qbQhovtX6HhYbAyGse7jiMCADuH/+Lg0bZcRKNdvMbJZh2L+05Er5
-	 VopXUDcIjg6r5tiujk7DBwLCaLgVEdikfHogdtgm0xg6e7UOTTol3+gx2EsMUVQXTW
-	 HZkdZcGfWRdTiXmoIgmk2kaODRkuiRvFpkuWC3C0=
+	by mail.kernel.org (Postfix) with ESMTP id 38EF820866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="LUdX5IAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHNM1g (ORCPT
+        id S1728119AbgHNM14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNM1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:27:35 -0400
-Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B331820866;
-        Fri, 14 Aug 2020 12:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597408054;
-        bh=qXZEi5/3wCG59wN+8zasH+1mGj1FqIwR4tCJVTq0T1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k0IYN8ll00sX+S2nw7k5gdLe5nBNtcYeukmpiG2fA8GmZ7FUtYbBVUhMq+ZLrtOBJ
-         jM6+md8o5FjWeO7sZwNXcdVCJ5kqHByoDN+l/Yb84RLAaIJ2iKHl2alVduNFVaSW5J
-         QTgWTwIGLrxXR0/Io99QwtMYzrnbOPfNAX9ILpGs=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F352440D3D; Fri, 14 Aug 2020 09:27:32 -0300 (-03)
-Date:   Fri, 14 Aug 2020 09:27:32 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 10/18] perf ftrace: add support for trace option
- funcgraph-irqs
-Message-ID: <20200814122732.GA13995@kernel.org>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
- <20200808023141.14227-11-changbin.du@gmail.com>
-MIME-Version: 1.0
+        Fri, 14 Aug 2020 08:27:56 -0400
+Received: from mail-eopbgr140111.outbound.protection.outlook.com ([40.107.14.111]:31456
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbgHNM1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:27:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TUjyrEpFMfmxGwZi3JbrQqbEaCK3J+YpIhUbainevp2YShae9enQs7yiX1IkgT0+7199avCOLsC9cxpivRHtyqbRwuwvlS30vlh5kIauHG4yp6yQYHdlEL10pPVjp8D60CVrt9OUYuONPiigEikOzh9BuZnlYB8y19iiRcWfBXmpMjazycMcpVjn8oAgkZaA5kAt1BpVXTwgYHZ6dGAapT2eqcOj1l8U0A1NL/i8obGFIl99c5kol37QWuRDz6i+8EW+dEUqyx8S3GCq0TqXphNg4twZKMxKZGiPJ0llldjS6PUJN90r2DComaSYmizyotmHWTZpyal/9Z2YQJdKOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ludUcZZnmjYNVxKyAICb2QB4M8t0iF9X30zSnu98QfY=;
+ b=lo12hp+dEmpoSoiOkSDDxzzlHWXUfVgHNsUxzTST7dOQzOJ/iQHj9YeDb/DTssA7dAebp/HrkYkyC2hPLL5AEFYmr4FllDPEejmIX6v1E9N8r1XI4R5aPZLCpGnocD022AH54dWNyl8titN4UFQiutXNTZYnFxAlblPBHCBBIPe8LvFeMQpwzXUxzakDrKAR8xNy9CCmsbJDfDIQtp72OhuZiG2hy3lA18xrzo+X2Slou+MNctBTdoFjdnf5o3TrPed/PhjFrg7OdLITePag5J67p1BbO07wQl+f0sLbc2NqW6zXFyTcoofkgM6eZsN7Vtn6Q1wzODlz/hx1HpcAag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ludUcZZnmjYNVxKyAICb2QB4M8t0iF9X30zSnu98QfY=;
+ b=LUdX5IAYF/LYHsYv8SVtO62CPk57me63XJrWrRRY9vqwNi4XIdNTKRFdP749vUKOPZw53/E7FJJI27VttVh1lH14R9hGAkDku1aU/skDIa8JqbM1A5eUJJbDbd7ZPGG49W72GH7sousoNjxHewUAz+ipCZMstr9ywHOf9agVJWI=
+Authentication-Results: earth.li; dkim=none (message not signed)
+ header.d=none;earth.li; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0361.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5b::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.16; Fri, 14 Aug 2020 12:27:49 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3283.018; Fri, 14 Aug 2020
+ 12:27:49 +0000
+Date:   Fri, 14 Aug 2020 15:27:44 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+Message-ID: <20200814122744.GF17795@plvision.eu>
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-2-vadym.kochan@plvision.eu>
+ <20200813080322.GH21409@earth.li>
+ <20200814082054.GD17795@plvision.eu>
+ <20200814120536.GA26106@earth.li>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200808023141.14227-11-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200814120536.GA26106@earth.li>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM5PR1001CA0054.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:206:15::31) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM5PR1001CA0054.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:206:15::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 12:27:47 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: af997fac-a920-4a16-dde5-08d8404d74d9
+X-MS-TrafficTypeDiagnostic: HE1P190MB0361:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0361654E568F6B66132858AA95400@HE1P190MB0361.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PixtPe28l4V8yqiiUKUoqKYiqAt/Kr+P46ntn1LOS1tbdDdEW4kaVio9HCTWj/wVsWiCXPWVP2EtwwuiUh/BOnsHUPUxZXbV6kkhYlLR0ROPWINRNyUomaZDQxUB2HwJdugnrj5P1A/jTBf4SvCQTu1BQa8BX717/0IdFqGTkoyuxiYG75v+wATxjgv6d3apViW7tRLIlWjD2CnOiX3XEm6GqXtaOBax40RORmWJg1mjDXzAyThWW4P/yEfaapIXkSZuC+Tq0GAXnrV/dM4aoumnc3mmHVVGFXhHBA/dYk2OpXZwxGnranujD9GabQ05SUEMiONInohbLhxQUd/pUw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(366004)(396003)(136003)(346002)(39830400003)(376002)(8936002)(956004)(7696005)(52116002)(33656002)(2616005)(6666004)(186003)(1076003)(316002)(54906003)(83380400001)(6916009)(508600001)(2906002)(7416002)(36756003)(86362001)(5660300002)(8886007)(8676002)(16526019)(4326008)(66556008)(66476007)(66946007)(55016002)(44832011)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: fqP8B1dyYbj53bdlkNqarVGJ2NY5lBZAvrbMykf1pDd8g5Us4mLWk9uk2ZIjzgw1DCxbSjA3dLpbN9t6xyrvMvl0EcoqS6pLFaLl3/LuwsDUSHc1VkeJlLDJLvpjBQkyX1djXBLvMZ69SXxIPRLNWGfhqzshLhkiL8HPpqg0CSWLHVbQ3QA4g5zlu1qILYHaJQs0y43grMxjFjkGD+aWf9MgzyXYHa7mxYaZSWn3bYQWxjBJdykFfP/4e1/bnoKZPCItU4+xEE3IaR7CBMunqQZmjer3/z//szFpsEGxNWn5MOyJwiktkSmtgsi/nKFUyJrs4r9PtNXFjibrnz4N4M68sUH1FelaXoSD0pcvDwDWJUmX0RJ5ZwhAT94zch/ojFUTPMP8ZEKEcJBwkJFMTLY5XETonuje42I6HeDxsfPtf9IsMrvxI+FNCjHiEiD1XBv4oYJq+o6TLISDNG/RBbC8KieUlbowO8gtDeINKXIPyZqYeiKdAglSV7d5zj5R7tEHxCbJUyguOpoEH7FN6Gexsl2PpzBzZUDAjQoQ5/sR3UYVNHcotkuVWWSzXx37EvXK3GgcLvfyxgrAOg/h0y3+iWCDOSHCMFS4SsETRPk+n+T0KZhI9ezTFwVnUzN5QgY2jw3JyB/gtlxfmtzFZA==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: af997fac-a920-4a16-dde5-08d8404d74d9
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 12:27:49.1588
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sKa3/eYSIBy01TmBmL9rQAYexPir5ENJYQ8QF57TZ3x3gIJ0fc/hVrPwqixa86aUZsqBO2Opl1Jfhva4eGnIDuM1x+YJCsEO76wpi7nb7eI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0361
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Aug 08, 2020 at 10:31:33AM +0800, Changbin Du escreveu:
-> This adds an option '--graph-opts noirqs' to filter out functions executed
-> in irq context.
-
-ditto, no example provided, please consider adding an example +
-explanation to perf-ftrace.txt.
- 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+On Fri, Aug 14, 2020 at 01:05:36PM +0100, Jonathan McDowell wrote:
+> On Fri, Aug 14, 2020 at 11:20:54AM +0300, Vadym Kochan wrote:
+> > On Thu, Aug 13, 2020 at 09:03:22AM +0100, Jonathan McDowell wrote:
+> > > On Mon, Jul 27, 2020 at 03:22:37PM +0300, Vadym Kochan wrote:
+> > > > Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> > > > ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> > > > wireless SMB deployment.
+> > > > 
+> > > > The current implementation supports only boards designed for the Marvell
+> > > > Switchdev solution and requires special firmware.
+> > > > 
+> > > > The core Prestera switching logic is implemented in prestera_main.c,
+> > > > there is an intermediate hw layer between core logic and firmware. It is
+> > > > implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+> > > > related logic, in future there is a plan to support more devices with
+> > > > different HW related configurations.
+> > > 
+> > > The Prestera range covers a lot of different silicon. 98DX326x appears
+> > > to be AlleyCat3; does this driver definitely support all previous
+> > > revisions too? I've started looking at some 98DX4122 (BobCat+) hardware
+> > > and while some of the register mappings seem to match up it looks like
+> > > the DSA tagging has some extra information at least.
+> > > 
+> > > Worth making it clear exactly what this driver is expected to support,
+> > > and possibly fix up the naming/device tree compatibles as a result.
+> > > 
+> > Regarding "naming/device tree compatibles", do you mean to add
+> > compatible matching for particular ASIC and also for common ? 
+> > 
+> > Currently 
+> > 
+> >     compatible = "marvell,prestera"
+> > 
+> > is used as default, so may be
+> > 
+> > you mean to support few matching including particular silicon too, like ?
+> > 
+> > 
+> >     compatible = "marvell,prestera"
+> >     compatible = "marvell,prestera-ac3x"
+> > 
+> > Would you please give an example ?
 > 
-> ---
-> v2: option name '--nofuncgraph-irqs' -> '--graph-noirqs'.
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  1 +
->  tools/perf/builtin-ftrace.c              | 21 ++++++++++++++++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
+> AFAICT "Prestera" is the general name for the Marvell
+> enterprise/data-centre silicon, comparable to the "LinkStreet"
+> designation for their lower end switching. The mv88e* drivers do not
+> mention LinkStreet in their compatible strings at all, choosing instead
+> to refer to chip IDs (I see mv88e6085, mv88e6190 + mv88e6250).
 > 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 3380a2e2c9ad..fca55ac55ff3 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -104,6 +104,7 @@ OPTIONS
->  --graph-opts::
->  	List of options allowed to set:
->  	  nosleep-time - Measure on-CPU time only for function_graph tracer.
-> +	  noirqs       - Ignore functions that happen inside interrupt.
->  
->  SEE ALSO
->  --------
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 47d63bba6a48..b4c821be4fb5 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -45,6 +45,7 @@ struct perf_ftrace {
->  	bool			inherit;
->  	int			func_stack_trace;
->  	int			graph_nosleep_time;
-> +	int			graph_noirqs;
->  };
->  
->  struct filter_entry {
-> @@ -207,6 +208,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
->  	write_tracing_option_file("function-fork", "0");
->  	write_tracing_option_file("func_stack_trace", "0");
->  	write_tracing_option_file("sleep-time", "1");
-> +	write_tracing_option_file("funcgraph-irqs", "1");
->  }
->  
->  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-> @@ -399,6 +401,17 @@ static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
->  	return 0;
->  }
->  
-> +static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
-> +{
-> +	if (!ftrace->graph_noirqs)
-> +		return 0;
-> +
-> +	if (write_tracing_option_file("funcgraph-irqs", "0") < 0)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
->  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  {
->  	char *trace_file;
-> @@ -483,6 +496,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  		goto out_reset;
->  	}
->  
-> +	if (set_tracing_funcgraph_irqs(ftrace) < 0) {
-> +		pr_err("failed to set tracing option funcgraph-irqs\n");
-> +		goto out_reset;
-> +	}
-> +
->  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
->  		goto out_reset;
-> @@ -662,6 +680,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
->  	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
->  	struct sublevel_option graph_tracer_opts[] = {
->  		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
-> +		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
->  		{ .name = NULL, }
->  	};
->  
-> @@ -733,7 +752,7 @@ int cmd_ftrace(int argc, const char **argv)
->  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
->  		    "Max depth for function graph tracer"),
->  	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
-> -		     "graph tracer options, available options: nosleep-time",
-> +		     "graph tracer options, available options: nosleep-time,noirqs",
->  		     parse_graph_tracer_opts),
->  	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
->  		     "size of per cpu buffer", parse_buffer_size),
-> -- 
-> 2.25.1
+> I do not have enough familiarity with the Prestera range to be able to
+> tell what commonality there is between the different versions (it
+> appears you need an NDA to get hold of the programming references), but
+> even just looking at your driver and the vendor code for the BobCat it
+> seems that AlleyCat3 uses an extended DSA header format, and requires a
+> firmware with message based access, in comparison to the BobCat which
+> uses register poking.
+> 
+> Based on that I'd recommend not using the bare "marvell,prestera"
+> compatible string, but instead something more specific.
+> "marvell,prestera-ac3x" seems like a suitable choice, assuming that's
+> how these chips are named/generally referred to.
+> 
+> Also I'd expand your Kconfig information to actually include "Marvell
+> Prestera 98DX326x" as that's the only supported chip range at present.
 > 
 
--- 
+Yes, Prestera covers more range of devices. But it is planning to cover
+other devices too, and currently there is no device-specific DTS
+properties which are used in this version, but only the generic one -
+since only the MAC address node.
 
-- Arnaldo
+I mean that if there will be other Prestera devices supported then it
+will require to extend the DTS matching string in the driver just to
+support the same generic DTS properties for new device.
+
+Anyway I will rise and discuss this question.
+
+Thanks,
