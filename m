@@ -2,227 +2,145 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D483BC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC25CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E19207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816572074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e89zevz8"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JRy5m+qT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHNIXo (ORCPT
+        id S1726983AbgHNIX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:23:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgHNIXo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:23:44 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C383FC061383
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:23:43 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d2so4420038lfj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 01:23:43 -0700 (PDT)
+        Fri, 14 Aug 2020 04:23:57 -0400
+Received: from mail-mw2nam12on2059.outbound.protection.outlook.com ([40.107.244.59]:60161
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726268AbgHNIX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 04:23:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m6Mtf82+h+DG/AzxrPFUZ5C8yPKJVhjs/EDAESdoCbBqlv1N4UvW2AxJ5l3GU/XiFWEAl+GfyTQRnmxUwnsPJFzETtyw2iSyOyADGD5mt44IsadZ4uPLZTy+4NmciW9d3LpGFSs1cJ4ll8Nzh+FkmaiG5Gq0aBTrk1WpfEg6We6sclR4v/QZL6l68pEjspPOMuiIN3bNgBnzrHzzYtgBbjS6IrMQqXwJqZkOgDyKKjPajUPhH6q0tRlz5d/gGRh1b3LPQvlBt8JpJISQCnMG/B1e5Ll+LLOXqBqJr2UWVpVKrWDEKWoknqml4U8FAJfChekKXeZoKOT4btO/7gCWyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVqek+tcpWLWmxNT2tjZrwKaxpHxJIcWdAcNTBsBRAM=;
+ b=FHidzzODtSxCaMQ2ZhgXcgMWVSnuPZQhugG4Pqq9jH7UBe2ZKbvWCZInQl5yW2njVAzf+ri2h2No4deGvA1KU9oOoKiNzOkdQLghdO0AyfVN3ysVfs2B5MZxs2uQ4n/y3fWDRuRpUMozeJwEkBhFyfzICBSp3VQ/f2U6+rp8wnL5p5B6qkQHBMWKaLOM3mumZSbmJ+0JSDxhy1hFdBTjcrcGzHpFc4kQkHKiK27/TA1t6xzbTedXHwlgfXf+jRnXSdcLVdwPCvTeOayx4s5JQ2Qnj4mFsGZuQ/+YjPS+IrkVTGGrvFKhXOTU7xWOSSM70/z0LS60Wuz4+eNyjqNASQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=eFnKZN0nDkXEMnVHqpXKPvxHxeInqTtj3cAC5I26ma4=;
-        b=e89zevz81wOF42kMV3hsGa+7BPXPtkxZT5SvAK328YLsMv8YiAmNkzT4L6YaGJLpY2
-         ZJNAx20IoadLD3KkhRWnGUFUlHEMDH4M4JftMFaG7EviQ+IOiWIPntmmuUd2i+R+5AAg
-         /RGL4aJHGHWbS+cr67dF2thOXGwuIP0/QzJDHspGD+onCcco3mYtfxCM8mw6GdaeOE2L
-         gzf2wi+JsmV0GC5mtvK9tQAomhLiacBd8hRLQ0eYU9xpHoYKNojXrcFxygVHdFdpsaji
-         WEDO79rx+9BNmFBANRqlatBAb3e9y6WV/05koeyaIVXRJtLwQX4SwwIAd5cx6rdDpDiD
-         HxOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=eFnKZN0nDkXEMnVHqpXKPvxHxeInqTtj3cAC5I26ma4=;
-        b=oxxJOuPETNCRKOtgC168oyQLWgVReflwZwhm/uzpwnFMmEOr4ezhLCEqHOzZvtQd44
-         Xb05pCT/868ElcBowbYeOw9UL/6keUWogDHfHT0m16qJ1uTYe75D9bRFO7CxgBfdRMB6
-         tArg44/cX8pYCM+qfmgcLaN0OGwog0MDAJ/0cEGHzdgjH4YZnEhZrVMJuMQrcfbNeEPR
-         WUuWoDhU1Kc2XhffXkuYP8AbnzT5XPj+vUs2+U9v8Wah4Z1UASELt//8aepCiHqtZM5C
-         VeaiRs/2vSWeiWJh6905ZAa6c+N/sR2r3CB1uYaHR2HIhKa16hKQBmHmiEbs16cu1/6Z
-         6MDw==
-X-Gm-Message-State: AOAM531+fBByKEvNaqiYSLp4rh4ASQo5dcXzmP2c/12DonazuOYDdkkq
-        iCBWft8hpxw567M/hG/IH0U=
-X-Google-Smtp-Source: ABdhPJx1Eta7oqUaKM47XYlHscA1lToyUV1G6AhWGpLRzYA7//kae7qnZT67N8cFYQPLtWHCmeXIrA==
-X-Received: by 2002:a19:c852:: with SMTP id y79mr710040lff.37.1597393421186;
-        Fri, 14 Aug 2020 01:23:41 -0700 (PDT)
-Received: from eldfell ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id m27sm1731878lfq.19.2020.08.14.01.23.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 01:23:40 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 11:23:29 +0300
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     crj <algea.cao@rock-chips.com>, jernej.skrabec@siol.net,
-        laurent.pinchart+renesas@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, kuankuan.y@gmail.com, narmstrong@baylibre.com,
-        hjc@rock-chips.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, a.hajda@samsung.com,
-        tzimmermann@suse.de, jbrunet@baylibre.com,
-        linux-rockchip@lists.infradead.org, darekm@google.com,
-        sam@ravnborg.org, linux-arm-kernel@lists.infradead.org,
-        cychiang@chromium.org
-Subject: Re: [PATCH 4/6] drm/rockchip: dw_hdmi: Add vendor hdmi properties
-Message-ID: <20200814112329.4f83dc7a@eldfell>
-In-Reply-To: <20200813104522.GA6057@pendragon.ideasonboard.com>
-References: <20200812083120.743-1-algea.cao@rock-chips.com>
-        <20200812083543.4231-1-algea.cao@rock-chips.com>
-        <20200812093315.GE6057@pendragon.ideasonboard.com>
-        <52cca26d-b2b3-22b2-f371-a8086f2e6336@rock-chips.com>
-        <20200812133017.GJ6057@pendragon.ideasonboard.com>
-        <20200813104228.096179e7@eldfell>
-        <20200813104522.GA6057@pendragon.ideasonboard.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVqek+tcpWLWmxNT2tjZrwKaxpHxJIcWdAcNTBsBRAM=;
+ b=JRy5m+qTqHi7QhHyQC/7CYpGSjpoM0jXhKIHOMfQEqUMK5gQf8rgl7s1OB6EW+lcrl0oYFkaqFtcmPZ2iFOjsjr2+hkfnW1uEEYvz+/New4gxvtAIJJYvAXOBZx1muOEh3cwND5sQxMYTysFvRiwChsNhFRmCAeQuiuxRhmkplc=
+Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB4112.namprd12.prod.outlook.com (2603:10b6:208:19a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 14 Aug
+ 2020 08:23:54 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.015; Fri, 14 Aug 2020
+ 08:23:54 +0000
+Subject: Re: [BUG] drm/ttm: Warning during suspend/freeze
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc:     Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+References: <87zh6x3b16.fsf@nanos.tec.linutronix.de>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <7a8edb0a-350e-b19a-aabb-ec66922313c0@amd.com>
+Date:   Fri, 14 Aug 2020 10:23:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <87zh6x3b16.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR04CA0096.eurprd04.prod.outlook.com
+ (2603:10a6:208:be::37) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/OYJIbNYvQBUhhX5zztcLolA"; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR04CA0096.eurprd04.prod.outlook.com (2603:10a6:208:be::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Fri, 14 Aug 2020 08:23:51 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 740b692f-aa74-4bf3-063e-08d8402b6187
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4112:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4112FA55497CA0C9BE6E3CD683400@MN2PR12MB4112.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YJW14Iuz9QjfMfv5MBOrKAaPmIPZhAo3jc5LfQhbK87hxP5Fyi2PrML5tEFZoC8ccLffTK1Pysu8wOhFqVxeXDriSuWrSF5iy9CIPEzvBB7RI1q9XOgeGTmo3t2rmgS9ZLos9P0x+7v+QtB82otgZ5wkGsHnZ+Uikxjin4CY19e37kSe/5wcbKqhgxwZrk//J1K6KbB0NVtfLrei4DL/RQmow0+hpE2+mugXMI+Br+11bRLLuN/OHdgw0TUTQC/EeKyRtBgM9Rtm5x2cNfRVEbJe71yFXyHNsy9WR7Iz8bA7jW96jlnkfsgu9IA+VypZGk6pET4B91PmiNBFZDJa3ptFUTzFiMbNuc5nbWilELDF4X7H+/mJq0oamWKpPj1i
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(4326008)(31686004)(86362001)(6666004)(54906003)(31696002)(52116002)(15650500001)(66556008)(66476007)(5660300002)(316002)(2906002)(2616005)(8676002)(66946007)(36756003)(6486002)(16526019)(186003)(8936002)(83380400001)(45080400002)(478600001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: fVAsVvEBv8XC1ac8O6imN7w3RiFfIwdx5S1cwlV4LXye4yWdNdsTik1I+bduhQTbEwfxOle2Ev6Hk8ugexFyAsog8sMAUpQ2BFyfq98I27GfmaAwzkkEDNEQgepRwd9VHrjks0mycsd35zG8Z+b/dHDKQdBRna9VXUFTI/06741XLedhare1keSWhlkq7TJUqc4JMbyKv3uAVJ+GrShA75sqG/KKL6Le9vZ59qGoopQNwx5wO3pLWorZUdDEhaj8b4ZWwlsur/W8FpYINU+GeK+m27XCko/rDqmaJFLG5j2+JwWMj1SfIY1ZgwDMU0AiHoZiVHJ+dfhx1pU5X62Pb+aVSR5xsXZ2XEiV7Zd8cmASC3004T85r43xV2dFCWg501D2InpuAVmBDfSGRN2W3HdtNFGs8hOEiFInBTuT9DK7mSZegtYh2RX57E3OkKg2Q7iUzJk28doSxlonC5CnhGLzeHRt7Pj8964+myOgiw6FI7xC+7KzC/SgAjqq22y94s3bPylZgo/dFYDr9rOxWAhlXzDagOa2PAhjn90YyawuytuG01LAFQFR0MeECB5lfMohaGZXPWTBwKDaLQAy+Uj0R+jhZcrjqThbyTjE2h0n1yLblIHniJLH34ZYmAkcwSm9PHQS9zjF/YH83Wkce1OjDomLvKJEmysrcfpB6pzRDWwGR0wN+tZ63kvjGcBLaC6llUJ3SggKshmc84g2XQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 740b692f-aa74-4bf3-063e-08d8402b6187
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2020 08:23:53.9743
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZFYh0nQF7ELjsD6Cijzk6mo4ZeMEl5uuGyWc635D044tiRMPuKIJk9bY8eNwK448
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OYJIbNYvQBUhhX5zztcLolA
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Thomas,
 
-On Thu, 13 Aug 2020 13:45:22 +0300
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+well I added a new assertion to catch cases when a driver tries to kmap 
+a BO without grabbing the lock.
 
-> On Thu, Aug 13, 2020 at 10:42:28AM +0300, Pekka Paalanen wrote:
-> > On Wed, 12 Aug 2020 16:30:17 +0300 Laurent Pinchart wrote: =20
-> > > On Wed, Aug 12, 2020 at 07:08:10PM +0800, crj wrote: =20
-> > > > =E5=9C=A8 2020/8/12 17:33, Laurent Pinchart =E5=86=99=E9=81=93:   =
-=20
-> > > > > On Wed, Aug 12, 2020 at 04:35:43PM +0800, Algea Cao wrote:   =20
-> > > > >> Introduce struct dw_hdmi_property_ops in plat_data to support
-> > > > >> vendor hdmi property.
-> > > > >>
-> > > > >> Implement hdmi vendor properties color_depth_property and
-> > > > >> hdmi_output_property to config hdmi output color depth and
-> > > > >> color format.
-> > > > >>
-> > > > >> The property "hdmi_output_format", the possible value
-> > > > >> could be:
-> > > > >>           - RGB
-> > > > >>           - YCBCR 444
-> > > > >>           - YCBCR 422
-> > > > >>           - YCBCR 420
-> > > > >>
-> > > > >> Default value of the property is set to 0 =3D RGB, so no changes=
- if you
-> > > > >> don't set the property.
-> > > > >>
-> > > > >> The property "hdmi_output_depth" possible value could be
-> > > > >>           - Automatic
-> > > > >>             This indicates prefer highest color depth, it is
-> > > > >>             30bit on rockcip platform.
-> > > > >>           - 24bit
-> > > > >>           - 30bit
-> > > > >> The default value of property is 24bit.
-> > > > >>
-> > > > >> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> > > > >> ---
-> > > > >>
-> > > > >>   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 174 ++++++++++++=
-++++++++
-> > > > >>   include/drm/bridge/dw_hdmi.h                |  22 +++
-> > > > >>   2 files changed, 196 insertions(+)
-> > > > >>
-> > > > >> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drive=
-rs/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> > > > >> index 23de359a1dec..8f22d9a566db 100644
-> > > > >> --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> > > > >> +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> > > > >> @@ -52,6 +52,27 @@
-> > > > >>  =20
-> > > > >>   #define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
-> > > > >>  =20
-> > > > >> +/* HDMI output pixel format */
-> > > > >> +enum drm_hdmi_output_type {
-> > > > >> +	DRM_HDMI_OUTPUT_DEFAULT_RGB, /* default RGB */
-> > > > >> +	DRM_HDMI_OUTPUT_YCBCR444, /* YCBCR 444 */
-> > > > >> +	DRM_HDMI_OUTPUT_YCBCR422, /* YCBCR 422 */
-> > > > >> +	DRM_HDMI_OUTPUT_YCBCR420, /* YCBCR 420 */
-> > > > >> +	DRM_HDMI_OUTPUT_YCBCR_HQ, /* Highest subsampled YUV */
-> > > > >> +	DRM_HDMI_OUTPUT_YCBCR_LQ, /* Lowest subsampled YUV */
-> > > > >> +	DRM_HDMI_OUTPUT_INVALID, /* Guess what ? */
-> > > > >> +};   =20
-> > > > >
-> > > > > Vendor-specific properties shouldn't use names starting with drm_=
- or
-> > > > > DRM_, that's for the DRM core. But this doesn't seem specific to
-> > > > > Rockchip at all, it should be a standard property. Additionally, =
-new
-> > > > > properties need to come with a userspace implementation showing t=
-heir
-> > > > > usage, in X.org, Weston, the Android DRM/KMS HW composer, or anot=
-her
-> > > > > relevant upstream project (a test tool is usually not enough).   =
-=20
-> > > >=20
-> > > > We use these properties only in Android HW composer, But we can't u=
-pstream
-> > > >=20
-> > > > our HW composer code right now.=C2=A0 Can we use this properties as=
- private=20
-> > > > property
-> > > >=20
-> > > > and do not upstream HW composer for the time being?   =20
-> > >=20
-> > > It's not my decision, it's a policy of the DRM subsystem to require an
-> > > open implementation in userspace to validate all API additions. =20
-> >=20
-> > Also read
-> > https://www.kernel.org/doc/html/latest/gpu/drm-uapi.html#open-source-us=
-erspace-requirements
-> > very carefully: it calls for a FOSS userspace project's proper upstream
-> > to have reviewed and accepted the patches to use the new UAPI, but
-> > those patches must NOT be MERGED at that time yet. =20
->=20
-> Correct. Many userspace projects wouldn't merge a patch before the
-> kernel API is merged, so that would create a chicken and egg problem :-)
+Looks like QXL is doing exactly that here.
 
-I wouldn't be so sure that absolutely everyone knows that rule. It only
-takes just one userspace project to merge and release with it to
-potentially require renaming everything if any change is needed after
-the kernel review process.
+Regards,
+Christian.
 
-Actually, if I remember right, I may have seen such merging happen.
-After all, "accepted" is usually a synonym for "merged".
+Am 14.08.20 um 10:08 schrieb Thomas Gleixner:
+> Suspending or freezing a KVM guest triggers the following warning
+> reliably on current mainline:
+>
+> [56691.550343] printk: Suspending console(s) (use no_console_suspend to debug)
+> [56691.578735] WARNING: CPU: 37 PID: 462 at drivers/gpu/drm/ttm/ttm_tt.c:51 ttm_tt_create+0xb6/0xe0 [ttm]
+> [56692.795234] Modules linked in: snd_hda_codec_generic(E) qxl(E) drm_ttm_helper(E) ttm(E) snd_hda_intel(E) snd_intel_dspcfg(E) snd_hda_codec(E) drm_kms_helper(E) snd_hwdep(E) snd_hda_core(E) cec(E) snd_pcm(E) snd_timer(E) drm(E) joydev
+> (E) snd(E) pcspkr(E) sg(E) evdev(E) virtio_balloon(E) serio_raw(E) virtio_console(E) soundcore(E) button(E) virtio_rng(E) rng_core(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) hid_generic(E) usbhid(E) hid(E) virtio_net(E) net_failover(E) failover(E) uhci_hcd(E) virtio_blk(E) sr_mod(E) cdrom(E) ata_generic(E) ehci_pci(E) ata_piix(E) ehci_hcd(E) libata(E) virtio_pci(E) usbcore(E) psmouse(E) virtio_ring(E) scsi_mod(E) i2c_piix4(E) virtio(E) floppy(E)
+> [56691.578781] CPU: 37 PID: 462 Comm: kworker/37:1 Tainted: G            E     5.8.0+ #8217
+> [56691.578784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [56692.795348] Workqueue: events drm_fb_helper_dirty_work [drm_kms_helper]
+> [56691.578872] RIP: 0010:ttm_tt_create+0xb6/0xe0 [ttm]
+> [56691.578903] Call Trace:
+> [56691.578912]  ttm_bo_kmap+0x13c/0x260 [ttm]
+> [56691.578942]  qxl_bo_kmap+0x40/0x70 [qxl]
+> [56691.578947]  qxl_gem_prime_vmap+0x21/0x50 [qxl]
+> [56691.579060]  drm_gem_vmap+0x1f/0x50 [drm]
+> [56691.579073]  drm_client_buffer_vmap+0x1c/0x30 [drm]
+> [56691.579083]  drm_fb_helper_dirty_work+0xb2/0x1c0 [drm_kms_helper]
+> [56691.579091]  process_one_work+0x246/0x580
+> [56691.579099]  ? process_one_work+0x580/0x580
+> [56691.579101]  worker_thread+0x30/0x370
+> [56691.579104]  ? process_one_work+0x580/0x580
+> [56691.579107]  kthread+0x12a/0x140
+> [56691.579110]  ? kthread_park+0x80/0x80
+> [56691.579118]  ret_from_fork+0x22/0x30
+>
+> Have not had time to figure out whether this is a regression or an older
+> issue. If you need further info please let me know.
+>
+> Thanks,
+>
+>          tglx
 
-
-Thanks,
-pq
-
---Sig_/OYJIbNYvQBUhhX5zztcLolA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl82SgEACgkQI1/ltBGq
-qqeoPg//QF/KmV+W3r7hJpYNR4Fh9oX2bbkn6C+oa1Op70IyVrpYTJJisVcGIuVx
-YbQd+GAtYLMuS5ooTO6pWn09zXCZ1l1tNLSoKtheiCLKyQZ/QplxTe2Vrm2gLjE/
-MRw6EnAcD3RwHCqLTNWDKlIMehm+MYYRphizLCuGkSJcwNyqn7xFlT3aAIpeSkoA
-UHz3Wg+kfBfbse82XNVLDPJ64zB0LY38/8Ae5U8AoEqcQDdpG+F68jchhR4AseAv
-hQ78LD2q2/hNvSZxmo7rMvdddZMMh8/7qFvjKkZYUL/+9K8U3wZ5KkdqsQbl1azP
-bFFM88zz9MEQWhiAV6Up+aPFo+/fvVOdlo7mHWhNztetbKI5zwUlp/IHd3dEsk6R
-xyOKBU/fgehGpHpFGGR7452nfrwN3w4xNCRbO2RiupbAC1l1ilvMFGw3Il/50L6Y
-DyXdUN5x1zeA7Api94KXSBELWX42/AFijzHo5IGeWLG37Uhq+CmMjyvaGVnJQG2R
-1E+fcOS7wkBTFgbMkkSIieB0sH6/EAD8q8eTvlrZQodRcijZylONSxn+8gOkBlKC
-FR2OuE4Y9ygf4KrlF7FEcYxYoCu4SFblpuc8Ah76dnEHFCNIId9uLZI0uyQTRjVL
-urvGr/Bl0nK7s/52x0WRZnu0uqt2OBM02L7dj5uTVkflkDjqDPU=
-=uVVF
------END PGP SIGNATURE-----
-
---Sig_/OYJIbNYvQBUhhX5zztcLolA--
