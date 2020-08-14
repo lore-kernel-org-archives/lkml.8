@@ -2,124 +2,141 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB28C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B456C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE920855
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HpL1ED54"
+	by mail.kernel.org (Postfix) with ESMTP id 779EF22B4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597412093;
+	bh=2k7wrk2A5zGJi+fRb0tRgIS913bmaCEjSwO77FwaKMk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=O5C7/Ht43xf72CAblxlNuG31O0vONPjCiRSstFUMGmiPz2Ui5/Q3YLbWCsYFa1st+
+	 YQVZoCwz1Sav4FAQ+mLXtppLRntIrv72Uh2iyjFCfWeVuS2SQEGZow8Ob5jOu9rgSu
+	 GPnXNXWC9XKfdcUSOZVmUWX1AVnAWMcyYw6f4kQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgHNNel (ORCPT
+        id S1728585AbgHNNew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:34:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16822 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726196AbgHNNek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:34:40 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07EDXQ1S042718;
-        Fri, 14 Aug 2020 09:34:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=PK+K/zrJwJJiiva50zj5pMJeHrNKrjTAzX2kE46/Fok=;
- b=HpL1ED54G7rpWyxM115TzOJNoxoCePA6dglz6kH3tG20LR8sMssoHAiZrVHeR0R/NVPZ
- eY53RfrmfkEfFUmI0mSn2R8YOnArHUyOREBlpnUc0Jku/yBKGhVCqZVelkdlRFWZa61E
- xT0hXio9W5V4bedORHGNZc0Dj5OJhgCEqdEiHAhXj3UND4V/KIgwJZO/6j8KhYqYHRUu
- Ydw41u4B0ISDLlQUswPrMfC11/K37y2aeI9/5/Qt95aB6+Ftq630rIC1YxG/vlmgOwOM
- X9YvEeC2FTgpJSQGGTo3y4fvL+4EzFYlUQr+fh5qNjtzF4u35/NQ+5EfUMI+d3GHZX7/ rA== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32srauuxgh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Aug 2020 09:34:10 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07EDLdOD032624;
-        Fri, 14 Aug 2020 13:34:06 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 32skahenw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Aug 2020 13:34:05 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07EDY2GB21758434
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Aug 2020 13:34:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE7D352050;
-        Fri, 14 Aug 2020 13:34:02 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.79.212.27])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5C78352051;
-        Fri, 14 Aug 2020 13:33:58 +0000 (GMT)
-From:   Balamuruhan S <bala24@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, peterz@infradead.org,
-        Jisheng.Zhang@synaptics.com, rdna@fb.com, viro@zeniv.linux.org.uk,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        naveen.n.rao@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        sandipan@linux.ibm.com, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, Balamuruhan S <bala24@linux.ibm.com>
-Subject: [PATCH] kernel/watchdog: fix warning -Wunused-variable for watchdog_allowed_mask in ppc64
-Date:   Fri, 14 Aug 2020 19:03:30 +0530
-Message-Id: <20200814133330.210093-1-bala24@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 14 Aug 2020 09:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgHNNev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:34:51 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340AC20791;
+        Fri, 14 Aug 2020 13:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597412090;
+        bh=2k7wrk2A5zGJi+fRb0tRgIS913bmaCEjSwO77FwaKMk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YlODcCPqwINvpVojzhyjjz9MxMddRD2aNthmQFLCxvr7+MUtcFPc4z91us+eHTIZL
+         8OAsOl83Enw+lY6w5D+/XQorw3v+fsiNEbXVHM41up30924ZTOKcGKcAYTDgwjyQyO
+         rPTylFhazdcgJuUxq+EO5IuraNs79rfZrW/FBJPI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1485D3522A0E; Fri, 14 Aug 2020 06:34:50 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 06:34:50 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814133450.GK4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <87lfiitquu.fsf@nanos.tec.linutronix.de>
+ <20200814071750.GZ9477@dhcp22.suse.cz>
+ <20200814121544.GA32598@pc636>
+ <20200814124832.GD9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-14_07:2020-08-14,2020-08-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- suspectscore=1 priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0
- malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008140099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814124832.GD9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ppc64 config if `CONFIG_SOFTLOCKUP_DETECTOR` is not set then it
-warns for unused declaration of `watchdog_allowed_mask` while building,
-move the declaration inside ifdef later in the code.
+On Fri, Aug 14, 2020 at 02:48:32PM +0200, Michal Hocko wrote:
+> On Fri 14-08-20 14:15:44, Uladzislau Rezki wrote:
+> > > On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
+> > > > Michal Hocko <mhocko@suse.com> writes:
+> > > [...]
+> > > > > Why should we limit the functionality of the allocator for something
+> > > > > that is not a real problem?
+> > > > 
+> > > > We'd limit the allocator for exactly ONE new user which was aware of
+> > > > this problem _before_ the code hit mainline. And that ONE user is
+> > > > prepared to handle the fail.
+> > > 
+> > > If we are to limit the functionality to this one particular user then
+> > > I would consider a dedicated gfp flag a huge overkill. It would be much
+> > > more easier to have a preallocated pool of pages and use those and
+> > > completely avoid the core allocator. That would certainly only shift the
+> > > complexity to the caller but if it is expected there would be only that
+> > > single user then it would be probably better than opening a can of worms
+> > > like allocator usable from raw spin locks.
+> > > 
+> > Vlastimil raised same question earlier, i answered, but let me answer again:
+> > 
+> > It is hard to achieve because the logic does not stick to certain static test
+> > case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
+> > on that, "how heavily" - number of pages are formed, until the drain/reclaimer
+> > thread frees them.
+> 
+> How many pages are talking about - ball park? 100s, 1000s?
 
-```
-kernel/watchdog.c:47:23: warning: ‘watchdog_allowed_mask’ defined but not used [-Wunused-variable]
- static struct cpumask watchdog_allowed_mask __read_mostly;
-```
+Under normal operation, a couple of pages per CPU, which would make
+preallocation entirely reasonable.  Except that if someone does something
+that floods RCU callbacks (close(open) in a tight userspace loop, for but
+one example), then 2000 per CPU might not be enough, which on a 64-CPU
+system comes to about 500MB.  This is beyond excessive for preallocation
+on the systems I am familiar with.
 
-Signed-off-by: Balamuruhan S <bala24@linux.ibm.com>
----
- kernel/watchdog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And the flooding case is where you most want the reclamation to be
+efficient, and thus where you want the pages.
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 5abb5b22ad13..33c9b8a3d51b 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -44,7 +44,6 @@ int __read_mostly soft_watchdog_user_enabled = 1;
- int __read_mostly watchdog_thresh = 10;
- static int __read_mostly nmi_watchdog_available;
- 
--static struct cpumask watchdog_allowed_mask __read_mostly;
- 
- struct cpumask watchdog_cpumask __read_mostly;
- unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
-@@ -166,6 +165,7 @@ int __read_mostly sysctl_softlockup_all_cpu_backtrace;
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
- 
-+static struct cpumask watchdog_allowed_mask __read_mostly;
- static bool softlockup_initialized __read_mostly;
- static u64 __read_mostly sample_period;
- 
+This of course raises the question of how much memory the lockless caches
+contain, but fortunately these RCU callback flooding scenarios also
+involve process-context allocation of the memory that is being passed
+to kfree_rcu().  That allocation should keep the lockless caches from
+going empty in the common case, correct?
 
-base-commit: a3a28c4451dff698d0c7ef5a3e80423aa5774e2b
--- 
-2.24.1
+Please note that we will also need to apply this same optimization to
+call_rcu(), which will have the same constraints.
 
+> > Preloading pages and keeping them for internal use, IMHO, seems not optimal
+> > from the point of resources wasting. It is better to have a fast mechanism to
+> > request a page and release it back for needs of others. As described about
+> > we do not know how much we will need.
+> 
+> It would be wasted memory but if we are talking about relatively small
+> number of pages. Note that there are not that many pages on the
+> allocator's pcp list anyway.
+
+Indeed, if we were talking a maximum of (say) 10 pages per CPU, we would
+not be having this conversation.  ;-)
+
+							Thanx, Paul
