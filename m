@@ -2,72 +2,130 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D485C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F945C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC4D020774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:28:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eDP3xueF"
+	by mail.kernel.org (Postfix) with ESMTP id 7348220838
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgHNF2E (ORCPT
+        id S1726597AbgHNF3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 01:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgHNF2D (ORCPT
+        Fri, 14 Aug 2020 01:29:54 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:10118 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgHNF3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 01:28:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762E8C061757;
-        Thu, 13 Aug 2020 22:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Zum0YIlqmhHS3QFdM5uxhyHhjwPh766nrYcKVM2Z7Xc=; b=eDP3xueFlAEEI++oq+SQUo+kvC
-        g+4Rzw6l7n7Yk13S85jeXb4cauZEa3kNZZ+k662zmmqNcyz7lrH6khtiPZYp/nYf/eBTGVd4WHCaV
-        lMu4i6Nuqg8V7iDIiGs1pQt6YTBth1JIiVJa8aY8+maFUIlkarAIjG4mkcjg8JscYmN8rKthRh0tD
-        ecLlTxqfTpAITC3vBUihZ5OZ42RspfmDAt1FwGSiNcK0mVftQq/bBvlp2bw4K4huV35wwLcMBNPmw
-        xiQi0qTvKU6bOcMpGTZYzaGM8ISzmJFYXt58vCcmas/5jG0+wFQwqTtCB4zdLL+QtixwiusvO3S/F
-        gySFhDOQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6SG1-0002t7-4W; Fri, 14 Aug 2020 05:28:01 +0000
-Date:   Fri, 14 Aug 2020 06:28:01 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pascal Bouchareine <kalou@tfz.net>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Subject: Re: [PATCH v4 2/2] fcntl: introduce F_SET_DESCRIPTION
-Message-ID: <20200814052801.GA10141@infradead.org>
-References: <20200814035453.210716-1-kalou@tfz.net>
- <20200814035453.210716-3-kalou@tfz.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814035453.210716-3-kalou@tfz.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Fri, 14 Aug 2020 01:29:54 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 13 Aug 2020 22:29:52 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 Aug 2020 22:29:50 -0700
+Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Aug 2020 10:59:32 +0530
+Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
+        id 2AC0D4702; Fri, 14 Aug 2020 10:59:31 +0530 (IST)
+From:   Dikshita Agarwal <dikshita@codeaurora.org>
+To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
+        majja@codeaurora.org, stanimir.varbanov@linaro.org,
+        vgarodia@codeaurora.org, Dikshita Agarwal <dikshita@codeaurora.org>
+Subject: [PATCH v2] media: v4l2-ctrl: add control for long term reference.
+Date:   Fri, 14 Aug 2020 10:59:27 +0530
+Message-Id: <1597382967-32729-1-git-send-email-dikshita@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 08:54:53PM -0700, Pascal Bouchareine wrote:
-> This command attaches a description to a file descriptor for
-> troubleshooting purposes. The free string is displayed in the
-> process fdinfo file for that fd /proc/pid/fdinfo/fd.
-> 
-> One intended usage is to allow processes to self-document sockets
-> for netstat and friends to report
+LTR (Long Term Reference) frames are the frames that are encoded
+sometime in the past and stored in the DPB buffer list to be used
+as reference to encode future frames.
+This change adds controls to enable this feature.
 
-NAK.  There is no way we're going to bloat a criticial structure like
-struct file for some vanity information like this.
+Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+---
+ .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 23 ++++++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
+ include/uapi/linux/v4l2-controls.h                 |  4 ++++
+ 3 files changed, 33 insertions(+)
+
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index d0d506a..6d1b005 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -4272,3 +4272,26 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
+       - Selecting this value specifies that HEVC slices are expected
+         to be prefixed by Annex B start codes. According to :ref:`hevc`
+         valid start codes can be 3-bytes 0x000001 or 4-bytes 0x00000001.
++
++``V4L2_CID_MPEG_VIDEO_LTRCOUNT (enum)``
++	Specifies the number of Long Term Reference frames encoder needs to
++	generate or keep.
++	This control is used to query or configure the number of Long Term
++	Reference frames.
++
++``V4L2_CID_MPEG_VIDEO_MARKLTRFRAME (enum)``
++	This control is used to mark current frame as Long Term Reference
++	frame.
++	this provides a Long Term Reference index that ranges from 0
++	to LTR count-1 and then the particular frame will be marked with that
++	Long Term Reference index.
++
++``V4L2_CID_MPEG_VIDEO_USELTRFRAME (enum)``
++	Specifies the Long Term Reference frame(s) to be used for encoding
++	the current frame.
++	This provides a bitmask which consists of bits [0, 15]. A total of N
++	LSB bits of this field are valid, where N is the maximum number of
++	Long Term Reference frames supported.
++	All the other bits are invalid and should be rejected.
++	The LSB corresponds to the Long Term Reference index 0. Bit N-1 from
++	the LSB corresponds to the Long Term Reference index max LTR count-1.
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 3f3fbcd..3138c72 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -991,6 +991,9 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
++	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:		return "LTR Count";
++	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:		return "Mark LTR";
++	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:		return "Use LTR";
+ 
+ 	/* CAMERA controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1224,6 +1227,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 		break;
+ 	case V4L2_CID_MPEG_VIDEO_MV_H_SEARCH_RANGE:
+ 	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:
++	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:
++	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:
++	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:
+ 		*type = V4L2_CTRL_TYPE_INTEGER;
+ 		break;
+ 	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 6227141..f2daa86 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -742,6 +742,10 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+ #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
+ #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+ #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
++#define V4L2_CID_MPEG_VIDEO_LTRCOUNT	(V4L2_CID_MPEG_BASE + 645)
++#define V4L2_CID_MPEG_VIDEO_MARKLTRFRAME	(V4L2_CID_MPEG_BASE + 646)
++#define V4L2_CID_MPEG_VIDEO_USELTRFRAME		(V4L2_CID_MPEG_BASE + 647)
++
+ 
+ /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+ #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+-- 
+1.9.1
+
