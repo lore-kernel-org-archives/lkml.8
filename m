@@ -2,104 +2,142 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D1F20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRaW7s6n"
+	by mail.kernel.org (Postfix) with ESMTP id 747B120771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 01:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHNBjv (ORCPT
+        id S1726656AbgHNBkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 21:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgHNBju (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 21:39:50 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA416C061757;
-        Thu, 13 Aug 2020 18:39:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so3475846pls.2;
-        Thu, 13 Aug 2020 18:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ucwMhSrbSIS+geFiJPFbLh/10bUBQsiRpXGuHS0d2Ek=;
-        b=gRaW7s6nWoOflNE02kTZswBl5Fv3jtAsfVWJyLQyFIq29U7UbYOV3oUUY5EbK6y/hX
-         snUTTWEJ3BTy9lhmwyrvckJClhEO55aCN3uOod3x1PWoE+xhtdPe++S7zrWiofhP9B29
-         RYRoB9fPhT7Kz+HD22Mllss/9YYVwWq5Ko/2Almanz74VKxbEdVwkaahWWu45snG78wm
-         IkdnkcAOSEMDMGJYwy7GI6HmIkRfchrKw2KZW5Y9DVhl19vNqMduyoDPn0rt+pgNNDdc
-         p5sA7UtO4miy3p/rWwYEnyubHaeXTMeeiOMujqiTiRDjsvVK1N4S+2f05QcGcQOPhVC1
-         bAgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ucwMhSrbSIS+geFiJPFbLh/10bUBQsiRpXGuHS0d2Ek=;
-        b=Lb04Ezv1+clx6DNkhjLUHowOj4K0OVFu4N6Xh9Hv3rWbuu5t6xsaoD0z2MPSm0EuiD
-         ILmSKvLzxmu3hqicj07JB+gDMBDfzFNRu3UQ9OFsP0uFuECxu8/mNmz362vYU4AImF2x
-         PKN6zbdvWk431mLuoCmcL2Ka7ISxfdk9Pngrkhw7VyEJOwL0VlHf2dO+tJtxtySYqoKx
-         /4qRaroDJ6cFVaJBEd1h2SQpnUT8pUvCCL9RAo4XWas+5DDxmwR/ovCXRIDsXS8gOYTz
-         GwWsdE7w1broc6+0tNGAr8yf92boulkqOfSBtgO9rVZL1hIuTGhQjk+HRozFuR9lf6Xb
-         nAaA==
-X-Gm-Message-State: AOAM533vwta1Lu/eYTobGW4hPfCSj8d3LJc8O8Ghk23HETghQM6AGQ6/
-        8XqdkAzLj63S5si8MMW5nAc=
-X-Google-Smtp-Source: ABdhPJxHemgMxApjKK6EZW0+jIi/iIgDCvbWbdKO+NVvljwfhmqcOFUjD5pxlm5zMpX00z1i5pOjWg==
-X-Received: by 2002:a17:902:aa4c:: with SMTP id c12mr403702plr.237.1597369190464;
-        Thu, 13 Aug 2020 18:39:50 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id fv21sm6202032pjb.16.2020.08.13.18.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 18:39:49 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 10:39:48 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>, kurt@linutronix.de,
-        Raul Rangel <rrangel@google.com>,
-        "S, Shirish" <Shirish.S@amd.com>
-Subject: Re: Recursive/circular locking in
- serial8250_console_write/serial8250_do_startup
-Message-ID: <20200814013948.GA356684@jagdpanzerIV.localdomain>
-References: <20200812154813.GA46894@roeck-us.net>
- <20200813050629.GA95559@roeck-us.net>
- <20200813115948.GA3854926@kroah.com>
- <20200813142022.GY1891694@smile.fi.intel.com>
- <c9421d8a-7a2b-23ce-61f5-41f2136cf228@roeck-us.net>
- <e78b85b6-3134-290e-88e2-f1d6e88f0db0@roeck-us.net>
- <20200813180013.GZ1891694@smile.fi.intel.com>
+        Thu, 13 Aug 2020 21:40:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:15604 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726546AbgHNBkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 21:40:15 -0400
+IronPort-SDR: sw0LBl4GtSKKiuNby4RfQAjj3KETIgFTrOxaZdumOCQDlYOVJoeyn0JhWr8lu96NCMneLsGupm
+ D5vhZaqmFkHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="154309079"
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="154309079"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 18:40:15 -0700
+IronPort-SDR: nn2/a2uT0dfmJs5glicqz7PZfMhJpugjrmgjWvIyz7YuOXGxPzQe/4+tNLDXxM2PX95RhtOOBc
+ WiIigei2EWPA==
+X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
+   d="scan'208";a="470421279"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 18:40:15 -0700
+Date:   Thu, 13 Aug 2020 18:40:14 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] KVM: x86: move kvm_vcpu_gfn_to_memslot() out of
+ try_async_pf()
+Message-ID: <20200814014014.GA4845@linux.intel.com>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
+ <20200807141232.402895-2-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200813180013.GZ1891694@smile.fi.intel.com>
+In-Reply-To: <20200807141232.402895-2-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Fri, Aug 07, 2020 at 04:12:30PM +0200, Vitaly Kuznetsov wrote:
+> No functional change intended. Slot flags will need to be analyzed
+> prior to try_async_pf() when KVM_MEM_PCI_HOLE is implemented.
 
-On (20/08/13 21:00), Andy Shevchenko wrote:
-> That's basically what Sergey (IIRC) proposed in [1].
-> (You missed enable_irq() part in above)
+Why?  Wouldn't it be just as easy, and arguably more appropriate, to add
+KVM_PFN_ERR_PCI_HOLE and update handle_abornmal_pfn() accordinaly?
+
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c         | 14 ++++++++------
+>  arch/x86/kvm/mmu/paging_tmpl.h |  7 +++++--
+>  2 files changed, 13 insertions(+), 8 deletions(-)
 > 
-> I guess we may try it. Sergey, can you submit a formal patch?
-
-OK, let me try.
-
-	-ss
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 862bf418214e..fef6956393f7 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4042,11 +4042,10 @@ static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
+>  }
+>  
+> -static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
+> -			 gpa_t cr2_or_gpa, kvm_pfn_t *pfn, bool write,
+> -			 bool *writable)
+> +static bool try_async_pf(struct kvm_vcpu *vcpu, struct kvm_memory_slot *slot,
+> +			 bool prefault, gfn_t gfn, gpa_t cr2_or_gpa,
+> +			 kvm_pfn_t *pfn, bool write, bool *writable)
+>  {
+> -	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+>  	bool async;
+>  
+>  	/* Don't expose private memslots to L2. */
+> @@ -4082,7 +4081,7 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+>  	bool exec = error_code & PFERR_FETCH_MASK;
+>  	bool lpage_disallowed = exec && is_nx_huge_page_enabled();
+>  	bool map_writable;
+> -
+> +	struct kvm_memory_slot *slot;
+>  	gfn_t gfn = gpa >> PAGE_SHIFT;
+>  	unsigned long mmu_seq;
+>  	kvm_pfn_t pfn;
+> @@ -4104,7 +4103,10 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+>  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+>  	smp_rmb();
+>  
+> -	if (try_async_pf(vcpu, prefault, gfn, gpa, &pfn, write, &map_writable))
+> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+> +
+> +	if (try_async_pf(vcpu, slot, prefault, gfn, gpa, &pfn, write,
+> +			 &map_writable))
+>  		return RET_PF_RETRY;
+>  
+>  	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r))
+> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+> index 0172a949f6a7..5c6a895f67c3 100644
+> --- a/arch/x86/kvm/mmu/paging_tmpl.h
+> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
+> @@ -779,6 +779,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+>  	int write_fault = error_code & PFERR_WRITE_MASK;
+>  	int user_fault = error_code & PFERR_USER_MASK;
+>  	struct guest_walker walker;
+> +	struct kvm_memory_slot *slot;
+>  	int r;
+>  	kvm_pfn_t pfn;
+>  	unsigned long mmu_seq;
+> @@ -833,8 +834,10 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+>  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+>  	smp_rmb();
+>  
+> -	if (try_async_pf(vcpu, prefault, walker.gfn, addr, &pfn, write_fault,
+> -			 &map_writable))
+> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, walker.gfn);
+> +
+> +	if (try_async_pf(vcpu, slot, prefault, walker.gfn, addr, &pfn,
+> +			 write_fault, &map_writable))
+>  		return RET_PF_RETRY;
+>  
+>  	if (handle_abnormal_pfn(vcpu, addr, walker.gfn, pfn, walker.pte_access, &r))
+> -- 
+> 2.25.4
+> 
