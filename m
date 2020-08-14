@@ -2,132 +2,137 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6192078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D54320774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597427244;
+	bh=akv/UmJpcxiw7tC5PwlDZdR2KC9Vs7eUyK1bJfdTthU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ejkYDJaR9UhafACIYWLt+Ia8z3ZlM2RC5liHOwATxir+M+UT1pxrrLKsEYGjRaTx9
+	 +jBXLoGP1ed56DMcL9d7ndNI133UnEyKEM+JGaiXCNxPp7h26TPbValNK4SqGLoXWq
+	 7yC4dOnpttcVqDVBS+FtjDjp/sBcqcp+TOjVpZNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgHNRq6 convert rfc822-to-8bit (ORCPT
+        id S1728395AbgHNRrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36630 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 13:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNRq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:46:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726844AbgHNRrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:47:09 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B91CC20774;
-        Fri, 14 Aug 2020 17:46:54 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 13:46:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        =?UTF-8?B?VGhpw6li?= =?UTF-8?B?YXVk?= Weksteen 
-        <tweek@google.com>, Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] selinux: add tracepoint on denials
-Message-ID: <20200814134653.0ba7f64e@oasis.local.home>
-In-Reply-To: <3518887d-9083-2836-a8db-c7c27a70c990@sony.com>
-References: <20200813144914.737306-1-tweek@google.com>
-        <15e2e26d-fe4b-679c-b5c0-c96d56e09853@gmail.com>
-        <CA+zpnLcf94HGmE=CGH6nT8ya0oax5orXc5nP1qToUgaca6FeQg@mail.gmail.com>
-        <CAEjxPJ50vrauP7dd-ek15vwnMN1kvAyvYSc0fhR4xwCJEQSFxQ@mail.gmail.com>
-        <ad64b5af-93de-e84e-17ca-40d8dd3cfe44@sony.com>
-        <CAEjxPJ67G24T1a5WitmMqL4RUpjOgQFwpQ8unO1-OXSS=35V4Q@mail.gmail.com>
-        <3518887d-9083-2836-a8db-c7c27a70c990@sony.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6482A20885
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597427228;
+        bh=akv/UmJpcxiw7tC5PwlDZdR2KC9Vs7eUyK1bJfdTthU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M1BVD6SnLlAB2txByxPfGzUWpVOp3wq3n7nM5a54Y2PQJRoJlEXq4f0QbkFagm6pg
+         9dBY7bMOODEevE6mAvxFYo35Mi9HPTiws8gRQ5R225rEKUaODsFf8AGNqWHm7C1l6j
+         PV+URg/mt57tVczx/6gYBnLYKuLv/hYkJ1cGVOd8=
+Received: by mail-wr1-f52.google.com with SMTP id f7so9079516wrw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:47:08 -0700 (PDT)
+X-Gm-Message-State: AOAM5329retzUHMWEiLlrROY+ZIQBEvtqnVJWuZLKw0trga6u6DdsYG+
+        HY0UBR6RjeX/1nsS2tCcpPdPi94JZ7S+2g51RHkRkg==
+X-Google-Smtp-Source: ABdhPJyUWIngePPeonF9Qb5pi4t0BlSXHz3udbBaINEYqUbzO/kdzoB39Yt/n/fFkRBlsagQA4nriALJiUYA+FrSZsE=
+X-Received: by 2002:adf:e90f:: with SMTP id f15mr3752426wrm.18.1597427226974;
+ Fri, 14 Aug 2020 10:47:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200130162340.GA14232@rapoport-lnx>
+In-Reply-To: <20200130162340.GA14232@rapoport-lnx>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 14 Aug 2020 10:46:55 -0700
+X-Gmail-Original-Message-ID: <CALCETrVOWodgnRBFpPLEnc_Bfg=fgfAJiD1p-eE1uwCMc6c9Tg@mail.gmail.com>
+Message-ID: <CALCETrVOWodgnRBFpPLEnc_Bfg=fgfAJiD1p-eE1uwCMc6c9Tg@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret"
+ memory areas
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 19:22:13 +0200
-peter enderborg <peter.enderborg@sony.com> wrote:
+On Thu, Jan 30, 2020 at 8:23 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> Hi,
+>
+> This is essentially a resend of my attempt to implement "secret" mappings
+> using a file descriptor [1].
+>
+> I've done a couple of experiments with secret/exclusive/whatever
+> memory backed by a file-descriptor using a chardev and memfd_create
+> syscall. There is indeed no need for VM_ flag, but there are still places
+> that would require special care, e.g vm_normal_page(), madvise(DO_FORK), so
+> it won't be completely free of core mm modifications.
+>
+> Below is a POC that implements extension to memfd_create() that allows
+> mapping of a "secret" memory. The "secrecy" mode should be explicitly set
+> using ioctl(), for now I've implemented exclusive and uncached mappings.
 
-> On 8/14/20 7:08 PM, Stephen Smalley wrote:
-> > On Fri, Aug 14, 2020 at 1:07 PM peter enderborg
-> > <peter.enderborg@sony.com> wrote:  
-> >> On 8/14/20 6:51 PM, Stephen Smalley wrote:  
-> >>> On Fri, Aug 14, 2020 at 9:05 AM Thiébaud Weksteen <tweek@google.com> wrote:  
-> >>>> On Thu, Aug 13, 2020 at 5:41 PM Stephen Smalley
-> >>>> <stephen.smalley.work@gmail.com> wrote:  
-> >>>>> An explanation here of how one might go about decoding audited and
-> >>>>> tclass would be helpful to users (even better would be a script to do it
-> >>>>> for them).  Again, I know how to do that but not everyone using
-> >>>>> perf/ftrace will.  
-> >>>> What about something along those lines:
-> >>>>
-> >>>> The tclass value can be mapped to a class by searching
-> >>>> security/selinux/flask.h. The audited value is a bit field of the
-> >>>> permissions described in security/selinux/av_permissions.h for the
-> >>>> corresponding class.  
-> >>> Sure, I guess that works.  Would be nice if we just included the class
-> >>> and permission name(s) in the event itself but I guess you viewed that
-> >>> as too heavyweight?  
-> >> The class name is added in part 2. Im not sure how a proper format for permission
-> >> would look like in trace terms. It is a list, right?  
-> > Yes.  See avc_audit_pre_callback() for example code to log the permission names.  
-> 
-> I wrote about that on some of the previous sets. The problem is that trace format is quite fixed. So it is lists are not
-> that easy to handle if you want to filter in them. You can have a trace event for each of them. You can also add
-> additional trace event "selinux_audied_permission" for each permission. With that you can filter out tclass or permissions.
-> 
-> But the basic thing we would like at the moment is a event that we can debug in user space.
+Hi-
 
-We have a trace_seq p helper, that lets you create strings in
-TP_printk(). I should document this more. Thus you can do:
+Sorry for the extremely delayed response.
 
-extern const char *audit_perm_to_name(struct trace_seq *p, u16 class, u32 audited);
-#define __perm_to_name(p, class, audited) audit_perm_to_name(p, class, audited)
+I like the general concept, and I like the exclusive concept.  While
+it is certainly annoying for the kernel to manage non-direct-mapped
+pages, I think it's the future.  But I have serious concerns about the
+uncached part.  Here are some concerns.
 
-	TP_printk("tclass=%u audited=%x (%s)",
-		__entry->tclass,
-		__entry->audited,
-		__perm_to_name(__entry->tclass, __entry->audited))
+If it's done at all, I think it should be MFD_SECRET_X86_UNCACHED.  I
+think that uncached memory is outside the scope of things that can
+reasonably be considered to be architecture-neutral.  (For example, on
+x86, UC and WC have very different semantics, and UC has quite
+different properties than WB for things like atomics.  Also, the
+performance of UC is interesting at best, and the ways to even
+moderately efficiently read from UC memory or write to UC memory are
+highly x86-specific.)
 
+I'm a little unconvinced about the security benefits.  As far as I
+know, UC memory will not end up in cache by any means (unless
+aliased), but it's going to be tough to do much with UC data with
+anything resembling reasonable performance without derived values
+getting cached.  It's likely entirely impossible to do it reliably
+without asm.  But even with plain WB memory, getting it into L1 really
+should not be that bad unless major new vulnerabilities are
+discovered.  And there are other approaches that could be more
+arch-neutral and more performant.  For example, there could be an
+option to flush a few cache lines on schedule out.  This way a task
+could work on some (exclusive but WB) secret memory and have the cache
+lines flushed if anything interrupts it.  Combined with turning SMT
+off, this could offer comparable protection with much less overhead.
 
-const char *audit_perm_to_name(struct trace_seq *p, u16 tclass, u32 av)
-{
-	const char *ret = trace_seq_buffer_ptr(p);
-	int i, perm;
+UC also doesn't seem reliable on x86, sadly.  From asking around,
+there are at least a handful of scenarios under which the kernel can
+ask the CPU for UC but get WB anyway.  Apparently Xen hypervisors will
+do this unless the domain has privileged MMIO access, and ESXi will do
+it under some set of common circumstances.  So unless we probe somehow
+or have fancy enumeration or administrative configuration, I'm not
+sure we can even get predictable behavior if we hand userspace a
+supposedly UC mapping.  Giving user code WB when it thinks it has UC
+could end badly.
 
-	( some check for tclass integrity here)
-
-	perms = secclass_map[tclass-1].perms;
-
-	i = 0;
-	perm = 1;
-	while (i < (sizeof(av) * 8)) {
-		if ((perm & av) && perms[i]) {
-			trace_seq_printf(p, " %s", perms[i]);
-			av &= ~perm;
-		}
-		i++;
-		perm <<= 1;
-	}
-
-	return ret;
-}
-
-Note, this wont work for perf and trace-cmd as it wouldn't know how to
-parse it, but if the tclass perms are stable, you could create a plugin
-to libtraceevent that can do the above as well.
-
--- Steve
+--Andy
