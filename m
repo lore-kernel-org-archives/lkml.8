@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50978C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5562420855
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C5C20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPcBQTWc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NnWG0R80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgHNRag (ORCPT
+        id S1728536AbgHNR1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
+        Fri, 14 Aug 2020 13:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbgHNR1q (ORCPT
+        with ESMTP id S1728480AbgHNR1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:27:46 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885C0C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:45 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id c124so3433418wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:45 -0700 (PDT)
+        Fri, 14 Aug 2020 13:27:35 -0400
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A140C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:34 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id gg11so3575516ejb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:27:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=np+YjQo4chu4bS0e//GH8nyclC7wFRenYBsdsyZN+zk=;
-        b=pPcBQTWcc0pB+A1Qkgyg36kQKBhw6A/0CZ5PXyKV9kUI5he4/+mJy2m/2Z2DVjNjII
-         8UZtagmk1MICeu1fM9xQeBBKEXfd3Q/Af6l1AhqGnW02K5SLJndTbN6hxWqsI5U75N/D
-         bQVQGpbGqdhv5DDR8Q8C7NbIZhVU0qqjL054jTmF2xIVXVxSE/2IRAn+gYyvT6WL8YIJ
-         HVPEqgkP1vHe3O8MQLU1DuWBLaG3kzbf0CtyRYJ4WbL1tBvFoKr0I2IWdVa5PiLx/gA4
-         3vm0svprRoNvMg/ImX3wCNl4HgPmXhS6H9WFhvChpekjkLznqiC2BXgy2tmf0g63pXLy
-         iKKw==
+        bh=yqDvbJRB7ghhYUJnBffV6Wdevt15gkjdAFpaNJ5xwpI=;
+        b=NnWG0R80eq9R1RVTHFiLH0+CbG24xMo/Pk8D6hlayJD6/jup0+WhQpn2FfApkw/OLH
+         A63ofaKuhmI+m7v2+zIDRG9RtiQN+RQxrkKbeQwebMG1LRwJfphYfEQnq2+fGbTB4g4z
+         0ar2+Of0emarFbHb/5bMHP0CN+28ZVQ9W+t+U5OB3hPR/CDoy7ZVdEn9RtcK63/ZFdkY
+         s1zGYNIlG0CiuVOTUOXbquRYk/zS85v9JTfIXFwSdH8/mWbGe3nRg0LhqUaJ6IYnJ4n/
+         CkC+dT3E3iHy6futQCIpKS3ojibi5A30STpXasKQQLHxZt/PMBf4G/RtJ2x3i91KcLxv
+         91nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=np+YjQo4chu4bS0e//GH8nyclC7wFRenYBsdsyZN+zk=;
-        b=QnY+k+nt8WoKkLGmEPDnZTIU4xZXjOUnlSeE2Sx1B14ZiAlW8KpyjwKIKFYR6l9ic9
-         A8aH3zLAsMJL4ki+c2GbLH3LwYffAhsnmgt+p35V8yYEsoXlt7JzINbAHb0wdB0o43du
-         sBcniE7+10KQt/jJk5o7SdyC4PDw/R8o15li7zJgTBAJrX59I7sapmgX9s+i54S0MR+q
-         RcASlGYfyS02vbYRmJ88Ii4Zh42Oo/4lEZQgLUuY6KDb0usEw9lxaix74sASBS4leF1f
-         3P7p5yb7asyqavsr1WX5Abn1ZYi36h+RJ8aEQREeKjruI5S+TGq75lRuSiamkOQqxk4b
-         EY9w==
-X-Gm-Message-State: AOAM533Mo2PymPpxcWpUAL1wGckoPaMiLK5KMXaCO2HuT6V8EmU0/Yjb
-        KLQFUGDmmaO/ohO7TjeqQ/GHWQeVK9BuQpzW
-X-Google-Smtp-Source: ABdhPJxMdFS/yNyg4MwjTnWmhaQzL0z42GnjWIS4vVb2p1bJE9xvcCYCxX7TZZq23RaIt0i+3EFX9Qy944e9OQDZ
-X-Received: by 2002:a7b:c8da:: with SMTP id f26mr3553163wml.126.1597426064102;
- Fri, 14 Aug 2020 10:27:44 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:26:50 +0200
+        bh=yqDvbJRB7ghhYUJnBffV6Wdevt15gkjdAFpaNJ5xwpI=;
+        b=tEIu7YKLzniUoOWjvVUOOf/44ncH92/9HK2DAZ8CttxaLlL6axEak/KjWZbo7+smiK
+         1530nK01nkllrPEt8eKtg1zNkfaz35n7AQ2gvHFo5Q8RhA0oRvw0jqVEbgwi5R1XCXTe
+         Y25nmqKdYiS4MafEXLsjMRPLJBno2XtA6XkaLH9I+/141DxvDu5EgZEe5vkiKGv3Yup+
+         VIW/sAp+8gBZzixS+e4slSauDfV6knv1Pqx8UlmPq3qmxIRVqIYAKt/qXkDppvobgLkl
+         45TTiLRIQZSFPuLhgMA1/67Fe3YQ0hzGUPnzAqEV29Psc7tiKiVgfwb9cVPVZr65Oz2y
+         NDkA==
+X-Gm-Message-State: AOAM533qtcjtYpYBhvgAoKhA6jkms6Ese/AsdoqEO0j1TTz81YVD+6Of
+        TuCi5R0fg8lF9QslcOoQAw8Jenz374oXh53m
+X-Google-Smtp-Source: ABdhPJyJZIfoQU8kIAVBaHLf+CE/8nKps8LgSd0/B5y0ypQpapc4GyhKksQd0R944+AQ9wkt5psrYlbDykyLb/2S
+X-Received: by 2002:a17:906:c7c8:: with SMTP id dc8mr3324691ejb.285.1597426051207;
+ Fri, 14 Aug 2020 10:27:31 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:26:45 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <c628647bade1a8f80dca858b0c0fba74cfa08271.1597425745.git.andreyknvl@google.com>
+Message-Id: <272b331db9919432cd6467a0bd5ce73ffc46fc97.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 08/35] kasan: rename generic/tags_report.c files
+Subject: [PATCH 03/35] kasan: shadow declarations only for software modes
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -86,81 +86,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename generic_report.c to report_generic.c and tags_report.c to
-report_tags.c, as their content is more relevant to report.c file,
-then to generic.c or tags.c.
+This is a preparatory commit for the upcoming addition of a new hardware
+tag-based (MTE-based) KASAN mode.
 
-No functional changes.
+Group shadow-related KASAN function declarations and only define them
+for the two existing software modes.
+
+No functional changes for software modes.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/kasan/Makefile                               | 12 ++++++------
- mm/kasan/report.c                               |  2 +-
- mm/kasan/{generic_report.c => report_generic.c} |  0
- mm/kasan/{tags_report.c => report_tags.c}       |  0
- 4 files changed, 7 insertions(+), 7 deletions(-)
- rename mm/kasan/{generic_report.c => report_generic.c} (100%)
- rename mm/kasan/{tags_report.c => report_tags.c} (100%)
+ include/linux/kasan.h | 44 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-index 40366d706b7c..007c824f6f43 100644
---- a/mm/kasan/Makefile
-+++ b/mm/kasan/Makefile
-@@ -6,13 +6,13 @@ KCOV_INSTRUMENT := n
- # Disable ftrace to avoid recursion.
- CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_generic.o = $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_generic_report.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_init.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_quarantine.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_report_generic.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_report_tags.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_shadow.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index bd5b4965a269..44a9aae44138 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -3,16 +3,24 @@
+ #define _LINUX_KASAN_H
  
- # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
- # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
-@@ -23,14 +23,14 @@ CC_FLAGS_KASAN_RUNTIME += -DDISABLE_BRANCH_PROFILING
+ #include <linux/types.h>
++#include <asm/kasan.h>
  
- CFLAGS_common.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_generic.o := $(CC_FLAGS_KASAN_RUNTIME)
--CFLAGS_generic_report.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_init.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_quarantine.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_report.o := $(CC_FLAGS_KASAN_RUNTIME)
-+CFLAGS_report_generic.o := $(CC_FLAGS_KASAN_RUNTIME)
-+CFLAGS_report_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_shadow.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
--CFLAGS_tags_report.o := $(CC_FLAGS_KASAN_RUNTIME)
+ struct kmem_cache;
+ struct page;
+ struct vm_struct;
+ struct task_struct;
  
- obj-$(CONFIG_KASAN) := common.o report.o
--obj-$(CONFIG_KASAN_GENERIC) += init.o generic.o generic_report.o shadow.o quarantine.o
--obj-$(CONFIG_KASAN_SW_TAGS) += init.o shadow.o tags.o tags_report.o
-+obj-$(CONFIG_KASAN_GENERIC) += init.o generic.o report_generic.o shadow.o quarantine.o
-+obj-$(CONFIG_KASAN_SW_TAGS) += init.o report_tags.o shadow.o tags.o
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 7c025d792e2f..f16591ba9e2e 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * This file contains common generic and tag-based KASAN error reporting code.
-+ * This file contains common KASAN error reporting code.
-  *
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * Author: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/report_generic.c
-similarity index 100%
-rename from mm/kasan/generic_report.c
-rename to mm/kasan/report_generic.c
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/report_tags.c
-similarity index 100%
-rename from mm/kasan/tags_report.c
-rename to mm/kasan/report_tags.c
+-#ifdef CONFIG_KASAN
++#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ 
+ #include <linux/pgtable.h>
+-#include <asm/kasan.h>
++
++/* Software KASAN implementations use shadow memory. */
++
++#ifdef CONFIG_KASAN_SW_TAGS
++#define KASAN_SHADOW_INIT 0xFF
++#else
++#define KASAN_SHADOW_INIT 0
++#endif
+ 
+ extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+ extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+@@ -29,6 +37,23 @@ static inline void *kasan_mem_to_shadow(const void *addr)
+ 		+ KASAN_SHADOW_OFFSET;
+ }
+ 
++int kasan_add_zero_shadow(void *start, unsigned long size);
++void kasan_remove_zero_shadow(void *start, unsigned long size);
++
++#else /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
++
++static inline int kasan_add_zero_shadow(void *start, unsigned long size)
++{
++	return 0;
++}
++static inline void kasan_remove_zero_shadow(void *start,
++					unsigned long size)
++{}
++
++#endif /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
++
++#ifdef CONFIG_KASAN
++
+ /* Enable reporting bugs after kasan_disable_current() */
+ extern void kasan_enable_current(void);
+ 
+@@ -69,9 +94,6 @@ struct kasan_cache {
+ 	int free_meta_offset;
+ };
+ 
+-int kasan_add_zero_shadow(void *start, unsigned long size);
+-void kasan_remove_zero_shadow(void *start, unsigned long size);
+-
+ size_t __ksize(const void *);
+ static inline void kasan_unpoison_slab(const void *ptr)
+ {
+@@ -137,14 +159,6 @@ static inline bool kasan_slab_free(struct kmem_cache *s, void *object,
+ 	return false;
+ }
+ 
+-static inline int kasan_add_zero_shadow(void *start, unsigned long size)
+-{
+-	return 0;
+-}
+-static inline void kasan_remove_zero_shadow(void *start,
+-					unsigned long size)
+-{}
+-
+ static inline void kasan_unpoison_slab(const void *ptr) { }
+ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+ 
+@@ -152,8 +166,6 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+ 
+ #ifdef CONFIG_KASAN_GENERIC
+ 
+-#define KASAN_SHADOW_INIT 0
+-
+ void kasan_cache_shrink(struct kmem_cache *cache);
+ void kasan_cache_shutdown(struct kmem_cache *cache);
+ void kasan_record_aux_stack(void *ptr);
+@@ -168,8 +180,6 @@ static inline void kasan_record_aux_stack(void *ptr) {}
+ 
+ #ifdef CONFIG_KASAN_SW_TAGS
+ 
+-#define KASAN_SHADOW_INIT 0xFF
+-
+ void kasan_init_tags(void);
+ 
+ void *kasan_reset_tag(const void *addr);
 -- 
 2.28.0.220.ged08abb693-goog
 
