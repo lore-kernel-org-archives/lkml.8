@@ -2,136 +2,195 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7584C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C71C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F7B20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681AE2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 19:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nsEdusix"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NBWF02fE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHNTWv (ORCPT
+        id S1728183AbgHNTWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 15:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
+        Fri, 14 Aug 2020 15:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHNTWu (ORCPT
+        with ESMTP id S1726196AbgHNTWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:22:50 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC5BC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:22:50 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id c16so11029476ejx.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:22:50 -0700 (PDT)
+        Fri, 14 Aug 2020 15:22:54 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9842DC061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:22:53 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id bo3so11020179ejb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 12:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Gh/neF9ziJj56PStHE/QUZcQmekSoXrkmgunMbnXSWg=;
-        b=nsEdusixWGWlqqcRwywxuEcnS0tRoDLUZ5AHp1gy4TV6NF4nPagOWT2h656wgfLODg
-         duAPjQ237NbgC/fxEmuEbnPx2xPn/BpCCaKavmn0akmuPquJgdZvYiyrua4MY+g3eQW9
-         TgsTdAyoD3Ifs0tuNk8n6z0uL+4msbqxuTVzCABiJfXTLm0IWrK7qzfln3p0iz3rL97V
-         L71AVTtHP8h6QhfIaYwh/6WSvmA8szEmbdFBnVykMukugE7Rop7nMJqLeEtjiG52MRh5
-         gY64O7S08lc/qMuIYBW/j79Fj52HP/BSAroHBmF2cUR95qpT8pOMrrSYigygRC8CTKgo
-         bmUw==
+        bh=oiNMm6FF5XKaj0T6wdRHFF4cYaSW0F3pSaRh9jzk7hI=;
+        b=NBWF02fE5aok65sYlsKAguAGBhIi0yOEDEIpAg4NnCiZlfpKo/Bo5H+uqcf1vrmTbl
+         cDy1oMclgrqlYE3VkShRO7PrfvXP3mqoExvqqQG7Kho6LXqxRAEAJ7LHZJPYH1IgmoXO
+         b4oSo5jRdCJgwsDViQFNMltfaUj0s49jkYPglpXhGd1NdFtIlxJoVR97WT+j0Rc7ucId
+         xO654p4Wf0SlwJKJTx5GfM27NPlWVuTdH9WEupRKwU49LpvAM9mdtjzNU7LMkDlRuRZ6
+         dB0Q4Vj/MvUqnFDdaT1jua9Ei+QuO5E/mVdnh75I4Fsk6RhR20r/pI6wIGT7qS5hlnJJ
+         F1rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Gh/neF9ziJj56PStHE/QUZcQmekSoXrkmgunMbnXSWg=;
-        b=hftVA3VJTOVNUoL/jY5SJSaZWHH3m+v7vXuaeox5cMTuRY8doGbICXXkizaQ5uNa2p
-         e5ae29u4TQuR5iK/tYDLKN23QPa/9rL+cP3Amh1UdLeIjomvIy1I/YYh44WP/r32eL6P
-         sMDYmNNUUR48qRA3ydyTWiOQERGRnOsaFZLm+7bx7T24Xqgs7l/XIe7tM9w0d4Nx5Y4D
-         Fo9z7kjrMSI+J0aELwwE5ASktwrQdn/hXKjynVtQRDuyikyfeXLXBhXEWc69HjVAMKc6
-         cGi42CYSULd8jYLV6w2sFEyv15kZzOE6m9xDGpCeIlLWelIlY6hMeD/is4+2+YswM+zT
-         fuFA==
-X-Gm-Message-State: AOAM532115zhZkT5XAKNm2iDc8ZHWr+Vg4HR9ZXWMlVCE8I7UO0/Vv1l
-        QUkqnu6zjHbTD+aZO57j0fqCtSAjxOyXSAzJrSa8eg==
-X-Google-Smtp-Source: ABdhPJw7uK+zbS7upvoYuMM2rqJ8bAKQKnzwdI8tLocljcFEMVvlLLlyo7HoKL67aDpo1nVSQ/nJ72jMN6nXFZS8UEI=
-X-Received: by 2002:a17:906:4994:: with SMTP id p20mr3575441eju.299.1597432968735;
- Fri, 14 Aug 2020 12:22:48 -0700 (PDT)
+        bh=oiNMm6FF5XKaj0T6wdRHFF4cYaSW0F3pSaRh9jzk7hI=;
+        b=jDKGzUjyVrOVPpb4q9u+p4m2WpWzvb/cwtVAa/lv5JdGr+3ugrlpy4MXTUSkv3qiVT
+         E4N/WMo4GfZlAt64QP3kE5nQbMyCptqrapsXGtakro4XHU54IRy7SJIzGkK2gyFOQ68m
+         RE/qBCA0pmPlYtXewWwR4+NCjOzM4QEJlsqabunvvxh0ZSUl1eaEVPmAc1+Heg2SIXti
+         UvezXf9xOO/r7Z6P9Aq6ZPS+YJT9dxgZj//k7vNOUdF4FAYmb4e7/jIH1U1fiET6UFn2
+         vJukvP8JJThQF67JVMefkRdqeFzZttCOIgR16W6IiCGFZ1ZcMJjYG0wvoR1Qh7ap8eNE
+         iolA==
+X-Gm-Message-State: AOAM532qsLjqAylHliVB9Z5crZmLC8jndg3jwuCaZmzidFzLoi/aDkmq
+        12QvEZTK7cAW/ZBDBZRsN8mPyM3fpeFLu0urIBAD0Q==
+X-Google-Smtp-Source: ABdhPJy1LGMGslwbxEbeZovOCWCkPEUxGJyJQFGFqxsDCl1xJrR6njxAdcpGXUNR23cjEUtboIPf0+SnLxFncrZKNbQ=
+X-Received: by 2002:a17:907:11d0:: with SMTP id va16mr4031828ejb.426.1597432972238;
+ Fri, 14 Aug 2020 12:22:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com>
- <20200813012125.GV1665100@dtor-ws>
-In-Reply-To: <20200813012125.GV1665100@dtor-ws>
-From:   Raul Rangel <rrangel@google.com>
-Date:   Fri, 14 Aug 2020 13:22:37 -0600
-Message-ID: <CAHQZ30D5irdR+cSiksXAtDDi58-qCpHSv=-OXyPqOydH8mgpeQ@mail.gmail.com>
-Subject: Re: PS/2 + i8042 intermixing commands
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "S, Shirish" <Shirish.S@amd.com>
+References: <20200814055239.47348-1-sangyan@huawei.com> <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
+ <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com> <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 14 Aug 2020 15:22:16 -0400
+Message-ID: <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Sang Yan <sangyan@huawei.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>, xiexiuqi@huawei.com,
+        guohanjun@huawei.com, luanjianhai@huawei.com, zhuling8@huawei.com,
+        luchunhua@huawei.com, James Morse <james.morse@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for clarifying Dmitry. I'll get a patch pushed up next week.
+On Fri, Aug 14, 2020 at 7:24 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> Hi,
+>
+> On 08/14/20 at 04:21pm, Sang Yan wrote:
+> >
+> >
+> > On 08/14/20 14:58, Dave Young wrote:
+> > > On 08/14/20 at 01:52am, Sang Yan wrote:
+> > >> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
+> > >> copy all segments from vmalloced memory to kernel boot memory,
+> > >> because of disabled mmu.
+> > >
+> > > It is not the case on all archs, I assume your case is arm64, please
+> > > describe it in patch log :)
+> > >
+> > Yes, it's particularly obvious on arm64. I will add it to the patch log,
+> > and test how long it takes on x86 and other arch.
+> >
+> > > About the arm64 problem, I know Pavel Tatashin is working on a patchset
+> > > to improve the performance with enabling mmu.
+> > >
+> > > I added Pavel in cc, can you try his patches?
+> > >
+> > Thanks for your tips, I will try these patches. @Pavel.
+> > Disable mmu after finishing copying pages?
+> > >>
+> > >> We introduce quick kexec to save time of copying memory as above,
+> > >> just like kdump(kexec on crash), by using reserved memory
+> > >> "Quick Kexec".
+> > >
+> > > This approach may have gain, but it also introduce extra requirements to
+> > > pre-reserve a memory region.  I wonder how Eric thinks about the idea.
+> > >
+> > > Anyway the "quick" name sounds not very good, I would suggest do not
+> > > introduce a new param, and the code can check if pre-reserved region
+> > > exist then use it, if not then fallback to old way.
+> > >
+> > aha. I agree with it, but I thought it may change the old behaviors of
+> > kexec_load.
+> >
+> > I will update a new patch without introducing new flags and new params.
+>
+> Frankly I'm still not sure it is worth to introduce a new interface if the
+> improvement can be done in arch code like Pavel is doing.  Can you try
+> that first?
 
-On Wed, Aug 12, 2020 at 7:21 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Thu, Aug 06, 2020 at 09:28:41AM -0600, Raul Rangel wrote:
-> > >
-> > > <- atkbd_event_work->atkbd_set_leds
-> > > [KB recv data: 0xed] # CMD 10
-> > > <- Wait, where is the data?
-> > >
-> > > <- Continuation of i8042_port_close?
-> > > [KB recv cmd: 0x60] # CMD #14
-> > > [KB recv data: 0x43]
-> > > [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
-> > > [KB set CTR_RAM(0x00)=0x43 (old:0x41)]
-> > > [AUX IRQ enable]
-> > >
-> > > <- Here is the data!
-> > > [KB recv data: 0x00] # CMD 10 (data)
-> > > [KB Unsupported i8042 data 0x00]
-> > > [KB recv data: 0x00] <- Did the host retry?
-> > > [KB Unsupported i8042 data 0x00]
-> > >
-> > > <- atkbd_event_work->atkbd_set_repeat_rate
-> > > [KB recv data: 0xf3] # CMD #11
-> > > [KB recv data: 0x00]
-> > > [KB eaten by STATE_SETREP: 0x00]
-> > >
-> > > [KB recv cmd: 0xd4] # CMD #15
-> > > [KB recv data: 0xf2]
-> > > [STATE_SEND_TO_MOUSE: 0xf2]
-> >
-> > As you can see CMD #10 starts between #13 and #14, and then completes
-> > after #14. Is this expected behavior?
-> >
-> > I'm not quite sure if #13 and #14 are coming from i8042_port_close. I
-> > don't have a function trace available, but it seems to fit.
-> >
-> > I found this comment:
-> > /*
-> >  * Writers to AUX and KBD ports as well as users issuing i8042_command
-> >  * directly should acquire i8042_mutex (by means of calling
-> >  * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
-> >  * they do not disturb each other (unfortunately in many i8042
-> >  * implementations write to one of the ports will immediately abort
-> >  * command that is being processed by another port).
-> >  */
-> > static DEFINE_MUTEX(i8042_mutex);
-> >
-> > Does that not mean that i8042_port_close, i8042_enable_kbd_port,
-> > i8042_enable_aux_port, + any other function that calls i8042_command
-> > should be taking the lock before calling i8042_command?
->
-> Yeah, I think this is right. When I added the mutex it was because 2
-> deices were clashing with each other and I did not consider that closing
-> port in the i8042 driver itself may also disturb in-flight command.
->
-> Thanks.
->
-> --
-> Dmitry
+Hi Dave,
+
+Thank you for including me into this discussion.
+
+My patches will fix this issue. This is an ARM64 specific problem and
+I did not see this to be performance problem on x86 during kexec
+relocation. This happens because on ARM64 relocation is performed with
+MMU disabled, and when MMU is disabled the caching is disabled as
+well.
+
+I have a patch series that fixes this entirely, but James Morse
+(+CCed) and I still have not agreed on the final approach. We had an
+off-list conversation about it, and we need to continue it in public
+ML.
+
+Here is some history:
+
+This is the original series that I sent a year ago. It basically
+proposes the same thing as this series from Sang Yan:
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
+
+Once, I realized that with enabling MMU the relocation is issue is
+gone completely, I sent a new series, and this is the latest version
+of that series:
+https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com/
+
+It has been tested in production, and several people from different
+companies commented to me that they are using it as well.
+
+After my patch series was sent out, James created a new branch in his
+tree with his approach of enabling MMU without having a new VA space,
+but instead re-use what the kernel  has now. I have not tested that
+branch yet.
+
+Here are some comments from James Morse and the off-list discussion we had:
+-------
+It sounds like you are depending on write streaming mode to meet your
+target performance.
+This isn't even CPU specific, its cache and firmware configuration specific!
+I don't think we should optimise a general purpose operating system
+based on things like this.
+..
+I think the best approach is going to be to eliminate the relocations entirely.
+...
+I'm afraid I view this kexec-map thing as high-risk duct-tape over the
+kexec core code
+deliberately scattering the kexec payload.
+I'd prefer any approach that causes the payload to be stored in-place
+from the beginning
+as that benefits other architectures too.
+-------
+
+It appears James is leaning to the approach of not performing
+relocation at all and use what is proposed by Sang Yan and me during
+my first approach for this problem. However, I have several issues
+with this take, which if addressed would be OK for me.
+1. The newer, more secure kexec syscall kexec_file_load(), which
+allows to check the IMA integrity of the loaded file does not have a
+way to specify the area in memory where to place the kernel. We are
+using this syscall in production, and cannot go back to kexec_load()
+for security reasons.
+2. Reserving memory means wasting memory during run-time. Our machine
+has only 8G of RAM, and reserving even 128M for the next kernel is an
+expensive proposition. Now we start loading the next kernel after some
+non essential processes are stopped, but before essential processes
+are stopped for the lowest downtime possible.
+3. Disabling relocation means changes in the common code, which I am
+not sure actually helps any other platform beside ARM64, so I am
+worried it won't be accepted into upstream.
+
+Thank you,
+Pasha
