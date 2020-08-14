@@ -2,141 +2,198 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16691C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C03C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAA66214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmuBuatk"
+	by mail.kernel.org (Postfix) with ESMTP id 816A2214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597408006;
+	bh=GW/SFrYPF//O+vnSjDpnSBDiFUl5S0m9zp+KwyLcYGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cSVb8tSO670PzxEpprbWI3EwW8TUVxbKsx/f1tF72bkOh/JnmdjiV0P/0jBHwcAwW
+	 kRiy7uF929+4RavbSp/IQe7MYJs/vIT0PucHVU69np3jnEFwlk/LQKdghwgXIBwklL
+	 mvYdGla9toJ/pTH4IMulT/9lPuQSUSP5TyK5pnlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHNMYy (ORCPT
+        id S1728068AbgHNM0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgHNMYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:24:53 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC3BC061384;
-        Fri, 14 Aug 2020 05:24:52 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r13so3825931iln.0;
-        Fri, 14 Aug 2020 05:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+ElKAxCeMvixaBaV/Xg1XsAoLBeStHXgmdlK4qT1ov0=;
-        b=UmuBuatkkwEwvgUfEv6/w63/3OCnNwI7xb9n+XWRFZz7KhkL482mphJyRk77LfKVV+
-         bThdCpXxP/BRhA+TmwEMkQ4PSHxoHRXsEwhNaWYFbJ/q6br1R+g8cvaEKrvWLasoCpBu
-         jsbF0u7He0pkqpc7zios3+iy3xUlDi0L/JLHU2blIuXRPM0uTHaQ4WezpWG3i+5DhT12
-         UUkq5pz6VNusQqZdmS3AQIdAmAvp75esvbeNyesAODYo2Xk5+QJNlEZwsEXwnbs1isGc
-         Qmn/7eA8Xr6W1XpOIoZ43rSqWIscKEiATMmLJpu4wdAFhls12nThTi+5Fx1R3jOZRYgO
-         xUlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+ElKAxCeMvixaBaV/Xg1XsAoLBeStHXgmdlK4qT1ov0=;
-        b=SfQzjYP7KVLYjz4/tGyUMXgnQfEhP82/zBG7D20LcyziXqt4wJOaiPvGXZtxa82gJY
-         vqe4F7aSPVOjCgGLSZQ4lWBGC/4mlt+3AXN3/McEQ2eKSeq8a57MuQqy0+NxEWz8n9xW
-         8RZnVLh4TV3Ysi8uwO8PliBQ0szQUZwxQIQA/fA7K6K48mFfR+KywptJQR9c8hqwisLM
-         Aq4M2yM6umRJ5TJf1Xq1RqyjXhg+zNXfBO/z+vTeNn9Um1CdM90N8gcSEjGdGGhX3CZe
-         Jh5cysjpTnUsIuWyirwc7vwfn5UVzHC1efq7l7K+DhoU/Lz4vTEWC1FM4zGdWV/qBnLw
-         A9IQ==
-X-Gm-Message-State: AOAM533P/xgQV93f7XJxRNLgqCfIdpQNTCIvuLXwPix8uRj1sQs0na4b
-        DjSm/u2QZIqhJ+wRFShSw3xAkE44Lbr5gg==
-X-Google-Smtp-Source: ABdhPJyXw6rmXo0vyOBADbFcQVkJOtIX8FrppQIOUxhUfffQSdqcSTWDL4Y9sPLD6OOU6pQFk2WDXA==
-X-Received: by 2002:a92:980f:: with SMTP id l15mr2341987ili.56.1597407891965;
-        Fri, 14 Aug 2020 05:24:51 -0700 (PDT)
-Received: from aford-IdeaCentre-A730.lan ([2601:448:8400:9e8:7d86:99d6:a568:98e8])
-        by smtp.gmail.com with ESMTPSA id i191sm607349ild.69.2020.08.14.05.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 05:24:51 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: logicpd-som-lv-baseboard: Fix missing video
-Date:   Fri, 14 Aug 2020 07:24:41 -0500
-Message-Id: <20200814122441.2425966-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 14 Aug 2020 08:26:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727995AbgHNM0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:26:44 -0400
+Received: from quaco.ghostprotocols.net (177.207.136.251.dynamic.adsl.gvt.net.br [177.207.136.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A55920866;
+        Fri, 14 Aug 2020 12:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597408003;
+        bh=GW/SFrYPF//O+vnSjDpnSBDiFUl5S0m9zp+KwyLcYGc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XkCb9UQNqRQWP1MHlzwNZDpsQ4BqrNt5F/NLF4jLKTtNI+2so7hMq3YDuv6tCW1SF
+         3y/oB9Yhvmd3lsD97gzCfim/u0AbaCXUOdOdYhoMn3YfKxxQCwfbRBT2RQ7XJaPS8A
+         BFU3jMGH7edOoOwJYOJ7xuDcELclf5lJ3IuTyTbg=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DA05940D3D; Fri, 14 Aug 2020 09:26:40 -0300 (-03)
+Date:   Fri, 14 Aug 2020 09:26:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 09/18] perf ftrace: add support for trace option
+ sleep-time
+Message-ID: <20200814122640.GZ13995@kernel.org>
+References: <20200808023141.14227-1-changbin.du@gmail.com>
+ <20200808023141.14227-10-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808023141.14227-10-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous commit removed the panel-dpi driver, which made the
-SOM-LV video stop working because it relied on the DPI driver
-for setting video timings.  Now that the simple-panel driver is
-available in omap2plus, this patch migrates the SOM-LV dev kits
-to use a similar panel and remove the manual timing requirements.
-A similar patch was already done and applied to the Torpedo family.
+Em Sat, Aug 08, 2020 at 10:31:32AM +0800, Changbin Du escreveu:
+> This adds an option '--graph-opts nosleep-time' which allow us
+> only to measure on-CPU time. This option is function_graph tracer
+> only.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+Here an example showing its usage would be great. Even better, on
+perf-ftrace.txt, so that people can see it in action and learn about its
+output and usefullness.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Applied,
 
-diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-index 100396f6c2fe..79e9e24328b9 100644
---- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-@@ -102,35 +102,18 @@ video_reg: video_reg {
- 		regulator-max-microvolt = <3300000>;
- 	};
+- Arnaldo
  
--	lcd0: display@0 {
--		compatible = "panel-dpi";
--		label = "28";
--		status = "okay";
--		/* default-on; */
-+	lcd0: display {
-+		/* This isn't the exact LCD, but the timings meet spec */
-+		compatible = "logicpd,type28";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&lcd_enable_pin>;
--		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd INI */
-+		backlight = <&bl>;
-+		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
- 		port {
- 			lcd_in: endpoint {
- 				remote-endpoint = <&dpi_out>;
- 			};
- 		};
--
--		panel-timing {
--			clock-frequency = <9000000>;
--			hactive = <480>;
--			vactive = <272>;
--			hfront-porch = <3>;
--			hback-porch = <2>;
--			hsync-len = <42>;
--			vback-porch = <3>;
--			vfront-porch = <2>;
--			vsync-len = <11>;
--			hsync-active = <1>;
--			vsync-active = <1>;
--			de-active = <1>;
--			pixelclk-active = <0>;
--		};
- 	};
- 
- 	bl: backlight {
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> 
+> ---
+> v3: switch to uniform option --graph-opts.
+> v2: option name '--nosleep-time' -> '--graph-nosleep-time'.
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt |  4 +++
+>  tools/perf/builtin-ftrace.c              | 41 ++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index 8f08ad0992c2..3380a2e2c9ad 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -101,6 +101,10 @@ OPTIONS
+>  --graph-depth=::
+>  	Set max depth for function graph tracer to follow
+>  
+> +--graph-opts::
+> +	List of options allowed to set:
+> +	  nosleep-time - Measure on-CPU time only for function_graph tracer.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1], linkperf:perf-trace[1]
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 469b89748c42..47d63bba6a48 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -44,6 +44,7 @@ struct perf_ftrace {
+>  	unsigned long		percpu_buffer_size;
+>  	bool			inherit;
+>  	int			func_stack_trace;
+> +	int			graph_nosleep_time;
+>  };
+>  
+>  struct filter_entry {
+> @@ -205,6 +206,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+>  {
+>  	write_tracing_option_file("function-fork", "0");
+>  	write_tracing_option_file("func_stack_trace", "0");
+> +	write_tracing_option_file("sleep-time", "1");
+>  }
+>  
+>  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> @@ -386,6 +388,17 @@ static int set_tracing_trace_inherit(struct perf_ftrace *ftrace)
+>  	return 0;
+>  }
+>  
+> +static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
+> +{
+> +	if (!ftrace->graph_nosleep_time)
+> +		return 0;
+> +
+> +	if (write_tracing_option_file("sleep-time", "0") < 0)
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  {
+>  	char *trace_file;
+> @@ -465,6 +478,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  		goto out_reset;
+>  	}
+>  
+> +	if (set_tracing_sleep_time(ftrace) < 0) {
+> +		pr_err("failed to set tracing option sleep-time\n");
+> +		goto out_reset;
+> +	}
+> +
+>  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+>  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+>  		goto out_reset;
+> @@ -637,6 +655,26 @@ static int parse_func_tracer_opts(const struct option *opt,
+>  	return 0;
+>  }
+>  
+> +static int parse_graph_tracer_opts(const struct option *opt,
+> +				  const char *str, int unset)
+> +{
+> +	int ret;
+> +	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
+> +	struct sublevel_option graph_tracer_opts[] = {
+> +		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
+> +		{ .name = NULL, }
+> +	};
+> +
+> +	if (unset)
+> +		return 0;
+> +
+> +	ret = perf_parse_sublevel_options(str, graph_tracer_opts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static void select_tracer(struct perf_ftrace *ftrace)
+>  {
+>  	bool graph = !list_empty(&ftrace->graph_funcs) ||
+> @@ -694,6 +732,9 @@ int cmd_ftrace(int argc, const char **argv)
+>  		     "Set nograph filter on given functions", parse_filter_func),
+>  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
+>  		    "Max depth for function graph tracer"),
+> +	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
+> +		     "graph tracer options, available options: nosleep-time",
+> +		     parse_graph_tracer_opts),
+>  	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+>  		     "size of per cpu buffer", parse_buffer_size),
+>  	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.25.1
 
+- Arnaldo
