@@ -2,32 +2,33 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6950BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4522D20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BBC2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgHNNga (ORCPT
+        id S1728642AbgHNNgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:36:30 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43782 "EHLO honk.sigxcpu.org"
+        Fri, 14 Aug 2020 09:36:35 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43810 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgHNNga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728611AbgHNNga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Aug 2020 09:36:30 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 1E861FB07;
-        Fri, 14 Aug 2020 15:36:26 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id CA88FFB02;
+        Fri, 14 Aug 2020 15:36:27 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q6Zfzkg2jRDO; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
+        with ESMTP id 2sdFtjjeNwml; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id EC786457CC; Fri, 14 Aug 2020 15:36:23 +0200 (CEST)
+        id 02B6E4576F; Fri, 14 Aug 2020 15:36:23 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -46,10 +47,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
-Date:   Fri, 14 Aug 2020 15:36:20 +0200
-Message-Id: <cover.1597412076.git.agx@sigxcpu.org>
+Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add mantix vendor prefix
+Date:   Fri, 14 Aug 2020 15:36:21 +0200
+Message-Id: <b5f80625269a03a27828e3e6f22f316806c39d68.1597412076.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597412076.git.agx@sigxcpu.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,26 +61,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The panel uses a Focaltech FT8006p, the touch part is handled by the already
-existing edt-ft5x06. It can be found in e.g. the Librem 5.
+Add prefix for Mantix Display Technology Co.,Ltd.
 
-This series is against next-20200814.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Guido Günther (3):
-  dt-bindings: vendor-prefixes: Add mantix vendor prefix
-  dt-bindings: Add Mantix MLAF057WE51-X panel bindings
-  drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
-
- .../display/panel/mantix,mlaf057we51-x.yaml   |  73 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 362 ++++++++++++++++++
- 6 files changed, 456 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 2baee2c817c1a..59d4c8b068c4d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -611,6 +611,8 @@ patternProperties:
+     description: Linux Automation GmbH
+   "^macnica,.*":
+     description: Macnica Americas
++  "^mantix,.*":
++    description: Mantix Display Technology Co.,Ltd.
+   "^mapleboard,.*":
+     description: Mapleboard.org
+   "^marvell,.*":
 -- 
 2.26.2
 
