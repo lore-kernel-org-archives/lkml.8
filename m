@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412D4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE75C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194552078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3752078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y52gb1Nw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+6DNaeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgHNR2D (ORCPT
+        id S1728689AbgHNR2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
+        Fri, 14 Aug 2020 13:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbgHNR2B (ORCPT
+        with ESMTP id S1728657AbgHNR2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:01 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF003C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:00 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id t26so3543973wmn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:00 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:02 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8880FC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:02 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id i4so6527547qvv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=cI4OCXXdcluQ8udPJIeOucRKN//yXw3Lt8Ci7TJhPtY=;
-        b=Y52gb1NwOVdnYMzy39zbAEp0AxmkVGEVl5sO8IimEphuNBa46b8UdemRzumD9FchzS
-         rLzWvPrLf42ZtByLKUZis23wh0vVNMMWKrmlakNZyhUgxwGLHQ0j7isTtCP9kLxQKWsI
-         iUFHlaLQj2CWOSPtoa5N5MfbvCuPuWY0/G+z68tmu4jVOhA/kpF87tRprJwHotDxzFz9
-         nqRDRlOuGfGhohyK3x1wtrLh2l4uFHxbCmb66Caf4wskc7tBCh5B6IOlwI85JRIgEyl+
-         zl6s/FZ3gp+Dd30wvZV7Ozi551d8uKRsOiyk8ZKZ4fUY6Ax+Vu47Yqdb97WW5es7FCqk
-         3r7Q==
+        bh=l6ZIwvY6syyAP67b2MO5JHAbeJPBE9lyCC+sGAziw0Y=;
+        b=a+6DNaeGtiK8RCbbEJSYLo+X1UMhNxWoSfsXBd3ip7DAyvTiyPTnoLrmeGVgbLvsLx
+         CfpZKFFIvUuTxkBYDZDQn4jbGgswxQdQkBs5VxOgEcg5+iRb7bqLWyASx3w3iF6+2dk1
+         pbgqCiTuFstwf5I6mi0DpUvGIbwg/XLzQm17VEOz7spf7VI+6MEL2AH29BoM7qpqlkUb
+         9ce6X7/d2RmXIOEQQ9dwmguTJZxg6DC/de53tpFF7HdIloSioMjjzjIprIayyVndKKl+
+         Dft04zNWux8SRfTG5d0zwMQLGVh2OUWV29lifG2KiF2tIJZ3GI3MbAiHjiMNSGd827mX
+         +UvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=cI4OCXXdcluQ8udPJIeOucRKN//yXw3Lt8Ci7TJhPtY=;
-        b=I8S0yBdSAdTa7P4B6F0PM8UGGSrPyGOVunKt6c3pG6IrVPov0LAh9aayJTEJH7MLsh
-         xhYoxZUgb/i6TDFR5694oKji2ePO28h0HBdiDRAzxjA6hNUVqp7dLsY9jvA+gxWwCAQD
-         iusGYzJw4mj9kM0CNZZyuiaLBiZAuEo8XQrDlkNeuAmCw1e/dVyhuwhVz4hM0EGTd5pX
-         0ogq/s54tx/YTES7BNU8s3b4cEYfZp/vsGmtsA8wUe2Uagp5/GHcSYRlrfDW5hwf2A+O
-         BMA+8J7XhDzb08XOPoyaHcW7eH44yECW8ducQ4QxaF/Ts0XRgM521minooRyQ9r7USd1
-         +oPA==
-X-Gm-Message-State: AOAM532Kh2qJRYXWRfSu29MsPJCYTmKDheysL/OzhwRVVpD29aE703wp
-        p+PurYimd/YBoaoZeCDAEbdd3eLA472mVbOL
-X-Google-Smtp-Source: ABdhPJwOZsvPwGKa5m7TqARujAwtgW8ZF1arqYgXqkG6x3udD3qrrXjjRug8FIoPmVcf0uINBQGYw7oWCR4/Amlh
-X-Received: by 2002:a7b:c4d3:: with SMTP id g19mr3322924wmk.29.1597426079500;
- Fri, 14 Aug 2020 10:27:59 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:26:57 +0200
+        bh=l6ZIwvY6syyAP67b2MO5JHAbeJPBE9lyCC+sGAziw0Y=;
+        b=ThNI7UzaKiFWRvq/ytL/xoWs6Mu1Fkn7gyi8PJWClcHKNZ5M6OkFQsVWOsUIoa2Er7
+         BFvIBooNXrUvZtxbfWGQhxpAasHKPmbzOc43eAsH9ZoWWdMhjom81JkEQxgILWnHQa3N
+         kuroCX98BSVtIY42zgqewZiYgORL12vT3nV/rkmE3YdTKBBgmi6ZxPutnhL4hj75YPup
+         EGko5GapHm3xQx6P9P/RacEyL0brRCHGkHCZ6XVad+DOVIsDJtep7CS45LFJhkh5VmSv
+         l2Hj0CzF5urxn0IF+ucCA26TxUaZKjA5VzK55x7Ze42PPJkDLQXzvgZ0O5kNXngHGCTA
+         7Nag==
+X-Gm-Message-State: AOAM531Zxoh3AtwDJm7TbDH4Ewl8ALGAhqjfmVC1dLKvQyDV86CBEVz5
+        zZJiZVsJxKnCR5Qfgi4N0EomPUtEZAduAudK
+X-Google-Smtp-Source: ABdhPJy3uOE8d50CkEhPANU8s2DSDIvcOJG7lmvrwT9uA8T2s4Kv8enADBz7gFdwS2uXrMPjd1s0rvPxNPa2NPmj
+X-Received: by 2002:a05:6214:1841:: with SMTP id d1mr3456365qvy.135.1597426081697;
+ Fri, 14 Aug 2020 10:28:01 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:26:58 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <ea36f46b5223a67d6333acbcc79ba07380608010.1597425745.git.andreyknvl@google.com>
+Message-Id: <e0683edc00699fcc0fc1fbc3cb1320875ff434f2.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 15/35] kasan: rename print_shadow_for_address to print_memory_metadata
+Subject: [PATCH 16/35] kasan: kasan_non_canonical_hook only for software modes
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -89,47 +89,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This is a preparatory commit for the upcoming addition of a new hardware
 tag-based (MTE-based) KASAN mode.
 
-Hardware tag-based KASAN won't be using shadow memory, but will reuse
-this function. Rename "shadow" to implementation-neutral "metadata".
+kasan_non_canonical_hook() is only applicable to KASAN modes that use
+shadow memory, and won't be needed for hardware tag-based KASAN.
 
-No functional changes.
+No functional changes for software modes.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/kasan/report.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/kasan/report.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index ada3cfb43764..8ad1ced1607d 100644
+index 8ad1ced1607d..2cce7c9beea3 100644
 --- a/mm/kasan/report.c
 +++ b/mm/kasan/report.c
-@@ -255,7 +255,7 @@ static int shadow_pointer_offset(const void *row, const void *shadow)
- 		(shadow - row) / SHADOW_BYTES_PER_BLOCK + 1;
+@@ -376,7 +376,8 @@ bool kasan_report(unsigned long addr, size_t size, bool is_write,
+ 	return ret;
  }
  
--static void print_shadow_for_address(const void *addr)
-+static void print_memory_metadata(const void *addr)
- {
- 	int i;
- 	const void *shadow = kasan_mem_to_shadow(addr);
-@@ -316,7 +316,7 @@ void kasan_report_invalid_free(void *object, unsigned long ip)
- 	pr_err("\n");
- 	print_address_description(object, tag);
- 	pr_err("\n");
--	print_shadow_for_address(object);
-+	print_memory_metadata(object);
- 	end_report(&flags);
- }
- 
-@@ -352,7 +352,7 @@ static void __kasan_report(unsigned long addr, size_t size, bool is_write,
- 	if (addr_has_metadata(untagged_addr)) {
- 		print_address_description(untagged_addr, get_tag(tagged_addr));
- 		pr_err("\n");
--		print_shadow_for_address(info.first_bad_addr);
-+		print_memory_metadata(info.first_bad_addr);
- 	} else {
- 		dump_stack();
- 	}
+-#ifdef CONFIG_KASAN_INLINE
++#if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
++	defined(CONFIG_KASAN_INLINE)
+ /*
+  * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
+  * canonical half of the address space) cause out-of-bounds shadow memory reads
 -- 
 2.28.0.220.ged08abb693-goog
 
