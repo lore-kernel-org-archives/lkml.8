@@ -2,102 +2,205 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EDFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 04:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 04:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160FF20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 04:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE0220708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 04:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AUUNBvBz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aWJ3QnKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgHNEVx (ORCPT
+        id S1726247AbgHNEfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 00:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgHNEVx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 00:21:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BFCC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 21:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=6u8Q+umVnRxiYYDPDA9arw80XfyHuNVnhyeRkqd+wgE=; b=AUUNBvBzzD8i5v1Rf6ugorkyGQ
-        La0hjzSqKhbHaeuOnuQYRkFNjyVWFlhtEREwbee9n4C2O5Et1GEqDLJW7D53xW3zN2n7qevbMOfEv
-        7DdkQ7O9H4JhC+pH0Qc0iCGL5bmxwODxDK8ivPO2emYNEADJpAtP5l6AJkN16ywm9W+EuHR562J/W
-        fN4Ax0d6JwEqIP5QfahMyc6fwS4gBs2KDRBFuthmaCI8DzDqe6VXPSqqeRpBU9LV2r0BUfs//ypS3
-        BrAE1ijwVw0tyoqcml7DZRB64A+1v/PDuK7AOrfXlwtZzviDjbTg0be+QWPNlFUy4d7saJop41Wv6
-        vbxg9IiQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6RDx-0007c4-Nm; Fri, 14 Aug 2020 04:21:50 +0000
-Subject: Re: net/tipc/udp_media.c:743: undefined reference to `ipv6_dev_find'
-To:     Xin Long <lucien.xin@gmail.com>, kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-References: <202008120718.VxKCVIJX%lkp@intel.com>
- <CADvbK_fycBSAL5Xz1XjGNmEfQ6499n+4Wr01GTn-vNi0Fuj2FQ@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <eeb31691-bc42-3363-f24d-b8fa66f5deb2@infradead.org>
-Date:   Thu, 13 Aug 2020 21:21:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 Aug 2020 00:35:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31355 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgHNEfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 00:35:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597379702; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=O+YXpiXi1aKhvrMTEpWfpAywLALFnaHtIH6SlbxpOfw=;
+ b=aWJ3QnKUfzrQUcl4k8ukMbJ9sQFLUUoqqdo+Flrpy1hpTlttxBWMtSDY3cBOn+gVybYxO00L
+ f19eibdfRyqY2iW9n+yf8kkaMEM0ANxy3XB+8lpC3e4Ke1IO80btL8ZhVYi2FNxtpQHfr9XT
+ 3R7Yd1dThaKnmE+NBKioU0EeM5U=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f3614754c787f237bb4aabf (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 04:35:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8FD6AC43395; Fri, 14 Aug 2020 04:35:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E7B9C433C6;
+        Fri, 14 Aug 2020 04:34:59 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <CADvbK_fycBSAL5Xz1XjGNmEfQ6499n+4Wr01GTn-vNi0Fuj2FQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Aug 2020 10:04:59 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
+In-Reply-To: <8ffd22d5926aedda0c9fa6ea429fd84e@kernel.org>
+References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
+ <20200813090324.GB9829@willie-the-truck>
+ <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
+ <20200813094041.GA9894@willie-the-truck>
+ <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
+ <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
+ <8ffd22d5926aedda0c9fa6ea429fd84e@kernel.org>
+Message-ID: <d4ad5ade9815632f450374c9b6bbe9d2@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 2:35 AM, Xin Long wrote:
-> On Wed, Aug 12, 2020 at 7:21 AM kernel test robot <lkp@intel.com> wrote:
->>
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->> head:   c636eef2ee3696f261a35f34989842701a107895
->> commit: 5a6f6f579178dbeb33002d93b4f646c31348fac9 tipc: set ub->ifindex for local ipv6 address
->> date:   6 days ago
->> config: ia64-randconfig-r005-20200811 (attached as .config)
->> compiler: ia64-linux-gcc (GCC) 9.3.0
->> reproduce (this is a W=1 build):
->>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         git checkout 5a6f6f579178dbeb33002d93b4f646c31348fac9
->>         # save the attached .config to linux build tree
->>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=ia64
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>):
->>
->>    ia64-linux-ld: net/tipc/udp_media.o: in function `tipc_udp_enable':
->>>> net/tipc/udp_media.c:743: undefined reference to `ipv6_dev_find'
-> To use some APIs exported from ipv6 code.
-> We need add this:
+On 2020-08-13 23:29, Marc Zyngier wrote:
+> On 2020-08-13 13:33, Sai Prakash Ranjan wrote:
+>> On 2020-08-13 16:09, Marc Zyngier wrote:
+>>> On 2020-08-13 10:40, Will Deacon wrote:
+>>>> On Thu, Aug 13, 2020 at 02:49:37PM +0530, Sai Prakash Ranjan wrote:
+>>>>> On 2020-08-13 14:33, Will Deacon wrote:
+>>>>> > On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
+>>>>> > > KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
+>>>>> > > bits set and are spectre-v2 safe. But on big.LITTLE systems where
+>>>>> > > they are coupled with other CPU cores such as the KRYO4XX silver
+>>>>> > > based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
+>>>>> > > bits set, the system wide safe value will be set to the lowest value
+>>>>> > > of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
+>>>>> > > ID_AA64PFR0_EL1.
+>>>>> > >
+>>>>> > > This is a problem when booting a guest kernel on gold CPU cores
+>>>>> > > where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
+>>>>> > > and consider them as vulnerable for Spectre variant 2 due to system
+>>>>> > > wide safe value which is used in kvm emulation code when reading id
+>>>>> > > registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
+>>>>> > > for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
+>>>>> > > list which will be consulted even when the sanitised read reports
+>>>>> > > that CSV2 bits are not set for KRYO4XX gold cores.
+>>>>> > >
+>>>>> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
+>>>>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>>>> > > ---
+>>>>> > >  arch/arm64/kernel/cpu_errata.c | 1 +
+>>>>> > >  1 file changed, 1 insertion(+)
+>>>>> > >
+>>>>> > > diff --git a/arch/arm64/kernel/cpu_errata.c
+>>>>> > > b/arch/arm64/kernel/cpu_errata.c
+>>>>> > > index 6bd1d3ad037a..6cbdd2d98a2a 100644
+>>>>> > > --- a/arch/arm64/kernel/cpu_errata.c
+>>>>> > > +++ b/arch/arm64/kernel/cpu_errata.c
+>>>>> > > @@ -545,6 +545,7 @@ static const struct midr_range
+>>>>> > > spectre_v2_safe_list[] = {
+>>>>> > >  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+>>>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+>>>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+>>>>> > > +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
+>>>>> >
+>>>>> > We shouldn't be putting CPUs in the safe list when they have CSV2
+>>>>> > reporting
+>>>>> > that they are mitigated in hardware, so I don't think this is the right
+>>>>> > approach.
+>>>>> >
+>>>>> 
+>>>>> Ok but the only thing I find wrong in this approach is that it is a
+>>>>> redundant
+>>>>> information because CSV2 is already advertising the mitigation, but 
+>>>>> again
+>>>>> CSV2 check is done first so it doesn't really hurt to add it to the 
+>>>>> safe
+>>>>> list because we already know that it is safe.
+>>>> 
+>>>> It simply doesn't scale. That's why CSV2 exists in the first place, 
+>>>> so we
+>>>> don't have to modify the kernel everytime a new CPU is invented.
+>>>> 
+>>>>> > Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
+>>>>> > physical CPUs without CSV2 set are on the safe list. But then again, KVM
+>>>>> > has always been slightly in denial about big.LITTLE because you can't
+>>>>> > sensibly expose it to a guest if there are detectable differences...
+>>>>> >
+>>>>> 
+>>>>> Sorry but I don't see how the guest kernel will see the CSV2 bits 
+>>>>> set for
+>>>>> gold CPU cores without actually adding them to the safe list or 
+>>>>> reading the
+>>>>> not sanitised value of ID_AA64PFR0_EL1 ?
+>>>> 
+>>>> Well that's for somebody to figure out in the patch. I'm just saying 
+>>>> that
+>>>> adding cores to the safe list when they already have a CSV2 field 
+>>>> conveying
+>>>> the same information is the wrong approach. The right appproach is 
+>>>> for KVM
+>>>> to expose CSV2 as set when the system is not affected by the 
+>>>> erratum.
+>>> 
+>>> A sensible way to fix this would be with something like that:
+>>> 
+>>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>>> index 077293b5115f..2735db21ff0d 100644
+>>> --- a/arch/arm64/kvm/sys_regs.c
+>>> +++ b/arch/arm64/kvm/sys_regs.c
+>>> @@ -1131,6 +1131,9 @@ static u64 read_id_reg(const struct kvm_vcpu 
+>>> *vcpu,
+>>>  		if (!vcpu_has_sve(vcpu))
+>>>  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+>>>  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+>>> +		if (!(val & (0xfUL << ID_AA64PFR0_CSV2_SHIFT)) &&
+>>> +		    get_spectre_v2_workaround_state() == 
+>>> ARM64_BP_HARDEN_NOT_REQUIRED)
+>>> +			val |= (1UL << ID_AA64PFR0_CSV2_SHIFT);
+>>>  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+>>>  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+>>>  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+>>> 
+>> 
+>> Thanks Marc, I gave this a go on SC7180 where the issue was seen and
+>> this fix is good.
+>> 
+>> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > 
-> --- a/net/tipc/Kconfig
-> +++ b/net/tipc/Kconfig
-> @@ -6,6 +6,7 @@
->  menuconfig TIPC
->         tristate "The TIPC Protocol"
->         depends on INET
-> +       depends on IPV6 || IPV6=n
+> There is still a problem with this approach. A late CPU could
+> come up after a guest has been started. If that CPU identified
+> as vulnerable by the host kernel, get_spectre_v2_workaround_state()
+> will return a different value, breaking the guest (or more
+> likely, leaving it exposed to Spectre-v2 attacks).
+> 
+> We'd need to disable the late onlining of CPUs that would change
+> the mitigation state, and this is... ugly.
 > 
 
-Thanks. Works for me.
+Ugh, yes indeed and here I was thinking that these things are 
+straightforward :(
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Thanks,
+Sai
 
-Please make a proper patch and send it to the maintainers.
 -- 
-~Randy
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
