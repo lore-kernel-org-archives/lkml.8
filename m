@@ -2,165 +2,122 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D20A20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="OjMGGmCA"
+	by mail.kernel.org (Postfix) with ESMTP id 20F6620781
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 09:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597398249;
+	bh=lOAtx8/5R1QSMK92PFjGC5sa51WTZfT/efb3BSgBdy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wsOCXwgL1be6TqNAFo4rezRHVVRuB8qqyWojmZOBCkEt5BoTTv+uHQDGfSapbnF0W
+	 5okJaC2wRRrFwSmFzImgLlTSu9xVk9sEbhMjMS1nK+4dl42bElMto9XaKEWNROTARw
+	 fmAqB0vNhPCkQBccNbjYby4MBfTPjwJ6/RvdobTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgHNJmp (ORCPT
+        id S1726887AbgHNJoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 05:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgHNJmo (ORCPT
+        Fri, 14 Aug 2020 05:44:07 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36335 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgHNJoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 05:42:44 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0EEC061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 02:42:44 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g14so10266675iom.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 02:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AspIN0mKod2D4fw11QEsKNtq92S2lAnwdSlAe9wE40U=;
-        b=OjMGGmCAnlktilu79lmfTPRv171f69fT08t+qaQHMbxST6z2QcobCk+RVa/GghD+yU
-         DAyHdImgAJzstNveAnXYZOBN7x1H/qNSzO0EFR+arDrYvNNKXc/SYbQAeDmDqIRmpoAk
-         lvWHRDoTAMiSLkYznS8jqsVqafYK93TAAnVbKFXJHyXOoX7YTPCI+1SX/v7r1uACPxdO
-         UVmSxllGDoXzSVNfOUo2bPx7xzG7OjSjziJIg/IUhkqPBtDoE88XG/9ip+WphUeIK5hJ
-         hdC6dirSin7v/WnXEUl1RFT/H/l4+xc+8KVIYJLjoPI6zSuZz3mqsmsItqiHWFkoe07g
-         Yq1g==
+        Fri, 14 Aug 2020 05:44:07 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 3so7411390wmi.1;
+        Fri, 14 Aug 2020 02:44:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AspIN0mKod2D4fw11QEsKNtq92S2lAnwdSlAe9wE40U=;
-        b=qdHXuBDASXopAHhW8NO/OuU9ow3Fke5z4JpK165haEk/dhphF1HlJkBmI1mup7PLJp
-         8ktPlPL4WRNbRw+l/9D8W9nJpRCtPqgG9TPXy6ItZpJuyvaHJLf1qkXf+AdFgqqtnAVz
-         vt72VWMmdC8q9HyQVKmnJ4H5V0Apb7D5N93GDqf07wLszeOVvmU9vzD1CLIO3gn7eg6E
-         00dy/ctAbwf5kQIwej3lkM3RqjLYJwTlgSNrMe6U8W0Cz8c+JSDrZ/nnSPMGQAOxMxD/
-         SqMedETF/BkVDkCt8ezarNoVo7I9o/4eCQvUFgEX976UvP55Nzsr7ToDKygU8EQlTSdg
-         63vQ==
-X-Gm-Message-State: AOAM5313KHTSs/1iz3bH3kFicmXmgxQ1PSyU4YIDPa0EUp1WOXdnVPmb
-        8EohaUpWixsCs7lA9dLwqQV2IlKlIOr4ZeiL1QOGHHLW9/ONJA==
-X-Google-Smtp-Source: ABdhPJyYHB4rlqQ6DIvZ/ZMd0V4MEKTcbHltccZZWTakaQmZcA7txa+DPHXLYXpSb3gVaHKSG5qHFkmgdAqh2fjAfUo=
-X-Received: by 2002:a6b:ba89:: with SMTP id k131mr1443918iof.133.1597398163441;
- Fri, 14 Aug 2020 02:42:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qxju5gCtdZfDOIWTLAir45a9M2m86cvcOQuRF45cqVw=;
+        b=CMp1fYrl6DpF1s/9XOdxxhJKjN12LzlVhxLnPmMQ8C07MjHniaTu0xvGX6W/ahER4c
+         KnzqT6AGxuwS9pgcYw4lVPzSXo9b/gG1itYluFRUt+akcyNW75chpUNM31RQj8Kb/Cxa
+         CZVsU6wmj08mvApqsQyNnN/AErSpvei8cpOv/ze5DMc0IH+qDom6nkD+JI6uc4uxMn23
+         CDn4eRubMsRv2HKKsGWeku3r1Yc20qVw0Lu7u5JRX2P8tP7MsVltqBflgItIu7eAWuhf
+         e40z+pXd0JsSRncsm45zinFwlxZixZRz14XB2kPiaRoWBa5pLVccxDKERh1J1w1FGJfY
+         R2Eg==
+X-Gm-Message-State: AOAM533u1y6TH3Sy/k7x9WGCme1nvUk3BGWFhOJZBgy71XYaTgfnWJ5j
+        zB8Wqf4roKd0OuCuaE265Ng=
+X-Google-Smtp-Source: ABdhPJxCVxYpk7RwkD/3Vl6aY71IkXz6sNRRIKFHFxjDmASbOU7JKqDHKDrU6WuIbO04S1M8Q6/PRg==
+X-Received: by 2002:a1c:6a03:: with SMTP id f3mr1857480wmc.181.1597398245369;
+        Fri, 14 Aug 2020 02:44:05 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i7sm15001164wrs.25.2020.08.14.02.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 02:44:04 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 09:44:03 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, mingo@redhat.com, bp@alien8.de,
+        x86@kernel.org, hpa@zytor.com
+Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt
+ in ACPI DSDT
+Message-ID: <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
+References: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-4-cmo@melexis.com>
- <CAHp75VfNwb5uBp=H0295LEJjXy1+=V5yvSN1PHbtMYzgg=_EAA@mail.gmail.com>
- <CAKv63uv=b60B9RXBJF4HEhMOowu-qbGrv7LsmJVvkkERSida-A@mail.gmail.com>
- <CAHp75Vd+3SopKog6uhSKoOLn+tECsQfs7kRbJsrMZEbNRpk8bQ@mail.gmail.com>
- <CAKv63usrjEHTmYtahedqULnqu-fM3TFC8HJ=S4h+w=UTv5sd-Q@mail.gmail.com>
- <CAHp75VeH5SA2KeiTSN__8ndj1v_SEb7mEWPG1p2Lz-tATDWi8A@mail.gmail.com>
- <CAKv63uvQBoD=a2ADG7XBoQd2JRt6ggK0UB-g6cSuWLE7EV+qww@mail.gmail.com> <CAHp75VfAbufX+jYcxnp8AyAzZ0M42jRCkP5X1sRqXm0jpoyvrQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfAbufX+jYcxnp8AyAzZ0M42jRCkP5X1sRqXm0jpoyvrQ@mail.gmail.com>
-From:   Crt Mori <cmo@melexis.com>
-Date:   Fri, 14 Aug 2020 11:42:07 +0200
-Message-ID: <CAKv63utpidP12iQXWU59=F+cVCq6oShSAitmKhoC4W4aaPtnRA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] iio:temperature:mlx90632: Convert polling while
- loop to do-while
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 11:32, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Aug 14, 2020 at 10:33 AM Crt Mori <cmo@melexis.com> wrote:
-> > On Thu, 13 Aug 2020 at 21:41, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Aug 13, 2020 at 4:04 PM Crt Mori <cmo@melexis.com> wrote:
-> > > > On Thu, 13 Aug 2020 at 13:24, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > On Thu, Aug 13, 2020 at 2:14 PM Crt Mori <cmo@melexis.com> wrote:
-> > > > > > On Thu, 13 Aug 2020 at 13:03, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > > > On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
-> > >
-> > > ...
-> > >
-> > > > > > > I don't see how it prevents using iopoll.h. It uses usleep_range()
-> > > > > > > under the hood in the same way you did here, but open coded.
-> > > > > > >
-> > > > > >
-> > > > > > One loop is indeed 10ms and that is not the problem, the problem is
-> > > > > > that timeout is at least 3 calls of this data ready (3 channels), so
-> > > > > > that is at minimum 30ms of timeout, or it could even be 4 in worse
-> > > > > > case scenario and that is outside of the range for usleep to measure.
-> > > > > > So in case of the other loop, where we wait 200ms for channel refresh
-> > > > > > it is also out of scope. Timeout should be in number of tries or in
-> > > > > > msleep range if you ask me.
-> > > > >
-> > > > > I still didn't buy it. You have in both cases usleep_range(). Why in
-> > > > > your case it's okay and in regmap_read_poll_timeout() is not?
-> > > > >
-> > > >
-> > > > I tried and it did not work, so then I read the manual. Looking into
-> > > >
-> > > > * regmap_read_poll_timeout_atomic - Poll until a condition is met or a
-> > > > timeout occurs
-> > >
-> > > Why _atomic?!
-> >
-> > I just pasted something, it is the same as for non _atomic
->
-> OK.
->
-> ...
->
-> > > >  * @delay_us: Time to udelay between reads in us (0 tight-loops).
-> > > >  *            Should be less than ~10us since udelay is used
-> > > >  *            (see Documentation/timers/timers-howto.rst).
-> > > >  * @timeout_us: Timeout in us, 0 means never timeout
->
-> ...
->
-> > > > > > > >                 usleep_range(10000, 11000);
-> > >
-> > > You use here usleep_range(). The same is used for
-> > > regmap_read_poll_timeout(). What's the difference?
-> > >
-> > > Since it uses 1/4 of the range you probably need to update tries and
-> > > timeout_us to make it work.
-> > >
-> >
-> > Timeout_us here needs to be in one case 100 * 10ms (maybe not
-> > realistic as we could live with number of around 40 * 10ms), but this
-> > is a lot more than proposed range of usleep which Is up to 20ms. Even
-> > in best case this timeout should be 40 ms to give enough time to
-> > measure 2 channels for sure. So with the current timeout_us
-> > requirement we are outside of the range of the udelay timer and that
-> > is why I would need a macro with number of tries, not with the timeout
-> > value (or timeout value of ms).
->
-> I do not understand. The regmap_read_poll_timeout() is a macro which
-> unrolls in the very similar loop you have now in the code.
-> What prevents it from using it?
->
-> I think there is a big misunderstanding about the parameters of that macro.
-> delay_us (must be small enough), timeout_us can be any long.
->
-I tested on Beaglebone with the 100 * 10000 as timeout_us and I always
-got the -ETIMEDOUT error. I also tested in the other case where
-delay_us is 250000 and then timeout_us would be 4*250000 and I have
-also received -ETIMEDOUT as a response.
+On Thu, Aug 13, 2020 at 04:51:19PM -0700, Michael Kelley wrote:
+> On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
+> in the ACPI DSDT.  This information is not used on x86 because the
+> interrupt vector must be hardcoded.  But update the generic
+> VMbus driver to do the parsing and pass the information to the
+> architecture specific code that sets up the Linux IRQ.  Update
+> consumers of the interrupt to get it from an architecture specific
+> function.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/x86/include/asm/mshyperv.h |  1 +
+>  arch/x86/kernel/cpu/mshyperv.c  |  3 ++-
+>  drivers/hv/hv.c                 |  2 +-
+>  drivers/hv/vmbus_drv.c          | 30 +++++++++++++++++++++++++++---
+>  include/asm-generic/mshyperv.h  |  4 +++-
+>  5 files changed, 34 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 4f77b8f..ffc2899 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -54,6 +54,7 @@ typedef int (*hyperv_fill_flush_list_func)(
+>  #define hv_enable_vdso_clocksource() \
+>  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
+>  #define hv_get_raw_timer() rdtsc_ordered()
+> +#define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
+>  
+>  /*
+>   * Reference to pv_ops must be inline so objtool
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 3112544..538aa87 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -55,9 +55,10 @@
+>  	set_irq_regs(old_regs);
+>  }
+>  
+> -void hv_setup_vmbus_irq(void (*handler)(void))
+> +int hv_setup_vmbus_irq(int irq, void (*handler)(void))
+>  {
 
-I can prepare a patch with the iopoll.h API and maybe you will spot
-the mistake, as after rechecking timeout_us is indeed 64bit and is
-only used in the time comparison operations and not with timers.
+irq is not used here. Did you perhaps forget to commit a chunk of code?
 
-> --
-> With Best Regards,
-> Andy Shevchenko
+>  	vmbus_handler = handler;
+> +	return 0;
+>  }
+
+Wei.
