@@ -2,46 +2,36 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6DC20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC19A2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgHNNiV (ORCPT
+        id S1726834AbgHNNjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:38:21 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43406 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgHNNhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:37:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id F14A429A7D6
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v3 15/19] media: cedrus: h264: Fix frame list construction
-Date:   Fri, 14 Aug 2020 10:36:30 -0300
-Message-Id: <20200814133634.95665-16-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200814133634.95665-1-ezequiel@collabora.com>
-References: <20200814133634.95665-1-ezequiel@collabora.com>
+        Fri, 14 Aug 2020 09:39:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42600 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgHNNjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:39:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4BAC8B02A;
+        Fri, 14 Aug 2020 13:40:03 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.com
+Subject: [GIT PULL] xen: branch for v5.9-rc1b
+Date:   Fri, 14 Aug 2020 15:39:39 +0200
+Message-Id: <20200814133939.21185-1-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,63 +39,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Linus,
 
-Current frame list construction algorithm assumes that decoded image
-will be output into its own buffer. That is true for progressive content
-but not for interlaced where each field is decoded separately into same
-buffer.
+Please git pull the following tag:
 
-Fix that by checking if capture buffer is listed in DPB. If it is, reuse
-it.
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.9-rc1b-tag
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+xen: branch for v5.9-rc1, 2nd batch
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-index 1e89a8438f36..fe041b444385 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -101,7 +101,7 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
- 	struct cedrus_dev *dev = ctx->dev;
- 	unsigned long used_dpbs = 0;
- 	unsigned int position;
--	unsigned int output = 0;
-+	int output = -1;
- 	unsigned int i;
- 
- 	cap_q = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
-@@ -124,6 +124,11 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
- 		position = cedrus_buf->codec.h264.position;
- 		used_dpbs |= BIT(position);
- 
-+		if (run->dst->vb2_buf.timestamp == dpb->reference_ts) {
-+			output = position;
-+			continue;
-+		}
-+
- 		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
- 			continue;
- 
-@@ -131,13 +136,11 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
- 				    dpb->top_field_order_cnt,
- 				    dpb->bottom_field_order_cnt,
- 				    &pic_list[position]);
--
--		output = max(position, output);
- 	}
- 
--	position = find_next_zero_bit(&used_dpbs, CEDRUS_H264_FRAME_NUM,
--				      output);
--	if (position >= CEDRUS_H264_FRAME_NUM)
-+	if (output >= 0)
-+		position = output;
-+	else
- 		position = find_first_zero_bit(&used_dpbs, CEDRUS_H264_FRAME_NUM);
- 
- 	output_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
--- 
-2.27.0
+It contains 2 series:
 
+- Removal of support for running as 32-bit Xen PV-guest. 32-bit PV
+  guests are rarely used, are lacking security fixes for Meltdown, and
+  can be easily replaced by PVH mode. Another series for doing more
+  cleanup will follow soon (removal of 32-bit-only pvops functionality).
+
+- Fixes and additional features for the Xen display frontend driver.
+
+
+Thanks.
+
+Juergen
+
+ arch/x86/entry/entry_32.S                | 109 +------
+ arch/x86/entry/vdso/vdso32/note.S        |  30 --
+ arch/x86/include/asm/proto.h             |   2 +-
+ arch/x86/include/asm/segment.h           |   2 +-
+ arch/x86/kernel/head_32.S                |  31 --
+ arch/x86/xen/Kconfig                     |   3 +-
+ arch/x86/xen/Makefile                    |   3 +-
+ arch/x86/xen/apic.c                      |  17 --
+ arch/x86/xen/enlighten_pv.c              |  78 +----
+ arch/x86/xen/mmu_pv.c                    | 492 ++++++-------------------------
+ arch/x86/xen/p2m.c                       |   6 +-
+ arch/x86/xen/setup.c                     |  36 +--
+ arch/x86/xen/smp_pv.c                    |  18 --
+ arch/x86/xen/vdso.h                      |   6 -
+ arch/x86/xen/xen-asm.S                   | 194 +++++++++++-
+ arch/x86/xen/xen-asm_32.S                | 185 ------------
+ arch/x86/xen/xen-asm_64.S                | 192 ------------
+ arch/x86/xen/xen-head.S                  |   6 -
+ arch/x86/xen/xen-ops.h                   |   1 -
+ drivers/gpu/drm/xen/xen_drm_front.c      |  10 +-
+ drivers/gpu/drm/xen/xen_drm_front.h      |   2 +-
+ drivers/gpu/drm/xen/xen_drm_front_conn.c |   1 +
+ drivers/gpu/drm/xen/xen_drm_front_gem.c  |  11 +-
+ drivers/gpu/drm/xen/xen_drm_front_kms.c  |   2 +-
+ drivers/xen/Kconfig                      |   4 +-
+ drivers/xen/gntdev-dmabuf.c              |   8 +
+ include/xen/interface/io/displif.h       |  91 +++++-
+ 27 files changed, 397 insertions(+), 1143 deletions(-)
+
+Juergen Gross (3):
+      x86/xen: remove 32-bit Xen PV guest support
+      x86/xen: eliminate xen-asm_64.S
+      x86/xen: drop tests for highmem in pv code
+
+Oleksandr Andrushchenko (5):
+      xen/gntdev: Fix dmabuf import with non-zero sgt offset
+      drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+      drm/xen-front: Add YUYV to supported formats
+      xen: Sync up with the canonical protocol definition in Xen
+      drm/xen-front: Pass dumb buffer data offset to the backend
