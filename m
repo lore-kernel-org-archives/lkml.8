@@ -2,97 +2,82 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB080C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB03C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B37D920866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597418786;
-	bh=BuFd0GUohYMykV0bEdLt1waKCKM21ZGzCtbhCO68IFc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hOpQMYRzwE5IugVR5iJD/Jvd5VGz9nMBfFVuF50MfUCijV3d9g38zsGEcEbATL60n
-	 747jJfffMvGBojuM7IyPcdK3sMY9Wh4JTyGSS7biYFzdCuQ6XWcCwHfA4CBja+i+8O
-	 pHLh4X/I7LEyVZvrOokbDWt5aXzE2J8rbHxe/iig=
+	by mail.kernel.org (Postfix) with ESMTP id 81EBA207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYgXg/G3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHNP0Z (ORCPT
+        id S1727826AbgHNP1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgHNP0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:26:24 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02285207DA;
-        Fri, 14 Aug 2020 15:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597418784;
-        bh=BuFd0GUohYMykV0bEdLt1waKCKM21ZGzCtbhCO68IFc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IIINUl+lN73fm93kQbcZAXjSlQanUn+3mjuNuD3Nidj6TRiHH1x8JytdH4XNdcU58
-         9vtGYsGEm0hgOvf4QSYePNsgOTrf5uahsMt09h8BEg99lleRxbDlvyFEdc/ZArMpHw
-         ShSpemX1MWdH1Tp9ugrVarn7gsSnCw5beyosMS8U=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CDEEE3522A0E; Fri, 14 Aug 2020 08:26:23 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 08:26:23 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200814152623.GN4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813182618.GX2674@hirez.programming.kicks-ass.net>
- <20200813185257.GF4295@paulmck-ThinkPad-P72>
- <20200813220619.GA2674@hirez.programming.kicks-ass.net>
- <875z9m3xo7.fsf@nanos.tec.linutronix.de>
- <20200814083037.GD3982@worktop.programming.kicks-ass.net>
- <20200814102306.GK35926@hirez.programming.kicks-ass.net>
+        Fri, 14 Aug 2020 11:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgHNP1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:27:20 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1E8C061384;
+        Fri, 14 Aug 2020 08:27:19 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id c16so10313837ejx.12;
+        Fri, 14 Aug 2020 08:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=laB7aE4hgtTLxMhcqJK/gtN+/NQVEMfkjyrRHT25v7M=;
+        b=dYgXg/G3LgCbNh9JMLbZBeu/qQ2oxY1Mj9rY3lBz+zDWkR9u63sRSMWkvq0p5z/w64
+         ynepp3rWZI9KIEIFYLAp3bMpYSoRgAId8SBass12h20sKZIGvgVCmoLXQQcuUNJYwpA5
+         j5ECwVo0jJ3WuZfcFfHMvrAf6lCDfDhu1v/t2jUErnKimQd7OSV2BKn0Ztak4xFUu79U
+         f6V5LZELenBEzaKSsgdr5kCn5EVK7ynHtumvJ+0aOXh/JmSXGvz8k9WQrW4Vbz82L8H7
+         EbU78O5ululCJ9bPfSbTK83sBRyTiVbTjdc92IhMYtvTa9Ncdms6xqKtzJctfA6sPRls
+         hA4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=laB7aE4hgtTLxMhcqJK/gtN+/NQVEMfkjyrRHT25v7M=;
+        b=SnoXxHyzKzbGyQTSMY2+69vFvFbDd2az3Cdv6VMpd+D9NfSGxH1B36I+0+f1S38RU8
+         yJ9FAxtYiTcPmMC4r02ezG7J7gD+wxUb2r7k5qqLi28W00f5LS539TX2c/2cQDJUtNyc
+         CqsewRpIuT+wx2JitIEplXocaumAhPOsgN21hlRW1US4utHMNPPNPCwdXPiIxTZ8FETJ
+         Vmr2eHkHW8C+GrYCirTnBblgLznNB54GcIrmgGqhCdvcMF5IrtORDp6VvMZdDATIiumy
+         6wXms+rXgKWplPZQnaDkqW+AWWhi0285Xx1nIYaiDV2hMFoY53/qP7q2rYZKEPJs3tKM
+         vdYg==
+X-Gm-Message-State: AOAM533lQvjqggzA99Zeqxms2Iog7L2haH/0VqfugkXxNP8qsr6enGor
+        qZVqdMsPSR3+KNZrzc0kJJZUMT46z9PlWkjqz9o=
+X-Google-Smtp-Source: ABdhPJxzrpdNKl1n40Wq/XKY+9obkbHdMG7l1mh2ysAETZhznmJJNSayHb9WcWtvRklHAnzv0EkUY/cshH8+meBZ94E=
+X-Received: by 2002:a17:906:3445:: with SMTP id d5mr2856635ejb.348.1597418838713;
+ Fri, 14 Aug 2020 08:27:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814102306.GK35926@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200729120057.35079-1-konradybcio@gmail.com> <CAMS8qEWQZPAZy71jx2Wx9B=RDximmC_A9On1Tk-3ekL-LTgsYg@mail.gmail.com>
+In-Reply-To: <CAMS8qEWQZPAZy71jx2Wx9B=RDximmC_A9On1Tk-3ekL-LTgsYg@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Fri, 14 Aug 2020 17:26:42 +0200
+Message-ID: <CAMS8qEXj8pHqhtHj-rwMvB8NvuuDbmzP2wZDRcT0r8YA6dX2Bg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] msm8992/4 updates
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:23:06PM +0200, peterz@infradead.org wrote:
-> On Fri, Aug 14, 2020 at 10:30:37AM +0200, Peter Zijlstra wrote:
-> > > > 1.	Prohibit invoking allocators from raw atomic context, such
-> > > >	as when holding a raw spinlock.
-> > > 
-> > >   Clearly the simplest solution but not Pauls favourite and
-> > >   unfortunately he has a good reason.
-> > 
-> > Which isn't actually stated anywhere I suppose ?
-> 
-> Introduce raw_kfree_rcu() that doesn't do the allocation, and fix the
-> few wonky callsites.
+Bumping again, merge window closes soon..
 
-The problem with that is common code along with the tendency of people
-to just use the one that "works everywhere".
-
-							Thanx, Paul
+Konrad
