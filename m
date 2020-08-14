@@ -2,75 +2,109 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDDFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9737220774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC8620774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EpPtzf1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgHNGEu (ORCPT
+        id S1726623AbgHNGFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:04:50 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54669 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHNGEt (ORCPT
+        Fri, 14 Aug 2020 02:05:15 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6490 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726151AbgHNGFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:04:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d190so6505559wmd.4;
-        Thu, 13 Aug 2020 23:04:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vPALidMW+fF/GY55nQjLH9o8dJ+J86ReCVm/X6/kzsY=;
-        b=CaFaXxQ90asjOIOAWID1M/3mYB//WZE6TXWZS2IVXOnXj6vsl6+yFjKmLukzZe1KPz
-         gOdfdgYDqyGvbxkUbIMqCnUN2LL24YtwQHVZBOv4IvkmtJbAI6muujCHbjYeIkgMpk/o
-         ertwA/xqWRc1XTzsULkbAIbZ+uJO+DwybiBVeHw7BLu6nSokzScipXSl9e5i5HpJLYWv
-         qW3gxaYZNB9grDmxZMF+w/QXUvx7Os2gtXV4NuR1QnZDH3cCMG426+5pSuc1ufhRAfRq
-         XGxT5zLkIqAYoJtQsP+ZgEXlMxY15z5xnl/9g62ddYmu5RcHqeK2GFzDB9baV0d1u24L
-         0ggw==
-X-Gm-Message-State: AOAM5312dQUVzO25PM0uaqJcxgus9bOqh3hVoBsAsdFyF+LU9j36O+GR
-        EUHrPwY/TgTB6BOStWB3hUM=
-X-Google-Smtp-Source: ABdhPJyLfOoJ39cpyJDuUL+tU5wQhF112G02dJXAZioVEhaG5hyPc5D1oW/NxBT9ROo/KumxVB3xQQ==
-X-Received: by 2002:a1c:4b0d:: with SMTP id y13mr1008363wma.6.1597385088054;
-        Thu, 13 Aug 2020 23:04:48 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:51f:3472:bc7:2f4f? ([2601:647:4802:9070:51f:3472:bc7:2f4f])
-        by smtp.gmail.com with ESMTPSA id k4sm14550383wrd.72.2020.08.13.23.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 23:04:47 -0700 (PDT)
-Subject: Re: [PATCH v2] nvme: Use spin_lock_irq() when taking the ctrl->lock
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <keith.busch@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-References: <20200812232444.18310-1-logang@deltatee.com>
- <20200813003200.GA1640756@dhcp-10-100-145-180.wdl.wdc.com>
- <829bed01-44c9-cac7-eb1b-9d1ccca7fd47@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <498ea4cf-1edd-e50e-35aa-b5529616337b@grimberg.me>
-Date:   Thu, 13 Aug 2020 23:04:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 Aug 2020 02:05:14 -0400
+X-UUID: c2426f0e5bd0429e87435e36841a485c-20200814
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=59u+JK0JHUadSuGfbkt82SozCQVQXwbTzzJ5U+21lKY=;
+        b=EpPtzf1/K4O8uhlmeSgnyBnAiP4JkGvhHQMAYFps8g/N8F+PTvyKdFetylow5WXAezi0GuAtoxW656e0W+IaaA59RZW1FsdttXBdWzXmVxkMmE7YRhRjvKmWrsPaBhlKkcQqc39lwzfyHudBqKjJVQZrsbFDNiTrUgu+vXO/RQU=;
+X-UUID: c2426f0e5bd0429e87435e36841a485c-20200814
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <seiya.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1459197204; Fri, 14 Aug 2020 14:05:09 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 14 Aug 2020 14:05:06 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 14 Aug 2020 14:05:06 +0800
+From:   Seiya Wang <seiya.wang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v4 0/4] Add basic node support for Mediatek MT8192 SoC 
+Date:   Fri, 14 Aug 2020 14:04:51 +0800
+Message-ID: <20200814060454.32200-1-seiya.wang@mediatek.com>
+X-Mailer: git-send-email 2.14.1
 MIME-Version: 1.0
-In-Reply-To: <829bed01-44c9-cac7-eb1b-9d1ccca7fd47@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+TVQ4MTkyIGlzIGEgU29DIGJhc2VkIG9uIDY0Yml0IEFSTXY4IGFyY2hpdGVjdHVyZS4NCkl0IGNv
+bnRhaW5zIDQgQ0E1NSBhbmQgNCBDQTc2IGNvcmVzLg0KTVQ4MTkyIHNoYXJlIG1hbnkgSFcgSVAg
+d2l0aCBNVDY1eHggc2VyaWVzLg0KVGhpcyBwYXRjaHNldCB3YXMgdGVzdGVkIG9uIE1UODE5MiBl
+dmFsdWF0aW9uIGJvYXJkIGFuZCB1c2UgY29ycmVjdCBjbG9jayB0byBzaGUNCmxsLg0KDQpCYXNl
+ZCBvbiB2NS44LXJjMQ0KDQpDaGFuZ2UgaW4gdjQ6DQoxLiBSZW1vdmUgc2Nwc3lzLCBzcG1pIGFu
+ZCBhcHUgbm9kZXMNCjIuIEFkZCBpMmMgbm9kZXMNCjMuIFVwZGF0ZSB3YXRjaGRvZyBiaW5kaW5n
+DQo0LiBVcGRhdGUgZGVwZW5kZW5jeSBsaXN0DQoNCkNoYW5nZSBpbiB2MzoNCkZpeCB0eXBvIGlu
+IGJpbmRpbmcgZG9jdW1lbnQgb2YgdGltZXINCg0KQ2hhbmdlIGluIHYyOg0KMS4gUmVtb3ZlIG10
+ODE5Mi1wb3dlci5oIGZyb20gbXQ4MTkyLmR0c2kgd2hpY2ggaXMgbm90IHVzZWQgeWV0DQoyLiBB
+ZGQgdGltZXIgYmluZGluZyBkb2N1bWVudCBhbmQgZGV2aWNlIHRyZWUgbm9kZSBpbiBtdDgxOTIu
+ZHRzaQ0KMy4gUmVtb3ZlIHdhdGNoZG9nIGRyaXZlciBtb2RpZmljYXRpb24NCg0KU2VpeWEgV2Fu
+ZyAoMyk6DQogIGFybTY0OiBkdHM6IEFkZCBNZWRpYXRlayBTb0MgTVQ4MTkyIGFuZCBldmFsdWF0
+aW9uIGJvYXJkIGR0cyBhbmQNCiAgICBNYWtlZmlsZQ0KICBkdC1iaW5kaW5nczogc2VyaWFsOiBB
+ZGQgY29tcGF0aWJsZSBmb3IgTWVkaWF0ZWsgTVQ4MTkyDQogIGR0LWJpbmRpbmdzOiB0aW1lcjog
+QWRkIGNvbXBhdGlibGUgZm9yIE1lZGlhdGVrIE1UODE5Mg0KLS0tDQpUaGlzIHBhdGNoIGRlcGVu
+ZHMgb24NCltQQVRDSCB2MiAxLzNdIGR0LWJpbmRpbmdzOiBwaW5jdHJsOiBtdDgxOTI6IGFkZCBw
+aW5jdHJsIGZpbGUNCltQQVRDSCB2MiAyLzNdIGR0LWJpbmRpbmdzOiBwaW5jdHJsOiBtdDgxOTI6
+IGFkZCBiaW5kaW5nIGRvY3VtZW50DQpbUEFUQ0ggdjIgMy80XSBkdC1iaW5kaW5nczogbWVkaWF0
+ZWs6IGFkZCBjb21wYXRpYmxlIGZvciBNVDY4NzMvODE5MiBwd3JhcA0KW1BBVENIIHYyIDEvMl0g
+ZHQtYmluZGluZ3M6IHNwaTogdXBkYXRlIGJpbmRpbmdzIGZvciBNVDgxOTIgU29DDQpbUEFUQ0gg
+Mi80XSBjbGs6IG1lZGlhdGVrOiBBZGQgZHQtYmluZGluZ3MgZm9yIE1UODE5MiBjbG9ja3MNCltQ
+QVRDSCB2MiAxLzVdIGR0LWJpbmRpbmdzOiBBUk06IE1lZGlhdGVrOiBEb2N1bWVudCBiaW5kaW5n
+cyBmb3IgTVQ4MTkyDQpbdjQsMy81XSBkdC1iaW5kaW5nOiBtZWRpYXRlazogbXQ4MTkyOiB1cGRh
+dGUgbXRrLXdkdCBkb2N1bWVudA0KDQpQbGVhc2UgYWxzbyBhY2NlcHQgdGhpcyBwYXRjaCB0b2dl
+dGhlciB3aXRoIFsxXVsyXVszXVs0XVs1XVs2XQ0KdG8gYXZvaWQgYnVpbGQgYW5kIGR0IGJpbmRp
+bmcgY2hlY2sgZXJyb3IuDQoNClsxXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1h
+aWwvbGludXgtbWVkaWF0ZWsvMjAyMC1BdWd1c3QvMDE1MDAyLmh0bWwNClsyXSBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0ZWsvMjAyMC1BdWd1c3QvMDE1
+MDA1Lmh0bWwNClszXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgt
+bWVkaWF0ZWsvMjAyMC1KdWx5LzAxNDU0Ni5odG1sDQpbNF0gaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW1lZGlhdGVrLzIwMjAtSnVseS8wMTQ0MDYuaHRtbA0KWzVd
+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDIw
+LUp1bHkvMDE0NDUwLmh0bWwNCls2XSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1h
+aWwvbGludXgtbWVkaWF0ZWsvMjAyMC1KdWx5LzAxNDg5OC5odG1sDQpbN10gaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW1lZGlhdGVrLzIwMjAtQXVndXN0LzAxNTA0
+Ni5odG1sDQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvbXRrLXVhcnQudHh0
+ICAgICAgICB8ICAgMSArDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdk
+dC50eHQgICAgICAgfCAgIDIgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZp
+bGUgICAgICAgICAgICAgIHwgICAxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210
+ODE5Mi1ldmIuZHRzICAgICAgICB8ICAyOSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
+ay9tdDgxOTIuZHRzaSAgICAgICAgICAgfCA2NjMgKysrKysrKysrKysrKysrKysrKysrDQogZHJp
+dmVycy93YXRjaGRvZy9tdGtfd2R0LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKw0K
+IDYgZmlsZXMgY2hhbmdlZCwgNzAxIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTItZXZiLmR0cw0KIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpDQoNCi0tDQoy
+LjE0LjE=
 
->> There's an unrelated whitespace change in nvme_init_identify().
->> Otherwise, looks fine.
-> 
-> Oops, sorry. can this be fixed up when it's merged?
-
-Fixed and queued.
