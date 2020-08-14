@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFCCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9988C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7592078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920432078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 00:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZL77P19"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZnuIFn4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHNAHi (ORCPT
+        id S1727803AbgHNAIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
+        Thu, 13 Aug 2020 20:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgHNAHS (ORCPT
+        with ESMTP id S1727023AbgHNAHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 20:07:18 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4CDC061385;
-        Thu, 13 Aug 2020 17:07:18 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w25so8072750ljo.12;
-        Thu, 13 Aug 2020 17:07:18 -0700 (PDT)
+        Thu, 13 Aug 2020 20:07:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7C7C061757;
+        Thu, 13 Aug 2020 17:07:38 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v12so8092672ljc.10;
+        Thu, 13 Aug 2020 17:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OACUgnIVU65tzsOzScIriTEik4ElupmW/3n4uNknnCw=;
-        b=kZL77P19rsPfMMmuxF3UHL/Nw2J9zg9LBziAuYQ3QGHZKN9kRvJK7aiAXbyRYjKZQ8
-         /5Wmh0LE201J+xiNAsLVXtEFIHp7BqFJaetac2UzyAmf4fwbF4Hz5y7PQep8vSK0S2yD
-         +6g/WwNIulGxYBcNf2zp7lmJCi0+MZqEumQcasLcUhjAwuVx2pC3kyKNxrXDx6YRHGHd
-         FZKLo9faGDn8FGsUuvYBT+yQ8b/cTDloITpIriRIGl90pO6Ftvav1FqXrsFGOwBd2hsz
-         aOjBHxaHnknr21wkmfTOjJMnHlen/Eyyyg4xWKumXfMyebpvCdNKn6XJOi5Uc2hXVU50
-         PRZw==
+        bh=8yAUvmC7dB1AvZufMoltXCEKaZJYFALPQadvIxchYtE=;
+        b=nZnuIFn4NQ7251gwYTws9nLSOUpePnWTN0wUR3sYcp5FQ9RWkjtClffkh7lFP53eh8
+         ugWvszqZJIIGDUX4I3Y1FZgdXBimv4gOIrfNH2l+zxC4vj+5RsroRnqxON7cW4RVu/jQ
+         gqp23VL7L0+kGSefSR5HudzGvkDgywh0nkcZ3fVzjkmILhkUf1/Lnlv3GZnkKG4HPQv9
+         f0e9uWIE3vUCTO6C+/tXTKWmmquU9N7AeonqQqCVzPfg8ZrRoAIcdwQjF34x9TkNh5UV
+         mMmm4YDoocFJlQCkhpPc+17BnKW7mTsThNqB55qwge+Qkdc5zlH4V/kg1uhEk1Ovug+O
+         8V9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OACUgnIVU65tzsOzScIriTEik4ElupmW/3n4uNknnCw=;
-        b=eFuy4qMMrVa9jhd/Tt6Sp2c39d0npvwVLHuUnNV5rRX7/5Y961+7/yCVNf2q1KCayq
-         LDQcpg7+Nxh+2B6w70lt/mIOlH5QxoGr8pOQozvooYqFGajP0bxpcigki7yiS13PRmSR
-         FWy8kYAF19lqMR1NPrjg4wAm4y9BFM/oItOK4XaFFKmYPeI2r0waYJfOp8nHD5ViJsrA
-         kWvyXEZrNi+xcKnOWDcwcOtQI/LaXuZ68zuqxJNKKJ0izbqN1OCaBJ9f1O6CGOzUPAk1
-         OAhMEpZfxPBAEh8AXf9pM1wfGXxBYJ/VRd5/HZ1+FDQ5G+Vo4tAU0HZO4n554CaaQaHG
-         EG7w==
-X-Gm-Message-State: AOAM530TK2MxfDd4fcGOjz00EWnGk3o7jAomBR452K4sCSciB3c8xluE
-        DTETawpQibPOQSPw98XYzK0=
-X-Google-Smtp-Source: ABdhPJwZBq6RRxfSxs1QS6UjMbi4aAPxYtBEkRmgJlSMBt/bp0JaRodpMylZTYNCmfkGoS/0/xKH5w==
-X-Received: by 2002:a2e:7504:: with SMTP id q4mr107843ljc.41.1597363636645;
-        Thu, 13 Aug 2020 17:07:16 -0700 (PDT)
+        bh=8yAUvmC7dB1AvZufMoltXCEKaZJYFALPQadvIxchYtE=;
+        b=hxOBbVBDhr+MLj/q4yFLh4+vxIRhzvWAmHq6V6FLrpzUBj6g37f6+npfwo9nh9B0+o
+         lbop9M93tYThlk2VjP/HPeHo4EY1RO6N+wPhrGoR0BO3nigiIUQdkkp6p7sUtNxpp8Me
+         RtR4UdVzSLZ3TKKCFlKKm8xSZBIdYz7r8shG7JKDSKPEkLE2cabHSW2A9mMk+hWa03DQ
+         bhNsTdHv92TX2QwszEZ2iw1Hy7ttaJlaaxJs8LVTqCcHwWRJl7mZ/80wvS6WnwQ8YcQo
+         797BN5s7ga2xTjGjSroM1Ec3M4k+eAF7M+YT9cp+xCo4nMUn8jSXH2CE+rrK+itGapDC
+         nTMw==
+X-Gm-Message-State: AOAM531+/BL3zxgH1w6u/DvOLrOX5Rv2Vrj8sfNOeqxouKpCP/AhueOd
+        V3Nq2N+1KbfUIQNaqKXQRFI=
+X-Google-Smtp-Source: ABdhPJwiHCAsmpwTHY7fxXYOvVp2r9Jve/fNJ/xQBu7FZzCkI2bJBYxqcixmLnYy4dsrjOhGDpzE3A==
+X-Received: by 2002:a2e:9010:: with SMTP id h16mr114446ljg.316.1597363657009;
+        Thu, 13 Aug 2020 17:07:37 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.15
+        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 17:07:16 -0700 (PDT)
+        Thu, 13 Aug 2020 17:07:36 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 14/36] PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
-Date:   Fri, 14 Aug 2020 03:05:59 +0300
-Message-Id: <20200814000621.8415-15-digetx@gmail.com>
+Subject: [PATCH v5 32/36] memory: tegra30-emc: Continue probing if timings are missing in device-tree
+Date:   Fri, 14 Aug 2020 03:06:17 +0300
+Message-Id: <20200814000621.8415-33-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200814000621.8415-1-digetx@gmail.com>
 References: <20200814000621.8415-1-digetx@gmail.com>
@@ -88,49 +88,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's useful to now when something goes wrong instead of failing silently,
-so let's add error messages to tegra_devfreq_target() to prevent situation
-where it fails silently.
+EMC driver will become mandatory after turning it into interconnect
+provider because interconnect users, like display controller driver, will
+fail to probe using newer device-trees that have interconnect properties.
+Thus make EMC driver to probe even if timings are missing in device-tree.
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra20-devfreq.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/memory/tegra/tegra30-emc.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-index a985f24098f5..bc43284996de 100644
---- a/drivers/devfreq/tegra20-devfreq.c
-+++ b/drivers/devfreq/tegra20-devfreq.c
-@@ -44,19 +44,25 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+index f3082964cfb6..0cd39bf5f393 100644
+--- a/drivers/memory/tegra/tegra30-emc.c
++++ b/drivers/memory/tegra/tegra30-emc.c
+@@ -988,6 +988,11 @@ static struct device_node *emc_find_node_by_ram_code(struct device *dev)
+ 	u32 value, ram_code;
  	int err;
  
- 	opp = devfreq_recommended_opp(dev, freq, flags);
--	if (IS_ERR(opp))
-+	if (IS_ERR(opp)) {
-+		dev_err(dev, "failed to find opp for %lu Hz\n", *freq);
- 		return PTR_ERR(opp);
++	if (of_get_child_count(dev->of_node) == 0) {
++		dev_info(dev, "device-tree doesn't have memory timings\n");
++		return NULL;
 +	}
++
+ 	ram_code = tegra_read_ram_code();
  
- 	rate = dev_pm_opp_get_freq(opp);
- 	dev_pm_opp_put(opp);
+ 	for_each_child_of_node(dev->of_node, np) {
+@@ -1057,6 +1062,9 @@ static long emc_round_rate(unsigned long rate,
+ 	struct tegra_emc *emc = arg;
+ 	unsigned int i;
  
- 	err = clk_set_min_rate(tegra->emc_clock, rate);
++	if (!emc->num_timings)
++		return clk_get_rate(emc->clk);
++
+ 	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
+ 
+ 	for (i = 0; i < emc->num_timings; i++) {
+@@ -1263,12 +1271,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	struct tegra_emc *emc;
+ 	int err;
+ 
+-	if (of_get_child_count(pdev->dev.of_node) == 0) {
+-		dev_info(&pdev->dev,
+-			 "device-tree node doesn't have memory timings\n");
+-		return -ENODEV;
+-	}
+-
+ 	np = of_parse_phandle(pdev->dev.of_node, "nvidia,memory-controller", 0);
+ 	if (!np) {
+ 		dev_err(&pdev->dev, "could not get memory controller node\n");
+@@ -1280,10 +1282,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	if (!mc)
+ 		return -ENOENT;
+ 
+-	np = emc_find_node_by_ram_code(&pdev->dev);
+-	if (!np)
+-		return -EINVAL;
+-
+ 	emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
+ 	if (!emc) {
+ 		of_node_put(np);
+@@ -1297,10 +1295,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	emc->clk_nb.notifier_call = emc_clk_change_notify;
+ 	emc->dev = &pdev->dev;
+ 
+-	err = emc_load_timings_from_dt(emc, np);
+-	of_node_put(np);
 -	if (err)
-+	if (err) {
-+		dev_err(dev, "failed to set min rate: %d\n", err);
- 		return err;
+-		return err;
++	np = emc_find_node_by_ram_code(&pdev->dev);
++	if (np) {
++		err = emc_load_timings_from_dt(emc, np);
++		of_node_put(np);
++		if (err)
++			return err;
 +	}
  
- 	err = clk_set_rate(tegra->emc_clock, 0);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "failed to set rate: %d\n", err);
- 		goto restore_min_rate;
-+	}
- 
- 	return 0;
- 
+ 	emc->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(emc->regs))
 -- 
 2.27.0
 
