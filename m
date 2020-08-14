@@ -2,100 +2,198 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2259CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B1AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC03120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3E82078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597428104;
+	bh=tlSBhpa4ToPHr0zR2hPhfIijVZq2J3X4X8TvGLSLkgU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=LOyESMdzM8OFX94HhHxetzXRLG7E9HURvCJrxlgdEw4vnZh/sk5ZA4mfd6WL9l2I2
+	 94SFQVf7XlAjHN4FEnvl/Gz2Pjb1S8sTGiXrESVqzwyeAuhYLvjRNAGMYGNArzZ9fS
+	 I7ANRRzbjw61u7Pe8uaTn1OZtjcPobrsVYfcoh4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHNSAL (ORCPT
+        id S1728395AbgHNSBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 14:00:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41072 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgHNSAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 14:00:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s15so4883314pgc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 11:00:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b1l6WJIr43PpfFuXs56xVTu2jiFSLMBw3oL0hztXcos=;
-        b=H+PwhcIH2zsWCbIVtFpbpDXB5jtr8Q66UiJJmFVLkijjXtu8hnuhfC0py5H5fWqqa5
-         OTqELwTBCtUS0Jv5G2DJi5A/xxu9CfQ9MGZNN2Hqpe95PFm8/dbmpLgowsXfoaSOser6
-         6Ye0knczMC/IFX849wwABFQpy633aSO3gS6e77atCgqw8EbM/i8j1ArtSbDeL4kfs3+R
-         rEe2YCI2v8rDXg2EYCFCy0M5r4j8EvS3pssxZg8GR98Fk3DZrwTWjCusWeOebwzUhrbd
-         dSUoDRe07BsSOSPLlbADqg+XujoSpU80U7YyqC8FDw8bysbxVKm2nb/bFya51jdSfWF+
-         RuMw==
-X-Gm-Message-State: AOAM532+6In/3+//xLzBg3qS5xrX48vqRtXSbKUb+3Tv3nhdN5mt5Jle
-        Nx63RZYsebO4XR6JCrjU5lE=
-X-Google-Smtp-Source: ABdhPJyF3ztckgCcdugn+Ud0cF+bfv1vKWCsXc7NhxQ8d6m3EUTgVQchX0lrfO+uwb2WyTIiWwHV5w==
-X-Received: by 2002:a05:6a00:1509:: with SMTP id q9mr2652041pfu.24.1597428010590;
-        Fri, 14 Aug 2020 11:00:10 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:51f:3472:bc7:2f4f? ([2601:647:4802:9070:51f:3472:bc7:2f4f])
-        by smtp.gmail.com with ESMTPSA id x6sm10054474pfd.53.2020.08.14.11.00.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 11:00:09 -0700 (PDT)
-Subject: Re: [PATCH] nvme-pci: cancel nvme device request before disabling
-To:     Keith Busch <kbusch@kernel.org>, Tong Zhang <ztong0001@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@fb.com, Christoph Hellwig <hch@lst.de>
-References: <20200814071431.201400-1-ztong0001@gmail.com>
- <20200814150433.GA3498391@dhcp-10-100-145-180.wdl.wdc.com>
- <CAA5qM4CctYiBe766-OnxAPHJWByyOo1rE7FzW-75ZcOib6niCA@mail.gmail.com>
- <20200814154233.GA3772144@dhcp-10-100-145-180.wdl.wdc.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <02d965f9-d465-6e6f-b113-5f6f7e327afb@grimberg.me>
-Date:   Fri, 14 Aug 2020 11:00:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 14 Aug 2020 14:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgHNSBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:01:42 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5889220771;
+        Fri, 14 Aug 2020 18:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597428101;
+        bh=tlSBhpa4ToPHr0zR2hPhfIijVZq2J3X4X8TvGLSLkgU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=U9vNT1mSKZy7w26/Fkt1gMXQdcR78Clo1DaaDjTx23XBJP544U/oZs0qT0S0/OczB
+         eANl7ItRov1iQjT496z3+SF0LsTUlx0R5Zke9QLWzXvTfb4+J05zob5gC+DzYaZfFI
+         j1YupVg3WG/EErHmAjFzlongRtzP3F+F1yePIsDQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0FC073522A0E; Fri, 14 Aug 2020 11:01:41 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 11:01:41 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200814180141.GP4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <87lfiitquu.fsf@nanos.tec.linutronix.de>
+ <20200814071750.GZ9477@dhcp22.suse.cz>
+ <20200814121544.GA32598@pc636>
+ <20200814124832.GD9477@dhcp22.suse.cz>
+ <20200814133450.GK4295@paulmck-ThinkPad-P72>
+ <20200814140604.GE9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200814154233.GA3772144@dhcp-10-100-145-180.wdl.wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814140604.GE9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>>> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
->>>> index ba725ae47305..c4f1ce0ee1e3 100644
->>>> --- a/drivers/nvme/host/pci.c
->>>> +++ b/drivers/nvme/host/pci.c
->>>> @@ -1249,8 +1249,8 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
->>>>                dev_warn_ratelimited(dev->ctrl.device,
->>>>                         "I/O %d QID %d timeout, disable controller\n",
->>>>                         req->tag, nvmeq->qid);
->>>> -             nvme_dev_disable(dev, true);
->>>>                nvme_req(req)->flags |= NVME_REQ_CANCELLED;
->>>> +             nvme_dev_disable(dev, true);
->>>>                return BLK_EH_DONE;
->>>
->>> Shouldn't this flag have been set in nvme_cancel_request()?
->>
->> nvme_cancel_request() is not setting this flag to cancelled and this is causing
+On Fri, Aug 14, 2020 at 04:06:04PM +0200, Michal Hocko wrote:
+> On Fri 14-08-20 06:34:50, Paul E. McKenney wrote:
+> > On Fri, Aug 14, 2020 at 02:48:32PM +0200, Michal Hocko wrote:
+> > > On Fri 14-08-20 14:15:44, Uladzislau Rezki wrote:
+> > > > > On Thu 13-08-20 19:09:29, Thomas Gleixner wrote:
+> > > > > > Michal Hocko <mhocko@suse.com> writes:
+> > > > > [...]
+> > > > > > > Why should we limit the functionality of the allocator for something
+> > > > > > > that is not a real problem?
+> > > > > > 
+> > > > > > We'd limit the allocator for exactly ONE new user which was aware of
+> > > > > > this problem _before_ the code hit mainline. And that ONE user is
+> > > > > > prepared to handle the fail.
+> > > > > 
+> > > > > If we are to limit the functionality to this one particular user then
+> > > > > I would consider a dedicated gfp flag a huge overkill. It would be much
+> > > > > more easier to have a preallocated pool of pages and use those and
+> > > > > completely avoid the core allocator. That would certainly only shift the
+> > > > > complexity to the caller but if it is expected there would be only that
+> > > > > single user then it would be probably better than opening a can of worms
+> > > > > like allocator usable from raw spin locks.
+> > > > > 
+> > > > Vlastimil raised same question earlier, i answered, but let me answer again:
+> > > > 
+> > > > It is hard to achieve because the logic does not stick to certain static test
+> > > > case, i.e. it depends on how heavily kfree_rcu(single/double) are used. Based
+> > > > on that, "how heavily" - number of pages are formed, until the drain/reclaimer
+> > > > thread frees them.
+> > > 
+> > > How many pages are talking about - ball park? 100s, 1000s?
+> > 
+> > Under normal operation, a couple of pages per CPU, which would make
+> > preallocation entirely reasonable.  Except that if someone does something
+> > that floods RCU callbacks (close(open) in a tight userspace loop, for but
+> > one example), then 2000 per CPU might not be enough, which on a 64-CPU
+> > system comes to about 500MB.  This is beyond excessive for preallocation
+> > on the systems I am familiar with.
+> > 
+> > And the flooding case is where you most want the reclamation to be
+> > efficient, and thus where you want the pages.
 > 
-> Right, I see that it doesn't, but I'm saying that it should. We used to
-> do something like that, and I'm struggling to recall why we're not
-> anymore.
+> I am not sure the page allocator would help you with this scenario
+> unless you are on very large machines. Pagesets scale with the available
+> memory and percpu_pagelist_fraction sysctl (have a look at
+> pageset_set_high_and_batch). It is roughly 1000th of the zone size for
+> each zone. You can check that in /proc/vmstat (my 8G machine)
 
-I also don't recall why, but I know that we rely on the status
-propagating back from submit_sync_cmd which won't happen because
-it converts the status into -ENODEV.
+Small systems might have ~64G.  The medium-sized systems might have
+~250G.  There are a few big ones that might have 1.5T.  None of the
+/proc/vmstat files from those machines contain anything resembling
+the list below, though.
 
-> The driver is not reporting   non-response back for all
-> cancelled requests, and that is probably not what we should be doing.
+> Node 0, zone      DMA
+> Not interesting at all
+> Node 0, zone    DMA32
+>   pagesets
+>     cpu: 0
+>               count: 242
+>               high:  378
+>               batch: 63
+>     cpu: 1
+>               count: 355
+>               high:  378
+>               batch: 63
+>     cpu: 2
+>               count: 359
+>               high:  378
+>               batch: 63
+>     cpu: 3
+>               count: 366
+>               high:  378
+>               batch: 63
+> Node 0, zone   Normal
+>   pagesets
+>     cpu: 0
+>               count: 359
+>               high:  378
+>               batch: 63
+>     cpu: 1
+>               count: 241
+>               high:  378
+>               batch: 63
+>     cpu: 2
+>               count: 297
+>               high:  378
+>               batch: 63
+>     cpu: 3
+>               count: 227
+>               high:  378
+>               batch: 63
+> 
+> Besides that do you need to be per-cpu? Having 1000 pages available and
+> managed under your raw spinlock should be good enough already no?
 
-I'd think that we should modify our callers to handle nvme status
-codes as well rather than rely on nvme_submit_sync_cmd to return a
-negative codes under some conditions.
+It needs to be almost entirely per-CPU for performance reasons.  Plus
+a user could do a tight close(open()) loop on each CPU.
+
+> > This of course raises the question of how much memory the lockless caches
+> > contain, but fortunately these RCU callback flooding scenarios also
+> > involve process-context allocation of the memory that is being passed
+> > to kfree_rcu().  That allocation should keep the lockless caches from
+> > going empty in the common case, correct?
+> 
+> Yes, those are refilled both on the allocation/free paths. But you
+> cannot really rely on that to happen early enough.
+
+So the really ugly scenarios with the tight loops normally allocate
+something and immediately either call_rcu() or kfree_rcu() it.
+But you are right, someone doing "rm -rf" on a large file tree
+with lots of small files might not be doing that many allocations.
+
+> Do you happen to have any numbers that would show the typical usage
+> and how often the slow path has to be taken becase pcp lists are
+> depleted? In other words even if we provide a functionality to give
+> completely lockless way to allocate memory how useful that is?
+
+Not yet, but let's see what we can do.
+
+							Thanx, Paul
