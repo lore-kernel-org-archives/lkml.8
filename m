@@ -2,170 +2,104 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCA22078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F95C20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 02:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUAvIzwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHNCZs (ORCPT
+        id S1726683AbgHNC0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:25:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37241 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgHNCZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 22:25:46 -0400
-IronPort-SDR: loe7R+yQA1cJk34r4tBTcCjCOXdG/dzXamCGyYjes0vWdqHRaoa+aVN0TfIITxLxeLNensvMZO
- X0a6r/50w6EQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="153576020"
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="153576020"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 19:25:45 -0700
-IronPort-SDR: C0XQXzUEe9qasbYbqTSW1APNek6shQ6g+sLC7ON+zyug+AEMvGiP8jnFMZOZtbG3c32a/q4v1/
- F8S866UhRGRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,310,1592895600"; 
-   d="scan'208";a="369782211"
-Received: from pnp1.jf.intel.com ([10.23.15.21])
-  by orsmga001.jf.intel.com with ESMTP; 13 Aug 2020 19:25:45 -0700
-From:   vaibhav.shankar@intel.com
-To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, bp@alien8.de, x86@kernel.org, hpa@zytor.com
-Cc:     vaibhav.shankar@intel.com
-Subject: [PATCH] perf/x86/intel/uncore: Add BW counters for GT, IA and IO breakdown
-Date:   Thu, 13 Aug 2020 19:22:34 -0700
-Message-Id: <20200814022234.23605-1-vaibhav.shankar@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Aug 2020 22:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgHNC0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 22:26:35 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48847C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 19:26:35 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id z17so7251852ill.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 19:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cHegjZcU0XOaLxA3426H5gnc8atFuiYj+6kFdWj5ljE=;
+        b=oUAvIzwfnyXhMrJXp9A1vBkMDzpBeKwIYiT7rg6agknOuVfhVMJP0WmQblYydOyP+b
+         1IRkiAOB0rQ4pQzNUisgFR1hKz7Zc+hyJhyKG5tC/FXKkQN2GmcVbGwa1VomkiJIMxvs
+         YhPvJgcLkgQRgawrhNj6YVc5JN6kSN3vZQ29JHPKzYL3F42gyW8RgLALkytlLfSRGTnu
+         Ih5DH3tkN9u5X000+VwM1UJ8vVesRQpuHqEzgvR+/tLzU3931gw5zlIV9CmjGnvWtHQu
+         2LSo2uOWbTiXtcsFsvsz2Zk3j+Ey6qWwtwtIQrkr/iZUt4v/KphL7F3OdzripTaL4A1S
+         GlbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cHegjZcU0XOaLxA3426H5gnc8atFuiYj+6kFdWj5ljE=;
+        b=Bwpn6hRFcAQOI9Dy6prtRe273PdJ19JKzUtQoZHqHCnTFoUpCiRxX3csAbogRAZ0UO
+         5zqWSUN7fo3MEbOopg7RFdlpa99ylTS0uBRlacGQ6gJUUDhRKZFu57uwYOaiSBwLOo10
+         MjRNql4pXyGDDsbWFhUrI0dFCaNk9Sxwr88tSnEqmld2rF0d6ivQcn4fGWyNPdawH/Fw
+         lXYKvwh5Ur4IL4BM1ipZrOJ6gCnum/FH2M/MPlBgjetDAY6ZLX7vBiRDuz9Tmcpq3C4V
+         14CR+GGGJJMK3j7nvuWySLrd4bNxzDEYbtGl+yYrPNkDs4ENHPlJUaOnxikyCMjwp0OJ
+         5ogQ==
+X-Gm-Message-State: AOAM533LAeo+U3bwKBiQr+qn7q0JOQ+ZOKIKmeS26Gz8RbgowdSEz88z
+        KXWDT4punUXMCK6ZDcAqmsyk81+8vrhKBHMPsdg=
+X-Google-Smtp-Source: ABdhPJySR/ElNUPu/PRuA5+q877G96Zj8p+NIBqU+6fXRvhBw3ZZPj6G1VvyjexkX1gnKj4evN8mvAzRBGHG5aS5gxA=
+X-Received: by 2002:a92:6904:: with SMTP id e4mr702536ilc.83.1597371994666;
+ Thu, 13 Aug 2020 19:26:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
+ <20200814014355.GS17456@casper.infradead.org> <20200814020700.GT17456@casper.infradead.org>
+ <CAGWkznEkTeTq4-wPKBcNsF2vF5SVaFc3xoZmceKSwg34vpkqbg@mail.gmail.com>
+In-Reply-To: <CAGWkznEkTeTq4-wPKBcNsF2vF5SVaFc3xoZmceKSwg34vpkqbg@mail.gmail.com>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Fri, 14 Aug 2020 10:26:23 +0800
+Message-ID: <CAGWkznGUBp+dHk3NugBzfftObosjH7Gg4s8C-AwkQBr5fM6-gw@mail.gmail.com>
+Subject: Re: [PATCH] mm : update ra->ra_pages if it's NOT equal to bdi->ra_pages
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Roman Gushchin <klamm@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Shankar <vaibhav.shankar@intel.com>
-
-Linux only has support to read total DDR reads and writes. Here we
-add support to enable bandwidth breakdown-GT, IA and IO. Breakdown
-of BW is impotant to debug and optimize memory access. This can also
-be used for telemetry and improving the system software.The offsets for
-GT, IA and IO are added and these free running counters can be accessed
-via MMIO space.
-
-The BW breakdown can be meaured using the following cmd:-
-perf stat -e uncore_imc/gt_requests/,uncore_imc/ia_requests/,
-             uncore_imc/io_requests/
-
-             30.57 MiB  uncore_imc/gt_requests/
-           1346.13 MiB  uncore_imc/ia_requests/
-            190.97 MiB  uncore_imc/io_requests/
-
-       5.984572733 seconds time elapsed
-
-     BW/s = <gt,ia,io>_requests/time elapsed
-
-Signed-off-by: Vaibhav Shankar <vaibhav.shankar@intel.com>
----
- arch/x86/events/intel/uncore_snb.c | 52 ++++++++++++++++++++++++++++--
- 1 file changed, 49 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index cb94ba86efd2..6a4ca27b2c9e 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -390,6 +390,18 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
- 	INTEL_UNCORE_EVENT_DESC(data_writes.scale, "6.103515625e-5"),
- 	INTEL_UNCORE_EVENT_DESC(data_writes.unit, "MiB"),
- 
-+	INTEL_UNCORE_EVENT_DESC(gt_requests, "event=0x03"),
-+	INTEL_UNCORE_EVENT_DESC(gt_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(gt_requests.unit, "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(ia_requests, "event=0x04"),
-+	INTEL_UNCORE_EVENT_DESC(ia_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(ia_requests.unit, "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(io_requests, "event=0x05"),
-+	INTEL_UNCORE_EVENT_DESC(io_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(io_requests.unit, "MiB"),
-+
- 	{ /* end: all zeroes */ },
- };
- 
-@@ -405,13 +417,35 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
- #define SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE	0x5054
- #define SNB_UNCORE_PCI_IMC_CTR_BASE		SNB_UNCORE_PCI_IMC_DATA_READS_BASE
- 
-+/* BW break down- legacy counters */
-+#define SNB_UNCORE_PCI_IMC_GT_REQUESTS		0x3
-+#define SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE	0x5040
-+#define SNB_UNCORE_PCI_IMC_IA_REQUESTS		0x4
-+#define SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE	0x5044
-+#define SNB_UNCORE_PCI_IMC_IO_REQUESTS		0x5
-+#define SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE	0x5048
-+
- enum perf_snb_uncore_imc_freerunning_types {
--	SNB_PCI_UNCORE_IMC_DATA		= 0,
-+	SNB_PCI_UNCORE_IMC_DATA_READS		= 0,
-+	SNB_PCI_UNCORE_IMC_DATA_WRITES,
-+	SNB_PCI_UNCORE_IMC_GT_REQUESTS,
-+	SNB_PCI_UNCORE_IMC_IA_REQUESTS,
-+	SNB_PCI_UNCORE_IMC_IO_REQUESTS,
-+
- 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
- };
- 
- static struct freerunning_counters snb_uncore_imc_freerunning[] = {
--	[SNB_PCI_UNCORE_IMC_DATA]     = { SNB_UNCORE_PCI_IMC_DATA_READS_BASE, 0x4, 0x0, 2, 32 },
-+	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_GT_REQUESTS]	= { SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_IA_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_IO_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
- };
- 
- static struct attribute *snb_uncore_imc_formats_attr[] = {
-@@ -525,6 +559,18 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
- 		base = SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE;
- 		idx = UNCORE_PMC_IDX_FREERUNNING;
- 		break;
-+	case SNB_UNCORE_PCI_IMC_GT_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
-+	case SNB_UNCORE_PCI_IMC_IA_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
-+	case SNB_UNCORE_PCI_IMC_IO_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -598,7 +644,7 @@ static struct intel_uncore_ops snb_uncore_imc_ops = {
- 
- static struct intel_uncore_type snb_uncore_imc = {
- 	.name		= "imc",
--	.num_counters   = 2,
-+	.num_counters   = 5,
- 	.num_boxes	= 1,
- 	.num_freerunning_types	= SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
- 	.mmio_map_size	= SNB_UNCORE_PCI_IMC_MAP_SIZE,
--- 
-2.17.1
-
+On Fri, Aug 14, 2020 at 10:20 AM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+>
+> On Fri, Aug 14, 2020 at 10:07 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Fri, Aug 14, 2020 at 02:43:55AM +0100, Matthew Wilcox wrote:
+> > > On Fri, Aug 14, 2020 at 09:30:11AM +0800, Zhaoyang Huang wrote:
+> > > > file->f_ra->ra_pages will remain the initialized value since it opend, which may
+> > > > be NOT equal to bdi->ra_pages as the latter one is updated somehow(etc,
+> > > > echo xxx > /sys/block/dm/queue/read_ahead_kb).So sync ra->ra_pages to the
+> > > > updated value when sync read.
+> > >
+> > > It still ignores the work done by shrink_readahead_size_eio()
+> > > and fadvise(POSIX_FADV_SEQUENTIAL).
+> >
+> > ... by the way, if you're trying to update one particular file's readahead
+> > state, you can just call fadvise(POSIX_FADV_NORMAL) on it.
+> >
+> > If you want to update every open file's ra_pages by writing to sysfs,
+> > then just no.  We don't do that.
+> No, What I want to fix is the file within one process's context  keeps
+> using the initialized value when it is opened and not sync with new
+> value when bdi->ra_pages changes.
+So you mean it is just the desired behavior as having the opened file
+use the initialized value even if bdi->ra_pages changed via sysfs?
+> >
+> > You haven't said what problem you're facing, so I really can't be more
+> > helpful.
