@@ -2,81 +2,148 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A927FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2488FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EFE20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597385388;
-	bh=c/lfw5JZTqHPS72/1poOsY6BXX2T5S4whSMwu1pt5eI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ektVppgXE4P++JoSd7ZRaix73M7Xg3a1LxChH2kXRngccye+8gDgWjXt1EYCWUkny
-	 UgIj2NiKhMAOu7cL/r9TyIvY5/mQ2+0A75peDsv9fb5yZ0PU/wA+Nuu686XVpjuVxk
-	 amrgJJO43H2bUTokMgorPGuUB5TWGLOb21Q9uoPs=
+	by mail.kernel.org (Postfix) with ESMTP id D0FB4206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 06:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dAuId8q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgHNGJr (ORCPT
+        id S1726283AbgHNGKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 02:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgHNGJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 02:09:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB34420708;
-        Fri, 14 Aug 2020 06:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597385386;
-        bh=c/lfw5JZTqHPS72/1poOsY6BXX2T5S4whSMwu1pt5eI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P+8afEJYPSe8D5GzWDR+rbuzJP74xvyOyWi7jinVsDT4D5lcLOtbNCwVRwvg+JX/A
-         SQMtwV3zfdxM5yW7ytNYJhgPEJ4PsLkF14iD7jhk860pQrsJnR1Z5gms4QRYoBvUpK
-         7dt+cWsB70NvtYK+nqIHnY1AU/URLUWfbCIn2pCc=
-Date:   Fri, 14 Aug 2020 08:09:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200814060909.GD1409566@kroah.com>
-References: <cover.1597376585.git.huangqiwu@xiaomi.com>
- <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+        Fri, 14 Aug 2020 02:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgHNGKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 02:10:52 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4086FC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 23:10:52 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m22so8732235ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 23:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CBGbgQ+17TYFarb+mLVeepEGqaaGnPjpnJL0cl1DvV8=;
+        b=dAuId8q4m/LMMsa7LucKk0Erno8ZVyXL1VnzdmXx7f3ZEYYYa/q6H1DM4oh3i+DOpu
+         O75vgqDi7ep3r72W9BZwV+9c2JQFWacOzClSZNZiDrXLA9izfnd278d2vyz87VfmxGVp
+         hpTnzK5PMSnuKYNQHLkqWOFFFDtmNVU9cE3qmNM/ZPdDncWsZvYuawaP6UNCTZoru0Wq
+         M3oJk1M05gApX5XLsEJ4LqEDWMJK3kV2I3DUqYpEmHffbhGw3aQgvuMNVVGkTdVjJuJI
+         YV24LojzTHHs46QVLPl7S9emwdDs4eo8KP32hgVESeiUgRjWI2iix3eGXz4a13X3Td4I
+         fJyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CBGbgQ+17TYFarb+mLVeepEGqaaGnPjpnJL0cl1DvV8=;
+        b=hzLyhroXvcljc8303H008fcDYulNbvMecISr7KzUeHUO4lf9aBKQIMSVotziuLIcIy
+         kPRnlpWn9JLy34Hf88uXvdMq5Gaa434GaL4bbxHXB2MsaIO4PK/4t8yUp4snXTmEZYDC
+         AKhtZoXeOdQQDNiAuHLdkPYHTcTd1SmA7OaE2u07QthLKL2VtvL7IRvjlIlcicg1KiHZ
+         +QuuZMLCO49VuDWpCcgS47HF3q2qc/VWUyzPWIXWWOY0Ow5hYox/hN3nfcf8ApoN7AtA
+         dhjkLys90RypL5GE/DmnOaH1JljJ6eML8+qg2TKVuXpbwkrmktq09U37Jn3G1AqIPBEw
+         ShFA==
+X-Gm-Message-State: AOAM531DbCemg5WVSzbG16GfvbD8BeqNO4GvkY1Xry72BBg/D64e3rRQ
+        fQu9pkQ+NlSOhO7CbSBKyeSsF8yN5166ifSppzmcalWbYae2RQ==
+X-Google-Smtp-Source: ABdhPJx8WmGaVlNSSN6nxM+IFTU8UW4nFJsCjZNkdj3n84kkD5dgMVhIH8duYNKI/uV3tsPH8ooDV4iHlKlijHNK6O0=
+X-Received: by 2002:a05:651c:204a:: with SMTP id t10mr637880ljo.194.1597385449516;
+ Thu, 13 Aug 2020 23:10:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+References: <20200813154020.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+ <20200813073325.GK3480@piout.net>
+In-Reply-To: <20200813073325.GK3480@piout.net>
+From:   Victor Ding <victording@google.com>
+Date:   Fri, 14 Aug 2020 16:10:13 +1000
+Message-ID: <CANqTbdZhZL--JebFhZPkf2+VuCUs2b=Me-BoBHgAtt_MvQBX3A@mail.gmail.com>
+Subject: Re: [PATCH] rtc: cmos: initialize rtc time when reading alarm
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
-> From: Qiwu Huang <huangqiwu@xiaomi.com>
-> 
-> Reports the kind of quick charge type based on
-> different adapter power.
-> 
-> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
->  drivers/power/supply/power_supply_sysfs.c   |  1 +
->  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
->  include/linux/power_supply.h                | 14 ++++++
->  4 files changed, 87 insertions(+)
+Hi Alexandre,
 
-You should also submit your driver that uses these new attributes at the
-same time.  What happened to that request?  Otherwise no one really
-knows how these are being used, or if they even are used by anyone.
+On Thu, Aug 13, 2020 at 5:33 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hi,
+>
+> On 13/08/2020 15:41:34+1000, Victor Ding wrote:
+> > cmos_read_alarm() may leave certain fields of a struct rtc_time
+> > untouched; therefore, these fields contain garbage if not properly
+> > initialized, leading to inconsistent values when converting into
+> > time64_t.
+> > This patch to set all fields of a struct rtc_time to -1 before calling
+> > cmos_read_alarm().
+> >
+>
+> I don't think this actually helps with the conversion as mktime64
+> is taking unsigned int so I would think you need the whole logic that is
+> in __rtc_read_alarm
 
-thanks,
+It's true that this change does not produce a correct time64_t; however,
+it isn't the intention either. The proposed change only produces a
+consistent value: calling obtaining identical struct rtc_time if the CMOS
+wakealarm is unchanged. In the case of suspend/resume, a correct value
+time64_t is not necessary; a consistent value is sufficient to correctly
+perform an equality test for `t_current_expires` and `t_saved_expires`.
+Logic to deduce a correct time64_t is expensive and hence I would like to
+avoid __rtc_read_alarm's logic here.
 
-greg k-h
+Prior to this patch, the struct rtc_time is uninitialized. After calling
+cmos_read_alarm(), the tm_year field is always left untouched and hence
+contains only garbage. On platforms without enhanced RTC timers, the
+tm_mon and tm_mday fields are left with garbage as well. Therefore,
+`t_current_expires` and `t_saved_expires` from garbage data, which leads
+to incorrect equality test results.
+
+>
+> > Signed-off-by: Victor Ding <victording@google.com>
+> > ---
+> >
+> >  drivers/rtc/rtc-cmos.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
+> > index bcc96ab7793f..c99af567780d 100644
+> > --- a/drivers/rtc/rtc-cmos.c
+> > +++ b/drivers/rtc/rtc-cmos.c
+> > @@ -1006,6 +1006,7 @@ static int cmos_suspend(struct device *dev)
+> >                       enable_irq_wake(cmos->irq);
+> >       }
+> >
+> > +     memset(&cmos->saved_wkalrm.time, -1, sizeof(struct rtc_time));
+> >       cmos_read_alarm(dev, &cmos->saved_wkalrm);
+> >
+> >       dev_dbg(dev, "suspend%s, ctrl %02x\n",
+> > @@ -1054,6 +1055,7 @@ static void cmos_check_wkalrm(struct device *dev)
+> >               return;
+> >       }
+> >
+> > +     memset(&current_alarm.time, -1, sizeof(struct rtc_time));
+> >       cmos_read_alarm(dev, &current_alarm);
+> >       t_current_expires = rtc_tm_to_time64(&current_alarm.time);
+> >       t_saved_expires = rtc_tm_to_time64(&cmos->saved_wkalrm.time);
+> > --
+> > 2.28.0.236.gb10cc79966-goog
+> >
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+Best regards,
+Victor Ding
