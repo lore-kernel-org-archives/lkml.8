@@ -2,78 +2,71 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D46C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7599AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B80F20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57ACE20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 18:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgHNSsJ (ORCPT
+        id S1726918AbgHNSug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 14:48:09 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:41130 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgHNSsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 14:48:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id e12so6656649ioc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 11:48:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=FdIRXuZCQukDRQ0XU5HzlXLbagxjzssCGhlf1mUy6ZA=;
-        b=g5Mqu7H4RckR1gnSPIdO/Km6EHvoqCFakRmVG1spTaaRiTAlZQUmNESMCw7DDj36Jw
-         Jyu7zAxMmDK3ud8F+cri0XUZUKbImNK3MzezkjWkI9Xm5regzRi93zgApqUbBxxlVhB0
-         IYOVs5kLok1ddz4IZb7qj6NZDjq65ezBo8xhmHrGOepJkG+//m1qfzmBmMize4FfC/Y3
-         Qh7d+kAVr8MslBn7DxEgXDBZTzQ7H4F9gn/p5J4gW7KsF0LazE8rfipgo3oQDOn9PzH5
-         /3eGPQxGutQDwXelY5pbZerH6TfZaochPAOog4TysYvFayJ4rxPrmaMWFpfi/NdPcos+
-         cOoQ==
-X-Gm-Message-State: AOAM533dJOfspiekazn9R2QP4OjMpbvtWIlm/q52iNEhmLkes+yxECIk
-        WrUrDXUBJG2mbLTOzFJQgj4zsL0ci9Mo9x0xog3hWZcSBon/
-X-Google-Smtp-Source: ABdhPJzNTvNy1dhu9pwSXa3tWa4iLGVzBCdcRYK93MYJzzPqsQW/K4PnkT/GdTdJGW94oI0/s3HorImYD5cpCRRwVwYGVaoycdZT
+        Fri, 14 Aug 2020 14:50:36 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:50836 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgHNSuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:50:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 922D7E1446;
+        Fri, 14 Aug 2020 20:50:34 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XD5iMQt1uVXx; Fri, 14 Aug 2020 20:50:31 +0200 (CEST)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH] mmc: mmc_spi: fix timeout calculation
+Date:   Fri, 14 Aug 2020 20:50:11 +0200
+Message-Id: <20200814185011.3252020-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c09:: with SMTP id d9mr3762153ile.289.1597430888599;
- Fri, 14 Aug 2020 11:48:08 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 11:48:08 -0700
-In-Reply-To: <000000000000eea12405843bc43c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ab163105acdadc50@google.com>
-Subject: Re: KASAN: use-after-free Read in refcount_inc_not_zero_checked (2)
-From:   syzbot <syzbot+eff6b596cc8194e2f029@syzkaller.appspotmail.com>
-To:     ardb@kernel.org, davem@davemloft.net, linux-efi@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, netdev@vger.kernel.org, nivedita@alum.mit.edu,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+Previously the cycle timeout was converted to a microsecond value but
+then incorrectly treated as a nanosecond timeout. This patch changes
+the code to convert both the nanosecond timeout and the cycle timeout
+to a microsecond value and use that directly.
 
-commit 987053a30016a7d9ab3e4ad973e7c51aeb1f1ef6
-Author: Arvind Sankar <nivedita@alum.mit.edu>
-Date:   Thu Apr 30 18:28:40 2020 +0000
+Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+---
+ drivers/mmc/host/mmc_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-    efi/x86: Move command-line initrd loading to efi_main
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index 39bb1e30c2d7..f85e0ad896a9 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -882,9 +882,9 @@ mmc_spi_data_do(struct mmc_spi_host *host, struct mmc_command *cmd,
+ 	else
+ 		clock_rate = spi->max_speed_hz;
+ 
+-	timeout = data->timeout_ns +
++	timeout = data->timeout_ns / 1000 +
+ 		  data->timeout_clks * 1000000 / clock_rate;
+-	timeout = usecs_to_jiffies((unsigned int)(timeout / 1000)) + 1;
++	timeout = usecs_to_jiffies((unsigned int)timeout) + 1;
+ 
+ 	/* Handle scatterlist segments one at a time, with synch for
+ 	 * each 512-byte block
+-- 
+2.28.0
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11680f6a900000
-start commit:   9c7dc824 Merge tag '5.1-rc-smb3' of git://git.samba.org/sf..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1aaa1cfbfe1abf
-dashboard link: https://syzkaller.appspot.com/bug?extid=eff6b596cc8194e2f029
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e294a3200000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: efi/x86: Move command-line initrd loading to efi_main
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
