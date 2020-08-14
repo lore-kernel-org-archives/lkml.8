@@ -2,122 +2,144 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0256C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F0822B45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBC220774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 21:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o40fi2D/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYyuaTEq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgHNVPK (ORCPT
+        id S1728179AbgHNVPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 17:15:10 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41946 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgHNVPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 17:15:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597439709; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=2qKj4SNXimMKoQyi+qljyl20bGjTHCPTKE/IaXeY4B8=;
- b=o40fi2D/QGoZB4+ayVBIYR8lU2cuH76wvj6NXo3p7S+r+cpeFxNvSpfoItLS7IgKBTEZfMOD
- wlRhqHM0e0lw0e9gTDrsVaqvHoSp/0jJEfSUpOTmd+5cqrplmHYfDsOfQG5i454ao2LUnWg3
- KCXJlL9TCc836vnptxZ2zNeM8xI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f36fecfd48d4625cabca0ba (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 21:14:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 072FFC433CB; Fri, 14 Aug 2020 21:14:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FBB1C433C9;
-        Fri, 14 Aug 2020 21:14:53 +0000 (UTC)
+        Fri, 14 Aug 2020 17:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728112AbgHNVPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 17:15:20 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E10C061385;
+        Fri, 14 Aug 2020 14:15:20 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id z3so9627747ilh.3;
+        Fri, 14 Aug 2020 14:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tJMVJBnaXmXqh981RH/h7+Q4BiQVvI3wCXGlTjz6EWg=;
+        b=bYyuaTEqbGMUDbMQT1N3adh8ZXqau382QojThewnW//4qEz3eZ/zrAaDMQ2DyZdy5S
+         zy3hUU8M7NHVx+aHkrthzP7rx9gfHneJI0nSdRH9Ckd5lxNps3aL683LKaDWNsKgnYZM
+         Lt+XpG2yMuTdQt8MznPtkrXzYmYBSamAHiQN0gr/ZKTOQNhfnS7FBtOsdNBgsXegXw43
+         TAgtcMLOko7OxUnCkBxGuIogU9IzzqRw3UAHDFpS3HbUFvqlslWZEjTR+rnWF0tc8VNO
+         9PavoPblmc7OTQ7XIa/bqusD5Dw8UajLsvr3Pqjx3usFzgELflUYZN+4bZqMnmJRkg7f
+         yYag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tJMVJBnaXmXqh981RH/h7+Q4BiQVvI3wCXGlTjz6EWg=;
+        b=opm6RX5H9nI0rguz6NcbkMk7fDJHH1BZBKC0gYzgWqYmN5BoA9GfiErCuca3rHzbt2
+         AUuJ7Ijx6lUZ5/4jj4FKhaeWEGku+AMZz0Yq+eQN6a8Y9WPC1Z9/IeYkFpQVUVYPgGeY
+         /Pl1mYOBaZIpLyql62oSv8f2iz1yZk0yjU8oy38tCmnGFhn0KHvwYj0ZaYZC7aa6jnKc
+         OXCl8MgFXX86M1+9sndJdJtIhyetQNoYBFpxe37Uazo5dJOGCTT/m8oAx6uw9A8dT9qc
+         yeFtdfcp7P40U13erKX15Ei41Rwwu5a8mHh8gKwi4GU3hLWKhPFGSn6JTL6YiZEVqvWd
+         KV2g==
+X-Gm-Message-State: AOAM532RP3naOoENAHAU0xj4CQlq8+ptA+dzYHu/cnNyUvJpZSUCiuy7
+        H8wIrzmCQ73CjoTi2Y1yhfDKTMrx/1el/zWJjs8=
+X-Google-Smtp-Source: ABdhPJwpZ1nVKkZq07Dopl2XjbctppDLsyq/CUWPrYJGlfkx7y1ewbsXQzHhTu2pyEZDnsMGq5XWLhh+TTzjZ6JEaKE=
+X-Received: by 2002:a05:6e02:143:: with SMTP id j3mr3694759ilr.97.1597439719638;
+ Fri, 14 Aug 2020 14:15:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 14:14:53 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     devicetree@vger.kernel.org, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, swboyd@chromium.org,
-        khsieh@codeaurora.org, seanpaul@chromium.org,
-        abhinavk@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno@lists.freedesktop.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH v10 2/5] drm/msm/dp: add displayPort driver
- support
-In-Reply-To: <db6a4104ba9fc00edaf5542693ac6bd9@codeaurora.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-3-tanmay@codeaurora.org>
- <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
- <db6a4104ba9fc00edaf5542693ac6bd9@codeaurora.org>
-Message-ID: <fccbdceaf64a1e50561c6e9ece46d0d0@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040232.13054.82417.stgit@localhost.localdomain> <6c072332-ff16-757d-99dd-b8fbae131a0c@linux.alibaba.com>
+ <CAKgT0Uf0TbRBVsuGZ1bgh5rdFp+vARkP=+GgD4-DP3Gy6cj+pA@mail.gmail.com>
+In-Reply-To: <CAKgT0Uf0TbRBVsuGZ1bgh5rdFp+vARkP=+GgD4-DP3Gy6cj+pA@mail.gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 14 Aug 2020 14:15:08 -0700
+Message-ID: <CAKgT0Ue=DwVAr+dG8Ff04mUY5ZCG6cpvHCG=bP1w=HujiCp0BQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] mm: Drop use of test_and_set_skip in favor of
+ just setting skip
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kbuild test robot <lkp@intel.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-14 10:56, Tanmay Shah wrote:
-> On 2020-08-14 10:12, Dmitry Baryshkov wrote:
->> Hello,
->> 
->> On 12/08/2020 07:42, Tanmay Shah wrote:
->>> From: Chandan Uddaraju <chandanu@codeaurora.org>
->> 
->> [skipped]
->> 
->>> +		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
->>> +			   dp_parser_check_prefix("stream", clk_name))  &&
->>> +			   ctrl_clk_index < ctrl_clk_count) {
->>> +			struct dss_clk *clk =
->>> +				&ctrl_power->clk_config[ctrl_clk_index];
->>> +			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
->>> +			ctrl_clk_index++;
->>> +
->>> +			if (!strncmp(clk_name, "ctrl_link",
->>> +					strlen("ctrl_link")) ||
->>> +					!strncmp(clk_name, "stream_pixel",
->>> +					strlen("ctrl_pixel")))
->> 
->> This should be "stream_pixel", I believe. I don't like macros, but
->> most probably it would help here. Also function/brace alignment could
->> be better (sorry, it really hides the issue here).
->> 
-> 
-> Thanks for reviews and good catch!! I completely missed it when I
-> renamed "ctrl_pixel".
-> Use of "stream_pixel" is very limited. So, instead of macros direct
-> name is used.
-> Fixing function and brace alignment sounds good idea insted.
-> 
->> 
-Actually I will reuse dp_parser_check_prefix utility. It's already doing 
-same Job.
+On Fri, Aug 14, 2020 at 7:24 AM Alexander Duyck
+<alexander.duyck@gmail.com> wrote:
+>
+> On Fri, Aug 14, 2020 at 12:19 AM Alex Shi <alex.shi@linux.alibaba.com> wr=
+ote:
+> >
+> >
+> >
+> > =E5=9C=A8 2020/8/13 =E4=B8=8B=E5=8D=8812:02, Alexander Duyck =E5=86=99=
+=E9=81=93:
+> > >
+> > > Since we have dropped the late abort case we can drop the code that w=
+as
+> > > clearing the LRU flag and calling page_put since the abort case will =
+now
+> > > not be holding a reference to a page.
+> > >
+> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > seems the case-lru-file-mmap-read case drop about 3% on this patch in a=
+ rough testing.
+> > on my 80 core machine.
+>
+> I'm not sure how it could have that much impact on the performance
+> since the total effect would just be dropping what should be a
+> redundant test since we tested the skip bit before we took the LRU
+> bit, so we shouldn't need to test it again after.
+>
+> I finally got my test setup working last night. I'll have to do some
+> testing in my environment and I can start trying to see what is going
+> on.
 
-> 
->>> +				clk->type = DSS_CLK_PCLK;
->>> +			else
->>> +				clk->type = DSS_CLK_AHB;
->>> +		}
->>> +	}
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+So I ran the case-lru-file-mmap-read a few times and I don't see how
+it is supposed to be testing the compaction code. It doesn't seem like
+compaction is running at least on my system as a result of the test
+script. I wonder if testing this code wouldn't be better done using
+something like thpscale from the
+mmtests(https://github.com/gormanm/mmtests)? It seems past changes to
+the compaction code were tested using that, and the config script for
+the test explains that it is designed specifically to stress the
+compaction code. I have the test up and running now and hope to
+collect results over the weekend.
+
+There is one change I will probably make to this patch and that is to
+place the new code that is setting skip_updated where the old code was
+calling test_and_set_skip_bit. By doing that we can avoid extra checks
+and it should help to reduce possible collisions when setting the skip
+bit in the pageblock flags.
+
+Thanks.
+
+- Alex
