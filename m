@@ -2,298 +2,107 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B283C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FDFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F9820781
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE44720781
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 10:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHNK0k (ORCPT
+        id S1726968AbgHNK1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:26:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54380 "EHLO mx2.suse.de"
+        Fri, 14 Aug 2020 06:27:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54728 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgHNK0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:26:38 -0400
+        id S1726820AbgHNK1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:27:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9EA78AD41;
-        Fri, 14 Aug 2020 10:26:57 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     amit.pundir@linaro.org, hch@lst.de, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     rientjes@google.com, jeremy.linton@arm.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH v4 2/2] dma-pool: fix coherent pool allocations for IOMMU mappings
-Date:   Fri, 14 Aug 2020 12:26:24 +0200
-Message-Id: <20200814102625.25599-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200814102625.25599-1-nsaenzjulienne@suse.de>
-References: <20200814102625.25599-1-nsaenzjulienne@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 5DBB0AF8F;
+        Fri, 14 Aug 2020 10:27:56 +0000 (UTC)
+Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200811094447.31208-1-roger.pau@citrix.com>
+ <20200811094447.31208-3-roger.pau@citrix.com>
+ <20200813073337.GA16160@infradead.org> <20200813075420.GC975@Air-de-Roger>
+ <20200814072920.GA6126@infradead.org> <20200814095629.GJ975@Air-de-Roger>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <a907ff4a-c887-7d02-1d45-140d7749afa4@suse.com>
+Date:   Fri, 14 Aug 2020 12:27:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200814095629.GJ975@Air-de-Roger>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On 14.08.20 11:56, Roger Pau Monné wrote:
+> On Fri, Aug 14, 2020 at 08:29:20AM +0100, Christoph Hellwig wrote:
+>> On Thu, Aug 13, 2020 at 09:54:20AM +0200, Roger Pau Monn?? wrote:
+>>> On Thu, Aug 13, 2020 at 08:33:37AM +0100, Christoph Hellwig wrote:
+>>>> On Tue, Aug 11, 2020 at 11:44:47AM +0200, Roger Pau Monne wrote:
+>>>>> If enabled (because ZONE_DEVICE is supported) the usage of the new
+>>>>> functionality untangles Xen balloon and RAM hotplug from the usage of
+>>>>> unpopulated physical memory ranges to map foreign pages, which is the
+>>>>> correct thing to do in order to avoid mappings of foreign pages depend
+>>>>> on memory hotplug.
+>>>>
+>>>> So please just select ZONE_DEVICE if this is so much better rather
+>>>> than maintaining two variants.
+>>>
+>>> We still need to other variant for Arm at least, so both need to be
+>>> maintained anyway, even if we force ZONE_DEVICE on x86.
+>>
+>> Well, it still really helps reproducability if you stick to one
+>> implementation of x86.
+>>
+>> The alternative would be an explicit config option to opt into it,
+>> but just getting a different implementation based on a random
+>> kernel option is strange.
+> 
+> Would adding something like the chunk below to the patch be OK?
+> 
+> ---8<---
+> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+> index 018020b91baa..5f321a1319e6 100644
+> --- a/drivers/xen/Kconfig
+> +++ b/drivers/xen/Kconfig
+> @@ -328,7 +328,14 @@ config XEN_FRONT_PGDIR_SHBUF
+>   	tristate
+>   
+>   config XEN_UNPOPULATED_ALLOC
+> -	bool
+> -	default y if ZONE_DEVICE && !ARM && !ARM64
+> +	bool "Use unpopulated memory ranges for guest mappings"
+> +	depends on X86
+> +	select ZONE_DEVICE
+> +	default y
 
-When allocating coherent pool memory for an IOMMU mapping we don't care
-about the DMA mask.  Move the guess for the initial GFP mask into the
-dma_direct_alloc_pages and pass dma_coherent_ok as a function pointer
-argument so that it doesn't get applied to the IOMMU case.
+I'd rather use "default XEN_BACKEND" here, as mappings of other guest's
+memory is rarely used for non-backend guests.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
 
-Changes since v1:
-  - Check if phys_addr_ok() exists prior calling it
-
- drivers/iommu/dma-iommu.c   |   4 +-
- include/linux/dma-direct.h  |   3 -
- include/linux/dma-mapping.h |   5 +-
- kernel/dma/direct.c         |  13 ++--
- kernel/dma/pool.c           | 114 +++++++++++++++---------------------
- 5 files changed, 62 insertions(+), 77 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 4959f5df21bd..5141d49a046b 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1035,8 +1035,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    !gfpflags_allow_blocking(gfp) && !coherent)
--		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
--					       gfp);
-+		page = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &cpu_addr,
-+					       gfp, NULL);
- 	else
- 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
- 	if (!cpu_addr)
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 5a3ce2a24794..6e87225600ae 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -73,9 +73,6 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
- }
- 
- u64 dma_direct_get_required_mask(struct device *dev);
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
--				  u64 *phys_mask);
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size);
- void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs);
- void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 016b96b384bd..52635e91143b 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -522,8 +522,9 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
- 			pgprot_t prot, const void *caller);
- void dma_common_free_remap(void *cpu_addr, size_t size);
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags);
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t flags,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t));
- bool dma_free_from_pool(struct device *dev, void *start, size_t size);
- 
- int
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index bb0041e99659..db6ef07aec3b 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -43,7 +43,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
- 
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
-+static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 				  u64 *phys_limit)
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
-@@ -68,7 +68,7 @@ gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 	return 0;
- }
- 
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
-+static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- {
- 	return phys_to_dma_direct(dev, phys) + size - 1 <=
- 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
-@@ -161,8 +161,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	size = PAGE_ALIGN(size);
- 
- 	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
--		ret = dma_alloc_from_pool(dev, size, &page, gfp);
--		if (!ret)
-+		u64 phys_mask;
-+
-+		gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
-+				&phys_mask);
-+		page = dma_alloc_from_pool(dev, size, &ret, gfp,
-+				dma_coherent_ok);
-+		if (!page)
- 			return NULL;
- 		goto done;
- 	}
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 57f4a0f32a92..b0aaba4197ae 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -225,93 +225,75 @@ static int __init dma_atomic_pool_init(void)
- }
- postcore_initcall(dma_atomic_pool_init);
- 
--static inline struct gen_pool *dma_guess_pool_from_device(struct device *dev)
-+static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
- {
--	u64 phys_mask;
--	gfp_t gfp;
--
--	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
--					  &phys_mask);
--	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
-+	if (prev == NULL) {
-+		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
-+			return atomic_pool_dma32;
-+		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
-+			return atomic_pool_dma;
-+		return atomic_pool_kernel;
-+	}
-+	if (prev == atomic_pool_kernel)
-+		return atomic_pool_dma32 ? atomic_pool_dma32 : atomic_pool_dma;
-+	if (prev == atomic_pool_dma32)
- 		return atomic_pool_dma;
--	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
--		return atomic_pool_dma32;
--	return atomic_pool_kernel;
-+	return NULL;
- }
- 
--static inline struct gen_pool *dma_get_safer_pool(struct gen_pool *bad_pool)
-+static struct page *__dma_alloc_from_pool(struct device *dev, size_t size,
-+		struct gen_pool *pool, void **cpu_addr,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
--	if (bad_pool == atomic_pool_kernel)
--		return atomic_pool_dma32 ? : atomic_pool_dma;
-+	unsigned long addr;
-+	phys_addr_t phys;
- 
--	if (bad_pool == atomic_pool_dma32)
--		return atomic_pool_dma;
-+	addr = gen_pool_alloc(pool, size);
-+	if (!addr)
-+		return NULL;
- 
--	return NULL;
--}
-+	phys = gen_pool_virt_to_phys(pool, addr);
-+	if (phys_addr_ok && !phys_addr_ok(dev, phys, size)) {
-+		gen_pool_free(pool, addr, size);
-+		return NULL;
-+	}
- 
--static inline struct gen_pool *dma_guess_pool(struct device *dev,
--					      struct gen_pool *bad_pool)
--{
--	if (bad_pool)
--		return dma_get_safer_pool(bad_pool);
-+	if (gen_pool_avail(pool) < atomic_pool_size)
-+		schedule_work(&atomic_pool_work);
- 
--	return dma_guess_pool_from_device(dev);
-+	*cpu_addr = (void *)addr;
-+	memset(*cpu_addr, 0, size);
-+	return pfn_to_page(__phys_to_pfn(phys));
- }
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags)
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t gfp,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
- 	struct gen_pool *pool = NULL;
--	unsigned long val = 0;
--	void *ptr = NULL;
--	phys_addr_t phys;
--
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool) {
--			WARN(1, "Failed to get suitable pool for %s\n",
--			     dev_name(dev));
--			break;
--		}
--
--		val = gen_pool_alloc(pool, size);
--		if (!val)
--			continue;
--
--		phys = gen_pool_virt_to_phys(pool, val);
--		if (dma_coherent_ok(dev, phys, size))
--			break;
--
--		gen_pool_free(pool, val, size);
--		val = 0;
--	}
--
--
--	if (val) {
--		*ret_page = pfn_to_page(__phys_to_pfn(phys));
--		ptr = (void *)val;
--		memset(ptr, 0, size);
-+	struct page *page;
- 
--		if (gen_pool_avail(pool) < atomic_pool_size)
--			schedule_work(&atomic_pool_work);
-+	while ((pool = dma_guess_pool(pool, gfp))) {
-+		page = __dma_alloc_from_pool(dev, size, pool, cpu_addr,
-+					     phys_addr_ok);
-+		if (page)
-+			return page;
- 	}
- 
--	return ptr;
-+	WARN(1, "Failed to get suitable pool for %s\n", dev_name(dev));
-+	return NULL;
- }
- 
- bool dma_free_from_pool(struct device *dev, void *start, size_t size)
- {
- 	struct gen_pool *pool = NULL;
- 
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool)
--			return false;
--
--		if (gen_pool_has_addr(pool, (unsigned long)start, size)) {
--			gen_pool_free(pool, (unsigned long)start, size);
--			return true;
--		}
-+	while ((pool = dma_guess_pool(pool, 0))) {
-+		if (!gen_pool_has_addr(pool, (unsigned long)start, size))
-+			continue;
-+		gen_pool_free(pool, (unsigned long)start, size);
-+		return true;
- 	}
-+
-+	return false;
- }
--- 
-2.28.0
+Juergen
 
