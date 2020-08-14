@@ -2,193 +2,148 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0504C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6241EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C821D2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/+CI6Qz"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEA620838
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597412667;
+	bh=U+TSDRx7w/GP8BDovUXFZlimAK/XJt7STpl3SGw/hwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vmmuN3ceBW8HrFbYUPH074c7u9C8huO1Ec7En578YPsl5k4Q6EVVRVYh+IdCdSHX2
+	 Gcpd16EVuHjBDd2V4FKaK0AZ8Ssh3GYXYJSNLdSg5E1BT+7pWutsH+2C1pnZ6UqrDq
+	 0v98UjNcUYktTdZYjTKN1CfKHjdEScZu/0NiI5Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgHNNnw (ORCPT
+        id S1728275AbgHNNoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgHNNmQ (ORCPT
+        Fri, 14 Aug 2020 09:44:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40202 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgHNNoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:42:16 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D55C061384;
-        Fri, 14 Aug 2020 06:42:14 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f24so9974793ejx.6;
-        Fri, 14 Aug 2020 06:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y5LsTNwKCh6Al0zyRb/0ncxD6eVljVyNGABrxdC37vw=;
-        b=M/+CI6Qz8KQWTsd+kGT/uM1Ni+vtIOUtSD0VzLrUy7jhmcmBF6vc3Im9cEhKAmwrAr
-         TOz6CQ0fs3eE52vbtQAbhVLy+evGIdQvb7KWHdhPKInJzG6B5sdSiQy2JBPhlRLrleFR
-         Ny4ur+eKD+UwVj+laCYLqG7ZjeikH2c+GtjKOHLKMLOy24BtvxNKRA9kv2lcsNbd01qQ
-         CeCGgX/vkEfK1lP9Sj7hnwmtfV/2F3y/z2rTpM9m0ROQBXq44eEBNcPTklNcZ3WTMOyl
-         R9G3wHJGj9RChHKYfhYuxUaBHoc91H/0XvdJktKOaajr6maohGp8jhhzH2APDclbesd6
-         dtkw==
+        Fri, 14 Aug 2020 09:44:13 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k20so7963150wmi.5;
+        Fri, 14 Aug 2020 06:44:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y5LsTNwKCh6Al0zyRb/0ncxD6eVljVyNGABrxdC37vw=;
-        b=W0d4jLQLGUZNGaxXWvrZQrK6+yLwa7i/VIOmvcKD8Swajgx0JMwnhKlmwvMZ0hJuRk
-         SwVuwDTjGpGbDlfVYm2Fa8/9BcIqjzXzbsb9HcjpoiiUHb90PT0CLtzTnlFvzXVIOpQw
-         qRcFZGzGnWb3kpcTwCirvkpDpqjvSamXO5mOSNUQHWlRL7JHnCrjy+clqdu+G50ARCdc
-         Zr4pGIg/c6mlY6KWchcsZNKyAAMXwv2RVRrRoPD7S644GQiQDj+Cq6Nx/XdC5G/L6Hcx
-         Ed7zSy2sf6Nrt70hJABNWSm1Hx7ZPvOhFejNpu+1OwybyVMvMvg7vN1uzY3tVz0jZAdO
-         sgDA==
-X-Gm-Message-State: AOAM531RqhnLv1CtkNYch/3z2t/AP9KRQW9XrxOf9cpbac1mo8Gbze2O
-        e+2J7ifCGf0DSuCP1mMF5Jk=
-X-Google-Smtp-Source: ABdhPJxfIBt9ouygjbXVOpv+/kkXwUijBEc/K2LJ1qUFsegGnfsEs0g0AG+c5H+KdeEoY4UrAF3vuA==
-X-Received: by 2002:a17:906:cb8c:: with SMTP id mf12mr2456605ejb.3.1597412533495;
-        Fri, 14 Aug 2020 06:42:13 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-0-192-118.retail.telecomitalia.it. [87.0.192.118])
-        by smtp.googlemail.com with ESMTPSA id s2sm6767118ejd.17.2020.08.14.06.42.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EVQHIchWAvbJrR7F5pGcTLqwzTGRpidCCQO103cMN5Q=;
+        b=aehlxuArczjlFwbdVk0grexGqxGNRBnHj2WhjbbCBPsykQD3dB7XW/UIC0ps4XYog7
+         RVYZ90uaz+K91eAsOIrSA4kVCEI3+lLL9L3tIoUalm02t05fGtfseFsQwBHnZCR+AWIk
+         PF8vOlQx9xTqQvc+ZGBSME3qTtvqV1C1i+LwcJkI5XWqrpVtdXcbhgdwVe9nCNfPstag
+         yTrJf6K5buJfJ/W3/56fxuW57z7gEhRCtysRrcebr2MZqHpb5+rQWls89d/ntwFC4yuV
+         eRrDZJ4X7f8/QPPnZSspmV96b08p7NLnfa6HUWm/FdM7F24muCwsnuimSKHzQ5yVHjGE
+         8MsA==
+X-Gm-Message-State: AOAM532prCpA5FessBBwDLc6NaGgPY8i8qSX38IIGPdX4p6OsXSagf4r
+        ekaGW+VtdHF1vRlFEpipnP8=
+X-Google-Smtp-Source: ABdhPJyupzTLvM3OPYJQq5jd05naBXn3/EU+shcT2GpIoXsngVfAHRl5p+bq3HfrNlyisYNapH/L2Q==
+X-Received: by 2002:a1c:66c5:: with SMTP id a188mr2542188wmc.173.1597412651906;
+        Fri, 14 Aug 2020 06:44:11 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t189sm15703924wmf.47.2020.08.14.06.44.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 06:42:12 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v6 3/8] drivers: thermal: tsens: Convert msm8960 to reg_field
-Date:   Fri, 14 Aug 2020 15:41:17 +0200
-Message-Id: <20200814134123.14566-4-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200814134123.14566-1-ansuelsmth@gmail.com>
-References: <20200814134123.14566-1-ansuelsmth@gmail.com>
+        Fri, 14 Aug 2020 06:44:11 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 13:44:09 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Add parsing of VMbus interrupt
+ in ACPI DSDT
+Message-ID: <20200814134409.ccvo3uqblhy7h5le@liuwe-devbox-debian-v2>
+References: <1597362679-37965-1-git-send-email-mikelley@microsoft.com>
+ <20200814094403.uhgrc74khr5vcyva@liuwe-devbox-debian-v2>
+ <MW2PR2101MB1052649114BC9A0396FB8905D7400@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB1052649114BC9A0396FB8905D7400@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert msm9860 driver to reg_field to use the init_common
-function.
+On Fri, Aug 14, 2020 at 01:32:11PM +0000, Michael Kelley wrote:
+> From: Wei Liu <wei.liu@kernel.org> Sent: Friday, August 14, 2020 2:44 AM
+> > 
+> > On Thu, Aug 13, 2020 at 04:51:19PM -0700, Michael Kelley wrote:
+> > > On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
+> > > in the ACPI DSDT.  This information is not used on x86 because the
+> > > interrupt vector must be hardcoded.  But update the generic
+> > > VMbus driver to do the parsing and pass the information to the
+> > > architecture specific code that sets up the Linux IRQ.  Update
+> > > consumers of the interrupt to get it from an architecture specific
+> > > function.
+> > >
+> > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> > > ---
+> > >  arch/x86/include/asm/mshyperv.h |  1 +
+> > >  arch/x86/kernel/cpu/mshyperv.c  |  3 ++-
+> > >  drivers/hv/hv.c                 |  2 +-
+> > >  drivers/hv/vmbus_drv.c          | 30 +++++++++++++++++++++++++++---
+> > >  include/asm-generic/mshyperv.h  |  4 +++-
+> > >  5 files changed, 34 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > > index 4f77b8f..ffc2899 100644
+> > > --- a/arch/x86/include/asm/mshyperv.h
+> > > +++ b/arch/x86/include/asm/mshyperv.h
+> > > @@ -54,6 +54,7 @@ typedef int (*hyperv_fill_flush_list_func)(
+> > >  #define hv_enable_vdso_clocksource() \
+> > >  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
+> > >  #define hv_get_raw_timer() rdtsc_ordered()
+> > > +#define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
+> > >
+> > >  /*
+> > >   * Reference to pv_ops must be inline so objtool
+> > > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > > index 3112544..538aa87 100644
+> > > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > > @@ -55,9 +55,10 @@
+> > >  	set_irq_regs(old_regs);
+> > >  }
+> > >
+> > > -void hv_setup_vmbus_irq(void (*handler)(void))
+> > > +int hv_setup_vmbus_irq(int irq, void (*handler)(void))
+> > >  {
+> > 
+> > irq is not used here. Did you perhaps forget to commit a chunk of code?
+> 
+> No, this is correct.  Per the commit message, the irq information
+> parsed from the DSDT is not used in the x86 code.  But it is used on the
+> ARM64 side.  I should add a comment to that effect here in the x86
+> code so there's no confusion.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/thermal/qcom/tsens-8960.c | 74 +++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+I see. The function for Arm64 is not here yet.
 
-diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-index 2a28a5af209e..cb3611299e8f 100644
---- a/drivers/thermal/qcom/tsens-8960.c
-+++ b/drivers/thermal/qcom/tsens-8960.c
-@@ -56,6 +56,18 @@
- #define TRDY_MASK		BIT(7)
- #define TIMEOUT_US		100
- 
-+#define S0_STATUS_OFF		0x3628
-+#define S1_STATUS_OFF		0x362c
-+#define S2_STATUS_OFF		0x3630
-+#define S3_STATUS_OFF		0x3634
-+#define S4_STATUS_OFF		0x3638
-+#define S5_STATUS_OFF		0x3664  /* Sensors 5-10 found on apq8064/msm8960 */
-+#define S6_STATUS_OFF		0x3668
-+#define S7_STATUS_OFF		0x366c
-+#define S8_STATUS_OFF		0x3670
-+#define S9_STATUS_OFF		0x3674
-+#define S10_STATUS_OFF		0x3678
-+
- static int suspend_8960(struct tsens_priv *priv)
- {
- 	int ret;
-@@ -269,6 +281,66 @@ static int get_temp_8960(const struct tsens_sensor *s, int *temp)
- 	return -ETIMEDOUT;
- }
- 
-+static struct tsens_features tsens_8960_feat = {
-+	.ver_major	= VER_0,
-+	.crit_int	= 0,
-+	.adc		= 1,
-+	.srot_split	= 0,
-+	.max_sensors	= 11,
-+};
-+
-+static const struct reg_field tsens_8960_regfields[MAX_REGFIELDS] = {
-+	/* ----- SROT ------ */
-+	/* No VERSION information */
-+
-+	/* CNTL */
-+	[TSENS_EN]     = REG_FIELD(CNTL_ADDR,  0, 0),
-+	[TSENS_SW_RST] = REG_FIELD(CNTL_ADDR,  1, 1),
-+	/* 8960 has 5 sensors, 8660 has 11, we only handle 5 */
-+	[SENSOR_EN]    = REG_FIELD(CNTL_ADDR,  3, 7),
-+
-+	/* ----- TM ------ */
-+	/* INTERRUPT ENABLE */
-+	/* NO INTERRUPT ENABLE */
-+
-+	/* Single UPPER/LOWER TEMPERATURE THRESHOLD for all sensors */
-+	[LOW_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR,  0,  7),
-+	[UP_THRESH_0]    = REG_FIELD(THRESHOLD_ADDR,  8, 15),
-+	[MIN_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 16, 23),
-+	[MAX_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 24, 31),
-+
-+	/* UPPER/LOWER INTERRUPT [CLEAR/STATUS] */
-+	/* 1 == clear, 0 == normal operation */
-+	[LOW_INT_CLEAR_0]   = REG_FIELD(CNTL_ADDR,  9,  9),
-+	[UP_INT_CLEAR_0]    = REG_FIELD(CNTL_ADDR, 10, 10),
-+
-+	/* NO CRITICAL INTERRUPT SUPPORT on 8960 */
-+
-+	/* Sn_STATUS */
-+	[LAST_TEMP_0]  = REG_FIELD(S0_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_1]  = REG_FIELD(S1_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_2]  = REG_FIELD(S2_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_3]  = REG_FIELD(S3_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_4]  = REG_FIELD(S4_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_5]  = REG_FIELD(S5_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_6]  = REG_FIELD(S6_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_7]  = REG_FIELD(S7_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_8]  = REG_FIELD(S8_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_9]  = REG_FIELD(S9_STATUS_OFF,  0,  7),
-+	[LAST_TEMP_10] = REG_FIELD(S10_STATUS_OFF, 0,  7),
-+
-+	/* No VALID field on 8960 */
-+	/* TSENS_INT_STATUS bits: 1 == threshold violated */
-+	[MIN_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 0, 0),
-+	[LOWER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 1, 1),
-+	[UPPER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 2, 2),
-+	/* No CRITICAL field on 8960 */
-+	[MAX_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 3, 3),
-+
-+	/* TRDY: 1=ready, 0=in progress */
-+	[TRDY] = REG_FIELD(INT_STATUS_ADDR, 7, 7),
-+};
-+
- static const struct tsens_ops ops_8960 = {
- 	.init		= init_8960,
- 	.calibrate	= calibrate_8960,
-@@ -282,4 +354,6 @@ static const struct tsens_ops ops_8960 = {
- struct tsens_plat_data data_8960 = {
- 	.num_sensors	= 11,
- 	.ops		= &ops_8960,
-+	.feat		= &tsens_8960_feat,
-+	.fields		= tsens_8960_regfields,
- };
--- 
-2.27.0
+If you want to send a new version, feel free. I can also queue this
+version up. I don't think lacking a comment here is a blocking issue.
 
+Wei.
+
+> 
+> Michael
+> 
+> > 
+> > >  	vmbus_handler = handler;
+> > > +	return 0;
+> > >  }
+> > 
+> > Wei.
