@@ -2,140 +2,82 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE3CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F22F20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597381342;
-	bh=Mgevma62UF6OMbzbC1FGOH89JXiBNfuIISpu2HN8v/w=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=RdgJiBrX99o1ioV9gouLS9z23idalThdP4ybxcxKMsAso08HcObOkAtEGsZm6h1Mr
-	 i5y6S/OAFz6ze2WX/Z/O+TySPOXYIoNEiRerc3U6F/MMp4vv3EO7wQONAemEfwwFJL
-	 qjGLpTMycyzdjA7VWhJD/9nOMqVbsAlidIB8nDgg=
+	by mail.kernel.org (Postfix) with ESMTP id 475B520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgHNFCV (ORCPT
+        id S1726408AbgHNFDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 01:02:21 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:62885 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgHNFCT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 01:02:19 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 07E51xdd001290;
-        Fri, 14 Aug 2020 14:02:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07E51xdd001290
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597381320;
-        bh=x8JxBjoCq979d4tk+W9V8zPD84/UgWP4VgQpYcI1FLw=;
-        h=From:Date:Subject:To:Cc:From;
-        b=OHYVBTy6kOHn4RmovDTfqnPh1zBhw/WSSYBxT0I17JllXOqHa3xYquMrZPKSfHx2n
-         1EXHPTBgYdpkX6b070gbl2DHHJCe48vRL8J5gLsuEzrce+u04ha2tClal33zvKYpzv
-         xxIKIBflItUvdPNoKquNFbK4rDMoJ+ccnO6pRbXu9GOufQPIdIge8mzwEnzkdNgVL4
-         2iwI2bnsxZWLOhk33G0Xrazn5HdElXXK7HyLcSpuj1rO1S2qbttWbrHSqrGsERyu+g
-         ZdJV5nUatSPnWx1Rq8n+lyCeEDaJo2Qt95uAKNKGJoOFbjl7QK7m2fs1OaQlcH8n7p
-         YQOPo3UN+i8kA==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id 1so4084755vsl.1;
-        Thu, 13 Aug 2020 22:02:00 -0700 (PDT)
-X-Gm-Message-State: AOAM5314BAdlYXbEirrPynM0SFuzPkoNzfjHXd4VF0y4PEmVT6bqfBpX
-        w1pRxFePJz7F2znyjAtN0RueoXrWrlgOy/byqWY=
-X-Google-Smtp-Source: ABdhPJxbcs0ATPwleW8AVtD+hbHq9C9n8oE6NZicY6WCCqyEAuV2j4K05S2ufrqj/pUD03HEVrQuMi+nyRhHYPaL6jI=
-X-Received: by 2002:a67:d908:: with SMTP id t8mr442148vsj.215.1597381318892;
- Thu, 13 Aug 2020 22:01:58 -0700 (PDT)
-MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 14 Aug 2020 14:01:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQh7gsicKmSFrLExH=a=spMMeYRDkFGB53Da7gcAUCFDg@mail.gmail.com>
-Message-ID: <CAK7LNAQh7gsicKmSFrLExH=a=spMMeYRDkFGB53Da7gcAUCFDg@mail.gmail.com>
-Subject: [GIT PULL] Kconfig updates for v5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Aug 2020 01:03:01 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55214 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgHNFDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 01:03:01 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D0C61A018C;
+        Fri, 14 Aug 2020 07:02:58 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C7E931A01FB;
+        Fri, 14 Aug 2020 07:02:53 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCDA2402C9;
+        Fri, 14 Aug 2020 07:02:47 +0200 (CEST)
+From:   Jiafei Pan <Jiafei.Pan@nxp.com>
+To:     peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de,
+        rostedt@goodmis.org, romain.perier@gmail.com, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        jiafei.pan@nxp.com, leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        Jiafei Pan <Jiafei.Pan@nxp.com>
+Subject: [PATCH v2] softirq: add irq off checking for __raise_softirq_irqoff
+Date:   Fri, 14 Aug 2020 12:55:22 +0800
+Message-Id: <20200814045522.45719-1-Jiafei.Pan@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+__raise_softirq_irqoff() will update per-CPU mask of pending softirqs,
+it need to be called in irq disabled context in order to keep it atomic
+operation, otherwise it will be interrupted by hardware interrupt,
+and per-CPU softirqs pending mask will be corrupted, the result is
+there will be unexpected issue, for example hrtimer soft irq will
+be losed and soft hrtimer will never be expire and handled.
 
-Please pull Kconfig updates for v5.9-rc1
+Enable CONFIG_PROVE_LOCKING to use lockdep_assert_irqs_disabled() to
+check hardirqs and softirqs status, and provide warning in irqs enabled
+context.
 
-Thanks.
+Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+---
+Changes in v2:
+- use lockdep_assert_irqs_disabled()
+- removed extra comments
+- changed commit message
 
+ kernel/softirq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
-
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kconfig-v5.9
-
-for you to fetch changes up to d4bbe8a1b55aeaadfa0fa982b468eaec9b799f1a:
-
-  kconfig: qconf: move setOptionMode() to ConfigList from ConfigView
-(2020-08-14 13:47:21 +0900)
-
-----------------------------------------------------------------
-Kconfig updates for v5.9
-
- - remove '---help---' keyword support
-
- - fix mouse events for 'menuconfig' symbols in search view of qconf
-
- - code cleanups of qconf
-
-----------------------------------------------------------------
-Masahiro Yamada (23):
-      kconfig: remove '---help---' support
-      Revert "checkpatch: kconfig: prefer 'help' over '---help---'"
-      kconfig: constify XPM data
-      kconfig: add 'static' to some file-local data
-      kconfig: qconf: remove ->addSeparator() to menuBar
-      kconfig: qconf: do not use 'menu' variable for (QMenuBar *)
-      kconfig: qconf: use 'menu' variable for (QMenu *)
-      kconfig: qconf: remove toolBar from ConfigMainWindow members
-      kconfig: qconf: overload addToolBar() to create and insert toolbar
-      kconfig: qconf: remove unused ConfigList::listView()
-      kconfig: qconf: remove name from ConfigSearchWindow constructor
-      kconfig: qconf: omit parent to QHBoxLayout()
-      kconfig: qconf: remove unused argument from ConfigList::updateList()
-      kconfig: qconf: remove unused argument from ConfigView::updateList()
-      kconfig: qconf: remove 'parent' from ConfigList::updateMenuList()
-      kconfig: qconf: drop more localization code
-      kconfig: qconf: remove ConfigItem::pixmap/setPixmap
-      kconfig: qconf: remove ConfigList::addColumn/removeColumn
-      kconfig: qconf: remove ConfigItem::text/setText
-      kconfig: qconf: remove unused voidPix, menuInvPix
-      kconfig: qconf: refactor icon setups
-      kconfig: qconf: do not limit the pop-up menu to the first row
-      kconfig: qconf: move setOptionMode() to ConfigList from ConfigView
-
-Maxime Chretien (1):
-      kconfig: qconf: Fix mouse events in search view
-
- scripts/checkkconfigsymbols.py |   2 +-
- scripts/checkpatch.pl          |   6 +-
- scripts/kconfig/images.c       |  30 +++----
- scripts/kconfig/images.h       |  30 +++----
- scripts/kconfig/lexer.l        |   4 +-
- scripts/kconfig/qconf.cc       | 319
-++++++++++++++++++++++++++++++++++----------------------------------
- scripts/kconfig/qconf.h        |  56 +++---------
- scripts/kconfig/symbol.c       |  14 ++-
- 8 files changed, 218 insertions(+), 243 deletions(-)
-
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index bf88d7f62433..09229ad82209 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -481,6 +481,7 @@ void raise_softirq(unsigned int nr)
+ 
+ void __raise_softirq_irqoff(unsigned int nr)
+ {
++	lockdep_assert_irqs_disabled();
+ 	trace_softirq_raise(nr);
+ 	or_softirq_pending(1UL << nr);
+ }
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
