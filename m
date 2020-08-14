@@ -2,130 +2,88 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F945C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7348220838
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8AD206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 05:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHNF3y (ORCPT
+        id S1726228AbgHNFmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 01:29:54 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:10118 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgHNF3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 01:29:54 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 13 Aug 2020 22:29:52 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 Aug 2020 22:29:50 -0700
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Aug 2020 10:59:32 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id 2AC0D4702; Fri, 14 Aug 2020 10:59:31 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@codeaurora.org>
-To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
-        majja@codeaurora.org, stanimir.varbanov@linaro.org,
-        vgarodia@codeaurora.org, Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH v2] media: v4l2-ctrl: add control for long term reference.
-Date:   Fri, 14 Aug 2020 10:59:27 +0530
-Message-Id: <1597382967-32729-1-git-send-email-dikshita@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 14 Aug 2020 01:42:47 -0400
+Received: from verein.lst.de ([213.95.11.211]:48371 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgHNFmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 01:42:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 58BF068C7B; Fri, 14 Aug 2020 07:42:42 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 07:42:41 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        iommu <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [PATCH] dma-debug: fix debug_dma_assert_idle(), use
+ rcu_read_lock()
+Message-ID: <20200814054241.GA719@lst.de>
+References: <alpine.LSU.2.11.2008122005240.11996@eggly.anvils> <CAHk-=whYLHtbeF6BFmoiik9PTjP2+pnpWxXLE9f0ccnT0LAd5A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whYLHtbeF6BFmoiik9PTjP2+pnpWxXLE9f0ccnT0LAd5A@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LTR (Long Term Reference) frames are the frames that are encoded
-sometime in the past and stored in the DPB buffer list to be used
-as reference to encode future frames.
-This change adds controls to enable this feature.
+On Thu, Aug 13, 2020 at 12:02:41PM -0700, Linus Torvalds wrote:
+> Yeah, that's ridiculously expensive, and serializes things for no good reason.
+> 
+> Your patch looks obviously correct to me (Christoph?),
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
----
- .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 23 ++++++++++++++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
- include/uapi/linux/v4l2-controls.h                 |  4 ++++
- 3 files changed, 33 insertions(+)
+It also looks correct to me.
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index d0d506a..6d1b005 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -4272,3 +4272,26 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
-       - Selecting this value specifies that HEVC slices are expected
-         to be prefixed by Annex B start codes. According to :ref:`hevc`
-         valid start codes can be 3-bytes 0x000001 or 4-bytes 0x00000001.
-+
-+``V4L2_CID_MPEG_VIDEO_LTRCOUNT (enum)``
-+	Specifies the number of Long Term Reference frames encoder needs to
-+	generate or keep.
-+	This control is used to query or configure the number of Long Term
-+	Reference frames.
-+
-+``V4L2_CID_MPEG_VIDEO_MARKLTRFRAME (enum)``
-+	This control is used to mark current frame as Long Term Reference
-+	frame.
-+	this provides a Long Term Reference index that ranges from 0
-+	to LTR count-1 and then the particular frame will be marked with that
-+	Long Term Reference index.
-+
-+``V4L2_CID_MPEG_VIDEO_USELTRFRAME (enum)``
-+	Specifies the Long Term Reference frame(s) to be used for encoding
-+	the current frame.
-+	This provides a bitmask which consists of bits [0, 15]. A total of N
-+	LSB bits of this field are valid, where N is the maximum number of
-+	Long Term Reference frames supported.
-+	All the other bits are invalid and should be rejected.
-+	The LSB corresponds to the Long Term Reference index 0. Bit N-1 from
-+	the LSB corresponds to the Long Term Reference index max LTR count-1.
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 3f3fbcd..3138c72 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -991,6 +991,9 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
-+	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:		return "LTR Count";
-+	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:		return "Mark LTR";
-+	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:		return "Use LTR";
- 
- 	/* CAMERA controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-@@ -1224,6 +1227,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 		break;
- 	case V4L2_CID_MPEG_VIDEO_MV_H_SEARCH_RANGE:
- 	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:
-+	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:
-+	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:
-+	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:
- 		*type = V4L2_CTRL_TYPE_INTEGER;
- 		break;
- 	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 6227141..f2daa86 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -742,6 +742,10 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-+#define V4L2_CID_MPEG_VIDEO_LTRCOUNT	(V4L2_CID_MPEG_BASE + 645)
-+#define V4L2_CID_MPEG_VIDEO_MARKLTRFRAME	(V4L2_CID_MPEG_BASE + 646)
-+#define V4L2_CID_MPEG_VIDEO_USELTRFRAME		(V4L2_CID_MPEG_BASE + 647)
-+
- 
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
--- 
-1.9.1
+> but it also
+> makes me go "why are we doing this in the first place"?
+> 
+> Because it looks to me like
+>  (a) the debug check is wrong
+>  (b) this is left-over from early debugging
+> 
+> In particular, I don't see why we couldn't do a COW on a page that is
+> under writeback at the same time. We're not changing the page that is
+> doing DMA.
 
+Yes.  We don't need to check for a DMA to the device, but a DMA from
+the device while under DMA obviously is bogus.  But then again you'd
+need to try really hard to do that.
+
+> In fact, the whole "COW with DMA" makes me feel like the real bug may
+> have been due that whole "ambiguous COW" thing, which was fixed in
+> 17839856fd58 ("gup: document and work around "COW can break either
+> way" issue")
+> 
+> That debug thing goes back almost 7 years, and I don't think it has
+> caught anything in those seven years, but I could be wrong.
+> 
+> The commit that adds it does talk about a bug, but that code was
+> removed entirely eventually. And google shows no hits for
+> debug_dma_assert_idle() since - until your email.
+> 
+> So my gut feel is that we should remove the check entirely, although
+> your patch does seem like a big improvement.
+> 
+> Christoph?
+
+The whole thing predates my involvement with the code, but I defintively
+think the patch from Hugh is a major improvement.  But I would also
+have no problem with just removing it entirely.
