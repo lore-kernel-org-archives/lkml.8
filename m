@@ -2,94 +2,124 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB28C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F105920791
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AE920855
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 13:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="ogPWcSqS"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HpL1ED54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgHNNeS (ORCPT
+        id S1728572AbgHNNel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:34:18 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:55327 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgHNNeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:34:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1058; q=dns/txt; s=axis-central1;
-  t=1597412056; x=1628948056;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YVahuulwrH51eJacyIUw/4WvPqZAzfYdmsvREBEkBDM=;
-  b=ogPWcSqSfgyYQ3d1Y/dxR+9cA1WwtOQx8jh69+8IzZxo4l29YFYc1bOl
-   OwNos06/PxATjTLlRIzRdmKxPULwc/USNzJ5tmUfrxZE9kzsKp/aoG/PJ
-   KI1ZfO9nZszZSI+BLHew9B0BSw0CyUHRiVivgpX7rnwKhHR0te9dKqL+A
-   dTntfkqJZaCLNO0VzgOAK6EhpAeAgmcaHK4oBlV6VNmJKz6+ksuROCGVY
-   l06VmcRlEbNLeaFIf8B46ZEthhB/BK+AUuy+XnlUO1Os0EusWhE6QtUkr
-   QBx7ygcDdLeiLPnsVYwcdw7+FkDAdFOD+kNJzv/ZRgWEQyzGGSoDjvKqC
-   A==;
-IronPort-SDR: 0g5mw+43X0CZ0OKp+cCyiQOJdM6VOCqRs0sO/O6HaHf6thzvuzR2/vs90+DioZY8+BTPD4cKvY
- BjqVCIm1H0bau75MJGBqqi+JuxsDBAhbU2d2rwU7UvV2b84spO3lPt+WP8Jf4dVGzB+RJkFPFq
- OrxIS8TyUrPG1k4ZXwMRh16M+lh6tDKSplJ2rM61a//zO0iF7gm+WOLuH5bwjSds6m+qX0sAPT
- a4UVdd3EeTZ2eFZmMS5rPoqgG8ADupZQTVoIX0SpGot4knK6t9PG1gdN2WY29axeD9HV/NjNf0
- NHg=
-X-IronPort-AV: E=Sophos;i="5.76,312,1592863200"; 
-   d="scan'208";a="11808915"
-Date:   Fri, 14 Aug 2020 15:34:15 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     John Ogness <john.ogness@linutronix.de>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] dynamic debug: allow printing to trace event
-Message-ID: <20200814133415.nbkehai2vp765an5@axis.com>
-References: <20200721141105.16034-1-vincent.whitchurch@axis.com>
- <20200721173045.540ae500@oasis.local.home>
- <87eep3zmg9.fsf@jogness.linutronix.de>
- <20200722144952.2mewrgebgkyr2zyf@axis.com>
- <20200722112823.3ba72d31@oasis.local.home>
- <20200723105735.mqfkfbljjda7qz7n@axis.com>
- <20200723112644.7759f82f@oasis.local.home>
+        Fri, 14 Aug 2020 09:34:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16822 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgHNNek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:34:40 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07EDXQ1S042718;
+        Fri, 14 Aug 2020 09:34:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=PK+K/zrJwJJiiva50zj5pMJeHrNKrjTAzX2kE46/Fok=;
+ b=HpL1ED54G7rpWyxM115TzOJNoxoCePA6dglz6kH3tG20LR8sMssoHAiZrVHeR0R/NVPZ
+ eY53RfrmfkEfFUmI0mSn2R8YOnArHUyOREBlpnUc0Jku/yBKGhVCqZVelkdlRFWZa61E
+ xT0hXio9W5V4bedORHGNZc0Dj5OJhgCEqdEiHAhXj3UND4V/KIgwJZO/6j8KhYqYHRUu
+ Ydw41u4B0ISDLlQUswPrMfC11/K37y2aeI9/5/Qt95aB6+Ftq630rIC1YxG/vlmgOwOM
+ X9YvEeC2FTgpJSQGGTo3y4fvL+4EzFYlUQr+fh5qNjtzF4u35/NQ+5EfUMI+d3GHZX7/ rA== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32srauuxgh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Aug 2020 09:34:10 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07EDLdOD032624;
+        Fri, 14 Aug 2020 13:34:06 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 32skahenw5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Aug 2020 13:34:05 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07EDY2GB21758434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Aug 2020 13:34:02 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE7D352050;
+        Fri, 14 Aug 2020 13:34:02 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.212.27])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5C78352051;
+        Fri, 14 Aug 2020 13:33:58 +0000 (GMT)
+From:   Balamuruhan S <bala24@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, peterz@infradead.org,
+        Jisheng.Zhang@synaptics.com, rdna@fb.com, viro@zeniv.linux.org.uk,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        naveen.n.rao@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
+        sandipan@linux.ibm.com, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, Balamuruhan S <bala24@linux.ibm.com>
+Subject: [PATCH] kernel/watchdog: fix warning -Wunused-variable for watchdog_allowed_mask in ppc64
+Date:   Fri, 14 Aug 2020 19:03:30 +0530
+Message-Id: <20200814133330.210093-1-bala24@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200723112644.7759f82f@oasis.local.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-14_07:2020-08-14,2020-08-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ suspectscore=1 priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008140099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:26:44PM +0200, Steven Rostedt wrote:
-> On Thu, 23 Jul 2020 12:57:35 +0200
-> Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
-> 
-> > Would it be acceptable to just use a fixed size for the event?  At least
-> > for my own debugging use cases it's preferable to just have to increase
-> > the trace buffer size in case it's insufficient, rather than to have to
-> > restort to one-off debugging code.
-> 
-> There's two other options.
-> 
-> Option 1, is to allocate 256 bytes times 4 (in case of interruption,
-> where you have a separate buffer for every context - normal, softirq,
-> irq, nmi), and use it like I do for stack traces in the latest kernel
-> (see __ftrace_stack_trace() in kernel/trace/trace.c)
-> 
-> Option 2, would be to use trace_array_vprintk(), but you need to create
-> your own instance to do so to keep from messing with the top level buffer.
+In ppc64 config if `CONFIG_SOFTLOCKUP_DETECTOR` is not set then it
+warns for unused declaration of `watchdog_allowed_mask` while building,
+move the declaration inside ifdef later in the code.
 
-Thanks for the suggestions, I've sent out a v2 implementing option 1:
+```
+kernel/watchdog.c:47:23: warning: ‘watchdog_allowed_mask’ defined but not used [-Wunused-variable]
+ static struct cpumask watchdog_allowed_mask __read_mostly;
+```
 
-https://lore.kernel.org/lkml/20200814133151.7759-1-vincent.whitchurch@axis.com/
+Signed-off-by: Balamuruhan S <bala24@linux.ibm.com>
+---
+ kernel/watchdog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 5abb5b22ad13..33c9b8a3d51b 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -44,7 +44,6 @@ int __read_mostly soft_watchdog_user_enabled = 1;
+ int __read_mostly watchdog_thresh = 10;
+ static int __read_mostly nmi_watchdog_available;
+ 
+-static struct cpumask watchdog_allowed_mask __read_mostly;
+ 
+ struct cpumask watchdog_cpumask __read_mostly;
+ unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+@@ -166,6 +165,7 @@ int __read_mostly sysctl_softlockup_all_cpu_backtrace;
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+ 
++static struct cpumask watchdog_allowed_mask __read_mostly;
+ static bool softlockup_initialized __read_mostly;
+ static u64 __read_mostly sample_period;
+ 
+
+base-commit: a3a28c4451dff698d0c7ef5a3e80423aa5774e2b
+-- 
+2.24.1
+
