@@ -2,78 +2,69 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6445C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294DA20885
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 22:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC3220771
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 23:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597446315;
+	bh=WxUD7skxwfs6pijT07oPf/FOHZs1nsZk33KJXyl/49c=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=X/tA4xx+ti9kDQQXCs9m45W+1zs6L1pitDMCyJCvRWL1wSFpGnBqCMZ8neqzzBqxJ
+	 T9ofLTtDxrXGt4nTENGV4Lfd1ofkjNt1CdGUlIX73xeOl+pHHPQlxfAo5tl4wbdY4O
+	 pEoqvrsvmGZOPRs2RBdqEpGfjVsPPmvw961HVpjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgHNW7I (ORCPT
+        id S1728276AbgHNXFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 18:59:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:53505 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgHNW7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 18:59:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id f22so7019162iof.20
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 15:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=26hWQC191k0LtuaZdSkVmfh/7oglcND6lOLk0CrAyjg=;
-        b=UatOcHi7n79hFt1G7RmTMMiiUEi813NimJS0PEimvCv5pWmv+NvDMGzYoZs8cTdRlV
-         mTuio5g7pdqnff3vSf7IqNJR4GDfQ3ZuDr0Dih0xZxTL90b88IdUgHDm92bu5War3o+s
-         ckv6CV3sWD2u1KG2wX3tPFaN9FWVQZv7/9VgH4Lj5VkBjX91aXUwiLZHvZz/NFnUuTxT
-         8pAufABpJwhUAzOYrgkdT98WCXr6Yke9HfXNzTQLrAepT5WlgY8ga23HEuAmjfKIf9n+
-         XU2b7Y0Cv/n3dnilNZfe4U8wZPcofloq+gCJ9GUGNI9m8pDswhBP4MWuvINDayaqGpf0
-         Xj4Q==
-X-Gm-Message-State: AOAM530HSDS86ebxTxnOQHn+PYSN/aPTVqe4db8WYQVAbWH1iN4w8gHq
-        Dcyf/tQYd76VsPDGDZQ4GDAPBjVSs20a0q6K7RR7VdOTxS+g
-X-Google-Smtp-Source: ABdhPJypLHX9dDgEVGPD3bwTWaZvyk4HCc9VC0CCoMFtyaW6XMVYLFWi6Q4yAOt+dOK2FInhgOit9VdtS0K9OXDQNFwAB7SvoEdS
-MIME-Version: 1.0
-X-Received: by 2002:a02:6903:: with SMTP id e3mr4870665jac.142.1597445946590;
- Fri, 14 Aug 2020 15:59:06 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 15:59:06 -0700
-In-Reply-To: <000000000000c770710586c6fc92@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000031c95f05acde5eda@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in free_block (5)
-From:   syzbot <syzbot+438a5abd4f53adb1c073@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, jmaloy@redhat.com,
-        jon.maloy@ericsson.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Aug 2020 19:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbgHNXFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 19:05:13 -0400
+Subject: Re: [GIT PULL] final round of SCSI updates for the 5.8+ merge window
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597446313;
+        bh=WxUD7skxwfs6pijT07oPf/FOHZs1nsZk33KJXyl/49c=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=v2xbTRNcvQhgaSsjJ3NAQCp1pwWXJ11Ugbecmu11T9nbgNjnkklAXC6JdFNZe+85M
+         88By6dEFtUgjmDMdPLO+GgYnwcco3KPmNHRvPY/uhreJ2OUTYzK0dgr6MD3CR84kak
+         083Gw8xqiu5s53TJTciPGAadu6KAZKGw6aJLR3yQ=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1597423176.3916.19.camel@HansenPartnership.com>
+References: <1597423176.3916.19.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-scsi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1597423176.3916.19.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 7e0e8be3a1fd1399373224e22d77487e63566704
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c9c9735c46f589b9877b7fc00c89ef1b61a31e18
+Message-Id: <159744631344.12327.3111654910189380288.pr-tracker-bot@kernel.org>
+Date:   Fri, 14 Aug 2020 23:05:13 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+The pull request you sent on Fri, 14 Aug 2020 09:39:36 -0700:
 
-commit 1378817486d6860f6a927f573491afe65287abf1
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Thu May 21 18:29:58 2020 +0000
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-    tipc: block BH before using dst_cache
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c9c9735c46f589b9877b7fc00c89ef1b61a31e18
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1537694a900000
-start commit:   e6986423 socket: fix compat SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
-dashboard link: https://syzkaller.appspot.com/bug?extid=438a5abd4f53adb1c073
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12adddbf200000
+Thank you!
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: tipc: block BH before using dst_cache
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
