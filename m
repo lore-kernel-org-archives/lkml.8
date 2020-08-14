@@ -2,159 +2,149 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54492C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3938C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8262087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRkTj42r"
+	by mail.kernel.org (Postfix) with ESMTP id CE26520B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgHNMuU (ORCPT
+        id S1728480AbgHNMuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgHNMuS (ORCPT
+        Fri, 14 Aug 2020 08:50:25 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:56966 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbgHNMuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:50:18 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754B2C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:50:18 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i10so9812939ljn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:50:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oNrJofI4VSIM1YMzNApXQ6u0hlAa3YOeI7FwPv0W0xo=;
-        b=dRkTj42r1ORWNCi0KwgABypOpxNH2YfxXSplKDrbKISe72oY7nKYANmkrXI7TtKY3n
-         FWkBYRoaG+R3/7Eh6gST6LtxiWqxoQ1nnN/qdQ9Knst1jUzHDduf2/YG0bhDHTtvLjkS
-         DBtUfpz7eYBCI85lLB3Rw7TkYRda85x+si9K8QaSMd4wEoLUDF/zI32+bvFkkArZLn2b
-         lZ0LOGC3YD0UVakzKaVLrc7hDjHoQc8aEgGCpfrRHGeL+cc/bztqeYVArmzbPYRg/pBR
-         wmtPaXdqENs54CoXQf69SlfWc9fyGj+wCEIJ0Ft9yWLyfQq98qCaRGUS6iUCHvOBLvZY
-         YI2g==
+        Fri, 14 Aug 2020 08:50:21 -0400
+Received: by mail-il1-f198.google.com with SMTP id a14so2636438ilt.23
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:50:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oNrJofI4VSIM1YMzNApXQ6u0hlAa3YOeI7FwPv0W0xo=;
-        b=fgvTWDGC26W85mMhSKLEE+b1GqfcWAPPP5VtiSMWKocVb9SqObJKYeh3tpgobdibI8
-         SDrDaEV13eJO39EBswUVkSNC2qVQeWOs8a0snid9/ujMkw1+nejL2oTsUJummls/ROY3
-         F4d/lVid41euJqJijHQj/9lrLJpI6+BxLaW29a5SMAT3JuF7r6Y0IrXoG4U9dyBtUQPx
-         SFIZWMYWut14q4BlaII2uYzHn5EE3yr5NTO4DqcZ4Gef1Tx9k7qshQkNq3YvjtXLtmnL
-         Zlot4xra1ySF1dsONHGgIXJi7fpAhrYtUnIYgLO3Q1/Bb2ScqwJTDvKnvS/G7+D/45Pw
-         JNzg==
-X-Gm-Message-State: AOAM531py9DeBKYskgtYMtveH8uzcrDAFr+LO35+ikRZ3htlpKwpTiIM
-        n33Pz9E7HzZFPNiE8gPjo2ii4OAbwTzeu54UrF1zYw==
-X-Google-Smtp-Source: ABdhPJx+l2dECJh1QpeXm78A5+o8DyQZpif8ELQbqtHLPbnrx54NFZfHtESmhBFMjh1+R+HViwIbf0fFv25NmToqJpU=
-X-Received: by 2002:a2e:b8cb:: with SMTP id s11mr1353447ljp.110.1597409416937;
- Fri, 14 Aug 2020 05:50:16 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Q8X7Ko3i7KnMZ99PC1YBu5jXAHW6Ad87sQmjX7bZi58=;
+        b=drYNottI5VPeIyI0D7E7w4xIoiN7yC2atbOKRzRjW4griV0vB94DZaD3KWI5LV4dIe
+         yiKncR94UHmUfd2fqBx7P+qFnFv185ndmV+Km0bRKsRU9ANSLMqs9rYhii8nHs6rBzhc
+         wh5hh0G6jG27gtRpFikOu8ItBCMqUv3vO/pmURj/Yj5iDcd2xtykQJzMdpafr0x5Xhzo
+         lrRZIqLGE7fu+EKmPZK0iky1erc9edRyXRa3Q++bLfcKcDEduuQ459HMRz4HVZJ8JkS1
+         DvWfX5hFKPWN3chRdeBc985MuiaC2ayKp3GD8BH3sxW19aM3SAjujTAYxhb+y5+PI0mg
+         rvqg==
+X-Gm-Message-State: AOAM5328K9MjloIRbMYEiiBa/xvx9SHtp9AtZc0oJmfTKyAzEkuiVNpN
+        bf16smRxQszzQsdretPAQCbz0/PqV7xus9MpWUUQTB2rkXfh
+X-Google-Smtp-Source: ABdhPJyMmeWIDWmWmUsXMphuU89IdTOiVP7xEfRWp/V7+QfBdUraCGUovj/amPvuFepZb/9WmMyzMt5ACquDkC9wJnRt6CZogi4O
 MIME-Version: 1.0
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
- <20200811135801.GA416071@kroah.com> <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
- <20200811145816.GA424033@kroah.com> <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
- <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
- <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
- <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
- <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com> <CAD=FV=WGh-+GTsg3-UDr-Ht48n3sRqAJ76PJVFcFuJ1ruFEqOw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WGh-+GTsg3-UDr-Ht48n3sRqAJ76PJVFcFuJ1ruFEqOw@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 14 Aug 2020 18:20:05 +0530
-Message-ID: <CAFA6WYPOF6_+jxG+PCtUS1BHPsnzYtAHmcWRMpMnvorQQ+M3wg@mail.gmail.com>
-Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+X-Received: by 2002:a92:9854:: with SMTP id l81mr2411247ili.161.1597409420363;
+ Fri, 14 Aug 2020 05:50:20 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 05:50:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000fcf8a05acd5dd72@google.com>
+Subject: BUG: corrupted list in media_gobj_destroy
+From:   syzbot <syzbot+4e886425af54bc69daea@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 at 20:56, Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Aug 13, 2020 at 2:25 AM Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > > One other idea occurred to me that's maybe simpler.  You could in
-> > > theory just poll the serial port periodically to accomplish.  It would
-> > > actually probably even work to call the normal serial port interrupt
-> > > routine from any random CPU.  On many serial drivers the entire
-> > > interrupt handler is wrapped with:
-> > >
-> > > spin_lock_irqsave(&uap->port.lock, flags);
-> > > ...
-> > > spin_unlock_irqrestore(&uap->port.lock, flags);
-> > >
-> > > And a few (the ones I was involved in fixing) have the similar pattern
-> > > of using uart_unlock_and_check_sysrq().
-> > >
-> > > Any serial drivers following this pattern could have their interrupt
-> > > routine called periodically just to poll for characters and it'd be
-> > > fine, right?  ...and having it take a second before a sysrq comes in
-> > > this case is probably not the end of the world?
-> > >
-> >
-> > Are you proposing to have complete RX operation in polling mode with
-> > RX interrupt disabled (eg. using a kernel thread)?
->
-> No, I'm suggesting a hybrid approach.  Leave the interrupts enabled as
-> usual, but _also_ poll every 500 ms or 1 second (maybe make it
-> configurable?).  In some serial drivers (ones that hold the lock for
-> the whole interrupt routine) this polling function could actually be
-> the same as the normal interrupt handler so it'd be trivially easy to
-> implement and maintain.
->
-> NOTE: This is not the same type of polling that kgdb does today.  The
-> existing polling is really only intended to work when we're dropped
-> into the debugger.  This would be more like a "poll_irq" type function
-> that would do all the normal work the interrupt did and is really just
-> there in the case that the CPU that the interrupt is routed to is
-> locked up.
->
+Hello,
 
-Your idea sounds interesting. I think where we are reaching is to have
-an ever active listener to serial port that can be scheduled to any
-random active CPU. And to keep its CPU overhead negligible, it can
-sleep and only wake-up and listen once every 500 ms or 1 second
-(configurable).
+syzbot found the following issue on:
 
-I will try to think more about it and probably give it a try with a PoC.
+HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=16663509900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ef84fa8ee48e528
+dashboard link: https://syzkaller.appspot.com/bug?extid=4e886425af54bc69daea
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
--Sumit
+Unfortunately, I don't have any reproducer for this issue yet.
 
->
-> > > One nice benefit of this is that it would actually work _better_ on
-> > > SMP systems for any sysrqs that aren't NMI safe.  Specifically with
-> > > your patch series those would be queued with irq_work_queue() which
-> > > means they'd be blocked if the CPU processing the NMI is stuck with
-> > > IRQs disabled.
-> >
-> > Yes, the sysrq handlers which aren't NMI safe will behave similarly to
-> > existing IRQ based sysrq handlers.
-> >
-> > > With the polling mechanism they'd nicely just run on a
-> > > different CPU.
-> >
-> > It looks like polling would cause much CPU overhead. So I am not sure
-> > if that is the preferred approach.
->
-> Maybe now it's clearer that there should be almost no overhead.  When
-> dealing with a SYSRQ it's fine if there's a bit of a delay before it's
-> processed, so polling every 1 second is probably fine.
->
-> -Doug
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4e886425af54bc69daea@syzkaller.appspotmail.com
+
+usb 1-1: USB disconnect, device number 97
+list_del corruption. next->prev should be ffff8881c93dc010, but was ffff8883c93dc012
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:54!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 1 PID: 3074 Comm: kworker/1:3 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:__list_del_entry_valid.cold+0x48/0x55 lib/list_debug.c:54
+Code: e8 f1 71 3c ff 0f 0b 4c 89 e2 48 89 ee 48 c7 c7 20 85 1c 86 e8 dd 71 3c ff 0f 0b 48 89 ee 48 c7 c7 e0 85 1c 86 e8 cc 71 3c ff <0f> 0b cc cc cc cc cc cc cc cc cc cc cc 41 57 41 56 41 55 41 54 55
+RSP: 0018:ffff8881d50b7498 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8881c93dc000 RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff8129ec93 RDI: ffffed103aa16e85
+RBP: ffff8881c93dc010 R08: 0000000000000054 R09: ffff8881db32f54f
+R10: 0000000000000000 R11: 000000000007e3b8 R12: ffff8881cdd8d108
+R13: ffff8881c93dc090 R14: ffff8881c93dc000 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3cf3d4a380 CR3: 00000001ab4d2000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del include/linux/list.h:146 [inline]
+ media_gobj_destroy drivers/media/mc/mc-entity.c:187 [inline]
+ media_gobj_destroy+0xa1/0x232 drivers/media/mc/mc-entity.c:176
+ __media_device_unregister_entity+0x236/0x300 drivers/media/mc/mc-device.c:603
+ media_device_unregister_entity+0x49/0x70 drivers/media/mc/mc-device.c:688
+ dvb_media_device_free+0x1d5/0x620 drivers/media/dvb-core/dvbdev.c:226
+ dvb_remove_device.part.0+0x8f/0x240 drivers/media/dvb-core/dvbdev.c:561
+ dvb_remove_device drivers/media/dvb-core/dvbdev.c:554 [inline]
+ dvb_unregister_device+0x1b/0x60 drivers/media/dvb-core/dvbdev.c:583
+ dvb_dmxdev_release+0x1a0/0x640 drivers/media/dvb-core/dmxdev.c:1459
+ dvb_usb_adapter_dvb_exit+0xa9/0x240 drivers/media/usb/dvb-usb/dvb-usb-dvb.c:224
+ dvb_usb_adapter_exit drivers/media/usb/dvb-usb/dvb-usb-init.c:114 [inline]
+ dvb_usb_exit.isra.0+0xaa/0x2a0 drivers/media/usb/dvb-usb/dvb-usb-init.c:129
+ dvb_usb_device_exit+0x111/0x1a0 drivers/media/usb/dvb-usb/dvb-usb-init.c:306
+ usb_unbind_interface+0x1d8/0x8d0 drivers/usb/core/driver.c:436
+ __device_release_driver+0x3c6/0x6f0 drivers/base/dd.c:1153
+ device_release_driver_internal drivers/base/dd.c:1184 [inline]
+ device_release_driver+0x26/0x40 drivers/base/dd.c:1207
+ bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+ device_del+0x481/0xd90 drivers/base/core.c:3107
+ usb_disable_device+0x387/0x930 drivers/usb/core/message.c:1245
+ usb_disconnect.cold+0x27d/0x780 drivers/usb/core/hub.c:2217
+ hub_port_connect drivers/usb/core/hub.c:5059 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x1c93/0x4390 drivers/usb/core/hub.c:5576
+ process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x392/0x470 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace 409eb60372a6c4c3 ]---
+RIP: 0010:__list_del_entry_valid.cold+0x48/0x55 lib/list_debug.c:54
+Code: e8 f1 71 3c ff 0f 0b 4c 89 e2 48 89 ee 48 c7 c7 20 85 1c 86 e8 dd 71 3c ff 0f 0b 48 89 ee 48 c7 c7 e0 85 1c 86 e8 cc 71 3c ff <0f> 0b cc cc cc cc cc cc cc cc cc cc cc 41 57 41 56 41 55 41 54 55
+RSP: 0018:ffff8881d50b7498 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8881c93dc000 RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff8129ec93 RDI: ffffed103aa16e85
+RBP: ffff8881c93dc010 R08: 0000000000000054 R09: ffff8881db32f54f
+R10: 0000000000000000 R11: 000000000007e3b8 R12: ffff8881cdd8d108
+R13: ffff8881c93dc090 R14: ffff8881c93dc000 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3cf3d4a380 CR3: 00000001ab4d2000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
