@@ -2,216 +2,99 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B04C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DAC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3582320774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B352D20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o7pOkJqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgHNMCt (ORCPT
+        id S1727930AbgHNMEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:02:49 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2605 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbgHNMCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:02:48 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BDC3B1AA99F23CE61D1D;
-        Fri, 14 Aug 2020 13:02:46 +0100 (IST)
-Received: from [127.0.0.1] (10.47.4.107) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 14 Aug
- 2020 13:02:46 +0100
-Subject: Re: nvme crash - Re: linux-next: Tree for Aug 13
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        <chaitanya.kulkarni@wdc.com>
-References: <20200813155009.GA2303@infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <81e42d30-ede3-d7b0-ad7b-8192bcf27a4c@huawei.com>
-Date:   Fri, 14 Aug 2020 13:00:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 14 Aug 2020 08:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgHNMEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:04:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23294C061384;
+        Fri, 14 Aug 2020 05:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zcIN3o7nFZcsDHO6slakDMVz6rP7Gh3OIOKHo+4Ripk=; b=o7pOkJqix8h4n8IfLn2Y+C4bnN
+        NAS93wz3etTRWKWCkhPZYrKM0H+6XReBTPxs5I4XvfRTP7YqjYOZOz/5feL4W/hwVbHSG+Nc3sQba
+        aBdx4NgUvbBWjQhL+bVVSLe21m6KKY3iPx7/UXWq2LqsDkLGKQHuQKIM/aVwmOPvuNqbk9ecxon/A
+        KHTdlymSifqJv36Rwv5TrG7pfDzsJd7y7e/ZwawtyOmoUr6+r7Yi2OQuZfk9Wg+6M/9cqQJ7S0x2Z
+        jK9oog66MXYCVHaRUkfEphDoX8dVWOshqKi0CMQQmaXY2P2yIeQ7o5bNyCqJoR2cap9BEYD7gLNsE
+        osXH/Fcg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6YRa-0000ck-NZ; Fri, 14 Aug 2020 12:04:22 +0000
+Date:   Fri, 14 Aug 2020 13:04:22 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        Kanchan Joshi <joshiiitr@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+Message-ID: <20200814120422.GA1872@infradead.org>
+References: <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731091416.GA29634@infradead.org>
+ <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731094135.GA4104@infradead.org>
+ <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731125110.GA11500@infradead.org>
+ <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200814081411.GA16943@infradead.org>
+ <CY4PR04MB3751DE1ECCA4099902AABAA6E7400@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200813155009.GA2303@infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.4.107]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB3751DE1ECCA4099902AABAA6E7400@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> I have experienced this this crash below on linux-next for the last few days
->> on my arm64 system. Linus' master branch today also has it.
-> Adding Robin and the iommu list as this seems to be in the dma-iommu
-> code.
+On Fri, Aug 14, 2020 at 08:27:13AM +0000, Damien Le Moal wrote:
+> > 
+> > O_APPEND pretty much implies out of order, as there is no way for an
+> > application to know which thread wins the race to write the next chunk.
 > 
->> root@ubuntu:/home/john# insmod nvme.ko
->> [148.254564] nvme 0000:81:00.0: Adding to iommu group 21
->> [148.260973] nvme nvme0: pci function 0000:81:00.0
->> root@ubuntu:/home/john# [148.272996] Unable to handle kernel NULL pointer
->> dereference at virtual address 0000000000000010
->> [148.281784] Mem abort info:
->> [148.284584] ESR = 0x96000004
->> [148.287641] EC = 0x25: DABT (current EL), IL = 32 bits
->> [148.292950] SET = 0, FnV = 0
->> [148.295998] EA = 0, S1PTW = 0
->> [148.299126] Data abort info:
->> [148.302003] ISV = 0, ISS = 0x00000004
->> [148.305832] CM = 0, WnR = 0
->> [148.308794] user pgtable: 4k pages, 48-bit VAs, pgdp=00000a27bf3c9000
->> [148.315229] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
->> [148.322016] Internal error: Oops: 96000004 [#1] PREEMPT SMP
->> [148.327577] Modules linked in: nvme nvme_core
->> [148.331927] CPU: 56 PID: 256 Comm: kworker/u195:0 Not tainted
->> 5.8.0-next-20200812 #27
->> [148.339744] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 -
->> V1.16.01 03/15/2019
->> [148.348260] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
->> [148.353822] pstate: 80c00009 (Nzcv daif +PAN +UAO BTYPE=--)
->> [148.359390] pc : __sg_alloc_table_from_pages+0xec/0x238
->> [148.364604] lr : __sg_alloc_table_from_pages+0xc8/0x238
->> [148.369815] sp : ffff800013ccbad0
->> [148.373116] x29: ffff800013ccbad0 x28: ffff0a27b3d380a8
->> [148.378417] x27: 0000000000000000 x26: 0000000000002dc2
->> [148.383718] x25: 0000000000000dc0 x24: 0000000000000000
->> [148.389019] x23: 0000000000000000 x22: ffff800013ccbbe8
->> [148.394320] x21: 0000000000000010 x20: 0000000000000000
->> [148.399621] x19: 00000000fffff000 x18: ffffffffffffffff
->> [148.404922] x17: 00000000000000c0 x16: fffffe289eaf6380
->> [148.410223] x15: ffff800011b59948 x14: ffff002bc8fe98f8
->> [148.415523] x13: ff00000000000000 x12: ffff8000114ca000
->> [148.420824] x11: 0000000000000000 x10: ffffffffffffffff
->> [148.426124] x9 : ffffffffffffffc0 x8 : ffff0a27b5f9b6a0
->> [148.431425] x7 : 0000000000000000 x6 : 0000000000000001
->> [148.436726] x5 : ffff0a27b5f9b680 x4 : 0000000000000000
->> [148.442027] x3 : ffff0a27b5f9b680 x2 : 0000000000000000
->> [148.447328] x1 : 0000000000000001 x0 : 0000000000000000
->> [148.452629] Call trace:
->> [148.455065]__sg_alloc_table_from_pages+0xec/0x238
->> [148.459931]sg_alloc_table_from_pages+0x18/0x28
->> [148.464541]iommu_dma_alloc+0x474/0x678
->> [148.468455]dma_alloc_attrs+0xd8/0xf0
->> [148.472193]nvme_alloc_queue+0x114/0x160 [nvme]
->> [148.476798]nvme_reset_work+0xb34/0x14b4 [nvme]
->> [148.481407]process_one_work+0x1e8/0x360
->> [148.485405]worker_thread+0x44/0x478
->> [148.489055]kthread+0x150/0x158
->> [148.492273]ret_from_fork+0x10/0x34
->> [148.495838] Code: f94002c3 6b01017f 540007c2 11000486 (f8645aa5)
->> [148.501921] ---[ end trace 89bb2b72d59bf925 ]---
->>
->> Anything to worry about? I guess not since we're in the merge window, but
->> mentioning just in case ...
+> Yes and no. If the application threads do not synchronize their calls to
+> io_submit(), then yes indeed, things can get out of order. But if the
+> application threads are synchronized, then the offset set for each append AIO
+> will be in sequence of submission, so the user will not see its writes
+> completing at different write offsets than this implied offsets.
 
-I bisected, and this patch looks to fix it (note the comments below the 
-'---'):
+Nothing gurantees any kind of ordering for two separate io_submit calls.
+The kernel may delay one of them for any reason.
 
- From 263891a760edc24b901085bf6e5fe2480808f86d Mon Sep 17 00:00:00 2001
-From: John Garry <john.garry@huawei.com>
-Date: Fri, 14 Aug 2020 12:45:18 +0100
-Subject: [PATCH] nvme-pci: Use u32 for nvme_dev.q_depth
-
-Recently nvme_dev.q_depth was changed from int to u16 type.
-
-This falls over for the queue depth calculation in nvme_pci_enable(),
-where NVME_CAP_MQES(dev->ctrl.cap) + 1 may overflow, as NVME_CAP_MQES()
-gives a 16b number also. That happens for me, and this is the result:
-
-root@ubuntu:/home/john# [148.272996] Unable to handle kernel NULL pointer
-dereference at virtual address 0000000000000010
-[148.281784] Mem abort info:
-[148.284584] ESR = 0x96000004
-[148.287641] EC = 0x25: DABT (current EL), IL = 32 bits
-[148.292950] SET = 0, FnV = 0
-[148.295998] EA = 0, S1PTW = 0
-[148.299126] Data abort info:
-[148.302003] ISV = 0, ISS = 0x00000004
-[148.305832] CM = 0, WnR = 0
-[148.308794] user pgtable: 4k pages, 48-bit VAs, pgdp=00000a27bf3c9000
-[148.315229] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
-[148.322016] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[148.327577] Modules linked in: nvme nvme_core
-[148.331927] CPU: 56 PID: 256 Comm: kworker/u195:0 Not tainted
-5.8.0-next-20200812 #27
-[148.339744] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 -
-V1.16.01 03/15/2019
-[148.348260] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
-[148.353822] pstate: 80c00009 (Nzcv daif +PAN +UAO BTYPE=--)
-[148.359390] pc : __sg_alloc_table_from_pages+0xec/0x238
-[148.364604] lr : __sg_alloc_table_from_pages+0xc8/0x238
-[148.369815] sp : ffff800013ccbad0
-[148.373116] x29: ffff800013ccbad0 x28: ffff0a27b3d380a8
-[148.378417] x27: 0000000000000000 x26: 0000000000002dc2
-[148.383718] x25: 0000000000000dc0 x24: 0000000000000000
-[148.389019] x23: 0000000000000000 x22: ffff800013ccbbe8
-[148.394320] x21: 0000000000000010 x20: 0000000000000000
-[148.399621] x19: 00000000fffff000 x18: ffffffffffffffff
-[148.404922] x17: 00000000000000c0 x16: fffffe289eaf6380
-[148.410223] x15: ffff800011b59948 x14: ffff002bc8fe98f8
-[148.415523] x13: ff00000000000000 x12: ffff8000114ca000
-[148.420824] x11: 0000000000000000 x10: ffffffffffffffff
-[148.426124] x9 : ffffffffffffffc0 x8 : ffff0a27b5f9b6a0
-[148.431425] x7 : 0000000000000000 x6 : 0000000000000001
-[148.436726] x5 : ffff0a27b5f9b680 x4 : 0000000000000000
-[148.442027] x3 : ffff0a27b5f9b680 x2 : 0000000000000000
-[148.447328] x1 : 0000000000000001 x0 : 0000000000000000
-[148.452629] Call trace:
-[148.455065]__sg_alloc_table_from_pages+0xec/0x238
-[148.459931]sg_alloc_table_from_pages+0x18/0x28
-[148.464541]iommu_dma_alloc+0x474/0x678
-[148.468455]dma_alloc_attrs+0xd8/0xf0
-[148.472193]nvme_alloc_queue+0x114/0x160 [nvme]
-[148.476798]nvme_reset_work+0xb34/0x14b4 [nvme]
-[148.481407]process_one_work+0x1e8/0x360
-[148.485405]worker_thread+0x44/0x478
-[148.489055]kthread+0x150/0x158
-[148.492273]ret_from_fork+0x10/0x34
-[148.495838] Code: f94002c3 6b01017f 540007c2 11000486 (f8645aa5)
-[148.501921] ---[ end trace 89bb2b72d59bf925 ]---
-
-Fix by making a u32.
-
-Fixes: 61f3b8963097 ("nvme-pci: use unsigned for io queue depth")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
-unsigned int may be better, and io_queue_depth() needs fixing also
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index ba725ae47305..72c1402abfc3 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -120,7 +120,7 @@ struct nvme_dev {
-  	unsigned max_qid;
-  	unsigned io_queues[HCTX_MAX_TYPES];
-  	unsigned int num_vecs;
--	u16 q_depth;
-+	u32 q_depth;
-  	int io_sqes;
-  	u32 db_stride;
-  	void __iomem *bar;
-@@ -2320,7 +2320,7 @@ static int nvme_pci_enable(struct nvme_dev *dev)
-
-  	dev->ctrl.cap = lo_hi_readq(dev->bar + NVME_REG_CAP);
-
--	dev->q_depth = min_t(u16, NVME_CAP_MQES(dev->ctrl.cap) + 1,
-+	dev->q_depth = min_t(u32, NVME_CAP_MQES(dev->ctrl.cap) + 1,
-  				io_queue_depth);
-  	dev->ctrl.sqsize = dev->q_depth - 1; /* 0's based queue depth */
-  	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+Now if you are doing two fully synchronous write calls on an
+O_APPEND fd, yes they are serialized.  But using Zone Append won't
+change that.
