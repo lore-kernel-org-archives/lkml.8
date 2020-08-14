@@ -2,180 +2,123 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C29C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0776C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3332068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFE92068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 08:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=harman.com header.i=@harman.com header.b="hdI4vxZD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gRZbAEl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgHNIOB (ORCPT
+        id S1727055AbgHNIOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 04:14:01 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.2]:39017 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726050AbgHNIOB (ORCPT
+        Fri, 14 Aug 2020 04:14:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgHNIOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 04:14:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harman.com;
-        s=harman2020; t=1597392838; i=@harman.com;
-        bh=XjNzQgYHnj5AbPTb6t48hQtzDyaXNCi9P2fFLdemfgY=;
-        h=From:To:CC:Subject:Date:Message-ID:Content-Type:
-         Content-Transfer-Encoding:MIME-Version;
-        b=hdI4vxZD5ZqWRbkA9ZqZBIKPeGz8uChO+dcgfZFdi9+HxXZGBX56eVLzikn3ttx90
-         K4lDO0Te58GX9s01dmqjDbf4geUDDpp4/WWeIbAk8mlc1klq7F+OGd7oF3b8poD62X
-         tthK4O3wbxWg1VG5b3+Cn7kMEDRscG3+QVe8cKPJuC09n6Q8MIIKqH0JtQLtZ7hQzR
-         38mFA0YOEiooCxykdIYwiJK9fzI7/hOFsBmtrQsgMNB1rBjCB1YVtb+0HGvKTD4xPk
-         5CLoTYLNM8kKnWhA+ZQwACWBAKMuORaR5SCwPZQHY2sNxXBOC68ps9+92e7GtrwBjM
-         GDAZf6loNd4xg==
-Received: from [100.112.130.0] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-a.us-west-2.aws.symcld.net id 2F/B2-01971-6C7463F5; Fri, 14 Aug 2020 08:13:58 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRWlGSWpSXmKPExsVyqPAOq+4xd7N
-  4g09nGC1OnDvGbnF51xw2ByaPz5vkAhijWDPzkvIrElgzJp/6wl7wV7qidUFIA+NUiS5GLg4h
-  gS2MEj/OT2OGc+b0T2WHcA4ySuw7dQIow8nBJmAusWtPCzuILSLgLnHtcS8jiM0s4Chxe+9bJ
-  hBbWMBV4v/2lSxdjBxANV4SH+4HQpTrSVy5cACsnEVAVWLTz81gNi/QmP+PF4LZjAJiEt9PrW
-  GCGCkucevJfDBbQkBAYsme88wQtqjEy8f/WCFsA4mtS/exQNhyEsu2P4fq1ZO4MXUKG4StLbF
-  s4WtmiF2CEidnPgGrFxLQkLh2aCXrBEbRWUjWzULSPgtJ+ywk7QsYWVYxmicVZaZnlOQmZubo
-  GhoY6BoaGukaGlnqmhroJVbpJuqVFuuWpxaX6BrpJZYX6xVX5ibnpOjlpZZsYgRGVUpBo9EOx
-  r+vP+gdYpTkYFIS5bU2N4sX4kvKT6nMSCzOiC8qzUktPsQow8GhJMGb7QaUEyxKTU+tSMvMAU
-  Y4TFqCg0dJhHeFK1Cat7ggMbc4Mx0idYrRnmPj07mLmDkmvASRB4/OA5KXrwNJIZa8/LxUKXH
-  enSBTBUDaMkrz4IbCEtIlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8MiBTeDLzSuB2vwI6
-  iwnoLL1mU5CzShIRUlINTBFCv0+sCDRN+OS0OdTr9oYLGY7T2LRlHrAVB3p+yrtu218w71naR
-  /WGU21/bE4JV/oaMapozq487T7bVch9nVvhDZPP4Vv/1Pl6Cq/qnnU8ZbPvkjPiouo2nbvNJx
-  2xf/d/7ez/fAICXnnLelc+zt3aoenJMmHmvic/OY/Ei7TyKlsIyOXuY1k8/3BVYMuy19/Py7a
-  YMi5cyZHzdxe3qE6CwPcrrZOVFnPYulzrNjAzi5+36HDNC6k5of8bZpZ0N1gsTnih+EPoze1T
-  4rd5JBOy509jWneOtWCDJfeiSyJiW3ecl1i6I6X7aMwf16S4ZP2DW5mvHnla2fXM8PqngraHM
-  8XzpQ3YOXXKOrx2KrEUZyQaajEXFScCAHthy/DDAwAA
-X-Env-Sender: Vladut.Vranceanu@harman.com
-X-Msg-Ref: server-21.tower-322.messagelabs.com!1597392832!48855!2
-X-Originating-IP: [194.113.220.5]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22423 invoked from network); 14 Aug 2020 08:13:57 -0000
-Received: from unknown (HELO HIMDWSMB10.ad.harman.com) (194.113.220.5)
-  by server-21.tower-322.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 14 Aug 2020 08:13:57 -0000
-Received: from HIMDWSMB08.ad.harman.com (10.70.50.118) by
- HIMDWSMB10.ad.harman.com (10.70.50.215) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 14 Aug 2020 10:13:52 +0200
-Received: from HIMDWSMB07.ad.harman.com (10.70.50.117) by
- HIMDWSMB08.ad.harman.com (10.70.50.118) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 14 Aug 2020 10:13:52 +0200
-Received: from HIMDWSMB07.ad.harman.com ([fe80::4cf8:5ebd:53f7:f6c4]) by
- HIMDWSMB07.ad.harman.com ([fe80::4cf8:5ebd:53f7:f6c4%16]) with mapi id
- 15.00.1497.000; Fri, 14 Aug 2020 10:13:52 +0200
-From:   "Vranceanu, Vladut" <Vladut.Vranceanu@harman.com>
-To:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [linux-ima-user]Systemd cgroups freezes after activating EVM
-Thread-Topic: [linux-ima-user]Systemd cgroups freezes after activating EVM
-Thread-Index: AdZyEsnJR1w89j+xSzSLGGMu//7ukA==
-Date:   Fri, 14 Aug 2020 08:13:52 +0000
-Message-ID: <d7a7b26117dc4129b9750130ba59b93e@HIMDWSMB07.ad.harman.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.70.50.4]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 14 Aug 2020 04:14:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF850C061383;
+        Fri, 14 Aug 2020 01:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=O4ePLcpRGoDo0O/rzXsIf8bGgZ7ERrg5VoASl6NkmpI=; b=gRZbAEl0QMe7sTmXwITLyqDLLW
+        86HhdIPkEJZ2AU5dluHodxWdRr+v5G7M7fNtcCNAFXSfAjRf9svixEVUbJUJUzlKhl7pIhucxGnq5
+        oX4Wwdhc3cpKaMD42w7anOCqmhokigU4FEIHUX8uJX4KJUqW3trKTscwO2zJPDPVsnyHJfiBrsb4r
+        b0LZ7Powl7iAIzQiUM4CI1vqvApLDqieTEpd+E7KVW9BY5vABIH7pRpwrjO0dvuToc6zsZi7VL8/6
+        pkHymJChFtuOnKgNuTg4Y6VngcpIverT6gkDp5fQyz6Ytt0k+Vny4BYJxnNzcWx/DpoEQm8TFlAvE
+        vyGXmEqA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6Uqp-0004Wc-Dj; Fri, 14 Aug 2020 08:14:11 +0000
+Date:   Fri, 14 Aug 2020 09:14:11 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        Kanchan Joshi <joshiiitr@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+Message-ID: <20200814081411.GA16943@infradead.org>
+References: <20200731064526.GA25674@infradead.org>
+ <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731091416.GA29634@infradead.org>
+ <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731094135.GA4104@infradead.org>
+ <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731125110.GA11500@infradead.org>
+ <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 05, 2020 at 07:35:28AM +0000, Damien Le Moal wrote:
+> > the write pointer.  The only interesting addition is that we also want
+> > to report where we wrote.  So I'd rather have RWF_REPORT_OFFSET or so.
+> 
+> That works for me. But that rules out having the same interface for raw block
+> devices since O_APPEND has no meaning in that case. So for raw block devices, it
+> will have to be through zonefs. That works for me, and I think it was your idea
+> all along. Can you confirm please ?
 
-I have some questions regarding system freezing at boot after activating EV=
-M. I receive this error message:
+Yes.  I don't think think raw syscall level access to the zone append
+primitive makes sense.  Either use zonefs for a file-like API, or
+use the NVMe pass through interface for 100% raw access.
 
-=A0=A0=A0=A0=A0 systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/system=
-: No such file of device.
-=A0=A0=A0=A0=A0 [!!!!!] Failed to mount API filesystems, freezing.
+> >  - take the exclusive per-inode (zone) lock and just issue either normal
+> >    writes or zone append at your choice, relying on the lock to
+> >    serialize other writers.  For the async case this means we need a
+> >    lock than can be release in a different context than it was acquired,
+> >    which is a little ugly but can be done.
+> 
+> Yes, that would be possible. But likely, this will also need calls to
+> inode_dio_wait() to avoid ending up with a mix of regular write and zone append
+> writes in flight (which likely would result in the regular write failing as the
+> zone append writes would go straight to the device without waiting for the zone
+> write lock like regular writes do).
 
-I am using Linux kernel 4.19.78 and system v2.34. My aim is to activate IMA=
-/EVM with EVM in mode 0x80000006, as per https://www.kernel.org/doc/Documen=
-tation/ABI/testing/evm. I have a script running from an initramFS, which do=
-es the IMA/EVM setup like the following:
+inode_dio_wait is a really bad implementation of almost a lock.  I've
+started some work that I need to finish to just replace it with proper
+non-owner rwsems (or even the range locks Dave has been looking into).
 
-=A0=A0=A0=A0=A0=A0 mount -n -t securityfs securityfs /sys/kernel/security
+> 
+> This all sound sensible to me. One last point though, specific to zonefs: if the
+> user opens a zone file with O_APPEND, I do want to have that necessarily mean
+> "use zone append". And same for the "RWF_REPORT_OFFSET". The point here is that
+> both O_APPEND and RWF_REPORT_OFFSET can be used with both regular writes and
+> zone append writes, but none of them actually clearly specify if the
+> application/user tolerates writing data to disk in a different order than the
+> issuing order... So another flag to indicate "atomic out-of-order writes" (==
+> zone append) ?
 
-=A0=A0=A0=A0=A0=A0 (set -e; while read i; do echo $i >&2; echo $i; done) </=
-etc/keys/policy >/sys/kernel/security/ima/policy
-
-=A0=A0=A0=A0=A0=A0 ima_id=3D"`awk '/\.ima/ { printf "%d", "0x"$1; }' /proc/=
-keys`"
-=A0=A0=A0=A0=A0=A0 evmctl import /etc/keys/x509_ima_1.der $ima_id
-
-=A0=A0=A0=A0=A0=A0 evm_id=3D"`awk '/\.evm/ { printf "%d", "0x"$1; }' /proc/=
-keys`"
-=A0=A0=A0=A0=A0=A0 evmctl import /etc/keys/x509_ima_1.der $evm_id
-
-=A0=A0=A0=A0=A0=A0 cat /etc/keys/kmk | keyctl padd user kmk @u
-=A0=A0=A0=A0=A0=A0 keyctl add encrypted evm-key "load `cat /etc/keys/evm-ke=
-y`" @u
-
-=A0=A0=A0=A0=A0=A0 echo -2147483642 > /sys/kernel/security/evm
-
-, where the policy is:=20
-
-=A0 =A0=A0=A0dont_appraise fsmagic=3D0x9fa0
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x62656572
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x64626720
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x01021994
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x858458f6
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x1cd1=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=20
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x42494e4d
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0x73636673
-=A0=A0=A0=A0 dont_appraise fsmagic=3D0xf97cff8c
-
-This would be a dummy policy, with which I could still reproduce the issue.
-
-Kernel command line parameters are:
-
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0 bootargs =3D "console=3Dt=
-tyS0,921600n1 \
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 debugshell=3D1 printk.disable=
-_uart=3D0 rootwait mem=3D1024m \
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 loglevel=3D8 earlycon=3Duart8=
-250,mmio32,0x11002000 rootfstype=3Dext4 ima_appraise=3Dlog evm=3Dfix cgroup=
-_no_v1=3Dall quiet ";
-
-, where ima_appraise=3Dlog evm=3Dfix should ensure that boot freeze does no=
-t occur cause of missing signatures and cgroup_no_v1=3Dall is one of my att=
-empts at solving the issue(not needed).
-
-The problem occurs specifically only when running this instruction "echo -2=
-147483642 > /sys/kernel/security/evm", of activating EVM. The same setup go=
-es through boot fine when leaving that out. Moreover, when doing the instru=
-ction in user-space, that also works(though I get some EVM-related kernel m=
-essages which, at this point, I'm not sure whether are normal or not).
-
-I would much appreciate any lead to what I could be doing wrong, as it is d=
-ifficult for me to trace the problem both for my lack of expertise and the =
-way the image is formed. I am not subscribed to this mailing list, as advis=
-ed by the FAQ, so please reply to my email individually as well, if you do.
-
-Thank you,
-Vlad
-
-P.S.: Already messaged systemd community and the answer was:
-
-systemd is just the messenger here. It tries to mount cgroupfs and that's d=
-enied due to some permission problem. We don't know IMA/EVM here. Please co=
-ntact the IMA community instead, they might be able to tell you why the ker=
-nel would refuse cgroupfs mounts.
-
-cgroupfs is required to be mountable for systemd to work. There's no way ar=
-ound that.
-
-
+O_APPEND pretty much implies out of order, as there is no way for an
+application to know which thread wins the race to write the next chunk.
