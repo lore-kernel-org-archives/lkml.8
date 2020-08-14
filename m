@@ -2,97 +2,92 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D42C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF332068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597427125;
-	bh=FiIcjZUHsrXzXH0x/aRcjN5xj+GMmd6ZOirtzojIXcY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rg6kC8KjRkSh1XLCt34xB4TWtCsTW7uq87b/EA+McH4FYfQokxR0nW2SRBJyupYDM
-	 Ako9oelJsihKI+4oxVMgM0DE7s4b0c4rkb6fEJqi+Abz17aaqJp/uzu1DBMzC51bOT
-	 NIsQrYoDQ3nfwJ8UJdMSIDBpsSgLgO2XUDENgxds=
+	by mail.kernel.org (Postfix) with ESMTP id 0FAA720774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rQF9QclW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgHNRpX (ORCPT
+        id S1728394AbgHNRqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNRpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:45:23 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D1420838;
-        Fri, 14 Aug 2020 17:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597427123;
-        bh=FiIcjZUHsrXzXH0x/aRcjN5xj+GMmd6ZOirtzojIXcY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZAQA2SeRvHDUZUCMEMhk/0up8jQO6zukqnZPWP2/qF2LxON+B1HgoWgA/aPl1RNA7
-         qtJbKBIz4H7GgYO6dX6Ge62lOOT16nrHFZKhmD2Ez7iBwdidw6GnjDn+71qIYW6vVB
-         eQC7EmThFZFXHOkecVbdctpD+ccrkYJynET6VPu4=
-Received: by mail-ot1-f52.google.com with SMTP id k12so8229332otr.1;
-        Fri, 14 Aug 2020 10:45:22 -0700 (PDT)
-X-Gm-Message-State: AOAM531YlG85wTcCJPTgxKfXDXmXdX6Isun3I0FwukXkSoIASwQ196bI
-        WOR24Obi5zLDD5MzFJpKmI9+Zkm3OCXKPaaC3Q==
-X-Google-Smtp-Source: ABdhPJzLneaV1U/oXF/OaPVbM1bWrBHv2LQr0VSykU63XEDKIJjDJeWXJvk+9sbW6PNCVPqJyPVi9PedlAYR9QizpQk=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2509020ote.107.1597427122326;
- Fri, 14 Aug 2020 10:45:22 -0700 (PDT)
+        Fri, 14 Aug 2020 13:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNRqq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Aug 2020 13:46:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07A4C061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kYAQV0Tbe/Xkg6dDIRNNv2tqIRDwN5EAzR9Dc9+lDxA=; b=rQF9QclWzmH/lzMkTLJY7+O9L6
+        v5PRKMXyA+vkFlN0Lo1x5yd5CR8Rpu41bsk4iwJicoeaJM777EjiHiWTIyoTJhT3jWjM1OANg2wCX
+        1ffXx8thZ+jPHEfDjJRp8Em6hYcncLSUvi+oCiJIyBq6stJ5pgOp9U0JEKV7nUU9Nk6bwlglow5YM
+        HDY1ueNIb4SqBiipfxSG0ncwWOEY0NRzu3g/dX6OxPiJIFuRJSEnh4sWPH50UOctqOHiiWLlTCbgq
+        w7bsbthoIeQYauFXftbzU6Wg+82aWQyXT442gUWLTlz5+Nezqx92iY52IogxAyJWWxxP07k+tZxf/
+        tA5RPhGQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6dmf-0002lN-3f; Fri, 14 Aug 2020 17:46:29 +0000
+Date:   Fri, 14 Aug 2020 18:46:29 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Zhaoyang Huang <huangzhaoyang@gmail.com>,
+        Roman Gushchin <klamm@yandex-team.ru>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm : update ra->ra_pages if it's NOT equal to
+ bdi->ra_pages
+Message-ID: <20200814174629.GY17456@casper.infradead.org>
+References: <1597368611-7631-1-git-send-email-zhaoyang.huang@unisoc.com>
+ <20200814014355.GS17456@casper.infradead.org>
+ <20200814020700.GT17456@casper.infradead.org>
+ <CAGWkznEkTeTq4-wPKBcNsF2vF5SVaFc3xoZmceKSwg34vpkqbg@mail.gmail.com>
+ <20200813193307.d5597367b7964d95f63e4580@linux-foundation.org>
 MIME-Version: 1.0
-References: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Aug 2020 11:45:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJpuoGi4r9a+nKGyTyh4zXtFr-M8oAmJLcQjiN3V54F9g@mail.gmail.com>
-Message-ID: <CAL_JsqJpuoGi4r9a+nKGyTyh4zXtFr-M8oAmJLcQjiN3V54F9g@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     Ray Jui <ray.jui@broadcom.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813193307.d5597367b7964d95f63e4580@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 10:15 PM Mark Tomlinson
-<mark.tomlinson@alliedtelesis.co.nz> wrote:
->
-> For hardware that only supports 32-bit writes to PCI there is the
-> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
-> messages was introduced by fb2659230120, but rate-limiting is not the
-> best choice here. Some devices may not show the warnings they should if
-> another device has just produced a bunch of warnings. Also, the number
-> of messages can be a nuisance on devices which are otherwise working
-> fine.
->
-> This patch changes the ratelimit to a single warning per bus. This
-> ensures no bus is 'starved' of emitting a warning and also that there
-> isn't a continuous stream of warnings. It would be preferable to have a
-> warning per device, but the pci_dev structure is not available here, and
-> a lookup from devfn would be far too slow.
->
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
-> changes in v4:
->  - Use bitfield rather than bool to save memory (was meant to be in v3).
->
->  drivers/pci/access.c | 9 ++++++---
->  include/linux/pci.h  | 1 +
->  2 files changed, 7 insertions(+), 3 deletions(-)
+On Thu, Aug 13, 2020 at 07:33:07PM -0700, Andrew Morton wrote:
+> On Fri, 14 Aug 2020 10:20:11 +0800 Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+> > No, What I want to fix is the file within one process's context  keeps
+> > using the initialized value when it is opened and not sync with new
+> > value when bdi->ra_pages changes.
+> 
+> So you're saying that
+> 
+> 	echo xxx > /sys/block/dm/queue/read_ahead_kb
+> 
+> does not affect presently-open files, and you believe that it should do
+> so?
+> 
+> I guess that could be a reasonable thing to want - it's reasonable for
+> a user to expect that writing to a global tunable will take immediate
+> global effect.  I guess.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+But it's also reasonable for someone to have written an application
+assuming that the current behaviour won't change.
+
+As I understand it, if we change net.ipv4.tcp_window_scaling, that will
+take effect only for new connections, and not for existing ones.
+
+I think the _real_ problem is that readahead never scales down, except
+for EIO.
+
+I don't have time to take on another project right now, but I think this
+patch is too simplistic and has too many downsides.  Someone needs to
+really think the readahead situation through properly.
