@@ -2,103 +2,121 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1E6C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7DA20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B6A20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 12:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SJrKMe+d";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wCiXtVzl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYwO7AyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgHNMn0 (ORCPT
+        id S1728318AbgHNMpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49556 "EHLO
+        Fri, 14 Aug 2020 08:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHNMn0 (ORCPT
+        with ESMTP id S1726209AbgHNMpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:43:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9828CC061384;
-        Fri, 14 Aug 2020 05:43:25 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597409003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/i5quBEHOUiEWbSlPICXRpE8LPmHlTEYkvSOImfh/R8=;
-        b=SJrKMe+dhkz8mqYvSm1e3oBcNuMqzj+vKg2nmRvxCMocVOYxiR8hR8W5A5OaMsQ5eaXR+h
-        s7OkQsvCSQIKdFkpRWVJje01s5cMnZyE67XTqnZjDT9+W9drRPQb4Z6C7cJ6De4c2niyOS
-        flq+s8FYRYtir4SvAgp3/bSDrLcUVLsggqIOjgZbmsTbuGRe1fGI5psw0V71kBU9pmTfLr
-        +9kJpggyh/g8HZfVm4PIzrORvKjA0OPCWoy6q+ae7LDNHYMuEZtRd5bKJB5P6PsIrHHMfh
-        fun6UsKWyYtiZfEYCzgiKdAUYazF6mV33S35Z0/D84Ps4+jxA/ieqo0WzAlsZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597409003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/i5quBEHOUiEWbSlPICXRpE8LPmHlTEYkvSOImfh/R8=;
-        b=wCiXtVzl9KyVOqjtdNk4AHVJumpRqaSpCZ9HC97XShRjOmcy9x+d74s433K+ZrFzbItPma
-        WAXqqS9/MwtJgpAw==
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-In-Reply-To: <CAD=FV=V1hvWZ0ANX9nsvRX_iXjuzw0X_tL2hgg4zYGgsqRtLTQ@mail.gmail.com>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de> <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com> <878sei42ql.fsf@nanos.tec.linutronix.de> <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com> <87364q3rqb.fsf@nanos.tec.linutronix.de> <CAD=FV=V1hvWZ0ANX9nsvRX_iXjuzw0X_tL2hgg4zYGgsqRtLTQ@mail.gmail.com>
-Date:   Fri, 14 Aug 2020 14:43:23 +0200
-Message-ID: <87bljdl7o4.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 14 Aug 2020 08:45:42 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341FBC061384
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:45:41 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so4129101plb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 05:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SmHbAJCevR0amMN/Zfcj3PyJxNcwE0n/cl6TTUsXdNc=;
+        b=AYwO7AyHkiDBNjn47cDqSTJQl4femmkIULUnFnOa5ljUbDmk+Tm7P8+9xmnzF0Lwer
+         TA0ivp6FbtknhP/WR6JVeNYVi3NlSzTySdzCIY7CwtddtOqZB15W9rOL+qAw/JCxIEyT
+         pmYGQzRjPKpAPdgRKSeRqaLnDd+nDXZzbc6ToGyJHiEV1b1QoXuiP0/takARs+DzfcEt
+         033BhFsxQKqnbpCoBMtCZnxu0nPnPrTu/hs5jCi6bjcNyJiOa4p/S35irh43zJXVr1Bu
+         BtaMjUs1m79AWPWtVYB5kWXqACOH14tXsROrzUSjjxGGkW8WzpVf/FYqoaJ6bOkT21lx
+         iKag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SmHbAJCevR0amMN/Zfcj3PyJxNcwE0n/cl6TTUsXdNc=;
+        b=T8UITtLXS/vziGYMGjwyZqipJA/7P9RJTWxXBwBj/V95YNJeYNi7uJ6IuCne2OTklt
+         yFasLdzJIRm1qdP3DXpFMgUk98ZIMFFgbCQeEfapSuPKxRCeHQN4qVDPWMd0CXbT6/XV
+         7tP9+7WL/KFUp0aHJL8adBmFU/uR0g9JwY8h5hUUG1RTT3tI0fDrpruRojstKrwUO0B1
+         hD8HUgNBeIiu01ojm4WX4iTx+YNzVrN3HAB0+fc/aFxAILmad4p/P4DELwrGMiTspuQd
+         ziBL01yrDptMkHeHAK1BCNKqFpNx0ySEqf8MdnKbjxrtRHDYPw9kNuUBkyx8H54EDAn8
+         Kw3Q==
+X-Gm-Message-State: AOAM530t9jeBBbeyvw419VyWIBnpDrV4Esk5eGX9fk5AE7I6KofU1ADN
+        gYO8aPLCilVoP7LsZ9vGlmIb/yp+APvriA==
+X-Google-Smtp-Source: ABdhPJzQRmyvNdWQHzsF9IF129kcaTj8mszVA6io9lQ2/cejD/Rnnk/oKhGnREbYAB4E/NgpTNokQA==
+X-Received: by 2002:a17:90a:bf86:: with SMTP id d6mr2075391pjs.83.1597409138981;
+        Fri, 14 Aug 2020 05:45:38 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.107.61])
+        by smtp.gmail.com with ESMTPSA id 196sm9592765pfc.178.2020.08.14.05.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 05:45:38 -0700 (PDT)
+From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>
+Subject: [PATCH V2] scripts: coccicheck: Change default value for parallelism
+Date:   Fri, 14 Aug 2020 18:15:30 +0530
+Message-Id: <20200814124530.24793-1-sylphrenadin@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug,
+By default, coccicheck utilizes all available threads to implement
+parallelisation. However, when all available threads are used,
+a decrease in performance is noted. The elapsed time is  minimum
+when at most one thread per core is used.
 
-On Thu, Aug 13 2020 at 20:04, Doug Anderson wrote:
-> On Thu, Aug 13, 2020 at 7:07 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>    Having a quick and dirty POC for illustration is fine and usually
->>    useful.
->
-> OK, I will try to remember that, in the future, I should send
-> questions rather than patches to you.  I'm always learning the
+For example, on benchmarking the semantic patch kfree.cocci for
+usb/serial using hyperfine, the outputs obtained for J=5 and J=2
+are 1.32 and 1.90 times faster than those for J=10 and J=9
+respectively for two separate runs. For the larger drivers/staging
+directory, minimium elapsed time is obtained for J=3 which is 1.86
+times faster than that for J=12. The optimal J value does not
+exceed 6 in any of the test runs. The benchmarks are run on a machine
+with 6 cores, with 2 threads per core, i.e, 12 hyperthreads in all.
 
-The quick and dirty POC patch for illustration along with the questions
-is always good to catch my attention.
+To improve performance, modify coccicheck to use at most only
+one thread per core by default.
 
-> workflows of the different maintainers, so sorry for killing so much
-> time.  :(
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+---
+ scripts/coccicheck | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-No problem. 
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328210ac..dd228dcc915e 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -75,8 +75,17 @@ else
+         OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
+     fi
+ 
++    # Use only one thread per core by default if hyperthreading is enabled
++    THREADS_PER_CORE=$(lscpu | grep "Thread(s) per core: " | tr -cd [:digit:])
+     if [ -z "$J" ]; then
+         NPROC=$(getconf _NPROCESSORS_ONLN)
++	if [ $THREADS_PER_CORE -gt 1 -a $NPROC -gt 2 ] ; then
++		if [ $NPROC -gt 8 ] ; then
++			NPROC=$((NPROC/4))
++		else
++			NPROC=$((NPROC/2))
++		fi
++	fi
+     else
+         NPROC="$J"
+     fi
+-- 
+2.17.1
 
->> If it solves the problem and from what you explained it should do so
->> then this is definitely the right way to go.
->
-> Wonderful!  Looking forward to Maulik's post doing it this way.
-
-/me closes the case for now and moves on.
-
-Thanks
-
-        tglx
