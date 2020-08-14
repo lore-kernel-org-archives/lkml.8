@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D829C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17008C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25549208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA7920774
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I7BFJRn9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TXhmlUEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgHNR2r (ORCPT
+        id S1728862AbgHNR25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37642 "EHLO
+        Fri, 14 Aug 2020 13:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbgHNR2n (ORCPT
+        with ESMTP id S1728836AbgHNR2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:28:43 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13326C061384
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:43 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id d6so3591996wrv.23
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:43 -0700 (PDT)
+        Fri, 14 Aug 2020 13:28:45 -0400
+Received: from mail-wm1-x349.google.com (mail-wm1-x349.google.com [IPv6:2a00:1450:4864:20::349])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AE2C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:45 -0700 (PDT)
+Received: by mail-wm1-x349.google.com with SMTP id c186so3411540wmd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kJlHQlyHf1HvTYFCcN+LwDe0IIk6i9RqNd5dGciZ6Z0=;
-        b=I7BFJRn9BbumelTeTM7IKHGPfBZcynJd43gIcFrt5XEcvzxy0Wzf8WnsNKaTIax5jr
-         HUvBgUpYNKNWZYu+bURQKRH5n06/cdNWba7CPxSKJgV5qIs+RECFgmKBeRLYIxOLAZCG
-         1dKItAvdJfm8oSnX6tKqt5qngTIxJJ7zST11LP47f1lDcYJY1GwVjpWIpmjB6qNRDmvb
-         Ch05VqLHv7VZA2+ppDka6QFrspWllhq5h62z64FvDAzfq6S81KVTNScwgvfSyGN56MO2
-         HR5lZx+yeJC57vDA/Fn4Jf2BN3rzo6Jo4txHmxqoaqx/w6IO/faSFD8SdIfaeg0DU1gH
-         LoNA==
+        bh=Pcjdii+vI+eVQZmrwdTthlIVK/0Kn69OYG7nvUYx2MA=;
+        b=TXhmlUEHDRckSGvHoUR2RSs3GBYIjhjy7m4nTmMXexkRfXA10vAJF6k5mECttOVnch
+         kWUNho/tQga+95V9quRaVvU2VA8tG+7jMFVkGyUBQY9IyzZa75akJ7KpZlkAAfAlJYGy
+         9JReDVTXFMsstYkUaHpGqABQvdI3wJJVIJ0ANXr3yySqFVvp2DHUWCY/Hu7wfxbjH4iN
+         jGJOjRzFpPTo0QeOKwthIK7eGCPn3KUf7vr2zk0qvprLlMAEba02C65//Gs6IkzaUUtj
+         UA7PrI3d/hYvXOSbHNATESa3jeaLrMwpkIfmvpzy3TzaNjRNMnkjbCDxMssa59fC/pMj
+         vfog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=kJlHQlyHf1HvTYFCcN+LwDe0IIk6i9RqNd5dGciZ6Z0=;
-        b=Him1odfcFA/F41ZUI62iFTqyw4ntwVJtkGWRAj0G0q734reRYDe4ZDcfqZgPGFQf+H
-         wd9eBWrJiZcWZyH+3+lYPQz33gHONK2nFrHddZ1tFFyqJ7lxspITuQh3jq1wtEn6ch+s
-         VuSYiKyF5Xi4EkQAteATnYJyeqRnEL6AtBh1a7K+B7i+PhB48/KqC3owJuJiIF318VDH
-         hTeVN0j9/9HIdwIRfVnuMR5lqMX6uyJ6sdf0PfQ2EN3hwh3/e975HH8nJRMLUL+NZ3eU
-         yvyDcnFpcbXQ4NV/CYtZQXQ6vqO2AYyIXtA15UIpaoL70z/zEEep5vaS+chSATheICJY
-         wyfw==
-X-Gm-Message-State: AOAM532D5A79FRQ43h9mRBahEnvGm5DnKRVlaFby7HwILSoU3TM+mZAI
-        OU5r9v4oTtDTPMhRorHRB8lxBbCx1W8aU8rP
-X-Google-Smtp-Source: ABdhPJxqdUAPjARnbQ5lX0fWboRK95ldEyr+27Agji2Z4xPsor/NlyQqlIQmOJATBl8+Gaf9vkUxDnSSxUMU/xLW
-X-Received: by 2002:a1c:2e4e:: with SMTP id u75mr3382777wmu.134.1597426121790;
- Fri, 14 Aug 2020 10:28:41 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 19:27:15 +0200
+        bh=Pcjdii+vI+eVQZmrwdTthlIVK/0Kn69OYG7nvUYx2MA=;
+        b=aqHXTuSaFGPL0Avs0gSP5x5w2c+F4it4yl/VHtAkoe1/hnlEz+WwzADjhS70VHaOIn
+         bfAC11aIBk5UtV+TQ9gy/OkXBxeFkwVc2hi2+bSyjTTNbwpwDZsSeMuoUR9NauiswSyW
+         1RyEkEw1zEHy/J1SWhkSpRM6qaCXhA8Y1HZ4RTT8dsf2Qa8ii0eLAnpWq04cnrVdhPdh
+         CgNXd0j41Ca0OUJkyAwM+tGPLAXytlMvSN3iUqJVF4yARSN0A6T4c2PzlKJk/FQ0Cbxw
+         AOae/fiKH/GtQUB3dcMoX1nezxT05AENLOmGqrgc8UosVGPE/+83K02iuInLJZvbC0fT
+         Eqew==
+X-Gm-Message-State: AOAM5304JINsFVPRakNRDiDFsVlPGyDRfJAzpCZ9uoYe79mvSEFmBV/N
+        U0sGW/8g47AETdIfR45bB2nBYAdRs3XKrhbw
+X-Google-Smtp-Source: ABdhPJwGtKOUaM9cDXGccXYrlTX/mHgBIiWRUSJFoL3akBtuqei2t6t2Xj/3Q/TY5PmNwmQ5jMza6h7dr+dQTGY+
+X-Received: by 2002:a1c:6083:: with SMTP id u125mr3397670wmb.161.1597426123818;
+ Fri, 14 Aug 2020 10:28:43 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 19:27:16 +0200
 In-Reply-To: <cover.1597425745.git.andreyknvl@google.com>
-Message-Id: <8384a6b24203b5719ef4f3a0339f740ad3299e9c.1597425745.git.andreyknvl@google.com>
+Message-Id: <8cea9310fa8d55775ec137e5df4d8bb654bc24fe.1597425745.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1597425745.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 33/35] kasan, slub: reset tags when accessing metadata
+Subject: [PATCH 34/35] kasan, arm64: enable CONFIG_KASAN_HW_TAGS
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -86,142 +86,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SLUB allocator accesses metadata for slab objects, that may lie
-out-of-bounds of the object itself, or be accessed when an object is freed.
-Handle this for Hardware tag-based KASAN by resetting tags when accessing
-metadata.
-
-Hardware tag-based KASAN doesn't rely on metadata_access_disable/enable(),
-and therefore requires resetting tags in the sections of code guarded
-by those annotations.
+Hardware tag-based KASAN is now ready, enable the configuration option.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/page_poison.c |  2 +-
- mm/slub.c        | 25 ++++++++++++++-----------
- 2 files changed, 15 insertions(+), 12 deletions(-)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/page_poison.c b/mm/page_poison.c
-index 34b9181ee5d1..d90d342a391f 100644
---- a/mm/page_poison.c
-+++ b/mm/page_poison.c
-@@ -43,7 +43,7 @@ static void poison_page(struct page *page)
- 
- 	/* KASAN still think the page is in-use, so skip it. */
- 	kasan_disable_current();
--	memset(addr, PAGE_POISON, PAGE_SIZE);
-+	memset(kasan_reset_tag(addr), PAGE_POISON, PAGE_SIZE);
- 	kasan_enable_current();
- 	kunmap_atomic(addr);
- }
-diff --git a/mm/slub.c b/mm/slub.c
-index ef303070d175..a786e1cee095 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -249,7 +249,7 @@ static inline void *freelist_ptr(const struct kmem_cache *s, void *ptr,
- {
- #ifdef CONFIG_SLAB_FREELIST_HARDENED
- 	/*
--	 * When CONFIG_KASAN_SW_TAGS is enabled, ptr_addr might be tagged.
-+	 * When CONFIG_KASAN_SW/HW_TAGS is enabled, ptr_addr might be tagged.
- 	 * Normally, this doesn't cause any issues, as both set_freepointer()
- 	 * and get_freepointer() are called with a pointer with the same tag.
- 	 * However, there are some issues with CONFIG_SLUB_DEBUG code. For
-@@ -275,6 +275,7 @@ static inline void *freelist_dereference(const struct kmem_cache *s,
- 
- static inline void *get_freepointer(struct kmem_cache *s, void *object)
- {
-+	object = kasan_reset_tag(object);
- 	return freelist_dereference(s, object + s->offset);
- }
- 
-@@ -304,6 +305,7 @@ static inline void set_freepointer(struct kmem_cache *s, void *object, void *fp)
- 	BUG_ON(object == fp); /* naive detection of double free or corruption */
- #endif
- 
-+	freeptr_addr = (unsigned long)kasan_reset_tag((void *)freeptr_addr);
- 	*(void **)freeptr_addr = freelist_ptr(s, fp, freeptr_addr);
- }
- 
-@@ -546,8 +548,8 @@ static void print_section(char *level, char *text, u8 *addr,
- 			  unsigned int length)
- {
- 	metadata_access_enable();
--	print_hex_dump(level, text, DUMP_PREFIX_ADDRESS, 16, 1, addr,
--			length, 1);
-+	print_hex_dump(level, kasan_reset_tag(text), DUMP_PREFIX_ADDRESS,
-+			16, 1, addr, length, 1);
- 	metadata_access_disable();
- }
- 
-@@ -578,7 +580,7 @@ static struct track *get_track(struct kmem_cache *s, void *object,
- 
- 	p = object + get_info_end(s);
- 
--	return p + alloc;
-+	return kasan_reset_tag(p + alloc);
- }
- 
- static void set_track(struct kmem_cache *s, void *object,
-@@ -591,7 +593,8 @@ static void set_track(struct kmem_cache *s, void *object,
- 		unsigned int nr_entries;
- 
- 		metadata_access_enable();
--		nr_entries = stack_trace_save(p->addrs, TRACK_ADDRS_COUNT, 3);
-+		nr_entries = stack_trace_save(kasan_reset_tag(p->addrs),
-+						TRACK_ADDRS_COUNT, 3);
- 		metadata_access_disable();
- 
- 		if (nr_entries < TRACK_ADDRS_COUNT)
-@@ -755,7 +758,7 @@ static __printf(3, 4) void slab_err(struct kmem_cache *s, struct page *page,
- 
- static void init_object(struct kmem_cache *s, void *object, u8 val)
- {
--	u8 *p = object;
-+	u8 *p = kasan_reset_tag(object);
- 
- 	if (s->flags & SLAB_RED_ZONE)
- 		memset(p - s->red_left_pad, val, s->red_left_pad);
-@@ -785,7 +788,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
- 	u8 *addr = page_address(page);
- 
- 	metadata_access_enable();
--	fault = memchr_inv(start, value, bytes);
-+	fault = memchr_inv(kasan_reset_tag(start), value, bytes);
- 	metadata_access_disable();
- 	if (!fault)
- 		return 1;
-@@ -881,7 +884,7 @@ static int slab_pad_check(struct kmem_cache *s, struct page *page)
- 
- 	pad = end - remainder;
- 	metadata_access_enable();
--	fault = memchr_inv(pad, POISON_INUSE, remainder);
-+	fault = memchr_inv(kasan_reset_tag(pad), POISON_INUSE, remainder);
- 	metadata_access_disable();
- 	if (!fault)
- 		return 1;
-@@ -1126,7 +1129,7 @@ void setup_page_debug(struct kmem_cache *s, struct page *page, void *addr)
- 		return;
- 
- 	metadata_access_enable();
--	memset(addr, POISON_INUSE, page_size(page));
-+	memset(kasan_reset_tag(addr), POISON_INUSE, page_size(page));
- 	metadata_access_disable();
- }
- 
-@@ -2816,10 +2819,10 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
- 		stat(s, ALLOC_FASTPATH);
- 	}
- 
--	maybe_wipe_obj_freeptr(s, object);
-+	maybe_wipe_obj_freeptr(s, kasan_reset_tag(object));
- 
- 	if (unlikely(slab_want_init_on_alloc(gfpflags, s)) && object)
--		memset(object, 0, s->object_size);
-+		memset(kasan_reset_tag(object), 0, s->object_size);
- 
- 	slab_post_alloc_hook(s, gfpflags, 1, &object);
- 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 70a7880d5145..0d95d8391d0f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -131,6 +131,7 @@ config ARM64
+ 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+ 	select HAVE_ARCH_KASAN if !(ARM64_16K_PAGES && ARM64_VA_BITS_48)
+ 	select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
++	select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_MMAP_RND_BITS
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
 -- 
 2.28.0.220.ged08abb693-goog
 
