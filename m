@@ -2,194 +2,133 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78939C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6914C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4504520774
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaUDLCfh"
+	by mail.kernel.org (Postfix) with ESMTP id B14EC206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597424734;
+	bh=AfbstP+k4FgET/zQNAlAR/09TPUNHExZjGv0x7+VM0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gzQVd2/72Zs+b6JG9LErMhIDePWPDsH6nDdelFl8Tk0+ASCY+DFtqdT8s0s8jiExw
+	 0lksInuj6Zym5OCe81CsGetYsY0i4rshlEzsWwJZfNHnQS7rQ1akN3s/kILLr6KMLM
+	 Qm/tvkWnnahPSeRiG3yg/5P03QBt0VBIyyBB9M9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgHNRB3 (ORCPT
+        id S1728179AbgHNRFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        Fri, 14 Aug 2020 13:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNRB0 (ORCPT
+        with ESMTP id S1726270AbgHNRFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:01:26 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEEEC061384;
-        Fri, 14 Aug 2020 10:01:25 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so4849387pfn.0;
-        Fri, 14 Aug 2020 10:01:25 -0700 (PDT)
+        Fri, 14 Aug 2020 13:05:30 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E10C3C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:05:29 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t6so10643915ljk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xiHC5DUY3Z/y6RtGYjcjT7j7DBa8EN54OpDjf5EfHiE=;
-        b=EaUDLCfh8Z6nm4RvCaTT7SUfk/rMB6EyH9B/yh3Mjaxesj8UFgiEsXU3oitdayGTB7
-         QRTE3c24Pbq+u0YMyQoPFWfvt8G+8GpR4HkYpXHL0HX4LCavxzJvy0a/VjqaEzxTqmdR
-         d2UQpmHgcXK+uNvN02XbohOvWgFVtHT5+48Ze2PLCHiXbKjk7uAI9vXTIIeEmJr8YLQg
-         u3RXSgA73Gu0gPlqa/djaNM60TnGPB2PpS05pRmuYrEZLUrRs56g5sCKEXqJjsm1q372
-         KzbnbH/zv7R60Rjpm2UNbgdhy8FMbm88cVwVjw1/JHrcQRWdce6ojziowWARYQS/lGWf
-         MZAw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qYuJ9NHHO+qnoSaHW0PlHI0fiXCW7zDlZFu/ah5uFho=;
+        b=QZC+eNnnLcPaczh2E7Iym7nx2PQpiiDURT50bzxJZUsdtO86YlDCUBTiiWPJAXsWnA
+         U49+U2ao8O1Ymle/LvRAFOmnKYrXWnRy0koTc1q4uPH3YiU1H0Bu0Wp5Fx58rMDOEorn
+         lZP3mAReqkIBPzLDybNfptRtvd5sif7WdrmnA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xiHC5DUY3Z/y6RtGYjcjT7j7DBa8EN54OpDjf5EfHiE=;
-        b=PZb3NrJaJ7JuExs9KUF2HAXNCUmWECPIVHZpKUyWWqITRZRAB94HZIsxV3ymni+5Fa
-         rAtJg095fg1ctt9zmhBnQ6ziqCDQbe1nEfBjrTRfK+yT+IWjsk11Qe2HyZhRxXS1yGY5
-         fX2egVvsx47rpKsQDdjDJWdpGdQElbkjWe0dhu7quQx/5eVKrGeNSTjlWv7VXLxCCPT8
-         Maz00QAfaZDBkP/6lNDD9Udpgz2ZQjdzzKBChZDF16k4hKDYw86mO5uosCfMYREOUy1m
-         ejhDBlNAzCYqYvJEGhw8/kT5Jyq+ReWHIPcLiNxVdYRTDz2n73OvIt0LEiERBaUK55HN
-         +svA==
-X-Gm-Message-State: AOAM5322Hk1o4GvU3rZ4XfvwzENkqYC41YXbvXsGpkYb8X28YNDLsZJA
-        soVmzuyDNtx1YcZIqlaCXLA=
-X-Google-Smtp-Source: ABdhPJweDz/UYGVY+PT1HUJ5dSv5+9NA/T7zfFSnrDEqaMooDfesI251oDJYN5qulsRvWqeHjfivoA==
-X-Received: by 2002:a63:4c11:: with SMTP id z17mr2324722pga.152.1597424484997;
-        Fri, 14 Aug 2020 10:01:24 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:affd])
-        by smtp.gmail.com with ESMTPSA id l7sm8987929pjf.43.2020.08.14.10.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 10:01:23 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 10:01:20 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, andriin@fb.com, yhs@fb.com,
-        linux@rasmusvillemoes.dk, andriy.shevchenko@linux.intel.com,
-        pmladek@suse.com, kafai@fb.com, songliubraving@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org, shuah@kernel.org,
-        rdna@fb.com, scott.branden@broadcom.com, quentin@isovalent.com,
-        cneirabustos@gmail.com, jakub@cloudflare.com, mingo@redhat.com,
-        rostedt@goodmis.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next 2/4] bpf: make BTF show support generic,
- apply to seq files/bpf_trace_printk
-Message-ID: <20200814170120.q5gcmlapm7aldmzg@ast-mbp.dhcp.thefacebook.com>
-References: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
- <1596724945-22859-3-git-send-email-alan.maguire@oracle.com>
- <20200813014616.6enltdpq6hzlri6r@ast-mbp.dhcp.thefacebook.com>
- <alpine.LRH.2.21.2008141344560.6816@localhost>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qYuJ9NHHO+qnoSaHW0PlHI0fiXCW7zDlZFu/ah5uFho=;
+        b=SuiH43T1E7DHvuStNyCypHb3TZpdbXwcjW+QUOXEoP77/clQnQv1hdJwxr61fyBJP8
+         xZdc6ndo/VA28IRF7frBUBeS7VyFS9SUP2i32B64317N+Kpb2/GfCICHLFqXgQO+dc2U
+         LrZYeRj47JRl3tQEsiNHTemk1xPMimnr7Snx/w8k4O4zvSYQutZRdMYsspp7ymTWu0eR
+         gcgyENZSNrDEfsu8a90p12hvT7azd2PeyLQ4WZ+6iDVzrY7+IkxMsUlKAAabbE0YkVK3
+         0LfUJnjgz1INmucC/MmNE4VzKFnNDYUKCQZ+aW2EMp1AWcbhMa10qC0xBx7MsSpCAOfb
+         1J8g==
+X-Gm-Message-State: AOAM531MsoFbpN5Ecx0QIQwnkwc0QJe3fW8pRhZS+yvaBu+cGaio+bBh
+        wFWUojUZkdV5IG4oUHeME4f26a3gkCHCwg==
+X-Google-Smtp-Source: ABdhPJx4ZKTKxDpMQ8t2nnLlncjAp0js791prscQe+o9R8h8Yet+AqowyfCunkdihoDnq19YP/mlIg==
+X-Received: by 2002:a2e:5c5:: with SMTP id 188mr1639387ljf.466.1597424727926;
+        Fri, 14 Aug 2020 10:05:27 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id t20sm1869189ljd.12.2020.08.14.10.05.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2020 10:05:26 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id v9so10684180ljk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 10:05:26 -0700 (PDT)
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr1629608lji.314.1597424726058;
+ Fri, 14 Aug 2020 10:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2008141344560.6816@localhost>
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <679456f1-5867-4017-b1d6-95197d2fa81b@auristor.com>
+In-Reply-To: <679456f1-5867-4017-b1d6-95197d2fa81b@auristor.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 14 Aug 2020 10:05:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
+Message-ID: <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     Jeffrey E Altman <jaltman@auristor.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 02:06:37PM +0100, Alan Maguire wrote:
-> On Wed, 12 Aug 2020, Alexei Starovoitov wrote:
-> 
-> > On Thu, Aug 06, 2020 at 03:42:23PM +0100, Alan Maguire wrote:
-> > > 
-> > > The bpf_trace_printk tracepoint is augmented with a "trace_id"
-> > > field; it is used to allow tracepoint filtering as typed display
-> > > information can easily be interspersed with other tracing data,
-> > > making it hard to read.  Specifying a trace_id will allow users
-> > > to selectively trace data, eliminating noise.
-> > 
-> > Since trace_id is not seen in trace_pipe, how do you expect users
-> > to filter by it?
-> 
-> Sorry should have specified this.  The approach is to use trace
-> instances and filtering such that we only see events associated
-> with a specific trace_id.  There's no need for the trace event to
-> actually display the trace_id - it's still usable as a filter.
-> The steps involved are:
-> 
-> 1. create a trace instance within which we can specify a fresh
->    set of trace event enablings, filters etc.
-> 
-> mkdir /sys/kernel/debug/tracing/instances/traceid100
-> 
-> 2. enable the filter for the specific trace id
-> 
-> echo "trace_id == 100" > 
-> /sys/kernel/debug/tracing/instances/traceid100/events/bpf_trace/bpf_trace_printk/filter
-> 
-> 3. enable the trace event
-> 
-> echo 1 > 
-> /sys/kernel/debug/tracing/instances/events/bpf_trace/bpf_trace_printk/enable
-> 
-> 4. ensure the BPF program uses a trace_id 100 when calling bpf_trace_btf()
+On Wed, Aug 12, 2020 at 8:53 PM Jeffrey E Altman <jaltman@auristor.com> wrote:
+>
+> For the AFS community, fsinfo offers a method of exposing some server
+> and volume properties that are obtained via "path ioctls" in OpenAFS and
+> AuriStorFS.  Some example of properties that might be exposed include
+> answers to questions such as:
 
-ouch.
-I think you interpreted the acceptance of the
-commit 7fb20f9e901e ("bpf, doc: Remove references to warning message when using bpf_trace_printk()")
-in the wrong way.
+Note that several of the questions you ask aren't necessarily
+mount-related at all.
 
-Everything that doc had said is still valid. In particular:
--A: This is done to nudge program authors into better interfaces when
--programs need to pass data to user space. Like bpf_perf_event_output()
--can be used to efficiently stream data via perf ring buffer.
--BPF maps can be used for asynchronous data sharing between kernel
--and user space. bpf_trace_printk() should only be used for debugging.
+Doing it by mount ends up being completely the wrong thing.
 
-bpf_trace_printk is for debugging only. _debugging of bpf programs themselves_.
-What you're describing above is logging and tracing. It's not debugging of programs.
-perf buffer, ring buffer, and seq_file interfaces are the right
-interfaces for tracing, logging, and kernel debugging.
+For example, at a minimum, these guys may well be per-directory (or
+even possibly per-file):
 
-> > It also feels like workaround. May be let bpf prog print the whole
-> > struct in one go with multiple new lines and call
-> > trace_bpf_trace_printk(buf) once?
-> 
-> We can do that absolutely, but I'd be interested to get your take
-> on the filtering mechanism before taking that approach.  I'll add
-> a description of the above mechanism to the cover letter and
-> patch to be clearer next time too.
+>  * where is a mounted volume hosted? which fileservers, named by uuid
+>  * what is the block size? 1K, 4K, ...
+>  * are directories just-send-8, case-sensitive, case-preserving, or
+>    case-insensitive?
+>  * if not just-send-8, what character set is used?
+>  * if Unicode, what normalization rules? etc.
+>  * what volume security policy (authn, integ, priv) is assigned, if any?
+>  * what is the replication policy, if any?
+>  * what is the volume encryption policy, if any?
 
-I think patch 3 is no go, because it takes bpf_trace_printk in
-the wrong direction.
-Instead please refactor it to use string buffer or seq_file as an output.
-If the user happen to use bpf_trace_printk("%s", buf);
-after that to print that string buffer to trace_pipe that's user's choice.
-I can see such use case when program author wants to debug
-their bpf program. That's fine. But for kernel debugging, on demand and
-"always on" logging and tracing the documentation should point
-to sustainable interfaces that don't interfere with each other,
-can be run in parallel by multiple users, etc.
+and trying to solve this with some kind of "mount info" is pure garbage.
 
-> > 
-> > Also please add interface into bpf_seq_printf.
-> > BTF enabled struct prints is useful for iterators too
-> > and generalization you've done in this patch pretty much takes it there.
-> > 
-> 
-> Sure, I'll try and tackle that next time.
-> 
-> > > +#define BTF_SHOW_COMPACT	(1ULL << 0)
-> > > +#define BTF_SHOW_NONAME		(1ULL << 1)
-> > > +#define BTF_SHOW_PTR_RAW	(1ULL << 2)
-> > > +#define BTF_SHOW_ZERO		(1ULL << 3)
-> > > +#define BTF_SHOW_NONEWLINE	(1ULL << 32)
-> > > +#define BTF_SHOW_UNSAFE		(1ULL << 33)
-> > 
-> > I could have missed it earlier, but what is the motivation to leave the gap
-> > in bits? Just do bit 4 and 5 ?
-> > 
-> 
-> Patch 3 uses the first 4 as flags to bpf_trace_btf();
-> the final two are not supported for the helper as flag values
-> so I wanted to leave some space for additional bpf_trace_btf() flags.
-> BTF_SHOW_NONEWLINE is always used for bpf_trace_btf(), since the
-> tracing adds a newline for us and we don't want to double up on newlines, 
-> so it's ORed in as an implicit argument for the bpf_trace_btf() case. 
-> BTF_SHOW_UNSAFE isn't allowed within BPF so it's not available as
-> a flag for the helper.
+Honestly, I really think you may want an extended [f]statfs(), not
+some mount tracking.
 
-I see. I think such approach is more error prone than explicit filtering.
-It's better to check for NONEWLINE and UNSAFE explicitly in those places
-instead of playing obscure game of upper bits.
-Also the choice of NONEWLINE vs NEWLINE should be available from the program
-when it wants to print it into a string or into a seq_file.
+                 Linus
