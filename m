@@ -2,239 +2,270 @@ Return-Path: <SRS0=KEJG=BY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C08C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 290F020866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5871A20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Aug 2020 15:09:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbAHF1rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgHNPJV (ORCPT
+        id S1726680AbgHNPJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:09:21 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:42894 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726662AbgHNPJR (ORCPT
+        Fri, 14 Aug 2020 11:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726662AbgHNPJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:09:17 -0400
-Received: by mail-il1-f197.google.com with SMTP id z1so6757717ilz.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 08:09:17 -0700 (PDT)
+        Fri, 14 Aug 2020 11:09:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D930C061384;
+        Fri, 14 Aug 2020 08:09:27 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t6so4684300pgq.1;
+        Fri, 14 Aug 2020 08:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O74o2CeF9BmakoAygKNVUbF4kexNvSnVutgrgt6zSA8=;
+        b=YbAHF1rrWqufIK2/c1cW1QSxEPyRIRyDc0fmEmL/2o9JfW9T7Fs/UUVR5E2vZmNt66
+         M0o2xC88G/u4zQizSg9RXsYwvPiAq+wQfsNFfIM05SrJ1yRp0ujkSFtsyNyrAn2aAZME
+         vAPb/g1hNLtrcygBLu96Ew92+69mtppirYzOKO0AoDNxG3rf9GozbXVz8qPYzpA9YRUZ
+         IF3/UMJJ24LEUnw2pck+qFfFcGkX+KSb78QASCN72FjkeyBDoXTojIhL6ID9+WPRF6WC
+         RJshRyK1iN/9u3CCuGbA63oQi2BonfFaZkagtDd/eFcqG2qtyyOudB5pN2e/aqZDhukQ
+         eOzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3Dv/nNZ0R5QJf8EggrUkyhwJ6CWsJ93Cph1VJZyEMSA=;
-        b=nRK92FJgpJ5krYw8PNynFTiDgUUeCRbR+43Zayd/Amp1ybL0dve9bPSHdEwXq9bK4C
-         tq1Jqm8Wij1+dRX6CrAnqrXepxs5UVhimgNwdayu7L2Wd2d9PVXD1JjtAawTBBvO9izd
-         8KJL+ryFgTgZ+IoOSCXxCc1Qe+RfZuMqrwtGfANkYcbEKS/f+4+nvBvi5RhhFeFQL1gD
-         HQ7NIwV34+njjY6nUmDlL10QGhDPBynKo8sa8jnyQN1WlziD85RTt27KGUOyUaa1CJtS
-         LAlCUUme8J1bwVgLffnhOtFLAvpC7WMegZTM3SITY18mMZpi6ONQ3leX1CXEQMH4YmIu
-         1DxA==
-X-Gm-Message-State: AOAM533l/NClm+hWVzDzIDrGzWzy7jX/mGtHnfRmRkohV9WdJEE79yeo
-        dvKLWnn+Hac4QrTPYfXsNtE5N6qI7UaZE2Zqg6kWlhEJHHGx
-X-Google-Smtp-Source: ABdhPJz1ToDlQKsvW+vJGNVeQUMPYy/AB6pv4ykvLLnYnggx0X8IYBNzKvGeK02QiskysUT1ufVMK4NxeTEY2qdnQnEqVY6c19vl
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O74o2CeF9BmakoAygKNVUbF4kexNvSnVutgrgt6zSA8=;
+        b=MYmngP55SB+KwDzIcHbS1Nnwm5V+XYKab6x81hB8gVV8mqRCK3bBJlWBB+Ko6m90oA
+         Y/nxPezsjjYZKpTWeCN1OXUydo9OUGSWXt8/pZ6TLGd+oFRzJD1fydZPoWRJKxKAE3gK
+         h0Hw6o6FuRjpp5TtU6szcCeh64VwzQVvWNuoumesXFK94ZVc+YGdz5V9B7yFTrlxo8Qy
+         WI6YYpqYOB0Joopnp0pUvTler30V4godcdKE1y/IcsgMRuH2j7O6AsTXnlts1PuQuNO/
+         qoPX9Ymzw304p7+Em6kodsmsr9GxRQ454mxag3Xz1oG3CQLwO++/ubGEbbQQgdokuaPL
+         VhNw==
+X-Gm-Message-State: AOAM530/6yfhVKuPojdtfhDDohCTlrvPtG1nEmcjM0pWDGnmkalPx3x0
+        9OhCR1qgy0mWVGYhcXU0Ou8=
+X-Google-Smtp-Source: ABdhPJxtlAfkZ1IM04n+CudW6LpO308CAYJkMzUoIjE1G1o/LkaM+di+OamfGIMNs59QYkvBAX8vag==
+X-Received: by 2002:a65:6108:: with SMTP id z8mr2067642pgu.266.1597417766635;
+        Fri, 14 Aug 2020 08:09:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i11sm8272957pjv.30.2020.08.14.08.09.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Aug 2020 08:09:25 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 08:09:24 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 1/2] watchdog: imx7ulp: Strictly follow the sequence
+ for wdog operations
+Message-ID: <20200814150924.GA255699@roeck-us.net>
+References: <1596150213-31638-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1589:: with SMTP id 9mr2904670ilv.234.1597417756817;
- Fri, 14 Aug 2020 08:09:16 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 08:09:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f3ffc205acd7cd06@google.com>
-Subject: KMSAN: uninit-value in __skb_checksum_complete (5)
-From:   syzbot <syzbot+b024befb3ca7990fea37@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596150213-31638-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jul 31, 2020 at 07:03:32AM +0800, Anson Huang wrote:
+> According to reference manual, the i.MX7ULP WDOG's operations except
+> refresh should follow below sequence:
+> 
+> 1. disable global interrupts;
+> 2. unlock the wdog and wait unlock bit set;
+> 3. reconfigure the wdog and wait for reconfiguration bit set;
+> 4. enabel global interrupts.
+> 
+> Strictly follow the recommended sequence can make it more robust.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-syzbot found the following issue on:
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=149f894a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=b024befb3ca7990fea37
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b024befb3ca7990fea37@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in __skb_checksum_complete+0x425/0x630 net/core/skbuff.c:2850
-CPU: 1 PID: 8705 Comm: kworker/u4:2 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __skb_checksum_complete+0x425/0x630 net/core/skbuff.c:2850
- nf_ip6_checksum+0x565/0x670 net/netfilter/utils.c:91
- nf_nat_icmpv6_reply_translation+0x312/0x1360 net/netfilter/nf_nat_proto.c:800
- nf_nat_ipv6_fn+0x3c4/0x570 net/netfilter/nf_nat_proto.c:873
- nf_nat_ipv6_local_fn+0xaa/0x800 net/netfilter/nf_nat_proto.c:946
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x17b/0x460 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:262 [inline]
- __ip6_local_out+0x696/0x7c0 net/ipv6/output_core.c:167
- ip6_local_out+0xa1/0x1e0 net/ipv6/output_core.c:177
- ip6_send_skb net/ipv6/ip6_output.c:1865 [inline]
- ip6_push_pending_frames+0x252/0x5b0 net/ipv6/ip6_output.c:1885
- icmpv6_push_pending_frames+0x6d1/0x710 net/ipv6/icmp.c:304
- icmp6_send+0x3979/0x40e0 net/ipv6/icmp.c:617
- icmpv6_send+0xdf/0x110 net/ipv6/ip6_icmp.c:43
- ip6_pkt_drop+0x906/0xa00 net/ipv6/route.c:4406
- ip6_pkt_discard_out+0xbb/0x130 net/ipv6/route.c:4419
- dst_output include/net/dst.h:443 [inline]
- ip6_local_out+0x17b/0x1e0 net/ipv6/output_core.c:179
- ip6tunnel_xmit include/net/ip6_tunnel.h:160 [inline]
- udp_tunnel6_xmit_skb+0x818/0xf80 net/ipv6/ip6_udp_tunnel.c:109
- geneve6_xmit_skb drivers/net/geneve.c:973 [inline]
- geneve_xmit+0x2b5d/0x3200 drivers/net/geneve.c:1002
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- batadv_send_skb_packet+0x622/0x970 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0xb2e/0xef0 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- csum_partial_copy+0xae/0x100 lib/checksum.c:154
- skb_copy_and_csum_bits+0x261/0x1360 net/core/skbuff.c:2737
- icmpv6_getfrag+0x148/0x3b0 net/ipv6/icmp.c:319
- __ip6_append_data+0x5a33/0x71b0 net/ipv6/ip6_output.c:1623
- ip6_append_data+0x44b/0x6e0 net/ipv6/ip6_output.c:1757
- icmp6_send+0x3711/0x40e0 net/ipv6/icmp.c:609
- icmpv6_send+0xdf/0x110 net/ipv6/ip6_icmp.c:43
- ip6_pkt_drop+0x906/0xa00 net/ipv6/route.c:4406
- ip6_pkt_discard_out+0xbb/0x130 net/ipv6/route.c:4419
- dst_output include/net/dst.h:443 [inline]
- ip6_local_out+0x17b/0x1e0 net/ipv6/output_core.c:179
- ip6tunnel_xmit include/net/ip6_tunnel.h:160 [inline]
- udp_tunnel6_xmit_skb+0x818/0xf80 net/ipv6/ip6_udp_tunnel.c:109
- geneve6_xmit_skb drivers/net/geneve.c:973 [inline]
- geneve_xmit+0x2b5d/0x3200 drivers/net/geneve.c:1002
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- batadv_send_skb_packet+0x622/0x970 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0xb2e/0xef0 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- pskb_expand_head+0x3fd/0x1e30 net/core/skbuff.c:1636
- __skb_cow include/linux/skbuff.h:3145 [inline]
- skb_cow_head include/linux/skbuff.h:3179 [inline]
- geneve_build_skb+0x575/0xf90 drivers/net/geneve.c:754
- geneve6_xmit_skb drivers/net/geneve.c:969 [inline]
- geneve_xmit+0x286c/0x3200 drivers/net/geneve.c:1002
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one+0x3cf/0x750 net/core/dev.c:3556
- dev_hard_start_xmit net/core/dev.c:3572 [inline]
- __dev_queue_xmit+0x3aad/0x4470 net/core/dev.c:4131
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- batadv_send_skb_packet+0x622/0x970 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0xb2e/0xef0 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- pskb_expand_head+0x3fd/0x1e30 net/core/skbuff.c:1636
- __skb_cow include/linux/skbuff.h:3145 [inline]
- skb_cow_head include/linux/skbuff.h:3179 [inline]
- batadv_skb_head_push+0x2cc/0x410 net/batman-adv/soft-interface.c:75
- batadv_send_skb_packet+0x1ed/0x970 net/batman-adv/send.c:86
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0xb2e/0xef0 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Uninit was created at:
- kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
- kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
- kmsan_alloc_page+0xc5/0x1a0 mm/kmsan/kmsan_shadow.c:293
- __alloc_pages_nodemask+0xdf0/0x1030 mm/page_alloc.c:4889
- __alloc_pages include/linux/gfp.h:509 [inline]
- __alloc_pages_node include/linux/gfp.h:522 [inline]
- alloc_pages_node include/linux/gfp.h:536 [inline]
- __page_frag_cache_refill mm/page_alloc.c:4964 [inline]
- page_frag_alloc+0x35b/0x880 mm/page_alloc.c:4994
- __netdev_alloc_skb+0xc3d/0xc90 net/core/skbuff.c:456
- __netdev_alloc_skb_ip_align include/linux/skbuff.h:2826 [inline]
- netdev_alloc_skb_ip_align include/linux/skbuff.h:2836 [inline]
- batadv_iv_ogm_aggregate_new net/batman-adv/bat_iv_ogm.c:558 [inline]
- batadv_iv_ogm_queue_add+0x13bf/0x1c60 net/batman-adv/bat_iv_ogm.c:670
- batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:849 [inline]
- batadv_iv_ogm_schedule+0x126d/0x1660 net/batman-adv/bat_iv_ogm.c:869
- batadv_iv_send_outstanding_bat_ogm_packet+0xd69/0xef0 net/batman-adv/bat_iv_ogm.c:1722
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> ---
+> changes since V3:
+> 	- wdog timeout should NOT update when setting timeout register failed.
+> ---
+>  drivers/watchdog/imx7ulp_wdt.c | 74 ++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 61 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+> index 7993c8c..badfc0b 100644
+> --- a/drivers/watchdog/imx7ulp_wdt.c
+> +++ b/drivers/watchdog/imx7ulp_wdt.c
+> @@ -5,6 +5,7 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -36,6 +37,7 @@
+>  #define DEFAULT_TIMEOUT	60
+>  #define MAX_TIMEOUT	128
+>  #define WDOG_CLOCK_RATE	1000
+> +#define WDOG_WAIT_TIMEOUT	20
+>  
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>  module_param(nowayout, bool, 0000);
+> @@ -48,17 +50,40 @@ struct imx7ulp_wdt_device {
+>  	struct clk *clk;
+>  };
+>  
+> -static void imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
+> +static int imx7ulp_wdt_wait(void __iomem *base, u32 mask)
+> +{
+> +	u32 val = readl(base + WDOG_CS);
+> +
+> +	if (!(val & mask) && readl_poll_timeout_atomic(base + WDOG_CS, val,
+> +						       val & mask, 0,
+> +						       WDOG_WAIT_TIMEOUT))
+> +		return -ETIMEDOUT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
+>  {
+>  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+>  
+>  	u32 val = readl(wdt->base + WDOG_CS);
+> +	int ret;
+>  
+> +	local_irq_disable();
+>  	writel(UNLOCK, wdt->base + WDOG_CNT);
+> +	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
+> +	if (ret)
+> +		goto enable_out;
+>  	if (enable)
+>  		writel(val | WDOG_CS_EN, wdt->base + WDOG_CS);
+>  	else
+>  		writel(val & ~WDOG_CS_EN, wdt->base + WDOG_CS);
+> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
+> +
+> +enable_out:
+> +	local_irq_enable();
+> +
+> +	return ret;
+>  }
+>  
+>  static bool imx7ulp_wdt_is_enabled(void __iomem *base)
+> @@ -79,17 +104,12 @@ static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
+>  
+>  static int imx7ulp_wdt_start(struct watchdog_device *wdog)
+>  {
+> -
+> -	imx7ulp_wdt_enable(wdog, true);
+> -
+> -	return 0;
+> +	return imx7ulp_wdt_enable(wdog, true);
+>  }
+>  
+>  static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
+>  {
+> -	imx7ulp_wdt_enable(wdog, false);
+> -
+> -	return 0;
+> +	return imx7ulp_wdt_enable(wdog, false);
+>  }
+>  
+>  static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
+> @@ -97,22 +117,37 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
+>  {
+>  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+>  	u32 val = WDOG_CLOCK_RATE * timeout;
+> +	int ret;
+>  
+> +	local_irq_disable();
+>  	writel(UNLOCK, wdt->base + WDOG_CNT);
+> +	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
+> +	if (ret)
+> +		goto timeout_out;
+>  	writel(val, wdt->base + WDOG_TOVAL);
+> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
+>  
+>  	wdog->timeout = timeout;
+>  
+> -	return 0;
+> +timeout_out:
+> +	local_irq_enable();
+> +
+> +	return ret;
+>  }
+>  
+>  static int imx7ulp_wdt_restart(struct watchdog_device *wdog,
+>  			       unsigned long action, void *data)
+>  {
+>  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +	int ret;
+> +
+> +	ret = imx7ulp_wdt_enable(wdog, true);
+> +	if (ret)
+> +		return ret;
+>  
+> -	imx7ulp_wdt_enable(wdog, true);
+> -	imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
+> +	ret = imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* wait for wdog to fire */
+>  	while (true)
+> @@ -136,19 +171,30 @@ static const struct watchdog_info imx7ulp_wdt_info = {
+>  		    WDIOF_MAGICCLOSE,
+>  };
+>  
+> -static void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
+> +static int imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
+>  {
+>  	u32 val;
+> +	int ret;
+>  
+> +	local_irq_disable();
+>  	/* unlock the wdog for reconfiguration */
+>  	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
+>  	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
+> +	ret = imx7ulp_wdt_wait(base, WDOG_CS_ULK);
+> +	if (ret)
+> +		goto init_out;
+>  
+>  	/* set an initial timeout value in TOVAL */
+>  	writel(timeout, base + WDOG_TOVAL);
+>  	/* enable 32bit command sequence and reconfigure */
+>  	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
+>  	writel(val, base + WDOG_CS);
+> +	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
+> +
+> +init_out:
+> +	local_irq_enable();
+> +
+> +	return ret;
+>  }
+>  
+>  static void imx7ulp_wdt_action(void *data)
+> @@ -199,7 +245,9 @@ static int imx7ulp_wdt_probe(struct platform_device *pdev)
+>  	watchdog_stop_on_reboot(wdog);
+>  	watchdog_stop_on_unregister(wdog);
+>  	watchdog_set_drvdata(wdog, imx7ulp_wdt);
+> -	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
+> +	ret = imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return devm_watchdog_register_device(dev, wdog);
+>  }
