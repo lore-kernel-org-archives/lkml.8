@@ -2,111 +2,141 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AECC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC74BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0772053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhC5u+7I"
+	by mail.kernel.org (Postfix) with ESMTP id BC3692053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597529029;
+	bh=RR8vpAJe95yICjOTWbJRmMXbXjVmhrK6B8p7jQvpcGA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=B+8OKyojHxuoIgUBWnAgQouzSd+Qfj20+L2fx8Ig0JGkq1yhDQSsStF2JPj+IgxvF
+	 csBvUKio9DMTv1gE1ck7esOoxmLAvEiGoevb+Pa7+3gA5iu5rryb5wobLE9zlqV6zU
+	 E6D09vAI0qF4icauoQfnpqvg7gP55I8f6r1jpEEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgHOWDk (ORCPT
+        id S1729802AbgHOWDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45598 "EHLO
+        Sat, 15 Aug 2020 18:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728675AbgHOVvK (ORCPT
+        with ESMTP id S1728677AbgHOVvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:51:10 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B448C03B3F0;
-        Sat, 15 Aug 2020 02:47:08 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t14so9834623wmi.3;
-        Sat, 15 Aug 2020 02:47:08 -0700 (PDT)
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7DFC02B8D7
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 04:13:29 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so12548679eje.7
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 04:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rnjXjcdoa8K1T7AG+e8ZGPlTXdNLEjYT6VnAJIHsZSs=;
-        b=DhC5u+7IZePPcWAY6zRSVw4d9LQe/5vxNN+unplSfogo19W/gQsHWuJWnEfjYUCWZt
-         ofTFVmBSDpb39en0q7gzC9dBmnaQ7ujQ56gfikCxE/T94RZkaPyqJuPWUwzxkR5zh6RV
-         2zeJYqeeaU1Q1DSdMTqqhY/LRakzcWnmcscyAO2j2jUydkp/FfzI4OzZgNMQ1L8kw/dO
-         8TBIMCb35O/0iS3h0EHlOgoUzUUJzgbioSquIoMM8Z4pf3EJ44qo6Vvwwkz35YBAtxYe
-         yD9YOvR1WEkLodQ5GO9kGAohvxI6l1LxEt45qDPE61B6uEJ5Kk1wekFA0TDuU9cxy1kN
-         mmgA==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=4ACFDihbhurDMLYhkZetXKBIk5H6sAegYTpSfKafOUo=;
+        b=SnRnOYM3EeMhrQ2sr9Yl50V40LP3tsUHkKKwlWIK67CHT+1OihQI5m9lKA1D42aPy5
+         9kllqkgMNfCveZeq1LqrcgENzFWsDe/pV+Gmj8LLFXpaBhCLkFgD4iWXzATE7nOMHvXx
+         Q3raBFfDcuYdCw3ggQSvXWysGvlAaogozaL/YiPbmJL5fCVBQeAXrZHBO/F5/l+F7cI7
+         UPimvN0HpYOmjbHeoRM3AJoYYjeKFvoX8cnR5AUfGaaXrJlC/y6WyQlMf3MGRQnHYqDg
+         d/Y4UwG/As5CW9+8uTV2yXksJ/SLxU4y3tyszl9o2kw9ExBKTq4JYaH/yWN6kl5Re4rG
+         PwMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rnjXjcdoa8K1T7AG+e8ZGPlTXdNLEjYT6VnAJIHsZSs=;
-        b=NV6Hg8WtvwFk3QnAk8ys1iWczIEc+UBuJJ7GR3dkcCgOzQ7MNNYg/t4DPPieKGbo9z
-         8qNx2M0hKaelKi5zQ2JIvJGM3LpmOLHKsRWDNcAxn4VxKv/tGC8X5PuJ+Bn22FZvX41O
-         1YOd8MJOl9Em7TEfH0fAyq5YGylLGDKb2PPWdkCLWR6PvT/aRThtEVDpYIa6cKenw+OS
-         FHZHVs3WH2UZ+7lI0rlnMf1sw7tYRVechhZQ7C6UlKlqz+ssju7awXbPuaN89iNNDMWq
-         QCBuW3QjFGinJNmSYgMv2XR02QLh2CeInGxMffjIbT2KGfD8rG9QkXwHCiDNU62HfD/h
-         yGPQ==
-X-Gm-Message-State: AOAM533Fa13G66x2xjuj+aSafO70eRcQlOViu7i3pDoKkOM3YGaHgxyl
-        xY8vjm9JSBblmA69rxEDslw=
-X-Google-Smtp-Source: ABdhPJz+QzwjIVRKxXK6BWYp+z7ISU45Y8xLUoCpZCu78YaysKfb9s+pgk2lbhYn93Jdk6qPnYy7kw==
-X-Received: by 2002:a1c:448a:: with SMTP id r132mr6014057wma.158.1597484827372;
-        Sat, 15 Aug 2020 02:47:07 -0700 (PDT)
-Received: from [172.20.10.4] (mob-5-90-172-191.net.vodafone.it. [5.90.172.191])
-        by smtp.gmail.com with ESMTPSA id 31sm21346274wrj.94.2020.08.15.02.47.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 02:47:06 -0700 (PDT)
-Subject: Re: [PATCH] seg6: using DSCP of inner IPv4 packets
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-References: <20200804074030.1147-1-ahabdels@gmail.com>
- <20200805.174049.1470539179902962793.davem@davemloft.net>
- <7f8b1def-0a65-d2a4-577e-5f928cee0617@gmail.com>
- <20200807.174342.2147963305722259387.davem@davemloft.net>
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-Message-ID: <56fb26ec-f35f-a7e9-53af-2ede1104bd28@gmail.com>
-Date:   Sat, 15 Aug 2020 11:47:04 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=4ACFDihbhurDMLYhkZetXKBIk5H6sAegYTpSfKafOUo=;
+        b=RK7hnc6FRpnhSh45oo8G686rZnHsGRI81QV2PooZnoFH9FxQypYZBOzBcQ49/YG8+J
+         2IRo5iyOZx/2gBGg9Oy1m8CvtrGNYjpD3ND2IPsqUTM8EZZupPF2Dc4dk4eCiAS6y9Bu
+         hnYAu7TR3qN7UOiom89jOEGUKEQ0+QYByNSp8zjuWTROkhP6pfswOMA9VYjETgQCLMsq
+         RwTmcvdbKi14gNoAhgd5hTTWYWHfLU0t6n7AacM0FOm2agXrhD9+t/sAPCkB1tDZlP8W
+         S0htLEejxONRMYdCch1kx5GyCg0Xe2Vu0AILorAlGz/v83KBiylt7hJ3Z5Mc2tkfn4W4
+         P2bA==
+X-Gm-Message-State: AOAM531DUgepW/B3vz1Tgp6GfvwBc5zjiztvj+uoO2soEE7QwIZFcwII
+        AVHUbjjGTAxL2NRfhFxhudw=
+X-Google-Smtp-Source: ABdhPJwQ0RWmv8xiZJM3NoutaWIzuRWqM6Xky4WihS0f4wFonyRZNgR5TY0sHxGOvjqcMRTneLWsJw==
+X-Received: by 2002:a17:906:85ce:: with SMTP id i14mr6825953ejy.318.1597490006889;
+        Sat, 15 Aug 2020 04:13:26 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 89sm8649247ede.29.2020.08.15.04.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2020 04:13:26 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 13:13:23 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Subject: [GIT PULL] locking fixes
+Message-ID: <20200815111323.GA2461929@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200807.174342.2147963305722259387.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Linus,
 
-Sorry for the late reply. I'm on PTO with limited email access.
+Please pull the latest locking/urgent git tree from:
 
-I will revise the patch in the next weeks and make outer IPv6 header 
-inherit Hop limit from Inner packet for the IPv6 case.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-2020-08-15
 
-Ahmed
+   # HEAD: 405fa8ac89e7aaa87282df659e525992f2639e76 futex: Convert to use the preferred 'fallthrough' macro
+
+A documentation fix and a 'fallthrough' macro update.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Huang Shijie (1):
+      Documentation/locking/locktypes: Fix a typo
+
+Miaohe Lin (1):
+      futex: Convert to use the preferred 'fallthrough' macro
 
 
-On 08/08/2020 02:43, David Miller wrote:
-> From: Ahmed Abdelsalam <ahabdels@gmail.com>
-> Date: Thu, 6 Aug 2020 08:43:06 +0200
-> 
->> SRv6 as defined in [1][2] does not mandate that the hop_limit of the
->> outer IPv6 header has to be copied from the inner packet.
-> 
-> This is not an issue of seg6 RFCs, but rather generic ip6 in ip6
-> tunnel encapsulation.
-> 
-> Therefore, what the existing ip6 tunnel encap does is our guide,
-> and it inherits from the inner header.
-> 
-> And that's what the original seg6 code almost certainly used to
-> guide the decision making in this area.
-> 
+ Documentation/locking/locktypes.rst | 2 +-
+ kernel/futex.c                      | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/locking/locktypes.rst b/Documentation/locking/locktypes.rst
+index 1b577a8bf982..4cefed8048ca 100644
+--- a/Documentation/locking/locktypes.rst
++++ b/Documentation/locking/locktypes.rst
+@@ -10,7 +10,7 @@ Introduction
+ ============
+ 
+ The kernel provides a variety of locking primitives which can be divided
+-into two categories:
++into three categories:
+ 
+  - Sleeping locks
+  - CPU local locks
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 61e8153e6c76..a5876694a60e 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3744,12 +3744,12 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 	switch (cmd) {
+ 	case FUTEX_WAIT:
+ 		val3 = FUTEX_BITSET_MATCH_ANY;
+-		/* fall through */
++		fallthrough;
+ 	case FUTEX_WAIT_BITSET:
+ 		return futex_wait(uaddr, flags, val, timeout, val3);
+ 	case FUTEX_WAKE:
+ 		val3 = FUTEX_BITSET_MATCH_ANY;
+-		/* fall through */
++		fallthrough;
+ 	case FUTEX_WAKE_BITSET:
+ 		return futex_wake(uaddr, flags, val, val3);
+ 	case FUTEX_REQUEUE:
