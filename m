@@ -2,204 +2,175 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AADC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE5FC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A305B2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4212053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CI1KLRx+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vlkrhu7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgHOVyI (ORCPT
+        id S1726339AbgHOVyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 17:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgHOVwh (ORCPT
+        with ESMTP id S1729128AbgHOVwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1813DC00868C
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:09:27 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so5499116plk.13
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:09:27 -0700 (PDT)
+        Sat, 15 Aug 2020 17:52:36 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF7CC09B054;
+        Sat, 15 Aug 2020 08:49:19 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id z11so2544866oon.5;
+        Sat, 15 Aug 2020 08:49:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=soE2IFby27f3lT1vJqM47DLs36Y61YrsYS5+tpHeZ7Q=;
-        b=CI1KLRx+27luHuKs2XaeFptA0WMQW5Fz18CFhEPtVnkbVKV5k7fBMYmRMvP9FuTb7i
-         POd83LEdDrPoRKUNpQJZiUqmb1YMxIu3WAyCVpW3k18G+SD1Q3iGNo/NWnt2drExn+vL
-         j+P0BkgpDOAq7PVGoXtJGBjyX9cFgRCgT2DA0=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=CcdQzl9In/9cdITxocrz0vM3bfLjK73C35i7BkxY8gM=;
+        b=Vlkrhu7XE01MxBsrAacNDdYsgy7DOQJxJEKTLz4ony4WzKDui3OeAofloeVgkW3GlA
+         XkpULxbqd6+qu24KAR/8K3wK4uuBXOMcPegijHUdtu8UaQTIgnb6CaDMczPRQH4uikaK
+         uA9oyRnFj/XN5+dnuUHLZp1ySFHoDaCTknCaBH1o3lPTQiV+aORMTCG25/Iv7tTVkgEN
+         xrylHIrpzjxxzqO+zMGhlUlvS80mjcq24eyqaOYeK2Useweb7qoYFddTnX6ibGTGrY7d
+         UJ13HzAUQqN82UPJPdK2i1lPD8Rl18nKbcGOm0f8bvgSt/Ejd/nEChzaTe8Twg+sWOtV
+         +rlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=soE2IFby27f3lT1vJqM47DLs36Y61YrsYS5+tpHeZ7Q=;
-        b=WwGZf7vrbixIGU9wowImrqLFQs74QRLy7kXsQP5Y2OdmpxrQWG7z0XVHEBJt+pqGsY
-         hQsx5JpWCouxDHSspdBH2lVForjeP2r+8836go2P5w+DRUjorx8bvuHmaMeGeUp426pf
-         nW866d7mI1B2e5zNr3H1+07H0ZtyRy54yNvqBW5hlGHP1Ut/7ohptnqhgLPRL9PmcsOo
-         MBFhJHF5c/mwLJRdrrC+zhwBSxYc/qmNZKGx9Y49J0bzHPQTd2V+v4+jWT6WedVg/h1f
-         UHEnHGlUmu0QNyPFbtsYgkXGrDL5YDrv51FLS8zd+/ozcQ15dkuTYBJuolCAFwSDCyhI
-         nv+Q==
-X-Gm-Message-State: AOAM530PeZCybsbTpre2VIAseDF6Mlh6COyzTAWEKZjfKKSjKPS7dbP3
-        fqXmmWCYEHg1ZnvUZi1xFrnuqA==
-X-Google-Smtp-Source: ABdhPJw++rQdsQjQ+F1CYSDJTNwjmrCJstNOaRhqVrb+4iAk5WeYCFnuaK3T5187FLXs3/JeJ8ejCw==
-X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr6020983plp.57.1597511366548;
-        Sat, 15 Aug 2020 10:09:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id go12sm10956840pjb.2.2020.08.15.10.09.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 10:09:25 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 10:09:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: [PATCH v2] overflow: Add __must_check attribute to check_*() helpers
-Message-ID: <202008151007.EF679DF@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=CcdQzl9In/9cdITxocrz0vM3bfLjK73C35i7BkxY8gM=;
+        b=LGEor5ulV5POlc9KGqEnmiyoJmwZ6tD8XfskpbLpugvENtQYNvsiGQ+OPyDIYuRF75
+         4EwWOU0nfdBoIHFucvdznbFoQg4lY0rgwUzYQ9SAoO2CdOhhFvJcSpKCymVUZkHUPGND
+         2bD7+z1IM/Ebtw1GQiiZVQ5IsKomvAiNwn3DktVZH0trAKYcde6C810zw6jc8wzpcKSB
+         QfZoRiFNJBZXJZop685ZVzuBAf/iYunlVJ2mLoEpq/c8yq25DJXtj0HjqYweKUFU8OeQ
+         rIJAAkcwiShd6gM1TbXZIqcdycR5CShTgsSxM5sDuJwpvctdkzwsSbnclL339GhbRbcV
+         IeTw==
+X-Gm-Message-State: AOAM533qV4ksuxlzb6yhwb2reP/h02klj9nFF1f2FLKOwd7zZzMAu0ml
+        ttOiCjPZiGu0zua0yVN6kUd5qwqc7vPX3fbHk6s=
+X-Google-Smtp-Source: ABdhPJz6FH8NPvgBQM4D3K801uDf1shBf80hvVksADf7wBd8t2UhIq2MzDrivyIHy2KNAla6O/Z9UjpiKj3IffF6XP4=
+X-Received: by 2002:a4a:7b4b:: with SMTP id l72mr5516085ooc.74.1597506554603;
+ Sat, 15 Aug 2020 08:49:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200812004158.GA1447296@rani.riverdale.lan> <20200812004308.1448603-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200812004308.1448603-1-nivedita@alum.mit.edu>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sat, 15 Aug 2020 17:49:03 +0200
+Message-ID: <CA+icZUVdTT1Vz8ACckj-SQyKi+HxJyttM52s6HUtCDLFCKbFgQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/boot/compressed: Disable relocation relaxation
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the destination variable of the check_*_overflow() helpers will
-contain a wrapped value on failure, it would be best to make sure callers
-really did check the return result of the helper. Adjust the macros to use
-a bool-wrapping static inline that is marked with __must_check. This means
-the macros can continue to have their type-agnostic behavior while gaining
-the function attribute (that cannot be applied directly to macros).
+On Wed, Aug 12, 2020 at 2:43 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The x86-64 psABI [0] specifies special relocation types
+> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+> can take advantage of for optimization (relaxation) at link time. This
+> is supported by LLD and binutils versions 2.26 onwards.
+>
+> The compressed kernel is position-independent code, however, when using
+> LLD or binutils versions before 2.27, it must be linked without the -pie
+> option. In this case, the linker may optimize certain instructions into
+> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+>
+> This potential issue has been present with LLD and binutils-2.26 for a
+> long time, but it has never manifested itself before now:
+> - LLD and binutils-2.26 only relax
+>         movq    foo@GOTPCREL(%rip), %reg
+>   to
+>         leaq    foo(%rip), %reg
+>   which is still position-independent, rather than
+>         mov     $foo, %reg
+>   which is permitted by the psABI when -pie is not enabled.
+> - gcc happens to only generate GOTPCREL relocations on mov instructions.
+> - clang does generate GOTPCREL relocations on non-mov instructions, but
+>   when building the compressed kernel, it uses its integrated assembler
+>   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+>   which has so far defaulted to not generating the GOTPCRELX
+>   relocations.
+>
+> Nick Desaulniers reports [1,2]:
+>   A recent change [3] to a default value of configuration variable
+>   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+>   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+>   relocations. LLD will relax instructions with these relocations based
+>   on whether the image is being linked as position independent or not.
+>   When not, then LLD will relax these instructions to use absolute
+>   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+>   Clang and linked with LLD to fail to boot.
+>
+> Patch series [4] is a solution to allow the compressed kernel to be
+> linked with -pie unconditionally, but even if merged is unlikely to be
+> backported. As a simple solution that can be applied to stable as well,
+> prevent the assembler from generating the relaxed relocation types using
+> the -mrelax-relocations=no option. For ease of backporting, do this
+> unconditionally.
+>
+> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
+> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2:
-- de-generalized __must_check_overflow() from being named "bool" (willy)
-- fix comment typos (rasmus)
-v1: https://lore.kernel.org/lkml/202008121450.405E4A3@keescook
----
- include/linux/overflow.h | 39 ++++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+Thanks for the patch.
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 93fcef105061..f1c4e7b56bd9 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -43,6 +43,16 @@
- #define is_non_negative(a) ((a) > 0 || (a) == 0)
- #define is_negative(a) (!(is_non_negative(a)))
- 
-+/*
-+ * Allows for effectively applying __must_check to a macro so we can have
-+ * both the type-agnostic benefits of the macros while also being able to
-+ * enforce that the return value is, in fact, checked.
-+ */
-+static inline bool __must_check __must_check_overflow(bool overflow)
-+{
-+	return unlikely(overflow);
-+}
-+
- #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
- /*
-  * For simplicity and code hygiene, the fallback code below insists on
-@@ -52,32 +62,32 @@
-  * alias for __builtin_add_overflow, but add type checks similar to
-  * below.
-  */
--#define check_add_overflow(a, b, d) ({		\
-+#define check_add_overflow(a, b, d) __must_check_overflow(({	\
- 	typeof(a) __a = (a);			\
- 	typeof(b) __b = (b);			\
- 	typeof(d) __d = (d);			\
- 	(void) (&__a == &__b);			\
- 	(void) (&__a == __d);			\
- 	__builtin_add_overflow(__a, __b, __d);	\
--})
-+}))
- 
--#define check_sub_overflow(a, b, d) ({		\
-+#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
- 	typeof(a) __a = (a);			\
- 	typeof(b) __b = (b);			\
- 	typeof(d) __d = (d);			\
- 	(void) (&__a == &__b);			\
- 	(void) (&__a == __d);			\
- 	__builtin_sub_overflow(__a, __b, __d);	\
--})
-+}))
- 
--#define check_mul_overflow(a, b, d) ({		\
-+#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
- 	typeof(a) __a = (a);			\
- 	typeof(b) __b = (b);			\
- 	typeof(d) __d = (d);			\
- 	(void) (&__a == &__b);			\
- 	(void) (&__a == __d);			\
- 	__builtin_mul_overflow(__a, __b, __d);	\
--})
-+}))
- 
- #else
- 
-@@ -190,21 +200,20 @@
- })
- 
- 
--#define check_add_overflow(a, b, d)					\
-+#define check_add_overflow(a, b, d)	__must_check_overflow(		\
- 	__builtin_choose_expr(is_signed_type(typeof(a)),		\
- 			__signed_add_overflow(a, b, d),			\
--			__unsigned_add_overflow(a, b, d))
-+			__unsigned_add_overflow(a, b, d)))
- 
--#define check_sub_overflow(a, b, d)					\
-+#define check_sub_overflow(a, b, d)	__must_check_overflow(		\
- 	__builtin_choose_expr(is_signed_type(typeof(a)),		\
- 			__signed_sub_overflow(a, b, d),			\
--			__unsigned_sub_overflow(a, b, d))
-+			__unsigned_sub_overflow(a, b, d)))
- 
--#define check_mul_overflow(a, b, d)					\
-+#define check_mul_overflow(a, b, d)	__must_check_overflow(		\
- 	__builtin_choose_expr(is_signed_type(typeof(a)),		\
- 			__signed_mul_overflow(a, b, d),			\
--			__unsigned_mul_overflow(a, b, d))
--
-+			__unsigned_mul_overflow(a, b, d)))
- 
- #endif /* COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW */
- 
-@@ -227,7 +236,7 @@
-  * '*d' will hold the results of the attempted shift, but is not
-  * considered "safe for use" if false is returned.
-  */
--#define check_shl_overflow(a, s, d) ({					\
-+#define check_shl_overflow(a, s, d) __must_check_overflow(({		\
- 	typeof(a) _a = a;						\
- 	typeof(s) _s = s;						\
- 	typeof(d) _d = d;						\
-@@ -237,7 +246,7 @@
- 	*_d = (_a_full << _to_shift);					\
- 	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
- 	(*_d >> _to_shift) != _a);					\
--})
-+}))
- 
- /**
-  * array_size() - Calculate size of 2-dimensional array.
--- 
-2.25.1
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
+- Sedat -
 
--- 
-Kees Cook
+[1] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674409705
+
+> ---
+>  arch/x86/boot/compressed/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 3962f592633d..ff7894f39e0e 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -43,6 +43,8 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+>  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+>  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+>  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+> +# Disable relocation relaxation in case the link is not PIE.
+> +KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
+>
+>  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+>  GCOV_PROFILE := n
+> --
+> 2.26.2
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200812004308.1448603-1-nivedita%40alum.mit.edu.
