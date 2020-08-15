@@ -2,463 +2,367 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E3BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C0C23133
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C7D23133
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnRWdG1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgHOVck (ORCPT
+        id S1727908AbgHOVdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:32:40 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:52578 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbgHOVcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:32:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 16BBCFB02;
-        Sat, 15 Aug 2020 23:16:28 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id J5RZCWaH0Sss; Sat, 15 Aug 2020 23:16:23 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id B6C78457CF; Sat, 15 Aug 2020 23:16:22 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
-Date:   Sat, 15 Aug 2020 23:16:22 +0200
-Message-Id: <d4e3f881e3d53166eea0be31a885e08679813558.1597526107.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597526107.git.agx@sigxcpu.org>
-References: <cover.1597526107.git.agx@sigxcpu.org>
+        Sat, 15 Aug 2020 17:33:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48361 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727097AbgHOVdF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:33:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597527181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q1AwCIOy834J5LQ7HjcvtnvU9bzLkbyKnbei9M95+JM=;
+        b=UnRWdG1mOSpMFiQArZcqoqf6A8R97k95MnE54id0tvLzRvwtmeO3Bq5/EjCefm4LbE4UnI
+        OydqmMNOxgRG4Rn5h4mvzgjqXSgV0kZLScAGzGJJz65pyibdCVUCOSdecS65fnf2Yu0b/4
+        hoyLkYJ1zKrRId26XfRNPwuvkq1NgBw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-gxzOrCTnNYy5WmgF7hv9_g-1; Sat, 15 Aug 2020 12:30:54 -0400
+X-MC-Unique: gxzOrCTnNYy5WmgF7hv9_g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC2B61DDE1;
+        Sat, 15 Aug 2020 16:30:32 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B43375D9CA;
+        Sat, 15 Aug 2020 16:30:22 +0000 (UTC)
+Subject: Re: [PATCH v6 07/15] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
+ (alloc/free)
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+ <1595917664-33276-8-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c60dd620-8cc1-6ecb-8d88-ca5c8d724c7e@redhat.com>
+Date:   Sat, 15 Aug 2020 18:30:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595917664-33276-8-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The panel uses a Focaltech FT8006p, the touch part is handled by the
-already existing edt-ft5x06.
+Yi,
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 328 ++++++++++++++++++
- 4 files changed, 347 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
+On 7/28/20 8:27 AM, Liu Yi L wrote:
+> This patch allows userspace to request PASID allocation/free, e.g. when
+> serving the request from the guest.
+> 
+> PASIDs that are not freed by userspace are automatically freed when the
+> IOASID set is destroyed when process exits.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+> v5 -> v6:
+> *) address comments from Eric against v5. remove the alloc/free helper.
+> 
+> v4 -> v5:
+> *) address comments from Eric Auger.
+> *) the comments for the PASID_FREE request is addressed in patch 5/15 of
+>    this series.
+> 
+> v3 -> v4:
+> *) address comments from v3, except the below comment against the range
+>    of PASID_FREE request. needs more help on it.
+>     "> +if (req.range.min > req.range.max)
+> 
+>      Is it exploitable that a user can spin the kernel for a long time in
+>      the case of a free by calling this with [0, MAX_UINT] regardless of
+>      their actual allocations?"
+>     https://lore.kernel.org/linux-iommu/20200702151832.048b44d1@x1.home/
+> 
+> v1 -> v2:
+> *) move the vfio_mm related code to be a seprate module
+> *) use a single structure for alloc/free, could support a range of PASIDs
+> *) fetch vfio_mm at group_attach time instead of at iommu driver open time
+> ---
+>  drivers/vfio/Kconfig            |  1 +
+>  drivers/vfio/vfio_iommu_type1.c | 69 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/vfio/vfio_pasid.c       | 10 ++++++
+>  include/linux/vfio.h            |  6 ++++
+>  include/uapi/linux/vfio.h       | 37 ++++++++++++++++++++++
+>  5 files changed, 123 insertions(+)
+> 
+> diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
+> index 3d8a108..95d90c6 100644
+> --- a/drivers/vfio/Kconfig
+> +++ b/drivers/vfio/Kconfig
+> @@ -2,6 +2,7 @@
+>  config VFIO_IOMMU_TYPE1
+>  	tristate
+>  	depends on VFIO
+> +	select VFIO_PASID if (X86)
+>  	default n
+>  
+>  config VFIO_IOMMU_SPAPR_TCE
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 18ff0c3..ea89c7c 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -76,6 +76,7 @@ struct vfio_iommu {
+>  	bool				dirty_page_tracking;
+>  	bool				pinned_page_dirty_scope;
+>  	struct iommu_nesting_info	*nesting_info;
+> +	struct vfio_mm			*vmm;
+>  };
+>  
+>  struct vfio_domain {
+> @@ -1937,6 +1938,11 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
+>  
+>  static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
+>  {
+> +	if (iommu->vmm) {
+> +		vfio_mm_put(iommu->vmm);
+> +		iommu->vmm = NULL;
+> +	}
+> +
+>  	kfree(iommu->nesting_info);
+>  	iommu->nesting_info = NULL;
+>  }
+> @@ -2071,6 +2077,26 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  					    iommu->nesting_info);
+>  		if (ret)
+>  			goto out_detach;
+> +
+> +		if (iommu->nesting_info->features &
+> +					IOMMU_NESTING_FEAT_SYSWIDE_PASID) {
+> +			struct vfio_mm *vmm;
+> +			int sid;
+> +
+> +			vmm = vfio_mm_get_from_task(current);
+> +			if (IS_ERR(vmm)) {
+> +				ret = PTR_ERR(vmm);
+> +				goto out_detach;
+> +			}
+> +			iommu->vmm = vmm;
+> +
+> +			sid = vfio_mm_ioasid_sid(vmm);
+> +			ret = iommu_domain_set_attr(domain->domain,
+> +						    DOMAIN_ATTR_IOASID_SID,
+> +						    &sid);
+> +			if (ret)
+> +				goto out_detach;
+> +		}
+>  	}
+>  
+>  	/* Get aperture info */
+> @@ -2859,6 +2885,47 @@ static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
+>  	return -EINVAL;
+>  }
+>  
+> +static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
+> +					  unsigned long arg)
+> +{
+> +	struct vfio_iommu_type1_pasid_request req;
+> +	unsigned long minsz;
+> +	int ret;
+> +
+> +	minsz = offsetofend(struct vfio_iommu_type1_pasid_request, range);
+> +
+> +	if (copy_from_user(&req, (void __user *)arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (req.argsz < minsz || (req.flags & ~VFIO_PASID_REQUEST_MASK))
+> +		return -EINVAL;
+> +
+> +	if (req.range.min > req.range.max)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	if (!iommu->vmm) {
+> +		mutex_unlock(&iommu->lock);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	switch (req.flags & VFIO_PASID_REQUEST_MASK) {
+> +	case VFIO_IOMMU_FLAG_ALLOC_PASID:
+> +		ret = vfio_pasid_alloc(iommu->vmm, req.range.min,
+> +				       req.range.max);
+> +		break;
+> +	case VFIO_IOMMU_FLAG_FREE_PASID:
+> +		vfio_pasid_free_range(iommu->vmm, req.range.min,
+> +				      req.range.max);
+> +		ret = 0;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
+>  {
+> @@ -2875,6 +2942,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		return vfio_iommu_type1_unmap_dma(iommu, arg);
+>  	case VFIO_IOMMU_DIRTY_PAGES:
+>  		return vfio_iommu_type1_dirty_pages(iommu, arg);
+> +	case VFIO_IOMMU_PASID_REQUEST:
+> +		return vfio_iommu_type1_pasid_request(iommu, arg);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
+> index befcf29..8d0317f 100644
+> --- a/drivers/vfio/vfio_pasid.c
+> +++ b/drivers/vfio/vfio_pasid.c
+> @@ -61,6 +61,7 @@ void vfio_mm_put(struct vfio_mm *vmm)
+>  {
+>  	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_mm_lock);
+>  }
+> +EXPORT_SYMBOL_GPL(vfio_mm_put);
+>  
+>  static void vfio_mm_get(struct vfio_mm *vmm)
+>  {
+> @@ -114,6 +115,13 @@ struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
+>  	mmput(mm);
+>  	return vmm;
+>  }
+> +EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
+> +
+> +int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
+> +{
+> +	return vmm->ioasid_sid;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_mm_ioasid_sid);
+>  
+>  /*
+>   * Find PASID within @min and @max
+> @@ -202,6 +210,7 @@ int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
+>  
+>  	return pasid;
+>  }
+> +EXPORT_SYMBOL_GPL(vfio_pasid_alloc);
+>  
+>  void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  			   ioasid_t min, ioasid_t max)
+> @@ -218,6 +227,7 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  		vfio_remove_pasid(vmm, vid);
+>  	mutex_unlock(&vmm->pasid_lock);
+>  }
+> +EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
+>  
+>  static int __init vfio_pasid_init(void)
+>  {
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index 31472a9..a355d01 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -101,6 +101,7 @@ struct vfio_mm;
+>  #if IS_ENABLED(CONFIG_VFIO_PASID)
+>  extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
+>  extern void vfio_mm_put(struct vfio_mm *vmm);
+> +extern int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
+>  extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
+>  extern void vfio_pasid_free_range(struct vfio_mm *vmm,
+>  				  ioasid_t min, ioasid_t max);
+> @@ -114,6 +115,11 @@ static inline void vfio_mm_put(struct vfio_mm *vmm)
+>  {
+>  }
+>  
+> +static inline int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
+> +{
+> +	return -ENOTTY;
+> +}
+> +
+>  static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
+>  {
+>  	return -ENOTTY;
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 0cf3d6d..6d79557 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1172,6 +1172,43 @@ struct vfio_iommu_type1_dirty_bitmap_get {
+>  
+>  #define VFIO_IOMMU_DIRTY_PAGES             _IO(VFIO_TYPE, VFIO_BASE + 17)
+>  
+> +/**
+> + * VFIO_IOMMU_PASID_REQUEST - _IOWR(VFIO_TYPE, VFIO_BASE + 18,
+> + *				struct vfio_iommu_type1_pasid_request)
+> + *
+> + * PASID (Processor Address Space ID) is a PCIe concept for tagging
+> + * address spaces in DMA requests. When system-wide PASID allocation
+> + * is required by the underlying iommu driver (e.g. Intel VT-d), this
+> + * provides an interface for userspace to request pasid alloc/free
+> + * for its assigned devices. Userspace should check the availability
+> + * of this API by checking VFIO_IOMMU_TYPE1_INFO_CAP_NESTING through
+> + * VFIO_IOMMU_GET_INFO.
+> + *
+> + * @flags=VFIO_IOMMU_FLAG_ALLOC_PASID, allocate a single PASID within @range.
+> + * @flags=VFIO_IOMMU_FLAG_FREE_PASID, free the PASIDs within @range.
+> + * @range is [min, max], which means both @min and @max are inclusive.
+> + * ALLOC_PASID and FREE_PASID are mutually exclusive.
+> + *
+> + * returns: allocated PASID value on success, -errno on failure for
+> + *	     ALLOC_PASID;
+> + *	     0 for FREE_PASID operation;
+> + */
+> +struct vfio_iommu_type1_pasid_request {
+> +	__u32	argsz;
+> +#define VFIO_IOMMU_FLAG_ALLOC_PASID	(1 << 0)
+> +#define VFIO_IOMMU_FLAG_FREE_PASID	(1 << 1)
+> +	__u32	flags;
+> +	struct {
+> +		__u32	min;
+> +		__u32	max;
+> +	} range;
+> +};
+> +
+> +#define VFIO_PASID_REQUEST_MASK	(VFIO_IOMMU_FLAG_ALLOC_PASID | \
+> +					 VFIO_IOMMU_FLAG_FREE_PASID)
+> +
+> +#define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
+> +
+>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+>  
+>  /*
+> 
+Looks OK to me
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 83ba7b62651f7..7dfe4cc3d4ec8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5474,6 +5474,13 @@ S:	Maintained
- F:	drivers/gpu/drm/panel/panel-lvds.c
- F:	Documentation/devicetree/bindings/display/panel/lvds.yaml
- 
-+DRM DRIVER FOR MANTIX MLAF057WE51 PANELS
-+M:	Guido Günther <agx@sigxcpu.org>
-+R:	Purism Kernel Team <kernel@puri.sm>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-+F:	drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-+
- DRM DRIVER FOR MATROX G200/G400 GRAPHICS CARDS
- S:	Orphan / Obsolete
- F:	drivers/gpu/drm/mga/
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index de2f2a452be55..8d97d07c58713 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -217,6 +217,17 @@ config DRM_PANEL_NOVATEK_NT39016
- 	  Say Y here if you want to enable support for the panels built
- 	  around the Novatek NT39016 display controller.
- 
-+config DRM_PANEL_MANTIX_MLAF057WE51
-+	tristate "Mantix MLAF057WE51-X MIPI-DSI LCD panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the Mantix
-+	  MLAF057WE51-X MIPI DSI panel as e.g. used in the Librem 5. It
-+	  has a resolution of 720x1440 pixels, a built in backlight and touch
-+	  controller.
-+
- config DRM_PANEL_OLIMEX_LCD_OLINUXINO
- 	tristate "Olimex LCD-OLinuXino panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index e45ceac6286fd..15a4e77529514 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
- obj-$(CONFIG_DRM_PANEL_NEC_NL8048HL11) += panel-nec-nl8048hl11.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT35510) += panel-novatek-nt35510.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT39016) += panel-novatek-nt39016.o
-+obj-$(CONFIG_DRM_PANEL_MANTIX_MLAF057WE51) += panel-mantix-mlaf057we51.o
- obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
- obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
- obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
-diff --git a/drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c b/drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-new file mode 100644
-index 0000000000000..cd5424d5bdb63
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Mantix MLAF057WE51 5.7" MIPI-DSI panel driver
-+ *
-+ * Copyright (C) Purism SPC 2020
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+#define DRV_NAME "panel-mantix-mlaf057we51"
-+
-+/* Manufacturer specific Commands send via DSI */
-+#define MANTIX_CMD_OTP_STOP_RELOAD_MIPI 0x41
-+#define MANTIX_CMD_INT_CANCEL           0x4C
-+
-+struct mantix {
-+	struct device *dev;
-+	struct drm_panel panel;
-+	struct gpio_desc *reset_gpio;
-+
-+	struct regulator *avdd;
-+	struct regulator *avee;
-+	struct regulator *vddi;
-+};
-+
-+static inline struct mantix *panel_to_mantix(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct mantix, panel);
-+}
-+
-+#define dsi_generic_write_seq(dsi, seq...) do {				\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+static int mantix_init_sequence(struct mantix *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	struct device *dev = ctx->dev;
-+
-+	/*
-+	 * Init sequence was supplied by the panel vendor.
-+	 */
-+	dsi_generic_write_seq(dsi, MANTIX_CMD_OTP_STOP_RELOAD_MIPI, 0x5A);
-+
-+	dsi_generic_write_seq(dsi, MANTIX_CMD_INT_CANCEL, 0x03);
-+	dsi_generic_write_seq(dsi, MANTIX_CMD_OTP_STOP_RELOAD_MIPI, 0x5A, 0x03);
-+	dsi_generic_write_seq(dsi, 0x80, 0xA9, 0x00);
-+
-+	dsi_generic_write_seq(dsi, MANTIX_CMD_OTP_STOP_RELOAD_MIPI, 0x5A, 0x09);
-+	dsi_generic_write_seq(dsi, 0x80, 0x64, 0x00, 0x64, 0x00, 0x00);
-+	msleep(20);
-+
-+	dev_dbg(dev, "Panel init sequence done\n");
-+	return 0;
-+}
-+
-+static int mantix_enable(struct drm_panel *panel)
-+{
-+	struct mantix *ctx = panel_to_mantix(panel);
-+	struct device *dev = ctx->dev;
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
-+	int ret;
-+
-+	ret = mantix_init_sequence(ctx);
-+	if (ret < 0) {
-+		dev_err(ctx->dev, "Panel init sequence failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to exit sleep mode\n");
-+		return ret;
-+	}
-+	msleep(20);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret)
-+		return ret;
-+	usleep_range(10000, 12000);
-+
-+	ret = mipi_dsi_turn_on_peripheral(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to turn on peripheral\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mantix_disable(struct drm_panel *panel)
-+{
-+	struct mantix *ctx = panel_to_mantix(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "Failed to turn off the display: %d\n", ret);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "Failed to enter sleep mode: %d\n", ret);
-+
-+
-+	return 0;
-+}
-+
-+static int mantix_unprepare(struct drm_panel *panel)
-+{
-+	struct mantix *ctx = panel_to_mantix(panel);
-+
-+	regulator_disable(ctx->avee);
-+	regulator_disable(ctx->avdd);
-+	/* T11 */
-+	usleep_range(5000, 6000);
-+	regulator_disable(ctx->vddi);
-+	/* T14 */
-+	msleep(50);
-+
-+	return 0;
-+}
-+
-+static int mantix_prepare(struct drm_panel *panel)
-+{
-+	struct mantix *ctx = panel_to_mantix(panel);
-+	int ret;
-+
-+	/* Focaltech FT8006P, section 7.3.1 and 7.3.4 */
-+	dev_dbg(ctx->dev, "Resetting the panel\n");
-+	ret = regulator_enable(ctx->vddi);
-+	if (ret < 0) {
-+		dev_err(ctx->dev, "Failed to enable vddi supply: %d\n", ret);
-+		return ret;
-+	}
-+	/* T1 + T2 */
-+	usleep_range(8000, 10000);
-+
-+	ret = regulator_enable(ctx->avdd);
-+	if (ret < 0) {
-+		dev_err(ctx->dev, "Failed to enable avdd supply: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* T2d */
-+	usleep_range(3500, 4000);
-+	ret = regulator_enable(ctx->avee);
-+	if (ret < 0) {
-+		dev_err(ctx->dev, "Failed to enable avee supply: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* T3+T5 */
-+	usleep_range(10000, 12000);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(5150, 7000);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+
-+	/* T6 */
-+	msleep(50);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode default_mode = {
-+	.hdisplay    = 720,
-+	.hsync_start = 720 + 45,
-+	.hsync_end   = 720 + 45 + 14,
-+	.htotal	     = 720 + 45 + 14 + 25,
-+	.vdisplay    = 1440,
-+	.vsync_start = 1440 + 130,
-+	.vsync_end   = 1440 + 130 + 8,
-+	.vtotal	     = 1440 + 130 + 8 + 106,
-+	.clock	     = 85298,
-+	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	.width_mm    = 65,
-+	.height_mm   = 130,
-+};
-+
-+static int mantix_get_modes(struct drm_panel *panel,
-+			    struct drm_connector *connector)
-+{
-+	struct mantix *ctx = panel_to_mantix(panel);
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &default_mode);
-+	if (!mode) {
-+		dev_err(ctx->dev, "Failed to add mode %ux%u@%u\n",
-+			default_mode.hdisplay, default_mode.vdisplay,
-+			drm_mode_vrefresh(mode));
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs mantix_drm_funcs = {
-+	.disable   = mantix_disable,
-+	.unprepare = mantix_unprepare,
-+	.prepare   = mantix_prepare,
-+	.enable	   = mantix_enable,
-+	.get_modes = mantix_get_modes,
-+};
-+
-+static int mantix_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct mantix *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		dev_err(dev, "cannot get reset gpio\n");
-+		return PTR_ERR(ctx->reset_gpio);
-+	}
-+
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+	ctx->dev = dev;
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-+		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-+
-+	ctx->avdd = devm_regulator_get(dev, "avdd");
-+	if (IS_ERR(ctx->avdd))
-+		return dev_err_probe(dev, PTR_ERR(ctx->avdd), "Failed to request avdd regulator\n");
-+
-+	ctx->avee = devm_regulator_get(dev, "avee");
-+	if (IS_ERR(ctx->avee))
-+		return dev_err_probe(dev, PTR_ERR(ctx->avee), "Failed to request avee regulator\n");
-+
-+	ctx->vddi = devm_regulator_get(dev, "vddi");
-+	if (IS_ERR(ctx->vddi))
-+		return dev_err_probe(dev, PTR_ERR(ctx->vddi), "Failed to request vddi regulator\n");
-+
-+	drm_panel_init(&ctx->panel, dev, &mantix_drm_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+
-+	ret = drm_panel_of_backlight(&ctx->panel);
-+	if (ret)
-+		return ret;
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "mipi_dsi_attach failed (%d). Is host ready?\n", ret);
-+		drm_panel_remove(&ctx->panel);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
-+		 default_mode.hdisplay, default_mode.vdisplay,
-+		 drm_mode_vrefresh(&default_mode),
-+		 mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
-+
-+	return 0;
-+}
-+
-+static void mantix_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	drm_panel_unprepare(&ctx->panel);
-+	drm_panel_disable(&ctx->panel);
-+}
-+
-+static int mantix_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	mantix_shutdown(dsi);
-+
-+	mipi_dsi_detach(dsi);
-+	drm_panel_remove(&ctx->panel);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mantix_of_match[] = {
-+	{ .compatible = "mantix,mlaf057we51-x" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mantix_of_match);
-+
-+static struct mipi_dsi_driver mantix_driver = {
-+	.probe	= mantix_probe,
-+	.remove = mantix_remove,
-+	.shutdown = mantix_shutdown,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = mantix_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(mantix_driver);
-+
-+MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
-+MODULE_DESCRIPTION("DRM driver for Mantix MLAF057WE51-X MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.26.2
+
+Thanks
+
+Eric
 
