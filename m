@@ -2,124 +2,133 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30817206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79792053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IpPDEUCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0+BYyOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgHOVx0 (ORCPT
+        id S1729238AbgHOVx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
+        Sat, 15 Aug 2020 17:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgHOVwn (ORCPT
+        with ESMTP id S1729152AbgHOVwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:52:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B110AC0A3BE5
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 09:34:17 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so6032267pfn.5
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 09:34:17 -0700 (PDT)
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB28C08E81C;
+        Sat, 15 Aug 2020 03:35:04 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id x2so6587041ybf.12;
+        Sat, 15 Aug 2020 03:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zJX37WRUVbMU5pJLki7rAUhX9uBKXYYVUdVs+LildKI=;
-        b=IpPDEUCjv38MHmQCN4xlwtZPYWyGXgrzrlene0jwicF8nC6bOQLRDf6JsqAZXPcSHM
-         Ia3GGX+Ri5jyykiM54fdWTzoYRRHzlFZhHRbnarJjgroY1BTzFbBGDfFhk0imqbjsO8m
-         594cDxoJl1B4YBWdYONF4W0lkqmH+sF0aDmCA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9FdBEk/PFONKRBL3ptMIHWrtdhPvwvR5FjJYMrVCgHg=;
+        b=W0+BYyOkemwI7h+hvaQAo9s1FdDmpB1n0aNtcGAEnmapUJuIHMqNKh1Gel888k+TBR
+         2rJRGW/9mDlu1hhxgiKEEQIj54ljTE2rlP6NpfoSJfDFo5URkupbE+RayKBnPF2Ui1CO
+         qhL3AFYQRU/OF7JheALPd9Xma4NxeJ7UQ35Xszq0opOlLLCDCryugaoLMyN6c8BSTJ/I
+         0GO0bJin77B3ez6SH1jCcUBFaavqNClT/nMnhuFG9bzl8nYX/+2JLdeUEOfhV3AfM1Ka
+         sTSJa8KrMmB86rmTT6dwUqw+ab6HYYxc78Vp2bhz+FWvAaegeWHjWLXI6i4isi5xTuZ5
+         orcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zJX37WRUVbMU5pJLki7rAUhX9uBKXYYVUdVs+LildKI=;
-        b=FMVJuVstnlazQ+0BzMpfd6dj5GmnFW/grjkzfH5bpI/zgkA5aLE1vm+somh4tT0Cc9
-         Alg9XRkwliPNDtxgHPGAcEiblcnfmUKLnY8ozpSVN0oGpRtEZuwVWPECzeZoIJLdjaCR
-         T1PAwewlRa36+7f04o+hexFNYtVkK3HS3AAhpH9zW5Ugi+EnXkd/WFmzZwS7bsNKGeop
-         6tQeKC9u2hfPw3zA8t0+1ztOAiYUJLMGSv4XNzJxWwXSQ442itu3NiTowJF5wmMYOjIm
-         no9XtzZDaCBMhgi1JCPC5xpvQcW+07FEQJ/Sn/P4loj7AtR5s8XmDx1qv/J59IE9JFFg
-         XXMg==
-X-Gm-Message-State: AOAM5314GsoQkrBJVU+pM9h8s9qecKtzHV0TeRGz+qsCSO0wvoxT/T8Y
-        iIfky9trMUSAIXwH2qVHvSF14w==
-X-Google-Smtp-Source: ABdhPJwxkXH54KOfuvV0sE3T/mUrFUJnBitO40SmY2gNDM+3Db0P2007Ysnhlcqr0odkVg6XM30umg==
-X-Received: by 2002:a63:4a4c:: with SMTP id j12mr5198869pgl.115.1597509257153;
-        Sat, 15 Aug 2020 09:34:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f27sm12433808pfk.217.2020.08.15.09.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 09:34:16 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 09:34:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Message-ID: <202008150921.B70721A359@keescook>
-References: <20200815014006.GB99152@rani.riverdale.lan>
- <20200815020946.1538085-1-ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9FdBEk/PFONKRBL3ptMIHWrtdhPvwvR5FjJYMrVCgHg=;
+        b=Z/Uix5qVrF/lUlxst9LAudbpTaaSmAHsemZVUKFXzSEs1NJnTLl8u0wnqFULyPNk1h
+         aQ2fjJmaaXFbAyHW8Q4B+2p4pp65uA/FL9C6cFHK95UpnJUca/fj4mxY+5zmjuBc+nQi
+         gQv96ERrp9JRjFyZmo0kN3TcUoPgLdNu9ID0/iKMnZZ0seyxEN9zSw/7g2BcBm9mAoIz
+         o0r55GKR08oN460ufAVtpOn9NZ2Lq7RMKY0fDvdkJ/UEugGxHFzdAYgGJWDVWAvCXiQX
+         tLwKgFXUiZtVIrZno6Z0ns/Qb0CXhRsQetSe7rxqBk6hbxUCqkN0WfLkTbJrWVffxLrU
+         p7Xw==
+X-Gm-Message-State: AOAM532nyelMvqRTYjfaA+71jw77kVn7IMbgUU3L9YSllxTBl51xYo7K
+        GeSz4BJ1+TiirMaaX1xw+zNdnwDp8enGzT/He5E=
+X-Google-Smtp-Source: ABdhPJz73oqfRaOfnalXbIezKUlfuEnoM5U/cUCYFspm9g39RLuwP9rmVKplgEBHzq46yz+aGDTTKBATvPsaKi73+34=
+X-Received: by 2002:a5b:40f:: with SMTP id m15mr8401661ybp.25.1597487699922;
+ Sat, 15 Aug 2020 03:34:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200815020946.1538085-1-ndesaulniers@google.com>
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sat, 15 Aug 2020 11:34:33 +0100
+Message-ID: <CA+V-a8sjxL-rbYAti8Djj2ch2+Zf+88_wNjbZHzKVBB66aZJ0g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint properties
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
-> LLVM implemented a recent "libcall optimization" that lowers calls to
-> `sprintf(dest, "%s", str)` where the return value is used to
-> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> in parsing format strings.  Calling `sprintf` with overlapping arguments
-> was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
-> 
-> `stpcpy` is just like `strcpy` except it returns the pointer to the new
-> tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
-> one statement.
+Hi Jacopo,
 
-O_O What?
+On Mon, Aug 3, 2020 at 12:39 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document endpoint properties required for parallel interface
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+I see you already have a patch for YAML conversion for OV772x binding
+[1], if you plan to post a v2 would you be OK to pick these changes as
+part of your conversion changes ?
 
-No; this is a _terrible_ API: there is no bounds checking, there are no
-buffer sizes. Anything using the example sprintf() pattern is _already_
-wrong and must be removed from the kernel. (Yes, I realize that the
-kernel is *filled* with this bad assumption that "I'll never write more
-than PAGE_SIZE bytes to this buffer", but that's both theoretically
-wrong ("640k is enough for anybody") and has been known to be wrong in
-practice too (e.g. when suddenly your writing routine is reachable by
-splice(2) and you may not have a PAGE_SIZE buffer).
+[1] https://www.spinics.net/lists/linux-media/msg173201.html
 
-But we cannot _add_ another dangerous string API. We're already in a
-terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
-needs to be addressed up by removing the unbounded sprintf() uses. (And
-to do so without introducing bugs related to using snprintf() when
-scnprintf() is expected[4].)
+Cheers,
+Prabhakar
 
--Kees
-
-[1] https://github.com/KSPP/linux/issues/88
-[2] https://github.com/KSPP/linux/issues/89
-[3] https://github.com/KSPP/linux/issues/90
-[4] https://lore.kernel.org/lkml/20200810092100.GA42813@2f5448a72a42/
-
--- 
-Kees Cook
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> index 0b3ede5b8e6a..1f4153484717 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> @@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
+>  interface bindings defined in Documentation/devicetree/bindings/media/
+>  video-interfaces.txt.
+>
+> +Endpoint node required properties for parallel connection are:
+> +- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> +- bus-width: shall be set to <8> for 8 bits parallel bus
+> +            or <10> for 10 bits parallel bus
+> +- data-shift: shall be set to <2> for 8 bits parallel bus
+> +             (lines 9:2 are used) or <0> for 10 bits parallel bus
+> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +               (Not required for bus-type equal 6)
+> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +               (Not required for bus-type equal 6)
+> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> +              signal. (Not required for bus-type equal 6)
+> +- bus-type: data bus type. Possible values are:
+> +           5 - Parallel
+> +           6 - Bt.656
+> +
+>  Example:
+>
+>  &i2c0 {
+> --
+> 2.17.1
+>
