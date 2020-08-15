@@ -2,135 +2,77 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F143F20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5172068E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgHPBo4 (ORCPT
+        id S1729133AbgHPBth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 21:44:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33798 "EHLO huawei.com"
+        Sat, 15 Aug 2020 21:49:37 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3477 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728886AbgHPBoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 21:44:15 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0AA9DAC5A7D41AA91CDD;
-        Sat, 15 Aug 2020 17:58:34 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 15 Aug 2020 17:58:24 +0800
-From:   Yang Shen <shenyang39@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v5 05/10] crypto: hisilicon/qm - fix event queue depth to 2048
-Date:   Sat, 15 Aug 2020 17:56:12 +0800
-Message-ID: <1597485377-2678-6-git-send-email-shenyang39@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
-References: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
+        id S1726029AbgHPBtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 21:49:36 -0400
+Received: from dggeme751-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 697626213E0D19D47355;
+        Sat, 15 Aug 2020 09:48:19 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme751-chm.china.huawei.com (10.3.19.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 15 Aug 2020 09:48:18 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Sat, 15 Aug 2020 09:48:19 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: Convert to use the preferred fallthrough macro
+Thread-Topic: [PATCH] bpf: Convert to use the preferred fallthrough macro
+Thread-Index: AdZypgu/8/yBxLCEJEWOhWkYz2pnlA==
+Date:   Sat, 15 Aug 2020 01:48:18 +0000
+Message-ID: <f6ec0c0d37f54298956a63ebe1ebf234@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.176.252]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shukun Tan <tanshukun1@huawei.com>
-
-Increasing depth of 'event queue' from 1024 to 2048, which equals to twice
-depth of 'completion queue'. It will fix the easily happened 'event queue
-overflow' as using 1024 queue depth for 'event queue'.
-
-Fixes: 263c9959c937("crypto: hisilicon - add queue management driver...")
-Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
-Signed-off-by: Yang Shen <shenyang39@huawei.com>
-Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- drivers/crypto/hisilicon/qm.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index b9bff96..791a469 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -181,6 +181,7 @@
- #define QM_PCI_COMMAND_INVALID		~0
- 
- #define QM_SQE_ADDR_MASK		GENMASK(7, 0)
-+#define QM_EQ_DEPTH			(1024 * 2)
- 
- #define QM_MK_CQC_DW3_V1(hop_num, pg_sz, buf_sz, cqe_sz) \
- 	(((hop_num) << QM_CQ_HOP_NUM_SHIFT)	| \
-@@ -652,7 +653,7 @@ static void qm_work_process(struct work_struct *work)
- 		qp = qm_to_hisi_qp(qm, eqe);
- 		qm_poll_qp(qp, qm);
- 
--		if (qm->status.eq_head == QM_Q_DEPTH - 1) {
-+		if (qm->status.eq_head == QM_EQ_DEPTH - 1) {
- 			qm->status.eqc_phase = !qm->status.eqc_phase;
- 			eqe = qm->eqe;
- 			qm->status.eq_head = 0;
-@@ -661,7 +662,7 @@ static void qm_work_process(struct work_struct *work)
- 			qm->status.eq_head++;
- 		}
- 
--		if (eqe_num == QM_Q_DEPTH / 2 - 1) {
-+		if (eqe_num == QM_EQ_DEPTH / 2 - 1) {
- 			eqe_num = 0;
- 			qm_db(qm, 0, QM_DOORBELL_CMD_EQ, qm->status.eq_head, 0);
- 		}
-@@ -1371,7 +1372,13 @@ static int qm_eq_aeq_dump(struct hisi_qm *qm, const char *s,
- 		return -EINVAL;
- 
- 	ret = kstrtou32(s, 0, &xeqe_id);
--	if (ret || xeqe_id >= QM_Q_DEPTH) {
-+	if (ret)
-+		return -EINVAL;
-+
-+	if (!strcmp(name, "EQE") && xeqe_id >= QM_EQ_DEPTH) {
-+		dev_err(dev, "Please input eqe num (0-%d)", QM_EQ_DEPTH - 1);
-+		return -EINVAL;
-+	} else if (!strcmp(name, "AEQE") && xeqe_id >= QM_Q_DEPTH) {
- 		dev_err(dev, "Please input aeqe num (0-%d)", QM_Q_DEPTH - 1);
- 		return -EINVAL;
- 	}
-@@ -2285,7 +2292,7 @@ static int hisi_qm_memory_init(struct hisi_qm *qm)
- } while (0)
- 
- 	idr_init(&qm->qp_idr);
--	qm->qdma.size = QMC_ALIGN(sizeof(struct qm_eqe) * QM_Q_DEPTH) +
-+	qm->qdma.size = QMC_ALIGN(sizeof(struct qm_eqe) * QM_EQ_DEPTH) +
- 			QMC_ALIGN(sizeof(struct qm_aeqe) * QM_Q_DEPTH) +
- 			QMC_ALIGN(sizeof(struct qm_sqc) * qm->qp_num) +
- 			QMC_ALIGN(sizeof(struct qm_cqc) * qm->qp_num);
-@@ -2295,7 +2302,7 @@ static int hisi_qm_memory_init(struct hisi_qm *qm)
- 	if (!qm->qdma.va)
- 		return -ENOMEM;
- 
--	QM_INIT_BUF(qm, eqe, QM_Q_DEPTH);
-+	QM_INIT_BUF(qm, eqe, QM_EQ_DEPTH);
- 	QM_INIT_BUF(qm, aeqe, QM_Q_DEPTH);
- 	QM_INIT_BUF(qm, sqc, qm->qp_num);
- 	QM_INIT_BUF(qm, cqc, qm->qp_num);
-@@ -2465,7 +2472,7 @@ static int qm_eq_ctx_cfg(struct hisi_qm *qm)
- 	eqc->base_h = cpu_to_le32(upper_32_bits(qm->eqe_dma));
- 	if (qm->ver == QM_HW_V1)
- 		eqc->dw3 = cpu_to_le32(QM_EQE_AEQE_SIZE);
--	eqc->dw6 = cpu_to_le32((QM_Q_DEPTH - 1) | (1 << QM_EQC_PHASE_SHIFT));
-+	eqc->dw6 = cpu_to_le32((QM_EQ_DEPTH - 1) | (1 << QM_EQC_PHASE_SHIFT));
- 	ret = qm_mb(qm, QM_MB_CMD_EQC, eqc_dma, 0, 0);
- 	dma_unmap_single(dev, eqc_dma, sizeof(struct qm_eqc), DMA_TO_DEVICE);
- 	kfree(eqc);
--- 
-2.7.4
-
+QW5kcmlpIE5ha3J5aWtvIDxhbmRyaWkubmFrcnlpa29AZ21haWwuY29tPiB3cm90ZToNCk9uIEZy
+aSwgQXVnIDE0LCAyMDIwIGF0IDI6NTggQU0gTWlhb2hlIExpbiA8bGlubWlhb2hlQGh1YXdlaS5j
+b20+IHdyb3RlOg0KPj4NCj4+IENvbnZlcnQgdGhlIHVzZXMgb2YgZmFsbHRocm91Z2ggY29tbWVu
+dHMgdG8gZmFsbHRocm91Z2ggbWFjcm8uDQo+PiBAQCAtMTc5NCw3ICsxNzk0LDcgQEAgc3RhdGlj
+IGJvb2wgY2dfc29ja29wdF9pc192YWxpZF9hY2Nlc3MoaW50IG9mZiwgaW50IHNpemUsDQo+PiAg
+ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcHJvZy0+ZXhwZWN0ZWRfYXR0YWNoX3R5cGUg
+PT0NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQlBGX0NHUk9VUF9HRVRTT0NL
+T1BUOw0KPj4gICAgICAgICAgICAgICAgIGNhc2Ugb2Zmc2V0b2Yoc3RydWN0IGJwZl9zb2Nrb3B0
+LCBvcHRuYW1lKToNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIC8qIGZhbGx0aHJvdWdoICov
+DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBmYWxsdGhyb3VnaDsNCj4NCj50aGlzIGZhbGx0
+aHJvdWdoIGlzIG5vdCBldmVudCBuZWNlc3NhcnksIGxldCdzIGRyb3AgaXQgaW5zdGVhZD8NCg0K
+V2lsbCBkby4gTWFueSB0aGFua3MuDQoNCj4NCj4+ICAgICAgICAgICAgICAgICBjYXNlIG9mZnNl
+dG9mKHN0cnVjdCBicGZfc29ja29wdCwgbGV2ZWwpOg0KPj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgaWYgKHNpemUgIT0gc2l6ZV9kZWZhdWx0KQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZXR1cm4gZmFsc2U7DQo+DQo+IFsuLi5dDQo=
