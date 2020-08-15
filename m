@@ -2,199 +2,219 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3799FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B1A20657
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hVfUEGnX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I0M6NcjP"
+	by mail.kernel.org (Postfix) with ESMTP id 20C7720657
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgHOW1E (ORCPT
+        id S1729084AbgHOW1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:27:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgHOW1E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:27:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9743C061786;
-        Sat, 15 Aug 2020 15:27:03 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 22:26:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597530421;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wypv7MENFaReKZ9UbFiYXOK6G1uQ5RrEzeXJG9GwfNc=;
-        b=hVfUEGnXH1Vx+e9LSsuRyD5aNi2ePl5cXr7NaKCHO3vyMPqnXb0RfWVw1cAi73oZJBRe0z
-        B1ZUbcRsOq/g8tBRVwV5leJumdmZh7UEmJU044l4UPgNu9YwuFDg1BHuPS+nHdjZZuWoue
-        XWy0m7l8L/bP+B/Lv1u9aNP7UM7Jf5JzlKrTXH/Udt94hXrmeh8iEDvzAkdKiJPxqxGWsn
-        WYj+fZMCHYEq4LoskH33kDaMg7NXL3KYN6+Qk/v7hY1XeP/jyuMinUd6Md6f4Dl4LhyIS1
-        w1nAii5/mM0ZguwJBGY7vJxD96aANOenAWZf5qR1u3iqJR7gOV91TUH4s/878g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597530421;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wypv7MENFaReKZ9UbFiYXOK6G1uQ5RrEzeXJG9GwfNc=;
-        b=I0M6NcjPBU+YGkqeeSR9P9QzXWWi4V/Ji8XERV4JuauQKoGx2GDIvrjiHWUWIkN3zbD8u9
-        PjNwayXtFDhlvxCA==
-From:   "tip-bot2 for Vaibhav Shankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel/uncore: Add BW counters for GT, IA
- and IO breakdown
-Cc:     Vaibhav Shankar <vaibhav.shankar@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200814022234.23605-1-vaibhav.shankar@intel.com>
-References: <20200814022234.23605-1-vaibhav.shankar@intel.com>
+        Sat, 15 Aug 2020 18:27:20 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:53992 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728091AbgHOW1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:27:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id F0763FB03;
+        Sat, 15 Aug 2020 12:40:24 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OX_34ocNZaCv; Sat, 15 Aug 2020 12:40:23 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 60AF4457CC; Sat, 15 Aug 2020 12:40:22 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 12:40:22 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200815104022.GA5641@bogon.m.sigxcpu.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+ <20200815100230.GA1002374@ravnborg.org>
 MIME-Version: 1.0
-Message-ID: <159753041851.3192.7787654120960182179.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815100230.GA1002374@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Hi Sam,
+On Sat, Aug 15, 2020 at 12:02:30PM +0200, Sam Ravnborg wrote:
+> Hi Guido.
+> 
+> > +static int mantix_probe(struct mipi_dsi_device *dsi)
+> > +{
+> > +	struct device *dev = &dsi->dev;
+> > +	struct mantix *ctx;
+> > +	int ret;
+> > +
+> > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > +	if (!ctx)
+> > +		return -ENOMEM;
+> > +
+> > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > +	if (IS_ERR(ctx->reset_gpio)) {
+> > +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> > +		return PTR_ERR(ctx->reset_gpio);
+> > +	}
+> > +
+> > +	mipi_dsi_set_drvdata(dsi, ctx);
+> > +	ctx->dev = dev;
+> > +
+> > +	dsi->lanes = 4;
+> > +	dsi->format = MIPI_DSI_FMT_RGB888;
+> > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> > +
+> > +	ctx->avdd = devm_regulator_get(dev, "avdd");
+> > +	if (IS_ERR(ctx->avdd)) {
+> > +		ret = PTR_ERR(ctx->avdd);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			DRM_DEV_ERROR(dev,
+> > +				      "Failed to request avdd regulator: %d\n",
+> > +				      ret);
+> > +		return ret;
+> > +	}
+> 
+> Consider to use the recently added dev_err_probe() here and below.
+> Note: Not part of drm-misc-next yet - but hopefully after -rc1
+> when a backmerge is done.
 
-Commit-ID:     24633d901ea44fe99bc9a2d01a3881fa097b78b3
-Gitweb:        https://git.kernel.org/tip/24633d901ea44fe99bc9a2d01a3881fa097b78b3
-Author:        Vaibhav Shankar <vaibhav.shankar@intel.com>
-AuthorDate:    Thu, 13 Aug 2020 19:22:34 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 15 Aug 2020 20:24:18 +02:00
+In fact I did decided against it since i was told that missing dev_* and
+DRM_* logging shouldn't be done. So is that o.k. nowadays?
+Cheers,
+ -- Guido
 
-perf/x86/intel/uncore: Add BW counters for GT, IA and IO breakdown
-
-Linux only has support to read total DDR reads and writes. Here we
-add support to enable bandwidth breakdown-GT, IA and IO. Breakdown
-of BW is important to debug and optimize memory access. This can also
-be used for telemetry and improving the system software.The offsets for
-GT, IA and IO are added and these free running counters can be accessed
-via MMIO space.
-
-The BW breakdown can be measured using the following cmd:
-
-  perf stat -e uncore_imc/gt_requests/,uncore_imc/ia_requests/,uncore_imc/io_requests/
-
-             30.57 MiB  uncore_imc/gt_requests/
-           1346.13 MiB  uncore_imc/ia_requests/
-            190.97 MiB  uncore_imc/io_requests/
-
-       5.984572733 seconds time elapsed
-
-     BW/s = <gt,ia,io>_requests/time elapsed
-
-Signed-off-by: Vaibhav Shankar <vaibhav.shankar@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200814022234.23605-1-vaibhav.shankar@intel.com
----
- arch/x86/events/intel/uncore_snb.c | 52 +++++++++++++++++++++++++++--
- 1 file changed, 49 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index cb94ba8..6a4ca27 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -390,6 +390,18 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
- 	INTEL_UNCORE_EVENT_DESC(data_writes.scale, "6.103515625e-5"),
- 	INTEL_UNCORE_EVENT_DESC(data_writes.unit, "MiB"),
- 
-+	INTEL_UNCORE_EVENT_DESC(gt_requests, "event=0x03"),
-+	INTEL_UNCORE_EVENT_DESC(gt_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(gt_requests.unit, "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(ia_requests, "event=0x04"),
-+	INTEL_UNCORE_EVENT_DESC(ia_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(ia_requests.unit, "MiB"),
-+
-+	INTEL_UNCORE_EVENT_DESC(io_requests, "event=0x05"),
-+	INTEL_UNCORE_EVENT_DESC(io_requests.scale, "6.103515625e-5"),
-+	INTEL_UNCORE_EVENT_DESC(io_requests.unit, "MiB"),
-+
- 	{ /* end: all zeroes */ },
- };
- 
-@@ -405,13 +417,35 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
- #define SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE	0x5054
- #define SNB_UNCORE_PCI_IMC_CTR_BASE		SNB_UNCORE_PCI_IMC_DATA_READS_BASE
- 
-+/* BW break down- legacy counters */
-+#define SNB_UNCORE_PCI_IMC_GT_REQUESTS		0x3
-+#define SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE	0x5040
-+#define SNB_UNCORE_PCI_IMC_IA_REQUESTS		0x4
-+#define SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE	0x5044
-+#define SNB_UNCORE_PCI_IMC_IO_REQUESTS		0x5
-+#define SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE	0x5048
-+
- enum perf_snb_uncore_imc_freerunning_types {
--	SNB_PCI_UNCORE_IMC_DATA		= 0,
-+	SNB_PCI_UNCORE_IMC_DATA_READS		= 0,
-+	SNB_PCI_UNCORE_IMC_DATA_WRITES,
-+	SNB_PCI_UNCORE_IMC_GT_REQUESTS,
-+	SNB_PCI_UNCORE_IMC_IA_REQUESTS,
-+	SNB_PCI_UNCORE_IMC_IO_REQUESTS,
-+
- 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
- };
- 
- static struct freerunning_counters snb_uncore_imc_freerunning[] = {
--	[SNB_PCI_UNCORE_IMC_DATA]     = { SNB_UNCORE_PCI_IMC_DATA_READS_BASE, 0x4, 0x0, 2, 32 },
-+	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_GT_REQUESTS]	= { SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_IA_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
-+	[SNB_PCI_UNCORE_IMC_IO_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE,
-+							0x0, 0x0, 1, 32 },
- };
- 
- static struct attribute *snb_uncore_imc_formats_attr[] = {
-@@ -525,6 +559,18 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
- 		base = SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE;
- 		idx = UNCORE_PMC_IDX_FREERUNNING;
- 		break;
-+	case SNB_UNCORE_PCI_IMC_GT_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
-+	case SNB_UNCORE_PCI_IMC_IA_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
-+	case SNB_UNCORE_PCI_IMC_IO_REQUESTS:
-+		base = SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE;
-+		idx = UNCORE_PMC_IDX_FREERUNNING;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -598,7 +644,7 @@ static struct intel_uncore_ops snb_uncore_imc_ops = {
- 
- static struct intel_uncore_type snb_uncore_imc = {
- 	.name		= "imc",
--	.num_counters   = 2,
-+	.num_counters   = 5,
- 	.num_boxes	= 1,
- 	.num_freerunning_types	= SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
- 	.mmio_map_size	= SNB_UNCORE_PCI_IMC_MAP_SIZE,
+> 
+> 	Sam
+> 
+> > +	ctx->avee = devm_regulator_get(dev, "avee");
+> > +	if (IS_ERR(ctx->avee)) {
+> > +		ret = PTR_ERR(ctx->avee);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			DRM_DEV_ERROR(dev,
+> > +				      "Failed to request avee regulator: %d\n",
+> > +				      ret);
+> > +		return ret;
+> > +	}
+> > +	ctx->vddi = devm_regulator_get(dev, "vddi");
+> > +	if (IS_ERR(ctx->vddi)) {
+> > +		ret = PTR_ERR(ctx->vddi);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			DRM_DEV_ERROR(dev,
+> > +				      "Failed to request vddi regulator: %d\n",
+> > +				      ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	drm_panel_init(&ctx->panel, dev, &mantix_drm_funcs,
+> > +		       DRM_MODE_CONNECTOR_DSI);
+> > +
+> > +	ret = drm_panel_of_backlight(&ctx->panel);
+> > +	if (ret)
+> > +		return ret;
+> > +	drm_panel_add(&ctx->panel);
+> > +
+> > +	ret = mipi_dsi_attach(dsi);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev,
+> > +			      "mipi_dsi_attach failed (%d). Is host ready?\n",
+> > +			      ret);
+> > +		drm_panel_remove(&ctx->panel);
+> > +		return ret;
+> > +	}
+> > +
+> > +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
+> > +		     default_mode.hdisplay, default_mode.vdisplay,
+> > +		     drm_mode_vrefresh(&default_mode),
+> > +		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void mantix_shutdown(struct mipi_dsi_device *dsi)
+> > +{
+> > +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
+> > +	int ret;
+> > +
+> > +	ret = drm_panel_unprepare(&ctx->panel);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
+> > +			      ret);
+> > +
+> > +	ret = drm_panel_disable(&ctx->panel);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
+> > +			      ret);
+> > +}
+> > +
+> > +static int mantix_remove(struct mipi_dsi_device *dsi)
+> > +{
+> > +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
+> > +	int ret;
+> > +
+> > +	mantix_shutdown(dsi);
+> > +
+> > +	ret = mipi_dsi_detach(dsi);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
+> > +			      ret);
+> > +
+> > +	drm_panel_remove(&ctx->panel);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id mantix_of_match[] = {
+> > +	{ .compatible = "mantix,mlaf057we51-x" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mantix_of_match);
+> > +
+> > +static struct mipi_dsi_driver mantix_driver = {
+> > +	.probe	= mantix_probe,
+> > +	.remove = mantix_remove,
+> > +	.shutdown = mantix_shutdown,
+> > +	.driver = {
+> > +		.name = DRV_NAME,
+> > +		.of_match_table = mantix_of_match,
+> > +	},
+> > +};
+> > +module_mipi_dsi_driver(mantix_driver);
+> > +
+> > +MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
+> > +MODULE_DESCRIPTION("DRM driver for Mantix MLAF057WE51-X MIPI DSI panel");
+> > +MODULE_LICENSE("GPL v2");
+> > -- 
+> > 2.26.2
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
