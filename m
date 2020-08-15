@@ -2,172 +2,260 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF00AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2D1205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529211;
-	bh=75sLDgS74qU0RUSowE4Y/141LDn4H61PM0ZxcV/8jpU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZnxSXGa1GaphCjUMQEvsz+8rWbiPhPMcwm7WPSbTtHSyP95a7SXXN21y/OBZlY8sG
-	 dGoCRiDztaBiN6Qmu+p026hOUPwkCqylj2DXjjLuhKat7s7YHZm1HfsUCgcFZHfAVa
-	 AVxXZEmK1hRqOj1X2oj9zlB2RxP2rIMItfi46kUI=
+	by mail.kernel.org (Postfix) with ESMTP id D8FC0205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DBYuSEfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgHOWGu (ORCPT
+        id S1730002AbgHOWGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
+        Sat, 15 Aug 2020 18:06:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbgHOVus (ORCPT
+        with ESMTP id S1728390AbgHOVus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C438C06134A
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:59:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i10so11762144ljn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:59:24 -0700 (PDT)
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A140C061379
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id l13so5230015qvt.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5V/+PBSBblwToTAxIaWCU/QUA1O6ispz0B5966qT9o=;
-        b=GViAih0/p9oLbkxsH0zRUETk2BWc6utJvJ2zieuBFpItMZ5Q/d+XoOIJE3UmtmDW9d
-         PfB7oAxIVJBUbDF/z38G7nHCI1AuDI/Wa5eZncLuwEofl1Tgh5gbUZms7q6RUinORQm5
-         atVm6Nom3LD276TzkMMR7WITDnfy6UtyUb83E=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sz9J9n5LJAX7KClHXQuFpMY4XStGHjRFIOCICHV1+xA=;
+        b=DBYuSEfaGrHBZ6Ox30YL3/iF80Lbym84DzzCTT44BqXZbCQrCWIHiVVstkjiPp5D3D
+         0Yc0zxknsWLouhfVyupvLylPPu3mlSvCJ5Bk3JVOHGtboT8kJHczbvJJyeBgQgbt2mKm
+         OvZouILkJD+chgktd8mY35fv05p4iyQsNd3Qw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5V/+PBSBblwToTAxIaWCU/QUA1O6ispz0B5966qT9o=;
-        b=AwPukdKC1ppzjZpojv7SSk88WNEQGgy1xru4W7SQuKiOZSUqqh6leMJWoRGt8frPxM
-         gQZH1cogGS3li7GC9HhwYC7KGqbGcz6GKpEKJ1diwP3OERuV3PoLGQLth1eYMJtl9Iov
-         dfYwVDtuLcF0uYrNDwqN2adfnBOI75VzH5sXCbdMYCd1ul9fyKrK6/7QfceT/8QmUy2+
-         V7phEqzvdIURCkZc3J0GFJ3evF35PvfSScNVt38Q71+p+ScnkBj6nP4JzJ9oDg+ZTBMh
-         HDtY4S56VZ8lGNjGdfFBDA9ItiB2ZUjJkkVYu6SA9DZXO0ZXyH8SZNtKjYNYW7R0avMv
-         fl0w==
-X-Gm-Message-State: AOAM5308VubFkMatdYr3dZcvJekZTK3mYkrPlnB1a5d0pzAy7PAnySjG
-        L9gIEZDtgqg6V9LP/cE/7PtLSqQ1ia8bSg==
-X-Google-Smtp-Source: ABdhPJwjDPqkG3kG5xYG2PRhv/OE0UngTipyQDD2/ehogRv9G97VfCOD+Ki3yDSpbncqfoGbPzc8iQ==
-X-Received: by 2002:a2e:3019:: with SMTP id w25mr2283575ljw.291.1597453162455;
-        Fri, 14 Aug 2020 17:59:22 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id v9sm2057310ljd.125.2020.08.14.17.59.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 17:59:21 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id i80so5669680lfi.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:59:21 -0700 (PDT)
-X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr2382329lfp.10.1597453160630;
- Fri, 14 Aug 2020 17:59:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sz9J9n5LJAX7KClHXQuFpMY4XStGHjRFIOCICHV1+xA=;
+        b=gdI9z1vOdBqP2GNy5V2RKiZUK/rZOom8u4wjZ4KqYW/nGe8KRfqNr+NrfQo4s71PXX
+         anf4vx4M0clpffg2XTn1vjGYHLihomOk6CQgvQobbMUnhWjv3FE0q6bLMfkWpIreITeA
+         omQo/bvq7KHWoG22hJHyfjkl/MatXOwb/uyex51C9y93Z1wlkRPgJWHIfUWbgC7PfXQQ
+         z9KDTqF7DGUzW0B7cyQyKqGmopsNY9W7wgMMucDEkLzHMAacpNPGPAFi8SMvvAcHDGyM
+         bj8BVO56DqqBSPcN5EFVy6b00KOZFJm/orRJdVQ+tTh8gaVjig6OYX8lYzotkXBb+NaE
+         WTHw==
+X-Gm-Message-State: AOAM533aYd99z0NINb+AiRRPfpm3I1bbz529LUdkN2Lwyr4V5fuRatxm
+        6vMHuciM9KQiLgTAz+zVrku5MqF5EmLHJA==
+X-Google-Smtp-Source: ABdhPJyg1Gs1MEeJSpdLbF1HcBYbQH7Ao2UZcesb0jCMGvIW5YPYA4FBd8gsxBOrIUvIyEV3Hz58NQ==
+X-Received: by 2002:a0c:b310:: with SMTP id s16mr5320090qve.5.1597461571554;
+        Fri, 14 Aug 2020 20:19:31 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 20:19:31 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        fweisbec@gmail.com, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH RFC 08/12] cpumask: Introduce a new iterator for_each_cpu_wrap_or
+Date:   Fri, 14 Aug 2020 23:19:04 -0400
+Message-Id: <20200815031908.1015049-9-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
+References: <20200815031908.1015049-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <alpine.LSU.2.11.2008122005240.11996@eggly.anvils>
- <CAHk-=whYLHtbeF6BFmoiik9PTjP2+pnpWxXLE9f0ccnT0LAd5A@mail.gmail.com>
- <20200814054241.GA719@lst.de> <CAHk-=wifNX6U28sjPay+1ZJ5BmxRG8Bac7W1sP_Ft1yTqLj+GA@mail.gmail.com>
- <alpine.LSU.2.11.2008141642260.18762@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008141642260.18762@eggly.anvils>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 14 Aug 2020 17:59:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whw3QcceKCdYS2ktCPQ96m8Ysyek+w4ny0ygvy7z-_2rw@mail.gmail.com>
-Message-ID: <CAHk-=whw3QcceKCdYS2ktCPQ96m8Ysyek+w4ny0ygvy7z-_2rw@mail.gmail.com>
-Subject: Re: [PATCH] dma-debug: fix debug_dma_assert_idle(), use rcu_read_lock()
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 5:26 PM Hugh Dickins <hughd@google.com> wrote:
->
-> We used to rely on page count there, and on trylock_page() only; but
-> there was at least one user whose app went wrong when occasionally we
-> COWed the page, just because something else momentarily took a reference
-> to it, or locked it.  Around 2006, bug report from 2004: I did look up
-> the history a week ago, but was interrupted before taking notes.
+From: Vineeth Pillai <viremana@linux.microsoft.com>
 
-I actually think you may be talking about the exact problem that that
-debug patch from Dan was originally created for:
+Hotplug fixes to core-scheduling require a new cpumask iterator which iterates
+through all online cpus in both the given cpumasks. This patch introduces it.
 
-  0abdd7a81b7e dma-debug: introduce debug_dma_assert_idle()
-  77873803363c net_dma: mark broken
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ include/linux/cpumask.h | 42 ++++++++++++++++++++++++++++++++
+ lib/cpumask.c           | 53 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+)
 
-and your memory sounds exactly like that net_dma case (and the timing
-matches roughly too - the NET_DMA code was merged in 2006, but I think
-people had been playing trial games with it before that).
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index f0d895d6ac39..03e8c57c6ca6 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -207,6 +207,10 @@ static inline int cpumask_any_and_distribute(const struct cpumask *src1p,
+ 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)(start))
+ #define for_each_cpu_and(cpu, mask1, mask2)	\
+ 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
++#define for_each_cpu_or(cpu, mask1, mask2)	\
++	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
++#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)	\
++	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2, (void)(start))
+ #else
+ /**
+  * cpumask_first - get the first cpu in a cpumask
+@@ -248,6 +252,7 @@ static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
+ }
+ 
+ int cpumask_next_and(int n, const struct cpumask *, const struct cpumask *);
++int cpumask_next_or(int n, const struct cpumask *, const struct cpumask *);
+ int cpumask_any_but(const struct cpumask *mask, unsigned int cpu);
+ unsigned int cpumask_local_spread(unsigned int i, int node);
+ int cpumask_any_and_distribute(const struct cpumask *src1p,
+@@ -278,6 +283,8 @@ int cpumask_any_and_distribute(const struct cpumask *src1p,
+ 		(cpu) < nr_cpu_ids;)
+ 
+ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
++extern int cpumask_next_wrap_or(int n, const struct cpumask *mask1,
++				 const struct cpumask *mask2, int start, bool wrap);
+ 
+ /**
+  * for_each_cpu_wrap - iterate over every cpu in a mask, starting at a specified location
+@@ -294,6 +301,22 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
+ 	     (cpu) < nr_cpumask_bits;						\
+ 	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
+ 
++/**
++ * for_each_cpu_wrap_or - iterate over every cpu in both masks, starting at a specified location
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask1: the first cpumask pointer
++ * @mask2: the second cpumask pointer
++ * @start: the start location
++ *
++ * The implementation does not assume any bit both masks are set (including @start).
++ *
++ * After the loop, cpu is >= nr_cpu_ids.
++ */
++#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)					\
++	for ((cpu) = cpumask_next_wrap_or((start)-1, (mask1), (mask2), (start), false);	\
++	     (cpu) < nr_cpumask_bits;						\
++	     (cpu) = cpumask_next_wrap_or((cpu), (mask1), (mask2), (start), true))
++
+ /**
+  * for_each_cpu_and - iterate over every cpu in both masks
+  * @cpu: the (optionally unsigned) integer iterator
+@@ -312,6 +335,25 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
+ 	for ((cpu) = -1;						\
+ 		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
+ 		(cpu) < nr_cpu_ids;)
++
++/**
++ * for_each_cpu_or - iterate over every cpu in both masks
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask1: the first cpumask pointer
++ * @mask2: the second cpumask pointer
++ *
++ * This saves a temporary CPU mask in many places.  It is equivalent to:
++ *	struct cpumask tmp;
++ *	cpumask_and(&tmp, &mask1, &mask2);
++ *	for_each_cpu(cpu, &tmp)
++ *		...
++ *
++ * After the loop, cpu is >= nr_cpu_ids.
++ */
++#define for_each_cpu_or(cpu, mask1, mask2)				\
++	for ((cpu) = -1;						\
++		(cpu) = cpumask_next_or((cpu), (mask1), (mask2)),	\
++		(cpu) < nr_cpu_ids;)
+ #endif /* SMP */
+ 
+ #define CPU_BITS_NONE						\
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index fb22fb266f93..0a5cdbd4eb6a 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -42,6 +42,25 @@ int cpumask_next_and(int n, const struct cpumask *src1p,
+ }
+ EXPORT_SYMBOL(cpumask_next_and);
+ 
++/**
++ * cpumask_next_or - get the next cpu in *src1p | *src2p
++ * @n: the cpu prior to the place to search (ie. return will be > @n)
++ * @src1p: the first cpumask pointer
++ * @src2p: the second cpumask pointer
++ *
++ * Returns >= nr_cpu_ids if no further cpus set in both.
++ */
++int cpumask_next_or(int n, const struct cpumask *src1p,
++		    const struct cpumask *src2p)
++{
++	/* -1 is a legal arg here. */
++	if (n != -1)
++		cpumask_check(n);
++	return find_next_or_bit(cpumask_bits(src1p), cpumask_bits(src2p),
++		nr_cpumask_bits, n + 1);
++}
++EXPORT_SYMBOL(cpumask_next_or);
++
+ /**
+  * cpumask_any_but - return a "random" in a cpumask, but not this one.
+  * @mask: the cpumask to search
+@@ -94,6 +113,40 @@ int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
+ }
+ EXPORT_SYMBOL(cpumask_next_wrap);
+ 
++/**
++ * cpumask_next_wrap_or - helper to implement for_each_cpu_wrap_or
++ * @n: the cpu prior to the place to search
++ * @mask1: first cpumask pointer
++ * @mask2: second cpumask pointer
++ * @start: the start point of the iteration
++ * @wrap: assume @n crossing @start terminates the iteration
++ *
++ * Returns >= nr_cpu_ids on completion
++ *
++ * Note: the @wrap argument is required for the start condition when
++ * we cannot assume @start is set in @mask.
++ */
++int cpumask_next_wrap_or(int n, const struct cpumask *mask1, const struct cpumask *mask2,
++			   int start, bool wrap)
++{
++	int next;
++
++again:
++	next = cpumask_next_or(n, mask1, mask2);
++
++	if (wrap && n < start && next >= start) {
++		return nr_cpumask_bits;
++
++	} else if (next >= nr_cpumask_bits) {
++		wrap = true;
++		n = -1;
++		goto again;
++	}
++
++	return next;
++}
++EXPORT_SYMBOL(cpumask_next_wrap_or);
++
+ /* These are not inline because of header tangles. */
+ #ifdef CONFIG_CPUMASK_OFFSTACK
+ /**
+-- 
+2.28.0.220.ged08abb693-goog
 
-IOW, net_dma was horribly broken, and just couldn't deal with COW
-because it did things wrong.
-
-The thing is, doing extra COW's really shouldn't matter in _any_
-half-way correct situation. There's a few cases:
-
- - user space writing to it, so we COW.
-
-   This is the "simple" case that is obvious and we've always done the
-same thing. User space will get the new copy, and there's no possible
-situation when that can be wrong.
-
- - get_user_pages() for reading.
-
-   This is the one we actually used to get wrong, and when another
-user *didn't* cow, the data that was read might not match what the
-original get_uiser_pages() case expected.
-
-    But in this case, the bug only happened when we didn't cow
-aggressively enough.
-
- - get_user_pages() for writing
-
-   This is another 'simple" case, because it does the COW at
-get_user_pages() time and gets it's own copy (which is also installed
-in the thread that does the GUP, of course, so a subsequent fork an
-danother write can obviously cause *further* COW action).
-
-But in no case should an extra COW matter. Except if somebody uses
-get_user_pages() to write to the page, and the COW "hides" that write
-by giving a new copy to whoever expected to see it, but that's exactly
-the case that Dan's patch was supposed to notice.
-
-And since it never triggered outside of that invalid net_dma case, I
-don't think any other case really ever existed.
-
-Yes, I can well imagine that some people loved the concept of that TCP
-receive copy offload, but it really was broken, and was removed
-entirely by Dan in commit 7bced397510a ("net_dma: simple removal") a
-year after being marked broken (the author date makes it look like
-it's just a couple of weeks after being marked broken, but the commit
-date for that removal is September 2014).
-
-So I don't think that the trylock and checking page counts is a
-correctness issue.
-
-It had better not be, because anybody that writes to a shared-cow page
- without breaking COW is simply broken.
-
-No, I really think that the real worry about doing more aggressive
-copying is that it doesn't steal back the KSM page or the swap cache
-page, so it will leave those pages around, and while they should then
-be really easy for the VM to reclaim, I really worry that we have a
-couple of decades of VM reclaim tuning with that swap cache reuse
-behavior (KSM, not so much).
-
-And while it works fine on my machine, I currently have 40GB or RAM
-free, because honestly, the stuff I do doesn't need all that much
-memory, and I ridiculously overspecced my new machine RAM'wise. So
-nothing I will do would show any problems.
-
-                Linus
