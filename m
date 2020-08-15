@@ -2,367 +2,150 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F130DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C7D23133
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnRWdG1m"
+	by mail.kernel.org (Postfix) with ESMTP id D8D8323133
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgHOVdG (ORCPT
+        id S1727938AbgHOVdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:33:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48361 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727097AbgHOVdF (ORCPT
+        Sat, 15 Aug 2020 17:33:23 -0400
+Received: from smtprelay0071.hostedemail.com ([216.40.44.71]:33962 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726641AbgHOVdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:33:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597527181;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q1AwCIOy834J5LQ7HjcvtnvU9bzLkbyKnbei9M95+JM=;
-        b=UnRWdG1mOSpMFiQArZcqoqf6A8R97k95MnE54id0tvLzRvwtmeO3Bq5/EjCefm4LbE4UnI
-        OydqmMNOxgRG4Rn5h4mvzgjqXSgV0kZLScAGzGJJz65pyibdCVUCOSdecS65fnf2Yu0b/4
-        hoyLkYJ1zKrRId26XfRNPwuvkq1NgBw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-gxzOrCTnNYy5WmgF7hv9_g-1; Sat, 15 Aug 2020 12:30:54 -0400
-X-MC-Unique: gxzOrCTnNYy5WmgF7hv9_g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC2B61DDE1;
-        Sat, 15 Aug 2020 16:30:32 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B43375D9CA;
-        Sat, 15 Aug 2020 16:30:22 +0000 (UTC)
-Subject: Re: [PATCH v6 07/15] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
- <1595917664-33276-8-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <c60dd620-8cc1-6ecb-8d88-ca5c8d724c7e@redhat.com>
-Date:   Sat, 15 Aug 2020 18:30:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 15 Aug 2020 17:33:23 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 342A318017514;
+        Sat, 15 Aug 2020 21:24:03 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BFB961800F594;
+        Sat, 15 Aug 2020 21:24:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wish32_1e17df327008
+X-Filterd-Recvd-Size: 5107
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 15 Aug 2020 21:23:59 +0000 (UTC)
+Message-ID: <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
+Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
+From:   Joe Perches <joe@perches.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?ISO-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Date:   Sat, 15 Aug 2020 14:23:58 -0700
+In-Reply-To: <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
+References: <20200815014006.GB99152@rani.riverdale.lan>
+         <20200815020946.1538085-1-ndesaulniers@google.com>
+         <202008150921.B70721A359@keescook>
+         <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <1595917664-33276-8-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
+On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
+> On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
+> > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
+> > > LLVM implemented a recent "libcall optimization" that lowers calls to
+> > > `sprintf(dest, "%s", str)` where the return value is used to
+> > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> > > in parsing format strings.  Calling `sprintf` with overlapping arguments
+> > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
+> > > 
+> > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
+> > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
+> > > one statement.
+> > 
+> > O_O What?
+> > 
+> > No; this is a _terrible_ API: there is no bounds checking, there are no
+> > buffer sizes. Anything using the example sprintf() pattern is _already_
+> > wrong and must be removed from the kernel. (Yes, I realize that the
+> > kernel is *filled* with this bad assumption that "I'll never write more
+> > than PAGE_SIZE bytes to this buffer", but that's both theoretically
+> > wrong ("640k is enough for anybody") and has been known to be wrong in
+> > practice too (e.g. when suddenly your writing routine is reachable by
+> > splice(2) and you may not have a PAGE_SIZE buffer).
+> > 
+> > But we cannot _add_ another dangerous string API. We're already in a
+> > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
+> > needs to be addressed up by removing the unbounded sprintf() uses. (And
+> > to do so without introducing bugs related to using snprintf() when
+> > scnprintf() is expected[4].)
+> 
+> Well, everything (-next, mainline, stable) is broken right now (with
+> ToT Clang) without providing this symbol.  I'm not going to go clean
+> the entire kernel's use of sprintf to get our CI back to being green.
 
-On 7/28/20 8:27 AM, Liu Yi L wrote:
-> This patch allows userspace to request PASID allocation/free, e.g. when
-> serving the request from the guest.
-> 
-> PASIDs that are not freed by userspace are automatically freed when the
-> IOASID set is destroyed when process exits.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> v5 -> v6:
-> *) address comments from Eric against v5. remove the alloc/free helper.
-> 
-> v4 -> v5:
-> *) address comments from Eric Auger.
-> *) the comments for the PASID_FREE request is addressed in patch 5/15 of
->    this series.
-> 
-> v3 -> v4:
-> *) address comments from v3, except the below comment against the range
->    of PASID_FREE request. needs more help on it.
->     "> +if (req.range.min > req.range.max)
-> 
->      Is it exploitable that a user can spin the kernel for a long time in
->      the case of a free by calling this with [0, MAX_UINT] regardless of
->      their actual allocations?"
->     https://lore.kernel.org/linux-iommu/20200702151832.048b44d1@x1.home/
-> 
-> v1 -> v2:
-> *) move the vfio_mm related code to be a seprate module
-> *) use a single structure for alloc/free, could support a range of PASIDs
-> *) fetch vfio_mm at group_attach time instead of at iommu driver open time
-> ---
->  drivers/vfio/Kconfig            |  1 +
->  drivers/vfio/vfio_iommu_type1.c | 69 +++++++++++++++++++++++++++++++++++++++++
->  drivers/vfio/vfio_pasid.c       | 10 ++++++
->  include/linux/vfio.h            |  6 ++++
->  include/uapi/linux/vfio.h       | 37 ++++++++++++++++++++++
->  5 files changed, 123 insertions(+)
-> 
-> diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-> index 3d8a108..95d90c6 100644
-> --- a/drivers/vfio/Kconfig
-> +++ b/drivers/vfio/Kconfig
-> @@ -2,6 +2,7 @@
->  config VFIO_IOMMU_TYPE1
->  	tristate
->  	depends on VFIO
-> +	select VFIO_PASID if (X86)
->  	default n
->  
->  config VFIO_IOMMU_SPAPR_TCE
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 18ff0c3..ea89c7c 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -76,6 +76,7 @@ struct vfio_iommu {
->  	bool				dirty_page_tracking;
->  	bool				pinned_page_dirty_scope;
->  	struct iommu_nesting_info	*nesting_info;
-> +	struct vfio_mm			*vmm;
->  };
->  
->  struct vfio_domain {
-> @@ -1937,6 +1938,11 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
->  
->  static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
->  {
-> +	if (iommu->vmm) {
-> +		vfio_mm_put(iommu->vmm);
-> +		iommu->vmm = NULL;
-> +	}
-> +
->  	kfree(iommu->nesting_info);
->  	iommu->nesting_info = NULL;
->  }
-> @@ -2071,6 +2077,26 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					    iommu->nesting_info);
->  		if (ret)
->  			goto out_detach;
-> +
-> +		if (iommu->nesting_info->features &
-> +					IOMMU_NESTING_FEAT_SYSWIDE_PASID) {
-> +			struct vfio_mm *vmm;
-> +			int sid;
-> +
-> +			vmm = vfio_mm_get_from_task(current);
-> +			if (IS_ERR(vmm)) {
-> +				ret = PTR_ERR(vmm);
-> +				goto out_detach;
-> +			}
-> +			iommu->vmm = vmm;
-> +
-> +			sid = vfio_mm_ioasid_sid(vmm);
-> +			ret = iommu_domain_set_attr(domain->domain,
-> +						    DOMAIN_ATTR_IOASID_SID,
-> +						    &sid);
-> +			if (ret)
-> +				goto out_detach;
-> +		}
->  	}
->  
->  	/* Get aperture info */
-> @@ -2859,6 +2885,47 @@ static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
->  	return -EINVAL;
->  }
->  
-> +static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
-> +					  unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_pasid_request req;
-> +	unsigned long minsz;
-> +	int ret;
-> +
-> +	minsz = offsetofend(struct vfio_iommu_type1_pasid_request, range);
-> +
-> +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> +		return -EFAULT;
-> +
-> +	if (req.argsz < minsz || (req.flags & ~VFIO_PASID_REQUEST_MASK))
-> +		return -EINVAL;
-> +
-> +	if (req.range.min > req.range.max)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&iommu->lock);
-> +	if (!iommu->vmm) {
-> +		mutex_unlock(&iommu->lock);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	switch (req.flags & VFIO_PASID_REQUEST_MASK) {
-> +	case VFIO_IOMMU_FLAG_ALLOC_PASID:
-> +		ret = vfio_pasid_alloc(iommu->vmm, req.range.min,
-> +				       req.range.max);
-> +		break;
-> +	case VFIO_IOMMU_FLAG_FREE_PASID:
-> +		vfio_pasid_free_range(iommu->vmm, req.range.min,
-> +				      req.range.max);
-> +		ret = 0;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -2875,6 +2942,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  		return vfio_iommu_type1_unmap_dma(iommu, arg);
->  	case VFIO_IOMMU_DIRTY_PAGES:
->  		return vfio_iommu_type1_dirty_pages(iommu, arg);
-> +	case VFIO_IOMMU_PASID_REQUEST:
-> +		return vfio_iommu_type1_pasid_request(iommu, arg);
->  	default:
->  		return -ENOTTY;
->  	}
-> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-> index befcf29..8d0317f 100644
-> --- a/drivers/vfio/vfio_pasid.c
-> +++ b/drivers/vfio/vfio_pasid.c
-> @@ -61,6 +61,7 @@ void vfio_mm_put(struct vfio_mm *vmm)
->  {
->  	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_mm_lock);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_mm_put);
->  
->  static void vfio_mm_get(struct vfio_mm *vmm)
->  {
-> @@ -114,6 +115,13 @@ struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
->  	mmput(mm);
->  	return vmm;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> +
-> +int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
-> +{
-> +	return vmm->ioasid_sid;
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_mm_ioasid_sid);
->  
->  /*
->   * Find PASID within @min and @max
-> @@ -202,6 +210,7 @@ int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
->  
->  	return pasid;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pasid_alloc);
->  
->  void vfio_pasid_free_range(struct vfio_mm *vmm,
->  			   ioasid_t min, ioasid_t max)
-> @@ -218,6 +227,7 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
->  		vfio_remove_pasid(vmm, vid);
->  	mutex_unlock(&vmm->pasid_lock);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
->  
->  static int __init vfio_pasid_init(void)
->  {
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 31472a9..a355d01 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -101,6 +101,7 @@ struct vfio_mm;
->  #if IS_ENABLED(CONFIG_VFIO_PASID)
->  extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
->  extern void vfio_mm_put(struct vfio_mm *vmm);
-> +extern int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
->  extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
->  extern void vfio_pasid_free_range(struct vfio_mm *vmm,
->  				  ioasid_t min, ioasid_t max);
-> @@ -114,6 +115,11 @@ static inline void vfio_mm_put(struct vfio_mm *vmm)
->  {
->  }
->  
-> +static inline int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
-> +{
-> +	return -ENOTTY;
-> +}
-> +
->  static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
->  {
->  	return -ENOTTY;
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 0cf3d6d..6d79557 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1172,6 +1172,43 @@ struct vfio_iommu_type1_dirty_bitmap_get {
->  
->  #define VFIO_IOMMU_DIRTY_PAGES             _IO(VFIO_TYPE, VFIO_BASE + 17)
->  
-> +/**
-> + * VFIO_IOMMU_PASID_REQUEST - _IOWR(VFIO_TYPE, VFIO_BASE + 18,
-> + *				struct vfio_iommu_type1_pasid_request)
-> + *
-> + * PASID (Processor Address Space ID) is a PCIe concept for tagging
-> + * address spaces in DMA requests. When system-wide PASID allocation
-> + * is required by the underlying iommu driver (e.g. Intel VT-d), this
-> + * provides an interface for userspace to request pasid alloc/free
-> + * for its assigned devices. Userspace should check the availability
-> + * of this API by checking VFIO_IOMMU_TYPE1_INFO_CAP_NESTING through
-> + * VFIO_IOMMU_GET_INFO.
-> + *
-> + * @flags=VFIO_IOMMU_FLAG_ALLOC_PASID, allocate a single PASID within @range.
-> + * @flags=VFIO_IOMMU_FLAG_FREE_PASID, free the PASIDs within @range.
-> + * @range is [min, max], which means both @min and @max are inclusive.
-> + * ALLOC_PASID and FREE_PASID are mutually exclusive.
-> + *
-> + * returns: allocated PASID value on success, -errno on failure for
-> + *	     ALLOC_PASID;
-> + *	     0 for FREE_PASID operation;
-> + */
-> +struct vfio_iommu_type1_pasid_request {
-> +	__u32	argsz;
-> +#define VFIO_IOMMU_FLAG_ALLOC_PASID	(1 << 0)
-> +#define VFIO_IOMMU_FLAG_FREE_PASID	(1 << 1)
-> +	__u32	flags;
-> +	struct {
-> +		__u32	min;
-> +		__u32	max;
-> +	} range;
-> +};
-> +
-> +#define VFIO_PASID_REQUEST_MASK	(VFIO_IOMMU_FLAG_ALLOC_PASID | \
-> +					 VFIO_IOMMU_FLAG_FREE_PASID)
-> +
-> +#define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
-> 
-Looks OK to me
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Maybe this should get place in compiler-clang.h so it isn't
+generic and public.
 
+Something like:
 
-Thanks
+---
+ include/linux/compiler-clang.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Eric
+diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+index cee0c728d39a..6279f1904e39 100644
+--- a/include/linux/compiler-clang.h
++++ b/include/linux/compiler-clang.h
+@@ -61,3 +61,30 @@
+ #if __has_feature(shadow_call_stack)
+ # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
+ #endif
++
++#ifndef __HAVE_ARCH_STPCPY
++/**
++ * stpcpy - copy a string from src to dest returning a pointer to the new end
++ *          of dest, including src's NULL terminator. May overrun dest.
++ * @dest: pointer to buffer being copied into.
++ *        Must be large enough to receive copy.
++ * @src: pointer to the beginning of string being copied from.
++ *       Must not overlap dest.
++ *
++ * This function exists _only_ to support clang's possible conversion of
++ * sprintf calls to stpcpy.
++ *
++ * stpcpy differs from strcpy in two key ways:
++ * 1. inputs must not overlap.
++ * 2. return value is dest's NUL termination character after copy.
++ *    (for strcpy, the return value is a pointer to src)
++ */
++
++static inline char *stpcpy(char __restrict *dest, const char __restrict *src)
++{
++	while ((*dest++ = *src++) != '\0') {
++		;	/* nothing */
++	}
++       return --dest;
++}
++#endif
+
 
