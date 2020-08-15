@@ -2,119 +2,143 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE15EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C60DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A56205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F8620781
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bI9yTul+"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a0Rw2bBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbgHOWE1 (ORCPT
+        id S1729845AbgHOWE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 18:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgHOVvC (ORCPT
+        with ESMTP id S1728555AbgHOVvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:51:02 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCDCC06134C;
-        Fri, 14 Aug 2020 18:33:15 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id e5so8359915qth.5;
-        Fri, 14 Aug 2020 18:33:15 -0700 (PDT)
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D02EC061374
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:27 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id k18so8453649qtm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vJ/jVWhGTXG1e9E+PiLPXFME4LoN6xMadImJ1YD9YHU=;
-        b=bI9yTul+XenFvqeVlqilZ/1PwJ1K3UFEioFw2tHq8PaWt4T8LWxVgwRJSMMkhCUE6S
-         Mhk+1TtNGS6OWGrlFWUOTVc0gMvTT5rGsqPSPF7y7J9R5EjAKpFUxmIDn1hRIQ/wtohD
-         h7ryjmhJ5t+sRCgBkpOsNhDqwsFM230xxiBOLSfm+c/bPJD3fF/amzVpL35ZoJJDtLUI
-         yPPUOToH6zKsZZ56/pzJ3TtCqrkDl5KRjH98qkAEoQJehZkYfRWLA6mKX6g7SAAlM2p+
-         hM1RQv8oPv1ZMBB3K1KLvw53CeRFVuV+sLMvOML/8vh1qbpqShRfnoqCIec5DNVLUsfr
-         Eb2A==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Sr87OpKcgqeQcj7Lut9VQ6DF03EgC9rXR/oozlPl9I0=;
+        b=a0Rw2bBSyqjyxtQEVYDJF5UDSoxnf31h9xYjxTorXrRsufS12jJhrWyPwlAQraVyu8
+         Eig+m2NceIZJfgxrM622A/TDW9fiqWVxjSN5/7SyLFyNmMcf0MOtJ79gBJCQzjMavIwi
+         FHQNEoxMgoQZZuK3w0rBVgisOjO1HcfBwhA3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=vJ/jVWhGTXG1e9E+PiLPXFME4LoN6xMadImJ1YD9YHU=;
-        b=rw635h449WWyb2LdxXwhLh6f64LaB/PGG829ylZXHG7wbg42YpTQR4jvlJDrDXhEzp
-         1SogV3Ph9t+bxew3WgQxmyt4KwUNq0fLDl92SOTzzLnj3eJ4tuwyGSZUZyz9EnFvANPK
-         fWvB8RVa63Q+WHO7l9zS/RmCbE1vnr2AFXJlvQ6hXpxc/atZh1lkrpMDYkxFMDO5wwg2
-         pkEmKCPzXZi2wqvWKwrDd78Ta/hJ9mBOwxsM3bIzeZIUKhbtYaj2ENTvqTsBWlp5XYjx
-         JpaUeN/ykWSk1vJLkYdN1rPR6ZtliiGz3BvOAcJZr9VY63vsgICUgwR0XBY7U1b0evt3
-         ROnQ==
-X-Gm-Message-State: AOAM531s2W0jywcll4pKZ6C8x19MKcPUaWOBCJ3YbP161lqYt8R9kO7B
-        jMoOuxzxD4ZoRbKVkoVg01CGxoz2IoY=
-X-Google-Smtp-Source: ABdhPJzT7OzYhDt4EGcOfivsmmvRSIEn2XltAWy/5uJNgRq1XLSKbN6URmiVpoEPnEgK3HsV7HyH9Q==
-X-Received: by 2002:ac8:7405:: with SMTP id p5mr4604950qtq.308.1597455192803;
-        Fri, 14 Aug 2020 18:33:12 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t69sm10061523qka.73.2020.08.14.18.33.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Sr87OpKcgqeQcj7Lut9VQ6DF03EgC9rXR/oozlPl9I0=;
+        b=XA7dLx9g3LymuCJtEAPl6Hzg5vYNzKvChPOUPVZ1jn4ey7SQ9osW9kAzJDXb9nyMRE
+         43+Y42OZsL8qnd3MmFb7e+8HvrIpCZ4rRDSidSj8PBUO1DOZyU+tV5cj9sI+aWyv/rXq
+         sTKKiGzNooUgbkCi72O9PLDprFHTrjnYEm/1jd/Nr9OARg/a3qw2XbFGxFv8zNWamjbA
+         dYWDr+JFrifIsvo8CqxQ/uySs3/je4+taeUKNK/BOqewjJIzWInrp2SgzQ1g830nOtGx
+         cKuNJ38pCs6ueWkZrFriY+0oXgPPsejPLdOSHr0Q77/hxQ0mWBzR7XJeUDck0JIFsbMc
+         TlCQ==
+X-Gm-Message-State: AOAM530CVZBEWj9WTHU+iMt2FYz6inW51VcZhoDAwDjB1ma1RU8+ui4G
+        I1SGczaCDqKPRKdD0wK56ItTygpm8je7YA==
+X-Google-Smtp-Source: ABdhPJzfuzPtyeMnMLHksEthsmRZwJK64n9qnDfflen8t0uv+egsOcthSALyKs2aNX7pgnP3PF3LeA==
+X-Received: by 2002:aed:3b57:: with SMTP id q23mr4961944qte.150.1597461565702;
+        Fri, 14 Aug 2020 20:19:25 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 18:33:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 14 Aug 2020 21:33:10 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Joe Perches <joe@perches.com>, Tony Luck <tony.luck@intel.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Fri, 14 Aug 2020 20:19:25 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
         Kees Cook <keescook@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] lib/string.c: implement stpcpy
-Message-ID: <20200815013310.GA99152@rani.riverdale.lan>
-References: <20200815002417.1512973-1-ndesaulniers@google.com>
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        fweisbec@gmail.com, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH RFC 03/12] arch/x86: Add a new TIF flag for untrusted tasks
+Date:   Fri, 14 Aug 2020 23:18:59 -0400
+Message-Id: <20200815031908.1015049-4-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
+References: <20200815031908.1015049-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200815002417.1512973-1-ndesaulniers@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 05:24:15PM -0700, Nick Desaulniers wrote:
-> +#ifndef __HAVE_ARCH_STPCPY
-> +/**
-> + * stpcpy - copy a string from src to dest returning a pointer to the new end
-> + *          of dest, including src's NULL terminator. May overrun dest.
-> + * @dest: pointer to end of string being copied into. Must be large enough
-> + *        to receive copy.
-> + * @src: pointer to the beginning of string being copied from. Must not overlap
-> + *       dest.
-> + *
-> + * stpcpy differs from strcpy in two key ways:
-> + * 1. inputs must not overlap.
-> + * 2. return value is the new NULL terminated character. (for strcpy, the
-> + *    return value is a pointer to src.
-> + */
-> +#undef stpcpy
-> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
-> +{
-> +	while ((*dest++ = *src++) != '\0')
-> +		/* nothing */;
-> +	return dest;
-> +}
-> +#endif
-> +
+Add a new TIF flag to indicate whether the kernel needs to be careful
+and take additional steps to mitigate micro-architectural issues during
+entry into user or guest mode.
 
-Won't this return a pointer that's one _past_ the terminating NUL? I
-think you need the increments to be inside the loop body, rather than as
-part of the condition.
+This new flag will be used by the series to determine if waiting is
+needed or not, during exit to user or guest mode.
 
-Nit: NUL is more correct than NULL to refer to the string terminator.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ arch/x86/include/asm/thread_info.h | 2 ++
+ kernel/sched/sched.h               | 6 ++++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+index 267701ae3d86..42e63969acb3 100644
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -98,6 +98,7 @@ struct thread_info {
+ #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
+ #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
+ #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
++#define TIF_UNSAFE_RET   	26	/* On return to process/guest, perform safety checks. */
+ #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
+ #define TIF_SYSCALL_TRACEPOINT	28	/* syscall tracepoint instrumentation */
+ #define TIF_ADDR32		29	/* 32-bit address space on 64 bits */
+@@ -127,6 +128,7 @@ struct thread_info {
+ #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
+ #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
+ #define _TIF_BLOCKSTEP		(1 << TIF_BLOCKSTEP)
++#define _TIF_UNSAFE_RET 	(1 << TIF_UNSAFE_RET)
+ #define _TIF_LAZY_MMU_UPDATES	(1 << TIF_LAZY_MMU_UPDATES)
+ #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+ #define _TIF_ADDR32		(1 << TIF_ADDR32)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 3575edc7dc43..1901d11a6f41 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2680,3 +2680,9 @@ static inline bool is_per_cpu_kthread(struct task_struct *p)
+ 
+ void swake_up_all_locked(struct swait_queue_head *q);
+ void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait);
++
++#ifdef CONFIG_SCHED_CORE
++#ifndef TIF_UNSAFE_RET
++#define TIF_UNSAFE_RET (0)
++#endif
++#endif
+-- 
+2.28.0.220.ged08abb693-goog
+
