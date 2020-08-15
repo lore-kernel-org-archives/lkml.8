@@ -2,235 +2,100 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0551DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61405C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E1C22D06
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC1520791
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BGEhN/Wb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE6fAWhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgHOV7t (ORCPT
+        id S1729615AbgHOV7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
+        Sat, 15 Aug 2020 17:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbgHOVvi (ORCPT
+        with ESMTP id S1728870AbgHOVvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:51:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1008C004594
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:48:54 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id l60so5841457pjb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:48:54 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55DBC0F26E2
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id d190so9970825wmd.4
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Z2xPpRoHP7BzvSX2rjf/bwJ13SQNsG5PYmvhRIAd2sU=;
-        b=BGEhN/WbxTSkRKE60J3CvxmlY0UKRwp/ZAg2U45KlXRgN/v22AODymoCybBpuELHV0
-         gJiM8R0WOAwzDxsIYSpFiIrtUl6bPq4CRMs7zzUC85FWMhbaZA6TQo5KugLzFSwFV+M5
-         DETZEEYKUO3FHXdeFU5FPCcxbslgBH1bLKQYKi+xkXMquvWPJGCrtbRidRLvonRf8XKm
-         MASkzLIGO//+pjB4BrxXuiUtW9kWXJNEd+OEeLjxyTEBRAwfC73k3K3Qn2sV0yHOFLMe
-         sd9D2+Q4fxUE0wHI7tUlUKxhmH2LM/eULQgvaVqrUXvh/U7N7SrzPaR6krKkJkazlHXj
-         7kgg==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=3Dsr0Yy5xJaA1gocXEUrCia+DklzUMLBvu3KE2Ccr3E=;
+        b=bE6fAWhW5P2lSSZB3qxYlXC4bc+7IiGKIPbBc5vsOZXEraILW4YnokRhL8zXOzdkpR
+         BmE/AodF8dwW1RGO6NZa0jzi6WkvUM3/FPT0KDABLRFhJ4kcGIEVE9JjhiodUJy/ulPm
+         eSDFGGv0/WgNvSsbLIPZkYLsQxcyxFK5zeEkAYZmFSWhHD5M1Aqp1L7y3kjAeWp8P8nx
+         ShCJ6Me6p6LJ+qCzVygvQ+ttGWoOqWU3nb/Dd41jAk8dy1tnda3kvLu2g2sbGRaZVvTj
+         IgL8YLlMXrqhXbtNUNCUnIY7nMPd0mdkD1y+Xtbfrnsdw6GwSHmG/yaDRCmUF9+W41yN
+         FP0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z2xPpRoHP7BzvSX2rjf/bwJ13SQNsG5PYmvhRIAd2sU=;
-        b=MdOaDqb3k+9GYRU38Mcipj9ICrAG631cePah6t8+M+nPPHy5leFclTJ/rjtYnDTsiC
-         vYIvw7r59UQHG1jTNC8TCoB+9Y8zBR/h7mBE5vPGP49Kjzlc3noJYycWj93hNu7Jgzn3
-         KzxqrVmASbcvyydp6P9NAU3sR8ry5cO8WrbD8pMwRxir1VVdAYjlD3EC+CsVejBKVbG+
-         jCP917UseeK0IT+6Q+n6S7Ro6SgwPvw1KBUIohOvAyVpYnvemm33iToIl9N31qN8wR/u
-         7vR9dhBIU5+Ub5GNOl4wSnF+Zl5Wa2uA5OSOQotsxJSBHClBleIRlJvFrf69/f7gBs95
-         foDQ==
-X-Gm-Message-State: AOAM531Hms9aNBnPWYzqxiE9oLkpek+tPuHe8Gx6vibwuRE1wMC/EHBp
-        5nREub8Riz/78lyIh2hqHBMqHA==
-X-Google-Smtp-Source: ABdhPJx2mzq8cS50/9IeaIq3A/NHdBiAOJ23/yFhnZW3jwTW9wfQhvvXukV2bvVi1sqca5xchRsk+w==
-X-Received: by 2002:a17:90a:c781:: with SMTP id gn1mr6629664pjb.151.1597517334243;
-        Sat, 15 Aug 2020 11:48:54 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:6299:2df1:e468:6351? ([2605:e000:100e:8c61:6299:2df1:e468:6351])
-        by smtp.gmail.com with ESMTPSA id b63sm12599824pfg.43.2020.08.15.11.48.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 11:48:53 -0700 (PDT)
-Subject: Re: general protection fault in io_poll_double_wake
-From:   Jens Axboe <axboe@kernel.dk>
-To:     syzbot <syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000018f60505aced798e@google.com>
- <fb1fe8ff-5c79-a020-f6ea-a28f974bde6b@kernel.dk>
-Message-ID: <178c8252-eb93-daaf-61fd-f0652de3b658@kernel.dk>
-Date:   Sat, 15 Aug 2020 11:48:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <fb1fe8ff-5c79-a020-f6ea-a28f974bde6b@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=3Dsr0Yy5xJaA1gocXEUrCia+DklzUMLBvu3KE2Ccr3E=;
+        b=lkht4dcto5F1aFoLSW0AfoNdLH4w8c7RuEFA7J9urfWd20+qQ/zjLQNul9lIx4BQ0f
+         wkVaR6x/X489PgBk7WJFHDTTFgG5PtLddTX2qTuNObVNDjNpv/nwBzPE8H1FYOCuW4uB
+         t+K1VbnavBZ3Xqvz6m73k+bf60Tus04sxq0B0jwfmJTcH2q9v7fW80zriq4qaQRMKmaC
+         Xc1Za6qhQpC0o0dsXr32pmHJy8X9G6tZjgQmxeVLUONQ63p5Rx8bBf8icfC4vDurlumj
+         CzRxCLD0i/BRpiXITyJCya7ICFuVgwOwEcCDukdhb52yzT4BBoc4FKvL3vq28kEHUEI5
+         f23g==
+X-Gm-Message-State: AOAM531Hb6KflA58IF2gbMKvAk3Y6Zltxr27mPXDHcS11dXNL9rSXkK/
+        5LgnQ2GfHl4pSUSeRzm9PVP5PJmmJ1Y=
+X-Google-Smtp-Source: ABdhPJxt2pVVX4FmKqdHcsNKWhP44boTusPcVDAhNPZj67cljfkrCR2KHRNBaFFWXFbMFsiw1yi+Og==
+X-Received: by 2002:a1c:7407:: with SMTP id p7mr7761683wmc.117.1597514384276;
+        Sat, 15 Aug 2020 10:59:44 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id e5sm24460775wrc.37.2020.08.15.10.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2020 10:59:43 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Subject: [PATCH 3/9] habanalabs: eliminate redundant else condition
+Date:   Sat, 15 Aug 2020 20:59:32 +0300
+Message-Id: <20200815175938.16619-3-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200815175938.16619-1-oded.gabbay@gmail.com>
+References: <20200815175938.16619-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/20 11:16 AM, Jens Axboe wrote:
-> On 8/15/20 10:00 AM, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    7fca4dee Merge tag 'powerpc-5.9-2' of git://git.kernel.org..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=1264d116900000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=21f0d1d2df6d5fc
->> dashboard link: https://syzkaller.appspot.com/bug?extid=7f617d4a9369028b8a2c
->> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f211d2900000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1721b0ce900000
->>
->> The issue was bisected to:
->>
->> commit 18bceab101adde8f38de76016bc77f3f25cf22f4
->> Author: Jens Axboe <axboe@kernel.dk>
->> Date:   Fri May 15 17:56:54 2020 +0000
->>
->>     io_uring: allow POLL_ADD with double poll_wait() users
-> 
-> I can reproduce this, I'll fix it up. Thanks!
+If both parts of if-else are goto statements, we can remove the else and
+put the else goto statement after the if statement.
 
-This should fix it:
-
-
-From 34fc8d0b76572c9fb184ab589d682dccfeb5c039 Mon Sep 17 00:00:00 2001
-From: Jens Axboe <axboe@kernel.dk>
-Date: Sat, 15 Aug 2020 11:44:50 -0700
-Subject: [PATCH] io_uring: sanitize double poll handling
-
-There's a bit of confusion on the matching pairs of poll vs double poll,
-depending on if the request is a pure poll (IORING_OP_POLL_ADD) or
-poll driven retry.
-
-Add io_poll_get_double() that returns the double poll waitqueue, if any,
-and io_poll_get_single() that returns the original poll waitqueue. With
-that, remove the argument to io_poll_remove_double().
-
-Finally ensure that wait->private is cleared once the double poll handler
-has run, so that remove knows it's already been seen.
-
-Cc: stable@vger.kernel.org # v5.8
-Reported-by: syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com
-Fixes: 18bceab101ad ("io_uring: allow POLL_ADD with double poll_wait() users")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- fs/io_uring.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ drivers/misc/habanalabs/common/command_submission.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7dd6df15bc49..cb030912bf5e 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4649,9 +4649,24 @@ static bool io_poll_rewait(struct io_kiocb *req, struct io_poll_iocb *poll)
- 	return false;
- }
- 
--static void io_poll_remove_double(struct io_kiocb *req, void *data)
-+static struct io_poll_iocb *io_poll_get_double(struct io_kiocb *req)
- {
--	struct io_poll_iocb *poll = data;
-+	/* pure poll stashes this in ->io, poll driven retry elsewhere */
-+	if (req->opcode == IORING_OP_POLL_ADD)
-+		return (struct io_poll_iocb *) req->io;
-+	return req->apoll->double_poll;
-+}
+diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
+index 2b40aa85bec9..58327cdb6a2c 100644
+--- a/drivers/misc/habanalabs/common/command_submission.c
++++ b/drivers/misc/habanalabs/common/command_submission.c
+@@ -686,8 +686,8 @@ static int cs_ioctl_default(struct hl_fpriv *hpriv, void __user *chunks,
+ 			rc = -ENOMEM;
+ 			if (is_kernel_allocated_cb)
+ 				goto release_cb;
+-			else
+-				goto free_cs_object;
 +
-+static struct io_poll_iocb *io_poll_get_single(struct io_kiocb *req)
-+{
-+	if (req->opcode == IORING_OP_POLL_ADD)
-+		return &req->poll;
-+	return &req->apoll->poll;
-+}
-+
-+static void io_poll_remove_double(struct io_kiocb *req)
-+{
-+	struct io_poll_iocb *poll = io_poll_get_double(req);
++			goto free_cs_object;
+ 		}
  
- 	lockdep_assert_held(&req->ctx->completion_lock);
- 
-@@ -4671,7 +4686,7 @@ static void io_poll_complete(struct io_kiocb *req, __poll_t mask, int error)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
- 
--	io_poll_remove_double(req, req->io);
-+	io_poll_remove_double(req);
- 	req->poll.done = true;
- 	io_cqring_fill_event(req, error ? error : mangle_poll(mask));
- 	io_commit_cqring(ctx);
-@@ -4711,7 +4726,7 @@ static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
- 			       int sync, void *key)
- {
- 	struct io_kiocb *req = wait->private;
--	struct io_poll_iocb *poll = req->apoll->double_poll;
-+	struct io_poll_iocb *poll = io_poll_get_single(req);
- 	__poll_t mask = key_to_poll(key);
- 
- 	/* for instances that support it check for an event match first: */
-@@ -4725,6 +4740,8 @@ static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
- 		done = list_empty(&poll->wait.entry);
- 		if (!done)
- 			list_del_init(&poll->wait.entry);
-+		/* make sure double remove sees this as being gone */
-+		wait->private = NULL;
- 		spin_unlock(&poll->head->lock);
- 		if (!done)
- 			__io_async_wake(req, poll, mask, io_poll_task_func);
-@@ -4808,7 +4825,7 @@ static void io_async_task_func(struct callback_head *cb)
- 	if (hash_hashed(&req->hash_node))
- 		hash_del(&req->hash_node);
- 
--	io_poll_remove_double(req, apoll->double_poll);
-+	io_poll_remove_double(req);
- 	spin_unlock_irq(&ctx->completion_lock);
- 
- 	if (!READ_ONCE(apoll->poll.canceled))
-@@ -4919,7 +4936,7 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
- 	ret = __io_arm_poll_handler(req, &apoll->poll, &ipt, mask,
- 					io_async_wake);
- 	if (ret || ipt.error) {
--		io_poll_remove_double(req, apoll->double_poll);
-+		io_poll_remove_double(req);
- 		spin_unlock_irq(&ctx->completion_lock);
- 		kfree(apoll->double_poll);
- 		kfree(apoll);
-@@ -4951,14 +4968,13 @@ static bool io_poll_remove_one(struct io_kiocb *req)
- {
- 	bool do_complete;
- 
-+	io_poll_remove_double(req);
-+
- 	if (req->opcode == IORING_OP_POLL_ADD) {
--		io_poll_remove_double(req, req->io);
- 		do_complete = __io_poll_remove_one(req, &req->poll);
- 	} else {
- 		struct async_poll *apoll = req->apoll;
- 
--		io_poll_remove_double(req, apoll->double_poll);
--
- 		/* non-poll requests have submit ref still */
- 		do_complete = __io_poll_remove_one(req, &apoll->poll);
- 		if (do_complete) {
+ 		job->id = i + 1;
 -- 
-2.28.0
-
-
--- 
-Jens Axboe
+2.17.1
 
