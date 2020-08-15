@@ -2,108 +2,101 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECE20639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CDC20639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529548;
-	bh=dwHjwC8GiChPu67IbBCb6Ypn7HuxNZ4cqMQsl04lslg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnPDSGz302g3cZRG8GdgF8WqtUju9u9+uJVH0BV/w0EuWQZGx4CxZTiXl4AhENqRo
-	 tIbu7izmce79++h+i2v8jrqIEQ7ZaACYabYEVbPJ3n8tL5Whtcz2scGtYsuy4a4RZm
-	 wBg7DhZGRzULm4Z85mYhDuS9FkKFDqbP6lKQByQ8=
+	s=default; t=1597529556;
+	bh=TCd3RnIh+m/AFQpcO3QO6DTwGhG5pB3KRXQioDsmqOI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=nhmqeIgbkVSBHiXfqGW2ISOR1NLGDclQTT7dWjo5nJcSAX03XwQC3PvlHJqdKf+IV
+	 RwAmSBrlbMD4NNEoZ7O4S6JNNEsVAc8t5RVGYJDFwU1LWnQMpRsrWhgwmJWRS3CIa5
+	 CI/5nNta/6IbvBNa8cSuUA9z7C8cYRlEklY0azIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgHOWM1 (ORCPT
+        id S1730106AbgHOWMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41794 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgHOWK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728585AbgHOWK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA6D20773;
-        Sat, 15 Aug 2020 12:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6409D23120;
+        Sat, 15 Aug 2020 13:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597495886;
-        bh=dwHjwC8GiChPu67IbBCb6Ypn7HuxNZ4cqMQsl04lslg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/R4wtUnbTIYAx3BaALrwOrakrpNSuLBsmGVH2WZFIO6EmqnHDgxBjPSx5cu6vn0F
-         D4GqHDerBcH7cE1HSubCkreBnggluVbZCvEVAjCaAePCbi5PPdEbJ7tNlgeDs4UEsT
-         7+bplO4I190caNSk7lhZGj2Zv6aWWl1GiJsFNcgU=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6vee-002Kds-BL; Sat, 15 Aug 2020 13:51:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com
-Subject: [PATCH 2/2] arm64: dts: rockchip: Fix PCIe DT properties
-Date:   Sat, 15 Aug 2020 13:51:12 +0100
-Message-Id: <20200815125112.462652-3-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200815125112.462652-1-maz@kernel.org>
-References: <20200815125112.462652-1-maz@kernel.org>
+        s=default; t=1597496585;
+        bh=TCd3RnIh+m/AFQpcO3QO6DTwGhG5pB3KRXQioDsmqOI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eNWPl1w+a9I0vCW47TFX0zI7f8aUPQdkPp8EYt2FoKGvxt8ILV1tkOX9mIethOQvz
+         CdKhN50oWLVwJisuvGGPuZuRb1o9BDW27haWLVSYVCwMYcAMmf8Fs4Zuvw47fB+etZ
+         SVRB2QprPHpSNIdOxDDHtQobDH0H+fiMzl1NxB2k=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 42C7635226F6; Sat, 15 Aug 2020 06:03:05 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 06:03:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200815130305.GY4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200814180141.GP4295@paulmck-ThinkPad-P72>
+ <87tux4kefm.fsf@nanos.tec.linutronix.de>
+ <20200815082754.GM3982@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815082754.GM3982@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It recently became apparent that the lack of a 'device_type = "pci"'
-in the PCIe root complex node for rk3399 is a violation of the PCI
-binding, as documented in IEEE Std 1275-1994. Changes to the kernel's
-parsing of the DT made such violation fatal, as drivers cannot
-probe the controller anymore.
+On Sat, Aug 15, 2020 at 10:27:54AM +0200, Peter Zijlstra wrote:
+> On Sat, Aug 15, 2020 at 01:14:53AM +0200, Thomas Gleixner wrote:
+> > 
+> > As a matter of fact I assume^Wdeclare that removing struct rcu_head which
+> > provides a fallback is not an option at all. I know that you want to,
+> > but it wont work ever. Dream on, but as we agreed on recently there is
+> > this thing called reality which ruins everything.
+> 
+> It never was going to work, freeing memory can never hard rely on the
+> success of allocating memory.
 
-Add the missing property makes the PCIe node compliant. While we
-are at it, drop the pointless linux,pci-domain property, which only
-makes sense when there are multiple host bridges.
+In neither case does the freeing of memory rely hard-rely on the success
+of allocating memory.  This is because there is a fallback in both cases
+should allocation fail.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Given an rcu_head structure, we use that, and accept the extra cache
+misses at callback-invocation time.  Otherwise, without an rcu_head
+structure, the allocation parameters are carefully chosen to avoid
+indefinite sleeping, meaning that the allocation attempt either succeeds
+or fails within a reasonable amount of time.  And upon failure we invoke
+synchronize_rcu(), then immediately free.  Which is slow, but then again
+life is like that under OOM conditions.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index ada724b12f01..a80fc4d563b5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -231,6 +231,7 @@ pcie0: pcie@f8000000 {
- 		reg = <0x0 0xf8000000 0x0 0x2000000>,
- 		      <0x0 0xfd000000 0x0 0x1000000>;
- 		reg-names = "axi-base", "apb-base";
-+		device_type = "pci";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		#interrupt-cells = <1>;
-@@ -249,7 +250,6 @@ pcie0: pcie@f8000000 {
- 				<0 0 0 2 &pcie0_intc 1>,
- 				<0 0 0 3 &pcie0_intc 2>,
- 				<0 0 0 4 &pcie0_intc 3>;
--		linux,pci-domain = <0>;
- 		max-link-speed = <1>;
- 		msi-map = <0x0 &its 0x0 0x1000>;
- 		phys = <&pcie_phy 0>, <&pcie_phy 1>,
--- 
-2.27.0
+And yes, this means that the price of leaving the rcu_head structure out
+of the structure to be freed is that you must call kvfree_free() from
+a sleepable context.  If you don't like being restricted to sleepable
+context, you can always supply the rcu_head structure.
 
+							Thanx, Paul
