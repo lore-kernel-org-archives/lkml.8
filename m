@@ -2,141 +2,228 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B882C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19DEA2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627452053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lfnEF5dz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="goupLROJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b3PfH/wy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgHOVvF (ORCPT
+        id S1729811AbgHOWEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        Sat, 15 Aug 2020 18:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbgHOVuy (ORCPT
+        with ESMTP id S1728594AbgHOVvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:54 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C22C09B052;
-        Sat, 15 Aug 2020 08:47:04 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 15:46:51 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597506412;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pu4f7XjhFcULlGOVp6eLrt6povAfc7FbC/8I3SqVmYY=;
-        b=lfnEF5dzZ75XgnRafY1H0VO2AdK2iJR8TYD8lkeaZ9D88/FyMhkj0AWwRYrLQWROasVJMZ
-        x6p3OJ4V6WIa8CjjdCe4GswOc1pzeepDZcxkx5uArP5jaIAYQ3BCJh8WhHmMXEzJxUDZRG
-        08DqYkklBkVhL8Qwlrzny6ghsLExWGCoeTnSRnXcsQLG7qldkb05+wlcD1AmO0YfaFYrB7
-        H/QZK/wFsJYN97gvKY5ghYKyoZlp2TZSXHxHFmGjUGBEJddogCHx9EPqddubuMBZUNhg3z
-        d7elTX055dRTZ4+zSaxOTaAomoy6Fu8gnr4kZ8mlZgKtXzxbke3rUi2AeiBAXQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597506412;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pu4f7XjhFcULlGOVp6eLrt6povAfc7FbC/8I3SqVmYY=;
-        b=goupLROJKx+xszbQtEWoArKYb0+Af5Nlu93cM64eo5C0vTpjWp8Xt+T0rjaVoJxtCEDRDc
-        PjxI9gTUliMNjKBA==
-From:   "tip-bot2 for Juergen Gross" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/paravirt] x86/paravirt: Use CONFIG_PARAVIRT_XXL instead of
- CONFIG_PARAVIRT
-Cc:     Juergen Gross <jgross@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200815100641.26362-4-jgross@suse.com>
-References: <20200815100641.26362-4-jgross@suse.com>
+        Sat, 15 Aug 2020 17:51:04 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22851C061345
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:40:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f5so4906794plr.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Gtg0Mu/abosx7cbMyjvqm3BgSpDd0rRtzMxQNPezKE=;
+        b=b3PfH/wypQHJ685ofVrtZdKKOqKYgm0iqPC0Pbe4odmP9dGa349PVYdCmd7nTWR8vR
+         xqutgbAOShitN9KXbUGkfnX2RmB6HDHK3bQHFNQ1X0f0k/murDm8wXR6ZTPUhXSoYUE6
+         dXn2GyTtSWrIHdlaeg/XasUr0caLPhjuk9rBo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Gtg0Mu/abosx7cbMyjvqm3BgSpDd0rRtzMxQNPezKE=;
+        b=mXIeVqRvTpwE7aSh5+PLGwbYqNltjzPF7UcFllEZ/xHdcpYa5h59re2HIA/9uM8NjF
+         x7uGFZRY42R9+2SjlHQ2GDBJ1KyCIZSvILPQa5cFb2xTumP2rkeS7aWmszyShLFL+BF4
+         dvMZdN+yLZoKTswGZAro4ik3zihrkYUvm26vnqMSo2d4zhc7uNppgutCOeQqQ+bcCcem
+         sw6QB31s+eouP7rXaAhtkPShxdtI1PXg9AN1918lBxTa0QHYsLovPOug4rbZKy2D0+Dt
+         ftaJymOGvUfM2+Bf5uzFJOqNNFZBwS8dDcPcuPwXugitm8SoAbWpZ3J0jIhxUe+TXZcp
+         XqGw==
+X-Gm-Message-State: AOAM530QJkbw5KBqxG0IuJ+tZgALlZPQV2GtIm31Ru68WRvgtndkunoL
+        x8Pl2jGydmBauAIRd9NqHzOqvQ==
+X-Google-Smtp-Source: ABdhPJyMZNGYoN3/sqk/JU4g3eewEpC+vFQpWtnhH5IY3352HMEya4rrUrGdYRs60YVUu1WzYjs8Pw==
+X-Received: by 2002:a17:902:c282:: with SMTP id i2mr3747922pld.205.1597452047421;
+        Fri, 14 Aug 2020 17:40:47 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id 196sm10762214pfc.178.2020.08.14.17.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 17:40:45 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        linux-bluetooth@vger.kernel.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Manish Mandlik <mmandlik@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH] Bluetooth: Only mark socket zapped after unlocking
+Date:   Fri, 14 Aug 2020 17:40:32 -0700
+Message-Id: <20200814173929.1.Ic1b9d93cf2d393e3efda4c2977639c095d276311@changeid>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-Message-ID: <159750641175.3192.2969286932741999871.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/paravirt branch of tip:
+Since l2cap_sock_teardown_cb doesn't acquire the channel lock before
+setting the socket as zapped, it could potentially race with
+l2cap_sock_release which frees the socket. Thus, wait until the cleanup
+is complete before marking the socket as zapped.
 
-Commit-ID:     ecac71816a1829c0e54c41c5f1845f75b55dc618
-Gitweb:        https://git.kernel.org/tip/ecac71816a1829c0e54c41c5f1845f75b55dc618
-Author:        Juergen Gross <jgross@suse.com>
-AuthorDate:    Sat, 15 Aug 2020 12:06:38 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 15 Aug 2020 13:52:11 +02:00
+This race was reproduced on a JBL GO speaker after the remote device
+rejected L2CAP connection due to resource unavailability.
 
-x86/paravirt: Use CONFIG_PARAVIRT_XXL instead of CONFIG_PARAVIRT
+Here is a dmesg log with debug logs from a repro of this bug:
+[ 3465.424086] Bluetooth: hci_core.c:hci_acldata_packet() hci0 len 16 handle 0x0003 flags 0x0002
+[ 3465.424090] Bluetooth: hci_conn.c:hci_conn_enter_active_mode() hcon 00000000cfedd07d mode 0
+[ 3465.424094] Bluetooth: l2cap_core.c:l2cap_recv_acldata() conn 000000007eae8952 len 16 flags 0x2
+[ 3465.424098] Bluetooth: l2cap_core.c:l2cap_recv_frame() len 12, cid 0x0001
+[ 3465.424102] Bluetooth: l2cap_core.c:l2cap_raw_recv() conn 000000007eae8952
+[ 3465.424175] Bluetooth: l2cap_core.c:l2cap_sig_channel() code 0x03 len 8 id 0x0c
+[ 3465.424180] Bluetooth: l2cap_core.c:l2cap_connect_create_rsp() dcid 0x0045 scid 0x0000 result 0x02 status 0x00
+[ 3465.424189] Bluetooth: l2cap_core.c:l2cap_chan_put() chan 000000006acf9bff orig refcnt 4
+[ 3465.424196] Bluetooth: l2cap_core.c:l2cap_chan_del() chan 000000006acf9bff, conn 000000007eae8952, err 111, state BT_CONNECT
+[ 3465.424203] Bluetooth: l2cap_sock.c:l2cap_sock_teardown_cb() chan 000000006acf9bff state BT_CONNECT
+[ 3465.424221] Bluetooth: l2cap_core.c:l2cap_chan_put() chan 000000006acf9bff orig refcnt 3
+[ 3465.424226] Bluetooth: hci_core.h:hci_conn_drop() hcon 00000000cfedd07d orig refcnt 6
+[ 3465.424234] BUG: spinlock bad magic on CPU#2, kworker/u17:0/159
+[ 3465.425626] Bluetooth: hci_sock.c:hci_sock_sendmsg() sock 000000002bb0cb64 sk 00000000a7964053
+[ 3465.430330]  lock: 0xffffff804410aac0, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+[ 3465.430332] Causing a watchdog bite!
 
-There are some code parts using CONFIG_PARAVIRT for Xen pvops related
-issues instead of the more stringent CONFIG_PARAVIRT_XXL.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200815100641.26362-4-jgross@suse.com
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Manish Mandlik <mmandlik@chromium.org>
 ---
- arch/x86/entry/entry_64.S                | 4 ++--
- arch/x86/include/asm/fixmap.h            | 2 +-
- arch/x86/include/asm/required-features.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+We had some more data available (outside of dmesg and oops) that led us
+to suspect a race between l2cap_sock_teardown_cb and l2cap_sock_release.
+I've left this out of the commit message since it's not an oops or dmesg
+logs.
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 70dea93..26fc9b4 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -46,13 +46,13 @@
- .code64
- .section .entry.text, "ax"
+Crash stack from CPU4:
+--
+-24 |spin_bug(
+    |    [X19] lock = 0xFFFFFF810BDB1EC0,
+    |    [X20] msg = 0xFFFFFFD143FD7960)
+-25 |debug_spin_lock_before(inline)
+    |  [X19] lock = 0xFFFFFF810BDB1EC0
+-25 |do_raw_spin_lock(
+    |    [X19] lock = 0xFFFFFF810BDB1EC0)
+-26 |raw_spin_lock_irqsave(
+    |    [X19] lock = 0xFFFFFF810BDB1EC0)
+-27 |skb_peek(inline)
+-27 |__skb_dequeue(inline)
+-27 |skb_dequeue(
+    |    [X20] list = 0xFFFFFF810BDB1EA8)
+    |  [locdesc] flags = 12297829382473034410
+-28 |skb_queue_purge(
+    |    [X19] list = 0xFFFFFF810BDB1EA8 -> (
+    |      [D:0xFFFFFF810BDB1EA8] next = 0x0,
+    |      [D:0xFFFFFF810BDB1EB0] prev = 0x0,
+    |      [D:0xFFFFFF810BDB1EB8] qlen = 0,
+    |      [D:0xFFFFFF810BDB1EC0] lock = ([D:0xFFFFFF810BDB1EC0] rlock = ([D:0xFFFFFF810BDB1EC0] raw_lock
+    |  [X0] skb = ???
+-29 |l2cap_seq_list_free(inline)
+    |  [locdesc] seq_list = 0xFFFFFF810BDB1ED8 -> (
+    |    [D:0xFFFFFF810BDB1ED8] head = 0,
+    |    [D:0xFFFFFF810BDB1EDA] tail = 0,
+    |    [D:0xFFFFFF810BDB1EDC] mask = 0,
+    |    [D:0xFFFFFF810BDB1EE0] list = 0x0)
+-29 |l2cap_chan_del(
+    |    [X19] chan = 0xFFFFFF810BDB1C00,
+    |  ?)
+-30 |l2cap_chan_unlock(inline)
+-30 |l2cap_connect_create_rsp(inline)
+    |  [X20] conn = 0xFFFFFF81231F2600
+    |  [locdesc] err = 0
+    |  [X27] chan = 0xFFFFFF810BDB1C00
+-30 |l2cap_bredr_sig_cmd(inline)
+    |  [X20] conn = 0xFFFFFF81231F2600
+    |  [locdesc] err = 0
+-30 |l2cap_sig_channel(inline)
+    |  [X20] conn = 0xFFFFFF81231F2600
+    |  [X19] skb = 0xFFFFFF813DE4C040
+    |  [X28] data = 0xFFFFFF8131582014
+    |  [locdesc] cmd_len = 43690
+-30 |l2cap_recv_frame(
+    |    [X20] conn = 0xFFFFFF81231F2600,
+    |    [X19] skb = 0xFFFFFF813DE4C040)
+    |  [locdesc] psm = 43690
+-31 |l2cap_recv_acldata(
+    |  ?,
+    |    [X19] skb = 0xFFFFFF813DE4C040,
+    |  ?)
+    |  [X21] len = 16
+-32 |hci_rx_work(
+    |  ?)
+    |  [X21] hdev = 0xFFFFFF8133A02000
+-33 |__read_once_size(inline)
+    |  [locdesc] size = 4
+-33 |atomic_read(inline)
+    |  [locdesc] __u = ([locdesc] __val = -1431655766, [locdesc] __c = (170))
+-33 |static_key_count(inline)
+-33 |static_key_false(inline)
+-33 |trace_workqueue_execute_end(inline)
+    |  [X22] work = 0xFFFFFF8133A02838
+-33 |process_one_work(
+    |    [X19] worker = 0xFFFFFF8133FE4500,
+    |    [X22] work = 0xFFFFFF8133A02838)
+    |  [locdesc] work_color = -1431655766
+-34 |__read_once_size(inline)
+    |  [locdesc] size = 8
+-34 |list_empty(inline)
+    |  [locdesc] __u = ([locdesc] __val = 0xAAAAAAAAAAAAAAAA, [locdesc] __c = (170))
+-34 |worker_thread(
+    |    [X19] __worker = 0xFFFFFF8133FE4500)
+    |  [X19] worker = 0xFFFFFF8133FE4500
+-35 |kthread(
+    |    [X20] _create = 0xFFFFFF8133FB3A00)
+    |  [X20] create = 0xFFFFFF8133FB3A00
+    |  [X0] ret = ???
+-36 |ret_from_fork(asm)
+
+ net/bluetooth/l2cap_sock.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
+index e1a3e66b175402..e7cfe28140c39b 100644
+--- a/net/bluetooth/l2cap_sock.c
++++ b/net/bluetooth/l2cap_sock.c
+@@ -1521,8 +1521,6 @@ static void l2cap_sock_teardown_cb(struct l2cap_chan *chan, int err)
  
--#ifdef CONFIG_PARAVIRT
-+#ifdef CONFIG_PARAVIRT_XXL
- SYM_CODE_START(native_usergs_sysret64)
- 	UNWIND_HINT_EMPTY
- 	swapgs
- 	sysretq
- SYM_CODE_END(native_usergs_sysret64)
--#endif /* CONFIG_PARAVIRT */
-+#endif /* CONFIG_PARAVIRT_XXL */
+ 	parent = bt_sk(sk)->parent;
  
- /*
-  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 0f0dd64..77217bd 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -99,7 +99,7 @@ enum fixed_addresses {
- 	FIX_PCIE_MCFG,
- #endif
- #endif
--#ifdef CONFIG_PARAVIRT
-+#ifdef CONFIG_PARAVIRT_XXL
- 	FIX_PARAVIRT_BOOTMAP,
- #endif
- #ifdef	CONFIG_X86_INTEL_MID
-diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
-index 6847d85..3ff0d48 100644
---- a/arch/x86/include/asm/required-features.h
-+++ b/arch/x86/include/asm/required-features.h
-@@ -54,7 +54,7 @@
- #endif
+-	sock_set_flag(sk, SOCK_ZAPPED);
+-
+ 	switch (chan->state) {
+ 	case BT_OPEN:
+ 	case BT_BOUND:
+@@ -1549,8 +1547,11 @@ static void l2cap_sock_teardown_cb(struct l2cap_chan *chan, int err)
  
- #ifdef CONFIG_X86_64
--#ifdef CONFIG_PARAVIRT
-+#ifdef CONFIG_PARAVIRT_XXL
- /* Paravirtualized systems may not have PSE or PGE available */
- #define NEED_PSE	0
- #define NEED_PGE	0
+ 		break;
+ 	}
+-
+ 	release_sock(sk);
++
++	/* Only zap after cleanup to avoid use after free race */
++	sock_set_flag(sk, SOCK_ZAPPED);
++
+ }
+ 
+ static void l2cap_sock_state_change_cb(struct l2cap_chan *chan, int state,
+-- 
+2.28.0.220.ged08abb693-goog
+
