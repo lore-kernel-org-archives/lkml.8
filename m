@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3186AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96492C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051E820639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E9920658
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="N7LAbLrR"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="e6PWsULu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgHOWHe (ORCPT
+        id S1729036AbgHOWHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 18:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgHOVuo (ORCPT
+        with ESMTP id S1728269AbgHOVuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:44 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05B0C0F26F0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id u20so6116186pfn.0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63E6C0F26FB
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:47 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id x6so6035889pgx.12
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=BIuH6kISmbFa5kGRXf8C1zMlDZ6CK7mUtowqlOF0/dI=;
-        b=N7LAbLrRiARO/ku0BNslWmbNZ5KMCXLYS4qzRJQeD3ePz5Yc0oZPSKTy+Q+tKlLaSZ
-         vw4sOnwZUbHIwBkpaULk8Dqk1m0Ks89+CTMi2qyHyNAhT49JzM0/RZm4qt0hZ/wedgnT
-         nca35p5YbcomCaOpAzEKL0DcuitU3yNF+7APgnu2ircedVIIIkJb3bDwhLaBmRHPIcvj
-         p4Gzixsux1Po9Z+nJQoK/7ZRuqxIibSsvwuMfnEeEiYNN118g0/aECXWk0JIf8Zqmitp
-         R4cMpAJMWrzNAoJt+US7GHgi+0ITpXxHm49DrtT77cwixLU8EFf1Q6pad9Pfenz+XvZ1
-         sOaw==
+        bh=cgr9lRuKidkQIN9VikhOAh92WJNaoQaxLNAuYBGK56A=;
+        b=e6PWsULuK1ZSnLzAcLaCBxDm6omzMQsVIJecKyrN7HSU4hXEnzWV60RwOx7FNce0Hj
+         Ke+ZSTpcDU3JIhDtJRiZvJgsp122dUidCpvjhkRKTwv4T2amwjdG2UIi79GZF9VbMCRc
+         Ic8PK+2wuWD2Bm6eQZbWs8D3M+V9nhh2hzO1z95l3MlCIRKCGscsoer6Qj6nDTn2LmPA
+         4Zb19YxRviqttOYunp4fH/bLzZvrkhQVnFyHcwGDJTPLf2C0W7BZQ0DYeqM9vBfrf65i
+         5A8NFr8SWQ9gJwZpKTSRbtl/NV2ezk4rIYpB93OYN6gxUYxpSekq7y8hqke+WXPgT2WU
+         YH1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:from:subject:to:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BIuH6kISmbFa5kGRXf8C1zMlDZ6CK7mUtowqlOF0/dI=;
-        b=CiKU1aQYq2gfbrQhFBjyRXncHBRMFgunrt9vfYXIYvnQvn6egxiwPyOuYr4YIZlaWe
-         VzLpXdRnmnzNTF/cgjPpq8qWwwjcjT4VKnl4flAKOq9zB6WdOf7Q6DjH1KY4TsyGJXIS
-         SirD0jZLgmx0FE495ZQwmP/kLnaNuZhdj5yB95xxXSAaKXsIZsiN+KYOrNZAycTbRCWY
-         6sdEJROpDqe2RfpIJfxejO1WHj1qMFlcyYWYb+qjn4ttyA3YFyLvK6h+BacMLbOicPOl
-         MGzyA5NV9J5TKIZKU75sgcuzONt8whYzSixD14TvEDB7u+B+3YAazApIny1RaN6RdmMb
-         REAA==
-X-Gm-Message-State: AOAM5300ObMSJIpfCiv7tD1XUpk7LJsX7LEiq+gfkQMUJQ9l0JC3te9V
-        E6+8yPjD7N59iH5/hawGsVS2/Q==
-X-Google-Smtp-Source: ABdhPJyfy8cQiabf33POMoUVdvZFoEvwy1OBJwtbtdWdmCXbYJDDDjojpV/LcyrdhWnFkCXCxmfsvQ==
-X-Received: by 2002:a63:143:: with SMTP id 64mr5167393pgb.343.1597515300385;
-        Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
+        bh=cgr9lRuKidkQIN9VikhOAh92WJNaoQaxLNAuYBGK56A=;
+        b=R87klnjymWNxMtBLrnKYpFrU7wEm0PUEz9eoMD8WejREMHXAR7gtb2iNVAElnr/501
+         DHK3ks++1P2twks1UA1N4hbzYtluHSc8ur/bxKtzBcfWO8s9kVc31ZrMH5kQ+QHIFtiJ
+         VWmn9KGMHoDq+f8NHT4kLF2uB+MPgVnXCnaIOx33iMDnO0S/CCxEobMLiAY/Q99g+n+M
+         Xz5H0plyjuFutkrvEDQHPhB9GL09mRAZkJtRt+WPTHFmvlRacV7M9dJHVONFhdt2ZHFa
+         QjvouwAEdcZ9gNYNjznn3crXjwhrPX3/FLpjrR73ZvV83Suedk1aYEqdhwceCdoD0IlN
+         veAQ==
+X-Gm-Message-State: AOAM5324+ObD8CBJCmmZXPn0QtZTypX8I6gL9bSshmNQbCySQ8w/bBPW
+        ppq86HjyqinmsZ96ymjKrxttAQ==
+X-Google-Smtp-Source: ABdhPJzM1CZhjXBL0TtrdKhbrHniS7YBWuX7Am0ORQZPsO3178OMkcj+cFPwslOf9e4QBeTzu5pGhQ==
+X-Received: by 2002:a62:8cd3:: with SMTP id m202mr5746565pfd.184.1597515346498;
+        Sat, 15 Aug 2020 11:15:46 -0700 (PDT)
 Received: from ?IPv6:2605:e000:100e:8c61:6299:2df1:e468:6351? ([2605:e000:100e:8c61:6299:2df1:e468:6351])
-        by smtp.gmail.com with ESMTPSA id j94sm11734141pje.44.2020.08.15.11.14.59
+        by smtp.gmail.com with ESMTPSA id z77sm13633210pfc.199.2020.08.15.11.15.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 11:14:59 -0700 (PDT)
+        Sat, 15 Aug 2020 11:15:45 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
 Subject: Re: possible deadlock in io_poll_double_wake
 To:     syzbot <syzbot+0d56cfeec64f045baffc@syzkaller.appspotmail.com>,
         io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
         viro@zeniv.linux.org.uk
 References: <000000000000923cee05acee6f61@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e3494c53-f84e-5152-42b0-f8ddd3ad4ccb@kernel.dk>
-Date:   Sat, 15 Aug 2020 11:14:58 -0700
+Message-ID: <f9436b5a-c8d5-1c45-3039-6e2ddea3a313@kernel.dk>
+Date:   Sat, 15 Aug 2020 11:15:44 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -81,7 +81,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz dupe general protection fault in io_poll_double_wake
+#syz dup general protection fault in io_poll_double_wake
 
 -- 
 Jens Axboe
