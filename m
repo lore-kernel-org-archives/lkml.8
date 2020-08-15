@@ -2,141 +2,107 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513F120639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD58D20639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewJ3JKHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgHOWEm (ORCPT
+        id S1729855AbgHOWEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        Sat, 15 Aug 2020 18:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728542AbgHOVvB (ORCPT
+        with ESMTP id S1728506AbgHOVuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:01 -0400
-Received: from mail-il1-x145.google.com (mail-il1-x145.google.com [IPv6:2607:f8b0:4864:20::145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91977C0F26EC
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:14:18 -0700 (PDT)
-Received: by mail-il1-x145.google.com with SMTP id k8so5087162ili.21
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:14:18 -0700 (PDT)
+        Sat, 15 Aug 2020 17:50:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C712C0F26E6
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:51 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l2so11052967wrc.7
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=D1qp9Sg5Vz7dxa7BsyonZd3Kc8l+lC9M/3l1Va+2nWM=;
+        b=ewJ3JKHkqTMghk5rkiCzHfQPeZiL5378GCf2e4QX+fdrHf5zqLZay9/iat/Gb0QcPW
+         0IGBiq3pCuwD8TA/vs1MZMKwhaIvtLJffg153Jy2e60LEl8esFycaOsJWqX6BXexbGYC
+         WyfP2vWdWzLPYvz+sDayOp3edkJkzG3Lx7MRa0oDJ3OReBJ9MUf4iZz5AVsHI5dW8q8e
+         s4iunHft6TcjESOL3RnB6wwYyEI76ZQzh0B3CIjL2m18fzBMhObRVu6+W+XMfQ1lSBf7
+         SkIsfOp+g6Xk++GC1d19mvaretDliRqj0K6TDc5X1Dy5h07f2TgmrN5xSGwew3vPTZS1
+         CF0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Tsrf0W3zdR8N6Sz4q9zL/K2/kh+E+ME01i4FhEUCMRQ=;
-        b=i3LxMJMiTKAIG7E6S4gu+fqNCB6LXrGGz6QAnBx569pqjv86FYDganIhiYKxSFfXFE
-         pby5Doit1RUB3Jnu2b9cGsuHHsnVsrD6lNP0Hvmt2Ef+1zZgFodEzRK7EQkrJAjSGGJl
-         iV1FgmrdkOFt2xoAThEqPYM01yOP1JtuyznuBtE0YdPYR2qQL5VtRIgQPUMTqWn6TkkG
-         u4y7cfpazpoe9yD6TZiUXnd6cTHANftGwAzdBOw2QsHj/rvXWLFdFGVmm3UneNmruSAD
-         emDw1YgiBstNFsGEMUYaLBlmGOWXx3jkrEocRRrpC4hYKpa4sMX60qSWT4k6pae/PXDf
-         sXRQ==
-X-Gm-Message-State: AOAM531i1f4bP/hJLdGXZf94jn0nw0V9tQBcCNNAMPmsNH92FWAva/fv
-        /6+rkwHFnes0zbTYAPI+1W21Q0H0lyaCzXIMoVNt8FJ95Jt4
-X-Google-Smtp-Source: ABdhPJxYqKqeKYXpBI+HjSS1BvnO9LP/5Zfu3IqMgkk1OcFJhfjveTF2PxtjTI1vWp6rJMeM+xx5/uYZ8rnvmalXEbxnC2kMkSXi
-MIME-Version: 1.0
-X-Received: by 2002:a92:d4cc:: with SMTP id o12mr7100103ilm.90.1597515257724;
- Sat, 15 Aug 2020 11:14:17 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 11:14:17 -0700
-In-Reply-To: <000000000000923cee05acee6f61@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000075c7e805acee8158@google.com>
-Subject: Re: possible deadlock in io_poll_double_wake
-From:   syzbot <syzbot+0d56cfeec64f045baffc@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=D1qp9Sg5Vz7dxa7BsyonZd3Kc8l+lC9M/3l1Va+2nWM=;
+        b=Lc4UctOHqPLHkV/2YiNJT/brvk0W87vkGUqyxDSZbU2pDGkz+CyqDiwtsFFacC/3ud
+         veaZDU1dCHWEH7B9vCA7aXFwh+gTGOR2kDMQPovl8CFxGGr7A9ZB+7JJJMg/0nhyiUPI
+         /0FUsvTnVt+bRuA8rJS9oD93sOASBWWce0TijWVsM1/lEFvhynP/nlqVzSFzzcCtqKER
+         +o5fT6UG4gpvoTMzvj2P2lPJdgJ6n91IarSVzNZ/oB204SB+eoIZ/b1kwUXBwHmq/TId
+         0MRC0C7zgL3l/cWawcSqnYmKj4qVqwNRoNq2WynrLDzvzHCX3e763eLDbm9JUkIKmUpA
+         JV6w==
+X-Gm-Message-State: AOAM53047ap0DBlB9R8arwsoR2p4c5iBgU3HFxmj6t5AcdKbr0uZSIEA
+        Mcn3wqZOoeUTW5HLRqC+5zZuhK4I5Hg=
+X-Google-Smtp-Source: ABdhPJxAsJDNrK39Otc1xbssnuz3FFHo2LdOIqBaRvmTsBRkRX2si2FaB1F6EwWuqyWIgM6PmCzQbw==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr7600511wrv.127.1597514390069;
+        Sat, 15 Aug 2020 10:59:50 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id e5sm24460775wrc.37.2020.08.15.10.59.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2020 10:59:48 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Subject: [PATCH 7/9] habanalabs: check TPC vector pipe is empty
+Date:   Sat, 15 Aug 2020 20:59:36 +0300
+Message-Id: <20200815175938.16619-7-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200815175938.16619-1-oded.gabbay@gmail.com>
+References: <20200815175938.16619-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+The driver waits for the TPC vector pipe to be empty before checking if the
+TPC kernel has finished executing, but the code doesn't validate that the
+pipe was indeed empty, it just wait for it without checking the return
+value.
 
-HEAD commit:    c9c9735c Merge tag 'scsi-misc' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=165d3b6a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=adea84f38e7bc8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d56cfeec64f045baffc
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1018494a900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c8e1e2900000
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/gaudi/gaudi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0d56cfeec64f045baffc@syzkaller.appspotmail.com
-
-============================================
-WARNING: possible recursive locking detected
-5.8.0-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor639/6830 is trying to acquire lock:
-ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:354 [inline]
-ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: io_poll_double_wake+0x108/0x360 fs/io_uring.c:4599
-
-but task is already holding lock:
-ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:122 [inline]
-ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: __wake_up+0xb8/0x150 kernel/sched/wait.c:142
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&tty->write_wait);
-  lock(&tty->write_wait);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-4 locks held by syz-executor639/6830:
- #0: ffff8880a6bc5098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x21/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffff8880a6bc52e8 (&tty->termios_rwsem){++++}-{3:3}, at: tty_set_termios+0xc5/0x1510 drivers/tty/tty_ioctl.c:328
- #2: ffff8880a6bc5098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref+0x18/0x80 drivers/tty/tty_ldisc.c:288
- #3: ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:122 [inline]
- #3: ffff8880a6bc5530 (&tty->write_wait){-.-.}-{2:2}, at: __wake_up+0xb8/0x150 kernel/sched/wait.c:142
-
-stack backtrace:
-CPU: 0 PID: 6830 Comm: syz-executor639 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
- check_deadlock kernel/locking/lockdep.c:2432 [inline]
- validate_chain+0x69a4/0x88a0 kernel/locking/lockdep.c:3202
- __lock_acquire+0x1161/0x2ab0 kernel/locking/lockdep.c:4426
- lock_acquire+0x160/0x730 kernel/locking/lockdep.c:5005
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:354 [inline]
- io_poll_double_wake+0x108/0x360 fs/io_uring.c:4599
- __wake_up_common+0x30a/0x4e0 kernel/sched/wait.c:93
- __wake_up_common_lock kernel/sched/wait.c:123 [inline]
- __wake_up+0xd4/0x150 kernel/sched/wait.c:142
- n_tty_set_termios+0xa60/0x1080 drivers/tty/n_tty.c:1874
- tty_set_termios+0xcac/0x1510 drivers/tty/tty_ioctl.c:341
- set_termios+0x4a1/0x580 drivers/tty/tty_ioctl.c:414
- tty_mode_ioctl+0x7b2/0xa80 drivers/tty/tty_ioctl.c:770
- tty_ioctl+0xf81/0x15c0 drivers/tty/tty_io.c:2665
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4405b9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdae6bfd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000004405b9
-RDX: 0000000020000000 RSI: 0000000000005404 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e20
-R13: 0000000000401eb0 R14: 0000000000000000 R15: 0000000000000000
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index ffd0849e8f2d..3360c3c207a9 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -6262,6 +6262,15 @@ static int gaudi_run_tpc_kernel(struct hl_device *hdev, u64 tpc_kernel,
+ 		1000,
+ 		kernel_timeout);
+ 
++	if (rc) {
++		dev_err(hdev->dev,
++			"Timeout while waiting for TPC%d vector pipe\n",
++			tpc_id);
++		hdev->asic_funcs->set_clock_gating(hdev);
++		mutex_unlock(&gaudi->clk_gate_mutex);
++		return -EIO;
++	}
++
+ 	rc = hl_poll_timeout(
+ 		hdev,
+ 		mmTPC0_CFG_WQ_INFLIGHT_CNTR + offset,
+-- 
+2.17.1
 
