@@ -2,83 +2,287 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9030FC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB04C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA2320658
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCC120658
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgHOWau (ORCPT
+        id S1729449AbgHOWaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
+        Sat, 15 Aug 2020 18:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729254AbgHOWan (ORCPT
+        with ESMTP id S1729196AbgHOWan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:30:43 -0400
-Received: from mail-io1-xd48.google.com (mail-io1-xd48.google.com [IPv6:2607:f8b0:4864:20::d48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BDBC0045B7
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 13:03:06 -0700 (PDT)
-Received: by mail-io1-xd48.google.com with SMTP id k10so7851410ioh.22
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 13:03:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=GL4DVB34UG1iqD0+jY4irCmmCEbZL1uTh6mw9vlItmk=;
-        b=K+0zPQau+AVLJdRVdghWc6Ox5tbjbIc7ve8BHAlkllkGrbCT2WLUKZfzxMMHANucgv
-         cHJ68z/3GqpUstAauB38JY7cqAR0UFP/DZ+zPMJUZnjgIxVkDYzbtkjZqe94jXQVVokP
-         v1X6vRpJPHJbny0HBHS9ATRsz8ZrJzWRxSWlk49WdL0ejNsw+R25BQtxOWeirgBljovA
-         ++XVEe1CtsPuzx51AahBxOqhLEQ3I/qRREtYnUeafjnBtl0lkGjngCDlFhAgdF60DaL4
-         n9bP2f/67bqPQBJRDbbLdumIF+3MhWUqEgLh+KE/kiaBOWAI5fo5kylHNGvai6/L+8hY
-         wXvA==
-X-Gm-Message-State: AOAM532kD/SCuPxTZIqN9pSA3jfWFkHqfnHJ3qrl6+y5JRY5VMtJCCMR
-        lUx9WjN4F+M/snyI+S+hpj/s/O5e5XsozG1XuvQmSiOhRtSO
-X-Google-Smtp-Source: ABdhPJwdTmBisU2wAY2tIbzM3sMi0k8roJATOzeZ3Cok9bb17JPYOxx0ftj7w2o6tEV0k/n7ffBFf8rJeLR+Tlx+Ol4cIbF5UNVl
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F784C0045B4;
+        Sat, 15 Aug 2020 12:59:39 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 07FJwa7T068168;
+        Sat, 15 Aug 2020 21:58:36 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 07FJwaPg001035;
+        Sat, 15 Aug 2020 21:58:36 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 07FJwad3001034;
+        Sat, 15 Aug 2020 21:58:36 +0200
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>,
+        Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core - platform/SoC support.
+Date:   Sat, 15 Aug 2020 21:43:07 +0200
+Message-Id: <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1597518433.git.ppisa@pikron.com>
+References: <cover.1597518433.git.ppisa@pikron.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:354d:: with SMTP id c74mr7061356ila.27.1597521785710;
- Sat, 15 Aug 2020 13:03:05 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 13:03:05 -0700
-In-Reply-To: <00000000000077346605a5a70a32@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008eef2f05acf006f8@google.com>
-Subject: Re: KASAN: out-of-bounds Read in pebs_update_state
-From:   syzbot <syzbot+45862e7027be5d590577@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
-        daniel.vetter@ffwll.ch, gregkh@linuxfoundation.org, hpa@zytor.com,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp,
-        penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 07FJwa7T068168
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-0.497, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1598126318.06685@XFUL32+Siwz7C+JDZTg5TA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+Platform bus adaptation for CTU CAN FD open-source IP core.
 
-commit 033724d6864245a11f8e04c066002e6ad22b3fd0
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Wed Jul 15 01:51:02 2020 +0000
+The core has been tested together with OpenCores SJA1000
+modified to be CAN FD frames tolerant on MicroZed Zynq based
+MZ_APO education kits designed by Petr Porazil from PiKRON.com
+company. FPGA design
 
-    fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12ed4181900000
-start commit:   e99332e7 gcc-10: mark more functions __init to avoid secti..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
-dashboard link: https://syzkaller.appspot.com/bug?extid=45862e7027be5d590577
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17bb1714100000
+The kit description at the Computer Architectures course pages
 
-If the result looks correct, please mark the issue as fixed by replying with:
+  https://cw.fel.cvut.cz/wiki/courses/b35apo/documentation/mz_apo/start .
 
-#syz fix: fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Kit carrier board and mechanics design source files
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+  https://gitlab.com/pikron/projects/mz_apo/microzed_apo
+
+The work is documented in Martin Jeřábek's diploma theses
+Open-source and Open-hardware CAN FD Protocol Support
+
+  https://dspace.cvut.cz/handle/10467/80366
+.
+
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Signed-off-by: Martin Jerabek <martin.jerabek01@gmail.com>
+Signed-off-by: Ondrej Ille <ondrej.ille@gmail.com>
+---
+ drivers/net/can/ctucanfd/Kconfig              |  11 ++
+ drivers/net/can/ctucanfd/Makefile             |   3 +
+ .../net/can/ctucanfd/ctu_can_fd_platform.c    | 142 ++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+
+diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
+index e1636373628a..a8c9cc38f216 100644
+--- a/drivers/net/can/ctucanfd/Kconfig
++++ b/drivers/net/can/ctucanfd/Kconfig
+@@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
+ 	  PCIe board with PiKRON.com designed transceiver riser shield is available
+ 	  at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
+ 
++config CAN_CTUCANFD_PLATFORM
++	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
++	depends on OF
++	help
++	  The core has been tested together with OpenCores SJA1000
++	  modified to be CAN FD frames tolerant on MicroZed Zynq based
++	  MZ_APO education kits designed by Petr Porazil from PiKRON.com
++	  company. FPGA design https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top.
++	  The kit description at the Computer Architectures course pages
++	  https://cw.fel.cvut.cz/b182/courses/b35apo/documentation/mz_apo/start .
++
+ endif
+diff --git a/drivers/net/can/ctucanfd/Makefile b/drivers/net/can/ctucanfd/Makefile
+index eb945260952d..a77ca72d534e 100644
+--- a/drivers/net/can/ctucanfd/Makefile
++++ b/drivers/net/can/ctucanfd/Makefile
+@@ -8,3 +8,6 @@ ctucanfd-y := ctu_can_fd.o ctu_can_fd_hw.o
+ 
+ obj-$(CONFIG_CAN_CTUCANFD_PCI) += ctucanfd_pci.o
+ ctucanfd_pci-y := ctu_can_fd_pci.o
++
++obj-$(CONFIG_CAN_CTUCANFD_PLATFORM) += ctucanfd_platform.o
++ctucanfd_platform-y += ctu_can_fd_platform.o
+diff --git a/drivers/net/can/ctucanfd/ctu_can_fd_platform.c b/drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+new file mode 100644
+index 000000000000..c35b16b8566b
+--- /dev/null
++++ b/drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*******************************************************************************
++ *
++ * CTU CAN FD IP Core
++ *
++ * Copyright (C) 2015-2018 Ondrej Ille <ondrej.ille@gmail.com> FEE CTU
++ * Copyright (C) 2018-2020 Ondrej Ille <ondrej.ille@gmail.com> self-funded
++ * Copyright (C) 2018-2019 Martin Jerabek <martin.jerabek01@gmail.com> FEE CTU
++ * Copyright (C) 2018-2020 Pavel Pisa <pisa@cmp.felk.cvut.cz> FEE CTU/self-funded
++ *
++ * Project advisors:
++ *     Jiri Novak <jnovak@fel.cvut.cz>
++ *     Pavel Pisa <pisa@cmp.felk.cvut.cz>
++ *
++ * Department of Measurement         (http://meas.fel.cvut.cz/)
++ * Faculty of Electrical Engineering (http://www.fel.cvut.cz)
++ * Czech Technical University        (http://www.cvut.cz/)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ ******************************************************************************/
++
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#include "ctu_can_fd.h"
++
++#define DRV_NAME	"ctucanfd"
++
++static void ctucan_platform_set_drvdata(struct device *dev,
++					struct net_device *ndev)
++{
++	struct platform_device *pdev = container_of(dev, struct platform_device,
++						    dev);
++
++	platform_set_drvdata(pdev, ndev);
++}
++
++/**
++ * ctucan_platform_probe - Platform registration call
++ * @pdev:	Handle to the platform device structure
++ *
++ * This function does all the memory allocation and registration for the CAN
++ * device.
++ *
++ * Return: 0 on success and failure value on error
++ */
++static int ctucan_platform_probe(struct platform_device *pdev)
++{
++	struct resource *res; /* IO mem resources */
++	struct device	*dev = &pdev->dev;
++	void __iomem *addr;
++	int ret;
++	unsigned int ntxbufs;
++	int irq;
++
++	/* Get the virtual base address for the device */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	addr = devm_ioremap_resource(dev, res);
++	if (IS_ERR(addr)) {
++		dev_err(dev, "Cannot remap address.\n");
++		ret = PTR_ERR(addr);
++		goto err;
++	}
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "Cannot find interrupt.\n");
++		ret = irq;
++		goto err;
++	}
++
++	/* Number of tx bufs might be change in HW for future. If so,
++	 * it will be passed as property via device tree
++	 */
++	ntxbufs = 4;
++	ret = ctucan_probe_common(dev, addr, irq, ntxbufs, 0,
++				  1, ctucan_platform_set_drvdata);
++
++	if (ret < 0)
++		platform_set_drvdata(pdev, NULL);
++
++err:
++	return ret;
++}
++
++/**
++ * ctucan_platform_remove - Unregister the device after releasing the resources
++ * @pdev:	Handle to the platform device structure
++ *
++ * This function frees all the resources allocated to the device.
++ * Return: 0 always
++ */
++static int ctucan_platform_remove(struct platform_device *pdev)
++{
++	struct net_device *ndev = platform_get_drvdata(pdev);
++	struct ctucan_priv *priv = netdev_priv(ndev);
++
++	netdev_dbg(ndev, "ctucan_remove");
++
++	unregister_candev(ndev);
++	pm_runtime_disable(&pdev->dev);
++	netif_napi_del(&priv->napi);
++	free_candev(ndev);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(ctucan_platform_pm_ops, ctucan_suspend, ctucan_resume);
++
++/* Match table for OF platform binding */
++static const struct of_device_id ctucan_of_match[] = {
++	{ .compatible = "ctu,ctucanfd-2", },
++	{ .compatible = "ctu,ctucanfd", },
++	{ /* end of list */ },
++};
++MODULE_DEVICE_TABLE(of, ctucan_of_match);
++
++static struct platform_driver ctucanfd_driver = {
++	.probe	= ctucan_platform_probe,
++	.remove	= ctucan_platform_remove,
++	.driver	= {
++		.name = DRV_NAME,
++		.pm = &ctucan_platform_pm_ops,
++		.of_match_table	= ctucan_of_match,
++	},
++};
++
++module_platform_driver(ctucanfd_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Martin Jerabek");
++MODULE_DESCRIPTION("CTU CAN FD for platform");
+-- 
+2.20.1
+
