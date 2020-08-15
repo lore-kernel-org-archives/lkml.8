@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3937EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 316A120657
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BA120658
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgHOWYB (ORCPT
+        id S1729424AbgHOWYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:24:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37958 "EHLO mx2.suse.de"
+        Sat, 15 Aug 2020 18:24:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37956 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbgHOWXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:23:50 -0400
+        id S1728765AbgHOWXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:23:46 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C53CFB65B;
-        Sat, 15 Aug 2020 07:52:17 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id E9063AC50;
+        Sat, 15 Aug 2020 12:46:45 +0000 (UTC)
+From:   colyli@suse.de
 To:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Coly Li <colyli@suse.de>, Dan Williams <dan.j.williams@intel.com>,
         James Bottomley <jejb@linux.ibm.com>,
@@ -32,8 +32,8 @@ Cc:     Coly Li <colyli@suse.de>, Dan Williams <dan.j.williams@intel.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Stefan Berger <stefanb@linux.ibm.com>
 Subject: [PATCH RESEND] docs: update trusted-encrypted.rst
-Date:   Sat, 15 Aug 2020 15:51:43 +0800
-Message-Id: <20200815075143.47082-1-colyli@suse.de>
+Date:   Sat, 15 Aug 2020 20:46:14 +0800
+Message-Id: <20200815124614.115201-1-colyli@suse.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,6 +41,8 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+From: Coly Li <colyli@suse.de>
 
 The parameters in tmp2 commands are outdated, people are not able to
 create trusted key by the example commands.
