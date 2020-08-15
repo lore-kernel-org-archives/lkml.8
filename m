@@ -2,150 +2,122 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58587C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37D45206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CLaLDaVS"
+	by mail.kernel.org (Postfix) with ESMTP id 22B2F206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597528574;
+	bh=TIb8MzV1Iy398kuBIMRykpL6Dkij6iQ7wIG7y135VuI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fR+CSs6myTwnmkEg7D5/juwqwIhTbmbBYFj1IfSFCK/WCBFSbTQy7z28F744duKgA
+	 qvZ8T9b+xS+8WHRmm9TWLGp0jNBbIxM34KcTpW6jdc4R493dxh9w/cmvNZy5oCvCMG
+	 adtHVyOataF05QHfKlN4inukawYAusEl+dvKe+/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgHOV4H (ORCPT
+        id S1728860AbgHOV4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        Sat, 15 Aug 2020 17:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729039AbgHOVwO (ORCPT
+        with ESMTP id S1728249AbgHOVwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:52:14 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8819C06137A
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:33 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 2so10162586qkf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:33 -0700 (PDT)
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B5FC061363
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 19:34:06 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m15so5754586lfp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 19:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vbniwNR3aKZ0L4CoWzsSoDjZIVxcefGHSxeEpUJZ0hc=;
-        b=CLaLDaVSSaOthzY7gj1/EAO/pRnF2RWI6hfa4ynUe7KqmWc+DGlX2ACZOU1gh16HxH
-         aodTD9ByW0xt4FgXGtwGU/SD7Kn16uBl6/ThKLo2j/c6IDaMkhBwWj7k6ckY62nKCIbL
-         KRdpyOXY4T3U2n9LwDx7jNU0zXN1Zn0yFS5oc=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qv3qmfuM3ON3dTRR9DJ/SW9QfEaLnmKIX6GHHlE8Ljg=;
+        b=HMXEuIIUsx9XgiA0p9Nl4Mb/yft6xail9kTFSwgsTDZgS3IrGkRKl307Q+vB4t7MEL
+         ymg2OU+CfzNAxV/xS1WJ7U0fVxN9MN4ScyCpWZhXejsoAxugr9Pt/URbmafCy6qw6cgG
+         sjLdtC+S9bZeT7peOnhGNNfF0zG+zP1z6RlG4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vbniwNR3aKZ0L4CoWzsSoDjZIVxcefGHSxeEpUJZ0hc=;
-        b=eatPwjN8X6lfIDZr9f9SqPQ377W6cyTUhLEpwjh++UuchvI9+nT0O725IYNaIXzrV/
-         vVCnfOZpMfZX9DB/f3yLnpMe1kY8bkwzvDQNp51d8RvTbmi1UENefIULDYbfb4isFWro
-         yPwM1CDhgj77Ckvrjv5SDhZ+1mywh8CG+uAaeC9Xj5ey6MLN2Nn929jv1LqJmgQrtQcL
-         srzBypTSu7lDF5ndaLpVzlTvAC3VmdrUlw8NWQvTa8oNuVlkdJJTMG4uyPK63bHnkJPX
-         HeenCisWIu0Chzx2yXJY0qVFztWhK40OYeYgnz4dSDH0SbM9kCAG0BdGTLxYnIiYngOI
-         LN3g==
-X-Gm-Message-State: AOAM532XKhFQ2ORbjmeSBxvVGMrNbRJ8fyM3fDFv1z1FJclVMV5i094d
-        JhByhSpFcaej1J40XPWGK7ymmdxPRu6kjw==
-X-Google-Smtp-Source: ABdhPJy8ThSw7e+zQhabD7gscM+Z8WPky9F7ZtlinM8kmEMwHAZW3RtkxPL4s0Cn3FOUVzK0AQ9s2w==
-X-Received: by 2002:a37:9c7:: with SMTP id 190mr4379796qkj.303.1597461572672;
-        Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        fweisbec@gmail.com, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH RFC 09/12] sched/coresched: Use for_each_cpu(_wrap)_or for pick_next_task
-Date:   Fri, 14 Aug 2020 23:19:05 -0400
-Message-Id: <20200815031908.1015049-10-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
-References: <20200815031908.1015049-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qv3qmfuM3ON3dTRR9DJ/SW9QfEaLnmKIX6GHHlE8Ljg=;
+        b=qrE4T5d5w5z75O16JZ8iGxRAaxhDNwGzbv2lzeGN76SU3J4gnz1WqL5MIqbtcmDGNF
+         1AiaxM32EE1gwKGgwX7A+xiLfn+aV5lxuoU+ifKZDinrYR7ul3APWfroGI+WpOLj+BJn
+         GKGHdOuzb+HjOaEAmqsWkRslVIa/KwJ2xDBsZHjamwoKGiPSkyjycLuAwHeyoOPrZFg7
+         FXmD623RLPYafvIkh86mzNF1rdVkuzcHCO17hViK5qCujM4wmbGom+lG1d0fhszlNrqI
+         CBl5ySL3H3fGqVCewist0T7etLXgQcGafWtSs9iM9P8AwQAPrDUrNDSDHHtzq2OBTjfP
+         DdSg==
+X-Gm-Message-State: AOAM530PJBIP2WbP6ytXKTPPVZYRqhlXtcSMg7ZnHByaRV6qAjsy691+
+        dpg04i6v92iVi1rqiaDPQMKQERYYYTBLuw==
+X-Google-Smtp-Source: ABdhPJzMdbf5LCXevAEwb+AuSJt17q60Te6RIf7FhU65hsPcf1pH4/oi8QgTEU4MjPxkxp421F4YiA==
+X-Received: by 2002:a19:3d4:: with SMTP id 203mr2486100lfd.183.1597458844746;
+        Fri, 14 Aug 2020 19:34:04 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id t27sm2087585ljd.101.2020.08.14.19.34.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Aug 2020 19:34:03 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id w25so11837234ljo.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 19:34:03 -0700 (PDT)
+X-Received: by 2002:a2e:92d0:: with SMTP id k16mr2338800ljh.70.1597458842826;
+ Fri, 14 Aug 2020 19:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley>
+ <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de>
+ <20200813051853.GA510@jagdpanzerIV.localdomain> <875z9nvvl2.fsf@jogness.linutronix.de>
+ <20200813084136.GK12903@alley> <20200813115435.GB483@jagdpanzerIV.localdomain>
+ <CAHk-=wjoRWDAGkeevWtxR73vMimYfzJt13yFqTqv=7BGb0cuAQ@mail.gmail.com> <b87a02b75c715d9a9f381fe3869612bb826a7351.camel@perches.com>
+In-Reply-To: <b87a02b75c715d9a9f381fe3869612bb826a7351.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 14 Aug 2020 19:33:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjNZ40akqgnb1y=dSYv1fX2Wk1SGF5hAzuV2azi5oQ+Tg@mail.gmail.com>
+Message-ID: <CAHk-=wjNZ40akqgnb1y=dSYv1fX2Wk1SGF5hAzuV2azi5oQ+Tg@mail.gmail.com>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+To:     Joe Perches <joe@perches.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Pillai <viremana@linux.microsoft.com>
+On Fri, Aug 14, 2020 at 4:52 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2020-08-14 at 15:46 -0700, Linus Torvalds wrote:
+> >
+> > This is why I think any discussion that says "people should buffer
+> > their lines themselves and we should get rid if pr_cont()" is
+> > fundamentally broken.
+> >
+> > Don't go down that hole. I won't take it. It's wrong.
+>
+> I don't think it's wrong per se.
 
-During a CPU hotplug event, schedule would be called with the hotplugged CPU
-not in the cpumask. So use for_each_cpu(_wrap)_or to include the current cpu in
-the task pick loop.
+It's *absolutely* and 100% wrong.
 
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/sched/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Yes, any random *user* of pr_cont() can decide to buffer on it's own.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ff13254ed317..3e9df8221c62 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4663,7 +4663,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	/* reset state */
- 	rq->core->core_cookie = 0UL;
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		trace_printk("CPU %d is in smt_mask, resetting\n", i);
-@@ -4685,7 +4685,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 */
- 	for_each_class(class) {
- again:
--		for_each_cpu_wrap(i, smt_mask, cpu) {
-+		for_each_cpu_wrap_or(i, smt_mask, cpumask_of(cpu), cpu) {
- 			struct rq *rq_i = cpu_rq(i);
- 			struct task_struct *p;
- 
-@@ -4774,6 +4774,9 @@ next_class:;
- 	rq->core->core_pick_seq = rq->core->core_task_seq;
- 	next = rq->core_pick;
- 	rq->core_sched_seq = rq->core->core_pick_seq;
-+
-+	/* Something should have been selected for current CPU */
-+	WARN_ON_ONCE(!next);
- 	trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
- 
- 	/*
-@@ -4784,7 +4787,7 @@ next_class:;
- 	 * their task. This ensures there is no inter-sibling overlap between
- 	 * non-matching user state.
- 	 */
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		WARN_ON_ONCE(!rq_i->core_pick);
--- 
-2.28.0.220.ged08abb693-goog
+But when the discussion is about printk() - the implementation, not
+the users - then it's complete and utter BS to talk about trying to
+get rid of pr_cont().
 
+See the difference?
+
+                Linus
