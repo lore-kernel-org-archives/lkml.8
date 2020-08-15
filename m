@@ -2,102 +2,84 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E826BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1237C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC0F2206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcfdA6dC"
+	by mail.kernel.org (Postfix) with ESMTP id DA7BD22BED
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgHOV7Q (ORCPT
+        id S1729570AbgHOV7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
+        Sat, 15 Aug 2020 17:59:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728898AbgHOVvn (ORCPT
+        with ESMTP id S1728897AbgHOVvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:43 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E817C02B8E9;
-        Sat, 15 Aug 2020 04:57:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id cq28so8738336edb.10;
-        Sat, 15 Aug 2020 04:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=e5WFLhWdFvLwcJo4KJClLZEF3HzHgvxjJKIXosYGPF4=;
-        b=PcfdA6dCXp/NZfoSZ2qnOycj1qJUi1htbO1eEEq90NaS1ZBNtqKKvp1yvvCT6cR1PI
-         b1AyVQY7O8k4eEUHuydvkugG0tJUjhwA2fvz5I9l6Lx++TMWojg2bObnsk5CR0wP9FiX
-         63gXciEy2Il0KmD4LFadcrKozWgYmQsQkEMWhWPX69t3mZKVxM33h3KAbNMYJEC4h5DC
-         BYe+jTdevJIvd1kD+Pfq3i8+gV9w2fbrYIVGWU6HZy8uYn2OaJ1xhDfFMVENqtOO7KEx
-         idE//vhd2D03izVfJla8QsRJsDuR0yb3IWaKmztSqs4ijrmlYeATzNHgbiQnXG8jlBLA
-         gnFA==
+        Sat, 15 Aug 2020 17:51:42 -0400
+Received: from mail-il1-x145.google.com (mail-il1-x145.google.com [IPv6:2607:f8b0:4864:20::145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B612C08C5ED
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 03:18:09 -0700 (PDT)
+Received: by mail-il1-x145.google.com with SMTP id i66so8287636ile.6
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 03:18:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e5WFLhWdFvLwcJo4KJClLZEF3HzHgvxjJKIXosYGPF4=;
-        b=rgAADB7dVpXGFcMOJefsjrLybXJAT5hWJS/IFoPdxlRssp8Tmj1r+AC0raC+CecvG8
-         3PcKHyytFz+5ofo436s+/O3hu3BnjMSGWXiudHvILQYJYVb6hLHNjJSXSAGUSjubJFmQ
-         asshmJxyMfgPRdOs4Q3pmViwb0TwvzK/rD36+jnSyeeP8p2DvokRvoYlkI1tv0HsODst
-         y0NOClcbLp88h5Cz/McLTzHkmC0GtYfR1ZQa4knGHyWxYs5y3WudF03RNf2eCJkVEvck
-         g5pesB26P0Ge+w2ZV9PF+vR2WTJkla37V2wjDMiLEFlGV7eEXRDkIfv6HoJfWyEPxoaH
-         7OlA==
-X-Gm-Message-State: AOAM533lJA9TsxKOYGxgGxSTeemDabiC+aqs3XBJpnbqWfA3mBcA7Xw0
-        fiU0zXUxz8rWm/ECopPb9ZY=
-X-Google-Smtp-Source: ABdhPJx3wb69o+9Gns8Ea5rU+G4bqnaPXWRFFoT1SHfqA0FUCsdviXL44mSynODzetlPyjAiXO2OyQ==
-X-Received: by 2002:a50:b701:: with SMTP id g1mr6878915ede.197.1597492657686;
-        Sat, 15 Aug 2020 04:57:37 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d69:b900:61e5:2d94:8d77:6e0f])
-        by smtp.gmail.com with ESMTPSA id v13sm9184110ejq.59.2020.08.15.04.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 04:57:37 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] Documentation: add riscv entry in list of existing profiles
-Date:   Sat, 15 Aug 2020 13:57:28 +0200
-Message-Id: <20200815115728.15128-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=aSMYatUGNqv5jWLXKfM6VYDCIDAFgzJgx/5GgNSFP4s=;
+        b=tUATX8PPYoXt7M3zDZ55qKyMQglHSBvgqDbE8wp5wrm/TZ+/Wwkx/Sgsc4w2gPDAfu
+         6Pj1LdVKYm9wk27KtAWvyxRnzyn+bVOFfwMzNZIm7dWZqTNZENgnvz+LIZnscCpvXCiU
+         l7xbWWfEZt04umeJ1EGlxHNY2RB/vtSf3CWqZtPaS+Q800G26rSVK+v1wU0RuJrLr6XZ
+         k3sUegRxUfQjR7lqjzowMYQPF89/t8huDqmuzdmlkcLXjU0+QJjGrxTFrqe1uMNpnZJV
+         JyoWwfM5184zvQddl5ilIOHFLPBS1OyR9nS/guXo92uVMZ4w4fUaERGL5zVIGVhfAlCR
+         2X8w==
+X-Gm-Message-State: AOAM533DZr5DB0cnLecEqQRlGZW91x67WCRo4bwEcMYE86tsdXukZd2b
+        MxotSzgeMJfmYzgJ33YpXByMvHAkBbJAwrifNGPG6+lDINwZ
+X-Google-Smtp-Source: ABdhPJxa9WohqkoJcux/K8+Cn7Cm1Tp8E/EBpa4BoOZW/55b+UPuL60utKTAuqde6IT36lWruGC7XaYYmAtA/9xMATE9zbYd1D+t
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:ea3:: with SMTP id u3mr5809783ilj.49.1597486685361;
+ Sat, 15 Aug 2020 03:18:05 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 03:18:05 -0700
+In-Reply-To: <000000000000ff323f05a053100c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006a1b9e05ace7da39@google.com>
+Subject: Re: general protection fault in syscall_return_slowpath
+From:   syzbot <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com>
+To:     bp@alien8.de, dan.carpenter@oracle.com, daniel.vetter@ffwll.ch,
+        dvyukov@google.com, gregkh@linuxfoundation.org, hpa@zytor.com,
+        jannh@google.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+        mingo@redhat.com, natechancellor@gmail.com,
+        penguin-kernel@I-love.SAKURA.ne.jp,
+        penguin-kernel@i-love.sakura.ne.jp,
+        syzkaller-bugs@googlegroups.com, syzkaller@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As long as there are only a few maintainer entry profiles, i.e., three
-in v5.8, continue to maintain a complete a list of entries in the
-maintainer handbook.
+syzbot suspects this issue was fixed by commit:
 
-Complete the list by adding the RISC-V ARCHITECTURE maintainer entry
-profile found in MAINTAINERS.
+commit 033724d6864245a11f8e04c066002e6ad22b3fd0
+Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date:   Wed Jul 15 01:51:02 2020 +0000
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on docs-next
+    fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
 
-Dan, please ack.
-Jonathan, please pick this patch.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f979f6900000
+start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=cd66e43794b178bb5cd6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a42329e00000
 
- Documentation/maintainer/maintainer-entry-profile.rst | 1 +
- 1 file changed, 1 insertion(+)
+If the result looks correct, please mark the issue as fixed by replying with:
 
-diff --git a/Documentation/maintainer/maintainer-entry-profile.rst b/Documentation/maintainer/maintainer-entry-profile.rst
-index 227f427118e8..b7a627d6c97d 100644
---- a/Documentation/maintainer/maintainer-entry-profile.rst
-+++ b/Documentation/maintainer/maintainer-entry-profile.rst
-@@ -101,3 +101,4 @@ to do something different in the near future.
- 
-    ../doc-guide/maintainer-profile
-    ../nvdimm/maintainer-entry-profile
-+   ../riscv/patch-acceptance
--- 
-2.17.1
+#syz fix: fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
