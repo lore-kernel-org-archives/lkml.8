@@ -2,83 +2,133 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75839C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1072053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597528836;
-	bh=vEljPOThfSbnJn88gHs4Smd9TmldHaunZhuNavYVFW4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=c461mlEgLXFPr3ozvBs6NqDZcNYGBOCYLYJ56dOVZ4zlDabu2QLxHfv6UrKA/Q3Jc
-	 0daFl23KOO+/8YtuXLDVDJOtoNeQ4++mt7tJ1eYeSxA7plTZz/Vz3dcBGskoZ+zy1G
-	 oyUN3IisKHOWd/q/rf7bzZ1vWQ43zvoEQHUpVors=
+	by mail.kernel.org (Postfix) with ESMTP id 026C1205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/paDNBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgHOWAf (ORCPT
+        id S1729121AbgHOWAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728838AbgHOWA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:00:28 -0400
-Subject: Re: [GIT PULL] perf tool changes for v5.9: 2nd batch
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597515739;
-        bh=vEljPOThfSbnJn88gHs4Smd9TmldHaunZhuNavYVFW4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Vze+ZvfKm0DVLiQx6F9jCuGC4zZ42/3sh6vUSprrhTTNyiAv1Jc1QBk9w4mQI+AuA
-         yC/ELqfDzeJAecrZG57q2hgPetCH3noKhRHpDHuiq9TomeZvRWLZ7rnvUTivfGyF3D
-         2Hn02yE1OIpS65IiaU0THazwa0GUMzHgPRMEoPMM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200814174917.2591425-1-acme@kernel.org>
-References: <20200814174917.2591425-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200814174917.2591425-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-14
-X-PR-Tracked-Commit-Id: 492e4edba6e2fc0620a69266d33f29c4a1f9ac1e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 713eee84720e6525bc5b65954c5087604a15f5e8
-Message-Id: <159751573947.22808.8285651134325842958.pr-tracker-bot@kernel.org>
-Date:   Sat, 15 Aug 2020 18:22:19 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        Colin King <colin.king@canonical.com>,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        David Ahern <dsahern@kernel.org>,
-        "Frank Ch . Eigler" <fche@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Paul Clarke <pc@us.ibm.com>, Peng Fan <fanpeng@loongson.cn>,
-        Rob Herring <robh@kernel.org>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
+        Sat, 15 Aug 2020 18:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728824AbgHOVvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:51:35 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E3DC06123D;
+        Fri, 14 Aug 2020 23:53:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x25so5617636pff.4;
+        Fri, 14 Aug 2020 23:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pVKGZSGZNhPJKOQuv9oilwXJQTmZT9NWxjcZcAW1Dkc=;
+        b=T/paDNBwrJPd7tpI4px6vg1iXEHldiMa+fmuF2H1V+N0u081TAs9Qlrw68enOZhGuh
+         YfgZFNB1V38/Q8shdcgR4KA3i9sgcBiar5OKerPRbFWouzGYAFxdcKiF6LuekieSxEw+
+         7ZcZS8+AgqxMHKpRMhtRTAeUngPUQrp9ndSNkyMPORAOoskbAAEm9qtLqu4A6LPuubYK
+         3gOo5rw5bsmotyhM3xbMf0jDtJM6rfnmReKatfEGZSbqwk5tHl78cc93cMVzyICHts5D
+         d9lgByOtkGXkgUdQPL8gA9u7YwgjV4ipPrrwsSjibkrVFZ88dU67L9bzNNHFjza5t31d
+         +ulg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pVKGZSGZNhPJKOQuv9oilwXJQTmZT9NWxjcZcAW1Dkc=;
+        b=LJWZebfDKOXTv77wbooBwfcl5J937su0CpzaSF7L5aTnwMyoju1qZgCzbejmMSuglS
+         7H2JptATZbsXLYzP5q/5P3tchQWSAPvn5McUpVWkV/9gLH2rXM7WM3/u8ndF/WJzWfyd
+         d+iqMLhr3JKrKf/OUqmKLOu2GqjeHqfa/yVdo15RHY0CsfKas9htXXFDHnLrsjheUIEr
+         dCYQuQ7kMemV39Dx3L3xX52umF3Uyaq3yCmXIai9NTkc3EpmxHr4/5Q2Up0KIQ80cfZO
+         aIqmQur/F2dlPUOVCf17DMRbKIb43c5cxqhvReLJilvyHkiY+1+gs3USY4YZY7sdvDLu
+         i0Iw==
+X-Gm-Message-State: AOAM531a+bDfxtAbjrgiE5XVZq7aJMsS/iU/4Exzsf1XovSZ/uWRw95O
+        9zUP5lf4cLLPHViYvufVlJ7fh23+BlM=
+X-Google-Smtp-Source: ABdhPJz/+FljT4cxQeY7+rTXYiiKIvIyoPaJtCubwetrLQ2346ifFhuRCW/LhJUv+eNmPF044AWmhg==
+X-Received: by 2002:a62:8c89:: with SMTP id m131mr4310246pfd.288.1597474394763;
+        Fri, 14 Aug 2020 23:53:14 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id x136sm10952194pfc.28.2020.08.14.23.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 23:53:13 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 14:53:09 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200815065309.GA13905@sol>
+References: <20200814030257.135463-1-warthog618@gmail.com>
+ <20200814030257.135463-8-warthog618@gmail.com>
+ <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 14:49:17 -0300:
+On Fri, Aug 14, 2020 at 09:31:29PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> 
+> Hi Kent,
+> 
+> not many comments here, just a couple minor details below.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-14
+[snip]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/713eee84720e6525bc5b65954c5087604a15f5e8
+> > +
+> > +/**
+> > + * struct line - contains the state of a userspace line request
+> > + * @gdev: the GPIO device the line request pertains to
+> > + * @label: consumer label used to tag descriptors
+> > + * @num_descs: the number of descriptors held in the descs array
+> > + * @descs: the GPIO descriptors held by this line request, with @num_descs
+> > + * elements.
+> > + */
+> > +struct line {
+> 
+> How about line_request, line_request_data or line_req_ctx? Something
+> more intuitive than struct line that doesn't even refer to a single
+> line. Same for relevant functions below.
+> 
 
-Thank you!
+As I've mentioned previously, I'm not a fan of names that include _data,
+_ctx, _state, or similar that don't really add anything.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I did consider line_request, but that was too close to the
+gpio_v2_line_request in gpio.d, not just the struct but also the
+resulting local variables, particularly in line_create() where they
+co-exist.
+
+Given the ioctl names, GPIO_V2_GET_LINE_IOCTL and
+GPIO_V2_LINE_GET/SET_xxx, that all create or operate on this struct, and
+that this is within the scope of gpiolib-cdev, the name 'line' seemed the
+best fit.
+
+And how does it not refer to a single line - what are the descs??
+
+No problems with your other comments.
+
+Cheers,
+Kent.
+
