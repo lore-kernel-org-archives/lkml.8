@@ -7,34 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88785C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8727FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B989206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BFD206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgHPAnK (ORCPT
+        id S1729182AbgHPApJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 20:43:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9738 "EHLO huawei.com"
+        Sat, 15 Aug 2020 20:45:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9739 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbgHPAnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 20:43:07 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A09C82E4AD79F8DA0C38;
-        Sat, 15 Aug 2020 16:55:35 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Sat, 15 Aug 2020
- 16:55:25 +0800
+        id S1726022AbgHPApI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 20:45:08 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ADEC9DB92E382919FF46
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 16:59:30 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 15 Aug 2020
+ 16:59:20 +0800
 From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>
+To:     <tglx@linutronix.de>
 CC:     <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
-Subject: [PATCH] sched: Convert to use the preferred fallthrough macro
-Date:   Sat, 15 Aug 2020 04:54:22 -0400
-Message-ID: <20200815085422.39115-1-linmiaohe@huawei.com>
+Subject: [PATCH] genirq: Convert to use the preferred fallthrough macro
+Date:   Sat, 15 Aug 2020 04:58:17 -0400
+Message-ID: <20200815085817.64335-1-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -50,30 +47,31 @@ Convert the uses of fallthrough comments to fallthrough macro.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- kernel/sched/topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/irq/manage.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 007b0a6b0152..1bd7e3af904f 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1219,13 +1219,13 @@ static void __free_domain_allocs(struct s_data *d, enum s_alloc what,
- 	case sa_rootdomain:
- 		if (!atomic_read(&d->rd->refcount))
- 			free_rootdomain(&d->rd->rcu);
--		/* Fall through */
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index d55ba625d426..375fcd78fdd3 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -271,7 +271,7 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 	case IRQ_SET_MASK_OK:
+ 	case IRQ_SET_MASK_OK_DONE:
+ 		cpumask_copy(desc->irq_common_data.affinity, mask);
+-		/* fall through */
 +		fallthrough;
- 	case sa_sd:
- 		free_percpu(d->sd);
--		/* Fall through */
+ 	case IRQ_SET_MASK_OK_NOCOPY:
+ 		irq_validate_effective_affinity(data);
+ 		irq_set_thread_affinity(desc);
+@@ -868,7 +868,7 @@ int __irq_set_trigger(struct irq_desc *desc, unsigned long flags)
+ 	case IRQ_SET_MASK_OK_DONE:
+ 		irqd_clear(&desc->irq_data, IRQD_TRIGGER_MASK);
+ 		irqd_set(&desc->irq_data, flags);
+-		/* fall through */
 +		fallthrough;
- 	case sa_sd_storage:
- 		__sdt_free(cpu_map);
--		/* Fall through */
-+		fallthrough;
- 	case sa_none:
- 		break;
- 	}
+ 
+ 	case IRQ_SET_MASK_OK_NOCOPY:
+ 		flags = irqd_get_trigger_type(&desc->irq_data);
 -- 
 2.19.1
 
