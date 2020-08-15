@@ -2,160 +2,87 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3186AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E33F20639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051E820639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUm0fiOo"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="N7LAbLrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgHOWHS (ORCPT
+        id S1729970AbgHOWHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
+        Sat, 15 Aug 2020 18:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728363AbgHOVus (ORCPT
+        with ESMTP id S1728117AbgHOVuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C31C0612EC
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:39:18 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u128so5480650pfb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:39:18 -0700 (PDT)
+        Sat, 15 Aug 2020 17:50:44 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05B0C0F26F0
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id u20so6116186pfn.0
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uQLY4f6KN8LbrgYUCIeblK2oZZloekPRvT4S8CUV7zA=;
-        b=KUm0fiOoGYxXYDE8SrU26PWn/FyBoqPjrUirL3CsGHSobKV27iBkVPzwQiO9ySZTK2
-         lMncaQFoCBNDy3UKbrh1YVlZle/ruEGG8OX7XObSgvqsEfWnvP4Wdk2vc5Y55w/Lfiqy
-         TK1xpzXpj0wVjYj3F2B5+3klxFYNvSF6khTtE=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=BIuH6kISmbFa5kGRXf8C1zMlDZ6CK7mUtowqlOF0/dI=;
+        b=N7LAbLrRiARO/ku0BNslWmbNZ5KMCXLYS4qzRJQeD3ePz5Yc0oZPSKTy+Q+tKlLaSZ
+         vw4sOnwZUbHIwBkpaULk8Dqk1m0Ks89+CTMi2qyHyNAhT49JzM0/RZm4qt0hZ/wedgnT
+         nca35p5YbcomCaOpAzEKL0DcuitU3yNF+7APgnu2ircedVIIIkJb3bDwhLaBmRHPIcvj
+         p4Gzixsux1Po9Z+nJQoK/7ZRuqxIibSsvwuMfnEeEiYNN118g0/aECXWk0JIf8Zqmitp
+         R4cMpAJMWrzNAoJt+US7GHgi+0ITpXxHm49DrtT77cwixLU8EFf1Q6pad9Pfenz+XvZ1
+         sOaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uQLY4f6KN8LbrgYUCIeblK2oZZloekPRvT4S8CUV7zA=;
-        b=FJqMYueNjgagM3BylqBkPSvqjOLOqZc1+R0TnMVckh5T49NFCq650AR0ObPY62MffC
-         56g8QiEXc6XcJatx6nm7d1EPj7YeiGmvskbXtkKU9+8EN2MsjXWTT9HE++iS3KiztwSz
-         7kA2spkeGrAjomc8N6Jdvc1/33VU417mCvf8UOPKjMCJB7f6zfbeD28ljayHu1bNP2li
-         zH2xKCGD9QuYC6fodwp6vnZKOXLzpXVW+K2rLHdIO4O+EnQjX8II8qjjHTMCOErmFxjH
-         zfM35EDM8YGJgduW6D3dMETv1TkHLuF2C4KHB3PCx7Pq85h05EL67kyxC4ePAaa3qSLG
-         wIDg==
-X-Gm-Message-State: AOAM5309JZ/T0r0G2hw4+kdhugXKH3bRo6mBBW/2FdrzAP/QTQuwel5W
-        aeV1EvbkxySbOgtOomRopfsLN9u4NGQOMg==
-X-Google-Smtp-Source: ABdhPJy9OTdghmRGxVH35DBW5ZHlztcFwvzQtBaPZTB5vwaSanatugYDASgPUvECg+v6lBg4Zx8l2A==
-X-Received: by 2002:a62:5c84:: with SMTP id q126mr3999847pfb.324.1597462757372;
-        Fri, 14 Aug 2020 20:39:17 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:7220:84ff:fe09:94fe])
-        by smtp.gmail.com with ESMTPSA id x4sm10845428pff.112.2020.08.14.20.39.15
+        bh=BIuH6kISmbFa5kGRXf8C1zMlDZ6CK7mUtowqlOF0/dI=;
+        b=CiKU1aQYq2gfbrQhFBjyRXncHBRMFgunrt9vfYXIYvnQvn6egxiwPyOuYr4YIZlaWe
+         VzLpXdRnmnzNTF/cgjPpq8qWwwjcjT4VKnl4flAKOq9zB6WdOf7Q6DjH1KY4TsyGJXIS
+         SirD0jZLgmx0FE495ZQwmP/kLnaNuZhdj5yB95xxXSAaKXsIZsiN+KYOrNZAycTbRCWY
+         6sdEJROpDqe2RfpIJfxejO1WHj1qMFlcyYWYb+qjn4ttyA3YFyLvK6h+BacMLbOicPOl
+         MGzyA5NV9J5TKIZKU75sgcuzONt8whYzSixD14TvEDB7u+B+3YAazApIny1RaN6RdmMb
+         REAA==
+X-Gm-Message-State: AOAM5300ObMSJIpfCiv7tD1XUpk7LJsX7LEiq+gfkQMUJQ9l0JC3te9V
+        E6+8yPjD7N59iH5/hawGsVS2/Q==
+X-Google-Smtp-Source: ABdhPJyfy8cQiabf33POMoUVdvZFoEvwy1OBJwtbtdWdmCXbYJDDDjojpV/LcyrdhWnFkCXCxmfsvQ==
+X-Received: by 2002:a63:143:: with SMTP id 64mr5167393pgb.343.1597515300385;
+        Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:6299:2df1:e468:6351? ([2605:e000:100e:8c61:6299:2df1:e468:6351])
+        by smtp.gmail.com with ESMTPSA id j94sm11734141pje.44.2020.08.15.11.14.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 20:39:16 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     rrangel@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org
-Cc:     linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH] platform: cros_ec: Add fields to command traces
-Date:   Fri, 14 Aug 2020 20:39:08 -0700
-Message-Id: <20200815033908.3108730-1-gwendal@chromium.org>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        Sat, 15 Aug 2020 11:14:59 -0700 (PDT)
+Subject: Re: possible deadlock in io_poll_double_wake
+To:     syzbot <syzbot+0d56cfeec64f045baffc@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <000000000000923cee05acee6f61@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e3494c53-f84e-5152-42b0-f8ddd3ad4ccb@kernel.dk>
+Date:   Sat, 15 Aug 2020 11:14:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000000000000923cee05acee6f61@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ftrace, add more fields to the cros_ec command event:
-- Add size of commands to check if they are properly set.
-- Add offset (in case an EC is cascaded being another EC),
-to allow proper command output
+#syz dupe general protection fault in io_poll_double_wake
 
-With:
-echo 1 > events/cros_ec/cros_ec_cmd/enable
-We now have (on samus)
-
-invalid command for the sensor stack:
-ectool-6942  [002] ....  3082.783116: cros_ec_request_done: version: 3,
- offset: 0, command: EC_CMD_MOTION_SENSE_CMD, outsize: 2, insize: 19,
- ec result: EC_RES_INVALID_PARAM, retval: 0
-
-powerd accessing PD EC being the main EC:
-powerd-1272  [002] ....    40.644026: cros_ec_request_done: version: 0,
- offset: 1, command: EC_CMD_USB_PD_POWER_INFO, outsize: 1, insize: 16,
- ec result: EC_RES_SUCCESS, retval: 16
-
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
- drivers/platform/chrome/cros_ec_trace.h | 27 +++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
-index e9fb05f89ef07..f744b21bc655f 100644
---- a/drivers/platform/chrome/cros_ec_trace.h
-+++ b/drivers/platform/chrome/cros_ec_trace.h
-@@ -23,14 +23,22 @@ TRACE_EVENT(cros_ec_request_start,
- 	TP_ARGS(cmd),
- 	TP_STRUCT__entry(
- 		__field(uint32_t, version)
-+		__field(uint32_t, offset)
- 		__field(uint32_t, command)
-+		__field(uint32_t, outsize)
-+		__field(uint32_t, insize)
- 	),
- 	TP_fast_assign(
- 		__entry->version = cmd->version;
--		__entry->command = cmd->command;
-+		__entry->offset = cmd->command / EC_CMD_PASSTHRU_OFFSET(1);
-+		__entry->command = cmd->command % EC_CMD_PASSTHRU_OFFSET(1);
-+		__entry->outsize = cmd->outsize;
-+		__entry->insize = cmd->insize;
- 	),
--	TP_printk("version: %u, command: %s", __entry->version,
--		  __print_symbolic(__entry->command, EC_CMDS))
-+	TP_printk("version: %u, offset: %d, command: %s, outsize: %u, insize: %u",
-+		  __entry->version, __entry->offset,
-+		  __print_symbolic(__entry->command, EC_CMDS),
-+		  __entry->outsize, __entry->insize)
- );
- 
- TRACE_EVENT(cros_ec_request_done,
-@@ -38,19 +46,26 @@ TRACE_EVENT(cros_ec_request_done,
- 	TP_ARGS(cmd, retval),
- 	TP_STRUCT__entry(
- 		__field(uint32_t, version)
-+		__field(uint32_t, offset)
- 		__field(uint32_t, command)
-+		__field(uint32_t, outsize)
-+		__field(uint32_t, insize)
- 		__field(uint32_t, result)
- 		__field(int, retval)
- 	),
- 	TP_fast_assign(
- 		__entry->version = cmd->version;
--		__entry->command = cmd->command;
-+		__entry->offset = cmd->command / EC_CMD_PASSTHRU_OFFSET(1);
-+		__entry->command = cmd->command % EC_CMD_PASSTHRU_OFFSET(1);
-+		__entry->outsize = cmd->outsize;
-+		__entry->insize = cmd->insize;
- 		__entry->result = cmd->result;
- 		__entry->retval = retval;
- 	),
--	TP_printk("version: %u, command: %s, ec result: %s, retval: %d",
--		  __entry->version,
-+	TP_printk("version: %u, offset: %d, command: %s, outsize: %u, insize: %u, ec result: %s, retval: %u",
-+		  __entry->version, __entry->offset,
- 		  __print_symbolic(__entry->command, EC_CMDS),
-+		  __entry->outsize, __entry->insize,
- 		  __print_symbolic(__entry->result, EC_RESULT),
- 		  __entry->retval)
- );
 -- 
-2.28.0.220.ged08abb693-goog
+Jens Axboe
 
