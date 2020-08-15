@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE026C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFABCC433DF
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD33923C81
+	by mail.kernel.org (Postfix) with ESMTP id B765E23B22
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgHOVcZ (ORCPT
+        id S1726389AbgHOVcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:32:25 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:52582 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgHOVcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:32:24 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:52580 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbgHOVcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:32:23 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id F3548FB08;
-        Sat, 15 Aug 2020 23:16:30 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id D7615FB07;
+        Sat, 15 Aug 2020 23:16:29 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M43NJ6HWV40A; Sat, 15 Aug 2020 23:16:27 +0200 (CEST)
+        with ESMTP id mz3qJxvJKjuI; Sat, 15 Aug 2020 23:16:28 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id A88F645678; Sat, 15 Aug 2020 23:16:22 +0200 (CEST)
+        id AC104457CD; Sat, 15 Aug 2020 23:16:22 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -47,9 +47,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add mantix vendor prefix
-Date:   Sat, 15 Aug 2020 23:16:20 +0200
-Message-Id: <5c3739d07630636218ea2814299ec5e0dffeb9ea.1597526107.git.agx@sigxcpu.org>
+Subject: [PATCH v2 2/3] dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+Date:   Sat, 15 Aug 2020 23:16:21 +0200
+Message-Id: <c171b488e883e26eaef7906c007a5cabcbf9e33d.1597526107.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597526107.git.agx@sigxcpu.org>
 References: <cover.1597526107.git.agx@sigxcpu.org>
@@ -61,26 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add prefix for Mantix Display Technology Co.,Ltd.
+The panel uses a Focaltech FT8006p, the touch part is handled by the
+already existing edt-ft5x06.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../display/panel/mantix,mlaf057we51-x.yaml   | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 2baee2c817c1a..59d4c8b068c4d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -611,6 +611,8 @@ patternProperties:
-     description: Linux Automation GmbH
-   "^macnica,.*":
-     description: Macnica Americas
-+  "^mantix,.*":
-+    description: Mantix Display Technology Co.,Ltd.
-   "^mapleboard,.*":
-     description: Mapleboard.org
-   "^marvell,.*":
+diff --git a/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+new file mode 100644
+index 0000000000000..937323cc9aaac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/mantix,mlaf057we51-x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mantix MLAF057WE51-X 5.7" 720x1440 TFT LCD panel
++
++maintainers:
++  - Guido Günther <agx@sigxcpu.org>
++
++description:
++  Mantix MLAF057WE51 X is a 720x1440 TFT LCD panel connected using
++  a MIPI-DSI video interface.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - mantix,mlaf057we51-x
++
++  port: true
++  reg:
++    maxItems: 1
++    description: DSI virtual channel
++
++  avdd-supply:
++    description: Positive analog power supply
++
++  avee-supply:
++    description: Negative analog power supply
++
++  vddi-supply:
++    description: 1.8V I/O voltage supply
++
++  reset-gpios: true
++
++  backlight: true
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - avee-supply
++  - vddi-supply
++  - reset-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        panel@0 {
++            compatible = "mantix,mlaf057we51-x";
++            reg = <0>;
++            avdd-supply = <&reg_avdd>;
++            avee-supply = <&reg_avee>;
++            vddi-supply = <&reg_1v8_p>;
++            reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
++            backlight = <&backlight>;
++        };
++    };
++
++...
 -- 
 2.26.2
 
