@@ -2,174 +2,86 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E69C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ABCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD2123B24
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A207823B24
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPClLCvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgHOVih (ORCPT
+        id S1726304AbgHOVkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:38:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62773 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgHOVid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:38:33 -0400
-IronPort-SDR: 6Q+OXgm6xMndxUabB+wZh+rPsd/+B2l2and0Lx90OfqVUS+bAelT9mZChwZBqAzULONvbZT0gA
- eVvE2xaQ2STg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9714"; a="218878052"
-X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
-   d="scan'208";a="218878052"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 12:53:46 -0700
-IronPort-SDR: ufbaN7XDWuZRsutGfXZoxTHSTwlWts13MQM+Kf9bLM8OnjsZXzf2XMESPkRiNDfnQ/+P+QzPwZ
- QJH7lktserLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
-   d="scan'208";a="319240608"
-Received: from cibrouil-mobl1.amr.corp.intel.com (HELO araj-mobl1.jf.intel.com) ([10.254.80.64])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Aug 2020 12:53:45 -0700
-Date:   Sat, 15 Aug 2020 12:53:45 -0700
-From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
- migrated
-Message-ID: <20200815195345.GA6022@araj-mobl1.jf.intel.com>
-References: <20200814213842.31151-1-ashok.raj@intel.com>
- <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
+        Sat, 15 Aug 2020 17:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgHOVkm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:40:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B9EC03D1D0
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u128so6242998pfb.6
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ORZYHt9ecrzKMNgyspN1PBptpkMsBZp4x/btzZwFfNw=;
+        b=lPClLCvyiXS+vZ3mRzNc/FiH6L8tgYs8RLI0q7i9kt/AQhBBuFvmlo2fEvNv5K3srP
+         YXqsA1qkuHGCHSCTZTVpyl4W/0I6/x2DLlEQkLiHpDxEyzCI4WS38s0ByD4HYRHKq0Qv
+         h4EX4r9WqELVLy5edF4ih81aLPRAzfGHeLYdo/UZfAvGc+8CyLMEnq4gppocQSECcCin
+         2IfwO8e/wWEkm0p2gbrrhY/hcZFRTxQWGLfXZodUg589SIB7cWku1A6MC4HgOyM3l1Tf
+         kUF+HQkAySqNq7taW1zeVhsajkdS/56zDKpo9YtfcRXd2SenkPtqZEgddkJmKT+/LycJ
+         Db6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ORZYHt9ecrzKMNgyspN1PBptpkMsBZp4x/btzZwFfNw=;
+        b=avkCV5kYBljKylBR7Wun+L6vVeFGmE2ChqevHGVtmbpEIUWKYNJx4UpgkmqfKra7/Y
+         vXe/HmuRwyLkXb03s5q474Z59hvTT0jhuFweRZI346R1YQ8gXUw+5ecPG7FxWvWxK3I1
+         96bUX3M+IEZkvi9wQWpaRoUj0CB1ib5aNYaLeC+ic0KAzJdAMK2ok+MtAR5WuBOH028V
+         zuY17L4L9Ae1HtcdiH/9yegBo4hN1rD6tgOg6TCRTG47VffeGp3srDMJSOjdkZGEg04r
+         +QWUUIAHm35fX8l9eACZYxJTe3s0T5Id6bf8ytOQt+OUwYvSUr+E2Ob3DiQDIMy57DQ9
+         2FSw==
+X-Gm-Message-State: AOAM5325COErMY2NjXaOa6hKCpKtJkWw1rl51y7AJDMSYj7jrxjoz8Zq
+        UcLuv63u5jAl+gAL4TbTQlaw9OzX9198mnS5VQYEhg==
+X-Google-Smtp-Source: ABdhPJyGVBSih5D1rMueRL34SkoQOVR4ObJ9OADrWJVIdsuwnDu2rdBGdvxWHpmI4b+0XZD1iry4j74RRH8Y8sT/Uxo=
+X-Received: by 2002:aa7:96e5:: with SMTP id i5mr3350792pfq.108.1597527043233;
+ Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+References: <15f52e9b0e50296aba35871bc1575a684c4a258a.camel@perches.com>
+ <CAKwvOd=8C94K-9VCqdCn9FXiyfDhKxMu=4AGem1bGgp8m6z0fw@mail.gmail.com> <CAHk-=wjjHN32BXdqu1iP8WSZoqdGPDDiqVLUbBgYG+=JO3MJCw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjjHN32BXdqu1iP8WSZoqdGPDDiqVLUbBgYG+=JO3MJCw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 15 Aug 2020 14:30:32 -0700
+Message-ID: <CAKwvOdm4NfdtVs-g7CTfHJcViXpeoF80B1j1weced4T+gfKN9w@mail.gmail.com>
+Subject: Re: [PATCH] genksyms: keywords: Use __restrict not _restrict
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy
+On Fri, Aug 14, 2020 at 8:06 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> It goes back to 2003 and the original keywords.gperf file, see
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=46bd1da672d66ccd8a639d3c1f8a166048cca608
 
-For some unknown reason my previous response said its taiting to be 
-delivered. 
-
-On Fri, Aug 14, 2020 at 04:25:32PM -0700, Randy Dunlap wrote:
-> On 8/14/20 2:38 PM, Ashok Raj wrote:
-> > When offlining CPU's, fixup_irqs() migrates all interrupts away from the
-> 
->                  CPUs,
-
-I'll fix all these in the next rev. 
-
-Just waiting to hear back from Thomas if he has additional ones I can fix
-and resend v2.
-
-Cheers,
-Ashok
-> 
-> > outgoing CPU to an online CPU. Its always possible the device sent an
-> 
->                                  It's
-> 
-> > interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-> > lapic identifies such interrupts. apic_soft_disable() will not capture any
-> 
->   LAPIC
-> 
-> > new interrupts in IRR. This causes interrupts from device to be lost during
-> > cpu offline. The issue was found when explicitly setting MSI affinity to a
-> 
->   CPU
-> 
-> > CPU and immediately offlining it. It was simple to recreate with a USB
-> > ethernet device and doing I/O to it while the CPU is offlined. Lost
-> > interrupts happen even when Interrupt Remapping is enabled.
-> > 
-> > Current code does apic_soft_disable() before migrating interrupts.
-> > 
-> > native_cpu_disable()
-> > {
-> > 	...
-> > 	apic_soft_disable();
-> > 	cpu_disable_common();
-> > 	  --> fixup_irqs(); // Too late to capture anything in IRR.
-> > }
-> > 
-> > Just fliping the above call sequence seems to hit the IRR checks
-> 
->        flipping
-> 
-> > and the lost interrupt is fixed for both legacy MSI and when
-> > interrupt remapping is enabled.
-> > 
-> > 
-> > Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-> > Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > 
-> > To: linux-kernel@vger.kernel.org
-> > To: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-> > Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-> > Cc: Evan Green <evgreen@chromium.org>
-> > Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  arch/x86/kernel/smpboot.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> > index ffbd9a3d78d8..278cc9f92f2f 100644
-> > --- a/arch/x86/kernel/smpboot.c
-> > +++ b/arch/x86/kernel/smpboot.c
-> > @@ -1603,13 +1603,20 @@ int native_cpu_disable(void)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > +	cpu_disable_common();
-> >  	/*
-> >  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
-> >  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-> > -	 * messages.
-> > +	 * messages. Its important to do apic_soft_disable() after
-> 
-> 	             It's
-> 
-> > +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
-> > +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
-> > +	 * currently set IRR/ISR but new interrupts will not set IRR.
-> > +	 * This causes interrupts sent to outgoing cpu before completion
-> 
-> 	                                           CPU
-> 
-> > +	 * of irq migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
-> 
-> 	      IRQ
-> 
-> > +	 * APIC State after It Has been Software Disabled" section for more
-> > +	 * details.
-> >  	 */
-> >  	apic_soft_disable();
-> > -	cpu_disable_common();
-> >  
-> >  	return 0;
-> >  }
-> > 
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+Interesting, I was wondering why upstream development on genksyms had
+stopped a long time ago.  That commit provides more context.
+-- 
+Thanks,
+~Nick Desaulniers
