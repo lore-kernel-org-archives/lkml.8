@@ -2,154 +2,139 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C92C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DACB2065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:17:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9w7CiNQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9C56120657
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgHOWRx (ORCPT
+        id S1728557AbgHOWWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgHOWRv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:17:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE03C061385
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 15:17:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ep8so5902759pjb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 15:17:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cyp9kIv6qMIcFE2qdHMexk3h45R1hTJMbabxmKvKOOQ=;
-        b=M9w7CiNQ1Eaom7klg4evZ/xHtzZQe125/dTYvruGKA/lL0RG1wT6rCxfZzBp/nqh5E
-         CkJrHaBeNb+eJ4uQH9UZ3sk1gHz5gcsAJy7NSS/YIfjbRn/DAL+ubvqOj99Kp2veZBSG
-         XFLZ20wlxoTvaqCKtmZP8PgkNSJ4WBLz7p/LAlAT7gp8TKC0u5bqlDc+p5H5FDqNg+/0
-         n2I01hp1TQGcKgyYfuoM9rlzlNUrsQEYwyqr1y0sryQXuiiWPzIyQ8x9cAUd0ih7/hvU
-         5t8NaFqV/vB29T3ru9Vte4G0HQSuOY+oElz7iH9Re2OTMmYK7FxHo3lez/tVbImogNfD
-         y4OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cyp9kIv6qMIcFE2qdHMexk3h45R1hTJMbabxmKvKOOQ=;
-        b=NUAZQrweMsfxRofTMPfpDKoFmEAcrLbaH5g0VeegUdXixuxpk4+SCGNcTEhVBdosx6
-         TP/S+prH2Mg4u7HPdfGVDbYj9ev8uSfaEMllfKkPTNILZ3n28/dcpnmMyLlIPXQN/ALI
-         RFH4VTpMy2IdrT1irX7r2AIBV3dF/dL8YFGwHJk5ifXlNyaw5dmESn8DyEwQCfaCgBp1
-         I/sspiWwbUzXgP5Q3fLKYTC+KdxkurDls3HCLijcQnmEWAPoAHlUUc+JqmBd9cnp/FQy
-         FTOfQ1cOraakd3Zt00E9tTh3MKlvgsGvML1EfUsxlS94Ua5IOsFfK/gU6r5/0U8XYWIG
-         xDxw==
-X-Gm-Message-State: AOAM53207dbU7lYDjmc8IP9ceTP7XLwI3A1NqyNTEJ+yv+IUi4EZLrgh
-        1LWZ0U+rLjXUJtHDhXiLkAvO8n8m9j7uJsa0AhxqwA==
-X-Google-Smtp-Source: ABdhPJzpmka1iHTSqa9O2mnCopmvu/YpiL1ZLiQX8vmMR5O11xwQ7jo5L3YKa7CaRoOxtLbe4SqOotUUyWWVnbIr44E=
-X-Received: by 2002:a17:90a:a10c:: with SMTP id s12mr7177172pjp.32.1597529870544;
- Sat, 15 Aug 2020 15:17:50 -0700 (PDT)
+        Sat, 15 Aug 2020 18:22:22 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:53894 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgHOWWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:22:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 609DCFB04;
+        Sat, 15 Aug 2020 18:26:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zdXwEJTZCE2k; Sat, 15 Aug 2020 18:25:59 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id AD998457CD; Sat, 15 Aug 2020 18:25:58 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 18:25:58 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200815162558.GA2744@bogon.m.sigxcpu.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+ <20200815100230.GA1002374@ravnborg.org>
+ <20200815104022.GA5641@bogon.m.sigxcpu.org>
+ <20200815104651.GA1005928@ravnborg.org>
 MIME-Version: 1.0
-References: <20200815014006.GB99152@rani.riverdale.lan> <20200815020946.1538085-1-ndesaulniers@google.com>
- <202008150921.B70721A359@keescook> <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com> <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
-In-Reply-To: <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Sat, 15 Aug 2020 15:17:39 -0700
-Message-ID: <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-To:     Joe Perches <joe@perches.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815104651.GA1005928@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 2:31 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sat, 2020-08-15 at 14:28 -0700, Nick Desaulniers wrote:
-> > On Sat, Aug 15, 2020 at 2:24 PM Joe Perches <joe@perches.com> wrote:
-> > > On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
-> > > > On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
-> > > > > > LLVM implemented a recent "libcall optimization" that lowers calls to
-> > > > > > `sprintf(dest, "%s", str)` where the return value is used to
-> > > > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> > > > > > in parsing format strings.  Calling `sprintf` with overlapping arguments
-> > > > > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
-> > > > > >
-> > > > > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
-> > > > > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
-> > > > > > one statement.
-> > > > >
-> > > > > O_O What?
-> > > > >
-> > > > > No; this is a _terrible_ API: there is no bounds checking, there are no
-> > > > > buffer sizes. Anything using the example sprintf() pattern is _already_
-> > > > > wrong and must be removed from the kernel. (Yes, I realize that the
-> > > > > kernel is *filled* with this bad assumption that "I'll never write more
-> > > > > than PAGE_SIZE bytes to this buffer", but that's both theoretically
-> > > > > wrong ("640k is enough for anybody") and has been known to be wrong in
-> > > > > practice too (e.g. when suddenly your writing routine is reachable by
-> > > > > splice(2) and you may not have a PAGE_SIZE buffer).
-> > > > >
-> > > > > But we cannot _add_ another dangerous string API. We're already in a
-> > > > > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
-> > > > > needs to be addressed up by removing the unbounded sprintf() uses. (And
-> > > > > to do so without introducing bugs related to using snprintf() when
-> > > > > scnprintf() is expected[4].)
-> > > >
-> > > > Well, everything (-next, mainline, stable) is broken right now (with
-> > > > ToT Clang) without providing this symbol.  I'm not going to go clean
-> > > > the entire kernel's use of sprintf to get our CI back to being green.
-> > >
-> > > Maybe this should get place in compiler-clang.h so it isn't
-> > > generic and public.
-> >
-> > https://bugs.llvm.org/show_bug.cgi?id=47162#c7 and
-> > https://bugs.llvm.org/show_bug.cgi?id=47144
-> > Seem to imply that Clang is not the only compiler that can lower a
-> > sequence of libcalls to stpcpy.  Do we want to wait until we have a
-> > fire drill w/ GCC to move such an implementation from
-> > include/linux/compiler-clang.h back in to lib/string.c?
->
-> My guess is yes, wait until gcc, if ever, needs it.
+Hi,
+On Sat, Aug 15, 2020 at 12:46:51PM +0200, Sam Ravnborg wrote:
+> On Sat, Aug 15, 2020 at 12:40:22PM +0200, Guido Günther wrote:
+> > Hi Sam,
+> > On Sat, Aug 15, 2020 at 12:02:30PM +0200, Sam Ravnborg wrote:
+> > > Hi Guido.
+> > > 
+> > > > +static int mantix_probe(struct mipi_dsi_device *dsi)
+> > > > +{
+> > > > +	struct device *dev = &dsi->dev;
+> > > > +	struct mantix *ctx;
+> > > > +	int ret;
+> > > > +
+> > > > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > > > +	if (!ctx)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > > > +	if (IS_ERR(ctx->reset_gpio)) {
+> > > > +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> > > > +		return PTR_ERR(ctx->reset_gpio);
+> > > > +	}
+> > > > +
+> > > > +	mipi_dsi_set_drvdata(dsi, ctx);
+> > > > +	ctx->dev = dev;
+> > > > +
+> > > > +	dsi->lanes = 4;
+> > > > +	dsi->format = MIPI_DSI_FMT_RGB888;
+> > > > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> > > > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> > > > +
+> > > > +	ctx->avdd = devm_regulator_get(dev, "avdd");
+> > > > +	if (IS_ERR(ctx->avdd)) {
+> > > > +		ret = PTR_ERR(ctx->avdd);
+> > > > +		if (ret != -EPROBE_DEFER)
+> > > > +			DRM_DEV_ERROR(dev,
+> > > > +				      "Failed to request avdd regulator: %d\n",
+> > > > +				      ret);
+> > > > +		return ret;
+> > > > +	}
+> > > 
+> > > Consider to use the recently added dev_err_probe() here and below.
+> > > Note: Not part of drm-misc-next yet - but hopefully after -rc1
+> > > when a backmerge is done.
+> > 
+> > In fact I did decided against it since i was told that missing dev_* and
+> > DRM_* logging shouldn't be done. So is that o.k. nowadays?
+> s/missing/mixing/
+> 
+> I often request that logging is consistent - so I recognize the
+> argument.
+> 
+> For panel/* I have not made up my mind what I think is the best
+> approach. The DRM_DEV_* and DRM_* logging do not add much value.
+> So I have been tempted several times to convert all logging in
+> panel/ to dev_* and pr_* (when no struct device * is available).
+> That would also avoid that we mix up logging.
+> 
+> We have drm_* logging - but they require a valid drm_device * which we
+> do not have in the the panel drivers. So they are ruled out here.
+> 
+> Do you have any opinions/comments on this?
 
-The suggestion to use static inline doesn't even make sense. The
-compiler is lowering calls to other library routines; `stpcpy` isn't
-being explicitly called.  Even if it was, not sure we want it being
-inlined.  No symbol definition will be emitted; problem not solved.
-And I refuse to add any more code using `extern inline`.  Putting the
-definition in lib/string.c is the most straightforward and avoids
-revisiting this issue in the future for other toolchains.  I'll limit
-access by removing the declaration, and adding a comment to avoid its
-use.  But if you're going to use a gnu target triple without using
--ffreestanding because you *want* libcall optimizations, then you have
-to provide symbols for all possible library routines!
--- 
-Thanks,
-~Nick Desaulniers
+I think for panel drivers DRM_* does not give any bonus so moving to
+{dev,pr}_* sounds good. I just wonder if other drm parts don't need
+`dev_drm_err_probe()` (or similar) anyway. But then maybe dyn_debug
+is enough nowadays to not need DRM_DEV_DEBUG_* either?
+Cheers,
+ -- Guido
+
+> 
+> 	Sam
+> 
