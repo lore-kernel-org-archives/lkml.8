@@ -2,201 +2,128 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D8DC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54691C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE04B2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="UGhjOy6s"
+	by mail.kernel.org (Postfix) with ESMTP id 3DE94206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgHOV4e (ORCPT
+        id S1729415AbgHOV4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
+        Sat, 15 Aug 2020 17:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728999AbgHOVwN (ORCPT
+        with ESMTP id S1729034AbgHOVwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:52:13 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71026C004587
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:24:08 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 93so10274025otx.2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tfz-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Npmo1qy1EtVMY1f22f/XoQlkfS4jbAFUtpYwb+UPN9s=;
-        b=UGhjOy6sny6yVuAYdTV7QBCsVIFSkm8sA3y/SwYBtDKROYWCu7teCOiIZNIbFqbCYc
-         ExIJMnNURR2y62RErP89vr5vRlyCI26hAxWcIRy+YJupCpNAWZwAPEF0bvbN7jlfrNBW
-         Z6XL/zXinZFM3jz26fjeTSDd5bpJjvs/+j1Wxbfowb0CHENC0egNjqh/Gl2vPvf5J5ti
-         NYw9sRYdgG4Sm5vsHkdc0KonY3R8qwZLxvgscFYM88L8Wg+IO7UcFJd/T7ItwLGOEzEH
-         n+YiJzdL+FBqViqWHvhlG20hAgDcQPgR3M6n3cgCQkXAdj4ed4Zuo02mdBGxq+kcLpfX
-         Jr+g==
+Received: from mail-il1-x148.google.com (mail-il1-x148.google.com [IPv6:2607:f8b0:4864:20::148])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BC3C0005BE
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:19:25 -0700 (PDT)
+Received: by mail-il1-x148.google.com with SMTP id u7so8813305ilj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:19:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Npmo1qy1EtVMY1f22f/XoQlkfS4jbAFUtpYwb+UPN9s=;
-        b=gj+IxyADHM4QfRZ8rHBpiYoYAFLOFPrgIodfok9wXJgbLzTmGn+HqpCAg+ANv4tjgk
-         EVTgz4H9seJWm+wOg0hp9IY6QbCtnwjQj6uV8zr9HCBndyLimcxpqj+Is5luxVGaTL8F
-         1o/2oLhpPKSymJ6gycDuy6e4RJVdXcc9zUXin8AGhdwIEBszsVhvwolw07MWC5PrdlFZ
-         75hmc1LyM/WozmGZDawdFrqUGQVslbXZkHd1uvQLWUaLmaoMuXwbWASr6qN9v7DM95Rk
-         ybauKrFuC+x/X3TdfClT0B6gBTXtvoM4a074fHeNE2zCp/b1vu+8FM2QQ24UNY530bsj
-         Xy/w==
-X-Gm-Message-State: AOAM533/ZGZU9ifWdSdHjF5r1LrCW8FWTeogwobpL5y6XsBUQghh04xO
-        oPVVl/WhSZSm6JbKbdSO98TT79hxKTbCdDJcKwk=
-X-Google-Smtp-Source: ABdhPJy7YkkteM56EdGdHCXuWzaeZe6zD/figZlqTYdO0AG60UZFeFBumOA4ui2QoHa8visqRWX4FA==
-X-Received: by 2002:a05:6830:605:: with SMTP id w5mr5942549oti.3.1597515847051;
-        Sat, 15 Aug 2020 11:24:07 -0700 (PDT)
-Received: from foo.attlocal.net (108-232-117-128.lightspeed.sntcca.sbcglobal.net. [108.232.117.128])
-        by smtp.gmail.com with ESMTPSA id z72sm2397820ooa.42.2020.08.15.11.24.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 11:24:06 -0700 (PDT)
-From:   Pascal Bouchareine <kalou@tfz.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     Pascal Bouchareine <kalou@tfz.net>, linux-api@vger.kernel.org,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Alexey Dobriyan" <adobriyan@gmail.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
-Subject: [PATCH 2/2] net: socket: implement SO_DESCRIPTION
-Date:   Sat, 15 Aug 2020 11:23:44 -0700
-Message-Id: <20200815182344.7469-3-kalou@tfz.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200815182344.7469-1-kalou@tfz.net>
-References: <20200815182344.7469-1-kalou@tfz.net>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=t8QMO3n4KROmSRkoKVG2lLOeJzzDaqBTfQOpgHU7bgA=;
+        b=SHf6E0sESl+vAuNz7DHjcfVq9cXs0vJvLvQ9E77BNpelTVkqFcq4XXXVsaBmId46UD
+         /F4Jo6+s4bQ0HGkqLpdhqk4YCb7fp0G4JP9DOZb1RRdSugx9Ycf9ou8ttcU2lTiQ7Y6s
+         F0DnEDC+TMBRf7j3Ft5AZNuUoBeMXUM33CShqTlhN8HaP/lzjy5Mz9ZSigGzXTmUZIDC
+         KJi+hIWChtJlBuSh+eAkzKetIkFOvvtlTi5X77q3U172ZirmEKiv17plDebFxPCsrKFp
+         qqef1zydh7MSmrIrTiAqAsYr497UUuGUisx81EYCcsBo26Y+P0F+17/5nbCQBGb532zR
+         fqZw==
+X-Gm-Message-State: AOAM530KsN8Uyi60lMTeoOJPPUA3kS9aAtulC6KYJtpKci5kUNEMdUCD
+        GCalpGmET3ZJ9pwtZSvdCdUvGsHiOoEOggiqSVKvjxDf2Vj/
+X-Google-Smtp-Source: ABdhPJwuiQ330unLGWYjqFD92eeYv7ieCWrxq3Aup/qHbAfQlSVCCMJLJOr7JsR076+ho+SlBCbpNUu4pGvr8oOWH/UxiyB1o8EX
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:866d:: with SMTP id e100mr7502553jai.83.1597511964807;
+ Sat, 15 Aug 2020 10:19:24 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 10:19:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002fe0e605acedbdfc@google.com>
+Subject: KMSAN: uninit-value in hci_chan_lookup_handle
+From:   syzbot <syzbot+4c14a8f574461e1c3659@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, johan.hedberg@gmail.com,
+        kuba@kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This command attaches the zero terminated string in optval to the
-socket for troubleshooting purposes. The free string is displayed in the
-process fdinfo file for that fd (/proc/<pid>/fdinfo/<fd>).
+Hello,
 
-One intended usage is to allow processes to self-document sockets
-for netstat and friends to report
+syzbot found the following issue on:
 
-We ignore optlen and constrain the string to a static max size
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c0e1e2900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=4c14a8f574461e1c3659
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fd6aa6900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105910ce900000
 
-Signed-off-by: Pascal Bouchareine <kalou@tfz.net>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4c14a8f574461e1c3659@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in __hci_chan_lookup_handle net/bluetooth/hci_conn.c:1741 [inline]
+BUG: KMSAN: uninit-value in hci_chan_lookup_handle+0x1e3/0x310 net/bluetooth/hci_conn.c:1757
+CPU: 0 PID: 8496 Comm: kworker/u5:2 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: hci0 hci_rx_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __hci_chan_lookup_handle net/bluetooth/hci_conn.c:1741 [inline]
+ hci_chan_lookup_handle+0x1e3/0x310 net/bluetooth/hci_conn.c:1757
+ hci_disconn_loglink_complete_evt net/bluetooth/hci_event.c:4992 [inline]
+ hci_event_packet+0x14e10/0x39d30 net/bluetooth/hci_event.c:6176
+ hci_rx_work+0x6df/0xd30 net/bluetooth/hci_core.c:4705
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2839 [inline]
+ __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ bt_skb_alloc include/net/bluetooth/bluetooth.h:377 [inline]
+ vhci_get_user drivers/bluetooth/hci_vhci.c:165 [inline]
+ vhci_write+0x18a/0x890 drivers/bluetooth/hci_vhci.c:285
+ call_write_iter include/linux/fs.h:1908 [inline]
+ new_sync_write fs/read_write.c:503 [inline]
+ vfs_write+0xf9a/0x17c0 fs/read_write.c:578
+ ksys_write+0x275/0x500 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
+
+
 ---
- include/net/sock.h                |  4 ++++
- include/uapi/asm-generic/socket.h |  2 ++
- net/core/sock.c                   | 23 +++++++++++++++++++++++
- net/socket.c                      |  5 +++++
- 4 files changed, 34 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 1183507df95b..6b4fd1383282 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -342,6 +342,7 @@ struct bpf_sk_storage;
-   *	@sk_txtime_deadline_mode: set deadline mode for SO_TXTIME
-   *	@sk_txtime_report_errors: set report errors mode for SO_TXTIME
-   *	@sk_txtime_unused: unused txtime flags
-+  *	@sk_description: user supplied with SO_DESCRIPTION
-   */
- struct sock {
- 	/*
-@@ -519,6 +520,9 @@ struct sock {
- 	struct bpf_sk_storage __rcu	*sk_bpf_storage;
- #endif
- 	struct rcu_head		sk_rcu;
-+
-+#define	SK_MAX_DESC_SIZE	256
-+	char			*sk_description;
- };
- 
- enum sk_pacing {
-diff --git a/include/uapi/asm-generic/socket.h b/include/uapi/asm-generic/socket.h
-index 77f7c1638eb1..fb51c4bb7a12 100644
---- a/include/uapi/asm-generic/socket.h
-+++ b/include/uapi/asm-generic/socket.h
-@@ -119,6 +119,8 @@
- 
- #define SO_DETACH_REUSEPORT_BPF 68
- 
-+#define SO_DESCRIPTION		69
-+
- #if !defined(__KERNEL__)
- 
- #if __BITS_PER_LONG == 64 || (defined(__x86_64__) && defined(__ILP32__))
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 2e5b7870e5d3..2cb44a0e38b7 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -828,6 +828,24 @@ void sock_set_rcvbuf(struct sock *sk, int val)
- }
- EXPORT_SYMBOL(sock_set_rcvbuf);
- 
-+int sock_set_description(struct sock *sk, char __user *user_desc)
-+{
-+	char *old, *desc;
-+
-+	desc = strndup_user(user_desc, SK_MAX_DESC_SIZE, GFP_KERNEL_ACCOUNT);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+
-+	lock_sock(sk);
-+	old = sk->sk_description;
-+	sk->sk_description = desc;
-+	release_sock(sk);
-+
-+	kfree(old);
-+
-+	return 0;
-+}
-+
- /*
-  *	This is meant for all protocols to use and covers goings on
-  *	at the socket level. Everything here is generic.
-@@ -850,6 +868,9 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 	if (optname == SO_BINDTODEVICE)
- 		return sock_setbindtodevice(sk, optval, optlen);
- 
-+	if (optname == SO_DESCRIPTION)
-+		return sock_set_description(sk, optval);
-+
- 	if (optlen < sizeof(int))
- 		return -EINVAL;
- 
-@@ -1792,6 +1813,8 @@ static void __sk_destruct(struct rcu_head *head)
- 		RCU_INIT_POINTER(sk->sk_filter, NULL);
- 	}
- 
-+	kfree(sk->sk_description);
-+
- 	sock_disable_timestamp(sk, SK_FLAGS_TIMESTAMP);
- 
- #ifdef CONFIG_BPF_SYSCALL
-diff --git a/net/socket.c b/net/socket.c
-index 976426d03f09..4f2c1a7744b0 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -134,6 +134,11 @@ static void sock_show_fdinfo(struct seq_file *m, struct file *f)
- {
- 	struct socket *sock = f->private_data;
- 
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_description)
-+		seq_printf(m, "desc:\t%s\n", sock->sk->sk_description);
-+	release_sock(sock->sk);
-+
- 	if (sock->ops->show_fdinfo)
- 		sock->ops->show_fdinfo(m, sock);
- }
--- 
-2.25.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
