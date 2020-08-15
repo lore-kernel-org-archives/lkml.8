@@ -2,88 +2,104 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68200C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A6323B24
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED28823B24
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgHOVme (ORCPT
+        id S1726349AbgHOVno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:42:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22594 "EHLO mga09.intel.com"
+        Sat, 15 Aug 2020 17:43:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54798 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgHOVmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:42:32 -0400
-IronPort-SDR: Vr93dfiLe4V4gQgGI0Ykv/q1TQ6lITZQEjuiusAICBvxGnJNAIDwXKyvHfVwGRU10iK/3c6wOM
- siEJLWDxROUg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9714"; a="155641019"
-X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
-   d="scan'208";a="155641019"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 10:21:05 -0700
-IronPort-SDR: Qce1Qa4j4E+CYhjuQPflNd6xCkbPt4BehQ3FdjzFRWIXKCA3zfigcFUvRtHQ3XV7LyyHkQqDhO
- xToqNL+1+1RQ==
-X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
-   d="scan'208";a="440428673"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 10:21:05 -0700
-Date:   Sat, 15 Aug 2020 10:21:03 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-Subject: Re: [GIT PULL] edac for v5.9 (part 2)
-Message-ID: <20200815172103.GA1628@agluck-desk2.amr.corp.intel.com>
-References: <20200815003645.GA22594@agluck-desk2.amr.corp.intel.com>
- <CAHk-=wgFg+RNU3Aa7paCPCLpUiTHGN1PuC2AGZoRSOxD=trKnQ@mail.gmail.com>
+        id S1726184AbgHOVno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:43:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 565B3B04C;
+        Sat, 15 Aug 2020 10:07:10 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v4 3/6] x86/paravirt: use CONFIG_PARAVIRT_XXL instead of CONFIG_PARAVIRT
+Date:   Sat, 15 Aug 2020 12:06:38 +0200
+Message-Id: <20200815100641.26362-4-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200815100641.26362-1-jgross@suse.com>
+References: <20200815100641.26362-1-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgFg+RNU3Aa7paCPCLpUiTHGN1PuC2AGZoRSOxD=trKnQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 08:21:13AM -0700, Linus Torvalds wrote:
-> On Fri, Aug 14, 2020 at 5:36 PM Luck, Tony <tony.luck@intel.com> wrote:
-> >
-> > Here's one more pull for EDAC with a driver that I let slip
-> > through the cracks.
-> 
-> Shortlog? Diffstat? Just what am I getting?
+There are some code parts using CONFIG_PARAVIRT for Xen pvops related
+issues instead of the more stringent CONFIG_PARAVIRT_XXL.
 
-Ah. Looking at bash history I fumbled arguments to git pleasepull. Second try:
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ arch/x86/entry/entry_64.S                | 4 ++--
+ arch/x86/include/asm/fixmap.h            | 2 +-
+ arch/x86/include/asm/required-features.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-The following changes since commit 0f959e19fadf00638b686fdeb70e24dfcc7bbcac:
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 70dea9337816..26fc9b42fadc 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -46,13 +46,13 @@
+ .code64
+ .section .entry.text, "ax"
+ 
+-#ifdef CONFIG_PARAVIRT
++#ifdef CONFIG_PARAVIRT_XXL
+ SYM_CODE_START(native_usergs_sysret64)
+ 	UNWIND_HINT_EMPTY
+ 	swapgs
+ 	sysretq
+ SYM_CODE_END(native_usergs_sysret64)
+-#endif /* CONFIG_PARAVIRT */
++#endif /* CONFIG_PARAVIRT_XXL */
+ 
+ /*
+  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 0f0dd645b594..77217bd292bd 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -99,7 +99,7 @@ enum fixed_addresses {
+ 	FIX_PCIE_MCFG,
+ #endif
+ #endif
+-#ifdef CONFIG_PARAVIRT
++#ifdef CONFIG_PARAVIRT_XXL
+ 	FIX_PARAVIRT_BOOTMAP,
+ #endif
+ #ifdef	CONFIG_X86_INTEL_MID
+diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
+index 6847d85400a8..3ff0d48469f2 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -54,7 +54,7 @@
+ #endif
+ 
+ #ifdef CONFIG_X86_64
+-#ifdef CONFIG_PARAVIRT
++#ifdef CONFIG_PARAVIRT_XXL
+ /* Paravirtualized systems may not have PSE or PGE available */
+ #define NEED_PSE	0
+ #define NEED_PGE	0
+-- 
+2.26.2
 
-  Merge branch 'edac-ghes' into edac-for-next (2020-06-22 15:28:01 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_5.9_pt2
-
-for you to fetch changes up to 709ed1bcef12398ac1a35c149f3e582db04456c2:
-
-  EDAC/ie31200: Fallback if host bridge device is already initialized (2020-08-10 11:13:06 -0700)
-
-----------------------------------------------------------------
-Fixes for ie31200 driver that missed the first pull
-
-----------------------------------------------------------------
-Jason Baron (1):
-      EDAC/ie31200: Fallback if host bridge device is already initialized
-
- drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
-
--Tony
