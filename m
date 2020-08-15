@@ -2,78 +2,92 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F5CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B34C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5BAF2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEBC2053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXvmttyk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JscczZiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgHOVwd (ORCPT
+        id S1729311AbgHOVyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        Sat, 15 Aug 2020 17:54:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729065AbgHOVwY (ORCPT
+        with ESMTP id S1729093AbgHOVwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:24 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41C3C09B04B;
-        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f10so5443988plj.8;
-        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
+        Sat, 15 Aug 2020 17:52:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E39EC03B3D2;
+        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so12311364ljg.13;
+        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rTPW4Vgi6J6sb3NDeTJ+AxP/fbIZYazNxG03Qo5ugNw=;
-        b=WXvmttykvtH6fdjtYt1TnuIlBjfutXTOyRQkbpvtBvRbapvHWJajQuEt2vYmCiNuZs
-         yfKZbyRjKMsvOGhGQra+YWXaPdT7eY7sTeDS2ZwIsCYEBZ3wf5dm0WTK4/Ov/swSkqGk
-         oVcGJSKySWigCkr5GE2+D0GTlxHxP9O+IxUlzPkTyyXn/ahZ7MXlz9gswiGk6Zo0odaX
-         TwNW/AR5BJ8WTKWTPsbohx45YC9mV26A8FylnxjjxDzbn5OJmPJtqrXO+KdvldxCUdeV
-         VGKUzr+J+B5wasUz+T6nWANs75ufIgARSM+M6v2uLlrTx+ydzTPBYhYIRMDRCX7iXGjb
-         aMyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rTPW4Vgi6J6sb3NDeTJ+AxP/fbIZYazNxG03Qo5ugNw=;
-        b=PZ+j7oPPZvuqajxenEg/Cppb1mc3tJAzkRcfOSrfbRREGfzgpqTFGyT1NuWn5b0Zob
-         yowVec0jczbloZQRo1FwgtlkvnKOoD5E1RTZCv3iRKxF++SAyM7lrKJUOrT6hQqpCgO0
-         gwKQoSGz+RWAgWfQ4MmX9j7AILn018p1XP8fscnsN0b12gYKxVnZlFUOIaBkCBpho6x7
-         /9YTM2paCihWF5DodcmEZuuKJxX+l0//t1zj67XcxzheCjIJzxwKJSH6hmsafwW+X7LU
-         X8zw9KYPWpQRF4sVlMQh8luASnNlyRitJrnjLErI+eyoiQ1YZBlU2ExBhvVPxTOQMr2D
-         eIlw==
-X-Gm-Message-State: AOAM5305CPs/zF02W6RvvtQcJGuLqI6ATPLSaLTNpjJf9qoSIwkBUQrM
-        pkv5Y9O/taKYoRIieuZshSU=
-X-Google-Smtp-Source: ABdhPJyKy5EqG8dNFaxmbWpREVyRWCTdpDXJADHemeJefvOP2cfgXhiEcBNUPorWbShOHPm+DXEPzg==
-X-Received: by 2002:a17:90a:f481:: with SMTP id bx1mr6304176pjb.172.1597505311100;
-        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id js19sm11107958pjb.33.2020.08.15.08.28.29
+        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
+        b=JscczZiBHiR/E30j1ODTRjEZ1J6tzdLICchjfKYD9oDq4hBTSw16cEKX38WSL3gIRR
+         xrnOqDQrO6y6nSFgZXIXzbnTdDu/52bbdqMewnXiQwAXD4xwaQ5W/NwThRCamidnVbmi
+         +OlUdBEBVMhTn2wgmOeXl6eQAS5m7c4rvBo0DLKI2UIO242DkP5o4nz2udq02GRUsqvU
+         nz5Syvq8CziHecgVZN5uKOS2Z/hKrUDqLlYS/7A+CIhHbPQO7h7h90xHiEBwYg/VpZsi
+         Hk/phvDKEAzoetTrUL85EGK3C692AW4EDjNNzVdsvul0ZuYBcZUwoFMdM1I+OhdgZN87
+         3y0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
+        b=exEXvbWnvm/975OkswMu12dF470FkJxH/W2gACT96ituYQUvo4xznEJxaPEjqcp2hw
+         e5tx9r0Tfq8goRDeO493KT4dPz77mRmVv94IAsH4kvrBUGjZggPyiyJTIx/SWt+hbZaW
+         c2hCthKcuT1hjan4ZQpXgWal4Itk0wr238qLRrGLWt0+d/cgm933emLWn7bO58CPTH3U
+         R668z6UeSHR0inuw5bc8NcwNq9YDRce618SjXSZsZggby0haXDipZzJIBwWY/JxFneUq
+         pRhrIhtoD1ol6Z4w0Kk6Xkwb+xZfEVN3N7LLUmC3I5X9WENunrc0qCFjXREWT7g+Sffh
+         a7rQ==
+X-Gm-Message-State: AOAM530KkoUDm23CgyqT30bT/mFuRIe6+IQ03RnlBOPVAlKo/bcjcqH3
+        Iqprgt57QfFq/eRVtyKcCZk=
+X-Google-Smtp-Source: ABdhPJxfJPykrCx26X5MYrFKAvPWACW5EIexq2GfCBCd7z/Z++I/TIHakOXnD8XGsq3zFFne/FcS3Q==
+X-Received: by 2002:a2e:808f:: with SMTP id i15mr3244164ljg.151.1597481138853;
+        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:6e9:851e:a10b:7957:433d:a960? ([2a00:1fa0:6e9:851e:a10b:7957:433d:a960])
+        by smtp.gmail.com with ESMTPSA id f3sm2331191ljo.81.2020.08.15.01.45.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 08:28:30 -0700 (PDT)
-Subject: Re: [PATCH] i2c: iproc: Fix checkpatch warnings by using 'BIT' macro
-To:     Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20200814224008.107430-1-ray.jui@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c2c1b5e7-37a0-39fe-5bad-36ddcff9d389@gmail.com>
-Date:   Sat, 15 Aug 2020 08:28:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
+Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
+Date:   Sat, 15 Aug 2020 11:45:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200814224008.107430-1-ray.jui@broadcom.com>
+In-Reply-To: <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,15 +96,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
+On 14.08.2020 20:30, Lad Prabhakar wrote:
 
-On 8/14/2020 3:40 PM, Ray Jui wrote:
-> Fix additional checkpatch warnings in the iProc I2C driver by using
-> 'BIT' marcro.
+> Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
 > 
-> Reported-by: Wolfram Sang <wsa@kernel.org>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>   arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> index a603d947970e..50e9ed16a36d 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> @@ -2369,6 +2369,44 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		pciec0_ep: pcie_ep@fe000000 {
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+    Hyphens are preferred over underscores in the node/prop names.
+
+[...]> +		pciec1_ep: pcie_ep@ee800000 {
+
+    Ditto, should be "pci-ep@ee800000".
+
+[...]
+
+MBR, Sergei
