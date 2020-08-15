@@ -2,125 +2,87 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEBAC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31FA204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7F204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VHDocVcg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hoSO6p9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgHOVwZ (ORCPT
+        id S1729154AbgHOVwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 17:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgHOVwN (ORCPT
+        with ESMTP id S1729096AbgHOVwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:13 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE0DC00868E
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:11:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id x6so5989763pgx.12
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BAVB1g/G59WljuvEwZfLgQcZGsyMrz+xF+J2CpCEONs=;
-        b=VHDocVcgp3i5hnK3JOC5n1xwowOu3PG/vmHdB2FTQmrkQIk9Vq4xClNNXpQX9xq0XU
-         SZ5C9UytWUiDuV74J9uvKS+lrRzMumsUcYw8LPFYKXG6BE40hAPeBdzFoXLVqk3X9L9+
-         dR0mb1S0fCgzBmx3RNiHRjErZue/3+FGTXB50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BAVB1g/G59WljuvEwZfLgQcZGsyMrz+xF+J2CpCEONs=;
-        b=BsTU9VSOGdJrMmSKmgL5/sY5xkNsnqh7uQ4GFRw72xk44kR0xC0YdnYvealE+gulJs
-         rlr9YTlQ4oqphhsPDBlrMb4hkItTM0P/CJLtOqq5XoA22ohgd7qZNU8B9E037m6uiHVg
-         rX5L6hIwfB3vKTVbeqNepCNpjULKHae8a8gWJGL8nKEH/DFnn3RRhPuvsGb4hpFhm13P
-         8sZBjrxvYS3wLTnlVf/dKL20lx1KGA/f7KbRSgXEL0TRUpiZbIfkgflDtX6cD29qj9pc
-         vVv0gyLrHWv4g9OsbDrJQ19lIKBktFAs7fmjaTf7D+WSj1y+/yg/MjsOXqbSu++jRXcs
-         /PpQ==
-X-Gm-Message-State: AOAM533JsKxuOwolmNe/OWaAwvmW2xHSeWHR+LYmRvlg+/J61Bx9XuBc
-        tJ03hs7bDhURLXqLqwNwoWEqlg==
-X-Google-Smtp-Source: ABdhPJyVSgnrgPrYWyXJv2wtFzi9lR01OEh1e48ygJ0aU1juIKmiqcLNGCA17IPGnewHz9ccm0/ehA==
-X-Received: by 2002:a62:8387:: with SMTP id h129mr5505019pfe.142.1597511474893;
-        Sat, 15 Aug 2020 10:11:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w3sm12829718pff.56.2020.08.15.10.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 10:11:14 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 10:11:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] overflow: Add __must_check attribute to check_*() helpers
-Message-ID: <202008151009.5709750A@keescook>
-References: <202008121450.405E4A3@keescook>
- <f7b6ad2f-4b35-1ca8-0137-05b27a0eb574@rasmusvillemoes.dk>
+        Sat, 15 Aug 2020 17:52:33 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C06C0A5533
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 09:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1mv06P/Fmb+hv86TbcEFiG1+z16o6FdI5If3i2x/DyE=; b=hoSO6p9bS+kR8vbBuexHU/cSA6
+        YmNuj+3iFwr08A2WOcohKj0yw0Q1WW+VDLfZiHk3dewzbesob8LVQijRzMgRS3xFxmDpPD/6KQV14
+        9EsWs+eRr6x1Fl2zEryJUHvSXNH5CdHcAaLer0g4ZMFeVrPTfrYKHpNvXdNQT8q68ios=;
+Received: from p200300ccff3e9c001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff3e:9c00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k6zTx-0007JG-VE; Sat, 15 Aug 2020 18:56:38 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k6zTx-0002n2-Kc; Sat, 15 Aug 2020 18:56:37 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, sre@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH 2/2] mfd: rn5t618: Add a power supply subdevice
+Date:   Sat, 15 Aug 2020 18:56:10 +0200
+Message-Id: <20200815165610.10647-3-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200815165610.10647-1-andreas@kemnade.info>
+References: <20200815165610.10647-1-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7b6ad2f-4b35-1ca8-0137-05b27a0eb574@rasmusvillemoes.dk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 08:39:44AM +0200, Rasmus Villemoes wrote:
-> On 12/08/2020 23.51, Kees Cook wrote:
-> > Since the destination variable of the check_*_overflow() helpers will
-> > contain a wrapped value on failure, it would be best to make sure callers
-> > really did check the return result of the helper. Adjust the macros to use
-> > a bool-wrapping static inline that is marked with __must_check. This means
-> > the macros can continue to have their type-agnostic behavior while gaining
-> > the function attribute (that cannot be applied directly to macros).
-> > 
-> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/overflow.h | 51 +++++++++++++++++++++++-----------------
-> >  1 file changed, 30 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> > index 93fcef105061..ef7d538c2d08 100644
-> > --- a/include/linux/overflow.h
-> > +++ b/include/linux/overflow.h
-> > @@ -43,6 +43,16 @@
-> >  #define is_non_negative(a) ((a) > 0 || (a) == 0)
-> >  #define is_negative(a) (!(is_non_negative(a)))
-> >  
-> > +/*
-> > + * Allows to effectively us apply __must_check to a macro so we can have
-> 
-> word ordering?
+The RN5T618 and RC5T619 both have a charger and a fuel gauge, so add
+a subdevice for it. According to drivers in the wild, things
+should be at least similar, but since it is not tested, add it
+only to the RC5T619.
 
-This and the __must_check-bool() renaming now done and sent in v2.
-Thanks!
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/mfd/rn5t618.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Sorry, I meant to send this before your cooking was done but forgot
-> about it again. Not a big deal, but it occurred to me it might be better
-> to rename the existing check_*_overflow to __check_*_overflow (in both
-> branches of the COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW), and then
-> 
-> #define check_*_overflow(a, b, d)
-> __must_check_bool(__check_*_overflow(a, b, d))
-
-At the end of the day, I'd rather not have a way to ignore the overflow
-in this way -- I'd rather have a set of wrap_mul_overflow() helpers
-instead. Then we've got proper annotation of the expectation (and a
-place for function attributes to be added to tell sanitizers to ignore
-overflow).
-
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index e25407ed3ad4..dc452df1f1bf 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -25,6 +25,7 @@ static const struct mfd_cell rn5t618_cells[] = {
+ 
+ static const struct mfd_cell rc5t619_cells[] = {
+ 	{ .name = "rn5t618-adc" },
++	{ .name = "rn5t618-power" },
+ 	{ .name = "rn5t618-regulator" },
+ 	{ .name = "rc5t619-rtc" },
+ 	{ .name = "rn5t618-wdt" },
 -- 
-Kees Cook
+2.20.1
+
