@@ -2,152 +2,155 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B1820791
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB86E206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgHOWAH (ORCPT
+        id S1729624AbgHOWAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45598 "EHLO
+        Sat, 15 Aug 2020 18:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgHOVvh (ORCPT
+        with ESMTP id S1728836AbgHOVvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:37 -0400
-Received: from mail-il1-x145.google.com (mail-il1-x145.google.com [IPv6:2607:f8b0:4864:20::145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC05BC0A88B7
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:00:23 -0700 (PDT)
-Received: by mail-il1-x145.google.com with SMTP id g6so8798851iln.2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:00:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Mh2vQL3nRBAlnAPp8z2LGMEgL0fvTMye3F0Sdv/V8c4=;
-        b=MiYm+v+uo+KF9mmgYjRL+U5ae+5GLjJI/7KAv+guScX3Qacu1HznWvMp8kFqbzrQrh
-         nSYxSGhtqD95YN5yDCkcKaoTwIWsdOzyR/dc94Nw0Rl4kt+9XKCWVmiClTLGueQr8HME
-         Ljy04X9UBeYy/oNZJFKk59dGK5xAf9RBDEjBiQgWH+i3UcGZyPT6Bx4QLrZTXiInqgEK
-         xRkemlLoOQ6wwz9+E1lf4L0Qan6FzDZB7KZnVx9Vr+qBuOwnouchJBqVR1oHw3Q+UWUc
-         2Sh7O4at66GuO2h1ekTkGsPyQ2VNZ+/w7AvEMzHw0aGsIYIENDPACBz1go+3YNsXPSKG
-         DskQ==
-X-Gm-Message-State: AOAM530g8bH2h/L++WwgQ1vMSLT2Z2smtQI1ukOCrsD19s+Tm8BwxEWo
-        N9HWLAiGKC9OtVhnTLe/PDeCeBixy3XjKW4BhA3cMtnos4o8
-X-Google-Smtp-Source: ABdhPJzYyX274OX+l37DAqsUHvwTM1HpTiSokWdE2OgfUedsairrIn4fwpGyYcMtJA4kqyI06NGJa+9Z4lGRakde0IBTseGBbLAO
-MIME-Version: 1.0
-X-Received: by 2002:a6b:5d05:: with SMTP id r5mr6221528iob.14.1597510822456;
- Sat, 15 Aug 2020 10:00:22 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 10:00:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000018f60505aced798e@google.com>
-Subject: general protection fault in io_poll_double_wake
-From:   syzbot <syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+        Sat, 15 Aug 2020 17:51:35 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D325DC02B8F4;
+        Sat, 15 Aug 2020 06:05:14 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 39E75299A26
+Message-ID: <b318069fe873e456f18d07d11f5d165667c9b04a.camel@collabora.com>
+Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
+ driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
+Date:   Sat, 15 Aug 2020 10:05:00 -0300
+In-Reply-To: <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+         <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
+         <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Neil,
 
-syzbot found the following issue on:
+On Wed, 2020-07-01 at 09:35 +0300, Adrian Ratiu wrote:
+> Hi Neil,
+> 
+> On Mon, 29 Jun 2020, Neil Armstrong <narmstrong@baylibre.com> 
+> wrote:
+> > Hi Adrian, 
+> > 
+> > On 09/06/2020 19:49, Adrian Ratiu wrote: 
+> > > [Re-submitting to cc dri-devel, sorry about the noise]  Hello 
+> > > all,  v9 cleanly applies on top of latest next-20200609 tree. 
+> > > v9 does not depend on other patches as the last binding doc has 
+> > > been merged.   All feedback up to this point has been 
+> > > addressed. Specific details in individual patch changelogs. 
+> > > The biggest changes are the deprecation of the Synopsys DW 
+> > > bridge bind() API in favor of of_drm_find_bridge() and .attach 
+> > > callbacks, the addition of a TODO entry which outlines future 
+> > > planned bridge driver refactorings and a reordering of some 
+> > > i.MX 6 patches to appease checkpatch.   The idea behind the 
+> > > TODO is to get this regmap and i.MX 6 driver merged and then do 
+> > > the rest of refactorings in-tree because it's easier and the 
+> > > refactorings themselves are out-of-scope of this series which 
+> > > is adding i.MX 6 support and is quite big already, so please, 
+> > > if there are more refactoring ideas, let's add them to the TODO 
+> > > doc. :) I intend to tackle those after this series is merged to 
+> > > avoid two complex inter-dependent simultaneous series. 
+> > 
+> > This has been around here for a long time and you seem to have 
+> > addressed all the reviews. 
+> > 
+> > >  As always more testing is welcome especially on Rockchip and 
+> > > STM SoCs. 
+> > 
+> > It has been tested on STM, but I'd like a feedback on RK 
+> > platform before applying the bridge parts. 
+> > 
+> > Can the imx & stm patches be applied separately ? 
+> > 
+> 
+> Yes the IMX and STM patches can be applied separately, they just 
+> both depend on the common regmap patches.
+> 
 
-HEAD commit:    7fca4dee Merge tag 'powerpc-5.9-2' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1264d116900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=21f0d1d2df6d5fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=7f617d4a9369028b8a2c
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f211d2900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1721b0ce900000
+It's been a month so I think it's a good idea to go forward
+applying IMX and STM patches (probably with the usual
+rebase dance).
 
-The issue was bisected to:
+As for Rockchip...
 
-commit 18bceab101adde8f38de76016bc77f3f25cf22f4
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Fri May 15 17:56:54 2020 +0000
+> The binding API removal change which directly touches RK can also 
+> be applied separately, but unfortunately I do not have access to a 
+> RK board with a DSI display to test it (or the bridge regmap logic 
+> on RK btw...), I just "eye-balled" the RK code based on the public 
+> docs and it LGTM.
+> 
 
-    io_uring: allow POLL_ADD with double poll_wait() users
+... I'll be getting some DSI hardware to help with the pending
+Rockchip issues, so we can tackle Rockchip as well. I'm quite sure
+we'll loop Heiko as well if needed :-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1498125e900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1698125e900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1298125e900000
+Cheers,
+Ezequiel
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com
-Fixes: 18bceab101ad ("io_uring: allow POLL_ADD with double poll_wait() users")
+> > Neil
+> > 
+> > > Big thank you to everyone who has contributed to this up to now,
+> > > Adrian
+> > > 
+> > > Adrian Ratiu (11):
+> > >   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
+> > >   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+> > >   drm: bridge: dw_mipi_dsi: add dsi v1.01 support
+> > >   drm: bridge: dw_mipi_dsi: remove bind/unbind API
+> > >   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+> > >   ARM: dts: imx6qdl: add missing mipi dsi properties
+> > >   drm: imx: Add i.MX 6 MIPI DSI host platform driver
+> > >   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
+> > >   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
+> > >   drm: bridge: dw-mipi-dsi: fix bad register field offsets
+> > >   Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
+> > > 
+> > >  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
+> > >  Documentation/gpu/todo.rst                    |  25 +
+> > >  arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
+> > >  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
+> > >  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
+> > >  drivers/gpu/drm/imx/Kconfig                   |   8 +
+> > >  drivers/gpu/drm/imx/Makefile                  |   1 +
+> > >  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
+> > >  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
+> > >  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
+> > >  10 files changed, 1059 insertions(+), 231 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> > >  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+> > > 
 
-general protection fault, probably for non-canonical address 0xdffffc0000000008: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000040-0x0000000000000047]
-CPU: 0 PID: 6842 Comm: syz-executor006 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:io_poll_double_wake+0x6b/0x360 fs/io_uring.c:4589
-Code: 8d 9d b8 00 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 53 64 de ff 48 8b 1b 48 83 c3 40 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 df e8 36 64 de ff 4c 8b 33 31 ff 44 89
-RSP: 0018:ffffc90001717b20 EFLAGS: 00010002
-RAX: 0000000000000008 RBX: 0000000000000040 RCX: ffff88809e0fe4c0
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880a2e7dc98
-RBP: ffff8880a2e7dc98 R08: 0000000000000000 R09: ffffc90001717be8
-R10: fffff520002e2f70 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809a429e40 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000002640880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2629c956c0 CR3: 000000009e4e7000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __wake_up_common+0x30a/0x4e0 kernel/sched/wait.c:93
- __wake_up_common_lock kernel/sched/wait.c:123 [inline]
- __wake_up+0xd4/0x150 kernel/sched/wait.c:142
- n_tty_set_termios+0xa60/0x1080 drivers/tty/n_tty.c:1874
- tty_set_termios+0xcac/0x1510 drivers/tty/tty_ioctl.c:341
- set_termios+0x4a1/0x580 drivers/tty/tty_ioctl.c:414
- tty_mode_ioctl+0x7b2/0xa80 drivers/tty/tty_ioctl.c:770
- tty_ioctl+0xf81/0x15c0 drivers/tty/tty_io.c:2665
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4405d9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe5f581ef8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000401ed0 RCX: 00000000004405d9
-RDX: 0000000020000080 RSI: 0000000000005404 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000003e69 R11: 0000000000000246 R12: 0000000000401e40
-R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 9d629bc7ccf35892 ]---
-RIP: 0010:io_poll_double_wake+0x6b/0x360 fs/io_uring.c:4589
-Code: 8d 9d b8 00 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 53 64 de ff 48 8b 1b 48 83 c3 40 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 df e8 36 64 de ff 4c 8b 33 31 ff 44 89
-RSP: 0018:ffffc90001717b20 EFLAGS: 00010002
-RAX: 0000000000000008 RBX: 0000000000000040 RCX: ffff88809e0fe4c0
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880a2e7dc98
-RBP: ffff8880a2e7dc98 R08: 0000000000000000 R09: ffffc90001717be8
-R10: fffff520002e2f70 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809a429e40 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000002640880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2629c956c0 CR3: 000000009e4e7000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
