@@ -2,150 +2,78 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F130DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C49C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D8323133
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7EE23133
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgHOVdX (ORCPT
+        id S1727993AbgHOVdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:33:23 -0400
-Received: from smtprelay0071.hostedemail.com ([216.40.44.71]:33962 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726641AbgHOVdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:33:23 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 342A318017514;
-        Sat, 15 Aug 2020 21:24:03 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BFB961800F594;
-        Sat, 15 Aug 2020 21:24:02 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wish32_1e17df327008
-X-Filterd-Recvd-Size: 5107
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 15 Aug 2020 21:23:59 +0000 (UTC)
-Message-ID: <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?ISO-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Date:   Sat, 15 Aug 2020 14:23:58 -0700
-In-Reply-To: <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
-References: <20200815014006.GB99152@rani.riverdale.lan>
-         <20200815020946.1538085-1-ndesaulniers@google.com>
-         <202008150921.B70721A359@keescook>
-         <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 15 Aug 2020 17:33:33 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:38907 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbgHOVdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:33:32 -0400
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 07FB3uNj034474;
+        Sat, 15 Aug 2020 19:03:56 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07FB3im8034424
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 15 Aug 2020 19:03:44 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 15 Aug 2020 19:03:47 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <namjae.jeon@samsung.com>, <sj1557.seo@samsung.com>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] exfat: use i_blocksize() to get blocksize
+Date:   Sat, 15 Aug 2020 18:57:07 +0800
+Message-ID: <20200815105707.19701-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07FB3im8034424
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
-> On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
-> > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
-> > > LLVM implemented a recent "libcall optimization" that lowers calls to
-> > > `sprintf(dest, "%s", str)` where the return value is used to
-> > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> > > in parsing format strings.  Calling `sprintf` with overlapping arguments
-> > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
-> > > 
-> > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
-> > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
-> > > one statement.
-> > 
-> > O_O What?
-> > 
-> > No; this is a _terrible_ API: there is no bounds checking, there are no
-> > buffer sizes. Anything using the example sprintf() pattern is _already_
-> > wrong and must be removed from the kernel. (Yes, I realize that the
-> > kernel is *filled* with this bad assumption that "I'll never write more
-> > than PAGE_SIZE bytes to this buffer", but that's both theoretically
-> > wrong ("640k is enough for anybody") and has been known to be wrong in
-> > practice too (e.g. when suddenly your writing routine is reachable by
-> > splice(2) and you may not have a PAGE_SIZE buffer).
-> > 
-> > But we cannot _add_ another dangerous string API. We're already in a
-> > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
-> > needs to be addressed up by removing the unbounded sprintf() uses. (And
-> > to do so without introducing bugs related to using snprintf() when
-> > scnprintf() is expected[4].)
-> 
-> Well, everything (-next, mainline, stable) is broken right now (with
-> ToT Clang) without providing this symbol.  I'm not going to go clean
-> the entire kernel's use of sprintf to get our CI back to being green.
+We alreday has the interface i_blocksize() to get blocksize,
+so use it.
 
-Maybe this should get place in compiler-clang.h so it isn't
-generic and public.
-
-Something like:
-
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
 ---
- include/linux/compiler-clang.h | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ fs/exfat/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index cee0c728d39a..6279f1904e39 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -61,3 +61,30 @@
- #if __has_feature(shadow_call_stack)
- # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
- #endif
-+
-+#ifndef __HAVE_ARCH_STPCPY
-+/**
-+ * stpcpy - copy a string from src to dest returning a pointer to the new end
-+ *          of dest, including src's NULL terminator. May overrun dest.
-+ * @dest: pointer to buffer being copied into.
-+ *        Must be large enough to receive copy.
-+ * @src: pointer to the beginning of string being copied from.
-+ *       Must not overlap dest.
-+ *
-+ * This function exists _only_ to support clang's possible conversion of
-+ * sprintf calls to stpcpy.
-+ *
-+ * stpcpy differs from strcpy in two key ways:
-+ * 1. inputs must not overlap.
-+ * 2. return value is dest's NUL termination character after copy.
-+ *    (for strcpy, the return value is a pointer to src)
-+ */
-+
-+static inline char *stpcpy(char __restrict *dest, const char __restrict *src)
-+{
-+	while ((*dest++ = *src++) != '\0') {
-+		;	/* nothing */
-+	}
-+       return --dest;
-+}
-+#endif
-
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index a6a063830..163b599db 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -226,7 +226,7 @@ void exfat_truncate(struct inode *inode, loff_t size)
+ {
+ 	struct super_block *sb = inode->i_sb;
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	unsigned int blocksize = 1 << inode->i_blkbits;
++	unsigned int blocksize = i_blocksize(inode);
+ 	loff_t aligned_size;
+ 	int err;
+ 
+-- 
+2.17.1
 
