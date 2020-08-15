@@ -2,152 +2,95 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A777DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F5CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E16B204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5BAF2053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="StWlDLaq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXvmttyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgHOVyf (ORCPT
+        id S1729104AbgHOVwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:35 -0400
+        Sat, 15 Aug 2020 17:52:33 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbgHOVwg (ORCPT
+        with ESMTP id S1729065AbgHOVwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:36 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171EFC06137D
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:37 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 77so10195377qkm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:37 -0700 (PDT)
+        Sat, 15 Aug 2020 17:52:24 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41C3C09B04B;
+        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f10so5443988plj.8;
+        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FwsOWE3cvymHDK4XxTdA3wF4GOr+2WPCQ6wnKRbw/jI=;
-        b=StWlDLaq0MYdU1CWVuIg/J4GYVc+68Ndih7GA3RYvlHvpUIZIf7YgKHremE+6JTJUO
-         xexuEqSkh+h37IgJdNAHSFAgEgU12rarmHYgKhMF2OPIcgpQ0OBxq9Tb+z80eovyzwwB
-         QRRN5uoJO8eH3cecRwWPlUIGRwBTM9VQqnDQE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rTPW4Vgi6J6sb3NDeTJ+AxP/fbIZYazNxG03Qo5ugNw=;
+        b=WXvmttykvtH6fdjtYt1TnuIlBjfutXTOyRQkbpvtBvRbapvHWJajQuEt2vYmCiNuZs
+         yfKZbyRjKMsvOGhGQra+YWXaPdT7eY7sTeDS2ZwIsCYEBZ3wf5dm0WTK4/Ov/swSkqGk
+         oVcGJSKySWigCkr5GE2+D0GTlxHxP9O+IxUlzPkTyyXn/ahZ7MXlz9gswiGk6Zo0odaX
+         TwNW/AR5BJ8WTKWTPsbohx45YC9mV26A8FylnxjjxDzbn5OJmPJtqrXO+KdvldxCUdeV
+         VGKUzr+J+B5wasUz+T6nWANs75ufIgARSM+M6v2uLlrTx+ydzTPBYhYIRMDRCX7iXGjb
+         aMyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FwsOWE3cvymHDK4XxTdA3wF4GOr+2WPCQ6wnKRbw/jI=;
-        b=dWLd9od2/rQ6WpiCzTKetr+gtHypOM2rCNeLJLs/dIZbJv6HxKydsasu51LccbdYpc
-         Sed/YZIvqE5Ceu10ZChbo5rT+dtiCX+Fud7CCKd5NLt1Frq8daXWTJzXhUeqO9DeQJkm
-         cEliPBiqigIO2pFISgrL3UinnzVGDdSDZ2lrYcskxl5pmV7UPp/4+iNpB+e7VYV9zsGg
-         4gOmcn3oyLjMy0ROk5zhBGyuDDFN9NjbgAirCKhFnIefOEazXZgVS8GL1SXegNkkAqk1
-         AZV8BMr7A6eGfBVszngwOtvvSXEAo4tKZ0r7TY57vQkLY/KMtxnAqtTyO99eVNtPR6IR
-         FDtQ==
-X-Gm-Message-State: AOAM5303h16MSR6lnG1WX9HOzhEP2yd+38crig79kNPKk6aZgvsZHi3g
-        EWuyQ/wQ5ugfBcctscsIgN/vvjMFAiXoEw==
-X-Google-Smtp-Source: ABdhPJx44+TLrchsQPKRwFKQTIlzobQZ2Jz2LhMGXzrQarb2Y05Zm7y8T8+orKvYxQaBtCnZCupZhw==
-X-Received: by 2002:a05:620a:1009:: with SMTP id z9mr4628395qkj.107.1597461576169;
-        Fri, 14 Aug 2020 20:19:36 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 20:19:35 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        fweisbec@gmail.com, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH RFC 12/12] sched/coresched: rq->core should be set only if not previously set
-Date:   Fri, 14 Aug 2020 23:19:08 -0400
-Message-Id: <20200815031908.1015049-13-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
-References: <20200815031908.1015049-1-joel@joelfernandes.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rTPW4Vgi6J6sb3NDeTJ+AxP/fbIZYazNxG03Qo5ugNw=;
+        b=PZ+j7oPPZvuqajxenEg/Cppb1mc3tJAzkRcfOSrfbRREGfzgpqTFGyT1NuWn5b0Zob
+         yowVec0jczbloZQRo1FwgtlkvnKOoD5E1RTZCv3iRKxF++SAyM7lrKJUOrT6hQqpCgO0
+         gwKQoSGz+RWAgWfQ4MmX9j7AILn018p1XP8fscnsN0b12gYKxVnZlFUOIaBkCBpho6x7
+         /9YTM2paCihWF5DodcmEZuuKJxX+l0//t1zj67XcxzheCjIJzxwKJSH6hmsafwW+X7LU
+         X8zw9KYPWpQRF4sVlMQh8luASnNlyRitJrnjLErI+eyoiQ1YZBlU2ExBhvVPxTOQMr2D
+         eIlw==
+X-Gm-Message-State: AOAM5305CPs/zF02W6RvvtQcJGuLqI6ATPLSaLTNpjJf9qoSIwkBUQrM
+        pkv5Y9O/taKYoRIieuZshSU=
+X-Google-Smtp-Source: ABdhPJyKy5EqG8dNFaxmbWpREVyRWCTdpDXJADHemeJefvOP2cfgXhiEcBNUPorWbShOHPm+DXEPzg==
+X-Received: by 2002:a17:90a:f481:: with SMTP id bx1mr6304176pjb.172.1597505311100;
+        Sat, 15 Aug 2020 08:28:31 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id js19sm11107958pjb.33.2020.08.15.08.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Aug 2020 08:28:30 -0700 (PDT)
+Subject: Re: [PATCH] i2c: iproc: Fix checkpatch warnings by using 'BIT' macro
+To:     Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20200814224008.107430-1-ray.jui@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <c2c1b5e7-37a0-39fe-5bad-36ddcff9d389@gmail.com>
+Date:   Sat, 15 Aug 2020 08:28:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200814224008.107430-1-ray.jui@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Pillai <viremana@linux.microsoft.com>
 
-During hotplug events, smt_mask would not contain all the CPUs in a core and
-this can cause reassigning of rq->core, which breaks the core-wide counters
-that are needed for tracking kernel-mode entry/exits.
 
-This patch therefore makes sure that rq->core does not change once it is set.
+On 8/14/2020 3:40 PM, Ray Jui wrote:
+> Fix additional checkpatch warnings in the iProc I2C driver by using
+> 'BIT' marcro.
+> 
+> Reported-by: Wolfram Sang <wsa@kernel.org>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/sched/core.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 5da5b2317b21..464493f3a759 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7519,21 +7519,25 @@ int sched_cpu_starting(unsigned int cpu)
- 	struct rq *rq, *core_rq = NULL;
- 	int i;
- 
--	for_each_cpu(i, smt_mask) {
--		rq = cpu_rq(i);
--		if (rq->core && rq->core == rq)
--			core_rq = rq;
--		init_irq_work(&rq->core_irq_work, sched_core_irq_work);
--	}
-+	core_rq = cpu_rq(cpu)->core;
-+
-+	if (!core_rq) {
-+		for_each_cpu(i, smt_mask) {
-+			rq = cpu_rq(i);
-+			if (rq->core && rq->core == rq)
-+				core_rq = rq;
-+			init_irq_work(&rq->core_irq_work, sched_core_irq_work);
-+		}
- 
--	if (!core_rq)
--		core_rq = cpu_rq(cpu);
-+		if (!core_rq)
-+			core_rq = cpu_rq(cpu);
- 
--	for_each_cpu(i, smt_mask) {
--		rq = cpu_rq(i);
-+		for_each_cpu(i, smt_mask) {
-+			rq = cpu_rq(i);
- 
--		WARN_ON_ONCE(rq->core && rq->core != core_rq);
--		rq->core = core_rq;
-+			WARN_ON_ONCE(rq->core && rq->core != core_rq);
-+			rq->core = core_rq;
-+		}
- 	}
- 
- 	printk("core: %d -> %d\n", cpu, cpu_of(core_rq));
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.28.0.220.ged08abb693-goog
-
+Florian
