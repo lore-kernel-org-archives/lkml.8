@@ -2,348 +2,154 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF8EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4273C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CB92053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3462053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBr91Xkg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PjtuBqGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgHOV7h (ORCPT
+        id S1729585AbgHOV7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
+        Sat, 15 Aug 2020 17:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgHOVvi (ORCPT
+        with ESMTP id S1728699AbgHOVvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1FEC06136C;
-        Fri, 14 Aug 2020 20:14:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d19so5413206pgl.10;
-        Fri, 14 Aug 2020 20:14:34 -0700 (PDT)
+        Sat, 15 Aug 2020 17:51:40 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404D4C06123F
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 00:21:34 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id v22so8667381qtq.8
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 00:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6PESmeoUjW2fKqrp7LdS6qEafazVRqSyS0MARpkUEoo=;
-        b=BBr91XkgPllUYu1Z+gb2ELMQgTU0FmDBp7gD9rnEuInCkpBtZnfakDWfEAPcnosuFX
-         XDg4j0VzqITAAVzTtIDhzbrhxmd9g+J95q1YJS7x2wu+Jmdh292UUgr/pt2cgJ3/N/e/
-         dUqQ1CY7D+39oXBkp9CI3NM3OIeFgffx+jwgWtDiY70vPuBFWnRoGBuUvki/UriT1DQu
-         dgw2XAo+RtGpZ3BV12OVxPslBWAFlhJnZB1jkDiPJHtaSYMtY9V5NsTd/d+xgMkNH5SB
-         GKK/UmXY1QEEFxk5cx3waSRLQpiJky11mvooIBckkevvisL203fTu0vQxCKtBcodlpim
-         w68A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fwXSXLqjHtnWSytqv0hQ9g9SOxtFMoK5KM1pc94nWWg=;
+        b=PjtuBqGRj/3IVl7itQUeq2V6N4AEWUAhHgzWW/JM+hKGh8ej0WDEPmKA4qZY6RX4/P
+         Zp4hTtZAvlQVnnBnc/w3VAKHcgYoa08oTD757pn8g3YM0qmKY15c4yB/FI/0VUqHVYyu
+         ZMnERb2M4TdlaXmH+p+LuPrbTZ6ixrVVeMWVW3MezLrK+QlaIzvyRfyFJ22MX1X6Ie14
+         QPriOVf6waYwccMMTdOcR0lgtox9KLBDR49NuTlFgk1VibSe5JgZQnPeFHgnmLK2o/eK
+         OQz+QLpvcNFiLW5Pu61RW1qPxxG/TEkDsGgjHd82mVWG2moOtToCAGD0GPNQSviumSNV
+         d0xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6PESmeoUjW2fKqrp7LdS6qEafazVRqSyS0MARpkUEoo=;
-        b=FmQv5OZ/TCNe5OWML0hZ81e0S354uhuov87SZudeDHHMzS1b6q+BO03vBON2V9EP/T
-         OX+6GzMzPv6qQgUDqrfVnbEgwVZOoz4lEgAmKPcaHO56kLzQK7iOvCa9YaRxpq6p0d7X
-         Cv+PlppO5DOvhPGnU06PbBvk1REp0r6R9NUVi56JtNOwMmnRu2S3hmorBmw6PMiPnx7R
-         ziTNq30hxIVqRYmwVJqORzDlRF0SCZCU9gWPppOqwrFgyK6uHroIZhPdj+grjY9s1xNL
-         jP/BJ/m/9ZuaZWhrvOjBUGCuy5phkd9H0TGFzCu8So+6vk3t5JEjc5TTicl8Tv64DnOm
-         SGXA==
-X-Gm-Message-State: AOAM530efEHWFHq+sl5zlNcMgwyU7HI7uGBmPBoOV/s263gXzZNUij4/
-        92xeb18EIh2cvyGfj+zuF4yXFBGMgib+ag==
-X-Google-Smtp-Source: ABdhPJzbubOCLblaxnWgnM5AVeLAjC5ZmDMG3q/HXkFZKajICJfeEo8J8PB7LXHXthymGzKIZ8P4ig==
-X-Received: by 2002:aa7:9556:: with SMTP id w22mr3789844pfq.245.1597461273536;
-        Fri, 14 Aug 2020 20:14:33 -0700 (PDT)
-Received: from localhost.localdomain ([123.110.251.91])
-        by smtp.gmail.com with ESMTPSA id 196sm10981534pfc.178.2020.08.14.20.14.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Aug 2020 20:14:32 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
-Date:   Sat, 15 Aug 2020 11:14:20 +0800
-Message-Id: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fwXSXLqjHtnWSytqv0hQ9g9SOxtFMoK5KM1pc94nWWg=;
+        b=ofxu9u+KJzEZTCjPbXQDSoJeAGJmE2guT/frnmDv4/RLWhvEpMs/tSvxIEYiSY6ue3
+         vGAn7KYdEqgC6C3cBxnzE6d5b+9o05a5MjW/pm+VdzBJISBrEol+2m9qC3m9dxKLAz1f
+         AwBqhanyhowwJj9NVXRPNYnIUdYUwpfzl1I1eqcZBlpntDBaWb/n7ZPKcoj3vq4WUgrf
+         rqDbjnPW41XopAT6BnUr4rOGVGXamMruB1NgF/Xrq6B/OPgVZ8DQoz63V35HnESglx2k
+         /oNjjSg5xk1FFxpEKQCr0HeS18W23arYgFWBFi1JzcU2lIJ7RWJFPH4j27UspPQV8DBt
+         BZZQ==
+X-Gm-Message-State: AOAM5301iMl5lK1F1fA0KKnd2UGwFNjIfJB+Fxi25/NTZ69bdrtnB8yE
+        9OgRbVBJhiO9NwSuBQiQ/q3TUcd7VOr5qXxrraBAAg==
+X-Google-Smtp-Source: ABdhPJx/F85IamzzlCd90sFXidWCnMoV2Dh28+Fj6HyaJ0wlGej4deoGRtD/NNkORoV9jBFXALvelRK/HtI0KY+N21I=
+X-Received: by 2002:ac8:4e39:: with SMTP id d25mr5180769qtw.208.1597476093134;
+ Sat, 15 Aug 2020 00:21:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200814030257.135463-1-warthog618@gmail.com> <20200814030257.135463-8-warthog618@gmail.com>
+ <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com> <20200815065309.GA13905@sol>
+In-Reply-To: <20200815065309.GA13905@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 15 Aug 2020 09:21:22 +0200
+Message-ID: <CAMpxmJVMJYJ71z59Mu-mCTQPNqV9N9sXJXNBjYazGo0tmXthfg@mail.gmail.com>
+Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+On Sat, Aug 15, 2020 at 8:53 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Fri, Aug 14, 2020 at 09:31:29PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> > > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > ---
+> >
+> > Hi Kent,
+> >
+> > not many comments here, just a couple minor details below.
+> >
+>
+> [snip]
+>
+> > > +
+> > > +/**
+> > > + * struct line - contains the state of a userspace line request
+> > > + * @gdev: the GPIO device the line request pertains to
+> > > + * @label: consumer label used to tag descriptors
+> > > + * @num_descs: the number of descriptors held in the descs array
+> > > + * @descs: the GPIO descriptors held by this line request, with @num_descs
+> > > + * elements.
+> > > + */
+> > > +struct line {
+> >
+> > How about line_request, line_request_data or line_req_ctx? Something
+> > more intuitive than struct line that doesn't even refer to a single
+> > line. Same for relevant functions below.
+> >
+>
+> As I've mentioned previously, I'm not a fan of names that include _data,
+> _ctx, _state, or similar that don't really add anything.
+>
 
-Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
-an I2C interface. DSVP/DSVN can provide the display panel module for the
-positive/negative voltage range from (+/-)4V to (+/-)6V.
+I certainly disagree with you on this. I think it's useful to discern
+the object itself from data associated with it. Let's consider struct
+irq_data and let's imagine it would be called struct irq instead. The
+latter would be misleading - as this struct contains a lot additional
+fields that form the context for the irq but aren't logically part of
+the "irq object". And then you have irq_common_data which is even more
+disconnected from the irq. This also would make using the name "irq"
+for the variables containing the global irq number confusing.
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
- drivers/regulator/Kconfig            |   7 ++
- drivers/regulator/Makefile           |   1 +
- drivers/regulator/rt4801-regulator.c | 223 +++++++++++++++++++++++++++++++++++
- 3 files changed, 231 insertions(+)
- create mode 100644 drivers/regulator/rt4801-regulator.c
+I think the same happens here: we may want to use the name "line" for
+local variables and then having "struct line_data" (or similar) would
+make it easier to read.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index de17ef7..2786f11 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -894,6 +894,13 @@ config REGULATOR_RN5T618
- config REGULATOR_ROHM
- 	tristate
- 
-+config REGULATOR_RT4801
-+	tristate "Richtek RT4801 Regulators"
-+	depends on I2C
-+	help
-+	  This adds support for voltage regulators in Richtek RT4801 Display Bias IC.
-+	  The device supports two regulators (DSVP/DSVN).
-+
- config REGULATOR_RT5033
- 	tristate "Richtek RT5033 Regulators"
- 	depends on MFD_RT5033
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index d8d3ecf..d091e52d 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -111,6 +111,7 @@ obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
- obj-$(CONFIG_REGULATOR_RK808)   += rk808-regulator.o
- obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o
- obj-$(CONFIG_REGULATOR_ROHM)	+= rohm-regulator.o
-+obj-$(CONFIG_REGULATOR_RT4801)	+= rt4801-regulator.o
- obj-$(CONFIG_REGULATOR_RT5033)	+= rt5033-regulator.o
- obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
- obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
-diff --git a/drivers/regulator/rt4801-regulator.c b/drivers/regulator/rt4801-regulator.c
-new file mode 100644
-index 00000000..0ddc670
---- /dev/null
-+++ b/drivers/regulator/rt4801-regulator.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+
-+#define RT4801_REG_VOP	0x00
-+#define RT4801_REG_VON	0x01
-+#define RT4801_REG_APPS	0x03
-+
-+#define VOUT_MASK	0x1F
-+
-+#define MIN_UV		4000000
-+#define STEP_UV		100000
-+#define MAX_UV		6000000
-+#define N_VOLTAGES	((MAX_UV - MIN_UV) / STEP_UV + 1)
-+
-+#define DSV_OUT_POS	0
-+#define DSV_OUT_NEG	1
-+#define DSV_OUT_MAX	2
-+
-+#define DSVP_ENABLE	BIT(0)
-+#define DSVN_ENABLE	BIT(1)
-+#define DSVALL_ENABLE	(DSVP_ENABLE | DSVN_ENABLE)
-+
-+struct rt4801_priv {
-+	struct device *dev;
-+	struct gpio_descs *enable_gpios;
-+	unsigned int enable_flag;
-+	unsigned int volt_sel[DSV_OUT_MAX];
-+};
-+
-+static int rt4801_set_voltage_sel(struct regulator_dev *rdev, unsigned int selector)
-+{
-+	struct rt4801_priv *priv = rdev_get_drvdata(rdev);
-+	int id = rdev_get_id(rdev), ret;
-+
-+	if (priv->enable_flag & BIT(id)) {
-+		ret = regulator_set_voltage_sel_regmap(rdev, selector);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	priv->volt_sel[id] = selector;
-+	return 0;
-+}
-+
-+static int rt4801_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct rt4801_priv *priv = rdev_get_drvdata(rdev);
-+	int id = rdev_get_id(rdev);
-+
-+	if (priv->enable_flag & BIT(id))
-+		return regulator_get_voltage_sel_regmap(rdev);
-+
-+	return priv->volt_sel[id];
-+}
-+
-+static int rt4801_enable(struct regulator_dev *rdev)
-+{
-+	struct rt4801_priv *priv = rdev_get_drvdata(rdev);
-+	struct gpio_descs *gpios = priv->enable_gpios;
-+	int id = rdev_get_id(rdev), ret;
-+
-+	if (gpios->ndescs <= id) {
-+		dev_warn(&rdev->dev, "no dedicated gpio can control\n");
-+		goto bypass_gpio;
-+	}
-+
-+	gpiod_set_value(gpios->desc[id], 1);
-+
-+bypass_gpio:
-+	ret = regmap_write(rdev->regmap, rdev->desc->vsel_reg, priv->volt_sel[id]);
-+	if (ret)
-+		return ret;
-+
-+	priv->enable_flag |= BIT(id);
-+	return 0;
-+}
-+
-+static int rt4801_disable(struct regulator_dev *rdev)
-+{
-+	struct rt4801_priv *priv = rdev_get_drvdata(rdev);
-+	struct gpio_descs *gpios = priv->enable_gpios;
-+	int id = rdev_get_id(rdev);
-+
-+	if (gpios->ndescs <= id) {
-+		dev_warn(&rdev->dev, "no dedicated gpio can control\n");
-+		goto bypass_gpio;
-+	}
-+
-+	gpiod_set_value(gpios->desc[id], 0);
-+
-+bypass_gpio:
-+	priv->enable_flag &= ~BIT(id);
-+	return 0;
-+}
-+
-+static int rt4801_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct rt4801_priv *priv = rdev_get_drvdata(rdev);
-+	int id = rdev_get_id(rdev);
-+
-+	return !!(priv->enable_flag & BIT(id));
-+}
-+
-+static const struct regulator_ops rt4801_regulator_ops = {
-+	.list_voltage = regulator_list_voltage_linear,
-+	.set_voltage_sel = rt4801_set_voltage_sel,
-+	.get_voltage_sel = rt4801_get_voltage_sel,
-+	.enable = rt4801_enable,
-+	.disable = rt4801_disable,
-+	.is_enabled = rt4801_is_enabled,
-+};
-+
-+static const struct regulator_desc rt4801_regulator_descs[] = {
-+	{
-+		.name = "DSVP",
-+		.ops = &rt4801_regulator_ops,
-+		.of_match = of_match_ptr("DSVP"),
-+		.type = REGULATOR_VOLTAGE,
-+		.id = DSV_OUT_POS,
-+		.min_uV = MIN_UV,
-+		.uV_step = STEP_UV,
-+		.n_voltages = N_VOLTAGES,
-+		.owner = THIS_MODULE,
-+		.vsel_reg = RT4801_REG_VOP,
-+		.vsel_mask = VOUT_MASK,
-+	},
-+	{
-+		.name = "DSVN",
-+		.ops = &rt4801_regulator_ops,
-+		.of_match = of_match_ptr("DSVN"),
-+		.type = REGULATOR_VOLTAGE,
-+		.id = DSV_OUT_NEG,
-+		.min_uV = MIN_UV,
-+		.uV_step = STEP_UV,
-+		.n_voltages = N_VOLTAGES,
-+		.owner = THIS_MODULE,
-+		.vsel_reg = RT4801_REG_VON,
-+		.vsel_mask = VOUT_MASK,
-+	},
-+};
-+
-+static const struct regmap_config rt4801_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = RT4801_REG_APPS,
-+};
-+
-+static int rt4801_probe(struct i2c_client *i2c)
-+{
-+	struct rt4801_priv *priv;
-+	struct regmap *regmap;
-+	int i;
-+
-+	priv = devm_kzalloc(&i2c->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = &i2c->dev;
-+	/* bootloader will on, driver only reconfigure enable to all output high */
-+	priv->enable_flag = DSVALL_ENABLE;
-+
-+	regmap = devm_regmap_init_i2c(i2c, &rt4801_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&i2c->dev, "Failed to init regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	priv->enable_gpios = devm_gpiod_get_array_optional(&i2c->dev, "enable", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->enable_gpios)) {
-+		dev_err(&i2c->dev, "Failed to get gpios\n");
-+		return PTR_ERR(priv->enable_gpios);
-+	}
-+
-+	for (i = 0; i < DSV_OUT_MAX; i++) {
-+		const struct regulator_desc *desc = rt4801_regulator_descs + i;
-+		struct regulator_config config = { .dev = &i2c->dev, .driver_data = priv,
-+						   .regmap = regmap, };
-+		struct regulator_dev *rdev;
-+		unsigned int val;
-+		int ret;
-+
-+		/* initialize volt_sel variable */
-+		ret = regmap_read(regmap, desc->vsel_reg, &val);
-+		if (ret)
-+			return ret;
-+
-+		priv->volt_sel[i] = val & desc->vsel_mask;
-+
-+		rdev = devm_regulator_register(&i2c->dev, desc, &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&i2c->dev, "Failed to register [%d] regulator\n", i);
-+			return PTR_ERR(rdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rt4801_of_id[] = {
-+	{ .compatible = "richtek,rt4801", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, rt4801_of_id);
-+
-+static struct i2c_driver rt4801_driver = {
-+	.driver = {
-+		.name = "rt4801",
-+		.of_match_table = of_match_ptr(rt4801_of_id),
-+	},
-+	.probe_new = rt4801_probe,
-+};
-+module_i2c_driver(rt4801_driver);
-+
-+MODULE_AUTHOR("ChiYuan Hwang <cy_huang@richtek.com>");
-+MODULE_DESCRIPTION("Richtek RT4801 Display Bias Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+I'll listen to other's suggestions/voices but personally I think that
+_ctx, _data etc. suffixes actually make sense.
 
+> I did consider line_request, but that was too close to the
+> gpio_v2_line_request in gpio.d, not just the struct but also the
+> resulting local variables, particularly in line_create() where they
+> co-exist.
+>
+> Given the ioctl names, GPIO_V2_GET_LINE_IOCTL and
+> GPIO_V2_LINE_GET/SET_xxx, that all create or operate on this struct, and
+> that this is within the scope of gpiolib-cdev, the name 'line' seemed the
+> best fit.
+>
+
+And that's why line_data or line_request_data do make sense IMO.
+
+> And how does it not refer to a single line - what are the descs??
+>
+
+I meant the fact that it can refer to multiple lines while being
+called "struct line". I do find this misleading.
+
+Bart
+
+> No problems with your other comments.
+>
+> Cheers,
+> Kent.
+>
