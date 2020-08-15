@@ -2,133 +2,186 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AFAC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026C1205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33610205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/paDNBw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiE/mrB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgHOWAp (ORCPT
+        id S1729639AbgHOWAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
+        Sat, 15 Aug 2020 18:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbgHOVvf (ORCPT
+        with ESMTP id S1728829AbgHOVvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:51:35 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E3DC06123D;
-        Fri, 14 Aug 2020 23:53:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x25so5617636pff.4;
-        Fri, 14 Aug 2020 23:53:15 -0700 (PDT)
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D630FC03B3CB
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 01:23:48 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t7so9480458otp.0
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 01:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pVKGZSGZNhPJKOQuv9oilwXJQTmZT9NWxjcZcAW1Dkc=;
-        b=T/paDNBwrJPd7tpI4px6vg1iXEHldiMa+fmuF2H1V+N0u081TAs9Qlrw68enOZhGuh
-         YfgZFNB1V38/Q8shdcgR4KA3i9sgcBiar5OKerPRbFWouzGYAFxdcKiF6LuekieSxEw+
-         7ZcZS8+AgqxMHKpRMhtRTAeUngPUQrp9ndSNkyMPORAOoskbAAEm9qtLqu4A6LPuubYK
-         3gOo5rw5bsmotyhM3xbMf0jDtJM6rfnmReKatfEGZSbqwk5tHl78cc93cMVzyICHts5D
-         d9lgByOtkGXkgUdQPL8gA9u7YwgjV4ipPrrwsSjibkrVFZ88dU67L9bzNNHFjza5t31d
-         +ulg==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=5ZdA3YbzFyuiBEZEvu/DHmwuAZEanF9AbrLkGxCCiGY=;
+        b=XiE/mrB9nNyL6m6Ayayjly1A/Rz+rKewJb7JYlLNaP1ST+WCAr/70G4ZKh3/NWgUUr
+         ddOiWE1MmCAw37YZR+CxBupx59x4N2hN53GkPpFvSmmZPXu1CO0yqV27scq3IKgSToum
+         /gp3utKXhE4jp4VJ6vTIyC5RVcOTfDF0McJfykHautJxpGuOdMklwG+PB1vyABAJ4INt
+         Y/zIK5JuxgwP0doj6Lob2OmS0nMDR7CCmi4ZYc6ac9hmVYrKtkcxwaEiuTcT3Pmkg5Us
+         wFBLQStuX7Z7C80zX0Vu0zsHgnbQTCKFHG4WtZrD78/XbGNOlWjHoaSoOSsqprmEmTTU
+         f0nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pVKGZSGZNhPJKOQuv9oilwXJQTmZT9NWxjcZcAW1Dkc=;
-        b=LJWZebfDKOXTv77wbooBwfcl5J937su0CpzaSF7L5aTnwMyoju1qZgCzbejmMSuglS
-         7H2JptATZbsXLYzP5q/5P3tchQWSAPvn5McUpVWkV/9gLH2rXM7WM3/u8ndF/WJzWfyd
-         d+iqMLhr3JKrKf/OUqmKLOu2GqjeHqfa/yVdo15RHY0CsfKas9htXXFDHnLrsjheUIEr
-         dCYQuQ7kMemV39Dx3L3xX52umF3Uyaq3yCmXIai9NTkc3EpmxHr4/5Q2Up0KIQ80cfZO
-         aIqmQur/F2dlPUOVCf17DMRbKIb43c5cxqhvReLJilvyHkiY+1+gs3USY4YZY7sdvDLu
-         i0Iw==
-X-Gm-Message-State: AOAM531a+bDfxtAbjrgiE5XVZq7aJMsS/iU/4Exzsf1XovSZ/uWRw95O
-        9zUP5lf4cLLPHViYvufVlJ7fh23+BlM=
-X-Google-Smtp-Source: ABdhPJz/+FljT4cxQeY7+rTXYiiKIvIyoPaJtCubwetrLQ2346ifFhuRCW/LhJUv+eNmPF044AWmhg==
-X-Received: by 2002:a62:8c89:: with SMTP id m131mr4310246pfd.288.1597474394763;
-        Fri, 14 Aug 2020 23:53:14 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id x136sm10952194pfc.28.2020.08.14.23.53.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 23:53:13 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 14:53:09 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200815065309.GA13905@sol>
-References: <20200814030257.135463-1-warthog618@gmail.com>
- <20200814030257.135463-8-warthog618@gmail.com>
- <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=5ZdA3YbzFyuiBEZEvu/DHmwuAZEanF9AbrLkGxCCiGY=;
+        b=JNvSCFD2c7GGK5D2S06pwnvpoZ7s5KFEe+21OqH4zhxXlCP2Ot/6oXuRbT1dpVw9iS
+         M5eATcyFOF1IXRfO4LpQdNzbuQGk2zALHqYcbUnqZImjZXH7t3WyqzEhcY59NMYhTQSo
+         OMkgy2ChkRXfUkT4uwDBm9kPEuH55AhhogFVtWVkifriC7tr9I++jo1amOMFRh055b+B
+         5j/oGn58r61djaztTEinY4r1EaTV3Vj4PkzQkABuHpn1wPo1iByjawzvxzsVTrt4FLuN
+         gsZ0vvvqHaoxiLfjV4qUAdM8wNT/QZB2JBdqepi3RvWBzMNLGp1GCTfeTvEBHlgXk415
+         gCXg==
+X-Gm-Message-State: AOAM532PSkji7h3DH3nP+02AXD8mm6P1EnJsgs7EEjkHP7w0VlhOP4tl
+        HxGD5CkBpS8HSCF8vYFed9ycWz2uJ3kg6OFM628=
+X-Google-Smtp-Source: ABdhPJxCiyEhC5G3jIT+CvyxgGvFalmOrlYAjt7DA5HbzKYB80D32aUM0mqtwbGrsYh57v/gqvmNpqlC/ZmniF50fPI=
+X-Received: by 2002:a9d:48d:: with SMTP id 13mr4914607otm.9.1597479828223;
+ Sat, 15 Aug 2020 01:23:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
+References: <20200527135329.1172644-1-arnd@arndb.de> <CAKwvOdmA29WzTd7APsQCsG_a=NVWuR53Z2h8NTLza5sisnV2PA@mail.gmail.com>
+ <CA+icZUUjtu3fCNTngY52h3uRL+eUaimNJb0UNwj5v-QwKggs5A@mail.gmail.com>
+ <CA+icZUWH5f4B_6eYy2_OOi45VjUkE_kN9akqvcOxxmmmM3TSrg@mail.gmail.com>
+ <CAKwvOdnj6ObdpsdVYkDxWp-dVTTg=xMkBm84y419SNtLuAqfMg@mail.gmail.com>
+ <CAKwvOdnahyqQQMdWhzpaYkJNi21Ux=8qyBmRnPidiT_RAn0YFw@mail.gmail.com> <CA+icZUVKBsp4cJV5V=ZtywEi=Ary5w-fNSijkNknU+U9xiKRRg@mail.gmail.com>
+In-Reply-To: <CA+icZUVKBsp4cJV5V=ZtywEi=Ary5w-fNSijkNknU+U9xiKRRg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sat, 15 Aug 2020 10:23:36 +0200
+Message-ID: <CA+icZUV5m+kPWpk0ovoWD+DK0Tn8=c0MdWnr2XTxStwXf_VF0g@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 09:31:29PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sat, Aug 15, 2020 at 5:28 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Sat, Aug 15, 2020 at 2:27 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
 > >
-> > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> > On Fri, Aug 14, 2020 at 3:57 PM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > On Fri, Aug 14, 2020 at 2:19 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > > >
+> > > > On Fri, Aug 14, 2020 at 7:29 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > > > >
+> > > > > Thanks for the proposal.
+> > > > >
+> > > > > I have adapted it to fit my patchset against Linux v5.8.
+> > > > >
+> > > > > Both Debian's GCC-10 and a snapshot version of LLVM toolchain
+> > > > > v11.0.0-rc1+ seems to be OK.
+> > > > >
+> > > >
+> > > > Yupp, OK.
+> > > >
+> > > > I was able to boot FreeDOS 1.2 VM in VirtualBox GUI.
+> > >
+> > > Hi Sedat,
+> > > Apologies, but it's not clear to me precisely which patch you tested.
+> > > Can you please confirm whether you tested:
+> > > 1. Arnd's patch that started this thread.
+> > > 2. My proposed diff adding -fno-addrsig to CFLAGS_powernow-k6.o.
+> > > 3. My proposed diff removing __force_order from the kernel.
+> > >
+> > > I'm hoping you were referring to testing 3., but it's not clear to me.
 > >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> 
-> Hi Kent,
-> 
-> not many comments here, just a couple minor details below.
-> 
+> > Ah, sorry, I missed your comment on github:
+> > https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674282107
+> >
+> > Ok, I will look at more disassembly next week and hopefully have a
+> > patch ready, with your tested by tag.
+> >
+>
+> Sorry for not being precise - I tested with solution (3.).
+> Later I added the diff I used as mentioned in your above comment.
+>
+> See [1]:
+>
+> > In a 2nd run building with a selfmade clang-11 and LLVM "bin"utils is fine, too.
+>
+> I cannot say much to older versions of GCC and/or LLVM/Clang if
+> removing "__force_order" works fine.
+>
+> Another (4.) solution:
+> Sami tried successfully by adding "__weak" declaration with
+> CONFIG_LKDTM=m (see [2]).
+> I am OK if this works, too.
+>
+> Please, see my attachments.
+>
+> - Sedat -
+>
+> [1] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674340760
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674182703
 
-[snip]
+Unfortunately, the diff from Sami does not work together with Arvind's
+patchset...
 
-> > +
-> > +/**
-> > + * struct line - contains the state of a userspace line request
-> > + * @gdev: the GPIO device the line request pertains to
-> > + * @label: consumer label used to tag descriptors
-> > + * @num_descs: the number of descriptors held in the descs array
-> > + * @descs: the GPIO descriptors held by this line request, with @num_descs
-> > + * elements.
-> > + */
-> > +struct line {
-> 
-> How about line_request, line_request_data or line_req_ctx? Something
-> more intuitive than struct line that doesn't even refer to a single
-> line. Same for relevant functions below.
-> 
+x86/boot: Remove run-time relocations from compressed kernel
 
-As I've mentioned previously, I'm not a fan of names that include _data,
-_ctx, _state, or similar that don't really add anything.
+...which got included in <tip.git#x86/boot> recently.
 
-I did consider line_request, but that was too close to the
-gpio_v2_line_request in gpio.d, not just the struct but also the
-resulting local variables, particularly in line_create() where they
-co-exist.
+I see the following:
 
-Given the ioctl names, GPIO_V2_GET_LINE_IOCTL and
-GPIO_V2_LINE_GET/SET_xxx, that all create or operate on this struct, and
-that this is within the scope of gpiolib-cdev, the name 'line' seemed the
-best fit.
+  ld.lld-11 -m elf_x86_64  -pie  --no-dynamic-linker -T
+arch/x86/boot/compressed/vmlinux.lds
+arch/x86/boot/compressed/kernel_info.o
+arch/x86/boot/compressed/head_64.o arch/x86/boot/compressed/misc.o
+arch/x86/boot/compressed/string.o arch/x86/boot/compressed/cmdline.o
+arch/x86/boot/compressed/error.o arch/x86/boot/compressed/piggy.o
+arch/x86/boot/compressed/cpuflags.o
+arch/x86/boot/compressed/early_serial_console.o
+arch/x86/boot/compressed/kaslr.o arch/x86/boot/compressed/kaslr_64.o
+arch/x86/boot/compressed/mem_encrypt.o
+arch/x86/boot/compressed/pgtable_64.o arch/x86/boot/compressed/acpi.o
+arch/x86/boot/compressed/efi_thunk_64.o
+drivers/firmware/efi/libstub/lib.a -o arch/x86/boot/compressed/vmlinux
+ld.lld-11: error: Unexpected GOT entries detected!
+ld.lld-11: error: Unexpected run-time relocations detected!
+ld.lld-11: error: Unexpected GOT entries detected!
+ld.lld-11: error: Unexpected run-time relocations detected!
+make[5]: *** [arch/x86/boot/compressed/Makefile:91:
+arch/x86/boot/compressed/vmlinux] Error 1
 
-And how does it not refer to a single line - what are the descs??
+When you need further informations, please let me know.
 
-No problems with your other comments.
+- Sedat -
 
-Cheers,
-Kent.
-
+[1] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674182703
