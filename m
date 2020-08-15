@@ -2,134 +2,110 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6302053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699582053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKX2g9Ly"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQ+fWqby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgHOWCe (ORCPT
+        id S1729748AbgHOWCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        Sat, 15 Aug 2020 18:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbgHOVvW (ORCPT
+        with ESMTP id S1728709AbgHOVvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29DC2C0F26DA;
-        Sat, 15 Aug 2020 10:38:56 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 184so10515065wmb.0;
-        Sat, 15 Aug 2020 10:38:56 -0700 (PDT)
+        Sat, 15 Aug 2020 17:51:24 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088F6C08E81D;
+        Sat, 15 Aug 2020 03:37:40 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id i26so8661301edv.4;
+        Sat, 15 Aug 2020 03:37:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=LTlBc86WBxHYhS5cpIEYsiz5cslHCacREpSctlHSwVw=;
-        b=UKX2g9LyaGrYYaTOc8OpvojSuSFUeF7Fh8iTOZLf1s2NTTXNJxApmwzhIAxx7t86pp
-         Qt6siL1UBFSvdUyrmTzxHt4gqmTVcyiJWjbvQI+CJioJTuX7PVX/JkBH/Gxy+wIhkQk8
-         pkIR6wGdKhfAVbGuBcweVa1lsaxVYXrBh3mbCCD3QqVlTCp1dv+9GLVUUhRQxjiWEv+n
-         l5AZ3Om8DNwYLKcgBbvAWLI5M0ooGBsnWFj2WxBsIe7qTZO+Gfwg/mU+Rf8+5M5QLvtU
-         1pbDm+MP16aUw1SjyAHD4H6zL0ur4qJpwPM2bR6wsStICxlopuJUUfKzrB1RsL3G26jI
-         kFTA==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t1LVSuI1NRkF6KqZNtOw+yQ3crRfQObWywAHMmVLnk0=;
+        b=ZQ+fWqby9a1jtQGefwywyLe6v64QaA7Bdf4daPmvgWiGIbLp4eAxPcMCGyPipoBSvi
+         98ARS860VviTcWZfz1fuvKORtuKGa7Trz86INHn6BwleJla9nBjquiag8JY6Q8w78RPK
+         mVBhNeT9fEN1B791N8ZajEOvHDvvbdmrCA0qHxRBEaSpG7CH84FatLNY9iWd0e3qKvVp
+         vhTxji+jL1iW2BhkpIcJn1M7Xwdvcu8JGrjsbv+9b+hvuTtJ0OMMU48zjsGEHdwUDUy7
+         LXPp5ma4cqJclP4ULeVjuX7X+7/5jEt29i/sqxWtBjVrWGo+OZGpTV2hwkX3ucxPiHIR
+         Pdlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=LTlBc86WBxHYhS5cpIEYsiz5cslHCacREpSctlHSwVw=;
-        b=K1hLzpZ1Mts+t0QM1ZEGNVpUOI2OveAu5CZtCwESKqAk/Xf4UynUjKMdDGrbd9EMQb
-         uJubhKlZisK/X7xPrAjxShoCa85zX10T8b7c6/heTuIDoTd+foRTVbQ57N/5n5pnqdw1
-         7m/mf/bE6/L44GfK7TQ740LE1IMRneAFE1NZffU3FzBTpPd2YG3TPI/iqfD/1ha3zUfJ
-         9xVoj7kURigt58KNKkcLGTc0Sf2lwqw/XdWp3qAmDKe67+K+i7vF6PhmMTdqm+wf2F6u
-         3uJzwrZDrAFgUjl/ihxEY/7aXl3/x4R525FxBAnCjClchonlSwSozoDjeF7XIXomzi/P
-         6MzQ==
-X-Gm-Message-State: AOAM5300GDxhH+K2+VaorSOm4LpsX9a223A079f5ARpIEl8xGNtRoY43
-        woQv3nAN0MCMnfereBkpyaE=
-X-Google-Smtp-Source: ABdhPJwa8fsBDCGcfSMqc/NcOe5scc7jwJeJxRKtujpEJRSIhOQSdZrzLLH0yblNZ3OtpkhaDz03+w==
-X-Received: by 2002:a7b:c40b:: with SMTP id k11mr7526072wmi.107.1597513134116;
-        Sat, 15 Aug 2020 10:38:54 -0700 (PDT)
-Received: from [100.64.193.196] ([147.229.117.43])
-        by smtp.gmail.com with ESMTPSA id 68sm23075592wra.39.2020.08.15.10.38.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 10:38:53 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   =?utf-8?Q?D=C3=A1vid_Bolvansk=C3=BD?= <david.bolvansky@gmail.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Date:   Sat, 15 Aug 2020 19:38:52 +0200
-Message-Id: <672236FE-769D-48F0-AAAD-FB9630BB2FA9@gmail.com>
-References: <202008150921.B70721A359@keescook>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-In-Reply-To: <202008150921.B70721A359@keescook>
-To:     Kees Cook <keescook@chromium.org>
-X-Mailer: iPhone Mail (17F75)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=t1LVSuI1NRkF6KqZNtOw+yQ3crRfQObWywAHMmVLnk0=;
+        b=GrfZaAf0yiyd/5I8xv/848CFIlHAGwrnUKMaoN0uns3qrw28VJgIx2ilEi2H2TRUs0
+         ROMP5o9lX7zeUwOd03j7V3tnkOr6xsH7h1SkKLUqEm2FYfw6tyNUN9FFtNg2IN5CpDhj
+         +SRSh8v4PfmeKbu9J7+efPpkW69tWZt+XMwe/U26oUE8ZJVg1wU1+IT+pV09CnIl9+2K
+         FHoX6pV8tEU/7Y27TN2RMuCnpIxzzrssp3d7xKHo2i6jBV/Cr+RR+PdI/Nr1GhJxkN5R
+         U+QlHFRDX0ebxwuJrcACbRLC/CcY5omiRE5BOkPa4e38oMUtwCEnrUs8o7gQnT26AHre
+         5q5Q==
+X-Gm-Message-State: AOAM531tTpIdGGaC/X+50DUw7MKqXamBdW7looxZXywsb6ylE2oCCDuc
+        qSDFD5OM1dWCVhogn/lHgY8=
+X-Google-Smtp-Source: ABdhPJyIebA9WqJ8aRwewHzlOukQLt+yRO56TMQId/Kwsz908PUmzImqZLLYwU6/QpBnZ3Al5OHy/A==
+X-Received: by 2002:a50:fc0a:: with SMTP id i10mr6465263edr.5.1597487859618;
+        Sat, 15 Aug 2020 03:37:39 -0700 (PDT)
+Received: from ubuntu-laptop (ip5f5bee32.dynamic.kabel-deutschland.de. [95.91.238.50])
+        by smtp.googlemail.com with ESMTPSA id g11sm8288715edv.95.2020.08.15.03.37.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 15 Aug 2020 03:37:39 -0700 (PDT)
+Message-ID: <b1081d95d115848d657bd48ca05f27ab0db01c7e.camel@gmail.com>
+Subject: Re: [PATCH v3 1/2] scsi: ufs: change ufshcd_comp_devman_upiu() to
+ ufshcd_compose_devman_upiu()
+From:   Bean Huo <huobean@gmail.com>
+To:     Can Guo <cang@codeaurora.org>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 15 Aug 2020 12:37:37 +0200
+In-Reply-To: <ca175083f887ab0204f63002b5e2c4c7@codeaurora.org>
+References: <20200814095034.20709-1-huobean@gmail.com>
+         <20200814095034.20709-2-huobean@gmail.com>
+         <ca175083f887ab0204f63002b5e2c4c7@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yeah, sprintf calls should be replaced with something safer.
+On Sat, 2020-08-15 at 09:52 +0800, Can Guo wrote:
+> Hi Bean,
+> 
+> On 2020-08-14 17:50, Bean Huo wrote:
+> > From: Bean Huo <beanhuo@micron.com>
+> > 
+> > ufshcd_comp_devman_upiu() alwasy make me confuse that it is a
+> > request
+> > completion calling function. Change it to
+> > ufshcd_compose_devman_upiu().
+> > 
+> > Signed-off-by: Bean Huo <beanhuo@micron.com>
+> > Acked-by: Avri Altman <avri.altman@wdc.com>
+> 
+> I gave my reviewed by tag in previous version, you missed it. Here it
+> is
+> 
+> Reviewed-by: Can Guo <cang@codeaurora.org>
 
-> D=C5=88a 15. 8. 2020 o 18:34 u=C5=BE=C3=ADvate=C4=BE Kees Cook <keescook@c=
-hromium.org> nap=C3=ADsal:
->=20
-> =EF=BB=BFOn Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:=
+Can
 
->> LLVM implemented a recent "libcall optimization" that lowers calls to
->> `sprintf(dest, "%s", str)` where the return value is used to
->> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
->> in parsing format strings.  Calling `sprintf` with overlapping arguments
->> was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
->>=20
->> `stpcpy` is just like `strcpy` except it returns the pointer to the new
->> tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
->> one statement.
->=20
-> O_O What?
->=20
-> No; this is a _terrible_ API: there is no bounds checking, there are no
-> buffer sizes. Anything using the example sprintf() pattern is _already_
-> wrong and must be removed from the kernel. (Yes, I realize that the
-> kernel is *filled* with this bad assumption that "I'll never write more
-> than PAGE_SIZE bytes to this buffer", but that's both theoretically
-> wrong ("640k is enough for anybody") and has been known to be wrong in
-> practice too (e.g. when suddenly your writing routine is reachable by
-> splice(2) and you may not have a PAGE_SIZE buffer).
->=20
-> But we cannot _add_ another dangerous string API. We're already in a
-> terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This=
+nice, thanks.
 
-> needs to be addressed up by removing the unbounded sprintf() uses. (And
-> to do so without introducing bugs related to using snprintf() when
-> scnprintf() is expected[4].)
->=20
-> -Kees
->=20
-> [1] https://github.com/KSPP/linux/issues/88
-> [2] https://github.com/KSPP/linux/issues/89
-> [3] https://github.com/KSPP/linux/issues/90
-> [4] https://lore.kernel.org/lkml/20200810092100.GA42813@2f5448a72a42/
->=20
-> --=20
-> Kees Cook
+Bean
+
