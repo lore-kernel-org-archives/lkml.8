@@ -2,200 +2,238 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9059F205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ak5n+gjx"
+	by mail.kernel.org (Postfix) with ESMTP id B85A1205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597529207;
+	bh=lVfSX53oWt/GG0pp2SaU6uae55I6TRETs4MBpUkpQdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qOs09EkT9uYrNjrWADApUl7OW7MLFEA1FV2ZhVrvMzh/tROu4dgUY60LWHARSuV+/
+	 d0u5DVbfgE3XZxdjFtVpQCGaBZXBFq02UZUUu275Bk8FkOeoloTlc9P+I15Irvta9U
+	 l3cQQWG29z9yOGSeGJuIToG3Q0d3JsyaM09Vg+4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgHOWGm (ORCPT
+        id S1729995AbgHOWGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
+        Sat, 15 Aug 2020 18:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgHOVus (ORCPT
+        with ESMTP id S1728370AbgHOVus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAC1C061367;
-        Fri, 14 Aug 2020 19:58:20 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id x6so5226155qvr.8;
-        Fri, 14 Aug 2020 19:58:20 -0700 (PDT)
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF194C03B3D7;
+        Sat, 15 Aug 2020 02:13:41 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o23so12397796ejr.1;
+        Sat, 15 Aug 2020 02:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=/fEGoVdDdtmlO46PesKTLAIEf8IpLdTiSt2G5gOFkkI=;
-        b=ak5n+gjxWktOhaG3EfOxzTfr2MLh+0OTCoxqLg7/D9ChzdjAZqrEtSq9K4E2AXAH4U
-         D8QKIb/Rt40mfh8OGPveRMmHNU05hLmn4D5KsXXJggq5ilU5uCj35Q/oMZOqkXHf5PlL
-         f5Y3FG67UkXHtCDxuxJk3FPnYihj+QpQ9SyOBtGw32hfkBN5GDj7agH2hTRiEvoMrmwv
-         YTUx23aisA3filv2zrS0f5RQtLH9z4JNxlzlAHs+VuPSwvDmAYiq9kNFDNGFe70btUDM
-         BewEQQ96bbfG1KqJtNpNti7aG34/0IhN27l3hg4bEP297lJmCQMsJ5xgWJhOSEVK5z61
-         f4rw==
+        bh=mqUm0D+LR1fyNqgEpWLZcUrJ5fpnGERJD73F5yobxbo=;
+        b=NXSY0vjVE5tPHf7IuLRoeAubB/ylXeS1/3XQ5D3uq+prksg4wr/wFryYS9yTbnP4di
+         md8LZYgPigun2do3qz7miFA87HgFqeha4DH/nrgJKN4AMqw5+ZFiSPMktIap/pH51ROs
+         Lf+qBonK2VWqkiID86N7ws1hIx9M/X8nFu8khVOTcQmH1XGaO2heo3a3pdXQvRfPUrPI
+         LRFzwQH/I7fHgLt4hXEbBHiyUGrfwXPAQkMWzl2/uu8PJQbqhb0fqXgpBibI2wLIgLxq
+         l0VRUKBV7N9Bp/Qv8e462/XXOHTUn6sjVI0jagAwFgNceU//9a1xtL5ZZpwezfq1HQsP
+         eBLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=/fEGoVdDdtmlO46PesKTLAIEf8IpLdTiSt2G5gOFkkI=;
-        b=NFH8MWkg9qEy3cAkiG9Hq+xVV9nxGN+CJmXp5ocChLUo40FE72ve0kNEqHmB/5pHII
-         eol/5ZbcCcs+COT8n4yiDhDstvdd0oUmZrjPfIn38axrn5u+e9fZst7wPNSS9QzVl+LF
-         t0ztTDwNhCjxqjVVz9sVda5ebBek5QyxbF4z3lEYdsvRUl2ppU4V0HtO5biN8mXHzugP
-         zcnSh1Vavd8hn5ZdhsMnqDgVPY3OFUywcqt9rumZDeXdQ8WrUhQDnCthPz2TK9YnB7Xz
-         IwxnmobUH5bf/DWB/QRgSrZKfKXHwMOQajeob2BAlyKNmvg4162lEz3IH3B1BBpz7315
-         81hg==
-X-Gm-Message-State: AOAM532jjsgCOl9wrHP//sqglJG774SjRz0xVWGiJixudKwUsG4cfl7Y
-        AddV0evK7Ya7oMMPES+wP7Q=
-X-Google-Smtp-Source: ABdhPJz4IJa9DVP0cyngnO8Zo4A7gSjgQXeL4X1dcUNiJlQGPfPvHSbi8Jgcd36sVDStuI+OMkHi3g==
-X-Received: by 2002:a05:6214:1742:: with SMTP id dc2mr5652005qvb.90.1597460299518;
-        Fri, 14 Aug 2020 19:58:19 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c33sm12431516qtk.40.2020.08.14.19.58.18
+        bh=mqUm0D+LR1fyNqgEpWLZcUrJ5fpnGERJD73F5yobxbo=;
+        b=pyDfon05IZFlBRLYZop3TmKHWwzWlLbjEvCRFhUhwO6BhJhB+J7urkNUH8RT+H6kKB
+         V580o0wELpNPOVA1fKyDbtBOvY1tJntGewT7kPucEI3yIGjZvsaYaqHZerhqEeKPUV6R
+         SP6I5XPBK5cKT4eF1DiM9Ubm4qJf2s4GysHBzi03mHRUBE7DP7RJJKIC0J0WcddPlPN9
+         JYaxZZSmh4XXz5fowAFvsIiQ5yzUl8lSK6QUXlPXPu9aZxGRnVbFHpoib4a2HETnjWEn
+         RekonfjavKYoDMb5sLxERnTbZEFRUcWV80bTxiUY/GJh7DSOs4ufcyswA2WajZTnzwqL
+         5I8Q==
+X-Gm-Message-State: AOAM530R51w3PBb6Wds7Tha0qQ4LG/ynrLmabQ4zwWOfNrICIKWPxRlG
+        Gg8wrbNfEcxs+JIe3o6x4No=
+X-Google-Smtp-Source: ABdhPJz5cQsILyJBeRROxoz/Tt1xsLjVUdBpw4vvM3748mGAI6Hau96Ht566QXH5PtIUwSDZuXEvuQ==
+X-Received: by 2002:a17:906:af0c:: with SMTP id lx12mr6308746ejb.228.1597482820529;
+        Sat, 15 Aug 2020 02:13:40 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id dr21sm9275800ejc.112.2020.08.15.02.13.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 19:58:18 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 14 Aug 2020 22:58:16 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Message-ID: <20200815025816.GA221583@rani.riverdale.lan>
-References: <20200815014006.GB99152@rani.riverdale.lan>
- <20200815020946.1538085-1-ndesaulniers@google.com>
+        Sat, 15 Aug 2020 02:13:39 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 11:13:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Yazen Ghannam <Yazen.Ghannam@amd.com>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bp@suse.de, tony.luck@intel.com, x86@kernel.org,
+        Smita.KoralahalliChannabasappa@amd.com
+Subject: Re: [PATCH 2/2] x86/MCE/AMD Support new memory interleaving schemes
+ during address translation
+Message-ID: <20200815091336.GB2444151@gmail.com>
+References: <20200814191449.183998-1-Yazen.Ghannam@amd.com>
+ <20200814191449.183998-3-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200815020946.1538085-1-ndesaulniers@google.com>
+In-Reply-To: <20200814191449.183998-3-Yazen.Ghannam@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
-> LLVM implemented a recent "libcall optimization" that lowers calls to
-> `sprintf(dest, "%s", str)` where the return value is used to
-> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> in parsing format strings.  Calling `sprintf` with overlapping arguments
-> was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
-> 
-> `stpcpy` is just like `strcpy` except it returns the pointer to the new
-> tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
-> one statement.
-> 
-> `stpcpy` was first standardized in POSIX.1-2008.
-> 
-> Implement this so that we don't observe linkage failures due to missing
-> symbol definitions for `stpcpy`.
-> 
-> Similar to last year's fire drill with:
-> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> 
-> This optimization was introduced into clang-12.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-> Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
-> Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
-> Link: https://reviews.llvm.org/D85963
-> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Suggested-by: Joe Perches <joe@perches.com>
-> Reported-by: Sami Tolvanen <samitolvanen@google.com>
-> Tested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V2:
-> * Added Sami's Tested by; though the patch changed implementation, the
->   missing symbol at link time was the problem Sami was observing.
-> * Fix __restrict -> __restrict__ typo as per Joe.
-> * Drop note about restrict from commit message as per Arvind.
-> * Fix NULL -> NUL as per Arvind; NUL is ASCII '\0'. TIL
-> * Fix off by one error as per Arvind; I had another off by one error in
->   my test program that was masking this.
-> 
->  include/linux/string.h |  3 +++
->  lib/string.c           | 23 +++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index b1f3894a0a3e..7686dbca8582 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -31,6 +31,9 @@ size_t strlcpy(char *, const char *, size_t);
->  #ifndef __HAVE_ARCH_STRSCPY
->  ssize_t strscpy(char *, const char *, size_t);
->  #endif
-> +#ifndef __HAVE_ARCH_STPCPY
-> +extern char *stpcpy(char *__restrict__, const char *__restrict__);
-> +#endif
->  
->  /* Wraps calls to strscpy()/memset(), no arch specific code required */
->  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
-> diff --git a/lib/string.c b/lib/string.c
-> index 6012c385fb31..68ddbffbbd58 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -272,6 +272,29 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
->  }
->  EXPORT_SYMBOL(strscpy_pad);
->  
-> +#ifndef __HAVE_ARCH_STPCPY
-> +/**
-> + * stpcpy - copy a string from src to dest returning a pointer to the new end
-> + *          of dest, including src's NUL terminator. May overrun dest.
-> + * @dest: pointer to end of string being copied into. Must be large enough
-> + *        to receive copy.
-> + * @src: pointer to the beginning of string being copied from. Must not overlap
-> + *       dest.
-> + *
-> + * stpcpy differs from strcpy in two key ways:
-> + * 1. inputs must not overlap.
 
-Looks like you missed my second email: strcpy also does not allow inputs
-to overlap. Couple typos below.
+* Yazen Ghannam <Yazen.Ghannam@amd.com> wrote:
 
-> + * 2. return value is the new NULL terminated character. (for strcpy, the
-				 ^^ NUL terminator.
-> + *    return value is a pointer to src.
-				      ^^ dest.)
-> + */
-> +#undef stpcpy
-> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
-> +{
-> +	while ((*dest++ = *src++) != '\0')
-> +		/* nothing */;
-> +	return --dest;
-> +}
-> +#endif
+> +     /* Read D18F1x208 (System Fabric ID Mask 0). */
+> +     if (amd_df_indirect_read(nid, 1, 0x208, umc, &tmp))
+> +             goto out_err;
 > +
->  #ifndef __HAVE_ARCH_STRCAT
->  /**
->   * strcat - Append one %NUL-terminated string to another
-> -- 
-> 2.28.0.220.ged08abb693-goog
-> 
+> +     /* Determine if system is a legacy Data Fabric type. */
+> +     legacy_df = !(tmp & 0xFF);
 
-The kernel-doc comments in string.c currently have a mix of %NUL and
-NUL, but the former seems to be more common. %NUL-terminator appears to
-be the preferred wording.
+1)
+
+I see this pattern in a lot of places in the code, first the magic 
+constant 0x208 is explained a comment, then it is *repeated* and used 
+it in the code...
+
+How about introducing an obviously named enum for it instead, which 
+would then be self-documenting, saving the comment and removing magic 
+numbers:
+
+	if (amd_df_indirect_read(nid, 1, AMD_REG_FAB_ID, umc, &reg_fab_id))
+		goto out_err;
+
+(The symbolic name should be something better, I just guessed 
+something quickly.)
+
+Please clean this up in a separate patch, not part of the already 
+large patch that introduces a new feature.
+
+2)
+
+'tmp & 0xFF' is some sort of fabric version ID value, with a value of 
+0 denoting legacy (pre-Rome) systems, right?
+
+How about making that explicit:
+
+	df_version = reg_fab_id & 0xFF;
+
+I'm pretty sure such a version ID might come handy later on, should 
+there be quirks or new capabilities with the newer systems ...
+
+
+>  			ret_addr -= hi_addr_offset;
+> @@ -728,23 +740,31 @@ int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)
+>  	}
+>  
+>  	lgcy_mmio_hole_en = tmp & BIT(1);
+> -	intlv_num_chan	  = (tmp >> 4) & 0xF;
+> -	intlv_addr_sel	  = (tmp >> 8) & 0x7;
+> -	dram_base_addr	  = (tmp & GENMASK_ULL(31, 12)) << 16;
+>  
+> -	/* {0, 1, 2, 3} map to address bits {8, 9, 10, 11} respectively */
+> -	if (intlv_addr_sel > 3) {
+> -		pr_err("%s: Invalid interleave address select %d.\n",
+> -			__func__, intlv_addr_sel);
+> -		goto out_err;
+> +	if (legacy_df) {
+> +		intlv_num_chan	  = (tmp >> 4) & 0xF;
+> +		intlv_addr_sel	  = (tmp >> 8) & 0x7;
+> +	} else {
+> +		intlv_num_chan    = (tmp >> 2) & 0xF;
+> +		intlv_num_dies	  = (tmp >> 6) & 0x3;
+> +		intlv_num_sockets = (tmp >> 8) & 0x1;
+> +		intlv_addr_sel	  = (tmp >> 9) & 0x7;
+>  	}
+>  
+> +	dram_base_addr	  = (tmp & GENMASK_ULL(31, 12)) << 16;
+> +
+>  	/* Read D18F0x114 (DramLimitAddress). */
+>  	if (amd_df_indirect_read(nid, 0, 0x114 + (8 * base), umc, &tmp))
+>  		goto out_err;
+>  
+> -	intlv_num_sockets = (tmp >> 8) & 0x1;
+> -	intlv_num_dies	  = (tmp >> 10) & 0x3;
+> +	if (legacy_df) {
+> +		intlv_num_sockets = (tmp >> 8) & 0x1;
+> +		intlv_num_dies	  = (tmp >> 10) & 0x3;
+> +		dst_fabric_id	  = tmp & 0xFF;
+> +	} else {
+> +		dst_fabric_id	  = tmp & 0x3FF;
+> +	}
+> +
+>  	dram_limit_addr	  = ((tmp & GENMASK_ULL(31, 12)) << 16) | GENMASK_ULL(27, 0);
+
+Could we please structure this code in a bit more readable fashion?
+
+1)
+
+Such as not using the meaningless 'tmp' variable name to first read 
+out DramOffset, then DramLimitAddress?
+
+How about naming them a bit more obviously, and retrieving them in a 
+single step:
+
+        if (amd_df_indirect_read(nid, 0, 0x1B4, umc, &reg_dram_off))
+                goto out_err;
+
+        /* Remove HiAddrOffset from normalized address, if enabled: */
+        if (reg_dram_off & BIT(0)) {
+                u64 hi_addr_offset = (tmp & GENMASK_ULL(31, 20)) << 8;
+
+                if (norm_addr >= hi_addr_offset) {
+                        ret_addr -= hi_addr_offset;
+                        base = 1;
+                }
+        }
+
+        if (amd_df_indirect_read(nid, 0, 0x114 + (8 * base), umc, &reg_dram_lim))
+                goto out_err;
+
+('reg' stands for register value - but 'val' would work too.)
+
+Side note: why is the above code using BIT() and GENMASK_UUL() when 
+all the other and new code is using fixed masks? Use one of these 
+versions instead of a weird mix ...
+
+2)
+
+Then all the fabric version dependent logic could be consolidated 
+instead of being spread out:
+
+	if (df_version) {
+		intlv_num_chan    = (reg_dram_off >>  2) & 0xF;
+		intlv_num_dies    = (reg_dram_off >>  6) & 0x3;
+		intlv_num_sockets = (reg_dram_off >>  8) & 0x1;
+		intlv_addr_sel    = (reg_dram_off >>  9) & 0x7;
+
+		dst_fabric_id     = (reg_dram_lim >>  0) & 0x3FF;
+	} else {
+		intlv_num_chan    = (reg_dram_off >>  4) & 0xF;
+		intlv_num_dies    = (reg_dram_lim >> 10) & 0x3;
+		intlv_num_sockets = (reg_dram_lim >>  8) & 0x1;
+		intlv_addr_sel    = (reg_dram_off >>  8) & 0x7;
+
+		dst_fabric_id     = (reg_dram_lim >>  0) & 0xFF;
+	}
+
+Also note a couple of more formatting & ordering edits I did to the 
+code, to improve the structure. My copy & paste job is untested 
+though.
+
+3)
+
+Notably, note how the new code on current systems is the first branch 
+- that's the most interesting code most of the time anyaway, legacy 
+systems being legacy.
+
+BTW., please do any such suggested code flow and structure clean-up 
+patches first in the series, then introduce the new logic, to make it 
+easier to verify.
+
+Thanks,
+
+	Ingo
