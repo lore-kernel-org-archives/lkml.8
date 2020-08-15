@@ -2,312 +2,254 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38195C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F26C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047692053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597528255;
-	bh=5Vkn53/6yyG7kvnLHSGm/YtciG8V8xRXOSWn7IPwmow=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=TEmnVCRB3X2k90TxtJPq0kpHpyKYRkQlcFnLW9bnLMVW9qJT7l/W9FCYeFS9a8cm8
-	 qeCYWglRj1UQzBbQRHBgT5M/r5DjGbkYnYbOQHB7QoCCUx5vp3LKruflKXBfa+1W71
-	 VMpoErUh9prNahR00SEbpuU/fTAwC6OZH0XkVWFg=
+	by mail.kernel.org (Postfix) with ESMTP id 6EB7522BED
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="DFNT1/7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgHOVux (ORCPT
+        id S1728513AbgHOVuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
+        Sat, 15 Aug 2020 17:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgHOVun (ORCPT
+        with ESMTP id S1728327AbgHOVuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:43 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECCFFC02B8DB
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 04:21:36 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id jp10so12593761ejb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 04:21:36 -0700 (PDT)
+        Sat, 15 Aug 2020 17:50:46 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on20704.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eab::704])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BE1C06138A
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:40:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aXVf6078HPWZBkgvUZ22Xw5IDyAkVzdshf9voOmQRGEHo1SsnUfH8Xvc4KBFhZhMMaWeYATlBJwmGlMusldbMYA4hE9P4y1RdW54YndWiUKUL/Rxq4Bz/LpegTrB6ux33zE53sW9rU9HbUm0nOz9qfZNGsYXrBcPEStGi8gtc4WJRQ5RgcAMoxlzerH4sqTV8Y16SmA3+97Vb+jOUKpSsdj16FGwWAK41jOLxVRfKk86K7ZJZsWkoFKyOYTC0Ok2QghbjhSBvQDZTOMfKKwYWlcsXPZQQupuPKyvpTlfPqhJRwVtFJhJTSoQARCngBrQdUMgetZMsAeDBhw4ri+oNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=137SJ50EBF1cfZ+AtAVGlHdk+dACIlaqNXN/blB3xPc=;
+ b=F5alNfs6gZE4eY0GhDBAaTxgGKUjc0MOeXmLKbp93AAcxNSGxl9PvCewHOA1p/+aEclcJDaQAqFR7tEqqwWAD+fEagY0bDuZJotc+oh/SP2sMZthfKGvZ4w4B+/HHEvQLfmq35cj8jz4E7PFAxUOhSJcAUR57DSQwUyp5nl04EaDf5c3tfv+h7qY+b56zaYMa7blj499h4E73UsLmyyLGbFOk7L2RoBIieN8Zzeox/Z0u1qCcoMnDdsBoihRLUm5nkTfL4FUf/3uSOvyGAWl+pcpjDrA11wtywRh2WwMURIohXD5E4b1rKgjRo2gstmBbEHIIJR1lUO/Uk1S9Ho74Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=sDeBJPFntet2GdvIWFJfTtM2LxyJq+enixp6zRLv3D8=;
-        b=SzHfMiqJ4e8oHqgddiQFTmGtd2EpuF+aa7GEfqFszn2hLAHaq76gZ71LT/f1wUMWAf
-         geELpQBfPMv3SDCKOp1e+YQmeYGBKSuihXYaInLJAH1VZxrzCWjpHUx2AGX3uH+7rC2Q
-         og3gGlGMoNKIla6ELV14vZjseQHNjpp9iEXgoriaCPvAR7jX631si4zDkr5BjjmUxvVj
-         7eqJnkIXOqkT0kjg3I6GQw7b/p5piobKEC7ec2TwzdOG7jPC/kyKvwUGX0eQMDoTsG9w
-         PQoM+6+8o5g6pdvhy/SL2LnQTFKBb9Xkzi04JrO/Hp3BIJPF0soVLJCn0jJzPF0uZ/0g
-         KSdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=sDeBJPFntet2GdvIWFJfTtM2LxyJq+enixp6zRLv3D8=;
-        b=Ens9dtheYRoy0P9P6vMt/5VlRfHHZHbhtSxSZrWGWc06luhm9M9UMyINRFdMaC2/Ru
-         cvYYXvDVzi3buQZ7j1ZyXsCZVsvjHZMrOTXLc+29+JhexOscIyq4LpY7lJTKIko83jhQ
-         XXs5gtcg5la6zCUHfGdxJLrFH5CqJXZ4accP3i26Ug3acxxgv7Ayzq+8a2a0bc+CR8Fo
-         bTzsqki+tzPoo2WtPlIidLVAnUIBetn1dlaPxfpr989rNUUc+LkNqloN3no7SeF9hg0g
-         0DM4OJbm7Z8P9mSaR6voLBIFkhklycRmzQApqIkrSk1qH6Tj3xSiSX2sBodRF4iS5VIl
-         QDpA==
-X-Gm-Message-State: AOAM532fJ/V5Ms9JNMuuy/icK8mt58x82tuUhwsF3b5y5YZQy9rOXdQK
-        zCJraIaOGPahmX8t6r4Fw1xfr+CpvCk=
-X-Google-Smtp-Source: ABdhPJxMNUK5V7CHtrSeGRZbyi5SUZ1vZNMTmRaBdU30cl91DE8DDo+WbQwMoUfHsQBquvC8vChd0A==
-X-Received: by 2002:a17:906:27db:: with SMTP id k27mr6505079ejc.433.1597490495671;
-        Sat, 15 Aug 2020 04:21:35 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id k24sm8978527ejz.102.2020.08.15.04.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 04:21:35 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 13:21:33 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf fixes
-Message-ID: <20200815112133.GA2582267@gmail.com>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=137SJ50EBF1cfZ+AtAVGlHdk+dACIlaqNXN/blB3xPc=;
+ b=DFNT1/7bwYGORWLrEzZrmCqpOlgMfIxVzwFFRQlJd+PZplTjaR9x3eCBZ+XVjFe8cTjGq+/DgKrQry+U0GOA68MLjsoBLMZmueXO4J1rTKrIKmWSxfexyVVPQKsSyzb6rqZ2pA6dVZKGWndw0RQbQhOVHqcD4x+H+S87dsp7guI=
+Authentication-Results: amperecomputing.com; dkim=none (message not signed)
+ header.d=none;amperecomputing.com; dmarc=none action=none
+ header.from=os.amperecomputing.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB5094.prod.exchangelabs.com (2603:10b6:a03:7c::27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.20; Sat, 15 Aug 2020 00:40:16 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947%3]) with mapi id 15.20.3283.015; Sat, 15 Aug 2020
+ 00:40:16 +0000
+From:   Tuan Phan <tuanphan@os.amperecomputing.com>
+To:     patches@amperecomputing.com
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf: arm_dsu: Support DSU ACPI devices
+Date:   Fri, 14 Aug 2020 17:39:40 -0700
+Message-Id: <1597451980-11405-1-git-send-email-tuanphan@os.amperecomputing.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR04CA0024.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::34) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BY5PR04CA0024.namprd04.prod.outlook.com (2603:10b6:a03:1d0::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3283.16 via Frontend Transport; Sat, 15 Aug 2020 00:40:15 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [4.28.12.214]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0b6d82f0-9f5f-4a72-61d0-08d840b3c73c
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5094:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB5094BDCB541249D4D48F8A48E0410@BYAPR01MB5094.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QHyk9QPbekzIGBDwq+xCEXLhkKwowj2vCegazHHBIx13DRE9RkY5AslP6gZ2b+CjWS3yLJu1MBisk2CbpEE5d5icqvqlAQnhoWMo1tH7iAuSj98jnImlnwThHUm3wueiMmLbyl2GlxvgwdK61uA3KSgGYCG0+J4qKntiuM/ZhU9u9bIxJl2zPu2ZQzdUDUMJ9bgBIzpDzU6Xp8Zh/TGhwIoxcI3n4uyftm1LtjHI2+GV7HvyaShUMLBGJHlkNGpkeqS9WBqG0WKBpNk0JrDhLtYDT60e3VW6IgY6S6Fuzt+JUGT4weMs94zr5BhdWqrVjCBTA+mbV27n5CrLLdxiWL3cLFiEsTQEnSym/xGrwb8s9ENO6NYfa0IsAU0nSeZbECSRmmPgaR/nMyLQXjdpsw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39840400004)(136003)(396003)(366004)(8936002)(16526019)(8676002)(52116002)(6506007)(6666004)(186003)(6486002)(26005)(2616005)(54906003)(83380400001)(6512007)(478600001)(66556008)(66476007)(66946007)(966005)(956004)(86362001)(4326008)(5660300002)(2906002)(34206002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: o4dexN01K+61LPwxm/9P8s7iboHmRgGjPFHMjH6dKwSsz0Xj/WtCzITIxkhdGX6+GAv67DzClU2K6iILi7CgZZQfEPnqCIbGtga5ohHrIhLAgyPiB7YblwUW3E7BGYM8aKCq8s6fl258Ar2exRPEbgY8MgLiYPNFaXgeqYeks2K9MZJA8V/vBu9fppmpC1C8OQ9RKfz447kV9q9P1Qq4Gj/2jg8ibMMBJiFKRk/C+1KR3Hv5Ze5/UA9ycP6UqhAHL6CM6ZiILJHFHI3dsH2lceCPwtizSfp+Qjdf5r7OBdbeJ3F0GOyRZ+owcXdhX1oKV7qfO94MLGtgkD9bkepxeGbTU4Fu4uqZi6HLXOmqOohXb3HgqqHW8qmOEPi9l03H0NKWkvNIo6W15Y3HmByHa1jtXEwSl1EZsPsxmp1wgms9y8hx+1NDssHPhz0NK0hLgFbef26FaiPKQA82WCtWWYxaRuLdkT//iTfpucNK3R8JgNejXcPQxRXQHmD6qFIf4zwUokrx09NYC9GmCZHhRtgHHPzJXg+0OJ/YpSqBqz1zPtHCyMuqpnJEtaIy2/0ANNqvSvUyHzcmtxI742KSd65hqrCqJoFdnj0smkVyCa3vA4juxdyI3XwoaTJI72AJX8uOK/OE1aHjiD2zCXrvxA==
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b6d82f0-9f5f-4a72-61d0-08d840b3c73c
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB4598.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2020 00:40:16.2499
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bwKtfk2dpKLf2nakHfSajGblJUBfFz7E4z0GLAOItuQcU8cCD9gPlXKmKtuehiuuT6TAJvDfSJ+9lyFVqz6144dAVFCh5BEF/dUcv51dAeKp/4jqxxoe1//qb4YuJCy9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Add support for probing device from ACPI node.
+Each DSU ACPI node and its associated cpus are inside a cluster node.
 
-Please pull the latest perf/urgent git tree from:
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+---
+Changes in v3:
+- Based on the latest ARM ACPI binding at: https://developer.arm.com/documentation/den0093/c/
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2020-08-15
+Changes in v2:
+- Removed IRQF_SHARED.
+- Fixed ACPI runtime detection.
 
-   # HEAD: bcfd218b66790243ef303c1b35ce59f786ded225 perf/x86/rapl: Add support for Intel SPR platform
+ drivers/perf/arm_dsu_pmu.c | 68 ++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 60 insertions(+), 8 deletions(-)
 
-Misc fixes, an expansion of perf syscall access to CAP_PERFMON privileged tools,
-plus a RAPL HW-enablement for Intel SPR platforms.
-
- Thanks,
-
-	Ingo
-
------------------->
-Alexey Budankov (1):
-      perf/core: Take over CAP_SYS_PTRACE creds to CAP_PERFMON capability
-
-Bhupesh Sharma (1):
-      hw_breakpoint: Remove unused __register_perf_hw_breakpoint() declaration
-
-Masami Hiramatsu (1):
-      kprobes: Remove show_registers() function prototype
-
-Zhang Rui (3):
-      perf/x86/rapl: Fix missing psys sysfs attributes
-      perf/x86/rapl: Support multiple RAPL unit quirks
-      perf/x86/rapl: Add support for Intel SPR platform
-
-
- arch/x86/events/rapl.c        | 46 +++++++++++++++++++++++++++++++++----------
- include/linux/hw_breakpoint.h |  3 ---
- include/linux/kprobes.h       |  1 -
- kernel/events/core.c          |  4 ++--
- 4 files changed, 38 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 68b38820b10e..67b411f7e8c4 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -130,11 +130,17 @@ struct rapl_pmus {
- 	struct rapl_pmu		*pmus[];
- };
+diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+index 96ed93c..4be355d 100644
+--- a/drivers/perf/arm_dsu_pmu.c
++++ b/drivers/perf/arm_dsu_pmu.c
+@@ -11,6 +11,7 @@
+ #define DRVNAME		PMUNAME "_pmu"
+ #define pr_fmt(fmt)	DRVNAME ": " fmt
  
-+enum rapl_unit_quirk {
-+	RAPL_UNIT_QUIRK_NONE,
-+	RAPL_UNIT_QUIRK_INTEL_HSW,
-+	RAPL_UNIT_QUIRK_INTEL_SPR,
-+};
++#include <linux/acpi.h>
+ #include <linux/bitmap.h>
+ #include <linux/bitops.h>
+ #include <linux/bug.h>
+@@ -603,18 +604,21 @@ static struct dsu_pmu *dsu_pmu_alloc(struct platform_device *pdev)
+ }
+ 
+ /**
+- * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster.
++ * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster
++ * from device tree.
+  */
+-static int dsu_pmu_dt_get_cpus(struct device_node *dev, cpumask_t *mask)
++static int dsu_pmu_dt_get_cpus(struct platform_device *pdev)
+ {
+ 	int i = 0, n, cpu;
+ 	struct device_node *cpu_node;
++	struct dsu_pmu *dsu_pmu =
++		(struct dsu_pmu *) platform_get_drvdata(pdev);
+ 
+-	n = of_count_phandle_with_args(dev, "cpus", NULL);
++	n = of_count_phandle_with_args(pdev->dev.of_node, "cpus", NULL);
+ 	if (n <= 0)
+ 		return -ENODEV;
+ 	for (; i < n; i++) {
+-		cpu_node = of_parse_phandle(dev, "cpus", i);
++		cpu_node = of_parse_phandle(pdev->dev.of_node, "cpus", i);
+ 		if (!cpu_node)
+ 			break;
+ 		cpu = of_cpu_node_to_id(cpu_node);
+@@ -626,11 +630,51 @@ static int dsu_pmu_dt_get_cpus(struct device_node *dev, cpumask_t *mask)
+ 		 */
+ 		if (cpu < 0)
+ 			continue;
+-		cpumask_set_cpu(cpu, mask);
++		cpumask_set_cpu(cpu, &dsu_pmu->associated_cpus);
+ 	}
+ 	return 0;
+ }
+ 
++/**
++ * dsu_pmu_acpi_get_cpus: Get the list of CPUs in the cluster
++ * from ACPI.
++ */
++static int dsu_pmu_acpi_get_cpus(struct platform_device *pdev)
++{
++	int cpu;
++	struct dsu_pmu *dsu_pmu = (struct dsu_pmu *) platform_get_drvdata(pdev);
 +
- struct rapl_model {
- 	struct perf_msr *rapl_msrs;
- 	unsigned long	events;
- 	unsigned int	msr_power_unit;
--	bool		apply_quirk;
-+	enum rapl_unit_quirk	unit_quirk;
- };
- 
-  /* 1/2^hw_unit Joule */
-@@ -612,14 +618,28 @@ static int rapl_check_hw_unit(struct rapl_model *rm)
- 	for (i = 0; i < NR_RAPL_DOMAINS; i++)
- 		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
- 
-+	switch (rm->unit_quirk) {
- 	/*
- 	 * DRAM domain on HSW server and KNL has fixed energy unit which can be
- 	 * different than the unit from power unit MSR. See
- 	 * "Intel Xeon Processor E5-1600 and E5-2600 v3 Product Families, V2
- 	 * of 2. Datasheet, September 2014, Reference Number: 330784-001 "
- 	 */
--	if (rm->apply_quirk)
-+	case RAPL_UNIT_QUIRK_INTEL_HSW:
-+		rapl_hw_unit[PERF_RAPL_RAM] = 16;
-+		break;
 +	/*
-+	 * SPR shares the same DRAM domain energy unit as HSW, plus it
-+	 * also has a fixed energy unit for Psys domain.
++	 * A dsu pmu node is inside a cluster parent node along with cpu nodes.
++	 * We need to find out all cpus that have the same parent with this pmu.
 +	 */
-+	case RAPL_UNIT_QUIRK_INTEL_SPR:
- 		rapl_hw_unit[PERF_RAPL_RAM] = 16;
-+		rapl_hw_unit[PERF_RAPL_PSYS] = 0;
-+		break;
-+	default:
-+		break;
++	for_each_possible_cpu(cpu) {
++		struct acpi_device *acpi_dev = ACPI_COMPANION(get_cpu_device(cpu));
++
++		if (acpi_dev &&
++			acpi_dev->parent == ACPI_COMPANION(&pdev->dev)->parent)
++			cpumask_set_cpu(cpu, &dsu_pmu->associated_cpus);
 +	}
 +
- 
- 	/*
- 	 * Calculate the timer rate:
-@@ -665,7 +685,7 @@ static const struct attribute_group *rapl_attr_update[] = {
- 	&rapl_events_pkg_group,
- 	&rapl_events_ram_group,
- 	&rapl_events_gpu_group,
--	&rapl_events_gpu_group,
-+	&rapl_events_psys_group,
- 	NULL,
- };
- 
-@@ -698,7 +718,6 @@ static struct rapl_model model_snb = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_PP1),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -707,7 +726,6 @@ static struct rapl_model model_snbep = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -717,7 +735,6 @@ static struct rapl_model model_hsw = {
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM) |
- 			  BIT(PERF_RAPL_PP1),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -726,7 +743,7 @@ static struct rapl_model model_hsx = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= true,
-+	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -734,7 +751,7 @@ static struct rapl_model model_hsx = {
- static struct rapl_model model_knl = {
- 	.events		= BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
--	.apply_quirk	= true,
-+	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_HSW,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
-@@ -745,14 +762,22 @@ static struct rapl_model model_skl = {
- 			  BIT(PERF_RAPL_RAM) |
- 			  BIT(PERF_RAPL_PP1) |
- 			  BIT(PERF_RAPL_PSYS),
--	.apply_quirk	= false,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
-+};
++	return 0;
++}
 +
-+static struct rapl_model model_spr = {
-+	.events		= BIT(PERF_RAPL_PP0) |
-+			  BIT(PERF_RAPL_PKG) |
-+			  BIT(PERF_RAPL_RAM) |
-+			  BIT(PERF_RAPL_PSYS),
-+	.unit_quirk	= RAPL_UNIT_QUIRK_INTEL_SPR,
- 	.msr_power_unit = MSR_RAPL_POWER_UNIT,
- 	.rapl_msrs      = intel_rapl_msrs,
- };
++static int dsu_pmu_platform_get_cpus(struct platform_device *pdev)
++{
++	int ret = -ENOENT;
++	struct fwnode_handle *fwnode = dev_fwnode(&pdev->dev);
++
++	if (IS_ERR_OR_NULL(fwnode))
++		return ret;
++
++	if (is_of_node(fwnode))
++		ret = dsu_pmu_dt_get_cpus(pdev);
++	else if (is_acpi_device_node(fwnode))
++		ret = dsu_pmu_acpi_get_cpus(pdev);
++
++	return ret;
++}
++
+ /*
+  * dsu_pmu_probe_pmu: Probe the PMU details on a CPU in the cluster.
+  */
+@@ -683,7 +727,9 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dsu_pmu))
+ 		return PTR_ERR(dsu_pmu);
  
- static struct rapl_model model_amd_fam17h = {
- 	.events		= BIT(PERF_RAPL_PKG),
--	.apply_quirk	= false,
- 	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
- 	.rapl_msrs      = amd_rapl_msrs,
- };
-@@ -787,6 +812,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&model_hsx),
- 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
-+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&model_spr),
- 	X86_MATCH_VENDOR_FAM(AMD,	0x17,		&model_amd_fam17h),
- 	X86_MATCH_VENDOR_FAM(HYGON,	0x18,		&model_amd_fam17h),
- 	{},
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index d7d4250cd1e4..78dd7035d1e5 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -72,7 +72,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    void *context);
- 
- extern int register_perf_hw_breakpoint(struct perf_event *bp);
--extern int __register_perf_hw_breakpoint(struct perf_event *bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
- 
-@@ -119,8 +118,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    void *context)		{ return NULL; }
- static inline int
- register_perf_hw_breakpoint(struct perf_event *bp)	{ return -ENOSYS; }
--static inline int
--__register_perf_hw_breakpoint(struct perf_event *bp) 	{ return -ENOSYS; }
- static inline void unregister_hw_breakpoint(struct perf_event *bp)	{ }
- static inline void
- unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)	{ }
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 45b8cdc9fad7..9be1bff4f586 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -227,7 +227,6 @@ extern int arch_prepare_kprobe(struct kprobe *p);
- extern void arch_arm_kprobe(struct kprobe *p);
- extern void arch_disarm_kprobe(struct kprobe *p);
- extern int arch_init_kprobes(void);
--extern void show_registers(struct pt_regs *regs);
- extern void kprobes_inc_nmissed_count(struct kprobe *p);
- extern bool arch_within_kprobe_blacklist(unsigned long addr);
- extern int arch_populate_kprobe_blacklist(void);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78e69e10482a..41e0cefb429b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11689,7 +11689,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 			goto err_task;
- 
- 		/*
--		 * Reuse ptrace permission checks for now.
-+		 * Preserve ptrace permission check for backwards compatibility.
- 		 *
- 		 * We must hold exec_update_mutex across this and any potential
- 		 * perf_install_in_context() call for this new event to
-@@ -11697,7 +11697,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 * perf_event_exit_task() that could imply).
- 		 */
- 		err = -EACCES;
--		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-+		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
- 			goto err_cred;
+-	rc = dsu_pmu_dt_get_cpus(pdev->dev.of_node, &dsu_pmu->associated_cpus);
++	platform_set_drvdata(pdev, dsu_pmu);
++
++	rc = dsu_pmu_platform_get_cpus(pdev);
+ 	if (rc) {
+ 		dev_warn(&pdev->dev, "Failed to parse the CPUs\n");
+ 		return rc;
+@@ -705,7 +751,6 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
  	}
  
+ 	dsu_pmu->irq = irq;
+-	platform_set_drvdata(pdev, dsu_pmu);
+ 	rc = cpuhp_state_add_instance(dsu_pmu_cpuhp_state,
+ 						&dsu_pmu->cpuhp_node);
+ 	if (rc)
+@@ -752,11 +797,19 @@ static const struct of_device_id dsu_pmu_of_match[] = {
+ 	{ .compatible = "arm,dsu-pmu", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, dsu_pmu_of_match);
++
++static const struct acpi_device_id dsu_pmu_acpi_match[] = {
++	{ "ARMHD500", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, dsu_pmu_acpi_match);
+ 
+ static struct platform_driver dsu_pmu_driver = {
+ 	.driver = {
+ 		.name	= DRVNAME,
+ 		.of_match_table = of_match_ptr(dsu_pmu_of_match),
++		.acpi_match_table = ACPI_PTR(dsu_pmu_acpi_match),
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = dsu_pmu_device_probe,
+@@ -826,7 +879,6 @@ static void __exit dsu_pmu_exit(void)
+ module_init(dsu_pmu_init);
+ module_exit(dsu_pmu_exit);
+ 
+-MODULE_DEVICE_TABLE(of, dsu_pmu_of_match);
+ MODULE_DESCRIPTION("Perf driver for ARM DynamIQ Shared Unit");
+ MODULE_AUTHOR("Suzuki K Poulose <suzuki.poulose@arm.com>");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
+
