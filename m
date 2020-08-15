@@ -2,37 +2,40 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B9CC433F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2F020708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F143F20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgHPBow (ORCPT
+        id S1729669AbgHPBo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 21:44:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33858 "EHLO huawei.com"
+        Sat, 15 Aug 2020 21:44:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33798 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729406AbgHPBoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 21:44:17 -0400
+        id S1728886AbgHPBoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 21:44:15 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E75C5359DCB713A97F8F;
-        Sat, 15 Aug 2020 17:58:28 +0800 (CST)
+        by Forcepoint Email with ESMTP id 0AA9DAC5A7D41AA91CDD;
+        Sat, 15 Aug 2020 17:58:34 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 15 Aug 2020 17:58:22 +0800
+ 14.3.487.0; Sat, 15 Aug 2020 17:58:24 +0800
 From:   Yang Shen <shenyang39@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v5 00/10] crypto: hisilicon/qm - misc fixes
-Date:   Sat, 15 Aug 2020 17:56:07 +0800
-Message-ID: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
+Subject: [PATCH v5 05/10] crypto: hisilicon/qm - fix event queue depth to 2048
+Date:   Sat, 15 Aug 2020 17:56:12 +0800
+Message-ID: <1597485377-2678-6-git-send-email-shenyang39@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
+References: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -42,65 +45,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset fix some qm bugs:
-patch 1: store the string address before pass to 'strsep'
-patch 2: clear 'qp_status->used' when init the 'qp'
-patch 3: use 'dev_info_ratelimited' to avoid printk flooding.
-patch 4: fix the judgement of queue is full
-patch 7: save the vf configuration space to make sure it is available
-	 after the 'PF' 'FLR'
-patch 8: register callback to 'pci_driver.shutdown'
-patch 9: wait for all working function finishs when remove the device
-patch 10: move the process of register alg to crypto in driver 'hisi_zip'
+From: Shukun Tan <tanshukun1@huawei.com>
 
-v5:
- - add a error branch instead of return immediately in patch "fix wrong
-   release after using strsep"
+Increasing depth of 'event queue' from 1024 to 2048, which equals to twice
+depth of 'completion queue'. It will fix the easily happened 'event queue
+overflow' as using 1024 queue depth for 'event queue'.
 
-v4:
- - exchange the patch 'fix the call trace when unbind device' and
-   'fix the process of register algorithms to crypto' to make sure the
-   driver is stable.
+Fixes: 263c9959c937("crypto: hisilicon - add queue management driver...")
+Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/qm.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-v3:
- - add the patch 10 which is aimed to fix the call trace when remove a
-   working device
-
-v2:
- - fix the wrong email address on patch 1
-
-Hui Tang (1):
-  crypto: hisilicon/qm - fix judgement of queue is full
-
-Shukun Tan (3):
-  crypto: hisilicon/qm - clear used reference count when start qp
-  crypto: hisilicon/qm - fix event queue depth to 2048
-  crypto: hisilicon/qm - fix VF not available after PF FLR
-
-Sihang Chen (1):
-  crypto: hisilicon/qm - fix wrong release after using strsep
-
-Weili Qian (1):
-  crypto: hisilicon/qm - fix the call trace when unbind device
-
-Yang Shen (4):
-  crypto: hisilicon/qm - fix print frequence in hisi_qp_send
-  crypto: hisilicon/qm - fix no stop reason when use 'hisi_qm_stop'
-  crypto: hisilicon/qm - register callback function to
-    'pci_driver.shutdown'
-  crypto: hisilicon/qm - fix the process of register algorithms to
-    crypto
-
- drivers/crypto/hisilicon/hpre/hpre_crypto.c |  36 ++---
- drivers/crypto/hisilicon/hpre/hpre_main.c   |  28 ++--
- drivers/crypto/hisilicon/qm.c               | 224 ++++++++++++++++++++++++----
- drivers/crypto/hisilicon/qm.h               |  27 ++--
- drivers/crypto/hisilicon/sec2/sec_crypto.c  |  35 ++---
- drivers/crypto/hisilicon/sec2/sec_main.c    |  34 ++---
- drivers/crypto/hisilicon/zip/zip_crypto.c   |   2 +-
- drivers/crypto/hisilicon/zip/zip_main.c     |  49 +++---
- 8 files changed, 290 insertions(+), 145 deletions(-)
-
---
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index b9bff96..791a469 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -181,6 +181,7 @@
+ #define QM_PCI_COMMAND_INVALID		~0
+ 
+ #define QM_SQE_ADDR_MASK		GENMASK(7, 0)
++#define QM_EQ_DEPTH			(1024 * 2)
+ 
+ #define QM_MK_CQC_DW3_V1(hop_num, pg_sz, buf_sz, cqe_sz) \
+ 	(((hop_num) << QM_CQ_HOP_NUM_SHIFT)	| \
+@@ -652,7 +653,7 @@ static void qm_work_process(struct work_struct *work)
+ 		qp = qm_to_hisi_qp(qm, eqe);
+ 		qm_poll_qp(qp, qm);
+ 
+-		if (qm->status.eq_head == QM_Q_DEPTH - 1) {
++		if (qm->status.eq_head == QM_EQ_DEPTH - 1) {
+ 			qm->status.eqc_phase = !qm->status.eqc_phase;
+ 			eqe = qm->eqe;
+ 			qm->status.eq_head = 0;
+@@ -661,7 +662,7 @@ static void qm_work_process(struct work_struct *work)
+ 			qm->status.eq_head++;
+ 		}
+ 
+-		if (eqe_num == QM_Q_DEPTH / 2 - 1) {
++		if (eqe_num == QM_EQ_DEPTH / 2 - 1) {
+ 			eqe_num = 0;
+ 			qm_db(qm, 0, QM_DOORBELL_CMD_EQ, qm->status.eq_head, 0);
+ 		}
+@@ -1371,7 +1372,13 @@ static int qm_eq_aeq_dump(struct hisi_qm *qm, const char *s,
+ 		return -EINVAL;
+ 
+ 	ret = kstrtou32(s, 0, &xeqe_id);
+-	if (ret || xeqe_id >= QM_Q_DEPTH) {
++	if (ret)
++		return -EINVAL;
++
++	if (!strcmp(name, "EQE") && xeqe_id >= QM_EQ_DEPTH) {
++		dev_err(dev, "Please input eqe num (0-%d)", QM_EQ_DEPTH - 1);
++		return -EINVAL;
++	} else if (!strcmp(name, "AEQE") && xeqe_id >= QM_Q_DEPTH) {
+ 		dev_err(dev, "Please input aeqe num (0-%d)", QM_Q_DEPTH - 1);
+ 		return -EINVAL;
+ 	}
+@@ -2285,7 +2292,7 @@ static int hisi_qm_memory_init(struct hisi_qm *qm)
+ } while (0)
+ 
+ 	idr_init(&qm->qp_idr);
+-	qm->qdma.size = QMC_ALIGN(sizeof(struct qm_eqe) * QM_Q_DEPTH) +
++	qm->qdma.size = QMC_ALIGN(sizeof(struct qm_eqe) * QM_EQ_DEPTH) +
+ 			QMC_ALIGN(sizeof(struct qm_aeqe) * QM_Q_DEPTH) +
+ 			QMC_ALIGN(sizeof(struct qm_sqc) * qm->qp_num) +
+ 			QMC_ALIGN(sizeof(struct qm_cqc) * qm->qp_num);
+@@ -2295,7 +2302,7 @@ static int hisi_qm_memory_init(struct hisi_qm *qm)
+ 	if (!qm->qdma.va)
+ 		return -ENOMEM;
+ 
+-	QM_INIT_BUF(qm, eqe, QM_Q_DEPTH);
++	QM_INIT_BUF(qm, eqe, QM_EQ_DEPTH);
+ 	QM_INIT_BUF(qm, aeqe, QM_Q_DEPTH);
+ 	QM_INIT_BUF(qm, sqc, qm->qp_num);
+ 	QM_INIT_BUF(qm, cqc, qm->qp_num);
+@@ -2465,7 +2472,7 @@ static int qm_eq_ctx_cfg(struct hisi_qm *qm)
+ 	eqc->base_h = cpu_to_le32(upper_32_bits(qm->eqe_dma));
+ 	if (qm->ver == QM_HW_V1)
+ 		eqc->dw3 = cpu_to_le32(QM_EQE_AEQE_SIZE);
+-	eqc->dw6 = cpu_to_le32((QM_Q_DEPTH - 1) | (1 << QM_EQC_PHASE_SHIFT));
++	eqc->dw6 = cpu_to_le32((QM_EQ_DEPTH - 1) | (1 << QM_EQC_PHASE_SHIFT));
+ 	ret = qm_mb(qm, QM_MB_CMD_EQC, eqc_dma, 0, 0);
+ 	dma_unmap_single(dev, eqc_dma, sizeof(struct qm_eqc), DMA_TO_DEVICE);
+ 	kfree(eqc);
+-- 
 2.7.4
 
