@@ -2,43 +2,43 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C652FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB96C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A1823B45
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A7F23B24
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHOVoC (ORCPT
+        id S1728016AbgHOVoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:44:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55000 "EHLO mx2.suse.de"
+        Sat, 15 Aug 2020 17:44:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54988 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgHOVnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726645AbgHOVnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:43:49 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3634FB04F;
-        Sat, 15 Aug 2020 10:07:11 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 01972B042;
+        Sat, 15 Aug 2020 10:07:10 +0000 (UTC)
 From:   Juergen Gross <jgross@suse.com>
 To:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     Juergen Gross <jgross@suse.com>, Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v4 6/6] x86/paravirt: avoid needless paravirt step clearing page table entries
-Date:   Sat, 15 Aug 2020 12:06:41 +0200
-Message-Id: <20200815100641.26362-7-jgross@suse.com>
+        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v4 0/6] x86/paravirt: cleanup after 32-bit PV removal
+Date:   Sat, 15 Aug 2020 12:06:35 +0200
+Message-Id: <20200815100641.26362-1-jgross@suse.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200815100641.26362-1-jgross@suse.com>
-References: <20200815100641.26362-1-jgross@suse.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,64 +46,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pte_clear() et al are based on tw0 paravirt steps today: one step to
-create a page table entry with all zeroes, and one step to write this
-entry value.
+A lot of cleanup after removal of 32-bit Xen PV guest support in
+paravirt code.
 
-Drop the first step as it is completely useless.
+Changes in V4:
+- dropped patches 1-3, as already committed
+- addressed comments to V3
+- added new patches 5+6
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/include/asm/paravirt.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Changes in V3:
+- addressed comments to V2
+- split patch 1 into 2 patches
+- new patches 3 and 7
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index f0464b88ea1e..d25cc6830e89 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -448,7 +448,7 @@ static inline pudval_t pud_val(pud_t pud)
- 
- static inline void pud_clear(pud_t *pudp)
- {
--	set_pud(pudp, __pud(0));
-+	set_pud(pudp, native_make_pud(0));
- }
- 
- static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
-@@ -485,15 +485,15 @@ static inline void __set_pgd(pgd_t *pgdp, pgd_t pgd)
- } while (0)
- 
- #define pgd_clear(pgdp) do {						\
--	if (pgtable_l5_enabled())						\
--		set_pgd(pgdp, __pgd(0));				\
-+	if (pgtable_l5_enabled())					\
-+		set_pgd(pgdp, native_make_pgd(0));			\
- } while (0)
- 
- #endif  /* CONFIG_PGTABLE_LEVELS == 5 */
- 
- static inline void p4d_clear(p4d_t *p4dp)
- {
--	set_p4d(p4dp, __p4d(0));
-+	set_p4d(p4dp, native_make_p4d(0));
- }
- 
- static inline void set_pte_atomic(pte_t *ptep, pte_t pte)
-@@ -504,12 +504,12 @@ static inline void set_pte_atomic(pte_t *ptep, pte_t pte)
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr,
- 			     pte_t *ptep)
- {
--	set_pte(ptep, __pte(0));
-+	set_pte(ptep, native_make_pte(0));
- }
- 
- static inline void pmd_clear(pmd_t *pmdp)
- {
--	set_pmd(pmdp, __pmd(0));
-+	set_pmd(pmdp, native_make_pmd(0));
- }
- 
- #define  __HAVE_ARCH_START_CONTEXT_SWITCH
+Changes in V2:
+- rebase to 5.8 kernel
+- addressed comments to V1
+- new patches 3 and 4
+
+Juergen Gross (6):
+  x86/paravirt: remove 32-bit support from PARAVIRT_XXL
+  x86/paravirt: cleanup paravirt macros
+  x86/paravirt: use CONFIG_PARAVIRT_XXL instead of CONFIG_PARAVIRT
+  x86/entry/32: revert "Fix XEN_PV build dependency"
+  x86/paravirt: remove set_pte_at pv-op
+  x86/paravirt: avoid needless paravirt step clearing page table entries
+
+ arch/x86/entry/entry_64.S                   |   4 +-
+ arch/x86/entry/vdso/vdso32/vclock_gettime.c |   1 +
+ arch/x86/include/asm/fixmap.h               |   2 +-
+ arch/x86/include/asm/idtentry.h             |   4 +-
+ arch/x86/include/asm/paravirt.h             | 151 +++-----------------
+ arch/x86/include/asm/paravirt_types.h       |  23 ---
+ arch/x86/include/asm/pgtable-3level_types.h |   5 -
+ arch/x86/include/asm/pgtable.h              |   7 +-
+ arch/x86/include/asm/required-features.h    |   2 +-
+ arch/x86/include/asm/segment.h              |   4 -
+ arch/x86/kernel/cpu/common.c                |   8 --
+ arch/x86/kernel/kprobes/core.c              |   1 -
+ arch/x86/kernel/kprobes/opt.c               |   1 -
+ arch/x86/kernel/paravirt.c                  |  19 ---
+ arch/x86/kernel/paravirt_patch.c            |  17 ---
+ arch/x86/xen/enlighten_pv.c                 |   6 -
+ arch/x86/xen/mmu_pv.c                       |   8 --
+ include/trace/events/xen.h                  |  20 ---
+ 18 files changed, 27 insertions(+), 256 deletions(-)
+
 -- 
 2.26.2
 
