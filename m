@@ -2,189 +2,127 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC43C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71615C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24CF9204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597528262;
-	bh=3SVBJhgxC7BPnwhc5MJagwvxEo4I+gn2nOiPf/aUh3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L8raMB730uD6vMKexj6qAfmWWZQk4fpYAGyb9caLBbTnkI0jQIS7sE2NPozXFz/uA
-	 6GedKQ1ngNwA3ChLbvetpZc7USoaLQfBHy4wuNMFzGEt9gXpbtA5CfomeS0yP3yFVz
-	 Eh+xJEUliWsXRymp2MbRjThkRS1ZfhCOoSYkPq5M=
+	by mail.kernel.org (Postfix) with ESMTP id 4B681204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IyRmSqiL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nN7XWbQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgHOVu7 (ORCPT
+        id S1728655AbgHOVvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45640 "EHLO
+        Sat, 15 Aug 2020 17:51:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgHOVus (ORCPT
+        with ESMTP id S1728488AbgHOVuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF42AC03B3CF;
-        Sat, 15 Aug 2020 01:42:16 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t15so8501504edq.13;
-        Sat, 15 Aug 2020 01:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ewcB7eh6VcMdK2/EFjX3fVLpAyAUfy8E0/JoUkn0HgI=;
-        b=LemSqFIat+3vQ38OT9v1LyTatshFL+7G3vYQYbVIX4A5glxOEnMcItzhiTISSLDMlL
-         3WDYJisn5kfjBv2GuvpCS9UJWB/bpNPHH5DHUdJRN7AiW80b+zCG94WR0GVNguFvzUCK
-         HRI5NIMN34lcNdVL4A8TmIYDbp2CxJB0tqUBlLSMU+3X/fcf330tXUj0KFjaozymLyYd
-         bEh0DbZR1tG8Uef7XZJA1NbVfVtV0rI6ZG3tBjAx00L3JQZz9sH25AyuMkfT/1FSJckt
-         mIqSMyLdrD7J8iqLa7rCww7TOWSNUHilMtk5kpGMfhrn/BvsHWfBEnsIK1vS4tJY0wV2
-         F6uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ewcB7eh6VcMdK2/EFjX3fVLpAyAUfy8E0/JoUkn0HgI=;
-        b=MQdpLXFcRU2/TQ4BRJJOR2a+ubiNiJ+peQFiT8OYRmLMr03pCnCTjkPDfM9Zd0Ce3o
-         WB+thoNMkkhPgdJl4InEZcNXLgONNvO+HT6C++Rxo6zT3rkk/7YXqQRing10lCzxRVPG
-         hZIetFfiqFTahcXmyKXnn/nP4vIGZae6zFMsFHRMeS1QbAU0U/9MJQxl/7J6WEzFLVsQ
-         DX1UZUHUfSNyH5fr8mZJhw+GN2ZWUpYaT8BzPKT1eeXXd3xAPwHfHWQv0JSr94UMlbwG
-         xGwghhIOqODcOIMvPWhKBORHZcPAz4fk5fsHiGKRv1dH54r1reeBO5GL60ncdGuvr4t1
-         z1fg==
-X-Gm-Message-State: AOAM532a083DccpGsIj4OjlHI3uY35HN/S3XtsrFeg22BMDg1ThZTx1a
-        J4zGKWSBh4C0daxhcKMk9uPlOLYEziU=
-X-Google-Smtp-Source: ABdhPJzqteyKa596sdV7BbCkNhznlD9P2VIEirR8RoBPNKsb7K65tSiQe+n7ZJf4GiD+XRjihA2KCA==
-X-Received: by 2002:aa7:d145:: with SMTP id r5mr5916308edo.323.1597480935312;
-        Sat, 15 Aug 2020 01:42:15 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id eb11sm2153780edb.76.2020.08.15.01.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 01:42:14 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 10:42:12 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Yazen Ghannam <Yazen.Ghannam@amd.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bp@suse.de, tony.luck@intel.com, x86@kernel.org,
-        Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH 1/2] x86/MCE/AMD, EDAC/mce_amd: Use AMD NodeId for
- Family17h+ DRAM Decode
-Message-ID: <20200815084212.GA2444151@gmail.com>
-References: <20200814191449.183998-1-Yazen.Ghannam@amd.com>
- <20200814191449.183998-2-Yazen.Ghannam@amd.com>
+        Sat, 15 Aug 2020 17:50:54 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9392DC09B051;
+        Sat, 15 Aug 2020 08:47:04 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 15:46:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597506413;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3fXszv2APHcKmDolqgtZdsS0ielnNdMvQ+ezIc2uA40=;
+        b=IyRmSqiLFCP1mofhwaH84KcBX8X+ngd1JIQ+ZsAPHgXnq++DKTT84IucIgxS116pB4K+qq
+        zRfqWqZsinI7kM+yZKZ4tzwRole9fXlxjUfqp4pmtCxU5CGFSntPQmob44d/8qJcfP+Jso
+        baeL7NPTgKtxKQQSfrzRxKJq2iXAxpilVHbhT9dSjS8TX9Mizjzojqb5kP4+dyHf+j78aI
+        meNjqZhnfyMHejvSQxS7KVHwSv3c0GahDAlb6PVwPwuOfHOKQRw14lK5XSQOr060eLG93h
+        HKvrLdVvKOwCrFSbZGbops/Yw/CVIe6GhqK/23GjKH656SiF5z3RsZXULn6yww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597506413;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3fXszv2APHcKmDolqgtZdsS0ielnNdMvQ+ezIc2uA40=;
+        b=nN7XWbQHARIUtV1aKk/8mYaUtrUJPNwW3MAiDTmZpbfu0dElQCLnVI6FqUZb2mLx9W1aZB
+        g0q9uQ7c94F07qDQ==
+From:   "tip-bot2 for Juergen Gross" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/paravirt] x86/paravirt: Clean up paravirt macros
+Cc:     Juergen Gross <jgross@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200815100641.26362-3-jgross@suse.com>
+References: <20200815100641.26362-3-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814191449.183998-2-Yazen.Ghannam@amd.com>
+Message-ID: <159750641236.3192.13754710785295850229.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/paravirt branch of tip:
 
-* Yazen Ghannam <Yazen.Ghannam@amd.com> wrote:
+Commit-ID:     94b827becc6a87c905ab30b398e12a266518acbb
+Gitweb:        https://git.kernel.org/tip/94b827becc6a87c905ab30b398e12a266518acbb
+Author:        Juergen Gross <jgross@suse.com>
+AuthorDate:    Sat, 15 Aug 2020 12:06:37 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 15 Aug 2020 13:52:11 +02:00
 
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
-> 
-> The edac_mce_amd module calls decode_dram_ecc() on AMD Family17h and
-> later systems. This function is used in amd64_edac_mod to do
-> system-specific decoding for DRAM ECC errors. The function takes a
-> "NodeId" as a parameter.
-> 
-> In AMD documentation, NodeId is used to identify a physical die in a
-> system. This can be used to identify a node in the AMD_NB code and also
-> it is used with umc_normaddr_to_sysaddr().
-> 
-> However, the input used for decode_dram_ecc() is currently the NUMA node
-> of a logical CPU. In the default configuration, the NUMA node and
-> physical die will be equivalent, so this doesn't have an impact. But the
-> NUMA node configuration can be adjusted with optional memory
-> interleaving schemes. This will cause the NUMA node enumeration to not
-> match the physical die enumeration. The mismatch will cause the address
-> translation function to fail or report incorrect results.
-> 
-> Save the "NodeId" as a percpu value during init in AMD MCE code. Export
-> a function to return the value which can be used from modules like
-> edac_mce_amd.
-> 
-> Fixes: fbe63acf62f5 ("EDAC, mce_amd: Use cpu_to_node() to find the node ID")
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
->  arch/x86/include/asm/mce.h    |  2 ++
->  arch/x86/kernel/cpu/mce/amd.c | 11 +++++++++++
->  drivers/edac/mce_amd.c        |  2 +-
->  3 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-> index cf503824529c..92527cc9ed06 100644
-> --- a/arch/x86/include/asm/mce.h
-> +++ b/arch/x86/include/asm/mce.h
-> @@ -343,6 +343,8 @@ extern struct smca_bank smca_banks[MAX_NR_BANKS];
->  extern const char *smca_get_long_name(enum smca_bank_types t);
->  extern bool amd_mce_is_memory_error(struct mce *m);
->  
-> +extern u8 amd_cpu_to_node(unsigned int cpu);
-> +
->  extern int mce_threshold_create_device(unsigned int cpu);
->  extern int mce_threshold_remove_device(unsigned int cpu);
->  
-> diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-> index 99be063fcb1b..524edf81e287 100644
-> --- a/arch/x86/kernel/cpu/mce/amd.c
-> +++ b/arch/x86/kernel/cpu/mce/amd.c
-> @@ -202,6 +202,9 @@ static DEFINE_PER_CPU(unsigned int, bank_map);
->  /* Map of banks that have more than MCA_MISC0 available. */
->  static DEFINE_PER_CPU(u32, smca_misc_banks_map);
->  
-> +/* CPUID_Fn8000001E_ECX[NodeId] used to identify a physical node/die. */
-> +static DEFINE_PER_CPU(u8, node_id);
-> +
->  static void amd_threshold_interrupt(void);
->  static void amd_deferred_error_interrupt(void);
->  
-> @@ -233,6 +236,12 @@ static void smca_set_misc_banks_map(unsigned int bank, unsigned int cpu)
->  
->  }
->  
-> +u8 amd_cpu_to_node(unsigned int cpu)
-> +{
-> +	return per_cpu(node_id, cpu);
-> +}
-> +EXPORT_SYMBOL_GPL(amd_cpu_to_node);
-> +
->  static void smca_configure(unsigned int bank, unsigned int cpu)
->  {
->  	unsigned int i, hwid_mcatype;
-> @@ -240,6 +249,8 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
->  	u32 high, low;
->  	u32 smca_config = MSR_AMD64_SMCA_MCx_CONFIG(bank);
->  
-> +	this_cpu_write(node_id, cpuid_ecx(0x8000001e) & 0xFF);
+x86/paravirt: Clean up paravirt macros
 
-So we already have this magic number used for a similar purpose, in 
-amd_get_topology():
+Some paravirt macros are no longer used, delete them.
 
-                cpuid(0x8000001e, &eax, &ebx, &ecx, &edx);
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200815100641.26362-3-jgross@suse.com
+---
+ arch/x86/include/asm/paravirt.h | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-                node_id  = ecx & 0xff;
-
-Firstly, could we please at least give 0x8000001e a proper symbolic 
-name, use it in hygon.c too (which AFAIK is derived from AMD anyway), 
-and then use it in these new patches?
-
-Secondly, why not stick node_id into struct cpuinfo_x86, where the MCA 
-code can then use it without having to introduce a new percpu data 
-structure?
-
-There's also the underlying assumption that there's only ever going to 
-be 256 nodes, which limitation I'm sure we'll hear about in a couple 
-of years as not being quite enough. ;-)
-
-So less hardcoding and more generalizations please.
-
-Thanks,
-
-	Ingo
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index 25c7a73..e02c409 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -586,16 +586,9 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
+ #endif /* SMP && PARAVIRT_SPINLOCKS */
+ 
+ #ifdef CONFIG_X86_32
+-#define PV_SAVE_REGS "pushl %ecx; pushl %edx;"
+-#define PV_RESTORE_REGS "popl %edx; popl %ecx;"
+-
+ /* save and restore all caller-save registers, except return value */
+ #define PV_SAVE_ALL_CALLER_REGS		"pushl %ecx;"
+ #define PV_RESTORE_ALL_CALLER_REGS	"popl  %ecx;"
+-
+-#define PV_FLAGS_ARG "0"
+-#define PV_EXTRA_CLOBBERS
+-#define PV_VEXTRA_CLOBBERS
+ #else
+ /* save and restore all caller-save registers, except return value */
+ #define PV_SAVE_ALL_CALLER_REGS						\
+@@ -616,14 +609,6 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
+ 	"pop %rsi;"							\
+ 	"pop %rdx;"							\
+ 	"pop %rcx;"
+-
+-/* We save some registers, but all of them, that's too much. We clobber all
+- * caller saved registers but the argument parameter */
+-#define PV_SAVE_REGS "pushq %%rdi;"
+-#define PV_RESTORE_REGS "popq %%rdi;"
+-#define PV_EXTRA_CLOBBERS EXTRA_CLOBBERS, "rcx" , "rdx", "rsi"
+-#define PV_VEXTRA_CLOBBERS EXTRA_CLOBBERS, "rdi", "rcx" , "rdx", "rsi"
+-#define PV_FLAGS_ARG "D"
+ #endif
+ 
+ /*
