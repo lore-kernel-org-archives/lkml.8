@@ -2,133 +2,119 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB90C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE15EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2552053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529057;
-	bh=WLjbP89+RgxkqyIUu2luDomwV2GjRSjz8IeVvbQ7efg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MbI4FmReKAvKW72SGYTxG2clO0symMzo86Nk50tNzQVeNrYRzTUibCEu7+LpsN8Sb
-	 0aV7R8HVJRiChLSsQ77BLjqujGS0NTQEE93c3oFgPGl4K79EEf3aarIdsVVmAdQVr5
-	 ZUqF/2TdhneADcFGPYhlc40HU1wzzrwSjMbMIWuU=
+	by mail.kernel.org (Postfix) with ESMTP id 83A56205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bI9yTul+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgHOWEP (ORCPT
+        id S1729840AbgHOWE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        Sat, 15 Aug 2020 18:04:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgHOVvD (ORCPT
+        with ESMTP id S1728556AbgHOVvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:03 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EEF5C03B3CD;
-        Sat, 15 Aug 2020 01:30:33 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a26so12338917ejc.2;
-        Sat, 15 Aug 2020 01:30:33 -0700 (PDT)
+        Sat, 15 Aug 2020 17:51:02 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCDCC06134C;
+        Fri, 14 Aug 2020 18:33:15 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id e5so8359915qth.5;
+        Fri, 14 Aug 2020 18:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=OTJ5ZzXkVNOqKUVJCNQ7kjB6RDngCntbQUzOLmWGTN0=;
-        b=caMuw41FA6/kb84Gk3fDwKcDsuD8nmGCfxFXlNaV9UWoEZNpH/wB1O7lqx8Kxg6sI7
-         ZdRTp98AlcQQkG7HcxBUkVzit4fqGpViPmILFpBRCVI+Ga5JNiV+Sj0uLH4PUeX+exR4
-         QfMUOFauDXZrERTOJVfWIyipGz96BCP55mjuNLV52VTh/lha1AdXJjeqWHOBUix4sqpx
-         k/614CCAm7UTexgXk+LkejK9IHrAPq85PrLnFoMXiSvAlS9lsAIZOZ9HMpvU/bSm4H4j
-         KhEEGSW454zYWJnvTfpMV8U5qHY5TR4GM0W2YjyEfWxlgGaUTYU+bInDnBrW0SzRVq9i
-         11wg==
+        bh=vJ/jVWhGTXG1e9E+PiLPXFME4LoN6xMadImJ1YD9YHU=;
+        b=bI9yTul+XenFvqeVlqilZ/1PwJ1K3UFEioFw2tHq8PaWt4T8LWxVgwRJSMMkhCUE6S
+         Mhk+1TtNGS6OWGrlFWUOTVc0gMvTT5rGsqPSPF7y7J9R5EjAKpFUxmIDn1hRIQ/wtohD
+         h7ryjmhJ5t+sRCgBkpOsNhDqwsFM230xxiBOLSfm+c/bPJD3fF/amzVpL35ZoJJDtLUI
+         yPPUOToH6zKsZZ56/pzJ3TtCqrkDl5KRjH98qkAEoQJehZkYfRWLA6mKX6g7SAAlM2p+
+         hM1RQv8oPv1ZMBB3K1KLvw53CeRFVuV+sLMvOML/8vh1qbpqShRfnoqCIec5DNVLUsfr
+         Eb2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=OTJ5ZzXkVNOqKUVJCNQ7kjB6RDngCntbQUzOLmWGTN0=;
-        b=pNUY2aw65/bnbLV9UQ0StlR6nH9hMWVfwWioltw+oITnN+vhFbxVBd0MrLXjoCXhpO
-         ojihCUlxBp9Uix7j5stqpaFFwlfsifvZm8bxXvrFsykfgG0CMgFbgCMcqQ8axPunpLLs
-         Ra/PFIm9PQ/Rp4pYOKhYajgvdJbYRTxVM8wR3DVEh5O2TAmVHtN13z7aA+18198RuIXm
-         TTsfKeytkspv0ouxl7fSt4DraGRf6PQPdvQesvkDREXpKqG6gNmIjVSvpNQaTJm6WYxp
-         mP+idM/rHB76E7J5vaVXfOIUcrGUEVDG/xAScLCQlTg72uRpXfxfPeNgGORXhqkO8Aaf
-         RHIw==
-X-Gm-Message-State: AOAM533fWWkTAj7R3yEViLOPlN42XLKWP5Lh218RtjkR0eG0+XGEqWKF
-        4yZSGhDqnD24/Wvc79kr3sg=
-X-Google-Smtp-Source: ABdhPJwiTPKiEV581q5AeJRHWKu0zF6t2Tdvh2SgsUODiijumjqWusU4DfnPtOT8BJbsAs9we+ODig==
-X-Received: by 2002:a17:906:eb90:: with SMTP id mh16mr5911532ejb.10.1597480232160;
-        Sat, 15 Aug 2020 01:30:32 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id e6sm8546653ejd.14.2020.08.15.01.30.30
+        bh=vJ/jVWhGTXG1e9E+PiLPXFME4LoN6xMadImJ1YD9YHU=;
+        b=rw635h449WWyb2LdxXwhLh6f64LaB/PGG829ylZXHG7wbg42YpTQR4jvlJDrDXhEzp
+         1SogV3Ph9t+bxew3WgQxmyt4KwUNq0fLDl92SOTzzLnj3eJ4tuwyGSZUZyz9EnFvANPK
+         fWvB8RVa63Q+WHO7l9zS/RmCbE1vnr2AFXJlvQ6hXpxc/atZh1lkrpMDYkxFMDO5wwg2
+         pkEmKCPzXZi2wqvWKwrDd78Ta/hJ9mBOwxsM3bIzeZIUKhbtYaj2ENTvqTsBWlp5XYjx
+         JpaUeN/ykWSk1vJLkYdN1rPR6ZtliiGz3BvOAcJZr9VY63vsgICUgwR0XBY7U1b0evt3
+         ROnQ==
+X-Gm-Message-State: AOAM531s2W0jywcll4pKZ6C8x19MKcPUaWOBCJ3YbP161lqYt8R9kO7B
+        jMoOuxzxD4ZoRbKVkoVg01CGxoz2IoY=
+X-Google-Smtp-Source: ABdhPJzT7OzYhDt4EGcOfivsmmvRSIEn2XltAWy/5uJNgRq1XLSKbN6URmiVpoEPnEgK3HsV7HyH9Q==
+X-Received: by 2002:ac8:7405:: with SMTP id p5mr4604950qtq.308.1597455192803;
+        Fri, 14 Aug 2020 18:33:12 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id t69sm10061523qka.73.2020.08.14.18.33.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 01:30:30 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 10:30:29 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
-Cc:     brendanhiggins@google.com, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        urielguajardo@google.com, alan.maguire@oracle.com
-Subject: Re: [PATCH v3] kunit: added lockdep support
-Message-ID: <20200815083029.GA2430016@gmail.com>
-References: <20200814205527.1833459-1-urielguajardojr@gmail.com>
+        Fri, 14 Aug 2020 18:33:12 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 14 Aug 2020 21:33:10 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Joe Perches <joe@perches.com>, Tony Luck <tony.luck@intel.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] lib/string.c: implement stpcpy
+Message-ID: <20200815013310.GA99152@rani.riverdale.lan>
+References: <20200815002417.1512973-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200814205527.1833459-1-urielguajardojr@gmail.com>
+In-Reply-To: <20200815002417.1512973-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Uriel Guajardo <urielguajardojr@gmail.com> wrote:
-
-> From: Uriel Guajardo <urielguajardo@google.com>
-> 
-> KUnit will fail tests upon observing a lockdep failure. Because lockdep
-> turns itself off after its first failure, only fail the first test and
-> warn users to not expect any future failures from lockdep.
-> 
-> Similar to lib/locking-selftest [1], we check if the status of
-> debug_locks has changed after the execution of a test case. However, we
-> do not reset lockdep afterwards.
-> 
-> Like the locking selftests, we also fix possible preemption count
-> corruption from lock bugs.
-
-> --- a/lib/kunit/Makefile
-> +++ b/lib/kunit/Makefile
-
-> +void kunit_check_lockdep(struct kunit *test, struct kunit_lockdep *lockdep) {
-> +	int saved_preempt_count = lockdep->preempt_count;
-> +	bool saved_debug_locks = lockdep->debug_locks;
-> +
-> +	if (DEBUG_LOCKS_WARN_ON(preempt_count() != saved_preempt_count))
-> +		preempt_count_set(saved_preempt_count);
-> +
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +	if (softirq_count())
-> +		current->softirqs_enabled = 0;
-> +	else
-> +		current->softirqs_enabled = 1;
+On Fri, Aug 14, 2020 at 05:24:15PM -0700, Nick Desaulniers wrote:
+> +#ifndef __HAVE_ARCH_STPCPY
+> +/**
+> + * stpcpy - copy a string from src to dest returning a pointer to the new end
+> + *          of dest, including src's NULL terminator. May overrun dest.
+> + * @dest: pointer to end of string being copied into. Must be large enough
+> + *        to receive copy.
+> + * @src: pointer to the beginning of string being copied from. Must not overlap
+> + *       dest.
+> + *
+> + * stpcpy differs from strcpy in two key ways:
+> + * 1. inputs must not overlap.
+> + * 2. return value is the new NULL terminated character. (for strcpy, the
+> + *    return value is a pointer to src.
+> + */
+> +#undef stpcpy
+> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
+> +{
+> +	while ((*dest++ = *src++) != '\0')
+> +		/* nothing */;
+> +	return dest;
+> +}
 > +#endif
 > +
-> +	if (saved_debug_locks && !debug_locks) {
-> +		kunit_set_failure(test);
-> +		kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
-> +		kunit_warn(test, "Further tests will have LOCKDEP disabled.");
-> +	}
 
+Won't this return a pointer that's one _past_ the terminating NUL? I
+think you need the increments to be inside the loop body, rather than as
+part of the condition.
 
-So this basically duplicates what the boot-time locking self-tests do, 
-in a poor fashion?
-
-Instead of duplicating unit tests, the right solution would be to 
-generalize the locking self-tests and use them both during bootup and 
-in kunit.
-
-Thanks,
-
-	Ingo
+Nit: NUL is more correct than NULL to refer to the string terminator.
