@@ -2,118 +2,122 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F782C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0645C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B601204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908142053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jYVoD/vX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRenq4I9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgHOVxm (ORCPT
+        id S1729263AbgHOVxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
+        Sat, 15 Aug 2020 17:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728240AbgHOVwl (ORCPT
+        with ESMTP id S1729147AbgHOVwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:52:41 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7ED9C061236;
-        Fri, 14 Aug 2020 22:51:41 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f1c7a000c615dc96c916289.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:7a00:c61:5dc9:6c91:6289])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3913C1EC03EA;
-        Sat, 15 Aug 2020 07:51:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597470696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UaHC+XYpOhT7alhor59jrB5xm8LzwHIuR+784j8TeOo=;
-        b=jYVoD/vXSYH5s+EEyEAMfZb6pLrBYCJgMbqCrB0uJ65Qhfoz03nttKbJ7T9Gzfz8CnU0GK
-        NFnKRYyadWH2wJv80ai0YnrNPPcJcRsHFR5N5KNbyLLDIgti6eydnCzykC9iJNm9fHcVTp
-        VeKJKSP2XhHU+bhSlNEy6oeJFealQT4=
-Date:   Sat, 15 Aug 2020 07:52:27 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     tony.luck@intel.com, qiuxu.zhuo@intel.com, mchehab@kernel.org,
-        james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: EDAC-SBRIDGE
-Message-ID: <20200815055227.GA25814@zn.tnic>
-References: <20200708113546.14135-1-grandmaster@al2klimov.de>
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFF7C0612F9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 21:30:45 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id m22so11967082eje.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 21:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B8hFqGgi3bQZQ1euyS6ai4tboC53ELWJOXqJtr0acco=;
+        b=mRenq4I9snynCGp0vxFPiCVDkCCQNDXc/K6ZtcuZ9aYc14T6j4LfGTSL76W2C78FHj
+         9ysuvUOmUjiz6BohSrUl1ZFUa5eGXkcM17ajneBnN2GAa8tE/1JmVhYYV003u/+TTXlB
+         5PU+3MglxIYB4bcsy4marQapECsWL/JhzjQFTsjsiIjNr+2mM/fMS3fgTZ0kx87G81nr
+         hjMVVfartF1/UQxG7+kBiDSLzNx3mQzTl7LQp/ThZ+EpXQwIC8ZZshUemWWPYxo9Lkph
+         mqfWKo204vTbKUXYyDAOADh51HQQv8HQtHAqQewO+eDfKQ2tz7ztXDxJow4nwiBB2oN+
+         R57g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B8hFqGgi3bQZQ1euyS6ai4tboC53ELWJOXqJtr0acco=;
+        b=O8SQG5kR6ECG3wV96iy5N7dwt8pUtDnPKyB5bxHQqd8T1ztGXSkT9pts34pNJWMcPp
+         +zhptZL/NbW3b+q2Ydl3LzZWzyEBcSiz2oss1lUSfrUFbBTAryY3alQUe78/8tWws7PY
+         7VIZ+odWOJdpDR0BQlyn8m23CaOigp1dUw3BlYhCP1jIypkGEkFpH8G0tIzyjFcG3wvW
+         AnGxkiQcAIB2Irbwb8+ftY0DjXS9C94cEKMb5FwFfPYx/hWQJU492Uisv4yva0Q1XoK4
+         po5NcYga8VTj0ZRdaBJuqfqCPtZTTkSL8TLnR5Fu23FCILIQFopFPAL7X5MDgU3OQu/+
+         +Adg==
+X-Gm-Message-State: AOAM533YiC4/0CahWBpcLg8i6xk7BjuNU1StVkrZqf4DJEZfhtX5msDt
+        10x5bjgb1+ZpkSR/H52o1I3O52G+0I2ny851bK7Bgc1qG8x8+A==
+X-Google-Smtp-Source: ABdhPJylzl07UeWh4gwKVqjg2TjJDuIdme0nwPFQc+XjZRIiG0e+NrtPPR3XvIZYEGtA5Fa+7F994QXhmXoARtLIYMI=
+X-Received: by 2002:a17:907:41dc:: with SMTP id og20mr5670047ejb.183.1597465844100;
+ Fri, 14 Aug 2020 21:30:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200708113546.14135-1-grandmaster@al2klimov.de>
+References: <20200815035637.15319-1-phillip@squashfs.org.uk>
+In-Reply-To: <20200815035637.15319-1-phillip@squashfs.org.uk>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 14 Aug 2020 21:30:33 -0700
+Message-ID: <CABXOdTcJDub=ffmwn4_Xn0chxdwwu4jNFrh9o3HVVH1Mzt4iSA@mail.gmail.com>
+Subject: Re: [PATCH] squashfs: avoid bio_alloc() failure with 1Mbyte blocks
+To:     Phillip Lougher <phillip@squashfs.org.uk>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Philippe Liard <pliard@google.com>, hch@lst.de,
+        adrien+dev@schischi.me, Guenter Roeck <groeck@chromium.org>,
+        Daniel Rosenberg <drosen@google.com>,
+        Nicolas Prochazka <nicolas.prochazka@gmail.com>,
+        Tomoatsu Shimada <shimada@walbrix.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 01:35:46PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On Fri, Aug 14, 2020 at 8:57 PM Phillip Lougher <phillip@squashfs.org.uk> wrote:
+>
+> This is a regression introduced by the "migrate from ll_rw_block usage
+> to BIO" patch.
+>
+> Bio_alloc() is limited to 256 pages (1 Mbyte).   This can cause a
+> failure when reading 1 Mbyte block filesystems.  The problem is
+> a datablock can be fully (or almost uncompressed), requiring 256
+> pages, but, because blocks are not aligned to page boundaries, it
+> may require 257 pages to read.
+>
+> Bio_kmalloc() can handle 1024 pages, and so use this for the
+> edge condition.
+>
+> Reported-by: Nicolas Prochazka <nicolas.prochazka@gmail.com>
+> Reported-by: Tomoatsu Shimada <shimada@walbrix.com>
+> Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+
+Fixes: 93e72b3c612a ("squashfs: migrate from ll_rw_block usage to BIO")
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
-> 
->  drivers/edac/sb_edac.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-> index d414698ca324..a6704e73fcce 100644
-> --- a/drivers/edac/sb_edac.c
-> +++ b/drivers/edac/sb_edac.c
-> @@ -3552,6 +3552,6 @@ MODULE_PARM_DESC(edac_op_state, "EDAC Error Reporting state: 0=Poll,1=NMI");
->  
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Mauro Carvalho Chehab");
-> -MODULE_AUTHOR("Red Hat Inc. (http://www.redhat.com)");
-> +MODULE_AUTHOR("Red Hat Inc. (https://www.redhat.com)");
->  MODULE_DESCRIPTION("MC Driver for Intel Sandy Bridge and Ivy Bridge memory controllers - "
->  		   SBRIDGE_REVISION);
-> -- 
-
-Merged all your EDAC patches into one and applied. Will push out once
--rc1 releases.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>  fs/squashfs/block.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/squashfs/block.c b/fs/squashfs/block.c
+> index 76bb1c846845..8a19773b5a0b 100644
+> --- a/fs/squashfs/block.c
+> +++ b/fs/squashfs/block.c
+> @@ -87,7 +87,11 @@ static int squashfs_bio_read(struct super_block *sb, u64 index, int length,
+>         int error, i;
+>         struct bio *bio;
+>
+> -       bio = bio_alloc(GFP_NOIO, page_count);
+> +       if (page_count <= BIO_MAX_PAGES)
+> +               bio = bio_alloc(GFP_NOIO, page_count);
+> +       else
+> +               bio = bio_kmalloc(GFP_NOIO, page_count);
+> +
+>         if (!bio)
+>                 return -ENOMEM;
+>
+> --
+> 2.20.1
+>
