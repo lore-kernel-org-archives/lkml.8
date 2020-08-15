@@ -2,75 +2,68 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4703CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156DA20639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE4E20657
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529572;
-	bh=2YAaeXqnIxpTxcvp+gkdqr00TyuFnSBiXPvvQsS/1S8=;
+	s=default; t=1597529574;
+	bh=p9Uh66ovclGtSaOL7rnm9s19mpJBhHaFsJcGtCuvF1w=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=GKjEgLd57JIRGsQndVenPVGirlIj1UowTbfnThbJnWkcHX/ez46kG8Jjn5A3HSZr6
-	 u2gLY9vvSWo8rdFC4Xh6qcV0k1ZasBAZnsvgzvzJmRK/o45edSOAjTbzMG8nAv5Hh2
-	 0jsd+JaHdWsO77TIqwA4DFqmaOXRLgwNPcIQd8Yo=
+	b=aNT5m6RSqyJu/zVtjsWyTfHsmT3oAOZ/Yd0z4RoG9SadPX7aKhbvjh5IbwGZbfpo2
+	 qKS5kAlRrqx3DX/sr2YIk59Lml8pNBkCf5tfFjz0K9LKOT9zonI56ak89HrO/6J6lA
+	 DwYCiSZNcDiIuwSpf1TCIUSNwO8mt8V9V6cCLPUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgHOWMu (ORCPT
+        id S1728935AbgHOWMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41772 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728787AbgHOWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728864AbgHOWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:27 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A4A22DBF;
-        Sat, 15 Aug 2020 08:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29FFF23100;
+        Sat, 15 Aug 2020 08:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597478593;
-        bh=2YAaeXqnIxpTxcvp+gkdqr00TyuFnSBiXPvvQsS/1S8=;
+        s=default; t=1597481736;
+        bh=p9Uh66ovclGtSaOL7rnm9s19mpJBhHaFsJcGtCuvF1w=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=aTdvelhcDS6+WntNjpiJrmmTg0/fEpvpqr6npg7eBxu/5+LO+YqOhG1mdsrqX/7gs
-         nK9ebxaqXPHzYoN6LG83OIQaMCFXkZabbWZQa+D+SvWc8Q3/P1GPp5AWiefb29obck
-         4ObLJOn75w2Irkqn2mtHLriIM3G52qsge/ilfdyo=
+        b=znm2OHPlHUDSZLVe2MaWYZjKe+WDUywDrXyKoUS9Z4MFSrLSTusNKVpXhcTbOQJeJ
+         gtXXDsnD/WHApxS0aHkRn/zrYWdVAeTPV0P92Xr4BiBKLeEyhyJQ80WQnkt1DApSAY
+         wUyFruf1TLDQ0oJT5/SbJ1+3rRKOur7UPK6ID2gs=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <453b3897507838e95359d891ef967165bd167a4e.1597292833.git.viresh.kumar@linaro.org>
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org> <c6bba235a9a6fd777255bb4f1d16492fdcabc847.1597292833.git.viresh.kumar@linaro.org> <453b3897507838e95359d891ef967165bd167a4e.1597292833.git.viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/4] opp: Track device's resources configuration status
+In-Reply-To: <2736eaf03a5b8bf3aa4566198a98f3d2073d0070.1597236805.git.mchehab+huawei@kernel.org>
+References: <2736eaf03a5b8bf3aa4566198a98f3d2073d0070.1597236805.git.mchehab+huawei@kernel.org>
+Subject: Re: [PATCH] spmi: fix some coding style issues at the spmi core
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, mka@chromium.org,
-        sibis@codeaurora.org, linux-kernel@vger.kernel.org
-To:     Nishanth Menon <nm@ti.com>, Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>
-Date:   Sat, 15 Aug 2020 01:03:11 -0700
-Message-ID: <159747859192.33733.13232258434530046392@swboyd.mtv.corp.google.com>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Date:   Sat, 15 Aug 2020 01:55:35 -0700
+Message-ID: <159748173501.2276320.8306877664488819502@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Viresh Kumar (2020-08-12 21:28:59)
-> The OPP core needs to track if the resources of devices are enabled or
-> configured or not, as it disables the resources when target_freq is set
-> to 0.
+Quoting Mauro Carvalho Chehab (2020-08-12 05:53:27)
+> While preparing to port the HiSilicon 6421v600 SPMI driver,
+> I noticed some coding style issues at the SPMI core.
 >=20
-> Handle that with a separate variable to make it easy to maintain.
+> Address them.
 >=20
-> Also note that we will unconditionally call clk_set_rate() in the case
-> where the resources are getting enabled again. This shouldn't have any
-> side effects anyway.
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
 
-Any reason to want to do that? We'll have to grab the prepare lock in
-the clk framework to figure out that there's nothing to do sometimes. If
-anything, a comment may help to indicate that we call clk_set_rate()
-again, but don't expect it to matter much.
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
