@@ -2,92 +2,75 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4703CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020FA20639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156DA20639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529564;
-	bh=4abrb1hIgzDOMolRWfF5UG90g9XBAir7ef4PB2uBVuU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=fYIcC7I9cU6COKMuKKgB8OXH0+7OPBnxPMObWn/E2yDioamUMt5vqm0wbxymOQe/o
-	 Mq2UbRxowtMYQBBGudrVz9FtVcY8T8nAw4WFH6Nban/1paQSTZwXud7xK5j2q542tV
-	 fY1/A/bcRQTOdidl3nikpBQ6xwtH1NmEmb5GGhsY=
+	s=default; t=1597529572;
+	bh=2YAaeXqnIxpTxcvp+gkdqr00TyuFnSBiXPvvQsS/1S8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=GKjEgLd57JIRGsQndVenPVGirlIj1UowTbfnThbJnWkcHX/ez46kG8Jjn5A3HSZr6
+	 u2gLY9vvSWo8rdFC4Xh6qcV0k1ZasBAZnsvgzvzJmRK/o45edSOAjTbzMG8nAv5Hh2
+	 0jsd+JaHdWsO77TIqwA4DFqmaOXRLgwNPcIQd8Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgHOWMm (ORCPT
+        id S1730116AbgHOWMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41770 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbgHOWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728787AbgHOWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:27 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50BF2311E;
-        Sat, 15 Aug 2020 12:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A4A22DBF;
+        Sat, 15 Aug 2020 08:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597495884;
-        bh=4abrb1hIgzDOMolRWfF5UG90g9XBAir7ef4PB2uBVuU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kN7OhMiT916olPv4+/4DmqTTNi0+ib9YnLbL5+XPnMEpaDmhtOeoeDG0jrr5tj5C+
-         NzsIns2VxT1xD/JLjLmXSVqijaSFkbFpjUD8l2oqhH5dTIXsf+elWnWsbbVk1NS17K
-         xzuTzTQEnSRtkrVTSLMWfhoK3Or9FDI5mvXjrYC8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6vec-002Kds-Va; Sat, 15 Aug 2020 13:51:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com
-Subject: [PATCH 0/2] PCI: rockchip: Fix PCIe probing in 5.9
-Date:   Sat, 15 Aug 2020 13:51:10 +0100
-Message-Id: <20200815125112.462652-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        s=default; t=1597478593;
+        bh=2YAaeXqnIxpTxcvp+gkdqr00TyuFnSBiXPvvQsS/1S8=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=aTdvelhcDS6+WntNjpiJrmmTg0/fEpvpqr6npg7eBxu/5+LO+YqOhG1mdsrqX/7gs
+         nK9ebxaqXPHzYoN6LG83OIQaMCFXkZabbWZQa+D+SvWc8Q3/P1GPp5AWiefb29obck
+         4ObLJOn75w2Irkqn2mtHLriIM3G52qsge/ilfdyo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <453b3897507838e95359d891ef967165bd167a4e.1597292833.git.viresh.kumar@linaro.org>
+References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org> <c6bba235a9a6fd777255bb4f1d16492fdcabc847.1597292833.git.viresh.kumar@linaro.org> <453b3897507838e95359d891ef967165bd167a4e.1597292833.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/4] opp: Track device's resources configuration status
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>, mka@chromium.org,
+        sibis@codeaurora.org, linux-kernel@vger.kernel.org
+To:     Nishanth Menon <nm@ti.com>, Viresh Kumar <viresh.kumar@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>
+Date:   Sat, 15 Aug 2020 01:03:11 -0700
+Message-ID: <159747859192.33733.13232258434530046392@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent changes to the way PCI DT nodes are parsed are now enforcing
-the presence of a "device_type" property, which has been mandated
-since... forever. This has the unfortunate effect of breaking
-non-compliant systems, and those using the Rockchip PCIe driver are
-amongst the victims. Oh well.
+Quoting Viresh Kumar (2020-08-12 21:28:59)
+> The OPP core needs to track if the resources of devices are enabled or
+> configured or not, as it disables the resources when target_freq is set
+> to 0.
+>=20
+> Handle that with a separate variable to make it easy to maintain.
+>=20
+> Also note that we will unconditionally call clk_set_rate() in the case
+> where the resources are getting enabled again. This shouldn't have any
+> side effects anyway.
 
-In order to keep users happy as well as my own machines up and
-running, let's paper over the problem by detecting a broken DT from
-the driver itself, and inserting the missing property at runtime.
-
-For a good measure, a second patch fixes the DT, but the chances of
-such a fix being deployed at this stage are pretty slim, so the above
-hack is in for the long run.
-
-Marc Zyngier (2):
-  PCI: rockchip: Work around missing device_type property in DT
-  arm64: dts: rockchip: Fix PCIe DT properties
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi    |  2 +-
- drivers/pci/controller/pcie-rockchip-host.c | 29 +++++++++++++++++++++
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
--- 
-2.27.0
-
+Any reason to want to do that? We'll have to grab the prepare lock in
+the clk framework to figure out that there's nothing to do sometimes. If
+anything, a comment may help to indicate that we call clk_set_rate()
+again, but don't expect it to matter much.
