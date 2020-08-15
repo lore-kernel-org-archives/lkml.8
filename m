@@ -2,115 +2,147 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17968C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A00C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6206206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B275020709
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgHPB3O convert rfc822-to-8bit (ORCPT
+        id S1729342AbgHPBoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 21:29:14 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:45629 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726177AbgHPB3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 21:29:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-83-xLw69Pq4OQiatc_ar3rOUw-1; Sat, 15 Aug 2020 10:25:17 +0100
-X-MC-Unique: xLw69Pq4OQiatc_ar3rOUw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 15 Aug 2020 10:25:17 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 15 Aug 2020 10:25:17 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-CC:     Petr Mladek <pmladek@suse.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Thread-Topic: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Thread-Index: AQHWcpX67byqAvXV2kG6Q82PT/3E2ak45Ocg
-Date:   Sat, 15 Aug 2020 09:25:16 +0000
-Message-ID: <2777285d9e224c509e10b8448844f19a@AcuMS.aculab.com>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
-         <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
-         <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley>
-         <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de>
-         <20200813051853.GA510@jagdpanzerIV.localdomain>
-         <875z9nvvl2.fsf@jogness.linutronix.de> <20200813084136.GK12903@alley>
-         <20200813115435.GB483@jagdpanzerIV.localdomain>
-         <CAHk-=wjoRWDAGkeevWtxR73vMimYfzJt13yFqTqv=7BGb0cuAQ@mail.gmail.com>
- <b87a02b75c715d9a9f381fe3869612bb826a7351.camel@perches.com>
-In-Reply-To: <b87a02b75c715d9a9f381fe3869612bb826a7351.camel@perches.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sat, 15 Aug 2020 21:44:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33804 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728774AbgHPBoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 21:44:14 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 067274D0DD50D43BE4B2;
+        Sat, 15 Aug 2020 17:58:34 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 15 Aug 2020 17:58:25 +0800
+From:   Yang Shen <shenyang39@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
+Subject: [PATCH v5 08/10] crypto: hisilicon/qm - register callback function to 'pci_driver.shutdown'
+Date:   Sat, 15 Aug 2020 17:56:15 +0800
+Message-ID: <1597485377-2678-9-git-send-email-shenyang39@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
+References: <1597485377-2678-1-git-send-email-shenyang39@huawei.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches
-> Sent: 15 August 2020 00:52
-...
-> > This is why I think any discussion that says "people should buffer
-> > their lines themselves and we should get rid if pr_cont()" is
-> > fundamentally broken.
-> >
-> > Don't go down that hole. I won't take it. It's wrong.
-> 
-> I don't think it's wrong per se.
-> 
-> It's reasonable to avoid pr_cont when appropriate.
-> 
-> Trivial buffering, or adding and using YA vsprintf
-> extension can avoid unnecessary message interleaving.
-> 
-> For instance, I just sent this patch to allow removal
-> of print_vma_addr and its use of pr_cont.
-> 
-> https://lore.kernel.org/lkml/09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com/
+Since the drivers such as HPRE/SEC/ZIP do not implement
+'pci_driver.shutdow', a RAS will be triggered at OS rebooting or shutting
+down as the hardware device is processing request.
+The log looks like this:
+	NOTICE:  [NimbusSecNodeType1]:[2372L]This is sec, Base = 0x141800000
+	NOTICE:  [NimbusSecHandle]:[2319L] SecIntSt = 0x3
+	NOTICE:  [NimbusSecHandle]:[2320L] SecQmIntStatus = 0x2
+	NOTICE:  [PrintSecurityType]:[344L] SecurityType is RECOVERABLE!
 
-ISTM that is a bit complex for a printf format.
-Even with the 'noinline_for_stack' it is going to
-use a lot of stack - and error printfs are already likely
-to be near the stack limit.
-The recursion for %pV might also cause grief.
+This patch offers a new API in qm to shutdown devices, and add shutdown
+callbacks in ACC driver based on this new API.
 
-In that case formatting the data into an on-stack char[]
-before the printf is probably the simplest solution.
+So the running devices will be stopped when the OS reboot or shutdown.
 
-	David
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/hpre/hpre_main.c |  1 +
+ drivers/crypto/hisilicon/qm.c             | 17 +++++++++++++++++
+ drivers/crypto/hisilicon/qm.h             |  1 +
+ drivers/crypto/hisilicon/sec2/sec_main.c  |  1 +
+ drivers/crypto/hisilicon/zip/zip_main.c   |  1 +
+ 5 files changed, 21 insertions(+)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
+index b9e5214..bbf3efb 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_main.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
+@@ -939,6 +939,7 @@ static struct pci_driver hpre_pci_driver = {
+ 	.sriov_configure	= IS_ENABLED(CONFIG_PCI_IOV) ?
+ 				  hisi_qm_sriov_configure : NULL,
+ 	.err_handler		= &hpre_err_handler,
++	.shutdown		= hisi_qm_dev_shutdown,
+ };
+ 
+ static void hpre_register_debugfs(void)
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index 3c37e00..f2729e6 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -3837,6 +3837,23 @@ static int qm_irq_register(struct hisi_qm *qm)
+ 	return ret;
+ }
+ 
++/**
++ * hisi_qm_dev_shutdown() - Shutdown device.
++ * @pdev: The device will be shutdown.
++ *
++ * This function will stop qm when OS shutdown or rebooting.
++ */
++void hisi_qm_dev_shutdown(struct pci_dev *pdev)
++{
++	struct hisi_qm *qm = pci_get_drvdata(pdev);
++	int ret;
++
++	ret = hisi_qm_stop(qm, QM_NORMAL);
++	if (ret)
++		dev_err(&pdev->dev, "Fail to stop qm in shutdown!\n");
++}
++EXPORT_SYMBOL_GPL(hisi_qm_dev_shutdown);
++
+ static void hisi_qm_controller_reset(struct work_struct *rst_work)
+ {
+ 	struct hisi_qm *qm = container_of(rst_work, struct hisi_qm, rst_work);
+diff --git a/drivers/crypto/hisilicon/qm.h b/drivers/crypto/hisilicon/qm.h
+index 9d6cf1d..5fc44cb 100644
+--- a/drivers/crypto/hisilicon/qm.h
++++ b/drivers/crypto/hisilicon/qm.h
+@@ -390,4 +390,5 @@ void hisi_acc_free_sgl_pool(struct device *dev,
+ int hisi_qm_alloc_qps_node(struct hisi_qm_list *qm_list, int qp_num,
+ 			   u8 alg_type, int node, struct hisi_qp **qps);
+ void hisi_qm_free_qps(struct hisi_qp **qps, int qp_num);
++void hisi_qm_dev_shutdown(struct pci_dev *pdev);
+ #endif
+diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+index 5f1c870..8b388c4 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_main.c
++++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+@@ -950,6 +950,7 @@ static struct pci_driver sec_pci_driver = {
+ 	.remove = sec_remove,
+ 	.err_handler = &sec_err_handler,
+ 	.sriov_configure = hisi_qm_sriov_configure,
++	.shutdown = hisi_qm_dev_shutdown,
+ };
+ 
+ static void sec_register_debugfs(void)
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index 224041e..10d2108 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -866,6 +866,7 @@ static struct pci_driver hisi_zip_pci_driver = {
+ 	.sriov_configure	= IS_ENABLED(CONFIG_PCI_IOV) ?
+ 					hisi_qm_sriov_configure : NULL,
+ 	.err_handler		= &hisi_zip_err_handler,
++	.shutdown		= hisi_qm_dev_shutdown,
+ };
+ 
+ static void hisi_zip_register_debugfs(void)
+-- 
+2.7.4
 
