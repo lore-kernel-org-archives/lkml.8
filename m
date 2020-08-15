@@ -2,147 +2,103 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F064AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BC8206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597533752;
-	bh=SB9wxVHgt3m7T/tEhx/Oa+YJt9VN49b1ddeU7NMOvEk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tL6iryON5tNZ+KX1KluD4jcVbTorWsjIFD5XKhl5dtUI2X1HlXz8LCImqwwFSGN4L
-	 4Ih6V8axb89aC5UTVFRnBLhciBBHu15M9xUV+Id34sjXp0POPedrlzcoAkQkL1oDp0
-	 76Z4UM31uplIy/lYuZm261384n6khXXw8A0NCNSI=
+	by mail.kernel.org (Postfix) with ESMTP id 0F8262065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z4yowwp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgHOXWb (ORCPT
+        id S1728672AbgHOXZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 19:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgHOXWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 19:22:30 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739D82065C;
-        Sat, 15 Aug 2020 23:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597533749;
-        bh=SB9wxVHgt3m7T/tEhx/Oa+YJt9VN49b1ddeU7NMOvEk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aVN9qcq6cqmxvD4IsLLewly56VryrzoOr3d3eGSPE1tXpVvGPQOKs97rPBlll36uG
-         7bM0cxwtJTA4bjf/rGTjcr8A0Xrcoy9KS/l92ag5S/On003FKZrPumPtta4UJtBrD7
-         ghyyujWRbGVHMF1kSphFqAtvcGhXkHRpnPPnx+L8=
-Date:   Sat, 15 Aug 2020 18:22:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Roh Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com
-Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
- property in DT
-Message-ID: <20200815232228.GA1325245@bjorn-Precision-5520>
+        Sat, 15 Aug 2020 19:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgHOXZ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 19:25:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433A7C061786;
+        Sat, 15 Aug 2020 16:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=thSB2duN5RGwr8Q6zOeYxAh5uO9v+2fWgViJOQmw1Dk=; b=Z4yowwp4zbGQeTVglQC+C9iE/u
+        bxcKFv5nygjuGgfRtqI0EY7F47Q4fxKtcgzo0rgmZU9ROSJOarJRdI+lJflYXNDt3EdwWI01zmgV0
+        eh09woCU3ErCWKlMJAeQz9zDsefj50aG4ZELi2sHOtfLGS8asgOAb15RuepmpO/6dSA4FHJUpk35n
+        CgjoiTh1+7tdzxBLoE1uPiHPvgiRWjPLoQp4vk60flN7K+dVLuDLVDUZd8aAhzcWecTTyVGrrPzOF
+        /hRZGQplXgxiPBnFy5GJjPAOc6eq3fPFQL9XJudgUU2r5H+RdHI1cOJbIZWlwRBmd/hVH1fWajYRq
+        hUN4oziQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k75YQ-0004jH-39; Sat, 15 Aug 2020 23:25:40 +0000
+Subject: Re: [PATCH v5 3/6] can: ctucanfd: add support for CTU CAN FD
+ open-source IP core - bus independent part.
+To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>, linux-can@vger.kernel.org,
+        devicetree@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>
+References: <cover.1597518433.git.ppisa@pikron.com>
+ <b634e83c1883e631092bdaca3519e906077f2f8b.1597518433.git.ppisa@pikron.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <45598c29-722d-93d4-bea2-7ed40ca13050@infradead.org>
+Date:   Sat, 15 Aug 2020 16:25:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200815125112.462652-2-maz@kernel.org>
+In-Reply-To: <b634e83c1883e631092bdaca3519e906077f2f8b.1597518433.git.ppisa@pikron.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
-> Recent changes to the DT PCI bus parsing made it mandatory for
-> device tree nodes describing a PCI controller to have the
-> 'device_type = "pci"' property for the node to be matched.
-> 
-> Although this follows the letter of the specification, it
-> breaks existing device-trees that have been working fine
-> for years.  Rockchip rk3399-based systems are a prime example
-> of such collateral damage, and have stopped discovering their
-> PCI bus.
-> 
-> In order to paper over the blunder, let's add a workaround
-> to the pcie-rockchip driver, adding the missing property when
-> none is found at boot time. A warning will hopefully nudge the
-> user into updating their DT to a fixed version if they can, but
-> the insentive is obviously pretty small.
+On 8/15/20 12:43 PM, Pavel Pisa wrote:
+> diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
+> new file mode 100644
+> index 000000000000..d8da44d7f926
+> --- /dev/null
+> +++ b/drivers/net/can/ctucanfd/Kconfig
+> @@ -0,0 +1,15 @@
+> +config CAN_CTUCANFD
+> +	tristate "CTU CAN-FD IP core"
+> +	help
+> +	  This driver adds support for the CTU CAN FD open-source IP core.
+> +	  More documentation and core sources at project page
+> +	  (https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core).
+> +	  The core integration to Xilinx Zynq system as platform driver
+> +	  is available (https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top).
+> +	  Implementation on Intel FGA based PCI Express board is available
 
-s/insentive/incentive/ (Lorenzo or I can fix this up)
+   Is that                        FPGA-based
+   ?
 
-> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> Suggested-by: Roh Herring <robh+dt@kernel.org>
-
-s/Roh/Rob/ (similarly)
-
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-
-This looks like a candidate for v5.9, since 2f96593ecc37 was merged
-during the v5.9 merge window, right?
-
-I wonder how many other DTs are similarly broken?  Maybe Rob's DT
-checker has already looked?
-
-> ---
->  drivers/pci/controller/pcie-rockchip-host.c | 29 +++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 0bb2fb3e8a0b..d7dd04430a99 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -949,6 +949,35 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	if (!dev->of_node)
->  		return -ENODEV;
->  
-> +	/*
-> +	 * Most rk3399 DTs are missing the 'device_type = "pci"' property,
-> +	 * potentially leading to PCIe probing failure. Be kind to the
-> +	 * users and fix it up for them. Upgrading is recommended.
-> +	 */
-> +	if (!of_find_property(dev->of_node, "device_type", NULL)) {
-> +		const char dtype[] = "pci";
-> +		struct property *prop;
+> +	  from project (https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd).
+> +	  Guidepost CTU FEE CAN bus projects page http://canbus.pages.fel.cvut.cz/ .
 > +
-> +		dev_warn(dev, "Working around missing device_type property\n");
+> +if CAN_CTUCANFD
 > +
-> +		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-> +		if (!prop)
-> +			return -ENOMEM;
-> +
-> +		prop->name	= kstrdup("device_type", GFP_KERNEL);
-> +		prop->value	= kstrdup(dtype, GFP_KERNEL);
-> +		prop->length	= ARRAY_SIZE(dtype);
-> +		if (!prop->name || !prop->value) {
-> +			kfree(prop->name);
-> +			kfree(prop->value);
-> +			kfree(prop);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		if (of_add_property(dev->of_node, prop))
-> +			dev_warn(dev, "Failed to add property, probing may fail");
-> +	}
-> +
->  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rockchip));
->  	if (!bridge)
->  		return -ENOMEM;
-> -- 
-> 2.27.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +endif
+
+
+-- 
+~Randy
+
