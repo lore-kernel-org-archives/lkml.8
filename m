@@ -2,212 +2,69 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F5DC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7712311C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A98204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597528230;
+	bh=LgBcMaRyW+AVbLf2prUcxTuvuv5Ha8CMganX6JOCQmM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=1DiLxDxLFAIjtYwmhVpc11swmwEFX7RHFl9TO3AIZoAfRSoLf4wkAB8zoSytLP1ON
+	 qFidMascjF7rARik+K2YctFzyBC1EMhsHjTxJbjLIG0TDY11z5l5OUvAxCSQc7GdIc
+	 OM/9zYMa+NevMCq48XetaoxCC5Lq6n4OKbjRGq1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgHOVt5 (ORCPT
+        id S1728303AbgHOVu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:49:57 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48008 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgHOVt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:49:56 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 86FA780539;
-        Sat, 15 Aug 2020 12:02:31 +0200 (CEST)
-Date:   Sat, 15 Aug 2020 12:02:30 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
- MLAF057WE51-X DSI panel
-Message-ID: <20200815100230.GA1002374@ravnborg.org>
-References: <cover.1597412076.git.agx@sigxcpu.org>
- <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8 a=e5mUnYsNAAAA:8
-        a=2VR2e5HfQ1QhP8mth8gA:9 a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+        Sat, 15 Aug 2020 17:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbgHOVu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:50:26 -0400
+Subject: Re: [GIT PULL] Please  pull NFS client updates for Linux 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597505992;
+        bh=LgBcMaRyW+AVbLf2prUcxTuvuv5Ha8CMganX6JOCQmM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=jSg9VIaEH2OFpJhgRu54QWc8aPc5FjjxvjveySCF81dNmI3Yd4kKS3HAUE1lzadGX
+         BBANiC+pHrtPMa9/Q7gfHQRJW7tAXsXywGaaeRI23wwklz9GGpJgp9akuns1wnXcA6
+         zryfJkkadKzbk0qFMrySEYJjTdfxZj182NitIaJE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
+References: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <480e5d764e343f576a3ecb1a2ff4165e3f66d7ed.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-1
+X-PR-Tracked-Commit-Id: 563c53e73b8b6ec842828736f77e633f7b0911e9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 37711e5e2325535bf094bdc0a66790d659b52d5b
+Message-Id: <159750599254.19697.4139931966515071544.pr-tracker-bot@kernel.org>
+Date:   Sat, 15 Aug 2020 15:39:52 +0000
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido.
+The pull request you sent on Fri, 14 Aug 2020 22:04:02 +0000:
 
-> +static int mantix_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct device *dev = &dsi->dev;
-> +	struct mantix *ctx;
-> +	int ret;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(ctx->reset_gpio)) {
-> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
-> +		return PTR_ERR(ctx->reset_gpio);
-> +	}
-> +
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +	ctx->dev = dev;
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-> +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-> +
-> +	ctx->avdd = devm_regulator_get(dev, "avdd");
-> +	if (IS_ERR(ctx->avdd)) {
-> +		ret = PTR_ERR(ctx->avdd);
-> +		if (ret != -EPROBE_DEFER)
-> +			DRM_DEV_ERROR(dev,
-> +				      "Failed to request avdd regulator: %d\n",
-> +				      ret);
-> +		return ret;
-> +	}
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.9-1
 
-Consider to use the recently added dev_err_probe() here and below.
-Note: Not part of drm-misc-next yet - but hopefully after -rc1
-when a backmerge is done.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/37711e5e2325535bf094bdc0a66790d659b52d5b
 
-	Sam
+Thank you!
 
-> +	ctx->avee = devm_regulator_get(dev, "avee");
-> +	if (IS_ERR(ctx->avee)) {
-> +		ret = PTR_ERR(ctx->avee);
-> +		if (ret != -EPROBE_DEFER)
-> +			DRM_DEV_ERROR(dev,
-> +				      "Failed to request avee regulator: %d\n",
-> +				      ret);
-> +		return ret;
-> +	}
-> +	ctx->vddi = devm_regulator_get(dev, "vddi");
-> +	if (IS_ERR(ctx->vddi)) {
-> +		ret = PTR_ERR(ctx->vddi);
-> +		if (ret != -EPROBE_DEFER)
-> +			DRM_DEV_ERROR(dev,
-> +				      "Failed to request vddi regulator: %d\n",
-> +				      ret);
-> +		return ret;
-> +	}
-> +
-> +	drm_panel_init(&ctx->panel, dev, &mantix_drm_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +
-> +	ret = drm_panel_of_backlight(&ctx->panel);
-> +	if (ret)
-> +		return ret;
-> +	drm_panel_add(&ctx->panel);
-> +
-> +	ret = mipi_dsi_attach(dsi);
-> +	if (ret < 0) {
-> +		DRM_DEV_ERROR(dev,
-> +			      "mipi_dsi_attach failed (%d). Is host ready?\n",
-> +			      ret);
-> +		drm_panel_remove(&ctx->panel);
-> +		return ret;
-> +	}
-> +
-> +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
-> +		     default_mode.hdisplay, default_mode.vdisplay,
-> +		     drm_mode_vrefresh(&default_mode),
-> +		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mantix_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = drm_panel_unprepare(&ctx->panel);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
-> +			      ret);
-> +
-> +	ret = drm_panel_disable(&ctx->panel);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
-> +			      ret);
-> +}
-> +
-> +static int mantix_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	mantix_shutdown(dsi);
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
-> +			      ret);
-> +
-> +	drm_panel_remove(&ctx->panel);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mantix_of_match[] = {
-> +	{ .compatible = "mantix,mlaf057we51-x" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mantix_of_match);
-> +
-> +static struct mipi_dsi_driver mantix_driver = {
-> +	.probe	= mantix_probe,
-> +	.remove = mantix_remove,
-> +	.shutdown = mantix_shutdown,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.of_match_table = mantix_of_match,
-> +	},
-> +};
-> +module_mipi_dsi_driver(mantix_driver);
-> +
-> +MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
-> +MODULE_DESCRIPTION("DRM driver for Mantix MLAF057WE51-X MIPI DSI panel");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
