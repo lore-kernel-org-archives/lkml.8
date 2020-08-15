@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF48C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8FC0205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81C4205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DBYuSEfa"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="as6+iIYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgHOWGw (ORCPT
+        id S1726645AbgHOWHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
+        Sat, 15 Aug 2020 18:07:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbgHOVus (ORCPT
+        with ESMTP id S1728387AbgHOVus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A140C061379
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id l13so5230015qvt.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:32 -0700 (PDT)
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84005C061373
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:25 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id t23so8490805qto.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sz9J9n5LJAX7KClHXQuFpMY4XStGHjRFIOCICHV1+xA=;
-        b=DBYuSEfaGrHBZ6Ox30YL3/iF80Lbym84DzzCTT44BqXZbCQrCWIHiVVstkjiPp5D3D
-         0Yc0zxknsWLouhfVyupvLylPPu3mlSvCJ5Bk3JVOHGtboT8kJHczbvJJyeBgQgbt2mKm
-         OvZouILkJD+chgktd8mY35fv05p4iyQsNd3Qw=
+        bh=L8ebdvedIOE71xQx+NB6UqCSp41vA2Jjo0EpqbQtKMU=;
+        b=as6+iIYvWIrEGoo9b3lcWbxApBD513L3D44Wq6RnC31tsfB9Xhp3pYjQ6fCyi6qqAQ
+         ZXoAXAAfi+XFzMN+jipQ3qEHczeydx0rmMZD/oGYw+V7imHqB72erKEa2QY8+N1rg+VH
+         XwmPDZ+YYHT0TcABO2DV+B8SKUbdQdSVHi9R8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sz9J9n5LJAX7KClHXQuFpMY4XStGHjRFIOCICHV1+xA=;
-        b=gdI9z1vOdBqP2GNy5V2RKiZUK/rZOom8u4wjZ4KqYW/nGe8KRfqNr+NrfQo4s71PXX
-         anf4vx4M0clpffg2XTn1vjGYHLihomOk6CQgvQobbMUnhWjv3FE0q6bLMfkWpIreITeA
-         omQo/bvq7KHWoG22hJHyfjkl/MatXOwb/uyex51C9y93Z1wlkRPgJWHIfUWbgC7PfXQQ
-         z9KDTqF7DGUzW0B7cyQyKqGmopsNY9W7wgMMucDEkLzHMAacpNPGPAFi8SMvvAcHDGyM
-         bj8BVO56DqqBSPcN5EFVy6b00KOZFJm/orRJdVQ+tTh8gaVjig6OYX8lYzotkXBb+NaE
-         WTHw==
-X-Gm-Message-State: AOAM533aYd99z0NINb+AiRRPfpm3I1bbz529LUdkN2Lwyr4V5fuRatxm
-        6vMHuciM9KQiLgTAz+zVrku5MqF5EmLHJA==
-X-Google-Smtp-Source: ABdhPJyg1Gs1MEeJSpdLbF1HcBYbQH7Ao2UZcesb0jCMGvIW5YPYA4FBd8gsxBOrIUvIyEV3Hz58NQ==
-X-Received: by 2002:a0c:b310:: with SMTP id s16mr5320090qve.5.1597461571554;
-        Fri, 14 Aug 2020 20:19:31 -0700 (PDT)
+        bh=L8ebdvedIOE71xQx+NB6UqCSp41vA2Jjo0EpqbQtKMU=;
+        b=eF/I0TYl3NVoVCIoZbSy6s0DZck6P718Y3TMzjtusNiqnRnQrBs7ZCppHHd2gWQ7qJ
+         GZOmtP33I2u5mA8lLU+RmlPAzAp8T8MBEmeprFa5+l8RN2lnIO1ZG5jnJtHikEpt6LJ6
+         NZaMY7huYTg6mhTWqq4/NCiG8u9eYInADrJDnGUebq1g20R4mT0mUnA5AitIvrCWKgSu
+         H0LFKGAFBXUaex9fb02L7zszTfleoHeQdpZDudX2OxaBt15x12hYAb2+2Jjqi5Iw+tiQ
+         lsdydxdRBB5iWTVZVTYK1zPkG2D9p8OFtW36hO2ogdJ+1X357WmRoCyoy+6kmu4RjCD1
+         5hPg==
+X-Gm-Message-State: AOAM533nOuKzaxmKXApn5yhhuVvWm+3HqM4kn6ikybDNtbIZrfCa11mp
+        N/zJn/rwY5apfAi2Q8nYv2b6DCy3Mfl6nA==
+X-Google-Smtp-Source: ABdhPJxEXPvjWqG/2R4JnUoqDPhLEmjL1XYpJrOO/Sx2vu/lWlmvx8W82TsGBVhX8LtdyDhFhDroKw==
+X-Received: by 2002:ac8:3a82:: with SMTP id x2mr4739680qte.161.1597461564540;
+        Fri, 14 Aug 2020 20:19:24 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.30
+        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 20:19:31 -0700 (PDT)
+        Fri, 14 Aug 2020 20:19:24 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Aaron Lu <aaron.lwe@gmail.com>,
         Aubrey Li <aubrey.li@linux.intel.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
@@ -72,6 +71,7 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         Tim Chen <tim.c.chen@intel.com>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
         x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
         fweisbec@gmail.com, kerrnel@google.com,
         Phil Auld <pauld@redhat.com>,
@@ -79,9 +79,9 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Chen Yu <yu.c.chen@intel.com>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH RFC 08/12] cpumask: Introduce a new iterator for_each_cpu_wrap_or
-Date:   Fri, 14 Aug 2020 23:19:04 -0400
-Message-Id: <20200815031908.1015049-9-joel@joelfernandes.org>
+Subject: [PATCH RFC 02/12] entry/idle: Add a common function for activites during idle entry/exit
+Date:   Fri, 14 Aug 2020 23:18:58 -0400
+Message-Id: <20200815031908.1015049-3-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
 References: <20200815031908.1015049-1-joel@joelfernandes.org>
@@ -92,170 +92,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Pillai <viremana@linux.microsoft.com>
+Currently only RCU hooks for idle entry/exit are called. In later
+patches, kernel-entry protection functionality will be added.
 
-Hotplug fixes to core-scheduling require a new cpumask iterator which iterates
-through all online cpus in both the given cpumasks. This patch introduces it.
-
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/linux/cpumask.h | 42 ++++++++++++++++++++++++++++++++
- lib/cpumask.c           | 53 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 95 insertions(+)
+ include/linux/entry-common.h | 16 ++++++++++++++++
+ kernel/sched/idle.c          | 17 +++++++++--------
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index f0d895d6ac39..03e8c57c6ca6 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -207,6 +207,10 @@ static inline int cpumask_any_and_distribute(const struct cpumask *src1p,
- 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)(start))
- #define for_each_cpu_and(cpu, mask1, mask2)	\
- 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
-+#define for_each_cpu_or(cpu, mask1, mask2)	\
-+	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
-+#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)	\
-+	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2, (void)(start))
- #else
- /**
-  * cpumask_first - get the first cpu in a cpumask
-@@ -248,6 +252,7 @@ static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
- }
- 
- int cpumask_next_and(int n, const struct cpumask *, const struct cpumask *);
-+int cpumask_next_or(int n, const struct cpumask *, const struct cpumask *);
- int cpumask_any_but(const struct cpumask *mask, unsigned int cpu);
- unsigned int cpumask_local_spread(unsigned int i, int node);
- int cpumask_any_and_distribute(const struct cpumask *src1p,
-@@ -278,6 +283,8 @@ int cpumask_any_and_distribute(const struct cpumask *src1p,
- 		(cpu) < nr_cpu_ids;)
- 
- extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
-+extern int cpumask_next_wrap_or(int n, const struct cpumask *mask1,
-+				 const struct cpumask *mask2, int start, bool wrap);
- 
- /**
-  * for_each_cpu_wrap - iterate over every cpu in a mask, starting at a specified location
-@@ -294,6 +301,22 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
- 	     (cpu) < nr_cpumask_bits;						\
- 	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index efebbffcd5cc..2ea0e09b00d5 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -369,4 +369,20 @@ void irqentry_exit_cond_resched(void);
+  */
+ void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
  
 +/**
-+ * for_each_cpu_wrap_or - iterate over every cpu in both masks, starting at a specified location
-+ * @cpu: the (optionally unsigned) integer iterator
-+ * @mask1: the first cpumask pointer
-+ * @mask2: the second cpumask pointer
-+ * @start: the start location
-+ *
-+ * The implementation does not assume any bit both masks are set (including @start).
-+ *
-+ * After the loop, cpu is >= nr_cpu_ids.
++ * generic_idle_enter - Called during entry into idle for housekeeping.
 + */
-+#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)					\
-+	for ((cpu) = cpumask_next_wrap_or((start)-1, (mask1), (mask2), (start), false);	\
-+	     (cpu) < nr_cpumask_bits;						\
-+	     (cpu) = cpumask_next_wrap_or((cpu), (mask1), (mask2), (start), true))
-+
- /**
-  * for_each_cpu_and - iterate over every cpu in both masks
-  * @cpu: the (optionally unsigned) integer iterator
-@@ -312,6 +335,25 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
- 	for ((cpu) = -1;						\
- 		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
- 		(cpu) < nr_cpu_ids;)
-+
-+/**
-+ * for_each_cpu_or - iterate over every cpu in both masks
-+ * @cpu: the (optionally unsigned) integer iterator
-+ * @mask1: the first cpumask pointer
-+ * @mask2: the second cpumask pointer
-+ *
-+ * This saves a temporary CPU mask in many places.  It is equivalent to:
-+ *	struct cpumask tmp;
-+ *	cpumask_and(&tmp, &mask1, &mask2);
-+ *	for_each_cpu(cpu, &tmp)
-+ *		...
-+ *
-+ * After the loop, cpu is >= nr_cpu_ids.
-+ */
-+#define for_each_cpu_or(cpu, mask1, mask2)				\
-+	for ((cpu) = -1;						\
-+		(cpu) = cpumask_next_or((cpu), (mask1), (mask2)),	\
-+		(cpu) < nr_cpu_ids;)
- #endif /* SMP */
- 
- #define CPU_BITS_NONE						\
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index fb22fb266f93..0a5cdbd4eb6a 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -42,6 +42,25 @@ int cpumask_next_and(int n, const struct cpumask *src1p,
- }
- EXPORT_SYMBOL(cpumask_next_and);
- 
-+/**
-+ * cpumask_next_or - get the next cpu in *src1p | *src2p
-+ * @n: the cpu prior to the place to search (ie. return will be > @n)
-+ * @src1p: the first cpumask pointer
-+ * @src2p: the second cpumask pointer
-+ *
-+ * Returns >= nr_cpu_ids if no further cpus set in both.
-+ */
-+int cpumask_next_or(int n, const struct cpumask *src1p,
-+		    const struct cpumask *src2p)
++static inline void generic_idle_enter(void)
 +{
-+	/* -1 is a legal arg here. */
-+	if (n != -1)
-+		cpumask_check(n);
-+	return find_next_or_bit(cpumask_bits(src1p), cpumask_bits(src2p),
-+		nr_cpumask_bits, n + 1);
++	rcu_idle_enter();
 +}
-+EXPORT_SYMBOL(cpumask_next_or);
 +
- /**
-  * cpumask_any_but - return a "random" in a cpumask, but not this one.
-  * @mask: the cpumask to search
-@@ -94,6 +113,40 @@ int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
- }
- EXPORT_SYMBOL(cpumask_next_wrap);
- 
 +/**
-+ * cpumask_next_wrap_or - helper to implement for_each_cpu_wrap_or
-+ * @n: the cpu prior to the place to search
-+ * @mask1: first cpumask pointer
-+ * @mask2: second cpumask pointer
-+ * @start: the start point of the iteration
-+ * @wrap: assume @n crossing @start terminates the iteration
-+ *
-+ * Returns >= nr_cpu_ids on completion
-+ *
-+ * Note: the @wrap argument is required for the start condition when
-+ * we cannot assume @start is set in @mask.
++ * generic_idle_enter - Called when exiting idle for housekeeping.
 + */
-+int cpumask_next_wrap_or(int n, const struct cpumask *mask1, const struct cpumask *mask2,
-+			   int start, bool wrap)
++static inline void generic_idle_exit(void)
 +{
-+	int next;
-+
-+again:
-+	next = cpumask_next_or(n, mask1, mask2);
-+
-+	if (wrap && n < start && next >= start) {
-+		return nr_cpumask_bits;
-+
-+	} else if (next >= nr_cpumask_bits) {
-+		wrap = true;
-+		n = -1;
-+		goto again;
-+	}
-+
-+	return next;
++	rcu_idle_exit();
 +}
-+EXPORT_SYMBOL(cpumask_next_wrap_or);
 +
- /* These are not inline because of header tangles. */
- #ifdef CONFIG_CPUMASK_OFFSTACK
- /**
+ #endif
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 3b03bedee280..5db5a946aa3b 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -8,6 +8,7 @@
+  */
+ #include "sched.h"
+ 
++#include <linux/entry-common.h>
+ #include <trace/events/power.h>
+ 
+ /* Linker adds these: start and end of __cpuidle functions */
+@@ -54,7 +55,7 @@ __setup("hlt", cpu_idle_nopoll_setup);
+ 
+ static noinline int __cpuidle cpu_idle_poll(void)
+ {
+-	rcu_idle_enter();
++	generic_idle_enter();
+ 	trace_cpu_idle_rcuidle(0, smp_processor_id());
+ 	local_irq_enable();
+ 	stop_critical_timings();
+@@ -64,7 +65,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
+ 		cpu_relax();
+ 	start_critical_timings();
+ 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+-	rcu_idle_exit();
++	generic_idle_exit();
+ 
+ 	return 1;
+ }
+@@ -158,7 +159,7 @@ static void cpuidle_idle_call(void)
+ 
+ 	if (cpuidle_not_available(drv, dev)) {
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
++		generic_idle_enter();
+ 
+ 		default_idle_call();
+ 		goto exit_idle;
+@@ -178,13 +179,13 @@ static void cpuidle_idle_call(void)
+ 		u64 max_latency_ns;
+ 
+ 		if (idle_should_enter_s2idle()) {
+-			rcu_idle_enter();
++			generic_idle_enter();
+ 
+ 			entered_state = call_cpuidle_s2idle(drv, dev);
+ 			if (entered_state > 0)
+ 				goto exit_idle;
+ 
+-			rcu_idle_exit();
++			generic_idle_exit();
+ 
+ 			max_latency_ns = U64_MAX;
+ 		} else {
+@@ -192,7 +193,7 @@ static void cpuidle_idle_call(void)
+ 		}
+ 
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
++		generic_idle_enter();
+ 
+ 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
+ 		call_cpuidle(drv, dev, next_state);
+@@ -209,7 +210,7 @@ static void cpuidle_idle_call(void)
+ 		else
+ 			tick_nohz_idle_retain_tick();
+ 
+-		rcu_idle_enter();
++		generic_idle_enter();
+ 
+ 		entered_state = call_cpuidle(drv, dev, next_state);
+ 		/*
+@@ -227,7 +228,7 @@ static void cpuidle_idle_call(void)
+ 	if (WARN_ON_ONCE(irqs_disabled()))
+ 		local_irq_enable();
+ 
+-	rcu_idle_exit();
++	generic_idle_exit();
+ }
+ 
+ /*
 -- 
 2.28.0.220.ged08abb693-goog
 
