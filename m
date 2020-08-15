@@ -2,72 +2,147 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F064AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB9C206B2
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BC8206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597533752;
+	bh=SB9wxVHgt3m7T/tEhx/Oa+YJt9VN49b1ddeU7NMOvEk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tL6iryON5tNZ+KX1KluD4jcVbTorWsjIFD5XKhl5dtUI2X1HlXz8LCImqwwFSGN4L
+	 4Ih6V8axb89aC5UTVFRnBLhciBBHu15M9xUV+Id34sjXp0POPedrlzcoAkQkL1oDp0
+	 76Z4UM31uplIy/lYuZm261384n6khXXw8A0NCNSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgHOXMo (ORCPT
+        id S1728435AbgHOXWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 19:12:44 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:57100 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727969AbgHOXMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 19:12:44 -0400
-Received: from localhost.localdomain ([93.22.149.115])
-        by mwinf5d71 with ME
-        id FiCf230082VdYtp03iCf2V; Sat, 15 Aug 2020 08:12:40 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 15 Aug 2020 08:12:40 +0200
-X-ME-IP: 93.22.149.115
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     sean@mess.org, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] media: mceusb: Avoid GFP_ATOMIC where it is not needed
-Date:   Sat, 15 Aug 2020 08:12:37 +0200
-Message-Id: <20200815061237.765171-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sat, 15 Aug 2020 19:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgHOXWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 19:22:30 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739D82065C;
+        Sat, 15 Aug 2020 23:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597533749;
+        bh=SB9wxVHgt3m7T/tEhx/Oa+YJt9VN49b1ddeU7NMOvEk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aVN9qcq6cqmxvD4IsLLewly56VryrzoOr3d3eGSPE1tXpVvGPQOKs97rPBlll36uG
+         7bM0cxwtJTA4bjf/rGTjcr8A0Xrcoy9KS/l92ag5S/On003FKZrPumPtta4UJtBrD7
+         ghyyujWRbGVHMF1kSphFqAtvcGhXkHRpnPPnx+L8=
+Date:   Sat, 15 Aug 2020 18:22:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Roh Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+Message-ID: <20200815232228.GA1325245@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815125112.462652-2-maz@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point in using GFP_ATOMIC here.
-It is a probe function, and GFP_KERNEL is already used the line before
-and the line after.
+On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+> Recent changes to the DT PCI bus parsing made it mandatory for
+> device tree nodes describing a PCI controller to have the
+> 'device_type = "pci"' property for the node to be matched.
+> 
+> Although this follows the letter of the specification, it
+> breaks existing device-trees that have been working fine
+> for years.  Rockchip rk3399-based systems are a prime example
+> of such collateral damage, and have stopped discovering their
+> PCI bus.
+> 
+> In order to paper over the blunder, let's add a workaround
+> to the pcie-rockchip driver, adding the missing property when
+> none is found at boot time. A warning will hopefully nudge the
+> user into updating their DT to a fixed version if they can, but
+> the insentive is obviously pretty small.
 
-Use GFP_KERNEL instead.
+s/insentive/incentive/ (Lorenzo or I can fix this up)
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/media/rc/mceusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> Suggested-by: Roh Herring <robh+dt@kernel.org>
 
-diff --git a/drivers/media/rc/mceusb.c b/drivers/media/rc/mceusb.c
-index f9616158bcf4..98681ba10428 100644
---- a/drivers/media/rc/mceusb.c
-+++ b/drivers/media/rc/mceusb.c
-@@ -1726,7 +1726,7 @@ static int mceusb_dev_probe(struct usb_interface *intf,
- 		goto mem_alloc_fail;
- 
- 	ir->pipe_in = pipe;
--	ir->buf_in = usb_alloc_coherent(dev, maxp, GFP_ATOMIC, &ir->dma_in);
-+	ir->buf_in = usb_alloc_coherent(dev, maxp, GFP_KERNEL, &ir->dma_in);
- 	if (!ir->buf_in)
- 		goto buf_in_alloc_fail;
- 
--- 
-2.25.1
+s/Roh/Rob/ (similarly)
 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+during the v5.9 merge window, right?
+
+I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+checker has already looked?
+
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 29 +++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 0bb2fb3e8a0b..d7dd04430a99 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -949,6 +949,35 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	if (!dev->of_node)
+>  		return -ENODEV;
+>  
+> +	/*
+> +	 * Most rk3399 DTs are missing the 'device_type = "pci"' property,
+> +	 * potentially leading to PCIe probing failure. Be kind to the
+> +	 * users and fix it up for them. Upgrading is recommended.
+> +	 */
+> +	if (!of_find_property(dev->of_node, "device_type", NULL)) {
+> +		const char dtype[] = "pci";
+> +		struct property *prop;
+> +
+> +		dev_warn(dev, "Working around missing device_type property\n");
+> +
+> +		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> +		if (!prop)
+> +			return -ENOMEM;
+> +
+> +		prop->name	= kstrdup("device_type", GFP_KERNEL);
+> +		prop->value	= kstrdup(dtype, GFP_KERNEL);
+> +		prop->length	= ARRAY_SIZE(dtype);
+> +		if (!prop->name || !prop->value) {
+> +			kfree(prop->name);
+> +			kfree(prop->value);
+> +			kfree(prop);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		if (of_add_property(dev->of_node, prop))
+> +			dev_warn(dev, "Failed to add property, probing may fail");
+> +	}
+> +
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rockchip));
+>  	if (!bridge)
+>  		return -ENOMEM;
+> -- 
+> 2.27.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
