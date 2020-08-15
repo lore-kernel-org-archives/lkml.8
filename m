@@ -2,112 +2,74 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55876C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF59B2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BD42053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fb8P7apw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="snPX6e/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgHOVyy (ORCPT
+        id S1729318AbgHOVzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
+        Sat, 15 Aug 2020 17:55:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729091AbgHOVw3 (ORCPT
+        with ESMTP id S1729075AbgHOVwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:29 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599A4C061232;
-        Fri, 14 Aug 2020 22:32:58 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id q75so12887456iod.1;
-        Fri, 14 Aug 2020 22:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=+uvK5xyS2jsYMowW54FGXjWCo1ZPVzf5OQMcA+nZWjU=;
-        b=Fb8P7apwQoGsHPtaXb5dSo5RR/ByS4YqN9w1L9SLoNREnc5tUpqgRtPoF5JP1XCHKz
-         ZqS8JALkerVr1yokT29OvYe3psLKWNDDd8XlUHAgx933NWvAZZfA/iv3wLtwZ1i9UbZH
-         k4o1yUSqjAKxVSB4GliQhsirO6oOg1yfPH/cQpnvh7hRPCpAQFQ/NvzOb8hBS05AKmPI
-         YReGyPtKaxClLLwSTWzaiCJKFCvBIzT3dHL47DEcimgiEsbexRzYPI1tHdVU5LBif6pu
-         7cE/ohLMNehvoUsRmq5oTSK1XwzbGBxcRkXuZ07GbSOUNx4pnm8jKy5NFK24RiEXXXvn
-         49Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=+uvK5xyS2jsYMowW54FGXjWCo1ZPVzf5OQMcA+nZWjU=;
-        b=bpid0bCuOHEOT7JeUWo7565I3ocLVxZyhYT8RxS0ehCW/uvgQb2NMM9Nwm9ttYwVeL
-         41DJqN1+W4gKbKzJ54lzgtQmpCUIjXikFC5rUlxxzmXpbgC8uhDBvgzOAiEgBK3Wft1O
-         ZuJaDUDKN7ZTFAkabrTDxkewpM/Hb4rfhQLKV1Pa1BSgkVs3V1QfzW3MoXc/pwbGK3o1
-         DWGVpHx1h2EgWtprVKxWeEADDXV/izGit+ChnAxNbRdRBszXJm9SSXI3wQfXPcWfrOFs
-         OBDu4yjTUt1T+J9GWUSYkP1g4MANrZy46zm5QWMo7ZmpyKCpPDWiEkLuG2lGzTs3Wz2d
-         diEg==
-X-Gm-Message-State: AOAM533iFFTe1YbOoDzkxM1szX7zf1QRiNd5csGr9SJqijRn+lXCUTlY
-        KBfS1Q5qm3xvF+Wc7v0gvt0d/cU9CM9j5geYJ6c0ZCYi/HJl6g==
-X-Google-Smtp-Source: ABdhPJzCQ5WCbCigax+HkCKLc4Nw6kcGYCSH3+w5/uVgttRscO15FaumbLuaks6h1UgQCOhYv9L1HF/VSxp5IBihRFU=
-X-Received: by 2002:a05:6602:2801:: with SMTP id d1mr4740187ioe.201.1597469577329;
- Fri, 14 Aug 2020 22:32:57 -0700 (PDT)
+        Sat, 15 Aug 2020 17:52:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF150C004582;
+        Sat, 15 Aug 2020 11:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XNnhqa1EUtqytFCfJSuJLhsT+WcSRC9k4ESXyMuhNTU=; b=snPX6e/0YVSp1IEqXQqMvaGXZs
+        690Ej5IRXxO8q+ekbLWln56lZObyenBEZwB9gVI+Rgh/OVCz/ZK6rZ4jpBAcJvUQINLfYnI32NB5p
+        Dl7iwSxgXobIfatecLrHb6exWfppgGaF3SGpXbQLu4fPe87kg12MUrlydN52Wf8nDfpUIrGdaWcm9
+        nEkcMn9QTO9mtJWj80Edzz618rhyeqdm1gr9hKGSjB/YVI0REbzkZAS8LG+QCittA7Tuz1kyguuP9
+        vu2LrGHht4+Mxd4hRkmteFllaPNl3oIQx7ZZSsMHMXUrA9YkY1I9D9vEraTU4PXR5N6qZ9FLEO40B
+        Y0NFTu5w==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k70pY-0004UB-36; Sat, 15 Aug 2020 18:23:00 +0000
+Date:   Sat, 15 Aug 2020 19:23:00 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Josef Bacik <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        Denis Efremov <efremov@linux.com>
+Subject: Re: [PATCH 2/2] tree-wide: rename vmemdup_user to kvmemdup_user
+Message-ID: <20200815182300.GZ17456@casper.infradead.org>
+References: <2e717622-22ba-9947-c8df-520bdbb2e16f@web.de>
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 15 Aug 2020 00:32:46 -0500
-Message-ID: <CAH2r5mvJ=EZ2mC6LTnTmML5tCKpcKCOM7+nbbFSzpATBWh9Y_A@mail.gmail.com>
-Subject: [GIT PULL] SMB3 fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e717622-22ba-9947-c8df-520bdbb2e16f@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-327a8d76b1ac2037f87bf041f3bc076407284ffc:
+On Sat, Aug 15, 2020 at 03:10:12PM +0200, Markus Elfring wrote:
+> > This helper uses kvmalloc, not vmalloc, so rename it to kvmemdup_user to
+> > make it clear we're using kvmalloc() and will need to use kvfree().
+> 
+> Can the renaming of this function name trigger software updates
+> for any more source files?
 
-  Merge tag '5.9-rc-smb3-fixes-part1' of
-git://git.samba.org/sfrench/cifs-2.6 (2020-08-06 19:21:04 -0700)
+Why don't you find out, and if there are, submit your own patch?
 
-are available in the Git repository at:
-
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.9-rc-smb3-fixes-part2
-
-for you to fetch changes up to c8c412f976124d85b8ded85c6ac3f760c12b63a3:
-
-  SMB3: Fix mkdir when idsfromsid configured on mount (2020-08-13
-19:41:01 -0500)
-
-----------------------------------------------------------------
-3 small cifs/smb3 fixes, one for stable fixing a mkdir path when using
-idsfromsid mount option
-
-The update for cifs.ko to use the new mount API isn't complete so
-isn't included in this set.
-
-Build verification test results:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/381
-----------------------------------------------------------------
-Dan Carpenter (1):
-      cifs: Fix an error pointer dereference in cifs_mount()
-
-Miaohe Lin (1):
-      cifs: Convert to use the fallthrough macro
-
-Steve French (1):
-      SMB3: Fix mkdir when idsfromsid configured on mount
-
- fs/cifs/connect.c   | 1 +
- fs/cifs/smb2inode.c | 1 +
- fs/cifs/smb2pdu.c   | 4 ++--
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
--- 
-Thanks,
-
-Steve
+> Example:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/memdup_user.cocci?id=c9c9735c46f589b9877b7fc00c89ef1b61a31e18#n18
+> 
+> Regards,
+> Markus
