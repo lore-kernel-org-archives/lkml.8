@@ -2,89 +2,86 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8C2C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48308C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A5A206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216992053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgHOV6C (ORCPT
+        id S1729326AbgHOV6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:58:02 -0400
-Received: from smtprelay0189.hostedemail.com ([216.40.44.189]:50018 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728964AbgHOV6A (ORCPT
+        Sat, 15 Aug 2020 17:58:46 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:47656 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728249AbgHOV6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:58:00 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 5BC0718041E63;
-        Sat, 15 Aug 2020 00:52:04 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 2CF8C18026226;
-        Sat, 15 Aug 2020 00:52:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: feast89_3216ee827001
-X-Filterd-Recvd-Size: 2404
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 15 Aug 2020 00:52:01 +0000 (UTC)
-Message-ID: <562003af51ca0b08f2108147b8d6e75cec18f3fd.camel@perches.com>
-Subject: Re: [PATCH] lib/string.c: implement stpcpy
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     =?ISO-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Date:   Fri, 14 Aug 2020 17:52:00 -0700
-In-Reply-To: <20200815002417.1512973-1-ndesaulniers@google.com>
-References: <20200815002417.1512973-1-ndesaulniers@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 15 Aug 2020 17:58:41 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id B462F20021;
+        Sat, 15 Aug 2020 16:53:30 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 16:53:29 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 0/4] Add support for Feixin K101-IM2BYL02 panel
+Message-ID: <20200815145329.GA1201814@ravnborg.org>
+References: <20200719170411.275812-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200719170411.275812-1-icenowy@aosc.io>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=8R4CpP16fAPwfkrXZjwA:9
+        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-14 at 17:24 -0700, Nick Desaulniers wrote:
-> LLVM implemented a recent "libcall optimization" that lowers calls to
-> `sprintf(dest, "%s", str)` where the return value is used to
-> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> in parsing format strings.
-[]
-> diff --git a/include/linux/string.h b/include/linux/string.h
-[]
-> @@ -31,6 +31,9 @@ size_t strlcpy(char *, const char *, size_t);
->  #ifndef __HAVE_ARCH_STRSCPY
->  ssize_t strscpy(char *, const char *, size_t);
->  #endif
-> +#ifndef __HAVE_ARCH_STPCPY
-> +extern char *stpcpy(char *__restrict, const char *__restrict__);
+Hi Icenowy
 
-Why use two different forms for __restrict and __restrict__?
-Any real reason to use __restrict__ at all?
+On Mon, Jul 20, 2020 at 01:04:06AM +0800, Icenowy Zheng wrote:
+> The controller chip of Feixin K101-IM2BA02 is going to be discontinued,
+> so Feixin start to provide K101-IM2BYL02 panel as a replacement, which
+> utilizes Ilitek ILI9881C controller.
+> 
+> Add support for K101-IM2BYL02 panel.
+> 
+> By the way, is there a way that can try both kind of panels in the same
+> kernel/DTB combo? K101-IM2BYL02 has the same pinout with K101-IM2BA02,
+> and PineTab schedule to switch to it w/o modifying the mainboard.
+> 
+> Icenowy Zheng (4):
+>   drm/panel: ilitek-ili9881c: prepare for adding support for extra
+>     panels
+>   dt-bindings: ili9881c: add compatible string for Feixin K101-IM2BYL02
+>   drm/panel: ilitek-ili9881c: add support for Feixin K101-IM2BYL02 panel
+Thanks, applied the above patches to drm-misc-next.
 
-It's used nowhere else in the kernel.
+	Sam
 
-$ git grep -w -P '__restrict_{0,2}'
-scripts/genksyms/keywords.c:    // According to rth, c99 defines "_Bool", __restrict", __restrict__", "restrict".  KAO
-scripts/genksyms/keywords.c:    { "__restrict__", RESTRICT_KEYW },
-
-
+>   [DO NOT MERGE] arm64: allwinner: dts: a64: enable K101-IM2BYL02 panel
+>     for PineTab
+> 
+>  .../display/panel/ilitek,ili9881c.yaml        |   1 +
+>  .../boot/dts/allwinner/sun50i-a64-pinetab.dts |  10 +
+>  drivers/gpu/drm/panel/panel-ilitek-ili9881c.c | 273 ++++++++++++++++--
+>  3 files changed, 265 insertions(+), 19 deletions(-)
+> 
+> -- 
+> 2.27.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
