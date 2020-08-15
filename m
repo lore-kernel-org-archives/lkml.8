@@ -2,85 +2,83 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB222C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75839C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AA823358
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1072053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597528836;
+	bh=vEljPOThfSbnJn88gHs4Smd9TmldHaunZhuNavYVFW4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=c461mlEgLXFPr3ozvBs6NqDZcNYGBOCYLYJ56dOVZ4zlDabu2QLxHfv6UrKA/Q3Jc
+	 0daFl23KOO+/8YtuXLDVDJOtoNeQ4++mt7tJ1eYeSxA7plTZz/Vz3dcBGskoZ+zy1G
+	 oyUN3IisKHOWd/q/rf7bzZ1vWQ43zvoEQHUpVors=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgHOWAQ (ORCPT
+        id S1729019AbgHOWAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:16 -0400
-Received: from mailex.mailcore.me ([94.136.40.62]:44384 "EHLO
-        mailex.mailcore.me" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729445AbgHOWAN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:00:13 -0400
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=phoenix.fritz.box)
-        by smtp04.mailcore.me with esmtpa (Exim 4.92.3)
-        (envelope-from <phillip@squashfs.org.uk>)
-        id 1k6nJo-0006KR-8t; Sat, 15 Aug 2020 04:57:20 +0100
-From:   Phillip Lougher <phillip@squashfs.org.uk>
-To:     linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, pliard@google.com, hch@lst.de,
-        adrien+dev@schischi.me, groeck@chromium.org, drosen@google.com,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Nicolas Prochazka <nicolas.prochazka@gmail.com>,
-        Tomoatsu Shimada <shimada@walbrix.com>
-Subject: [PATCH] squashfs: avoid bio_alloc() failure with 1Mbyte blocks
-Date:   Sat, 15 Aug 2020 04:56:37 +0100
-Message-Id: <20200815035637.15319-1-phillip@squashfs.org.uk>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailcore-Auth: 439913985
-X-Mailcore-Domain: 1686784
+        Sat, 15 Aug 2020 18:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728838AbgHOWA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:00:28 -0400
+Subject: Re: [GIT PULL] perf tool changes for v5.9: 2nd batch
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597515739;
+        bh=vEljPOThfSbnJn88gHs4Smd9TmldHaunZhuNavYVFW4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Vze+ZvfKm0DVLiQx6F9jCuGC4zZ42/3sh6vUSprrhTTNyiAv1Jc1QBk9w4mQI+AuA
+         yC/ELqfDzeJAecrZG57q2hgPetCH3noKhRHpDHuiq9TomeZvRWLZ7rnvUTivfGyF3D
+         2Hn02yE1OIpS65IiaU0THazwa0GUMzHgPRMEoPMM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200814174917.2591425-1-acme@kernel.org>
+References: <20200814174917.2591425-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200814174917.2591425-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-14
+X-PR-Tracked-Commit-Id: 492e4edba6e2fc0620a69266d33f29c4a1f9ac1e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 713eee84720e6525bc5b65954c5087604a15f5e8
+Message-Id: <159751573947.22808.8285651134325842958.pr-tracker-bot@kernel.org>
+Date:   Sat, 15 Aug 2020 18:22:19 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        Colin King <colin.king@canonical.com>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        David Ahern <dsahern@kernel.org>,
+        "Frank Ch . Eigler" <fche@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Paul Clarke <pc@us.ibm.com>, Peng Fan <fanpeng@loongson.cn>,
+        Rob Herring <robh@kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a regression introduced by the "migrate from ll_rw_block usage
-to BIO" patch.
+The pull request you sent on Fri, 14 Aug 2020 14:49:17 -0300:
 
-Bio_alloc() is limited to 256 pages (1 Mbyte).   This can cause a
-failure when reading 1 Mbyte block filesystems.  The problem is
-a datablock can be fully (or almost uncompressed), requiring 256
-pages, but, because blocks are not aligned to page boundaries, it
-may require 257 pages to read.
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-14
 
-Bio_kmalloc() can handle 1024 pages, and so use this for the
-edge condition.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/713eee84720e6525bc5b65954c5087604a15f5e8
 
-Reported-by: Nicolas Prochazka <nicolas.prochazka@gmail.com>
-Reported-by: Tomoatsu Shimada <shimada@walbrix.com>
-Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
----
- fs/squashfs/block.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thank you!
 
-diff --git a/fs/squashfs/block.c b/fs/squashfs/block.c
-index 76bb1c846845..8a19773b5a0b 100644
---- a/fs/squashfs/block.c
-+++ b/fs/squashfs/block.c
-@@ -87,7 +87,11 @@ static int squashfs_bio_read(struct super_block *sb, u64 index, int length,
- 	int error, i;
- 	struct bio *bio;
- 
--	bio = bio_alloc(GFP_NOIO, page_count);
-+	if (page_count <= BIO_MAX_PAGES)
-+		bio = bio_alloc(GFP_NOIO, page_count);
-+	else
-+		bio = bio_kmalloc(GFP_NOIO, page_count);
-+
- 	if (!bio)
- 		return -ENOMEM;
- 
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
