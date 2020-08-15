@@ -2,67 +2,78 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8327CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D758EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C7520657
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF8920639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529523;
-	bh=4asH1gc0Nnf0u9x4UFrqqedNqkxj9rZePIhJClf7JhY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNB6z7xf4ArArOVFRJZ2JgPq+4GXRC4iqodPuilLATSHoHmzcKgr6owfk0TFPC8uI
-	 VnBS0JWLzyk7Q4v2xIzxx7hTpkDSuPFWYUpq9SyIYmP4Na3weo3/5Y3xINsyIKPpDd
-	 h83xo2FQYV7sEdfZ7Q6ZfGbokm2Z7cW1rxNgivsE=
+	s=default; t=1597529536;
+	bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nsAmP6MUgAADazdxTeb8UNeiGfXV3c23snggk7pmfWnzDLZnvQ2sTCvjhSwAmIOL9
+	 pjMeZjnEB36Y6hNBKEEtBXQVpYfq99v3HdoNxNNlA4LCywyr7o9eOeGwAYXCzkyBCh
+	 HXRsAfkoIVPK2TA03TabUf9h4uabgyhTpU3sl7zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgHOWMA (ORCPT
+        id S1730082AbgHOWMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbgHOWK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729083AbgHOWK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:28 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B2512311F;
-        Sat, 15 Aug 2020 12:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3BAE22EBF;
+        Sat, 15 Aug 2020 11:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597495885;
-        bh=4asH1gc0Nnf0u9x4UFrqqedNqkxj9rZePIhJClf7JhY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxR0uKVy0ZNoswEX9B3zlFjp2tS7XMcR9EgR7LaVuACg0qMzDC8jjdE66fFTtlFIZ
-         gmkp1pCfoRVUfuNGo36pVe7F5ikBjkO32VbjSzF8Cdbv71OLOIgtPNblMY5FJrLWcT
-         EUYr7Ave7UMiBP6L0xXXpBYVqk2OTKbO20bVkqQ8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        s=default; t=1597490563;
+        bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lwUj1LTiJyeXK55xV/lUtdkVTfr0DvieDUZuSLrAF6DZ8R/HA5N71MJwG7nPKua0P
+         XN8+FLgUGcXPbi6i/MCranm+bgtLtOiBUJGe3yTgOhkKtl5mGsaqmriKXBsmDx338H
+         Qk13g3UnXJjZm3sQ9qnKs5RVQDD1IGu2zN6bkado=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1k6ved-002Kds-Ik; Sat, 15 Aug 2020 13:51:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com,
-        Roh Herring <robh+dt@kernel.org>
-Subject: [PATCH 1/2] PCI: rockchip: Work around missing device_type property in DT
-Date:   Sat, 15 Aug 2020 13:51:11 +0100
-Message-Id: <20200815125112.462652-2-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200815125112.462652-1-maz@kernel.org>
-References: <20200815125112.462652-1-maz@kernel.org>
+        id 1k6uGn-002KBi-AX; Sat, 15 Aug 2020 12:22:41 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 15 Aug 2020 12:22:41 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v4 1/5] of_address: Add bus type match for pci ranges
+ parser
+In-Reply-To: <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+ <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
+ <889508bae5da3c55690a7adbd101a5cd@kernel.org>
+ <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <34ac2d7c0770f9aa450aaa3905c82f52@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: robh+dt@kernel.org, jiaxun.yang@flygoat.com, frowand.list@gmail.com, linux-mips@vger.kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, paulburton@kernel.org, arnd@arndb.de, natechancellor@gmail.com, ndesaulniers@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,69 +81,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent changes to the DT PCI bus parsing made it mandatory for
-device tree nodes describing a PCI controller to have the
-'device_type = "pci"' property for the node to be matched.
+On 2020-08-14 23:51, Rob Herring wrote:
+> On Fri, Aug 14, 2020 at 12:21 PM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> Hi all,
+>> 
+>> On 2020-07-28 16:36, Jiaxun Yang wrote:
+>> > So the parser can be used to parse range property of ISA bus.
+>> >
+>> > As they're all using PCI-like method of range property, there is no
+>> > need
+>> > start a new parser.
+>> >
+>> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> > Reviewed-by: Rob Herring <robh@kernel.org>
+>> 
+>> This patch, although it looks correct, breaks the RK3399-based
+>> systems, as they miss the (now required) 'device_type = "pci";'
+>> property.
+> 
+> Required since 1990 something...
 
-Although this follows the letter of the specification, it
-breaks existing device-trees that have been working fine
-for years.  Rockchip rk3399-based systems are a prime example
-of such collateral damage, and have stopped discovering their
-PCI bus.
+And yet... The fact that it has been broken from day-1 (3.5 years
+ago) shows how good we are at enforcing those requirements.
 
-In order to paper over the blunder, let's add a workaround
-to the pcie-rockchip driver, adding the missing property when
-none is found at boot time. A warning will hopefully nudge the
-user into updating their DT to a fixed version if they can, but
-the insentive is obviously pretty small.
+> 
+>> We can fix the in-tree DT, but that's not really an option
+>> if someone relies on the DT being provided by the firmware
+>> (I for one definitely do).
+> 
+> Perhaps time to pay attention to schema errors:
+> 
+> arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
+> pcie@f8000000: 'device_type' is a required property
 
-Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-Suggested-by: Roh Herring <robh+dt@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/pci/controller/pcie-rockchip-host.c | 29 +++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+As long as this isn't part of the normal build flow, these errors
+will get ignored. I don't even know how to trigger this validation,
+TBH.
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 0bb2fb3e8a0b..d7dd04430a99 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -949,6 +949,35 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	if (!dev->of_node)
- 		return -ENODEV;
- 
-+	/*
-+	 * Most rk3399 DTs are missing the 'device_type = "pci"' property,
-+	 * potentially leading to PCIe probing failure. Be kind to the
-+	 * users and fix it up for them. Upgrading is recommended.
-+	 */
-+	if (!of_find_property(dev->of_node, "device_type", NULL)) {
-+		const char dtype[] = "pci";
-+		struct property *prop;
-+
-+		dev_warn(dev, "Working around missing device_type property\n");
-+
-+		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-+		if (!prop)
-+			return -ENOMEM;
-+
-+		prop->name	= kstrdup("device_type", GFP_KERNEL);
-+		prop->value	= kstrdup(dtype, GFP_KERNEL);
-+		prop->length	= ARRAY_SIZE(dtype);
-+		if (!prop->name || !prop->value) {
-+			kfree(prop->name);
-+			kfree(prop->value);
-+			kfree(prop);
-+			return -ENOMEM;
-+		}
-+
-+		if (of_add_property(dev->of_node, prop))
-+			dev_warn(dev, "Failed to add property, probing may fail");
-+	}
-+
- 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rockchip));
- 	if (!bridge)
- 		return -ENOMEM;
+> (I thought dtc would also catch this, but there we look for
+> device_type and then do PCI checks like node name. I guess we needed
+> to check for either device_type or the node name...)
+
+That would be much better. At least this *does* run at build time.
+
+> 
+>> I came up with the following hack, which solves the issue for
+>> me. Definitely not my finest hour, but I really need this box
+>> to keep going. I will post a patch fixing the DT separately.
+>> 
+>> Thanks,
+>> 
+>>          M.
+>> 
+>>  From ceef5fd9c4d2005eb577505c68868ebe527c098f Mon Sep 17 00:00:00 
+>> 2001
+>>  From: Marc Zyngier <maz@kernel.org>
+>> Date: Fri, 14 Aug 2020 19:10:12 +0100
+>> Subject: [PATCH] of: address: Workaround broken DTs missing the
+>> 'device_type =
+>>   "pci"' property
+>> 
+>> Recent changes to the PCI bus parsing made it mandatory for
+>> device trees nodes describing a PCI controller to have the
+>> 'device_type = "pci"' property for the node to be matched.
+>> 
+>> Although this is compliant with the specification, it breaks
+>> existing device-trees that have been working fine for years
+>> (the Rockchip rk3399-based systems being a prime example of
+>> such breakage).
+>> 
+>> In order to paper over the blunder, let's also match nodes
+>> that have the "linux,pci-domain" property, as they are
+>> pretty likely to be PCI nodes. This fixes the issue for
+>> systems such as the above platforms.
+>> 
+>> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges
+>> parser")
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/of/address.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index 590493e04b01..712e03781a2a 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -134,9 +134,12 @@ static int of_bus_pci_match(struct device_node 
+>> *np)
+>>          * "pciex" is PCI Express
+>>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>>          * "ht" is hypertransport
+>> +        * "linux,pci-domain" is a workaround for broken device trees
+>> +        * lacking the required "device_type" property.
+> 
+> I would suggest looking for 'pci' or 'pcie' node name instead.
+> 
+> You should remove linux,pci-domain from rk3399 as it is pointless when
+> there's a single PCI host bridge.
+
+Indeed. I was clutching at straws here.
+
+> 
+> The other option is fixup the live tree with of_add_property() in the
+> Rockchip PCI driver. Less likely to impact anyone else.
+
+That's actually a much better solution, thanks for pointing this out.
+At least I can shout about broken DTs while fixing it up, and the
+new fix is fairly neat.
+
+I'll post new patches shortly.
+
+Thanks,
+
+         M.
 -- 
-2.27.0
-
+Jazz is not dead. It just smells funny...
