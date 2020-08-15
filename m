@@ -2,101 +2,174 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A165C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E69C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12EF623B24
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD2123B24
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgHOVid (ORCPT
+        id S1727930AbgHOVih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:38:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62772 "EHLO mga07.intel.com"
+        Sat, 15 Aug 2020 17:38:37 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62773 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgHOVid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726004AbgHOVid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:38:33 -0400
-IronPort-SDR: 7aDkoqkccl2pA39I2vHozCLzR5T44O7sfwmIVDr1Tr6odwuvHZn58W67XKqWlYXU01q3M2GznO
- oL1kUJVpV7Qg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9713"; a="218860632"
-X-IronPort-AV: E=Sophos;i="5.76,316,1592895600"; 
-   d="scan'208";a="218860632"
+IronPort-SDR: 6Q+OXgm6xMndxUabB+wZh+rPsd/+B2l2and0Lx90OfqVUS+bAelT9mZChwZBqAzULONvbZT0gA
+ eVvE2xaQ2STg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9714"; a="218878052"
+X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
+   d="scan'208";a="218878052"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 05:55:34 -0700
-IronPort-SDR: CKSlF3hOH2ajsTjU/m9UYHYRy5AIEiRNAhByojGtC9bOGjvl44P4wgAUq1ZhZIDIP06WiJZfZl
- CBInzwoYTaIw==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 12:53:46 -0700
+IronPort-SDR: ufbaN7XDWuZRsutGfXZoxTHSTwlWts13MQM+Kf9bLM8OnjsZXzf2XMESPkRiNDfnQ/+P+QzPwZ
+ QJH7lktserLw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,316,1592895600"; 
-   d="scan'208";a="370134267"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga001.jf.intel.com with ESMTP; 15 Aug 2020 05:55:32 -0700
-Date:   Sat, 15 Aug 2020 20:52:43 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, Nicolas Palix <nicolas.palix@imag.fr>
-Subject: Re: [kbuild-all] Re: fs/ocfs2/suballoc.c:2430:2-8: preceding lock on
- line 2413
-Message-ID: <20200815125243.GA21882@intel.com>
-References: <202008141412.mP88ccpD%lkp@intel.com>
- <878sehl5e4.fsf@nanos.tec.linutronix.de>
- <alpine.DEB.2.22.394.2008142059190.2441@hadrien>
- <87364pkock.fsf@nanos.tec.linutronix.de>
- <alpine.DEB.2.22.394.2008142148180.2441@hadrien>
+X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
+   d="scan'208";a="319240608"
+Received: from cibrouil-mobl1.amr.corp.intel.com (HELO araj-mobl1.jf.intel.com) ([10.254.80.64])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Aug 2020 12:53:45 -0700
+Date:   Sat, 15 Aug 2020 12:53:45 -0700
+From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+Message-ID: <20200815195345.GA6022@araj-mobl1.jf.intel.com>
+References: <20200814213842.31151-1-ashok.raj@intel.com>
+ <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2008142148180.2441@hadrien>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 09:52:13PM +0200, Julia Lawall wrote:
-> 
-> 
-> On Fri, 14 Aug 2020, Thomas Gleixner wrote:
-> 
-> > Julia,
-> >
-> > On Fri, Aug 14 2020 at 21:00, Julia Lawall wrote:
-> > > On Fri, 14 Aug 2020, Thomas Gleixner wrote:
-> > >> That's clearly a false positive. Is there anything what can be done to
-> > >> help that cocci script here?
-> > >
-> > > I have a better version that needs to get pushed.
-> > >
-> > > But normally these pass through me.  Did you get it directly from kbuild?
-> >
-> > Yes, because I touched the affected lines last :)
-> 
-> Actually, that's not the point.  Normally, I get all the reports on this
-> case, and then I forward them if they look ok.  If I forwarded something
-> incorrect, then sorry about that.  If the policy has changed for this rule
-> to be sending the reports out directlty to the recipients, then I think it
-> should be changed back.  There are a lot of real bugs with lock usage, but
-> there are alot of false positives too.  Specifically, the rule looks for
-> the case with identical if tests, but only when the branches are identical
-> too.
-> 
-> Kbuild people, can this be adjusted?  Or have I misunderstood the
-> situation?
-Hi Julia and Thomas, pls allow us to check this further, usually all cocci
-reports will be sent to kbuild@01.org for Julia to check. But there maybe
-something wrong with this report. We will check the detail in next week as
-we have server maintainance during the weekend.
+Hi Randy
 
+For some unknown reason my previous response said its taiting to be 
+delivered. 
+
+On Fri, Aug 14, 2020 at 04:25:32PM -0700, Randy Dunlap wrote:
+> On 8/14/20 2:38 PM, Ashok Raj wrote:
+> > When offlining CPU's, fixup_irqs() migrates all interrupts away from the
 > 
-> thanks,
-> julia
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+>                  CPUs,
+
+I'll fix all these in the next rev. 
+
+Just waiting to hear back from Thomas if he has additional ones I can fix
+and resend v2.
+
+Cheers,
+Ashok
+> 
+> > outgoing CPU to an online CPU. Its always possible the device sent an
+> 
+>                                  It's
+> 
+> > interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> > lapic identifies such interrupts. apic_soft_disable() will not capture any
+> 
+>   LAPIC
+> 
+> > new interrupts in IRR. This causes interrupts from device to be lost during
+> > cpu offline. The issue was found when explicitly setting MSI affinity to a
+> 
+>   CPU
+> 
+> > CPU and immediately offlining it. It was simple to recreate with a USB
+> > ethernet device and doing I/O to it while the CPU is offlined. Lost
+> > interrupts happen even when Interrupt Remapping is enabled.
+> > 
+> > Current code does apic_soft_disable() before migrating interrupts.
+> > 
+> > native_cpu_disable()
+> > {
+> > 	...
+> > 	apic_soft_disable();
+> > 	cpu_disable_common();
+> > 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> > }
+> > 
+> > Just fliping the above call sequence seems to hit the IRR checks
+> 
+>        flipping
+> 
+> > and the lost interrupt is fixed for both legacy MSI and when
+> > interrupt remapping is enabled.
+> > 
+> > 
+> > Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+> > Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > 
+> > To: linux-kernel@vger.kernel.org
+> > To: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+> > Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  arch/x86/kernel/smpboot.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> > index ffbd9a3d78d8..278cc9f92f2f 100644
+> > --- a/arch/x86/kernel/smpboot.c
+> > +++ b/arch/x86/kernel/smpboot.c
+> > @@ -1603,13 +1603,20 @@ int native_cpu_disable(void)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	cpu_disable_common();
+> >  	/*
+> >  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+> >  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+> > -	 * messages.
+> > +	 * messages. Its important to do apic_soft_disable() after
+> 
+> 	             It's
+> 
+> > +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
+> > +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
+> > +	 * currently set IRR/ISR but new interrupts will not set IRR.
+> > +	 * This causes interrupts sent to outgoing cpu before completion
+> 
+> 	                                           CPU
+> 
+> > +	 * of irq migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
+> 
+> 	      IRQ
+> 
+> > +	 * APIC State after It Has been Software Disabled" section for more
+> > +	 * details.
+> >  	 */
+> >  	apic_soft_disable();
+> > -	cpu_disable_common();
+> >  
+> >  	return 0;
+> >  }
+> > 
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
