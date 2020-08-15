@@ -2,195 +2,88 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A59C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68200C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C824823B45
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fNTr1AP6"
+	by mail.kernel.org (Postfix) with ESMTP id 41A6323B24
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgHOVky (ORCPT
+        id S1726401AbgHOVme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgHOVkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:40:42 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9720DC03D1C9
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:21:38 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id w2so5982216qvh.12
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
-        b=fNTr1AP6oXI+Z+vP9W7aopVeB8HKDdHLOWptbwzZzf+/9o4e6mmG8uiZAHNv0y6lWd
-         TKsz9faMxGXvwuzoRbAnGOoIYbSJyPMXzOYEK+lV18IhjpncKwKwQ3qgtQx489VgvIIk
-         bV8k8/td6zymhZdtoNTI/s85alwGZlxlKuuoKwfX0YLKhauRO7OAsvZGQxy4H9HiK/gF
-         om936XsMh9eYx5rV9G0o0B0JDW/Vi+f0NAamfu92QrPofwUL+C6vZgSUQrFzekLMBsX4
-         ECmKIQqHJ2Hr8gzkvG86aMVtpLDQCrCp5oL8QoB4sXL8MIRRVeRLoVQl20//6oJwB7TZ
-         Mu9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
-        b=mrXwkVhVneatA68t1t0FisZVKfhdY/8Che1J9kF9dcj5TIYVAUjZZBW7DUq/UKInR0
-         OcmjnE+druZRX7GZM1KBQKjRGdgWujDL6+lDYQt3BsOnqJMtEqDrxoUYdMwOthMjDvO9
-         PNtPxSTdt6eKQI8mngE/p8hbDlCgN4KMhzRTBfoHmbVUOomFrT4/LIFL+MZtVszZANC5
-         eyVlrMm1Y+VBw4vmN7okJQ2GrEUDnSrio5+bJ0TvMxoVvuFIJVww5cwoJ3bn57/NvLLS
-         CdHqDB5WSxH3Rp1HcGO58yhmSpwmnYJZvYSHmZw/Fidq6OmGesPirj4MTqPvGTfLfIfM
-         LH8g==
-X-Gm-Message-State: AOAM533ETR8q56Sd7Uas7LVDzddLqwYJKneRKecj6H7kURfAjmsPIq2n
-        UXZzi3/eZ5dolc8t6dKAKSSY8w==
-X-Google-Smtp-Source: ABdhPJx3XPsMq4FB0tV42kjhPB8zgg9seOaawRnu+HoLIebEV0cYDDmb+NOgtyoCPkyOwqIgewXCog==
-X-Received: by 2002:a0c:ea30:: with SMTP id t16mr8572128qvp.177.1597526497539;
-        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 73sm2825144qtf.74.2020.08.15.14.21.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
-Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL
- driver
-To:     Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sat, 15 Aug 2020 17:42:34 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22594 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgHOVmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:42:32 -0400
+IronPort-SDR: Vr93dfiLe4V4gQgGI0Ykv/q1TQ6lITZQEjuiusAICBvxGnJNAIDwXKyvHfVwGRU10iK/3c6wOM
+ siEJLWDxROUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9714"; a="155641019"
+X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
+   d="scan'208";a="155641019"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 10:21:05 -0700
+IronPort-SDR: Qce1Qa4j4E+CYhjuQPflNd6xCkbPt4BehQ3FdjzFRWIXKCA3zfigcFUvRtHQ3XV7LyyHkQqDhO
+ xToqNL+1+1RQ==
+X-IronPort-AV: E=Sophos;i="5.76,317,1592895600"; 
+   d="scan'208";a="440428673"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 10:21:05 -0700
+Date:   Sat, 15 Aug 2020 10:21:03 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
- <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
-Date:   Sat, 15 Aug 2020 17:21:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        linux-edac <linux-edac@vger.kernel.org>
+Subject: Re: [GIT PULL] edac for v5.9 (part 2)
+Message-ID: <20200815172103.GA1628@agluck-desk2.amr.corp.intel.com>
+References: <20200815003645.GA22594@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wgFg+RNU3Aa7paCPCLpUiTHGN1PuC2AGZoRSOxD=trKnQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgFg+RNU3Aa7paCPCLpUiTHGN1PuC2AGZoRSOxD=trKnQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/20 4:20 PM, Rob Clark wrote:
-> On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
->>
->>
->> On 12/08/2020 07:42, Tanmay Shah wrote:
->>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
->>   >
->>   > Add the needed DP PLL specific files to support
->>   > display port interface on msm targets.
->>
->> [skipped]
->>
->>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>   > new file mode 100644
->>   > index 000000000000..475ba6ed59ab
->>   > --- /dev/null
->>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>   > @@ -0,0 +1,98 @@
->>   > +/* SPDX-License-Identifier: GPL-2.0-only */
->>   > +/*
->>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->>   > + */
->>   > +
->>   > +#ifndef __DP_PLL_10NM_H
->>   > +#define __DP_PLL_10NM_H
->>   > +
->>   > +#include "dp_pll.h"
->>   > +#include "dp_reg.h"
->>   > +
->>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->>   > +
->>   > +#define NUM_DP_CLOCKS_MAX            6
->>   > +
->>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
->>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->>   > +
->>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->>   > +
->>   > +struct dp_pll_vco_clk {
->>   > +    struct clk_hw hw;
->>   > +    unsigned long    rate;        /* current vco rate */
->>   > +    u64        min_rate;    /* min vco rate */
->>   > +    u64        max_rate;    /* max vco rate */
->>   > +    void        *priv;
->>   > +};
->>   > +
->>   > +struct dp_pll_db {
->>
->> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
->> example, will use slightly different structure.
+On Sat, Aug 15, 2020 at 08:21:13AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 14, 2020 at 5:36 PM Luck, Tony <tony.luck@intel.com> wrote:
+> >
+> > Here's one more pull for EDAC with a driver that I let slip
+> > through the cracks.
 > 
-> Note that sboyd has a WIP series to move all of the pll code out to a
-> phy driver.  If there is work already happening on 7nm support, it
-> might be better to go with the separate phy driver approach?  I'm
-> still a bit undecided about whether to land the dp code initially with
-> the pll stuff in drm, and then continue refactoring to move to
-> separate phy driver upstream, or to strip out the pll code from the
-> beginning.  If you/someone is working on 7nm support, then feedback
-> about which approach is easier is welcome.
-> 
-> https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
-> 
+> Shortlog? Diffstat? Just what am I getting?
 
-I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, and 
-I have done something similar, with the PLL driver in the QMP phy, 
-although not based on sboyd's series (along with some typec changes to 
-negotiate the DP alt mode and get HPD events, etc.). I don't think 
-having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't need 
-to be aware of the DP PLL/PHY driver, it only needs to set the 
-link/pixel clock rates which are in dispcc (and those then have the PLL 
-clocks as a parent).
+Ah. Looking at bash history I fumbled arguments to git pleasepull. Second try:
 
-FYI, since it sounds you are considering landing this: it is completely 
-broken, for example:
-- ioremap()'s to #define'd addresses in the PLL driver
-- main DP driver reading/writing to registers in the PHY region, but 
-getting the base address from devicetree was removed since earlier 
-revisions, so it just fails completely. Look at usb3_dp_com (for 
-example), which in dp_catalog_ctrl_usb_reset() would be used to 
-overwrite registers already being driven by the qmp phy driver - but now 
-the usb3_dp_com.base is never initialized.
+The following changes since commit 0f959e19fadf00638b686fdeb70e24dfcc7bbcac:
 
--Jonathan
+  Merge branch 'edac-ghes' into edac-for-next (2020-06-22 15:28:01 +0200)
 
-> BR,
-> -R
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-> 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_5.9_pt2
+
+for you to fetch changes up to 709ed1bcef12398ac1a35c149f3e582db04456c2:
+
+  EDAC/ie31200: Fallback if host bridge device is already initialized (2020-08-10 11:13:06 -0700)
+
+----------------------------------------------------------------
+Fixes for ie31200 driver that missed the first pull
+
+----------------------------------------------------------------
+Jason Baron (1):
+      EDAC/ie31200: Fallback if host bridge device is already initialized
+
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
+
+-Tony
