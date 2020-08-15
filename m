@@ -2,100 +2,152 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61405C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC1520791
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE6fAWhW"
+	by mail.kernel.org (Postfix) with ESMTP id 68B1820791
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgHOV7z (ORCPT
+        id S1729619AbgHOWAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
+        Sat, 15 Aug 2020 18:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbgHOVvi (ORCPT
+        with ESMTP id S1728856AbgHOVvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:38 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55DBC0F26E2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:45 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id d190so9970825wmd.4
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=3Dsr0Yy5xJaA1gocXEUrCia+DklzUMLBvu3KE2Ccr3E=;
-        b=bE6fAWhW5P2lSSZB3qxYlXC4bc+7IiGKIPbBc5vsOZXEraILW4YnokRhL8zXOzdkpR
-         BmE/AodF8dwW1RGO6NZa0jzi6WkvUM3/FPT0KDABLRFhJ4kcGIEVE9JjhiodUJy/ulPm
-         eSDFGGv0/WgNvSsbLIPZkYLsQxcyxFK5zeEkAYZmFSWhHD5M1Aqp1L7y3kjAeWp8P8nx
-         ShCJ6Me6p6LJ+qCzVygvQ+ttGWoOqWU3nb/Dd41jAk8dy1tnda3kvLu2g2sbGRaZVvTj
-         IgL8YLlMXrqhXbtNUNCUnIY7nMPd0mdkD1y+Xtbfrnsdw6GwSHmG/yaDRCmUF9+W41yN
-         FP0w==
+        Sat, 15 Aug 2020 17:51:37 -0400
+Received: from mail-il1-x145.google.com (mail-il1-x145.google.com [IPv6:2607:f8b0:4864:20::145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC05BC0A88B7
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:00:23 -0700 (PDT)
+Received: by mail-il1-x145.google.com with SMTP id g6so8798851iln.2
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 10:00:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=3Dsr0Yy5xJaA1gocXEUrCia+DklzUMLBvu3KE2Ccr3E=;
-        b=lkht4dcto5F1aFoLSW0AfoNdLH4w8c7RuEFA7J9urfWd20+qQ/zjLQNul9lIx4BQ0f
-         wkVaR6x/X489PgBk7WJFHDTTFgG5PtLddTX2qTuNObVNDjNpv/nwBzPE8H1FYOCuW4uB
-         t+K1VbnavBZ3Xqvz6m73k+bf60Tus04sxq0B0jwfmJTcH2q9v7fW80zriq4qaQRMKmaC
-         Xc1Za6qhQpC0o0dsXr32pmHJy8X9G6tZjgQmxeVLUONQ63p5Rx8bBf8icfC4vDurlumj
-         CzRxCLD0i/BRpiXITyJCya7ICFuVgwOwEcCDukdhb52yzT4BBoc4FKvL3vq28kEHUEI5
-         f23g==
-X-Gm-Message-State: AOAM531Hb6KflA58IF2gbMKvAk3Y6Zltxr27mPXDHcS11dXNL9rSXkK/
-        5LgnQ2GfHl4pSUSeRzm9PVP5PJmmJ1Y=
-X-Google-Smtp-Source: ABdhPJxt2pVVX4FmKqdHcsNKWhP44boTusPcVDAhNPZj67cljfkrCR2KHRNBaFFWXFbMFsiw1yi+Og==
-X-Received: by 2002:a1c:7407:: with SMTP id p7mr7761683wmc.117.1597514384276;
-        Sat, 15 Aug 2020 10:59:44 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id e5sm24460775wrc.37.2020.08.15.10.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 10:59:43 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Subject: [PATCH 3/9] habanalabs: eliminate redundant else condition
-Date:   Sat, 15 Aug 2020 20:59:32 +0300
-Message-Id: <20200815175938.16619-3-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200815175938.16619-1-oded.gabbay@gmail.com>
-References: <20200815175938.16619-1-oded.gabbay@gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Mh2vQL3nRBAlnAPp8z2LGMEgL0fvTMye3F0Sdv/V8c4=;
+        b=MiYm+v+uo+KF9mmgYjRL+U5ae+5GLjJI/7KAv+guScX3Qacu1HznWvMp8kFqbzrQrh
+         nSYxSGhtqD95YN5yDCkcKaoTwIWsdOzyR/dc94Nw0Rl4kt+9XKCWVmiClTLGueQr8HME
+         Ljy04X9UBeYy/oNZJFKk59dGK5xAf9RBDEjBiQgWH+i3UcGZyPT6Bx4QLrZTXiInqgEK
+         xRkemlLoOQ6wwz9+E1lf4L0Qan6FzDZB7KZnVx9Vr+qBuOwnouchJBqVR1oHw3Q+UWUc
+         2Sh7O4at66GuO2h1ekTkGsPyQ2VNZ+/w7AvEMzHw0aGsIYIENDPACBz1go+3YNsXPSKG
+         DskQ==
+X-Gm-Message-State: AOAM530g8bH2h/L++WwgQ1vMSLT2Z2smtQI1ukOCrsD19s+Tm8BwxEWo
+        N9HWLAiGKC9OtVhnTLe/PDeCeBixy3XjKW4BhA3cMtnos4o8
+X-Google-Smtp-Source: ABdhPJzYyX274OX+l37DAqsUHvwTM1HpTiSokWdE2OgfUedsairrIn4fwpGyYcMtJA4kqyI06NGJa+9Z4lGRakde0IBTseGBbLAO
+MIME-Version: 1.0
+X-Received: by 2002:a6b:5d05:: with SMTP id r5mr6221528iob.14.1597510822456;
+ Sat, 15 Aug 2020 10:00:22 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 10:00:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000018f60505aced798e@google.com>
+Subject: general protection fault in io_poll_double_wake
+From:   syzbot <syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If both parts of if-else are goto statements, we can remove the else and
-put the else goto statement after the if statement.
+Hello,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    7fca4dee Merge tag 'powerpc-5.9-2' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1264d116900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=21f0d1d2df6d5fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=7f617d4a9369028b8a2c
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f211d2900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1721b0ce900000
+
+The issue was bisected to:
+
+commit 18bceab101adde8f38de76016bc77f3f25cf22f4
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Fri May 15 17:56:54 2020 +0000
+
+    io_uring: allow POLL_ADD with double poll_wait() users
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1498125e900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1698125e900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1298125e900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com
+Fixes: 18bceab101ad ("io_uring: allow POLL_ADD with double poll_wait() users")
+
+general protection fault, probably for non-canonical address 0xdffffc0000000008: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000040-0x0000000000000047]
+CPU: 0 PID: 6842 Comm: syz-executor006 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:io_poll_double_wake+0x6b/0x360 fs/io_uring.c:4589
+Code: 8d 9d b8 00 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 53 64 de ff 48 8b 1b 48 83 c3 40 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 df e8 36 64 de ff 4c 8b 33 31 ff 44 89
+RSP: 0018:ffffc90001717b20 EFLAGS: 00010002
+RAX: 0000000000000008 RBX: 0000000000000040 RCX: ffff88809e0fe4c0
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880a2e7dc98
+RBP: ffff8880a2e7dc98 R08: 0000000000000000 R09: ffffc90001717be8
+R10: fffff520002e2f70 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff88809a429e40 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000002640880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2629c956c0 CR3: 000000009e4e7000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __wake_up_common+0x30a/0x4e0 kernel/sched/wait.c:93
+ __wake_up_common_lock kernel/sched/wait.c:123 [inline]
+ __wake_up+0xd4/0x150 kernel/sched/wait.c:142
+ n_tty_set_termios+0xa60/0x1080 drivers/tty/n_tty.c:1874
+ tty_set_termios+0xcac/0x1510 drivers/tty/tty_ioctl.c:341
+ set_termios+0x4a1/0x580 drivers/tty/tty_ioctl.c:414
+ tty_mode_ioctl+0x7b2/0xa80 drivers/tty/tty_ioctl.c:770
+ tty_ioctl+0xf81/0x15c0 drivers/tty/tty_io.c:2665
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4405d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe5f581ef8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000401ed0 RCX: 00000000004405d9
+RDX: 0000000020000080 RSI: 0000000000005404 RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000003e69 R11: 0000000000000246 R12: 0000000000401e40
+R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 9d629bc7ccf35892 ]---
+RIP: 0010:io_poll_double_wake+0x6b/0x360 fs/io_uring.c:4589
+Code: 8d 9d b8 00 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 53 64 de ff 48 8b 1b 48 83 c3 40 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 df e8 36 64 de ff 4c 8b 33 31 ff 44 89
+RSP: 0018:ffffc90001717b20 EFLAGS: 00010002
+RAX: 0000000000000008 RBX: 0000000000000040 RCX: ffff88809e0fe4c0
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880a2e7dc98
+RBP: ffff8880a2e7dc98 R08: 0000000000000000 R09: ffffc90001717be8
+R10: fffff520002e2f70 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff88809a429e40 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000002640880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2629c956c0 CR3: 000000009e4e7000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/misc/habanalabs/common/command_submission.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
-index 2b40aa85bec9..58327cdb6a2c 100644
---- a/drivers/misc/habanalabs/common/command_submission.c
-+++ b/drivers/misc/habanalabs/common/command_submission.c
-@@ -686,8 +686,8 @@ static int cs_ioctl_default(struct hl_fpriv *hpriv, void __user *chunks,
- 			rc = -ENOMEM;
- 			if (is_kernel_allocated_cb)
- 				goto release_cb;
--			else
--				goto free_cs_object;
-+
-+			goto free_cs_object;
- 		}
- 
- 		job->id = i + 1;
--- 
-2.17.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
