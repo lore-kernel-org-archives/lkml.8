@@ -2,86 +2,195 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ABCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A59C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A207823B24
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C824823B45
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPClLCvy"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fNTr1AP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgHOVkv (ORCPT
+        id S1726399AbgHOVky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        Sat, 15 Aug 2020 17:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgHOVkm (ORCPT
+        with ESMTP id S1726022AbgHOVkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:40:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B9EC03D1D0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u128so6242998pfb.6
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9720DC03D1C9
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:21:38 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id w2so5982216qvh.12
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 14:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ORZYHt9ecrzKMNgyspN1PBptpkMsBZp4x/btzZwFfNw=;
-        b=lPClLCvyiXS+vZ3mRzNc/FiH6L8tgYs8RLI0q7i9kt/AQhBBuFvmlo2fEvNv5K3srP
-         YXqsA1qkuHGCHSCTZTVpyl4W/0I6/x2DLlEQkLiHpDxEyzCI4WS38s0ByD4HYRHKq0Qv
-         h4EX4r9WqELVLy5edF4ih81aLPRAzfGHeLYdo/UZfAvGc+8CyLMEnq4gppocQSECcCin
-         2IfwO8e/wWEkm0p2gbrrhY/hcZFRTxQWGLfXZodUg589SIB7cWku1A6MC4HgOyM3l1Tf
-         kUF+HQkAySqNq7taW1zeVhsajkdS/56zDKpo9YtfcRXd2SenkPtqZEgddkJmKT+/LycJ
-         Db6g==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
+        b=fNTr1AP6oXI+Z+vP9W7aopVeB8HKDdHLOWptbwzZzf+/9o4e6mmG8uiZAHNv0y6lWd
+         TKsz9faMxGXvwuzoRbAnGOoIYbSJyPMXzOYEK+lV18IhjpncKwKwQ3qgtQx489VgvIIk
+         bV8k8/td6zymhZdtoNTI/s85alwGZlxlKuuoKwfX0YLKhauRO7OAsvZGQxy4H9HiK/gF
+         om936XsMh9eYx5rV9G0o0B0JDW/Vi+f0NAamfu92QrPofwUL+C6vZgSUQrFzekLMBsX4
+         ECmKIQqHJ2Hr8gzkvG86aMVtpLDQCrCp5oL8QoB4sXL8MIRRVeRLoVQl20//6oJwB7TZ
+         Mu9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ORZYHt9ecrzKMNgyspN1PBptpkMsBZp4x/btzZwFfNw=;
-        b=avkCV5kYBljKylBR7Wun+L6vVeFGmE2ChqevHGVtmbpEIUWKYNJx4UpgkmqfKra7/Y
-         vXe/HmuRwyLkXb03s5q474Z59hvTT0jhuFweRZI346R1YQ8gXUw+5ecPG7FxWvWxK3I1
-         96bUX3M+IEZkvi9wQWpaRoUj0CB1ib5aNYaLeC+ic0KAzJdAMK2ok+MtAR5WuBOH028V
-         zuY17L4L9Ae1HtcdiH/9yegBo4hN1rD6tgOg6TCRTG47VffeGp3srDMJSOjdkZGEg04r
-         +QWUUIAHm35fX8l9eACZYxJTe3s0T5Id6bf8ytOQt+OUwYvSUr+E2Ob3DiQDIMy57DQ9
-         2FSw==
-X-Gm-Message-State: AOAM5325COErMY2NjXaOa6hKCpKtJkWw1rl51y7AJDMSYj7jrxjoz8Zq
-        UcLuv63u5jAl+gAL4TbTQlaw9OzX9198mnS5VQYEhg==
-X-Google-Smtp-Source: ABdhPJyGVBSih5D1rMueRL34SkoQOVR4ObJ9OADrWJVIdsuwnDu2rdBGdvxWHpmI4b+0XZD1iry4j74RRH8Y8sT/Uxo=
-X-Received: by 2002:aa7:96e5:: with SMTP id i5mr3350792pfq.108.1597527043233;
- Sat, 15 Aug 2020 14:30:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
+        b=mrXwkVhVneatA68t1t0FisZVKfhdY/8Che1J9kF9dcj5TIYVAUjZZBW7DUq/UKInR0
+         OcmjnE+druZRX7GZM1KBQKjRGdgWujDL6+lDYQt3BsOnqJMtEqDrxoUYdMwOthMjDvO9
+         PNtPxSTdt6eKQI8mngE/p8hbDlCgN4KMhzRTBfoHmbVUOomFrT4/LIFL+MZtVszZANC5
+         eyVlrMm1Y+VBw4vmN7okJQ2GrEUDnSrio5+bJ0TvMxoVvuFIJVww5cwoJ3bn57/NvLLS
+         CdHqDB5WSxH3Rp1HcGO58yhmSpwmnYJZvYSHmZw/Fidq6OmGesPirj4MTqPvGTfLfIfM
+         LH8g==
+X-Gm-Message-State: AOAM533ETR8q56Sd7Uas7LVDzddLqwYJKneRKecj6H7kURfAjmsPIq2n
+        UXZzi3/eZ5dolc8t6dKAKSSY8w==
+X-Google-Smtp-Source: ABdhPJx3XPsMq4FB0tV42kjhPB8zgg9seOaawRnu+HoLIebEV0cYDDmb+NOgtyoCPkyOwqIgewXCog==
+X-Received: by 2002:a0c:ea30:: with SMTP id t16mr8572128qvp.177.1597526497539;
+        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 73sm2825144qtf.74.2020.08.15.14.21.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
+Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL
+ driver
+To:     Rob Clark <robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+References: <20200812044223.19279-1-tanmay@codeaurora.org>
+ <20200812044223.19279-4-tanmay@codeaurora.org>
+ <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
+ <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
+Date:   Sat, 15 Aug 2020 17:21:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <15f52e9b0e50296aba35871bc1575a684c4a258a.camel@perches.com>
- <CAKwvOd=8C94K-9VCqdCn9FXiyfDhKxMu=4AGem1bGgp8m6z0fw@mail.gmail.com> <CAHk-=wjjHN32BXdqu1iP8WSZoqdGPDDiqVLUbBgYG+=JO3MJCw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjjHN32BXdqu1iP8WSZoqdGPDDiqVLUbBgYG+=JO3MJCw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Sat, 15 Aug 2020 14:30:32 -0700
-Message-ID: <CAKwvOdm4NfdtVs-g7CTfHJcViXpeoF80B1j1weced4T+gfKN9w@mail.gmail.com>
-Subject: Re: [PATCH] genksyms: keywords: Use __restrict not _restrict
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 8:06 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> It goes back to 2003 and the original keywords.gperf file, see
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=46bd1da672d66ccd8a639d3c1f8a166048cca608
+On 8/15/20 4:20 PM, Rob Clark wrote:
+> On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+>>
+>>
+>> On 12/08/2020 07:42, Tanmay Shah wrote:
+>>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
+>>   >
+>>   > Add the needed DP PLL specific files to support
+>>   > display port interface on msm targets.
+>>
+>> [skipped]
+>>
+>>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>>   > new file mode 100644
+>>   > index 000000000000..475ba6ed59ab
+>>   > --- /dev/null
+>>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>>   > @@ -0,0 +1,98 @@
+>>   > +/* SPDX-License-Identifier: GPL-2.0-only */
+>>   > +/*
+>>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>   > + */
+>>   > +
+>>   > +#ifndef __DP_PLL_10NM_H
+>>   > +#define __DP_PLL_10NM_H
+>>   > +
+>>   > +#include "dp_pll.h"
+>>   > +#include "dp_reg.h"
+>>   > +
+>>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
+>>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
+>>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
+>>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
+>>   > +
+>>   > +#define NUM_DP_CLOCKS_MAX            6
+>>   > +
+>>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
+>>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
+>>   > +
+>>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
+>>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
+>>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
+>>   > +
+>>   > +struct dp_pll_vco_clk {
+>>   > +    struct clk_hw hw;
+>>   > +    unsigned long    rate;        /* current vco rate */
+>>   > +    u64        min_rate;    /* min vco rate */
+>>   > +    u64        max_rate;    /* max vco rate */
+>>   > +    void        *priv;
+>>   > +};
+>>   > +
+>>   > +struct dp_pll_db {
+>>
+>> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
+>> example, will use slightly different structure.
+> 
+> Note that sboyd has a WIP series to move all of the pll code out to a
+> phy driver.  If there is work already happening on 7nm support, it
+> might be better to go with the separate phy driver approach?  I'm
+> still a bit undecided about whether to land the dp code initially with
+> the pll stuff in drm, and then continue refactoring to move to
+> separate phy driver upstream, or to strip out the pll code from the
+> beginning.  If you/someone is working on 7nm support, then feedback
+> about which approach is easier is welcome.
+> 
+> https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
+> 
 
-Interesting, I was wondering why upstream development on genksyms had
-stopped a long time ago.  That commit provides more context.
--- 
-Thanks,
-~Nick Desaulniers
+I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, and 
+I have done something similar, with the PLL driver in the QMP phy, 
+although not based on sboyd's series (along with some typec changes to 
+negotiate the DP alt mode and get HPD events, etc.). I don't think 
+having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't need 
+to be aware of the DP PLL/PHY driver, it only needs to set the 
+link/pixel clock rates which are in dispcc (and those then have the PLL 
+clocks as a parent).
+
+FYI, since it sounds you are considering landing this: it is completely 
+broken, for example:
+- ioremap()'s to #define'd addresses in the PLL driver
+- main DP driver reading/writing to registers in the PHY region, but 
+getting the base address from devicetree was removed since earlier 
+revisions, so it just fails completely. Look at usb3_dp_com (for 
+example), which in dp_catalog_ctrl_usb_reset() would be used to 
+overwrite registers already being driven by the qmp phy driver - but now 
+the usb3_dp_com.base is never initialized.
+
+-Jonathan
+
+> BR,
+> -R
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> 
