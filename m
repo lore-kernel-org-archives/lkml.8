@@ -2,175 +2,174 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE5FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA908C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB4212053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AB0204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vlkrhu7X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIC8z7I2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgHOVyO (ORCPT
+        id S1729281AbgHOVyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        Sat, 15 Aug 2020 17:54:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729128AbgHOVwg (ORCPT
+        with ESMTP id S1729114AbgHOVwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:52:36 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF7CC09B054;
-        Sat, 15 Aug 2020 08:49:19 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id z11so2544866oon.5;
-        Sat, 15 Aug 2020 08:49:19 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174EAC0612F4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:52:32 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c6so5295502pje.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=CcdQzl9In/9cdITxocrz0vM3bfLjK73C35i7BkxY8gM=;
-        b=Vlkrhu7XE01MxBsrAacNDdYsgy7DOQJxJEKTLz4ony4WzKDui3OeAofloeVgkW3GlA
-         XkpULxbqd6+qu24KAR/8K3wK4uuBXOMcPegijHUdtu8UaQTIgnb6CaDMczPRQH4uikaK
-         uA9oyRnFj/XN5+dnuUHLZp1ySFHoDaCTknCaBH1o3lPTQiV+aORMTCG25/Iv7tTVkgEN
-         xrylHIrpzjxxzqO+zMGhlUlvS80mjcq24eyqaOYeK2Useweb7qoYFddTnX6ibGTGrY7d
-         UJ13HzAUQqN82UPJPdK2i1lPD8Rl18nKbcGOm0f8bvgSt/Ejd/nEChzaTe8Twg+sWOtV
-         +rlQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=x70ZbpZnKBRKGaABGtYI7hkwARLwGl0g0AbXbJj38qo=;
+        b=QIC8z7I2pOk9WGL3pODELePJrQrCwG3qkPanGNpky5u87PHfgSdCI0pBF+QnxTTf0g
+         iOUY7R5ymcJl5OLjfj7WpcEAAqIPJHY2WCZ08wgZ3qRPU8St2EscMsg2kiknXoUTwVlD
+         GG/Zz+L1S6z1HOXnNrFfACU+mNZ7DElHl3hLCWh2iANHKjR1jJd7QK6ga0SO0qNOKX+8
+         6+SSRO5ctwA1BUZMi0kVtarKHaLq0dRz4l8fc6hwoU6cF/R31/LaRtHi6lLuC3Fat3KW
+         4yHoaUcZOsvyT9aUiIKMbx7Xe8n9Lq65w8qaE7Pd6mOo5Id4VorhCFeDenmg1DEg2b3D
+         BdsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=CcdQzl9In/9cdITxocrz0vM3bfLjK73C35i7BkxY8gM=;
-        b=LGEor5ulV5POlc9KGqEnmiyoJmwZ6tD8XfskpbLpugvENtQYNvsiGQ+OPyDIYuRF75
-         4EwWOU0nfdBoIHFucvdznbFoQg4lY0rgwUzYQ9SAoO2CdOhhFvJcSpKCymVUZkHUPGND
-         2bD7+z1IM/Ebtw1GQiiZVQ5IsKomvAiNwn3DktVZH0trAKYcde6C810zw6jc8wzpcKSB
-         QfZoRiFNJBZXJZop685ZVzuBAf/iYunlVJ2mLoEpq/c8yq25DJXtj0HjqYweKUFU8OeQ
-         rIJAAkcwiShd6gM1TbXZIqcdycR5CShTgsSxM5sDuJwpvctdkzwsSbnclL339GhbRbcV
-         IeTw==
-X-Gm-Message-State: AOAM533qV4ksuxlzb6yhwb2reP/h02klj9nFF1f2FLKOwd7zZzMAu0ml
-        ttOiCjPZiGu0zua0yVN6kUd5qwqc7vPX3fbHk6s=
-X-Google-Smtp-Source: ABdhPJz6FH8NPvgBQM4D3K801uDf1shBf80hvVksADf7wBd8t2UhIq2MzDrivyIHy2KNAla6O/Z9UjpiKj3IffF6XP4=
-X-Received: by 2002:a4a:7b4b:: with SMTP id l72mr5516085ooc.74.1597506554603;
- Sat, 15 Aug 2020 08:49:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x70ZbpZnKBRKGaABGtYI7hkwARLwGl0g0AbXbJj38qo=;
+        b=HLgrKtG8aPwKfE5525ItGELbQ9C3oTNuLUjH4PLI4m0pKgC4/SVwI9NPSSh1aaYCBb
+         FgymRidNkBHji0dlYS6JjeXbI/1EAyZjQPtFCLVAp2GCkqS72P4tzgjn9WeY3pBo6anN
+         3hTUtgsql08loRu/VM9nzVyd7o90+JhyEl+J9o9XpjDBcd1ILEPAotazBcHld5XJk7Re
+         jZZvVZQ5gF7Gx5kK4syDw63CKkKZREhDhPvXp/gQRiEFJqdCD3EBxpNAXXEoA7ooLJzu
+         Ue6lmLL+ujd+ym72aHwiYGxhatEYjKSwWwgHQTDTDIC3+n+7+o4Pg4dWAE5W2jDUgLUp
+         k4ZQ==
+X-Gm-Message-State: AOAM533AEDwwgtBFlvtNSjTThrZ4yec27urbDbu+HTnEeqUOv+6UH5AC
+        m4OGSS8Tj6l2jh5QR6EjV6Y=
+X-Google-Smtp-Source: ABdhPJxzUv6FF/UEFlE3TNcT9qDpThU/RB7nLUhSbAswGmLPQGWY0y2IzHxVanJ7hBBeYruA/GUFdw==
+X-Received: by 2002:a17:90a:c58b:: with SMTP id l11mr4618708pjt.195.1597463551500;
+        Fri, 14 Aug 2020 20:52:31 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id x23sm10570909pfi.60.2020.08.14.20.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 20:52:30 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 12:52:28 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [RFC PATCH] vsprintf: Add %pv extension replacement for
+ print_vma_addr
+Message-ID: <20200815035228.GC582@jagdpanzerIV.localdomain>
+References: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
 MIME-Version: 1.0
-References: <20200812004158.GA1447296@rani.riverdale.lan> <20200812004308.1448603-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200812004308.1448603-1-nivedita@alum.mit.edu>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 15 Aug 2020 17:49:03 +0200
-Message-ID: <CA+icZUVdTT1Vz8ACckj-SQyKi+HxJyttM52s6HUtCDLFCKbFgQ@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/boot/compressed: Disable relocation relaxation
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Fangrui Song <maskray@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        e5ten.arch@gmail.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 2:43 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> The x86-64 psABI [0] specifies special relocation types
-> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
-> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
-> can take advantage of for optimization (relaxation) at link time. This
-> is supported by LLD and binutils versions 2.26 onwards.
->
-> The compressed kernel is position-independent code, however, when using
-> LLD or binutils versions before 2.27, it must be linked without the -pie
-> option. In this case, the linker may optimize certain instructions into
-> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
->
-> This potential issue has been present with LLD and binutils-2.26 for a
-> long time, but it has never manifested itself before now:
-> - LLD and binutils-2.26 only relax
->         movq    foo@GOTPCREL(%rip), %reg
->   to
->         leaq    foo(%rip), %reg
->   which is still position-independent, rather than
->         mov     $foo, %reg
->   which is permitted by the psABI when -pie is not enabled.
-> - gcc happens to only generate GOTPCREL relocations on mov instructions.
-> - clang does generate GOTPCREL relocations on non-mov instructions, but
->   when building the compressed kernel, it uses its integrated assembler
->   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
->   which has so far defaulted to not generating the GOTPCRELX
->   relocations.
->
-> Nick Desaulniers reports [1,2]:
->   A recent change [3] to a default value of configuration variable
->   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
->   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
->   relocations. LLD will relax instructions with these relocations based
->   on whether the image is being linked as position independent or not.
->   When not, then LLD will relax these instructions to use absolute
->   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
->   Clang and linked with LLD to fail to boot.
->
-> Patch series [4] is a solution to allow the compressed kernel to be
-> linked with -pie unconditionally, but even if merged is unlikely to be
-> backported. As a simple solution that can be applied to stable as well,
-> prevent the assembler from generating the relaxed relocation types using
-> the -mrelax-relocations=no option. For ease of backporting, do this
-> unconditionally.
->
-> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
-> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
-> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
-> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
-> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Cc-ing John
 
-Thanks for the patch.
+On (20/08/14 10:53), Joe Perches wrote:
+[..]
 
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+In general, the idea looks nice.
 
-- Sedat -
+> +static noinline_for_stack
+> +char *vma_addr(char *buf, char *end, void *ip,
+> +	       struct printf_spec spec, const char *fmt)
+> +{
+> +#ifdef CONFIG_MMU
+> +	struct mm_struct *mm = current->mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	/*
+> +	 * we might be running from an atomic context so we cannot sleep
+> +	 */
+> +	if (!mmap_read_trylock(mm))
+> +		return buf;
+> +
+> +	vma = find_vma(mm, (unsigned long)ip);
+> +	if (vma && vma->vm_file) {
+> +		char *p;
+> +		struct file *f = vma->vm_file;
+> +		char *page = (char *)__get_free_page(GFP_NOWAIT);
 
-[1] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674409705
+Hmm, this is huge. For the time being this is going to introduce lock
+inversion chains:
 
-> ---
->  arch/x86/boot/compressed/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 3962f592633d..ff7894f39e0e 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -43,6 +43,8 @@ KBUILD_CFLAGS += -Wno-pointer-sign
->  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
->  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-> +# Disable relocation relaxation in case the link is not PIE.
-> +KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
->
->  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  GCOV_PROFILE := n
-> --
-> 2.26.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200812004308.1448603-1-nivedita%40alum.mit.edu.
+	PRINTK -> printk_locks -> MM -> mm_locks
+
+vs
+	MM -> mm_locks -> PRINTK -> printk_locks
+
+Another thing to mention is
+
+	PRINTK -> printk_locks -> MM (WANR_ON/etc) -> PRINTK
+
+we are in printk_safe, currently, but that's going to change.
+
+We might not be ready to take this as of now, but things can change
+once we drop printk_locks.
+
+> +		if (page) {
+> +			p = file_path(f, page, PAGE_SIZE);
+> +			if (IS_ERR(p))
+> +				p = "?";
+> +			buf = string(buf, end, kbasename(p), default_str_spec);
+> +			buf = string_nocheck(buf, end, "[", default_str_spec);
+> +			buf = pointer_string(buf, end,
+> +					     (void *)vma->vm_start,
+> +					     default_hex_spec);
+> +			buf = string_nocheck(buf, end, "+", default_str_spec);
+> +			buf = pointer_string(buf, end,
+> +					     (void *)(vma->vm_end - vma->vm_start),
+> +					     default_hex_spec);
+> +			buf = string_nocheck(buf, end, "]", default_str_spec);
+> +			free_page((unsigned long)page);
+> +		}
+> +	}
+> +	mmap_read_unlock(mm);
+> +#else
+> +	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
+
+Hmm, we don't usually do that CONFIG_FOO=n thing, I think we just need
+to skip %pv and print nothing. Otherwise on !CONFIG_MMU systems the logbuf
+may contain a number of CONFIG_MMU=n messages, which are hardly useful.
+
+> +#endif
+> +	return buf;
+> +}
+> +
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -2254,6 +2304,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return uuid_string(buf, end, ptr, spec, fmt);
+>  	case 'V':
+>  		return va_format(buf, end, ptr, spec, fmt);
+
++ #ifdef CONFIG_MMU
+> +	case 'v':
+> +		return vma_addr(buf, end, ptr, spec, fmt);
++ #endif
+
+>  	case 'K':
+>  		return restricted_pointer(buf, end, ptr, spec);
+>  	case 'N':
+
+	-ss
