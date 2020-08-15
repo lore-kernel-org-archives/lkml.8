@@ -2,214 +2,157 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABD8C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A32C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D8120675
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpU7wlgp"
+	by mail.kernel.org (Postfix) with ESMTP id CBAD120675
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgHOWpE (ORCPT
+        id S1728998AbgHOWpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:45:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
+        Sat, 15 Aug 2020 18:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgHOWpD (ORCPT
+        with ESMTP id S1728381AbgHOWpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:45:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C62C061786;
-        Sat, 15 Aug 2020 15:45:02 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r15so1477334wrp.13;
-        Sat, 15 Aug 2020 15:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9v1OHYfpYYA5o/8gW7muupb2BSzWhmjZmmPoVg8UHwc=;
-        b=MpU7wlgpTu1VPsWReQOUM/Bp5mLVx+ftP/V75G52LjsbxIo0QsuOu+JU04yHVEg5S/
-         nsZ9/+Wnv2a2DwABGH8PnHx4rOhBACh5cu1geL49bsD+gBwXVp/6IcWK38MaAjWEXw41
-         ANFCNlEfCzomspwnKHST58MPeRpbLVzFvqI46n8PmPHZNgfqwOcTxworhoGkNcBEjjBz
-         wuKqXLFWBijjQirO2k5/IYcc1nnnNvNUIVLuhznkBUfdsCD69KMHrVsYoxcjAO/bAJs8
-         vkbN98ksfwqIcEU2E1doYtWGcoupmIAS4kSIHUpAxy/rGDPvMyasCQaqVXseENtyh/D8
-         OS1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9v1OHYfpYYA5o/8gW7muupb2BSzWhmjZmmPoVg8UHwc=;
-        b=HCxfO7MROZS0kL1OiCIp1exdRMkIhfs2ENcwxYUIdX5do4C6RJEy5wC+Z0Z6SxMWvK
-         CCX1lZOIpPCME+tiOIiefpqVvGKWobuOUOo0kL+gPlzt/9RLQ4qDnHSDVkcKVV8f07E9
-         dWXT/Pbc2XNcXnzqLGyf72J3F3+trnLOr0JwUkhHcmkWYZfk1SWeEknffAhKI9xecLhJ
-         VlhwN1V9d7zcfPBR2A7Eehza5uOz3N5njVFcaUeqRfa02Xy6ciSlP/77x/xyTYUvHYkC
-         G0UZh4FSe0M4UlmpQWkulBJwHfKqxfHhyRFwcYC2FwzU3J9bxJbdRPEGM6a4iwLZLYur
-         GBQA==
-X-Gm-Message-State: AOAM530AlGQ8ZADUVQbte5jPGRJKi164zguX26VLCDDdYFumnRyFGMjX
-        XFMEuGC3tkrPk6kKJ2RxYoKJ6GCqvwDFDqdUt6T7b29OKvo=
-X-Google-Smtp-Source: ABdhPJzr5FnMJX5imMejIe/UKLhmWfwhLVclXOj7FCJyMJx6rMCaQPKMBXCSD8ToEEmwQazfqzKj0xkGimx92he2ANI=
-X-Received: by 2002:adf:f485:: with SMTP id l5mr7848208wro.147.1597531500581;
- Sat, 15 Aug 2020 15:45:00 -0700 (PDT)
+        Sat, 15 Aug 2020 18:45:42 -0400
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 40060C0045A6;
+        Sat, 15 Aug 2020 12:47:54 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 07FJkqOV068015;
+        Sat, 15 Aug 2020 21:46:52 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 07FJkpI4000504;
+        Sat, 15 Aug 2020 21:46:51 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 07FJkpJv000503;
+        Sat, 15 Aug 2020 21:46:51 +0200
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>,
+        Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH v5 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+Date:   Sat, 15 Aug 2020 21:43:04 +0200
+Message-Id: <4ad7279ba263bb4da35edcefc66679a9d72702ec.1597518433.git.ppisa@pikron.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1597518433.git.ppisa@pikron.com>
+References: <cover.1597518433.git.ppisa@pikron.com>
 MIME-Version: 1.0
-References: <20200812044223.19279-1-tanmay@codeaurora.org> <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org> <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
- <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
-In-Reply-To: <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 15 Aug 2020 15:45:48 -0700
-Message-ID: <CAF6AEGt+NV-T7Qo_-gLM981QBWy3865Vbj518sd-4XQJccX_WA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 07FJkqOV068015
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-0.497, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1598125614.27224@CINxMI+r4dBBZ1Gq4CkgmA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 2:21 PM Jonathan Marek <jonathan@marek.ca> wrote:
->
-> On 8/15/20 4:20 PM, Rob Clark wrote:
-> > On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> >>
-> >>
-> >> On 12/08/2020 07:42, Tanmay Shah wrote:
-> >>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
-> >>   >
-> >>   > Add the needed DP PLL specific files to support
-> >>   > display port interface on msm targets.
-> >>
-> >> [skipped]
-> >>
-> >>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
-> >> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
-> >>   > new file mode 100644
-> >>   > index 000000000000..475ba6ed59ab
-> >>   > --- /dev/null
-> >>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
-> >>   > @@ -0,0 +1,98 @@
-> >>   > +/* SPDX-License-Identifier: GPL-2.0-only */
-> >>   > +/*
-> >>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
-> >>   > + */
-> >>   > +
-> >>   > +#ifndef __DP_PLL_10NM_H
-> >>   > +#define __DP_PLL_10NM_H
-> >>   > +
-> >>   > +#include "dp_pll.h"
-> >>   > +#include "dp_reg.h"
-> >>   > +
-> >>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
-> >>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
-> >>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
-> >>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
-> >>   > +
-> >>   > +#define NUM_DP_CLOCKS_MAX            6
-> >>   > +
-> >>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
-> >>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
-> >>   > +
-> >>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
-> >>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
-> >>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
-> >>   > +
-> >>   > +struct dp_pll_vco_clk {
-> >>   > +    struct clk_hw hw;
-> >>   > +    unsigned long    rate;        /* current vco rate */
-> >>   > +    u64        min_rate;    /* min vco rate */
-> >>   > +    u64        max_rate;    /* max vco rate */
-> >>   > +    void        *priv;
-> >>   > +};
-> >>   > +
-> >>   > +struct dp_pll_db {
-> >>
-> >> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
-> >> example, will use slightly different structure.
-> >
-> > Note that sboyd has a WIP series to move all of the pll code out to a
-> > phy driver.  If there is work already happening on 7nm support, it
-> > might be better to go with the separate phy driver approach?  I'm
-> > still a bit undecided about whether to land the dp code initially with
-> > the pll stuff in drm, and then continue refactoring to move to
-> > separate phy driver upstream, or to strip out the pll code from the
-> > beginning.  If you/someone is working on 7nm support, then feedback
-> > about which approach is easier is welcome.
-> >
-> > https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
-> >
->
-> I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, and
-> I have done something similar, with the PLL driver in the QMP phy,
-> although not based on sboyd's series (along with some typec changes to
-> negotiate the DP alt mode and get HPD events, etc.). I don't think
-> having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't need
-> to be aware of the DP PLL/PHY driver, it only needs to set the
-> link/pixel clock rates which are in dispcc (and those then have the PLL
-> clocks as a parent).
+The device-tree bindings for open-source/open-hardware CAN FD IP core
+designed at the Czech Technical University in Prague.
 
-yeah, in the dp case, having phy split out makes a ton of sense.. it
-would maybe be a nice cleanup in other cases (dsi, hdmi) but the
-combination of usb+dp makes burying this in drm not so great..
+CTU CAN FD IP core and other CTU CAN bus related projects
+listing and documentation page
 
-It would be good if you could work w/ sboyd on this.. based on what
-I've seen on previous gens, it is probably a different phy driver for
-7nm vs 10nm, but I think where we want to end up upstream is with phy
-split out of drm.
+   http://canbus.pages.fel.cvut.cz/
 
-> FYI, since it sounds you are considering landing this: it is completely
-> broken, for example:
-> - ioremap()'s to #define'd addresses in the PLL driver
-> - main DP driver reading/writing to registers in the PHY region, but
-> getting the base address from devicetree was removed since earlier
-> revisions, so it just fails completely. Look at usb3_dp_com (for
-> example), which in dp_catalog_ctrl_usb_reset() would be used to
-> overwrite registers already being driven by the qmp phy driver - but now
-> the usb3_dp_com.base is never initialized.
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+---
+ .../bindings/net/can/ctu,ctucanfd.yaml        | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
 
-Yeah, the idea to land dp isn't that it is perfect (or even not
-broken), so much as having something upstream gives a common base for
-others to work against.. maybe we should make the dp parts 'depends on
-STAGING'?
+diff --git a/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+new file mode 100644
+index 000000000000..6fa42112bb58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/can/ctu,ctucanfd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: CTU CAN FD Open-source IP Core Device Tree Bindings
++
++description: |
++  Open-source CAN FD IP core developed at the Czech Technical University in Prague
++
++  The core sources and documentation on project page
++    [1] sources : https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
++    [2] datasheet : https://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
++
++  Integration in Xilinx Zynq SoC based system together with
++  OpenCores SJA1000 compatible controllers
++    [3] project : https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
++  Martin Jerabek dimploma thesis with integration and testing
++  framework description
++    [4] PDF : https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
++
++maintainers:
++  - Pavel Pisa <pisa@cmp.felk.cvut.cz>
++  - Ondrej Ille <ondrej.ille@gmail.com>
++  - Martin Jerabek <martin.jerabek01@gmail.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: ctu,ctucanfd-2
++          - const: ctu,ctucanfd
++      - const: ctu,ctucanfd
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: |
++      phandle of reference clock (100 MHz is appropriate
++      for FPGA implementation on Zynq-7000 system).
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    ctu_can_fd_0: can@43c30000 {
++      compatible = "ctu,ctucanfd";
++      interrupts = <0 30 4>;
++      clocks = <&clkc 15>;
++      reg = <0x43c30000 0x10000>;
++    };
+-- 
+2.20.1
 
-I could keep a separate msm-next-dp branch that I rebase, to give a
-common point for folks working dp support for various different gens
-to coordinate work on.. that kinda sounds like a bunch of extra work
-for me, so might as well land what we have somehow and work together
-from there ;-)
-
-But it does sound like you are making the case for including the patch
-to drop the pll stuff and use phy framework as part of what initially
-goes upstream.
-
-BR,
--R
-
->
-> -Jonathan
->
-> > BR,
-> > -R
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
-> >
