@@ -2,142 +2,166 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93599C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFADC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB1420639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529233;
-	bh=FgkEw54dX+wvBNlwTQyuBHHm/4HJmuLd7WVTCZ2yT7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ewlaCJf2Ya1dm8gWzRPpyfC09+eVbZvx4y4oyzwXntanEQFhf/wBim7LS6Q5etJ9F
-	 y730NO9wotGeLNFXppQy1JFG8P015UIfRT0HxIpdS8bagQz2y4sWA1XpIMGQ71JBIr
-	 iMl786CysFd4pOLRB3U6XIdO3V3XgNAl/CX5q4YM=
+	by mail.kernel.org (Postfix) with ESMTP id EE35620639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VihnvLNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgHOWHL (ORCPT
+        id S1729752AbgHOWHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
+        Sat, 15 Aug 2020 18:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbgHOVus (ORCPT
+        with ESMTP id S1728347AbgHOVus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:48 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DE3C03B3D9;
-        Sat, 15 Aug 2020 02:17:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id kq25so12383117ejb.3;
-        Sat, 15 Aug 2020 02:17:24 -0700 (PDT)
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7893C06137C
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:35 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b14so10203621qkn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 20:19:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LdgMvtZiYzsixZdlySxjdld4bTg4i4MMF4SV+Xh6PgQ=;
-        b=Wa6vez79ybTUCXkANCj9WMY4gAdB0SzIgrz7k+4RufTMJ0/GZF++5zIruqwEV6kj24
-         EpvZA+nUk6RnUjxFFFWvqusUsxW9fBSPVHMOiWMQVotEfinwIwEWuNCTksYKUNSAMK/x
-         dMh5EEpy4hILcQDjKKcPYbsyny6XPdpyBfYeZVsjelWD2IEkMbh0LMO2uzfPe5ijpQ0u
-         +AZxUqA17Ge8B1ZIAvsDMXWd9DdyM+WS9owjALqdgRIUK6fpCB4jfIxWQJ8IYxSpcwI5
-         m6BrNpVvgiUY1MwMeSHLES5zuxp7Zg+8HVxzVaXQ7fEYlJQwAp1SbVBBa2uqX2Aexx7G
-         vHSQ==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=i+tcxwumkRlUZ+dHGtXtIYsQuEL+Suyx+IL7hWNPqcc=;
+        b=VihnvLNvi7fm/vGqgwWniK4q9Or33o+fcFfy+4EuCI3nBUqnUwu8O3wSniZsFgcLCS
+         GY6mFAh35OeVrNRthiK7QsdLWO2TMOOhNdFi9s3S0qhKs4rv/1IOYEchKmV9ykmg7/Hv
+         SFnRliiY/Op3UGMVKaeKOw/fdaLBkJ4y/sMy8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=LdgMvtZiYzsixZdlySxjdld4bTg4i4MMF4SV+Xh6PgQ=;
-        b=spuL5LL95awBqyP+oVszAP8/wMUfWjstMMNb0KhasQGiqc6E81m4ljpxs5rDknih1f
-         yWqgrTArxXQJ00QawVxul5VZYPq54gfUnKrsAkx4v0nTHpsZjw2t6eiAij8jBMEtTFNO
-         Dd7JUa2V+R13pIF0DIL3G4djAxj6WX5TWPJIRLhECJHgDFFWvrJhu+hf0DRrI8pATUcJ
-         +YhAecPtDlDVxeVebHk7m3D6CUUgrYlIn/KM3JIe3Et8ANyOKtOR8Wesp8YSSATbUeeG
-         peUMJJNplY31BdbI33oXsnUgp3JYWClCgJOY7nzxZ696KUrSmoS7uI9V73DgWBj8t6v4
-         R2Og==
-X-Gm-Message-State: AOAM533ENqJ0FSt7SiuEuJzPsRxe8AYAIa7kBEs7X7EkjJS3lltV/4Uo
-        wEHVjZqRnWF3IrvQtXfFADc=
-X-Google-Smtp-Source: ABdhPJxhJXsV123JZEM9qyyqxiKuZRj7XrS5k/o0gCCuzsGf/ulN0GcX1QsYsRREbz043y1E8pU5LQ==
-X-Received: by 2002:a17:906:3756:: with SMTP id e22mr6461945ejc.487.1597483043662;
-        Sat, 15 Aug 2020 02:17:23 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id qc23sm8633373ejb.97.2020.08.15.02.17.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=i+tcxwumkRlUZ+dHGtXtIYsQuEL+Suyx+IL7hWNPqcc=;
+        b=g678YFPunSHOAmjoBfSOTNbrcsEykGwDhWpqHRaiLeoV2sHbHAXNAAy77m/yamdLAV
+         GsIpQkVNPtQygoK9oEGb7lPK50cVNCWIQJRVxtvi4CliZ3EZqcss0zolkIQ1r1gfIww4
+         QJR66xtt/GRfAn30lZJ63+QRSoNWxSEs4ad06uEAYXehkog+PQVIdWiQFoT9k3B18Tnz
+         75xDnKkE/4CZYbxJ6LsBVfx5DpzDYUVY5vLhIJm1Wc2nfXadDOdlKqhqCa6RyiyVrI8C
+         jIYz/s6ncYG95LqrEQrdPLr4lN51UvMYBdis+pnEkvGQV/hyWuHt79dyb0EI1oSlacey
+         m/9w==
+X-Gm-Message-State: AOAM5331eSVxW7ZndcdWwF9L83fmtPG7pqD+468vTsSD6uBIrLPKODOM
+        Z4aw/VHGIlEfUuFt5Q4ND1djU0YX8gKYqw==
+X-Google-Smtp-Source: ABdhPJzr0EEDBpbBOEXApU/v6u5K2CG1nZZpgKij0Si6BF6meTqNfC2rIq+6NLuHjNL/DOCii/AYwQ==
+X-Received: by 2002:a37:a953:: with SMTP id s80mr4511361qke.239.1597461574990;
+        Fri, 14 Aug 2020 20:19:34 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id p12sm10055199qkk.118.2020.08.14.20.19.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 02:17:23 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 11:17:21 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        brendanhiggins@google.com, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, urielguajardo@google.com,
-        alan.maguire@oracle.com
-Subject: Re: [PATCH v3] kunit: added lockdep support
-Message-ID: <20200815091721.GC2444151@gmail.com>
-References: <20200814205527.1833459-1-urielguajardojr@gmail.com>
- <20200815083029.GA2430016@gmail.com>
- <20200815084443.GO3982@worktop.programming.kicks-ass.net>
+        Fri, 14 Aug 2020 20:19:34 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        fweisbec@gmail.com, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH RFC 11/12] sched/coresched: Check for dynamic changes in smt_mask
+Date:   Fri, 14 Aug 2020 23:19:07 -0400
+Message-Id: <20200815031908.1015049-12-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
+References: <20200815031908.1015049-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200815084443.GO3982@worktop.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vineeth Pillai <viremana@linux.microsoft.com>
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+There are multiple loops in pick_next_task that iterate over CPUs in
+smt_mask. During a hotplug event, sibling could be removed from the
+smt_mask while pick_next_task is running. So we cannot trust the mask
+across the different loops. This can confuse the logic.
 
-> On Sat, Aug 15, 2020 at 10:30:29AM +0200, Ingo Molnar wrote:
-> > 
-> > * Uriel Guajardo <urielguajardojr@gmail.com> wrote:
-> > 
-> > > From: Uriel Guajardo <urielguajardo@google.com>
-> > > 
-> > > KUnit will fail tests upon observing a lockdep failure. Because lockdep
-> > > turns itself off after its first failure, only fail the first test and
-> > > warn users to not expect any future failures from lockdep.
-> > > 
-> > > Similar to lib/locking-selftest [1], we check if the status of
-> > > debug_locks has changed after the execution of a test case. However, we
-> > > do not reset lockdep afterwards.
-> > > 
-> > > Like the locking selftests, we also fix possible preemption count
-> > > corruption from lock bugs.
-> > 
-> > > --- a/lib/kunit/Makefile
-> > > +++ b/lib/kunit/Makefile
-> > 
-> > > +void kunit_check_lockdep(struct kunit *test, struct kunit_lockdep *lockdep) {
-> > > +	int saved_preempt_count = lockdep->preempt_count;
-> > > +	bool saved_debug_locks = lockdep->debug_locks;
-> > > +
-> > > +	if (DEBUG_LOCKS_WARN_ON(preempt_count() != saved_preempt_count))
-> > > +		preempt_count_set(saved_preempt_count);
-> > > +
-> > > +#ifdef CONFIG_TRACE_IRQFLAGS
-> > > +	if (softirq_count())
-> > > +		current->softirqs_enabled = 0;
-> > > +	else
-> > > +		current->softirqs_enabled = 1;
-> > > +#endif
-> > > +
-> > > +	if (saved_debug_locks && !debug_locks) {
-> > > +		kunit_set_failure(test);
-> > > +		kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
-> > > +		kunit_warn(test, "Further tests will have LOCKDEP disabled.");
-> > > +	}
-> > 
-> > 
-> > So this basically duplicates what the boot-time locking self-tests do, 
-> > in a poor fashion?
-> 
-> No, it makes sure that any kunit based self-test fails when it messes up
-> it's locking.
+Add a retry logic if smt_mask changes between the loops.
 
-We have a flag for whether lockdep is running though, so is this 
-basically a very complicated way to parse /proc/lockdep_debug? :-)
+Reported-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/sched/core.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Thanks,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 48a49168e57f..5da5b2317b21 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4613,6 +4613,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	const struct sched_class *class;
+ 	const struct cpumask *smt_mask;
+ 	int i, j, cpu, occ = 0;
++	int smt_weight;
+ 	bool need_sync;
+ 
+ 	if (!sched_core_enabled(rq))
+@@ -4648,6 +4649,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	cpu = cpu_of(rq);
+ 	smt_mask = cpu_smt_mask(cpu);
+ 
++retry_select:
++	smt_weight = cpumask_weight(smt_mask);
++
+ 	/*
+ 	 * core->core_task_seq, rq->core_pick_seq, rq->core_sched_seq
+ 	 *
+@@ -4691,6 +4695,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 			struct rq *rq_i = cpu_rq(i);
+ 			struct task_struct *p;
+ 
++			/*
++			 * During hotplug online a sibling can be added in
++			 * the smt_mask * while we are here. If so, we would
++			 * need to restart selection by resetting all over.
++			 */
++			if (unlikely(smt_weight != cpumask_weight(smt_mask)))
++				goto retry_select;
++
+ 			if (rq_i->core_pick)
+ 				continue;
+ 
+@@ -4790,7 +4802,15 @@ next_class:;
+ 	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
+ 		struct rq *rq_i = cpu_rq(i);
+ 
+-		WARN_ON_ONCE(!rq_i->core_pick);
++		WARN_ON_ONCE(smt_weight == cpumask_weight(smt_mask) && !rq->core_pick);
++
++		/*
++		 * During hotplug online a sibling can be added in the smt_mask
++		 * while we are here. We might have missed picking a task for it.
++		 * Ignore it now as a schedule on that sibling will correct itself.
++		 */
++		if (!rq_i->core_pick)
++			continue;
+ 
+ 		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+ 			rq_i->core_forceidle = true;
+-- 
+2.28.0.220.ged08abb693-goog
 
-	Ingo
