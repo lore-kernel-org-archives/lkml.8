@@ -2,74 +2,102 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4D42063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AF72063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529442;
-	bh=2g8PILbXwNDZdi//uyLa2W5unzVyN0PqAZ/veoyBKNk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=oi2W0J0PjohNUHD6pDfPz47h+Surl4y6eY5q20hn5ZVXJchMjmJAdw/qfDwh2hyhR
-	 Q6XHrm4LFpjEuQPoBtlvc2tMgPnlUTP0hBGdQ/ym3FkzoyGvsQaTO4uG5k+c+gKTP0
-	 cvgERlGGgwtksPIv/HwweVioQQ+QW+XOwqXKLI8Y=
+	s=default; t=1597529456;
+	bh=gOLVKJhS/tWnZd7SI7/SoAPUz7KoYASG6xnNwS+qeCE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=U/rzKWTNK+wOfdLH19YHnlr6erBq07LJyu4A5x18n59uA1NeB9KNyWV//OVgtgeGA
+	 d2zuVttc+nC4fLvp4UJU3zGcfH61ahpsdfFFhSnMpR4C9jE1Hf9Oo9brKNcKDqJL6B
+	 Pft+2wWJvf0PyvTtIn9bpkmw+KnmtlpX8TrzZOTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgHOWKl (ORCPT
+        id S1729858AbgHOWKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbgHOWKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729610AbgHOWKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:37 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E79CF230FF;
-        Sat, 15 Aug 2020 09:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E246D23121;
+        Sat, 15 Aug 2020 14:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597482205;
-        bh=2g8PILbXwNDZdi//uyLa2W5unzVyN0PqAZ/veoyBKNk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=cjG3gQvnZJX6gtZ6bGDW40pVR5vo9J5QCtN6dJjOYTiesGgNDAeJCAMGCf9rlpBsr
-         RpjBkUXb365vRh7bG2XOgS4F7yY0QGL/skDBbEe2feQiCJ92Tzh/r3gyKwXt4xw3Qv
-         ROwKyPd6Tu1poNlJ0aSaaf91PbMvV467VchRQ14s=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1597501119;
+        bh=gOLVKJhS/tWnZd7SI7/SoAPUz7KoYASG6xnNwS+qeCE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=W/A1xzjEeU0SpXkwJq9Jh98nKdANsl/Uu2mJB/MVs0Q5XIy6rxxheuXxW214d0EQs
+         L0fdc/Sy2K/UVPx2xKI0PNqhuD5LcXuUHHhNG43bK+H0ZqulQKAAIoDNYNsWs9hjSF
+         rd2fJocg9nXrLneCwKwNcjHbLnX3xLm4zG2P80RQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C045F35230C2; Sat, 15 Aug 2020 07:18:39 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 07:18:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200815141839.GA4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200814180141.GP4295@paulmck-ThinkPad-P72>
+ <87tux4kefm.fsf@nanos.tec.linutronix.de>
+ <20200815084250.GN3982@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <b7c07d7476697145bbd685d11a57b40d222f2c50.1597235356.git.mchehab+huawei@kernel.org>
-References: <b7c07d7476697145bbd685d11a57b40d222f2c50.1597235356.git.mchehab+huawei@kernel.org>
-Subject: Re: [PATCH] spmi: get rid of a warning when built with W=1
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date:   Sat, 15 Aug 2020 02:03:23 -0700
-Message-ID: <159748220374.2278213.18377863722109238085@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815084250.GN3982@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Mauro Carvalho Chehab (2020-08-12 05:29:18)
-> The SPMI core complaing with this warning when built with W=3D1:
->=20
->         drivers/spmi/spmi.c: In function =E2=80=98spmi_controller_remove=
-=E2=80=99:
->         drivers/spmi/spmi.c:548:6: warning: variable =E2=80=98dummy=E2=80=
-=99 set but not used [-Wunused-but-set-variable]
->           548 |  int dummy;
->               |      ^~~~~
->=20
-> As the dummy var isn't needed, remove it.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+On Sat, Aug 15, 2020 at 10:42:50AM +0200, Peter Zijlstra wrote:
+> On Sat, Aug 15, 2020 at 01:14:53AM +0200, Thomas Gleixner wrote:
+> 
+> > #1 trivial fix is to force switching to an high prio thread or a soft
+> >    interrupt which does the allocation
+> 
+> Yeah, push the alocation out to another context. I did consider it, but
+> why bother?
+> 
+> Also, raising a softirq can't be done from every context, that's a whole
+> new problem. You can do irq_work I suppose, but not all architectures
+> support the self-IPI yet.
+> 
+> All in all, it's just more complexity than the fairly trivial
+> __alloc_page_lockless().
+> 
+> Whichever way around, we can't rely on the allocation.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+One way to enforce that would be to put something like this at the
+beginning of the __alloc_page_lockless() function:
+
+	if (IS_ENABLED(CONFIG_PROVE_LOCKING) && (prandom_u32() & 0xffff))
+		return NULL;
+
+I am sure that there is a better choice than CONFIG_PROVE_LOCKING.
+But whatever the choice, there is nothing quite like the occasional
+allocation failure during testing to convince people that such failure
+really can happen.
+
+							Thanx, Paul
