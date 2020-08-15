@@ -2,151 +2,84 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3756AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF62204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A9C2053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FOb5lXu7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L/7ul3MK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgHOVvb (ORCPT
+        id S1728832AbgHOVvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:51:31 -0400
+        Sat, 15 Aug 2020 17:51:35 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728674AbgHOVvK (ORCPT
+        with ESMTP id S1728694AbgHOVvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:51:10 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA7AC03B3E7;
-        Sat, 15 Aug 2020 02:32:39 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f1c7a00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:7a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A29941EC0411;
-        Sat, 15 Aug 2020 11:32:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597483956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DVkFmgVppcUdysdhmCgRYqE3/zJKAH13Ppg3uAvwVP8=;
-        b=FOb5lXu7Kn7iS2NabxxkPOxoDuF/xer2Qu77aiDAYxskjdo45klK3RVJaZ0IF/ic4gaKoN
-        Grp08fbd9Jmd9ZWZk69bruMIgP72l56Pi5EiNwnsDXKMyaQbCipo+ZQVuPqjJFQR17MtQ+
-        qhuxBZcCdDOclWH+NnhAd6ZlXjsIHbs=
-Date:   Sat, 15 Aug 2020 11:33:32 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Alex Kluver <alex.kluver@hpe.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ardb@kernel.org, mchehab@kernel.org, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com
-Subject: Re: [PATCH] edac,ghes,cper: Add Row Extension to Memory Error Record
-Message-ID: <20200815093332.GD25814@zn.tnic>
-References: <20200727181445.111002-1-alex.kluver@hpe.com>
+        Sat, 15 Aug 2020 17:51:22 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055BDC03B3D0;
+        Sat, 15 Aug 2020 01:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pkS7z3ao03yPLdIGYL9tG9q63NVqZ+TpW9PfCZt8oys=; b=L/7ul3MKsMrF7vWFB9Ph0PY0hg
+        +Wrv23G+mNVzExWozkDqWEcrqyDpNmp4bgihjtsFx2veXlJlN6DevE7WbJfH2I1n4oFCN0GuUpzTf
+        VY79AWM7eA+g14iycUVzXdQcho2vLxHb8xDoNgIgcLrYCaM8AcZHV8R9PZFU3X6dIZaQg1iU9NfgY
+        mBy696Lk5WsMxhVOysn+oSmps0iL/ytu7zw6Q4DJIchbCjbhHnVXc3Pq0vI4p8FPu1bdaygCdtEo1
+        ceCV9N//ZzsESLaouX4qtGOnCnQeDOAA+hTd6Bngcf7lFXG3fdh8MaBQotaqKRhlz1AOPxP8N4wXp
+        pgwrOxuA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6rm9-0003vH-PT; Sat, 15 Aug 2020 08:42:54 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C9B6F980C9E; Sat, 15 Aug 2020 10:42:50 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 10:42:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     paulmck@kernel.org, Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200815084250.GN3982@worktop.programming.kicks-ass.net>
+References: <20200814180141.GP4295@paulmck-ThinkPad-P72>
+ <87tux4kefm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727181445.111002-1-alex.kluver@hpe.com>
+In-Reply-To: <87tux4kefm.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 01:14:45PM -0500, Alex Kluver wrote:
-> Memory errors could be printed with incorrect row values since the DIMM
-> size has outgrown the 16 bit row field in the CPER structure. UEFI
-> Specification Version 2.8 has increased the size of row by allowing it to
-> use the first 2 bits from a previously reserved space within the structure.
-> 
-> When needed, add the extension bits to the row value printed.
-> 
-> Based on UEFI 2.8 Table 299. Memory Error Record
-> 
-> Tested-by: Russ Anderson <russ.anderson@hpe.com>
-> Signed-off-by: Alex Kluver <alex.kluver@hpe.com>
-> ---
->  drivers/edac/ghes_edac.c    | 10 ++++++++--
->  drivers/firmware/efi/cper.c | 11 +++++++++--
->  include/linux/cper.h        |  9 +++++++--
->  3 files changed, 24 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index cb3dab56a875..cfa3156300f5 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -337,8 +337,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
->  		p += sprintf(p, "rank:%d ", mem_err->rank);
->  	if (mem_err->validation_bits & CPER_MEM_VALID_BANK)
->  		p += sprintf(p, "bank:%d ", mem_err->bank);
-> -	if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
-> -		p += sprintf(p, "row:%d ", mem_err->row);
-> +	if (mem_err->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
-> +		u32 row_extended = 0;
-> +		if (mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT)
-> +			row_extended = (mem_err->extended & CPER_MEM_EXT_ROW_MASK)
-> +				<<CPER_MEM_EXT_ROW_SHIFT;
-> +		row_extended |= mem_err->row;
-> +		p += sprintf(p, "row:%d ", row_extended);
-> +	}
->  	if (mem_err->validation_bits & CPER_MEM_VALID_COLUMN)
->  		p += sprintf(p, "col:%d ", mem_err->column);
->  	if (mem_err->validation_bits & CPER_MEM_VALID_BIT_POSITION)
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index f564e15fbc7e..5faaf6ecd659 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -234,8 +234,14 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
->  		n += scnprintf(msg + n, len - n, "bank: %d ", mem->bank);
->  	if (mem->validation_bits & CPER_MEM_VALID_DEVICE)
->  		n += scnprintf(msg + n, len - n, "device: %d ", mem->device);
-> -	if (mem->validation_bits & CPER_MEM_VALID_ROW)
-> -		n += scnprintf(msg + n, len - n, "row: %d ", mem->row);
-> +	if (mem->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
-> +		u32 row_extended = 0;
-> +		if (mem->validation_bits & CPER_MEM_VALID_ROW_EXT)
-> +			row_extended = (mem->extended & CPER_MEM_EXT_ROW_MASK)
-> +				<<CPER_MEM_EXT_ROW_SHIFT;
+On Sat, Aug 15, 2020 at 01:14:53AM +0200, Thomas Gleixner wrote:
 
-This is not very readable.
+> #1 trivial fix is to force switching to an high prio thread or a soft
+>    interrupt which does the allocation
 
-> +		row_extended |= mem->row;
-> +		n += scnprintf(msg + n, len - n, "row: %d ", row_extended);
-> +	}
+Yeah, push the alocation out to another context. I did consider it, but
+why bother?
 
-Both those hunks contain duplicated code which kinda wants to be an
-inline function in cper.h which returns row_extended and gets called by
-both sites. And then the call site can look very simple:
+Also, raising a softirq can't be done from every context, that's a whole
+new problem. You can do irq_work I suppose, but not all architectures
+support the self-IPI yet.
 
-        if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
-                row = mem_err->row;
+All in all, it's just more complexity than the fairly trivial
+__alloc_page_lockless().
 
-        /* add row extension */
-        row |= cper_get_mem_extension();
-
-        p += sprintf(p, "row:%d ", row);
-
-with
-
-static inline u32 cper_get_mem_extension(void)
-{
-	if (!(mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT))
-		return 0;
-
-	return (mem_err->extended & CPER_MEM_EXT_ROW_MASK) << CPER_MEM_EXT_ROW_SHIFT;
-}
-
-Something along those lines...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Whichever way around, we can't rely on the allocation.
