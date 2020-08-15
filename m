@@ -2,110 +2,172 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF94FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4D1205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88F020639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597529432;
+	bh=LWZ3gG05lyWwHbQNUP3ksCUHLVF4wFzI8rRKV3uiNak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a8N1gzhnhyw8r2coYL0wZrayTAKv7rVNpT3hyIs5TnehMNBj6R2HCQa3dSjCjeZkU
+	 CHeAS87MwNoBsFKvsnCiBfUS8ES247XKfphVErKrYKL7MHMRt7dkZT1nK/erXT8FQA
+	 Fz5kKLYyRCARMUMERdv0IzoPYjpVN/Oo6rC3sVGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgHOWKN (ORCPT
+        id S1729512AbgHOWKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:10:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40989 "EHLO mga18.intel.com"
+        Sat, 15 Aug 2020 18:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbgHOWKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:10:12 -0400
-IronPort-SDR: gv3mEkCv6tYwT1VdKj8/7yq+A+vzvlz1M9eKIk7XkdWPk21w+Z2qxoTzWdwnfdozSrnR5Za8cb
- TsCQ+sRuPBWg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9713"; a="142150815"
-X-IronPort-AV: E=Sophos;i="5.76,316,1592895600"; 
-   d="scan'208";a="142150815"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2020 05:48:41 -0700
-IronPort-SDR: Ida5F9v1M5Pd+SNeHkfOib7YrT84GrHz32jp6JY/tIEwC+nNhpqBKYFo9ytJTEuNjkBzUB4xEh
- 7zQlqCys45AQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,316,1592895600"; 
-   d="scan'208";a="333651251"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2020 05:48:36 -0700
-Date:   Sat, 15 Aug 2020 20:45:47 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <lkp@intel.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Waiman Long <longman@redhat.com>,
-        Bixuan Cui <cuibixuan@huawei.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [mm] 3e38e0aaca:
- WARNING:at_mm/memcontrol.c:#mem_cgroup_alloc
-Message-ID: <20200815124547.GA21072@intel.com>
-References: <20200814141327.GJ7488@shao2-debian>
- <CAHk-=wj8oc=wCvqcMdpKM8cceEYmicpf++rNDWC_5A6qYDP9QQ@mail.gmail.com>
+        id S1728715AbgHOWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:10:27 -0400
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C87322E00;
+        Sat, 15 Aug 2020 03:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597460618;
+        bh=LWZ3gG05lyWwHbQNUP3ksCUHLVF4wFzI8rRKV3uiNak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aPLmc5XIVhNgOz/dUkmBwJHhTub2jfiFdCUnXPgEVZvsfdM60xwqSPiHXUjZo/gZg
+         W13nLli/i5dcL9+RLLKwoyKEj/1rS4pFIGP+81I7TUivDsE3PPl0LwR+oPRQbUf2eR
+         Zq7320V1UEnYBmGlW09/3R0ltEf9DMa1/eUQy5SE=
+Received: by mail-ej1-f53.google.com with SMTP id o18so11890552eje.7;
+        Fri, 14 Aug 2020 20:03:38 -0700 (PDT)
+X-Gm-Message-State: AOAM532l65Y/ZcRSYu08JznzZJX4t0VbxK+0NyP7fgsbMXobqvSx6uR6
+        V4hyvhlOtaj5s/12iSBYqiYEfVXTgvT5G9IeYQ==
+X-Google-Smtp-Source: ABdhPJyt/63tP7h7Rcip1YksjvsGO7WzFuUVEIVYhoFntsd6TkK7JtmalTJjkuyszotatOlhPqyFfaDNHeccHlw5oaU=
+X-Received: by 2002:a17:906:7492:: with SMTP id e18mr5232063ejl.375.1597460616714;
+ Fri, 14 Aug 2020 20:03:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj8oc=wCvqcMdpKM8cceEYmicpf++rNDWC_5A6qYDP9QQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com> <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 15 Aug 2020 11:03:24 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+Message-ID: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:00:44AM -0700, Linus Torvalds wrote:
-> On Fri, Aug 14, 2020 at 7:14 AM kernel test robot <lkp@intel.com> wrote:
-> >
-> > FYI, we noticed the following commit (built with gcc-9):
-> >
-> > commit: 3e38e0aaca9eafb12b1c4b731d1c10975cbe7974 ("mm: memcg: charge memcg percpu memory to the parent cgroup")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> >
-> >
-> > in testcase: boot
-> >
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> This should have already been fixed by commit 9f457179244a ("mm:
-> memcontrol: fix warning when allocating the root cgroup").
-Thanks Linus for this info, usually the test bot checks the head
-of fbc's branch to validate the bisection. If the head fixes
-the issue, the bot shall not send out such fbc report. We will
-double check this bisection process to resolve any logical issue.
+Hi, Neal:
 
-> 
-> But I forget what the syntax is to report that to the kernel test
-> robot. Would it be possible for lkp automatically look for "Fixes:"
-> tags, perhaps?
-Got it, we will investigate this which should be quite helpful, e.g. if
-we want to check whether an upstream commit had fixes in other
-repo like linux-next.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8813=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8811:33=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-Thanks
+[snip]
 
-> 
->                  Linus
+> +/*
+> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
+l dump
+> + *                        violation information including which master v=
+iolates
+> + *                        access slave.
+> + */
+> +static irqreturn_t devapc_violation_irq(int irq_number,
+> +                                       struct mtk_devapc_context *ctx)
+> +{
+> +       /*
+> +        * Mask slave's irq before clearing vio status.
+> +        * Must do it to avoid nested interrupt and prevent
+> +        * unexpected behavior.
+> +        */
+> +       mask_module_irq(ctx, true);
+
+I still don't understand why nested interrupt happen. If two CPU
+process different devapc interrupt at the same time, mask interrupt
+could not prevent these two CPU to sync vio dbg at the same time. As I
+know, in ARM CPU, only CPU0 process irq handler, and all devapc
+interrupt has the same priority, so why nested interrupt happen? Could
+you explain more detail about how nested interrupt happen?
+
+> +
+> +       while (devapc_sync_vio_dbg(ctx))
+> +               devapc_extract_vio_dbg(ctx);
+> +
+> +       /*
+> +        * Ensure that violation info are written
+> +        * before further operations
+> +        */
+> +       smp_mb();
+> +
+> +       clear_vio_status(ctx);
+> +       mask_module_irq(ctx, false);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+
+[snip]
+
+> +
+> +static int mtk_devapc_remove(struct platform_device *pdev)
+> +{
+> +       struct mtk_devapc_context *ctx =3D platform_get_drvdata(pdev);
+> +
+> +       stop_devapc(ctx);
+> +
+> +       if (ctx->infra_clk)
+
+This always true.
+
+Regards,
+Chun-Kuang.
+
+> +               clk_disable_unprepare(ctx->infra_clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mtk_devapc_driver =3D {
+> +       .probe =3D mtk_devapc_probe,
+> +       .remove =3D mtk_devapc_remove,
+> +       .driver =3D {
+> +               .name =3D KBUILD_MODNAME,
+> +               .of_match_table =3D mtk_devapc_dt_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(mtk_devapc_driver);
+> +
+> +MODULE_DESCRIPTION("Mediatek Device APC Driver");
+> +MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.7.9.5
 > _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
