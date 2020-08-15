@@ -2,90 +2,140 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A2920639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529095;
-	bh=+aCesZvNxMYJVUX1yJDY4XY+cGFCNW61nA046OfyXsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bCAm/rUTx0eaaFOHcq3wXLQ93uGuR4g6k7y2/XL8S2yrkGkf35yFf3yPxESCzezjW
-	 Hz7bcRRPX6RokVdeTICgOk8IYc8rGBcVknU0Vzy9sXM4GYMkiQQwYVqqqER5YQa9WZ
-	 XDIXRp2X1z0d0JxqCqNeTC64SZ1i2UMyDD3BCx0Y=
+	by mail.kernel.org (Postfix) with ESMTP id D9DC42053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EhozzWmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgHOWEy (ORCPT
+        id S1729865AbgHOWEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 18:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbgHOVuy (ORCPT
+        with ESMTP id S1728477AbgHOVuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:50:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E60C008688;
-        Sat, 15 Aug 2020 10:09:05 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r2so10994535wrs.8;
-        Sat, 15 Aug 2020 10:09:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=029UH3B1a9Lf0jL+nGrPJWLfG2l0sqy5BcJufnEFRSo=;
-        b=kfx/scPTYqEZ17u+ZFYo/wkli9c1602Eer/O88A9MASU/rJP3AEPexy218pL0WUJH7
-         AuKP62sIMRIW+iqc9N18xUsyqZsGIwldexljmnd+06UmvCnqBqmRalou/IFBdd1iVbU3
-         WUmpF6JFMlQcq6yRIpBI4IYmvKuumYcvesugBzbe0lkvaUU/7nbJ2G2wCDtTXTAM1Xcy
-         Y6ofNi8o/VYFJKVkdycaYU1L36eAdhAlIRbVnnO3uhWwVnZqqzcXlRWNscckmajhLomo
-         gSaVVfhR25jU0jOY72zMf5SS5mtRiPJ9z8161lt3ufLf4m52IpWtln8Rb5secVxHeFMP
-         kEQA==
-X-Gm-Message-State: AOAM5316gtq6MqmCtJTzV4t6DkCK7hN5Y8shdWbJDZ2n4yXOt2FXePT+
-        lij/H4mil8J+PI+YNSOpQIc=
-X-Google-Smtp-Source: ABdhPJz7Ays+EpnOkkjlDYLn2zhH8aBQpPRgvq1Kw/IIQOZykznexU2T++RMSld9txkKP52bTQT3QQ==
-X-Received: by 2002:a5d:60c5:: with SMTP id x5mr7773149wrt.67.1597511342690;
-        Sat, 15 Aug 2020 10:09:02 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id f15sm24370989wrt.80.2020.08.15.10.09.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 10:09:01 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 17:09:00 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH v2 1/1] Drivers: hv: vmbus: Add parsing of VMbus
- interrupt in ACPI DSDT
-Message-ID: <20200815170900.5hye5xdnrhwlhwyp@liuwe-devbox-debian-v2>
-References: <1597434304-40631-1-git-send-email-mikelley@microsoft.com>
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B00C00458C;
+        Sat, 15 Aug 2020 11:33:17 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f1c7a00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:7a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56E951EC0277;
+        Sat, 15 Aug 2020 20:33:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1597516391;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8BbZ63rk7VbMiYUQjJkYGKszCEMN5l41jgUUhvTPAOk=;
+        b=EhozzWmk+kL2/U5KxxkPgUx8K6UAmTLI1ZgR5AZbJMI0He/t8OVM5L7Ts1xYNrnz+/7MSc
+        0C4CT36Ji2ATnv3EboiqKdUzO3rBwwtyNqbKX5CQHqNvc/B1R9rOhQjFAbB9nwlgZyxNMR
+        zUQhBg+Jw9qsx/NC+CjSH9XlmeIKjbY=
+Date:   Sat, 15 Aug 2020 20:33:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, hhhawa@amazon.com,
+        ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        eitan@amazon.com
+Subject: Re: [PATCH v9 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20200815183358.GE25814@zn.tnic>
+References: <20200728095155.18506-1-talel@amazon.com>
+ <20200728095155.18506-3-talel@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1597434304-40631-1-git-send-email-mikelley@microsoft.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200728095155.18506-3-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:45:04PM -0700, Michael Kelley wrote:
-> On ARM64, Hyper-V now specifies the interrupt to be used by VMbus
-> in the ACPI DSDT.  This information is not used on x86 because the
-> interrupt vector must be hardcoded.  But update the generic
-> VMbus driver to do the parsing and pass the information to the
-> architecture specific code that sets up the Linux IRQ.  Update
-> consumers of the interrupt to get it from an architecture specific
-> function.
-> 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+On Tue, Jul 28, 2020 at 12:51:55PM +0300, Talel Shenhar wrote:
+> +static void al_mc_edac_check(struct mem_ctl_info *mci)
+> +{
+> +	struct al_mc_edac *al_mc = mci->pvt_info;
+> +
+> +	if (al_mc->irq_ue <= 0)
+> +		handle_ue(mci);
+> +
+> +	if (al_mc->irq_ce <= 0)
+> +		handle_ce(mci);
+> +}
+> +
+> +static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
+> +{
+> +	struct platform_device *pdev = info;
+> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +
+> +	if (handle_ue(mci))
+> +		return IRQ_HANDLED;
+> +	return IRQ_NONE;
+> +}
+> +
+> +static irqreturn_t al_mc_edac_irq_handler_ce(int irq, void *info)
+> +{
+> +	struct platform_device *pdev = info;
+> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +
+> +	if (handle_ce(mci))
+> +		return IRQ_HANDLED;
+> +	return IRQ_NONE;
+> +}
+> +
+> +static enum scrub_type al_mc_edac_get_scrub_mode(void __iomem *mmio_base)
+> +{
+> +	u32 ecccfg0;
+> +
+> +	ecccfg0 = readl(mmio_base + AL_MC_ECC_CFG);
+> +
+> +	if (FIELD_GET(AL_MC_ECC_CFG_SCRUB_DISABLED, ecccfg0))
+> +		return SCRUB_NONE;
+> +	else
+> +		return SCRUB_HW_SRC;
+> +}
+> +
+> +static void devm_al_mc_edac_free(void *data)
+> +{
+> +	edac_mc_free(data);
+> +}
+> +
+> +static void devm_al_mc_edac_del(void *data)
+> +{
+> +	edac_mc_del_mc(data);
+> +}
 
-Applied to hyperv-next. Thanks.
+From a previous review:
 
-Wei.
+I said:
+
+> Drop the "al_mc_edac_" prefix from most of the static functions. You can
+> leave it in the probe function or the IRQ handler so that it is visible
+> in stack traces but all those small functions don't need that prefix.
+
+You replied with:
+
+> Shall be part of v7.
+
+and yet it ain't part of any v<num>.
+
+Why?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
