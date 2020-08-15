@@ -2,73 +2,69 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D726C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B0A20639
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E6D20639
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="V3oTzjYq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mFFM1Oyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgHOWHV (ORCPT
+        id S1728594AbgHOWHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
+        Sat, 15 Aug 2020 18:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbgHOVuo (ORCPT
+        with ESMTP id S1728319AbgHOVuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:44 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3378C004580
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:20:08 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id jp10so13296300ejb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 11:20:08 -0700 (PDT)
+        Sat, 15 Aug 2020 17:50:46 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B98C061342
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:40:29 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id x6so5298298pgx.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Aug 2020 17:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OpZZK28b8NffZ5B6TNfkcT7DySPSUfUL+HBLi8ymZuk=;
-        b=V3oTzjYqO9jTTYGBEiyf2ShErrFEq3jU/oWgQAJGZyC8jk7rfxUp/+JMzVQtQ6fK77
-         m8H2Gm1/6/SbOfXKPJyH9tFEL8EZMNAfs5h99a1J1qvVeZJA7UdCzA86H7HDX8FdA0Ep
-         Zm+HmzqBMOAEBb6b3qtm0btBSNHDtUr8M4pbBp6cBip9EZv5QGLKIGlNjj4ZaR5tD34l
-         HOs0G2kBkmpwrkQCVvsJzcv50aEu4w5Vl0kEs6tGK8PxiIaEKDRsWSgsLkKDCl/2lLa7
-         xNSt1uRbf2ymzz7S7H/YLojd694kvZzxp0CxaVHhaE4GQS0p2Q8NYI+05I72GpgSJuuL
-         xj0g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=diqXePpQfxSpJLpQQOfQC8i1Pcl/TtcLU6rF23zLEEI=;
+        b=mFFM1OygZI2msD4NTsf2qqkDTzcazgCzMa+x1S+3E7NDIbucbrUaZJXrQAO5XqPT7j
+         994hZW9FDTJZoE8D3ocHok2kHs+6lSidKRHwjucc5TSKpCSmyEm20JfKJNp5+b8hknwu
+         yhXBezxdxNCuKTbFVZSbBewHzfL1vg/358SYA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OpZZK28b8NffZ5B6TNfkcT7DySPSUfUL+HBLi8ymZuk=;
-        b=UYr15ocnQRiieJ2TgurL26qr7KSKAlOtlgJ7zQd6KqFMS/wmdHeUAdQE/02cdcLMA+
-         bIvUT4qCxOh0FFL8URiUUr9HyQQFPPWLMVaE6WDr+XFmmL+KJ3c1vMmKFCxr/5cjK8n5
-         9WwtgJwmkd+xbPPY97hNch4jwTi9NerNZym26YjAQa8kvq3EFGj+zA6U/xYiBCyu70kc
-         5s3QDQLqYj2QtAN5SmuGnxT98iFWl5kGrjNx/vwgmpxQtrbxZv1J2Wg9KMx8ycqFTq0R
-         p1QuXvXnz1E4qbI05/HzcgCYbJfIisHPtmGoPM9CtfbHhzmUTurQhfYNDbu3ttolTCC5
-         1VyA==
-X-Gm-Message-State: AOAM533he2SD/nJeWtWeTJP/uv9LPFva6jcCPbdTidQkPwgwRusM3t7e
-        +CTF6J4SLniM6AqyRXoap1qq5QSAZs8=
-X-Google-Smtp-Source: ABdhPJxAif+DHTGIAVE8RS/VpsGIEnHOWkllB8nTHgbQiXkpv5KQMmpXc1hoO29G0LpqIJ5e1wSw/g==
-X-Received: by 2002:a17:906:c406:: with SMTP id u6mr8344063ejz.47.1597515607044;
-        Sat, 15 Aug 2020 11:20:07 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371a97000000000000000fcc.dip0.t-ipconnect.de. [2003:f1:371a:9700::fcc])
-        by smtp.googlemail.com with ESMTPSA id os4sm10054989ejb.117.2020.08.15.11.20.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=diqXePpQfxSpJLpQQOfQC8i1Pcl/TtcLU6rF23zLEEI=;
+        b=fsY374gO6s9G71NHvvaUkcjTTHMZ4XEvuSGjjNJ7zZLd4QO+oC41+fyEOQL+fyceAb
+         6Smn010Ksy2G5c6SsckX6dWA+juh5aMUdMF4XToHO4Ue3bMDfTr1dJI5b16PsnEILp5j
+         vOpPzkPBGt6Aig6G1H4RHNZ4hIbbQ8o/yxDXF77uX/vFcMK/ZmsAO9jJfwV/QeWfFO6A
+         If2aAh9BB1deBwCUqDpvCU1PmT/MgU+G7D5KHv6tkJ+zJiGqYbK7LY/U3zwtbCeJz5lq
+         vXL7MlvXLBMfOjUYyCXenLHYDQwCYh2B+z6PPP3enOFu4UYrPo6eK3GgRjM3U0Jflv1G
+         lCrQ==
+X-Gm-Message-State: AOAM532k6L7ZCrTFYOJAsdPYi8qtsfVrcrH2gNAOZy+CjSMqp2Y8lTAO
+        9uvHtCg+VQiPUwGoAf1lsJTvYRUkmXEmMQ==
+X-Google-Smtp-Source: ABdhPJwIEUsjzuZryI8OB5suIelqF+iGmrSZ+43qbqZgQgxF629z2p9LizMiUeUWyOKhvDlkbwRH0A==
+X-Received: by 2002:a05:6a00:1509:: with SMTP id q9mr3583237pfu.24.1597452029406;
+        Fri, 14 Aug 2020 17:40:29 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id x6sm10577131pfd.53.2020.08.14.17.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 11:20:06 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thomas Graichen <thomas.graichen@gmail.com>
-Subject: [PATCH RESEND v1] ARM: dts: meson8: remove two invalid interrupt lines from the GPU node
-Date:   Sat, 15 Aug 2020 20:19:57 +0200
-Message-Id: <20200815181957.408649-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 14 Aug 2020 17:40:28 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] debugobjects: Allow debug_obj_descr to be const
+Date:   Fri, 14 Aug 2020 17:40:26 -0700
+Message-Id: <20200815004027.2046113-2-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+In-Reply-To: <20200815004027.2046113-1-swboyd@chromium.org>
+References: <20200815004027.2046113-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,65 +72,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 3.10 vendor kernel defines the following GPU 20 interrupt lines:
-  #define INT_MALI_GP                 AM_IRQ(160)
-  #define INT_MALI_GP_MMU             AM_IRQ(161)
-  #define INT_MALI_PP                 AM_IRQ(162)
-  #define INT_MALI_PMU                AM_IRQ(163)
-  #define INT_MALI_PP0                AM_IRQ(164)
-  #define INT_MALI_PP0_MMU            AM_IRQ(165)
-  #define INT_MALI_PP1                AM_IRQ(166)
-  #define INT_MALI_PP1_MMU            AM_IRQ(167)
-  #define INT_MALI_PP2                AM_IRQ(168)
-  #define INT_MALI_PP2_MMU            AM_IRQ(169)
-  #define INT_MALI_PP3                AM_IRQ(170)
-  #define INT_MALI_PP3_MMU            AM_IRQ(171)
-  #define INT_MALI_PP4                AM_IRQ(172)
-  #define INT_MALI_PP4_MMU            AM_IRQ(173)
-  #define INT_MALI_PP5                AM_IRQ(174)
-  #define INT_MALI_PP5_MMU            AM_IRQ(175)
-  #define INT_MALI_PP6                AM_IRQ(176)
-  #define INT_MALI_PP6_MMU            AM_IRQ(177)
-  #define INT_MALI_PP7                AM_IRQ(178)
-  #define INT_MALI_PP7_MMU            AM_IRQ(179)
+The debugobject core could be slightly harder to corrupt if we make the
+debug_obj_descr a pointer to const memory. Depending on the
+architecture, const datastructures are placed into read-only memory and
+thus are harder to corrupt or hijack. This descriptor is used to fix up
+stuff like timers and workqueues when core kernel datastructures are
+busted, so moving the descriptors to read-only memory will make
+debugobjects more resilient to something going wrong and then corrupting
+the function pointers inside struct debug_obj_descr.
 
-However, the driver from the 3.10 vendor kernel does not use the
-following four interrupt lines:
-- INT_MALI_PP3
-- INT_MALI_PP3_MMU
-- INT_MALI_PP7
-- INT_MALI_PP7_MMU
-
-Drop the "pp3" and "ppmmu3" interrupt lines. This is also important
-because there is no matching entry in interrupt-names for it (meaning
-the "pp2" interrupt is actually assigned to the "pp3" interrupt line).
-
-Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
-Reported-by: Thomas Graichen <thomas.graichen@gmail.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
-re-send of v1 from [0] because it was never picked up
+ include/linux/debugobjects.h | 32 ++++++++++++++++----------------
+ lib/debugobjects.c           | 30 +++++++++++++++---------------
+ 2 files changed, 31 insertions(+), 31 deletions(-)
 
-
-[0] https://patchwork.kernel.org/patch/11582619/
-
-
- arch/arm/boot/dts/meson8.dtsi | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 277c0bb10453..04688e8abce2 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -240,8 +240,6 @@ mali: gpu@c0000 {
- 				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/include/linux/debugobjects.h b/include/linux/debugobjects.h
+index afc416e5dcab..8d2dde23e9fb 100644
+--- a/include/linux/debugobjects.h
++++ b/include/linux/debugobjects.h
+@@ -30,7 +30,7 @@ struct debug_obj {
+ 	enum debug_obj_state	state;
+ 	unsigned int		astate;
+ 	void			*object;
+-	struct debug_obj_descr	*descr;
++	const struct debug_obj_descr *descr;
+ };
+ 
+ /**
+@@ -64,14 +64,14 @@ struct debug_obj_descr {
+ };
+ 
+ #ifdef CONFIG_DEBUG_OBJECTS
+-extern void debug_object_init      (void *addr, struct debug_obj_descr *descr);
++extern void debug_object_init      (void *addr, const struct debug_obj_descr *descr);
+ extern void
+-debug_object_init_on_stack(void *addr, struct debug_obj_descr *descr);
+-extern int debug_object_activate  (void *addr, struct debug_obj_descr *descr);
+-extern void debug_object_deactivate(void *addr, struct debug_obj_descr *descr);
+-extern void debug_object_destroy   (void *addr, struct debug_obj_descr *descr);
+-extern void debug_object_free      (void *addr, struct debug_obj_descr *descr);
+-extern void debug_object_assert_init(void *addr, struct debug_obj_descr *descr);
++debug_object_init_on_stack(void *addr, const struct debug_obj_descr *descr);
++extern int debug_object_activate  (void *addr, const struct debug_obj_descr *descr);
++extern void debug_object_deactivate(void *addr, const struct debug_obj_descr *descr);
++extern void debug_object_destroy   (void *addr, const struct debug_obj_descr *descr);
++extern void debug_object_free      (void *addr, const struct debug_obj_descr *descr);
++extern void debug_object_assert_init(void *addr, const struct debug_obj_descr *descr);
+ 
+ /*
+  * Active state:
+@@ -79,26 +79,26 @@ extern void debug_object_assert_init(void *addr, struct debug_obj_descr *descr);
+  * - Must return to 0 before deactivation.
+  */
+ extern void
+-debug_object_active_state(void *addr, struct debug_obj_descr *descr,
++debug_object_active_state(void *addr, const struct debug_obj_descr *descr,
+ 			  unsigned int expect, unsigned int next);
+ 
+ extern void debug_objects_early_init(void);
+ extern void debug_objects_mem_init(void);
+ #else
+ static inline void
+-debug_object_init      (void *addr, struct debug_obj_descr *descr) { }
++debug_object_init      (void *addr, const struct debug_obj_descr *descr) { }
+ static inline void
+-debug_object_init_on_stack(void *addr, struct debug_obj_descr *descr) { }
++debug_object_init_on_stack(void *addr, const struct debug_obj_descr *descr) { }
+ static inline int
+-debug_object_activate  (void *addr, struct debug_obj_descr *descr) { return 0; }
++debug_object_activate  (void *addr, const struct debug_obj_descr *descr) { return 0; }
+ static inline void
+-debug_object_deactivate(void *addr, struct debug_obj_descr *descr) { }
++debug_object_deactivate(void *addr, const struct debug_obj_descr *descr) { }
+ static inline void
+-debug_object_destroy   (void *addr, struct debug_obj_descr *descr) { }
++debug_object_destroy   (void *addr, const struct debug_obj_descr *descr) { }
+ static inline void
+-debug_object_free      (void *addr, struct debug_obj_descr *descr) { }
++debug_object_free      (void *addr, const struct debug_obj_descr *descr) { }
+ static inline void
+-debug_object_assert_init(void *addr, struct debug_obj_descr *descr) { }
++debug_object_assert_init(void *addr, const struct debug_obj_descr *descr) { }
+ 
+ static inline void debug_objects_early_init(void) { }
+ static inline void debug_objects_mem_init(void) { }
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index fe4557955d97..e2a3171b6c63 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -90,7 +90,7 @@ static int			debug_objects_pool_size __read_mostly
+ 				= ODEBUG_POOL_SIZE;
+ static int			debug_objects_pool_min_level __read_mostly
+ 				= ODEBUG_POOL_MIN_LEVEL;
+-static struct debug_obj_descr	*descr_test  __read_mostly;
++static const struct debug_obj_descr *descr_test  __read_mostly;
+ static struct kmem_cache	*obj_cache __read_mostly;
+ 
+ /*
+@@ -223,7 +223,7 @@ static struct debug_obj *__alloc_object(struct hlist_head *list)
+  * Must be called with interrupts disabled.
+  */
+ static struct debug_obj *
+-alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
++alloc_object(void *addr, struct debug_bucket *b, const struct debug_obj_descr *descr)
+ {
+ 	struct debug_percpu_free *percpu_pool = this_cpu_ptr(&percpu_obj_pool);
+ 	struct debug_obj *obj;
+@@ -475,7 +475,7 @@ static struct debug_bucket *get_bucket(unsigned long addr)
+ 
+ static void debug_print_object(struct debug_obj *obj, char *msg)
+ {
+-	struct debug_obj_descr *descr = obj->descr;
++	const struct debug_obj_descr *descr = obj->descr;
+ 	static int limit;
+ 
+ 	if (limit < 5 && descr != descr_test) {
+@@ -529,7 +529,7 @@ static void debug_object_is_on_stack(void *addr, int onstack)
+ }
+ 
+ static void
+-__debug_object_init(void *addr, struct debug_obj_descr *descr, int onstack)
++__debug_object_init(void *addr, const struct debug_obj_descr *descr, int onstack)
+ {
+ 	enum debug_obj_state state;
+ 	bool check_stack = false;
+@@ -587,7 +587,7 @@ __debug_object_init(void *addr, struct debug_obj_descr *descr, int onstack)
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_init(void *addr, struct debug_obj_descr *descr)
++void debug_object_init(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	if (!debug_objects_enabled)
+ 		return;
+@@ -602,7 +602,7 @@ EXPORT_SYMBOL_GPL(debug_object_init);
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_init_on_stack(void *addr, struct debug_obj_descr *descr)
++void debug_object_init_on_stack(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	if (!debug_objects_enabled)
+ 		return;
+@@ -617,7 +617,7 @@ EXPORT_SYMBOL_GPL(debug_object_init_on_stack);
+  * @descr:	pointer to an object specific debug description structure
+  * Returns 0 for success, -EINVAL for check failed.
+  */
+-int debug_object_activate(void *addr, struct debug_obj_descr *descr)
++int debug_object_activate(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	enum debug_obj_state state;
+ 	struct debug_bucket *db;
+@@ -695,7 +695,7 @@ EXPORT_SYMBOL_GPL(debug_object_activate);
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_deactivate(void *addr, struct debug_obj_descr *descr)
++void debug_object_deactivate(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	struct debug_bucket *db;
+ 	struct debug_obj *obj;
+@@ -747,7 +747,7 @@ EXPORT_SYMBOL_GPL(debug_object_deactivate);
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_destroy(void *addr, struct debug_obj_descr *descr)
++void debug_object_destroy(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	enum debug_obj_state state;
+ 	struct debug_bucket *db;
+@@ -797,7 +797,7 @@ EXPORT_SYMBOL_GPL(debug_object_destroy);
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_free(void *addr, struct debug_obj_descr *descr)
++void debug_object_free(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	enum debug_obj_state state;
+ 	struct debug_bucket *db;
+@@ -838,7 +838,7 @@ EXPORT_SYMBOL_GPL(debug_object_free);
+  * @addr:	address of the object
+  * @descr:	pointer to an object specific debug description structure
+  */
+-void debug_object_assert_init(void *addr, struct debug_obj_descr *descr)
++void debug_object_assert_init(void *addr, const struct debug_obj_descr *descr)
+ {
+ 	struct debug_bucket *db;
+ 	struct debug_obj *obj;
+@@ -886,7 +886,7 @@ EXPORT_SYMBOL_GPL(debug_object_assert_init);
+  * @next:	state to move to if expected state is found
+  */
+ void
+-debug_object_active_state(void *addr, struct debug_obj_descr *descr,
++debug_object_active_state(void *addr, const struct debug_obj_descr *descr,
+ 			  unsigned int expect, unsigned int next)
+ {
+ 	struct debug_bucket *db;
+@@ -934,7 +934,7 @@ EXPORT_SYMBOL_GPL(debug_object_active_state);
+ static void __debug_check_no_obj_freed(const void *address, unsigned long size)
+ {
+ 	unsigned long flags, oaddr, saddr, eaddr, paddr, chunks;
+-	struct debug_obj_descr *descr;
++	const struct debug_obj_descr *descr;
+ 	enum debug_obj_state state;
+ 	struct debug_bucket *db;
+ 	struct hlist_node *tmp;
+@@ -1052,7 +1052,7 @@ struct self_test {
+ 	unsigned long	dummy2[3];
+ };
+ 
+-static __initdata struct debug_obj_descr descr_type_test;
++static __initconst const struct debug_obj_descr descr_type_test;
+ 
+ static bool __init is_static_object(void *addr)
+ {
+@@ -1177,7 +1177,7 @@ check_results(void *addr, enum debug_obj_state state, int fixups, int warnings)
+ 	return res;
+ }
+ 
+-static __initdata struct debug_obj_descr descr_type_test = {
++static __initconst const struct debug_obj_descr descr_type_test = {
+ 	.name			= "selftest",
+ 	.is_static_object	= is_static_object,
+ 	.fixup_init		= fixup_init,
 -- 
-2.28.0
+Sent by a computer, using git, on the internet
 
