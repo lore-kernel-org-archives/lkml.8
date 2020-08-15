@@ -2,224 +2,201 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C15C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5173CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFDF20658
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C99A2063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529484;
-	bh=VjSy88OZdK0t+zkVLUWmLUAMv7a0kHRUqImAjbyrFIY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1NSbP+GXvAoQAe2UqGcN1XvHtZMKoB4xNqlukjVItZlbtNIsa4hyG8HDBs17ZHshJ
-	 q0HMN9lCXmQkKW75lfWWEZDymAIjqMjG9VHbY+xoWJ3El2zIPnvBaVrMkEmcu/lx8f
-	 lOEdnA4uK8925i/TvMjK/a0kPBAkNNp7AF5Rnqwc=
+	s=default; t=1597529490;
+	bh=nVJ1YOeSYsEtBFDu1yB6K6Mup+VVhxZPIANp/vQT/Q4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LW1INDcyZ/OyY9IpyYn6loGTqwRdsAXgO/ZuFdcNVYIxNuIBUn+bNF00qD1sAJ3Ci
+	 tH9LsZJ2idYvYU9HRMYZariZ/T51xgfNbWAIYFs0ePgvc+OiTEdS0416deEM0fgqpM
+	 Krrrb6Jntny6ToMTpTaZQatqTL7Nti1qBcWv8+tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730044AbgHOWLW (ORCPT
+        id S1730011AbgHOWLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41794 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbgHOWKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729406AbgHOWKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 18:10:30 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17F922D2A;
-        Sat, 15 Aug 2020 03:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2E923123;
+        Sat, 15 Aug 2020 14:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597460508;
-        bh=VjSy88OZdK0t+zkVLUWmLUAMv7a0kHRUqImAjbyrFIY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SB+4IgrRRU3ZgH0KJxwNukOvD9EdB5xiOV8AHeyhZwJjn5VwTzQ6xt4TbTRgLk8sg
-         UDYYv29SK5rDcwK0m6VveCuQ0q7Bd2uGZkbFaixF1nuxWF6Y7+I3Hya/4NRTTgF1HY
-         8Pkg5JvbNAm2+Uazhf/YZf5K0ZIahsRly6aoiAjk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8823B3522B27; Fri, 14 Aug 2020 20:01:48 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 20:01:48 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200815030148.GX4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200814180141.GP4295@paulmck-ThinkPad-P72>
- <87tux4kefm.fsf@nanos.tec.linutronix.de>
- <20200814234152.GV4295@paulmck-ThinkPad-P72>
- <87ft8okabc.fsf@nanos.tec.linutronix.de>
+        s=default; t=1597500073;
+        bh=nVJ1YOeSYsEtBFDu1yB6K6Mup+VVhxZPIANp/vQT/Q4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JL9PdoUeuGcAkmF1/Z0Yvc7rApXXtrPGxa5pJlWGJSD3VPHSCfF3xS+OKfcYM1nVL
+         UKCvMiJoOmyM3PTSSt7NNpR4x7Ll9GWqkuzoqjLmRCvefCnD31Gcuj+2ifa6aqeYnY
+         6ACM9CanYdyYn1Hv8fmlUZU3bC16tieKKVVg3ank=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v2 1/6] tools/bootconfig: Show bootconfig compact tree from bootconfig file
+Date:   Sat, 15 Aug 2020 23:01:10 +0900
+Message-Id: <159750006983.202708.3005608326834658992.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159750006069.202708.12439674123720173666.stgit@devnote2>
+References: <159750006069.202708.12439674123720173666.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ft8okabc.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 02:43:51AM +0200, Thomas Gleixner wrote:
-> Paul,
-> 
-> On Fri, Aug 14 2020 at 16:41, Paul E. McKenney wrote:
-> > On Sat, Aug 15, 2020 at 01:14:53AM +0200, Thomas Gleixner wrote:
-> >> As a matter of fact I assume^Wdeclare that removing struct rcu_head which
-> >> provides a fallback is not an option at all. I know that you want to,
-> >> but it wont work ever. Dream on, but as we agreed on recently there is
-> >> this thing called reality which ruins everything.
-> >
-> > For call_rcu(), agreed.  For kfree_rcu(), we know what the callback is
-> > going to do, plus single-argument kfree_rcu() can only be invoked from
-> > sleepable context.  (If you want to kfree_rcu() from non-sleepable
-> > context, that will cost you an rcu_head in the data structure being
-> > freed.)
-> 
-> kfree_rcu() as of today is just a conveniance wrapper around
-> call_rcu(obj, rcu) which can be called from any context and it still
-> takes TWO arguments.
-> 
-> Icepack?
+Show the bootconfig compact tree from the bootconfig file
+instead of an initrd if the given file has no magic number
+and is smaller than 32KB.
 
-Indeed.  Make that not kfree_rcu(), but rather kvfree_rcu(), which is
-in mainline.  :-/
+User can use this for checking the syntax error or output
+checking before applying the bootconfig to initrd.
 
-> So if you come up with a new kfree_rcu_magic(void *obj) single argument
-> variant which can only be called from sleepable contexts then this does
-> not require any of the raw lock vs. non raw hacks at all because you can
-> simply allocate without holding the raw lock in the rare case that you
-> run out of storage space. With four 4k pages preallocated per CPU that's
-> every 2048 invocations per CPU on 64bit.
-> 
-> So if you run into that situation then you drop the lock and then it's
-> racy because you might be preempted or migrated after dropping the lock
-> and you might have done a useless allocation, but that does not justify
-> having a special allocator just for that? You have an extra page, so
-> what?
-> 
-> To prevent subsequent callers to add to the allocation race you simply
-> can let them wait on the first allocating attempt to finish That avoids
-> more pointless allocations and as a side effect prevents all of them to
-> create more pressure by continuing their open/close loop naturally
-> without extra work.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/bootconfig/main.c |   81 ++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 58 insertions(+), 23 deletions(-)
 
-Agreed, as I said, it is the double-argument version that is the
-challenge.
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index e0878f5f74b1..d165e63b5d5a 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -195,10 +195,55 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 	return size;
+ }
+ 
++static void show_xbc_error(const char *data, const char *msg, int pos)
++{
++	int lin = 1, col, i;
++
++	if (pos < 0) {
++		pr_err("Error: %s.\n", msg);
++		return;
++	}
++
++	/* Note that pos starts from 0 but lin and col should start from 1. */
++	col = pos + 1;
++	for (i = 0; i < pos; i++) {
++		if (data[i] == '\n') {
++			lin++;
++			col = pos - i;
++		}
++	}
++	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
++
++}
++
++static int init_xbc_with_error(char *buf, int len)
++{
++	char *copy = strdup(buf);
++	const char *msg;
++	int ret, pos;
++
++	if (!copy)
++		return -ENOMEM;
++
++	ret = xbc_init(buf, &msg, &pos);
++	if (ret < 0)
++		show_xbc_error(copy, msg, pos);
++	free(copy);
++
++	return ret;
++}
++
+ int show_xbc(const char *path)
+ {
+ 	int ret, fd;
+ 	char *buf = NULL;
++	struct stat st;
++
++	ret = stat(path, &st);
++	if (ret < 0) {
++		pr_err("Failed to stat %s: %d\n", path, -errno);
++		return -errno;
++	}
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0) {
+@@ -207,14 +252,24 @@ int show_xbc(const char *path)
+ 	}
+ 
+ 	ret = load_xbc_from_initrd(fd, &buf);
++	close(fd);
+ 	if (ret < 0) {
+ 		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 		goto out;
+ 	}
++	/* Assume a bootconfig file if it is enough small */
++	if (ret == 0 && st.st_size <= XBC_DATA_MAX) {
++		ret = load_xbc_file(path, &buf);
++		if (ret < 0) {
++			pr_err("Failed to load a boot config: %d\n", ret);
++			goto out;
++		}
++		if (init_xbc_with_error(buf, ret) < 0)
++			goto out;
++	}
+ 	xbc_show_compact_tree();
+ 	ret = 0;
+ out:
+-	close(fd);
+ 	free(buf);
+ 
+ 	return ret;
+@@ -251,27 +306,6 @@ int delete_xbc(const char *path)
+ 	return ret;
+ }
+ 
+-static void show_xbc_error(const char *data, const char *msg, int pos)
+-{
+-	int lin = 1, col, i;
+-
+-	if (pos < 0) {
+-		pr_err("Error: %s.\n", msg);
+-		return;
+-	}
+-
+-	/* Note that pos starts from 0 but lin and col should start from 1. */
+-	col = pos + 1;
+-	for (i = 0; i < pos; i++) {
+-		if (data[i] == '\n') {
+-			lin++;
+-			col = pos - i;
+-		}
+-	}
+-	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
+-
+-}
+-
+ int apply_xbc(const char *path, const char *xbc_path)
+ {
+ 	u32 size, csum;
+@@ -352,11 +386,12 @@ int apply_xbc(const char *path, const char *xbc_path)
+ int usage(void)
+ {
+ 	printf("Usage: bootconfig [OPTIONS] <INITRD>\n"
++		"Or     bootconfig <CONFIG>\n"
+ 		" Apply, delete or show boot config to initrd.\n"
+ 		" Options:\n"
+ 		"		-a <config>: Apply boot config to initrd\n"
+ 		"		-d : Delete boot config file from initrd\n\n"
+-		" If no option is given, show current applied boot config.\n");
++		" If no option is given, show the bootconfig in the given file.\n");
+ 	return -1;
+ }
+ 
 
-> > So if the single-argument kfree_rcu() case gets hit with a
-> > memory-allocation failure, it can fall back to waiting for a grace
-> > period and doing the free.  Of course, grace-period waits have horrible
-> > latency, but under OOM life is hard.  If this becomes a problem in
-> > non-OOM situations due to the lockless caches becoming empty, we will
-> > have to allocate memory if needed before acquiring the lock with the
-> > usual backout logic.  Doing that means that we can let the allocator
-> > acquire locks and maybe even do a little bit of blocking, so that the
-> > inline grace-period-wait would only happen if the system was well and
-> > truly OOMed.
-> 
-> No. It dropped the rcu internal lock and does a regular GFP_KENRNEL
-> allocation which waits for the page to become available. Which is a good
-> thing in the open/close scenario because it throttles the offender.
-
-Understood, especially that last.  But it really doesn't want to be
-waiting in the memory allocator for more than a grace period.  But that
-was hashed out quite some time ago, and there is a combination of GFP_*
-flags that achieves the right balance for the can-sleep situation.
-
-> >> For normal operations a couple of pages which can be preallocated are
-> >> enough. What you are concerned of is the case where you run out of
-> >> pointer storage space.
-> >
-> > Agreed.
-> >
-> >> There are two reasons why that can happen:
-> >> 
-> >>       1) RCU call flooding
-> >>       2) RCU not being able to run and mop up the backlog
-> >> 
-> >> #1 is observable by looking at the remaining storage space and the RCU
-> >>    call frequency
-> >> 
-> >> #2 is uninteresting because it's caused by RCU being stalled / delayed
-> >>    e.g. by a runaway of some sorts or a plain RCU usage bug.
-> >>    
-> >>    Allocating more memory in that case does not solve or improve anything.
-> >
-> > Yes, #2 is instead RCU CPU stall warning territory.
-> >
-> > If this becomes a problem, one approach is to skip the page-of-pointers
-> > allocation if the grace period is more than (say) one second old.  If
-> > the grace period never completes, OOM is unavoidable, but this is a way
-> > of putting it off for a bit.
-> 
-> Don't even think about optimizing your new thing for #2. It's a
-> pointless exercise. If the task which runs into the 'can't allocate'
-> case then is sleeps and waits. End of story.
-
-Agreed, and hence my "If this becomes a problem".  Until such time,
-it is pointless.  For one thing, we don't yet know the failure mode.
-But it has been helpful for me to think a move or two ahead when
-playing against RCU, hence the remainder of my paragraph.
-
-> >> So the interesting case is #1. Which means we need to look at the
-> >> potential sources of the flooding:
-> >> 
-> >>     1) User space via syscalls, e.g. open/close
-> >>     2) Kernel thread
-> >>     3) Softirq
-> >>     4) Device interrupt
-> >>     5) System interrupts, deep atomic context, NMI ...
-> >> 
-> >> #1 trivial fix is to force switching to an high prio thread or a soft
-> >>    interrupt which does the allocation
-> >> 
-> >> #2 Similar to #1 unless that thread loops with interrupts, softirqs or
-> >>    preemption disabled. If that's the case then running out of RCU
-> >>    storage space is the least of your worries.
-> >> 
-> >> #3 Similar to #2. The obvious candidates (e.g. NET) for monopolizing a
-> >>    CPU have loop limits in place already. If there is a bug which fails
-> >>    to care about the limit, why would RCU care and allocate more memory?
-> >> 
-> >> #4 Similar to #3. If the interrupt handler loops forever or if the
-> >>    interrupt is a runaway which prevents task/softirq processing then
-> >>    RCU free performance is the least of your worries.
-> >> 
-> >> #5 Clearly a bug and making RCU accomodate for that is beyond silly.
-> >> 
-> >> So if call_rcu() detects that the remaining storage space for pointers
-> >> goes below the critical point or if it observes high frequency calls
-> >> then it simply should force a soft interrupt which does the allocation.
-> >
-> > Unless call_rcu() has been invoked with scheduler locks held.  But
-> > eventually call_rcu() should be invoked with interrupts enabled, and at
-> > that point it would be safe to raise_softirq(), wake_up(), or
-> > whatever.
-> 
-> If this atomic context corner case is hit within a problematic context
-> then we talk about the RCU of today and not about the future single
-> argument thing. And that oldschool RCU has a fallback. We are talking
-> about pressure corner cases and you really want to squeeze out the last
-> cache miss?  What for? If there is pressure then these cache misses are
-> irrelevant.
-
-Of course.  My point was instead that even this atomic corner case was
-likely to have escape routes in the form of occasional non-atomic calls,
-and that these could do the wakeups.
-
-Again, thank you.
-
-							Thanx, Paul
