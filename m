@@ -2,99 +2,167 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61780C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF317C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE9823B22
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EABC23133
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CT+5vwiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgHOVc3 (ORCPT
+        id S1727076AbgHOVch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:32:29 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:52574 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgHOVcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:32:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 1F9E9FB09;
-        Sat, 15 Aug 2020 23:16:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id r8q8YHSa3Wsh; Sat, 15 Aug 2020 23:16:23 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id A05FD4576F; Sat, 15 Aug 2020 23:16:22 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
-Date:   Sat, 15 Aug 2020 23:16:19 +0200
-Message-Id: <cover.1597526107.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
+        Sat, 15 Aug 2020 17:32:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55049 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726901AbgHOVca (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:32:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597527147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r0QF9s7ohj4aNl8eau7he4E9tQctsoC4pp/nsapCJL4=;
+        b=CT+5vwiQTLnHtPepWrbzAXpGG7+YeR8TJ4+mb+o9ykDxZI0MwUxUhWFceqGGrpSZMLhSFU
+        iR5aWZADL2p3XqFsxb33ASJMxVAV5OZm7iD2JOEWvbvDJfpZFN4yy+JTAfw3/d72KFboAA
+        UqV6yuNt1olejz3TFUv8Ozr2akC+pQI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-XMeVB9CSPX2lvLUrfoyLuA-1; Sat, 15 Aug 2020 12:30:55 -0400
+X-MC-Unique: XMeVB9CSPX2lvLUrfoyLuA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38FBE1015DC2;
+        Sat, 15 Aug 2020 16:30:38 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C147E7A426;
+        Sat, 15 Aug 2020 16:30:28 +0000 (UTC)
+Subject: Re: [PATCH v6 09/15] iommu/vt-d: Check ownership for PASIDs from
+ user-space
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+ <1595917664-33276-10-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <0db97d4a-7c74-9fac-0763-0ed56dcc5eaa@redhat.com>
+Date:   Sat, 15 Aug 2020 18:30:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595917664-33276-10-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Yi,
 
-The panel uses a Focaltech FT8006p, the touch part is handled by the already
-existing edt-ft5x06. It can be found in e.g. the Librem 5.
+On 7/28/20 8:27 AM, Liu Yi L wrote:
+> When an IOMMU domain with nesting attribute is used for guest SVA, a
+> system-wide PASID is allocated for binding with the device and the domain.
+> For security reason, we need to check the PASID passed from user-space.
+> e.g. page table bind/unbind and PASID related cache invalidation.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 10 ++++++++++
+>  drivers/iommu/intel/svm.c   |  7 +++++--
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index b2fe54e..88f4647 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5436,6 +5436,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  		int granu = 0;
+>  		u64 pasid = 0;
+>  		u64 addr = 0;
+> +		void *pdata;
+>  
+>  		granu = to_vtd_granularity(cache_type, inv_info->granularity);
+>  		if (granu == -EINVAL) {
+> @@ -5456,6 +5457,15 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+>  			pasid = inv_info->granu.addr_info.pasid;
+>  
+> +		pdata = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
+> +		if (!pdata) {
+> +			ret = -EINVAL;
+> +			goto out_unlock;
+> +		} else if (IS_ERR(pdata)) {
+> +			ret = PTR_ERR(pdata);
+> +			goto out_unlock;
+> +		}
+> +
+>  		switch (BIT(cache_type)) {
+>  		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>  			/* HW will ignore LSB bits based on address mask */
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index c85b8d5..b9b29ad 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -323,7 +323,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  	dmar_domain = to_dmar_domain(domain);
+>  
+>  	mutex_lock(&pasid_mutex);
+> -	svm = ioasid_find(INVALID_IOASID_SET, data->hpasid, NULL);
+> +	svm = ioasid_find(dmar_domain->ioasid_sid, data->hpasid, NULL);
+A question about the locking strategy. We don't take the
+device_domain_lock here. Could you clarify whether it is safe?
 
-Changes from v1:
-- Due to review comments by Sam Ravnborg, thanks!
-  https://lore.kernel.org/dri-devel/20200815083917.GA993113@ravnborg.org/
-  - Don't preserve newlines with '|' in description
-  - Use reset-gpios and backlight from panel-common.yaml
-  - Reindent example
-  https://lore.kernel.org/dri-devel/20200815093226.GB993113@ravnborg.org/
-  - Drop unused includes
-  - Use dev_* instead of DRM_* for printing
-  - Turn off regulators in reverse order from enable
-  - Silence errors in mantix_{shutdown,remove}
-  - Drop duplicate mipi_dsi_dcs_enter_sleep_mode()
-  https://lore.kernel.org/dri-devel/20200815100230.GA1002374@ravnborg.org/
-  - Use dev_err_probe()
-- Add delays when turning off panel as suggested by the data sheet
 
-This series is against next-20200814.
+>  	if (IS_ERR(svm)) {
+>  		ret = PTR_ERR(svm);
+>  		goto out;
+> @@ -440,6 +440,7 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
+>  			    struct device *dev, u32 pasid)
+>  {
+>  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> +	struct dmar_domain *dmar_domain;
+>  	struct intel_svm_dev *sdev;
+>  	struct intel_svm *svm;
+>  	int ret = -EINVAL;
+> @@ -447,8 +448,10 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
+>  	if (WARN_ON(!iommu))
+>  		return -EINVAL;
+>  
+> +	dmar_domain = to_dmar_domain(domain);
+> +
+>  	mutex_lock(&pasid_mutex);
+> -	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
+> +	svm = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
+same here.
+>  	if (!svm) {
+>  		ret = -EINVAL;
+>  		goto out;
+> 
+Thanks
 
-Guido Günther (3):
-  dt-bindings: vendor-prefixes: Add mantix vendor prefix
-  dt-bindings: Add Mantix MLAF057WE51-X panel bindings
-  drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
-
- .../display/panel/mantix,mlaf057we51-x.yaml   |  70 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 328 ++++++++++++++++++
- 6 files changed, 419 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-
--- 
-2.26.2
+Eric
 
