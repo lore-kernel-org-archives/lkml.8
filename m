@@ -2,201 +2,138 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8125DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDC3204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8C3206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="quYqow0s";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S+JEYArJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzvxEX87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgHOVzU (ORCPT
+        id S1729360AbgHOVzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:55:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        Sat, 15 Aug 2020 17:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgHOVwZ (ORCPT
+        with ESMTP id S1729064AbgHOVwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:52:25 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A47C061347;
-        Fri, 14 Aug 2020 17:43:53 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597452231;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0G+axppjGzFD1dQNhB/BC6HHOikgQeBJXohrz5/uf+I=;
-        b=quYqow0sv/t/SjNiTyD3L+z5nz0GeEj7daya89jKSPPryz+OVDUY5FNaW9KeUjna6pziII
-        q3Yi+KIXjxKXk5fNbVwdcMY61G/K1XDwtFyYxdmlQXIjfKX/XXPalJcTwgpbp1gLSS62SE
-        /J5thjIZMthAZTCVbsKIsk/S/0QB45mx51zHbNb1v6yLX6fzPazpPa2+Fo5AEBNIpYn+Xa
-        /9NeFoRRwdn3Hedh/y9AOevdRs3P9bd1H5RQLEz9jDMXIQuw8/0RDVhlPyzLw0Ouv8CCQg
-        +8GuPuGzxYpv+jO1NjzalC7xDjqoI3UO4CyCVQUZSg29E32CIFue6zXE/qqdXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597452231;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0G+axppjGzFD1dQNhB/BC6HHOikgQeBJXohrz5/uf+I=;
-        b=S+JEYArJZdKGoQo+wpzbe4846cAJl157BcP2o1PIh9OAXUCuoGjDeFJpORMMo4OlFAe11J
-        LjfA/Xvu6T6II0BA==
-To:     paulmck@kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200814234152.GV4295@paulmck-ThinkPad-P72>
-References: <20200814180141.GP4295@paulmck-ThinkPad-P72> <87tux4kefm.fsf@nanos.tec.linutronix.de> <20200814234152.GV4295@paulmck-ThinkPad-P72>
-Date:   Sat, 15 Aug 2020 02:43:51 +0200
-Message-ID: <87ft8okabc.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sat, 15 Aug 2020 17:52:24 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAADFC02B8DD;
+        Sat, 15 Aug 2020 04:24:47 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id t15so8665249edq.13;
+        Sat, 15 Aug 2020 04:24:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/pYCqw4FJgQPrWvNgxirZK4mGQC6/Ct9Zlkxybe7NMM=;
+        b=BzvxEX870Xh3lvpFQLGjz7Veu4ygb9dXO7nfFMPyo3sDsJRvTHw6edfND4yqselsR6
+         URdlfuviGFFbRySestfN8PU7laLrFmG9iH1pfGTSdnXc1buyXBrCXETreK/M9kDopNRL
+         WJVCQYEx4kOiyuYGPpSZqor0EFIDiuRi3/MTukfQc2pS2hP1YDgE2bIJtcPaiDIi01jL
+         QPqZhDCVHMybZGVVBmfwQHHrGOI0OSwscrfWbmYsyGzHVVMqxiLtSfLKSqGFZsAisfLx
+         tTVZWR8KsVBWy7Ia/VM6l+oBsSYy/3YIzmJgrrbDQR/h1yyH9KRorvdwgkPpPE2JDYVL
+         C6Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/pYCqw4FJgQPrWvNgxirZK4mGQC6/Ct9Zlkxybe7NMM=;
+        b=OIffgJTBsjrC1GSboDDtIOVZjK5FD2mzhQxbDp0NlZE5olvh6Tit2kqmRPGd/98u+m
+         klHuLeZofv4eEqWxqn0VbfN7jgcuFCp5tokk7GZ4xv7Ezbp4DIbhv/nymZddsnurTDTO
+         V+JQG2LCM00sK+MAkUKyHeTxabho6FPTbLMrpIXhkUjZ3XTivBE6Anasq73RT4pl0W7+
+         A57npQThcWfWTfF6WnxWRlNSTFuuAokC37CzkuuQ3AeItDwVwI7m9lI3hyTEdv/RJYSA
+         1tec1sc6rX0BTI/1ijNXuikEqm1sxVBx8nbs9dZohMUGWGqLAOFSZ9/Py1GibDc+9t1b
+         TDiQ==
+X-Gm-Message-State: AOAM530rJxbLOoF+KvFb1C30t4U2f6dU8p/CADc6kSGvDJg3caOkfw6h
+        Ok7/wEa/eSU71Jf0Ekt4VnQ=
+X-Google-Smtp-Source: ABdhPJzNUtJSkcac39yHBPS5OxPmkL38Y++peDytppNuvWlZm5hLmWf+eQB4YO0lfG/9XEr/QYT7Gg==
+X-Received: by 2002:a50:fd8d:: with SMTP id o13mr6673800edt.313.1597490685719;
+        Sat, 15 Aug 2020 04:24:45 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g19sm9106505ejz.5.2020.08.15.04.24.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Aug 2020 04:24:45 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 1/2] ASoC: rockchip-spdif: add description for rk3308
+Date:   Sat, 15 Aug 2020 13:24:36 +0200
+Message-Id: <20200815112437.6662-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul,
+A test with the command below shows that the compatible string
 
-On Fri, Aug 14 2020 at 16:41, Paul E. McKenney wrote:
-> On Sat, Aug 15, 2020 at 01:14:53AM +0200, Thomas Gleixner wrote:
->> As a matter of fact I assume^Wdeclare that removing struct rcu_head which
->> provides a fallback is not an option at all. I know that you want to,
->> but it wont work ever. Dream on, but as we agreed on recently there is
->> this thing called reality which ruins everything.
->
-> For call_rcu(), agreed.  For kfree_rcu(), we know what the callback is
-> going to do, plus single-argument kfree_rcu() can only be invoked from
-> sleepable context.  (If you want to kfree_rcu() from non-sleepable
-> context, that will cost you an rcu_head in the data structure being
-> freed.)
+"rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
 
-kfree_rcu() as of today is just a conveniance wrapper around
-call_rcu(obj, rcu) which can be called from any context and it still
-takes TWO arguments.
+is already in use, but is not added to a document.
+The current fallback string "rockchip,rk3328-spdif" points to a data
+set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
+in the mainline as in the manufacturer kernel.
+(Of the enum only RK_SPDIF_RK3288 is used.)
+So if the properties don't change we might as well use the first SoC
+in line as fallback string and add the description for rk3308 as:
 
-Icepack?
+"rockchip,rk3308-spdif", "rockchip,rk3066-spdif"
 
-So if you come up with a new kfree_rcu_magic(void *obj) single argument
-variant which can only be called from sleepable contexts then this does
-not require any of the raw lock vs. non raw hacks at all because you can
-simply allocate without holding the raw lock in the rare case that you
-run out of storage space. With four 4k pages preallocated per CPU that's
-every 2048 invocations per CPU on 64bit.
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 
-So if you run into that situation then you drop the lock and then it's
-racy because you might be preempted or migrated after dropping the lock
-and you might have done a useless allocation, but that does not justify
-having a special allocator just for that? You have an extra page, so
-what?
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+enum rk_spdif_type {
+	RK_SPDIF_RK3066,
+	RK_SPDIF_RK3188,
+	RK_SPDIF_RK3288,
+	RK_SPDIF_RK3366,
+};
 
-To prevent subsequent callers to add to the allocation race you simply
-can let them wait on the first allocating attempt to finish That avoids
-more pointless allocations and as a side effect prevents all of them to
-create more pressure by continuing their open/close loop naturally
-without extra work.
+static const struct of_device_id rk_spdif_match[] = {
+	{ .compatible = "rockchip,rk3066-spdif",
+	  .data = (void *)RK_SPDIF_RK3066 },
+	{ .compatible = "rockchip,rk3188-spdif",
+	  .data = (void *)RK_SPDIF_RK3188 },
+	{ .compatible = "rockchip,rk3228-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3288-spdif",
+	  .data = (void *)RK_SPDIF_RK3288 },
+	{ .compatible = "rockchip,rk3328-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3366-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3368-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3399-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{},
+};
+---
+ Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> So if the single-argument kfree_rcu() case gets hit with a
-> memory-allocation failure, it can fall back to waiting for a grace
-> period and doing the free.  Of course, grace-period waits have horrible
-> latency, but under OOM life is hard.  If this becomes a problem in
-> non-OOM situations due to the lockless caches becoming empty, we will
-> have to allocate memory if needed before acquiring the lock with the
-> usual backout logic.  Doing that means that we can let the allocator
-> acquire locks and maybe even do a little bit of blocking, so that the
-> inline grace-period-wait would only happen if the system was well and
-> truly OOMed.
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+index c46715265..26e986097 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -27,6 +27,7 @@ properties:
+           - enum:
+             - rockchip,rk3188-spdif
+             - rockchip,rk3288-spdif
++            - rockchip,rk3308-spdif
+           - const: rockchip,rk3066-spdif
+ 
+   reg:
+-- 
+2.11.0
 
-No. It dropped the rcu internal lock and does a regular GFP_KENRNEL
-allocation which waits for the page to become available. Which is a good
-thing in the open/close scenario because it throttles the offender.
-
->> For normal operations a couple of pages which can be preallocated are
->> enough. What you are concerned of is the case where you run out of
->> pointer storage space.
->
-> Agreed.
->
->> There are two reasons why that can happen:
->> 
->>       1) RCU call flooding
->>       2) RCU not being able to run and mop up the backlog
->> 
->> #1 is observable by looking at the remaining storage space and the RCU
->>    call frequency
->> 
->> #2 is uninteresting because it's caused by RCU being stalled / delayed
->>    e.g. by a runaway of some sorts or a plain RCU usage bug.
->>    
->>    Allocating more memory in that case does not solve or improve anything.
->
-> Yes, #2 is instead RCU CPU stall warning territory.
->
-> If this becomes a problem, one approach is to skip the page-of-pointers
-> allocation if the grace period is more than (say) one second old.  If
-> the grace period never completes, OOM is unavoidable, but this is a way
-> of putting it off for a bit.
-
-Don't even think about optimizing your new thing for #2. It's a
-pointless exercise. If the task which runs into the 'can't allocate'
-case then is sleeps and waits. End of story.
-
->> So the interesting case is #1. Which means we need to look at the
->> potential sources of the flooding:
->> 
->>     1) User space via syscalls, e.g. open/close
->>     2) Kernel thread
->>     3) Softirq
->>     4) Device interrupt
->>     5) System interrupts, deep atomic context, NMI ...
->> 
->> #1 trivial fix is to force switching to an high prio thread or a soft
->>    interrupt which does the allocation
->> 
->> #2 Similar to #1 unless that thread loops with interrupts, softirqs or
->>    preemption disabled. If that's the case then running out of RCU
->>    storage space is the least of your worries.
->> 
->> #3 Similar to #2. The obvious candidates (e.g. NET) for monopolizing a
->>    CPU have loop limits in place already. If there is a bug which fails
->>    to care about the limit, why would RCU care and allocate more memory?
->> 
->> #4 Similar to #3. If the interrupt handler loops forever or if the
->>    interrupt is a runaway which prevents task/softirq processing then
->>    RCU free performance is the least of your worries.
->> 
->> #5 Clearly a bug and making RCU accomodate for that is beyond silly.
->> 
->> So if call_rcu() detects that the remaining storage space for pointers
->> goes below the critical point or if it observes high frequency calls
->> then it simply should force a soft interrupt which does the allocation.
->
-> Unless call_rcu() has been invoked with scheduler locks held.  But
-> eventually call_rcu() should be invoked with interrupts enabled, and at
-> that point it would be safe to raise_softirq(), wake_up(), or
-> whatever.
-
-If this atomic context corner case is hit within a problematic context
-then we talk about the RCU of today and not about the future single
-argument thing. And that oldschool RCU has a fallback. We are talking
-about pressure corner cases and you really want to squeeze out the last
-cache miss?  What for? If there is pressure then these cache misses are
-irrelevant.
-
-Thanks,
-
-        tglx
