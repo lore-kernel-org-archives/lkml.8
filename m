@@ -2,128 +2,439 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42513C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D250C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5CA20658
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439CF2065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 22:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgHOWdm (ORCPT
+        id S1728794AbgHOWfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:33:42 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:50554 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728262AbgHOWdl (ORCPT
+        Sat, 15 Aug 2020 18:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbgHOWfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:33:41 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CA97720022;
-        Sat, 15 Aug 2020 12:46:52 +0200 (CEST)
-Date:   Sat, 15 Aug 2020 12:46:51 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
- MLAF057WE51-X DSI panel
-Message-ID: <20200815104651.GA1005928@ravnborg.org>
-References: <cover.1597412076.git.agx@sigxcpu.org>
- <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
- <20200815100230.GA1002374@ravnborg.org>
- <20200815104022.GA5641@bogon.m.sigxcpu.org>
+        Sat, 15 Aug 2020 18:35:42 -0400
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EF1EC0045B1;
+        Sat, 15 Aug 2020 12:57:02 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 07FJu0cH068124;
+        Sat, 15 Aug 2020 21:56:00 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 07FJtxps000934;
+        Sat, 15 Aug 2020 21:55:59 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 07FJtxrF000933;
+        Sat, 15 Aug 2020 21:55:59 +0200
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>,
+        Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH v5 4/6] can: ctucanfd: CTU CAN FD open-source IP core - PCI bus support.
+Date:   Sat, 15 Aug 2020 21:43:06 +0200
+Message-Id: <a03647daa7a5f5cbed9b604021bd9407bc1470c3.1597518433.git.ppisa@pikron.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1597518433.git.ppisa@pikron.com>
+References: <cover.1597518433.git.ppisa@pikron.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200815104022.GA5641@bogon.m.sigxcpu.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=8nJEP1OIZ-IA:10 a=T4MLU0igAHpipydq7w0A:9 a=wPNLvfGTeEIA:10
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 07FJu0cH068124
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-0.497, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1598126161.30043@dclrB3bng2bqrNYUKNxYoA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 12:40:22PM +0200, Guido Günther wrote:
-> Hi Sam,
-> On Sat, Aug 15, 2020 at 12:02:30PM +0200, Sam Ravnborg wrote:
-> > Hi Guido.
-> > 
-> > > +static int mantix_probe(struct mipi_dsi_device *dsi)
-> > > +{
-> > > +	struct device *dev = &dsi->dev;
-> > > +	struct mantix *ctx;
-> > > +	int ret;
-> > > +
-> > > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > > +	if (!ctx)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> > > +	if (IS_ERR(ctx->reset_gpio)) {
-> > > +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
-> > > +		return PTR_ERR(ctx->reset_gpio);
-> > > +	}
-> > > +
-> > > +	mipi_dsi_set_drvdata(dsi, ctx);
-> > > +	ctx->dev = dev;
-> > > +
-> > > +	dsi->lanes = 4;
-> > > +	dsi->format = MIPI_DSI_FMT_RGB888;
-> > > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-> > > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-> > > +
-> > > +	ctx->avdd = devm_regulator_get(dev, "avdd");
-> > > +	if (IS_ERR(ctx->avdd)) {
-> > > +		ret = PTR_ERR(ctx->avdd);
-> > > +		if (ret != -EPROBE_DEFER)
-> > > +			DRM_DEV_ERROR(dev,
-> > > +				      "Failed to request avdd regulator: %d\n",
-> > > +				      ret);
-> > > +		return ret;
-> > > +	}
-> > 
-> > Consider to use the recently added dev_err_probe() here and below.
-> > Note: Not part of drm-misc-next yet - but hopefully after -rc1
-> > when a backmerge is done.
-> 
-> In fact I did decided against it since i was told that missing dev_* and
-> DRM_* logging shouldn't be done. So is that o.k. nowadays?
-s/missing/mixing/
+PCI bus adaptation for CTU CAN FD open-source IP core.
 
-I often request that logging is consistent - so I recognize the
-argument.
+The project providing FPGA design for Intel EP4CGX15 based DB4CGX15
+PCIe board with PiKRON.com designed transceiver riser shield is available
+at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
 
-For panel/* I have not made up my mind what I think is the best
-approach. The DRM_DEV_* and DRM_* logging do not add much value.
-So I have been tempted several times to convert all logging in
-panel/ to dev_* and pr_* (when no struct device * is available).
-That would also avoid that we mix up logging.
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Signed-off-by: Martin Jerabek <martin.jerabek01@gmail.com>
+Signed-off-by: Ondrej Ille <ondrej.ille@gmail.com>
+---
+ drivers/net/can/ctucanfd/Kconfig          |   9 +
+ drivers/net/can/ctucanfd/Makefile         |   3 +
+ drivers/net/can/ctucanfd/ctu_can_fd_pci.c | 314 ++++++++++++++++++++++
+ 3 files changed, 326 insertions(+)
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_pci.c
 
-We have drm_* logging - but they require a valid drm_device * which we
-do not have in the the panel drivers. So they are ruled out here.
+diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
+index d8da44d7f926..e1636373628a 100644
+--- a/drivers/net/can/ctucanfd/Kconfig
++++ b/drivers/net/can/ctucanfd/Kconfig
+@@ -12,4 +12,13 @@ config CAN_CTUCANFD
+ 
+ if CAN_CTUCANFD
+ 
++config CAN_CTUCANFD_PCI
++	tristate "CTU CAN-FD IP core PCI/PCIe driver"
++	depends on PCI
++	help
++	  This driver adds PCI/PCIe support for CTU CAN-FD IP core.
++	  The project providing FPGA design for Intel EP4CGX15 based DB4CGX15
++	  PCIe board with PiKRON.com designed transceiver riser shield is available
++	  at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
++
+ endif
+diff --git a/drivers/net/can/ctucanfd/Makefile b/drivers/net/can/ctucanfd/Makefile
+index 8d47008d0076..eb945260952d 100644
+--- a/drivers/net/can/ctucanfd/Makefile
++++ b/drivers/net/can/ctucanfd/Makefile
+@@ -5,3 +5,6 @@
+ 
+ obj-$(CONFIG_CAN_CTUCANFD) := ctucanfd.o
+ ctucanfd-y := ctu_can_fd.o ctu_can_fd_hw.o
++
++obj-$(CONFIG_CAN_CTUCANFD_PCI) += ctucanfd_pci.o
++ctucanfd_pci-y := ctu_can_fd_pci.o
+diff --git a/drivers/net/can/ctucanfd/ctu_can_fd_pci.c b/drivers/net/can/ctucanfd/ctu_can_fd_pci.c
+new file mode 100644
+index 000000000000..c4542eac2747
+--- /dev/null
++++ b/drivers/net/can/ctucanfd/ctu_can_fd_pci.c
+@@ -0,0 +1,314 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*******************************************************************************
++ *
++ * CTU CAN FD IP Core
++ *
++ * Copyright (C) 2015-2018 Ondrej Ille <ondrej.ille@gmail.com> FEE CTU
++ * Copyright (C) 2018-2020 Ondrej Ille <ondrej.ille@gmail.com> self-funded
++ * Copyright (C) 2018-2019 Martin Jerabek <martin.jerabek01@gmail.com> FEE CTU
++ * Copyright (C) 2018-2020 Pavel Pisa <pisa@cmp.felk.cvut.cz> FEE CTU/self-funded
++ *
++ * Project advisors:
++ *     Jiri Novak <jnovak@fel.cvut.cz>
++ *     Pavel Pisa <pisa@cmp.felk.cvut.cz>
++ *
++ * Department of Measurement         (http://meas.fel.cvut.cz/)
++ * Faculty of Electrical Engineering (http://www.fel.cvut.cz)
++ * Czech Technical University        (http://www.cvut.cz/)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ ******************************************************************************/
++
++#include <linux/module.h>
++#include <linux/pci.h>
++
++#include "ctu_can_fd.h"
++
++#define DRV_NAME	"ctucanfd_pci"
++
++#ifndef PCI_DEVICE_DATA
++#define PCI_DEVICE_DATA(vend, dev, data) \
++.vendor = PCI_VENDOR_ID_##vend, \
++.device = PCI_DEVICE_ID_##vend##_##dev, \
++.subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID, 0, 0, \
++.driver_data = (kernel_ulong_t)(data)
++#endif
++#ifndef PCI_VENDOR_ID_TEDIA
++#define PCI_VENDOR_ID_TEDIA 0x1760
++#endif
++
++#define PCI_DEVICE_ID_ALTERA_CTUCAN_TEST  0xCAFD
++#define PCI_DEVICE_ID_TEDIA_CTUCAN_VER21 0xff00
++
++#define CTUCAN_BAR0_CTUCAN_ID 0x0000
++#define CTUCAN_BAR0_CRA_BASE  0x4000
++#define CYCLONE_IV_CRA_A2P_IE (0x0050)
++
++#define CTUCAN_WITHOUT_CTUCAN_ID  0
++#define CTUCAN_WITH_CTUCAN_ID     1
++
++static bool use_msi = 1;
++module_param(use_msi, bool, 0444);
++MODULE_PARM_DESC(use_msi, "PCIe implementation use MSI interrupts. Default: 1 (yes)");
++
++static bool pci_use_second = 1;
++module_param(pci_use_second, bool, 0444);
++MODULE_PARM_DESC(pci_use_second, "Use the second CAN core on PCIe card. Default: 1 (yes)");
++
++struct ctucan_pci_board_data {
++	void __iomem *bar0_base;
++	void __iomem *cra_base;
++	void __iomem *bar1_base;
++	struct list_head ndev_list_head;
++	int use_msi;
++};
++
++static struct ctucan_pci_board_data *ctucan_pci_get_bdata(struct pci_dev *pdev)
++{
++	return (struct ctucan_pci_board_data *)pci_get_drvdata(pdev);
++}
++
++static void ctucan_pci_set_drvdata(struct device *dev,
++				   struct net_device *ndev)
++{
++	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
++	struct ctucan_priv *priv = netdev_priv(ndev);
++	struct ctucan_pci_board_data *bdata = ctucan_pci_get_bdata(pdev);
++
++	list_add(&priv->peers_on_pdev, &bdata->ndev_list_head);
++	priv->irq_flags = IRQF_SHARED;
++}
++
++/**
++ * ctucan_pci_probe - PCI registration call
++ * @pdev:	Handle to the pci device structure
++ * @ent:	Pointer to the entry from ctucan_pci_tbl
++ *
++ * This function does all the memory allocation and registration for the CAN
++ * device.
++ *
++ * Return: 0 on success and failure value on error
++ */
++static int ctucan_pci_probe(struct pci_dev *pdev,
++			    const struct pci_device_id *ent)
++{
++	struct device	*dev = &pdev->dev;
++	unsigned long driver_data = ent->driver_data;
++	struct ctucan_pci_board_data *bdata;
++	void __iomem *addr;
++	void __iomem *cra_addr;
++	void __iomem *bar0_base;
++	u32 cra_a2p_ie;
++	u32 ctucan_id = 0;
++	int ret;
++	unsigned int ntxbufs;
++	unsigned int num_cores = 1;
++	unsigned int core_i = 0;
++	int irq;
++	int msi_ok = 0;
++
++	ret = pci_enable_device(pdev);
++	if (ret) {
++		dev_err(dev, "pci_enable_device FAILED\n");
++		goto err;
++	}
++
++	ret = pci_request_regions(pdev, KBUILD_MODNAME);
++	if (ret) {
++		dev_err(dev, "pci_request_regions FAILED\n");
++		goto err_disable_device;
++	}
++
++	if (use_msi) {
++		ret = pci_enable_msi(pdev);
++		if (!ret) {
++			dev_info(dev, "MSI enabled\n");
++			pci_set_master(pdev);
++			msi_ok = 1;
++		}
++	}
++
++	dev_info(dev, "ctucan BAR0 0x%08llx 0x%08llx\n",
++		 (long long)pci_resource_start(pdev, 0),
++		 (long long)pci_resource_len(pdev, 0));
++
++	dev_info(dev, "ctucan BAR1 0x%08llx 0x%08llx\n",
++		 (long long)pci_resource_start(pdev, 1),
++		 (long long)pci_resource_len(pdev, 1));
++
++	addr = pci_iomap(pdev, 1, pci_resource_len(pdev, 1));
++	if (!addr) {
++		dev_err(dev, "PCI BAR 1 cannot be mapped\n");
++		ret = -ENOMEM;
++		goto err_release_regions;
++	}
++
++	/* Cyclone IV PCI Express Control Registers Area */
++	bar0_base = pci_iomap(pdev, 0, pci_resource_len(pdev, 0));
++	if (!bar0_base) {
++		dev_err(dev, "PCI BAR 0 cannot be mapped\n");
++		ret = -EIO;
++		goto err_pci_iounmap_bar1;
++	}
++
++	if (driver_data == CTUCAN_WITHOUT_CTUCAN_ID) {
++		cra_addr = bar0_base;
++		num_cores = 2;
++	} else {
++		cra_addr = bar0_base + CTUCAN_BAR0_CRA_BASE;
++		ctucan_id = ioread32(bar0_base + CTUCAN_BAR0_CTUCAN_ID);
++		dev_info(dev, "ctucan_id 0x%08lx\n", (unsigned long)ctucan_id);
++		num_cores = ctucan_id & 0xf;
++	}
++
++	irq = pdev->irq;
++
++	ntxbufs = 4;
++
++	bdata = kzalloc(sizeof(*bdata), GFP_KERNEL);
++	if (!bdata) {
++		ret = -ENOMEM;
++		goto err_pci_iounmap_bar0;
++	}
++
++	INIT_LIST_HEAD(&bdata->ndev_list_head);
++	bdata->bar0_base = bar0_base;
++	bdata->cra_base = cra_addr;
++	bdata->bar1_base = addr;
++	bdata->use_msi = msi_ok;
++
++	pci_set_drvdata(pdev, bdata);
++
++	ret = ctucan_probe_common(dev, addr, irq, ntxbufs, 100000000,
++				  0, ctucan_pci_set_drvdata);
++	if (ret < 0)
++		goto err_free_board;
++
++	core_i++;
++
++	while (pci_use_second && (core_i < num_cores)) {
++		addr += 0x4000;
++		ret = ctucan_probe_common(dev, addr, irq, ntxbufs, 100000000,
++					  0, ctucan_pci_set_drvdata);
++		if (ret < 0) {
++			dev_info(dev, "CTU CAN FD core %d initialization failed\n",
++				 core_i);
++			break;
++		}
++		core_i++;
++	}
++
++	/* enable interrupt in
++	 * Avalon-MM to PCI Express Interrupt Enable Register
++	 */
++	cra_a2p_ie = ioread32(cra_addr + CYCLONE_IV_CRA_A2P_IE);
++	dev_info(dev, "cra_a2p_ie 0x%08x\n", cra_a2p_ie);
++	cra_a2p_ie |= 1;
++	iowrite32(cra_a2p_ie, cra_addr + CYCLONE_IV_CRA_A2P_IE);
++	cra_a2p_ie = ioread32(cra_addr + CYCLONE_IV_CRA_A2P_IE);
++	dev_info(dev, "cra_a2p_ie 0x%08x\n", cra_a2p_ie);
++
++	return 0;
++
++err_free_board:
++	pci_set_drvdata(pdev, NULL);
++	kfree(bdata);
++err_pci_iounmap_bar0:
++	pci_iounmap(pdev, cra_addr);
++err_pci_iounmap_bar1:
++	pci_iounmap(pdev, addr);
++err_release_regions:
++	if (msi_ok) {
++		pci_disable_msi(pdev);
++		pci_clear_master(pdev);
++	}
++	pci_release_regions(pdev);
++err_disable_device:
++	pci_disable_device(pdev);
++err:
++	return ret;
++}
++
++/**
++ * ctucan_pci_remove - Unregister the device after releasing the resources
++ * @pdev:	Handle to the pci device structure
++ *
++ * This function frees all the resources allocated to the device.
++ * Return: 0 always
++ */
++static void ctucan_pci_remove(struct pci_dev *pdev)
++{
++	struct net_device *ndev;
++	struct ctucan_priv *priv = NULL;
++	struct ctucan_pci_board_data *bdata = ctucan_pci_get_bdata(pdev);
++
++	dev_dbg(&pdev->dev, "ctucan_remove");
++
++	if (!bdata) {
++		dev_err(&pdev->dev, "%s: no list of devices\n", __func__);
++		return;
++	}
++
++	/* disable interrupt in
++	 * Avalon-MM to PCI Express Interrupt Enable Register
++	 */
++	if (bdata->cra_base)
++		iowrite32(0, bdata->cra_base + CYCLONE_IV_CRA_A2P_IE);
++
++	while ((priv = list_first_entry_or_null(&bdata->ndev_list_head, struct ctucan_priv,
++						peers_on_pdev)) != NULL) {
++		ndev = priv->can.dev;
++
++		unregister_candev(ndev);
++
++		netif_napi_del(&priv->napi);
++
++		list_del_init(&priv->peers_on_pdev);
++		free_candev(ndev);
++	}
++
++	pci_iounmap(pdev, bdata->bar1_base);
++
++	if (bdata->use_msi) {
++		pci_disable_msi(pdev);
++		pci_clear_master(pdev);
++	}
++
++	pci_release_regions(pdev);
++	pci_disable_device(pdev);
++
++	pci_iounmap(pdev, bdata->bar0_base);
++
++	pci_set_drvdata(pdev, NULL);
++	kfree(bdata);
++}
++
++static SIMPLE_DEV_PM_OPS(ctucan_pci_pm_ops, ctucan_suspend, ctucan_resume);
++
++static const struct pci_device_id ctucan_pci_tbl[] = {
++	{PCI_DEVICE_DATA(TEDIA, CTUCAN_VER21,
++		CTUCAN_WITH_CTUCAN_ID)},
++	{},
++};
++
++static struct pci_driver ctucan_pci_driver = {
++	.name = KBUILD_MODNAME,
++	.id_table = ctucan_pci_tbl,
++	.probe = ctucan_pci_probe,
++	.remove = ctucan_pci_remove,
++	.driver.pm = &ctucan_pci_pm_ops,
++};
++
++module_pci_driver(ctucan_pci_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Pavel Pisa");
++MODULE_DESCRIPTION("CTU CAN FD for PCI bus");
+-- 
+2.20.1
 
-Do you have any opinions/comments on this?
-
-	Sam
