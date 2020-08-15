@@ -2,170 +2,145 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E991C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC2B2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F122053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgHOV6X (ORCPT
+        id S1729284AbgHOV6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:58:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:63150 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbgHOV6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:58:21 -0400
+Received: from smtprelay0091.hostedemail.com ([216.40.44.91]:46386 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729161AbgHOV6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:58:15 -0400
-IronPort-SDR: chfJsoWD21AZCo8XmipsY48Gr8Xp3fPVJU5kSbNv3X3S4iNFbIXkyB8U6JWbDTnuVx9ArIdlsP
- crfC4UdWv/cw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9713"; a="153763269"
-X-IronPort-AV: E=Sophos;i="5.76,315,1592895600"; 
-   d="scan'208";a="153763269"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2020 22:58:07 -0700
-IronPort-SDR: su0+2Bc+sf5a5AkUhAnKl1SwBt4M44H8rpqtoq3dBXweKweSiz9JoJjzqHl15/gQODauiDVSZq
- 3jjjhZb3JdGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,315,1592895600"; 
-   d="scan'208";a="291931077"
-Received: from araj-mobl1.jf.intel.com ([10.254.83.48])
-  by orsmga003.jf.intel.com with ESMTP; 14 Aug 2020 22:58:06 -0700
-Date:   Fri, 14 Aug 2020 22:58:06 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
- migrated
-Message-ID: <20200815055806.GA3828@araj-mobl1.jf.intel.com>
-References: <20200814213842.31151-1-ashok.raj@intel.com>
- <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 77CD218018769
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 04:18:38 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 3B2BF1801874F;
+        Sat, 15 Aug 2020 04:18:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: unit59_4e1053f27002
+X-Filterd-Recvd-Size: 3572
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 15 Aug 2020 04:18:36 +0000 (UTC)
+Message-ID: <2364837d5dcf80f3bdece75d8bfc2f9747467571.camel@perches.com>
+Subject: Re: [RFC PATCH] vsprintf: Add %pv extension replacement for
+ print_vma_addr
+From:   Joe Perches <joe@perches.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        John Ogness <john.ogness@linutronix.de>
+Date:   Fri, 14 Aug 2020 21:18:35 -0700
+In-Reply-To: <20200815035228.GC582@jagdpanzerIV.localdomain>
+References: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
+         <20200815035228.GC582@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb47f196-90e5-3f78-305b-122fc9192867@infradead.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Sat, 2020-08-15 at 12:52 +0900, Sergey Senozhatsky wrote:
+> Cc-ing John
+> 
+> On (20/08/14 10:53), Joe Perches wrote:
+> [..]
+> 
+> In general, the idea looks nice.
+> 
+> > +static noinline_for_stack
+> > +char *vma_addr(char *buf, char *end, void *ip,
+> > +	       struct printf_spec spec, const char *fmt)
+> > +{
+> > +#ifdef CONFIG_MMU
+> > +	struct mm_struct *mm = current->mm;
+> > +	struct vm_area_struct *vma;
+> > +
+> > +	/*
+> > +	 * we might be running from an atomic context so we cannot sleep
+> > +	 */
+> > +	if (!mmap_read_trylock(mm))
+> > +		return buf;
+> > +
+> > +	vma = find_vma(mm, (unsigned long)ip);
+> > +	if (vma && vma->vm_file) {
+> > +		char *p;
+> > +		struct file *f = vma->vm_file;
+> > +		char *page = (char *)__get_free_page(GFP_NOWAIT);
+> 
+> Hmm, this is huge. For the time being this is going to introduce lock
+> inversion chains:
+> 
+> 	PRINTK -> printk_locks -> MM -> mm_locks
+> 
+> vs
+> 	MM -> mm_locks -> PRINTK -> printk_locks
+> 
+> Another thing to mention is
+> 
+> 	PRINTK -> printk_locks -> MM (WANR_ON/etc) -> PRINTK
+> 
+> we are in printk_safe, currently, but that's going to change.
+> 
+> We might not be ready to take this as of now, but things can change
+> once we drop printk_locks.
+> 
+> > +		if (page) {
+> > +			p = file_path(f, page, PAGE_SIZE);
+> > +			if (IS_ERR(p))
+> > +				p = "?";
+> > +			buf = string(buf, end, kbasename(p), default_str_spec);
+> > +			buf = string_nocheck(buf, end, "[", default_str_spec);
+> > +			buf = pointer_string(buf, end,
+> > +					     (void *)vma->vm_start,
+> > +					     default_hex_spec);
+> > +			buf = string_nocheck(buf, end, "+", default_str_spec);
+> > +			buf = pointer_string(buf, end,
+> > +					     (void *)(vma->vm_end - vma->vm_start),
+> > +					     default_hex_spec);
+> > +			buf = string_nocheck(buf, end, "]", default_str_spec);
+> > +			free_page((unsigned long)page);
+> > +		}
+> > +	}
+> > +	mmap_read_unlock(mm);
+> > +#else
+> > +	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
+> 
+> Hmm, we don't usually do that CONFIG_FOO=n thing, I think we just need
+> to skip %pv and print nothing.
+
+I don't.
+
+Right now, include/linux/mm.h has
+
+#ifdef CONFIG_MMU
+void print_vma_addr(char *prefix, unsigned long rip);
+#else
+static inline void print_vma_addr(char *prefix, unsigned long rip)
+{
+}
+#endif
+
+and the 'v' can't be #ifdef'd in vsprintf/pointer()
+otherwise %pv would fallthrough to
+
+	return ptr_to_id(buf, end, ptr, spec);
 
 
-On Fri, Aug 14, 2020 at 04:25:32PM -0700, Randy Dunlap wrote:
-> On 8/14/20 2:38 PM, Ashok Raj wrote:
-> > When offlining CPU's, fixup_irqs() migrates all interrupts away from the
-> 
->                  CPUs,
-
-Thanks for catching these. I'll fix all these suggested changes in my next rev
-Once i get additional feedback from Thomas.
-
-
-> 
-> > outgoing CPU to an online CPU. Its always possible the device sent an
-> 
->                                  It's
-> 
-> > interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-> > lapic identifies such interrupts. apic_soft_disable() will not capture any
-> 
->   LAPIC
-> 
-> > new interrupts in IRR. This causes interrupts from device to be lost during
-> > cpu offline. The issue was found when explicitly setting MSI affinity to a
-> 
->   CPU
-> 
-> > CPU and immediately offlining it. It was simple to recreate with a USB
-> > ethernet device and doing I/O to it while the CPU is offlined. Lost
-> > interrupts happen even when Interrupt Remapping is enabled.
-> > 
-> > Current code does apic_soft_disable() before migrating interrupts.
-> > 
-> > native_cpu_disable()
-> > {
-> > 	...
-> > 	apic_soft_disable();
-> > 	cpu_disable_common();
-> > 	  --> fixup_irqs(); // Too late to capture anything in IRR.
-> > }
-> > 
-> > Just fliping the above call sequence seems to hit the IRR checks
-> 
->        flipping
-> 
-> > and the lost interrupt is fixed for both legacy MSI and when
-> > interrupt remapping is enabled.
-> > 
-> > 
-> > Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-> > Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > 
-> > To: linux-kernel@vger.kernel.org
-> > To: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-> > Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-> > Cc: Evan Green <evgreen@chromium.org>
-> > Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  arch/x86/kernel/smpboot.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> > index ffbd9a3d78d8..278cc9f92f2f 100644
-> > --- a/arch/x86/kernel/smpboot.c
-> > +++ b/arch/x86/kernel/smpboot.c
-> > @@ -1603,13 +1603,20 @@ int native_cpu_disable(void)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > +	cpu_disable_common();
-> >  	/*
-> >  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
-> >  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-> > -	 * messages.
-> > +	 * messages. Its important to do apic_soft_disable() after
-> 
-> 	             It's
-> 
-> > +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
-> > +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
-> > +	 * currently set IRR/ISR but new interrupts will not set IRR.
-> > +	 * This causes interrupts sent to outgoing cpu before completion
-> 
-> 	                                           CPU
-> 
-> > +	 * of irq migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
-> 
-> 	      IRQ
-> 
-> > +	 * APIC State after It Has been Software Disabled" section for more
-> > +	 * details.
-> >  	 */
-> >  	apic_soft_disable();
-> > -	cpu_disable_common();
-> >  
-> >  	return 0;
-> >  }
-> > 
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
