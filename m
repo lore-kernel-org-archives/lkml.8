@@ -2,155 +2,88 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476D12311C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D078323B45
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE3b9gKV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="fI2vCFF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgHOVpr (ORCPT
+        id S1728167AbgHOVps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:45:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
+        Sat, 15 Aug 2020 17:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgHOVpn (ORCPT
+        with ESMTP id S1726259AbgHOVpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Aug 2020 17:45:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA00C0045B9;
-        Sat, 15 Aug 2020 13:19:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 9so10130319wmj.5;
-        Sat, 15 Aug 2020 13:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIzNxA4BRTbs45wz2IBTfdONSpn/S4dV1mOfjSjFesQ=;
-        b=jE3b9gKVGX5Fk2XQYlJoQ9uC/GrRVyBZX0DJDN3AJAxFJULHvvIK2ex9pvr+pWVW6X
-         LAWRom/Q6eGx5wTFkQlktCzOrPNhzZe8gzqy3MqtZPJHCAiANJNEqJ0+S5XkpNNE8wF+
-         Wj8zHZ3ogrzsnKSIzaGROnT3CG1Ex/QgqY8omexs3fKkR6brl1sorYPZBV7smPDL/i0O
-         BlTZe8jkjajnVX8J7XlB/Ba3+EXRCUisSGzot3/9ui6Qvqs1HLvdSjDqRKaz3sWe6WtU
-         lginAKDasczM0r5brn7c0fg6LVFVMjUdOMagynJngPDA9icPpat9jIBAKlyjyWpRAFDm
-         UDng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIzNxA4BRTbs45wz2IBTfdONSpn/S4dV1mOfjSjFesQ=;
-        b=hroFIjWVC49WSCczv3jUJwcHI48AwHad776NJ/eSdYjeaTzXwewlqi6Q+513avOHez
-         6A2D0DpokAb8NiNxjIgxzAXIpvSxH2HrE8f5HvJ/dAd20vXZo9Gy2lyNLEMrjHJ4+UvN
-         lTtyFERjRmLWX8gqatz+eWSrY4B3JTDOgqDr0gZ6yPRiM+M5kUsMr9kv00aqO5E5AWbz
-         JWAuESZvE2SLlxhQCUHMBPR/83RyO41V1NKEgJ66nfXkqVYpGHudiruyzlBZtUIA5RVf
-         LDbeGw3AYZ9njmO3C1Lz6innsRaF97m2aSePOtn8vDfoW2KQ5c843hChr15iIN9CXwEO
-         KmMA==
-X-Gm-Message-State: AOAM530bbT+eQwmO2j/W0I5uSqUrytjtQplJ9NmBshEFhm8ZL5zRG3an
-        gu/ikh+kkhR+HSXOPEgTajR/5w6K6fbvfbIBUQ0=
-X-Google-Smtp-Source: ABdhPJyrGCbvhPVezyVJPPQnDejn5AGE+M7MmxTTrCOoiHRMgdeH5nxJu5TAlm48/n6OtYNzlDFZP/YcRo0XSEVEupY=
-X-Received: by 2002:a1c:e919:: with SMTP id q25mr7743939wmc.123.1597522787277;
- Sat, 15 Aug 2020 13:19:47 -0700 (PDT)
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000F1C00459D
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 12:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oQyOEPHw/uNu9ZLTFXekoz2n57dypFJZ56uvrqcRB/E=; b=fI2vCFF9Nl76oYBwA+j4JZYaZn
+        IMfEyaUu2DPjvoDQCqhLpzAKfn6j6Unbv03s33L5zzZCGG6EjmkXNq986BV/USXBfzjAzFlojBUL9
+        URJ/AeGPGD2jQ5epjk/tFsayqjaWLQ1f85YmqSEcjkaF01mt+jFI/dGu27DUrsA910l0=;
+Received: from p5dcc3368.dip0.t-ipconnect.de ([93.204.51.104] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k71wp-0000Fu-SA; Sat, 15 Aug 2020 21:34:36 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k71wp-0005dF-GO; Sat, 15 Aug 2020 21:34:35 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        andreas@kemnade.info, Anson.Huang@nxp.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        michael@walle.cc, rjones@gateworks.com, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        letux-kernel@openphoenux.org
+Subject: [PATCH 1/2] dt-bindings: arm: fsl: add compatible string for Tolino Shine 2 HD
+Date:   Sat, 15 Aug 2020 21:33:35 +0200
+Message-Id: <20200815193336.21598-2-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200815193336.21598-1-andreas@kemnade.info>
+References: <20200815193336.21598-1-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <20200812044223.19279-1-tanmay@codeaurora.org> <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-In-Reply-To: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 15 Aug 2020 13:20:35 -0700
-Message-ID: <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Tanmay Shah <tanmay@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
-        Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
->
-> On 12/08/2020 07:42, Tanmay Shah wrote:
->  > From: Chandan Uddaraju <chandanu@codeaurora.org>
->  >
->  > Add the needed DP PLL specific files to support
->  > display port interface on msm targets.
->
-> [skipped]
->
->  > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
-> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->  > new file mode 100644
->  > index 000000000000..475ba6ed59ab
->  > --- /dev/null
->  > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->  > @@ -0,0 +1,98 @@
->  > +/* SPDX-License-Identifier: GPL-2.0-only */
->  > +/*
->  > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->  > + */
->  > +
->  > +#ifndef __DP_PLL_10NM_H
->  > +#define __DP_PLL_10NM_H
->  > +
->  > +#include "dp_pll.h"
->  > +#include "dp_reg.h"
->  > +
->  > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->  > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->  > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->  > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->  > +
->  > +#define NUM_DP_CLOCKS_MAX            6
->  > +
->  > +#define DP_PHY_PLL_POLL_SLEEP_US        500
->  > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->  > +
->  > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->  > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->  > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->  > +
->  > +struct dp_pll_vco_clk {
->  > +    struct clk_hw hw;
->  > +    unsigned long    rate;        /* current vco rate */
->  > +    u64        min_rate;    /* min vco rate */
->  > +    u64        max_rate;    /* max vco rate */
->  > +    void        *priv;
->  > +};
->  > +
->  > +struct dp_pll_db {
->
-> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
-> example, will use slightly different structure.
+This adds a compatible string for the Tolino Shine 2 HD eBook reader.
 
-Note that sboyd has a WIP series to move all of the pll code out to a
-phy driver.  If there is work already happening on 7nm support, it
-might be better to go with the separate phy driver approach?  I'm
-still a bit undecided about whether to land the dp code initially with
-the pll stuff in drm, and then continue refactoring to move to
-separate phy driver upstream, or to strip out the pll code from the
-beginning.  If you/someone is working on 7nm support, then feedback
-about which approach is easier is welcome.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 05906e291e38..a3fb61868a16 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -211,6 +211,7 @@ properties:
+         items:
+           - enum:
+               - fsl,imx6sl-evk            # i.MX6 SoloLite EVK Board
++              - kobo,tolino-shine2hd
+               - kobo,tolino-shine3
+           - const: fsl,imx6sl
+ 
+-- 
+2.20.1
 
-BR,
--R
