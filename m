@@ -2,111 +2,151 @@ Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E635BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3756AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5D72053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597528277;
-	bh=OKFKeDJZDEG/PWUyEkutMs4Of3dMvejHgggyDEU4gMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BV1TCpA4L3Vl60SlTRB5RkLIyJyEEugeG61WuFWleUrrYwtr30UXPaaOy4fVYdOZV
-	 5h6VQmnkKDFMW9ptDwF0FgL50Akenu/ZqPABWqZWRdjS/prcv4tLAIpDrHU+bxGAcs
-	 6mZXc8q5qssNALSJ40Mk57/Ntvw39MYCvjLfmdlc=
+	by mail.kernel.org (Postfix) with ESMTP id ECF62204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 21:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FOb5lXu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgHOVvG (ORCPT
+        id S1728727AbgHOVvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
+        Sat, 15 Aug 2020 17:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728475AbgHOVuy (ORCPT
+        with ESMTP id S1728674AbgHOVvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 17:50:54 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89465C0F26F1;
-        Sat, 15 Aug 2020 11:15:01 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id c16so13233071ejx.12;
-        Sat, 15 Aug 2020 11:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LMT9eJmgWfVnryacfbbwOLILASNGcjdBzCE+hJadmmA=;
-        b=q9OCHHcUld23QLAguCC0Mhve5atQxWPM7SOpVjzmpC4kAyptnOwgxyiFibtct6IAqR
-         JU12DoxlOseehnlDh0awrurS/BP1r2bM4doDnzN2cGOiQQEuN2sUe/DG745GoJ3z9aTT
-         vIyGtAVG9unaVsHCDQIt+vBk7AQ4qzIFltuumRB5hOFJpjnVfc8DCrH3t44Os6WiUskw
-         1TfbM3pLnf01GHPwkXRNGioRRL3BuCmo5FSRFlOt5IyrRo2cMg7T6CxyMOSBLTKNfX9p
-         7Xs7OgwZFziQedYrMrGi2D7ke5qM4z9n4ehaq+E+2uKgNfe4HcJiwrLISJBAlDS5mJcT
-         TKQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=LMT9eJmgWfVnryacfbbwOLILASNGcjdBzCE+hJadmmA=;
-        b=WTYpeFoDhBDtojYwjoBU9CXNzyTRz6N9WyRyph6LrQQTEErT1VDhplvprUB3YHM+IO
-         T1jrPh7R/5sdvtJPaVjNoP/KcVfSmmZZmoyZL4bujwoF2R5auNsXyIbNWv3EB0GaGB9M
-         t+DSOLj7twvxJY47W3V73o/C1EyqYelotq0WH+SS9+1QPx+m67oR2DyRhl9qkIsTmbEW
-         YlvY71kkEV137entn2EHWqid/mrUKtiR3SPgmsjCDw5aYnFT86gVKziw6zv6kmId1PB4
-         U8aUvQ4eT8+dCRpgB1+Ey7FZe+qyA1kSbz073H2VLr3yEpLtRY4k0QImc7xfIlwSxkKg
-         jfvA==
-X-Gm-Message-State: AOAM530mAvpNjQ/1Ca8xd8K69FhApPfUP/SdAtldHRShBBMMn7LBw+Je
-        8Wmr1TxSlYZMZburQ3l7+344QyPJuhI=
-X-Google-Smtp-Source: ABdhPJwj5ewtaPyWTr8kWSZ3yL/Ah7r877dtkQoh2EtKIdB2dgc8xl5kP3vR+5g7dSuAQ1pWvOY0gQ==
-X-Received: by 2002:a17:906:328d:: with SMTP id 13mr8088081ejw.71.1597515300339;
-        Sat, 15 Aug 2020 11:15:00 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o25sm10278308ejm.34.2020.08.15.11.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 11:14:59 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 20:14:57 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: new build warnings after binutils update
-Message-ID: <20200815181457.GA2719638@gmail.com>
-References: <20200811143130.0ca95b8d@canb.auug.org.au>
- <CAMj1kXGvfjO_e7AgurJ-81o6e4rBC8HkXi3Kkb+ZZfy-MoKcyQ@mail.gmail.com>
- <20200814102206.GB2367157@gmail.com>
- <202008141232.A5A5D8C7@keescook>
+        Sat, 15 Aug 2020 17:51:10 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA7AC03B3E7;
+        Sat, 15 Aug 2020 02:32:39 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f1c7a00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:7a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A29941EC0411;
+        Sat, 15 Aug 2020 11:32:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1597483956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DVkFmgVppcUdysdhmCgRYqE3/zJKAH13Ppg3uAvwVP8=;
+        b=FOb5lXu7Kn7iS2NabxxkPOxoDuF/xer2Qu77aiDAYxskjdo45klK3RVJaZ0IF/ic4gaKoN
+        Grp08fbd9Jmd9ZWZk69bruMIgP72l56Pi5EiNwnsDXKMyaQbCipo+ZQVuPqjJFQR17MtQ+
+        qhuxBZcCdDOclWH+NnhAd6ZlXjsIHbs=
+Date:   Sat, 15 Aug 2020 11:33:32 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alex Kluver <alex.kluver@hpe.com>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ardb@kernel.org, mchehab@kernel.org, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com
+Subject: Re: [PATCH] edac,ghes,cper: Add Row Extension to Memory Error Record
+Message-ID: <20200815093332.GD25814@zn.tnic>
+References: <20200727181445.111002-1-alex.kluver@hpe.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202008141232.A5A5D8C7@keescook>
+In-Reply-To: <20200727181445.111002-1-alex.kluver@hpe.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Kees Cook <keescook@chromium.org> wrote:
-
-> On Fri, Aug 14, 2020 at 12:22:06PM +0200, Ingo Molnar wrote:
-> > > [0] https://lore.kernel.org/lkml/20200731202738.2577854-6-nivedita@alum.mit.edu/
-> > 
-> > It all looked good to me but was a bit late for v5.9, will pick up 
-> > after -rc1.
+On Mon, Jul 27, 2020 at 01:14:45PM -0500, Alex Kluver wrote:
+> Memory errors could be printed with incorrect row values since the DIMM
+> size has outgrown the 16 bit row field in the CPER structure. UEFI
+> Specification Version 2.8 has increased the size of row by allowing it to
+> use the first 2 bits from a previously reserved space within the structure.
 > 
-> Excellent! Thank you. I'll base the orphan series on x86/boot now. Once
-> I send a v6 (there are a few more things to tweak), can you carry that
-> in -tip as well (it includes arm and arm64 as well, all of which depend
-> on several asm-generic patches).
+> When needed, add the extension bits to the row value printed.
+> 
+> Based on UEFI 2.8 Table 299. Memory Error Record
+> 
+> Tested-by: Russ Anderson <russ.anderson@hpe.com>
+> Signed-off-by: Alex Kluver <alex.kluver@hpe.com>
+> ---
+>  drivers/edac/ghes_edac.c    | 10 ++++++++--
+>  drivers/firmware/efi/cper.c | 11 +++++++++--
+>  include/linux/cper.h        |  9 +++++++--
+>  3 files changed, 24 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index cb3dab56a875..cfa3156300f5 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -337,8 +337,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  		p += sprintf(p, "rank:%d ", mem_err->rank);
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_BANK)
+>  		p += sprintf(p, "bank:%d ", mem_err->bank);
+> -	if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
+> -		p += sprintf(p, "row:%d ", mem_err->row);
+> +	if (mem_err->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
+> +		u32 row_extended = 0;
+> +		if (mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT)
+> +			row_extended = (mem_err->extended & CPER_MEM_EXT_ROW_MASK)
+> +				<<CPER_MEM_EXT_ROW_SHIFT;
+> +		row_extended |= mem_err->row;
+> +		p += sprintf(p, "row:%d ", row_extended);
+> +	}
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_COLUMN)
+>  		p += sprintf(p, "col:%d ", mem_err->column);
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_BIT_POSITION)
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index f564e15fbc7e..5faaf6ecd659 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -234,8 +234,14 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
+>  		n += scnprintf(msg + n, len - n, "bank: %d ", mem->bank);
+>  	if (mem->validation_bits & CPER_MEM_VALID_DEVICE)
+>  		n += scnprintf(msg + n, len - n, "device: %d ", mem->device);
+> -	if (mem->validation_bits & CPER_MEM_VALID_ROW)
+> -		n += scnprintf(msg + n, len - n, "row: %d ", mem->row);
+> +	if (mem->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
+> +		u32 row_extended = 0;
+> +		if (mem->validation_bits & CPER_MEM_VALID_ROW_EXT)
+> +			row_extended = (mem->extended & CPER_MEM_EXT_ROW_MASK)
+> +				<<CPER_MEM_EXT_ROW_SHIFT;
 
-Sure, that looks the most sensible, since there's so much x86 impact. 
-Might migrate the commits over into a more generic topic branch - 
-started out with x86/boot to get things going.
+This is not very readable.
 
-Thanks,
+> +		row_extended |= mem->row;
+> +		n += scnprintf(msg + n, len - n, "row: %d ", row_extended);
+> +	}
 
-	Ingo
+Both those hunks contain duplicated code which kinda wants to be an
+inline function in cper.h which returns row_extended and gets called by
+both sites. And then the call site can look very simple:
+
+        if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
+                row = mem_err->row;
+
+        /* add row extension */
+        row |= cper_get_mem_extension();
+
+        p += sprintf(p, "row:%d ", row);
+
+with
+
+static inline u32 cper_get_mem_extension(void)
+{
+	if (!(mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT))
+		return 0;
+
+	return (mem_err->extended & CPER_MEM_EXT_ROW_MASK) << CPER_MEM_EXT_ROW_SHIFT;
+}
+
+Something along those lines...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
