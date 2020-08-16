@@ -2,154 +2,149 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE81C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9266DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C740206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF99206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnfhSjMI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvGMG1n7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgHPHXD (ORCPT
+        id S1726641AbgHPHYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 03:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48636 "EHLO
+        Sun, 16 Aug 2020 03:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgHPHXC (ORCPT
+        with ESMTP id S1726361AbgHPHYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 03:23:02 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD12C061786;
-        Sun, 16 Aug 2020 00:23:02 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so6617362pfn.0;
-        Sun, 16 Aug 2020 00:23:02 -0700 (PDT)
+        Sun, 16 Aug 2020 03:24:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E20C061786;
+        Sun, 16 Aug 2020 00:24:47 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o5so6550082pgb.2;
+        Sun, 16 Aug 2020 00:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XsWzkI7b5pu8oXRoyOcjalYLcDw0bFRQKxSKHW3RdiE=;
-        b=KnfhSjMIJRK9g0L1/TkVJwJ+MZLfx9QY8vyjsQeXdxMvc7pHJ+XF4PXGFngDemEagf
-         uXHun+YRQygAj9a8L+WiXupgmh1V1GckbRqwBBfw6XxOPcpFyzyG34B0oB5q7XM+gurL
-         hZh6j1HEy04Cd1nhn0g5ROqeIINp5tukMDDecpzBX0mT8uBa4hQ4082KYmFEJYfk5iql
-         +g8QBDlUsDxY5rzo8jVgJwHc/WN0BLh4xSRkCyrSmh5b1PTt2uyNJnDYlyLe7vEtk+JA
-         EeEyp9GCqH23grUC4k+powv+wo1ZaJ5la1nrnH0/k6SKrAQAOFvnuBBu2QSmUcf6+L++
-         Z1rQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RzIG+1vyXz3X47wXuY6TSglS4qmCJSgzuoZiRxj3Erc=;
+        b=LvGMG1n7dRBwxic3RaExkurQFdu2DRCEGL4TTFaSD2AABIqZoQFPO4/ivKbkUzs/jc
+         2kvQNC/A5R+VjIXC9c109YcE2ZtCvwzWnXAFUpEG/tgCCzAiP+8C304Il5gVMbMOppcu
+         EsMk8196tDigexI0o+jobBdXvKqslAbKLwBPgDkIXiAt8gdLHU4SgFjymi4PA9FWKCPZ
+         cP1Xe+ZHAEfSkrD1Qz9xdEmlrgz57vajcqpw3+UF9+uDg/HlV3Jq14+IFOmj/WkZOws0
+         p2BcItnqQ2R28CrGE+wfZn294Ua19cZ0mkpLDa+67jV7srq1Io5bmS7ukPbj8Y4r5YPy
+         qkRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XsWzkI7b5pu8oXRoyOcjalYLcDw0bFRQKxSKHW3RdiE=;
-        b=cCP/YPFut+oN/CRRrSb4XkaB7NB0x7ccW0H1PKl8DfkpWCQGHazZlM0uwWJNvYbu/n
-         1xceoX0jcdf7GO4xlN1Z12Dl/RgTThRGm2iBZV6XYKf4f9y/XBNE+QzoN0Enpnt5Fhbw
-         m6aabaa8yvwdK2+l/WBwlK3PdH584uCDz4AxqYLh93Gt6mtIfz28KR9jKBxIlTYDq9ng
-         rgb8GUZGcwNCf2p1NU41X5L+uXfmjvvD3sVH85V+WHdpO3VaULZAeEXaK/309OAX6Iuq
-         hgGhx/WfYjjWF4MbZb+wjhnEadBPfDeujfJAgSU6UxKhOoz5AAUkJP16p8DVuHqMJ50T
-         ljeA==
-X-Gm-Message-State: AOAM532ySIOdt9lKwnfX0i+l0qi0HiSsLzl2M4lOlAFBu29Kn/8FzSzP
-        eK8n6FsqMTYzIdxNbmQU2Q==
-X-Google-Smtp-Source: ABdhPJzFMl3/Ql1T3hd7ZrGzuMfN4t0G+fRolW4k2ewhaSOf7wlYHj/Nq/apWVEEHy02C1keDckxPA==
-X-Received: by 2002:a62:3486:: with SMTP id b128mr7032696pfa.98.1597562581911;
-        Sun, 16 Aug 2020 00:23:01 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:cea:9294:8100:367f:a3dd:e679])
-        by smtp.gmail.com with ESMTPSA id b22sm14825962pfb.213.2020.08.16.00.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 00:23:01 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     paul@crapouillou.net, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
-Date:   Sun, 16 Aug 2020 12:52:53 +0530
-Message-Id: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RzIG+1vyXz3X47wXuY6TSglS4qmCJSgzuoZiRxj3Erc=;
+        b=Nj/tDRS95xystJdiTjZREhPOqVfTbDutXmPgfUpP3m2ZERGHnQcwWthEr1Hnj41IAS
+         PjIBP9QiUWZ6CWW7KLxFobeGNxEE5sZesxckqlFusCj6Sw06E4NWLHPphnWtvbpNcXRC
+         nzqiq4LjcZmDkzjrejh0suZaUxfSGAGABvar2c3iFA6a5pa0vpCo1y6PhuORXYex022c
+         OgWZv/Fd6vcaNEQd85Ye62KovOVgOocbfx5flAPaFqBZZbOFZvCuIk1YHcjkz8scOiCd
+         Xt1jG1BUa1UY2sl1q2T+ZR8ytCr181pjX8kGTwp2mGZPFNmUUHR9Bb4FrNDrrmUPKFWC
+         gf8w==
+X-Gm-Message-State: AOAM531/6Sr7QDoldzsraTi5SQq6D+4Ea+qB1hyXdCDbDa2Jk0X/H7ZB
+        xXLZI++Q7ZYjsoRw5UIFMg==
+X-Google-Smtp-Source: ABdhPJwPyekNT3ZygpiIZGrHDjPVpPpnkXtp/Qfz8ZuAPkz6xKxKQeUCttdxcmHOrNiSK+UEt9Mt4g==
+X-Received: by 2002:a63:3e0f:: with SMTP id l15mr5508169pga.99.1597562687064;
+        Sun, 16 Aug 2020 00:24:47 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:cea:9294:8100:367f:a3dd:e679])
+        by smtp.gmail.com with ESMTPSA id s185sm13154905pgc.18.2020.08.16.00.24.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 16 Aug 2020 00:24:46 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sun, 16 Aug 2020 12:54:41 +0530
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     madhuparnabhowmik10@gmail.com, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrianov@ispras.ru, ldv-project@linuxtesting.org
+Subject: Re: [PATCH] drivers: watchdog: pc87413_wdt: Fix Race condition bug
+Message-ID: <20200816072441.GA13871@madhuparna-HP-Notebook>
+References: <20200813125451.19118-1-madhuparnabhowmik10@gmail.com>
+ <20200814150740.GA254327@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814150740.GA254327@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Fri, Aug 14, 2020 at 08:07:40AM -0700, Guenter Roeck wrote:
+> On Thu, Aug 13, 2020 at 06:24:51PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > After misc_register the open() callback can be called.
+> > However the base address (swc_base_addr) is set after misc_register()
+> > in init.
+> > As a result, if open callback is called before pc87413_get_swc_base_addr()
+> > then in the following call chain: pc87413_open() -> pc87413_refresh() ->
+> > pc87413_swc_bank3() : The value of swc_base_addr will be -1.
+> > Therefore, do misc_register() after pc87413_get_swc_base_addr().
+> > 
+> > Found by Linux Driver Verification project (linuxtesting.org).
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> Another candidate for removal. The entire driver is at the very least
+> questionable: It hard enables the watchdog after registering it, making it
+> mandatory to open it within one minute or the system will reboot. Also,
+> the driver doesn't even check if the hardware even exists; it just assumes
+> that it does. And then it reconfigures that potentially non-existing
+> hardware to use a specific chip pin as wdt output, as if that would be
+> useful if that pin is not wired up. Worst case that driver may actually
+> break something if it is loaded on an arbitrary system.
+> 
+> I really don't see the point of trying to patch it up unless there are users
+> left who can confirm that it even works on existing hardware, and then I'd
+> prefer to have it fixed for good and not just patched up.
+>
+Sure makes sense. Thank you for reviewing.
 
-In probe IRQ is requested before zchan->id is initialized which can be
-read in the irq handler. Hence, shift request irq and enable clock after
-other initializations complete. Here, enable clock part is not part of
-the race, it is just shifted down after request_irq to keep the error
-path same as before.
+Regards,
+Madhuparna
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- drivers/dma/dma-jz4780.c | 44 ++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 448f663da89c..5cbc8c3bd6c7 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -879,28 +879,6 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	ret = platform_get_irq(pdev, 0);
--	if (ret < 0)
--		return ret;
--
--	jzdma->irq = ret;
--
--	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
--			  jzdma);
--	if (ret) {
--		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
--		return ret;
--	}
--
--	jzdma->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(jzdma->clk)) {
--		dev_err(dev, "failed to get clock\n");
--		ret = PTR_ERR(jzdma->clk);
--		goto err_free_irq;
--	}
--
--	clk_prepare_enable(jzdma->clk);
--
- 	/* Property is optional, if it doesn't exist the value will remain 0. */
- 	of_property_read_u32_index(dev->of_node, "ingenic,reserved-channels",
- 				   0, &jzdma->chan_reserved);
-@@ -949,6 +927,28 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
- 	}
- 
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	jzdma->irq = ret;
-+
-+	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
-+			  jzdma);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
-+		return ret;
-+	}
-+
-+	jzdma->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(jzdma->clk)) {
-+		dev_err(dev, "failed to get clock\n");
-+		ret = PTR_ERR(jzdma->clk);
-+		goto err_free_irq;
-+	}
-+
-+	clk_prepare_enable(jzdma->clk);
-+
- 	ret = dmaenginem_async_device_register(dd);
- 	if (ret) {
- 		dev_err(dev, "failed to register device\n");
--- 
-2.17.1
-
+> Thanks,
+> Guenter
+> 
+> > ---
+> >  drivers/watchdog/pc87413_wdt.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
+> > index 73fbfc99083b..ad8b8af2bdc0 100644
+> > --- a/drivers/watchdog/pc87413_wdt.c
+> > +++ b/drivers/watchdog/pc87413_wdt.c
+> > @@ -512,6 +512,10 @@ static int __init pc87413_init(void)
+> >  	if (ret != 0)
+> >  		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+> >  
+> > +	pc87413_select_wdt_out();
+> > +	pc87413_enable_swc();
+> > +	pc87413_get_swc_base_addr();
+> > +
+> >  	ret = misc_register(&pc87413_miscdev);
+> >  	if (ret != 0) {
+> >  		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+> > @@ -520,10 +524,6 @@ static int __init pc87413_init(void)
+> >  	}
+> >  	pr_info("initialized. timeout=%d min\n", timeout);
+> >  
+> > -	pc87413_select_wdt_out();
+> > -	pc87413_enable_swc();
+> > -	pc87413_get_swc_base_addr();
+> > -
+> >  	if (!request_region(swc_base_addr, 0x20, MODNAME)) {
+> >  		pr_err("cannot request SWC region at 0x%x\n", swc_base_addr);
+> >  		ret = -EBUSY;
