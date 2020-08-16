@@ -2,94 +2,142 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB67C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 19:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 19:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7924A20855
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 19:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9862078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 19:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="aRuBjBtf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M35WWEAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgHPTaj (ORCPT
+        id S1729748AbgHPTba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 15:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
+        Sun, 16 Aug 2020 15:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729688AbgHPTag (ORCPT
+        with ESMTP id S1729730AbgHPTb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 15:30:36 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72B3C061388
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 12:30:35 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c15so12817807wrs.11
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 12:30:35 -0700 (PDT)
+        Sun, 16 Aug 2020 15:31:29 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC95FC061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 12:31:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so11932882wmc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 12:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tfz-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e0fU4VrqgZlTgwb4wRJnx5ZqxP+E94HxLzwK2cUn8RQ=;
-        b=aRuBjBtfZr5au/mqaUr6qu4OjMSiJUdP7VIISIQTUUBlgts7MESDv0nEvlMnw91QMs
-         T84O3kdAYAFn/LFeMoiYKLXrpbQD4DVEEIY2M09APJjpNONd7OkZBTBj6vwOAyDC1kMA
-         hnIDEvpJ1PJ6XsFJ49fSB63z5Vi3KXLDFOxW3mq/Ir3tHVK/HJJck4lVFrECLVAYZyzR
-         hpF8AiTOCXhR3zvAYMAhfMdeG/RPh9cMpCAz5zj9mZA9s2nAaZE9Ut/Idaqxvu295T6f
-         Ri/QWSRpROECHS7Ob7FsQuoELa0TMJAflxPvPyZPdsMHoT7EuZYX5VMZXnz3yziDfVTC
-         IWlg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=riVeaXVjuZmcehfNxxO8lj1kUtlDfTSeuBv9qK6ixUA=;
+        b=M35WWEAt9qJsNNvKpcIIpZDd4UCS92+EA1NKQ1mjYL7EO+BCytO5qucyp5SJ5ycDBW
+         ok6UZvtncPj9Z2neCyQSNZF5vSNZkEwxhdJt5BCBMUbXd4yrGHw7qkcIzGC5oFi5Usn9
+         WQNJXubTHLsJ00fSyWsZcgu/UMYdPTXN0Q6V7/d//ppdwwFoIW4GnLT9KXU/3advb3zz
+         1UtIGTD9LHNCptcgSJL8oEA7rFk/LIsevxHRWlWzc4oMXZ+k8NWd9nKi1zu0Z8ECfg7p
+         dg9RzfTXM9NoJGKySUUqFARfqIiR6X8xAk4CbHAvRE4W8631hQsy4Sv1NPKyzp5D798y
+         Y8qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e0fU4VrqgZlTgwb4wRJnx5ZqxP+E94HxLzwK2cUn8RQ=;
-        b=d9RhJ5PTKUHBFciil9aBez60dStPsJuAiaFx5hjSlH2CJLZMatN2E+SvMfgn8zqWyv
-         YnOauvNusSy/QDyAJbC0KZbwKTJurQR3V1XRXb5Ryz2vKowab2ECnUzvOB8FZl3EzzQV
-         3JNi4kb7jkHUzlVoftxySJrGh200yxYN1Ld1IIkiWI0RkUC+OFP/f0yH1StoU4WOOceH
-         uZ7NCsn+i8ccLo//Cs3048SLbG1455IyS9EcAD07cLjKA6q0kU0XZL2q8TLOp3BtEPA1
-         PF7HzYaeySrYWnGVrfbQDJpKrO2OkjkTkzxfs7OxnB/FcI5xirVlOOM1k8p9PZMaCsSG
-         H4Cg==
-X-Gm-Message-State: AOAM5302E2K2zaD6LUhapOy3aainW/dA28+FRDhcSFIzg91Dym8YrKvs
-        AHIQasjVkMx8gu8VnLbDhA/TPc+OvXOKeWRdMmoRQAqig6LBjMoO
-X-Google-Smtp-Source: ABdhPJxNkrRRHn9VpN+44nPTclpKSsDITviwHA8cNDXLcS2RsmPd+jX7VEQQAPjG6X7ESHUZ0zXUKvaaNA4yeKqT/k4=
-X-Received: by 2002:adf:a102:: with SMTP id o2mr11600431wro.319.1597606234590;
- Sun, 16 Aug 2020 12:30:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=riVeaXVjuZmcehfNxxO8lj1kUtlDfTSeuBv9qK6ixUA=;
+        b=IgMrV/bBjWsajnxx2VEGZVToXHXnzFmwLcTMJ3sJY47OUU/kzcgPI+hB7ehomfmTvM
+         tt2IAsH7qMxbJIktLCmXbVdS65CxOyZ0ha6H1AV5DY4hkFCdnSGfBLVOO+Fy1pTJMN6J
+         8uzKhWvdTPX8SJnOf61gpbh9wFBk8QyZf/VuaGmUaRAuo+hxIYkjaSMQfochoN5a7enx
+         Ae6liFHrJwpEgH2Avib60SlRiQHxcTFXns7u+1KYDUC0pk0xdn7hapjzkeO7UKvKo3vj
+         IjG8+7ji7DpqoLioXoRaQ264/oCvaaOpzQs/gEbNVxA+5jHs0G6tysasKK/vnyoM9jQY
+         Q2dg==
+X-Gm-Message-State: AOAM531RFpMt3bJD9lXiy5acnStltZS8f2yT5vZo19Tr7Qpp+4aFiz8j
+        Wj4y5+5qma6ZQy0r7kgcziXLQb+Ya0Q=
+X-Google-Smtp-Source: ABdhPJyi4UbmT00nTsoSw/OuAaaFid8FGig1pZoNI7QyAgobSL5JM93sWI/I2tZYZtmJy2gncMhaeQ==
+X-Received: by 2002:a7b:cc13:: with SMTP id f19mr11556318wmh.168.1597606285796;
+        Sun, 16 Aug 2020 12:31:25 -0700 (PDT)
+Received: from tsnow ([94.159.146.190])
+        by smtp.gmail.com with ESMTPSA id u66sm27717981wmu.37.2020.08.16.12.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 12:31:25 -0700 (PDT)
+Date:   Sun, 16 Aug 2020 22:31:22 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Riley Andrews <riandrews@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/4] staging: android: Add error handling to
+ order_to_index callers
+Message-ID: <c653c468e0c3044b10df375e8245e5d50634a7fa.1597602783.git.tomersamara98@gmail.com>
+References: <cover.1597602783.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-References: <20200815182344.7469-1-kalou@tfz.net> <20200815182344.7469-3-kalou@tfz.net>
- <7c910594-b297-646e-9410-f133fd62a902@gmail.com>
-In-Reply-To: <7c910594-b297-646e-9410-f133fd62a902@gmail.com>
-From:   Pascal Bouchareine <kalou@tfz.net>
-Date:   Sun, 16 Aug 2020 12:30:23 -0700
-Message-ID: <CAGbU3_=HQKHOzy_sq+gkLs-QDsQ4OmALbitaCvTp1hxVzAr_vw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] net: socket: implement SO_DESCRIPTION
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1597602783.git.tomersamara98@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 11:15 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
-> 1) You also ignored what would happen at accept() time.
->
-> Please test your patches with ASAN.
+Add error check to:
+- free_buffer_page
+- alloc_buffer_page
+after calling order_to_index, due to converting BUG to WARN at
+order_to_index.
 
-Ouch, I will look into it - thanks for pointing that out & 3/
+Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
+---
+ drivers/staging/android/ion/ion_system_heap.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
->
-> 2) Also, why is that description specific to sockets ?
+diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+index 37065a59ca69..1e73bfc88884 100644
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -49,8 +49,13 @@ static struct page *alloc_buffer_page(struct ion_system_heap *heap,
+ 				      struct ion_buffer *buffer,
+ 				      unsigned long order)
+ {
+-	struct ion_page_pool *pool = heap->pools[order_to_index(order)];
++	struct ion_page_pool *pool;
++	int index = order_to_index(order);
++
++	if (index < 0)
++		return NULL;
+ 
++	pool = heap->pools[index];
+ 	return ion_page_pool_alloc(pool);
+ }
+ 
+@@ -59,6 +64,7 @@ static void free_buffer_page(struct ion_system_heap *heap,
+ {
+ 	struct ion_page_pool *pool;
+ 	unsigned int order = compound_order(page);
++	int index;
+ 
+ 	/* go to system */
+ 	if (buffer->private_flags & ION_PRIV_FLAG_SHRINKER_FREE) {
+@@ -66,8 +72,11 @@ static void free_buffer_page(struct ion_system_heap *heap,
+ 		return;
+ 	}
+ 
+-	pool = heap->pools[order_to_index(order)];
++	index = order_to_index(order);
++	if (index < 0)
++		return;
+ 
++	pool = heap->pools[index];
+ 	ion_page_pool_free(pool, page);
+ }
+ 
+-- 
+2.25.1
 
-fcntl on struct file was deemed too intrusive - as far as fds are
-concerned, regular files and pipes have names and local processes to
-match against anyway
-we're left with mostly remote targets - one example was to preserve
-target host names after resolution (alas, I don't think there's a
-clean flow to hook that transparently)
