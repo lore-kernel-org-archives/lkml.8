@@ -2,87 +2,73 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61622C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3627C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBA1206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F9A206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597564571;
-	bh=WBoK5fgAJLyzBGCPs2ZM73uEvs9Y4AnzIU1vghJTqvA=;
+	s=default; t=1597565503;
+	bh=qR6bXbhqJAxMOnDvTEU8dcP0bKQliVVdnV9L5TbvwnA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CtQmSjKFDLURAR48pez3vRC5AHjH4H9Xh3Gre7Qji9KWEecBfgWgZwVgQvV9KAW9K
-	 U+HcGDCox8PKK6vkZR35EkTmBwT9FwAtLH1FquuaEAdNks+gg0fArfOvXXESQ/leeC
-	 NcarTZdJDYJUM8cHYIAbZ2LfNZAz2sUu6varthn8=
+	b=QAaLgIoPH/asZ6EO2qJPHAwJXKnlNyT2jBrWgLlXmzYW570rOeanQQhQvG9LC1wHI
+	 yUoW3ZvCtW0vhsnVidYBU3W90KQADUbTW74U2oNnDBVerVCPXuZLWEv87w5MGKnF5s
+	 vr8Qg+bo6I3cFm7qLJQqniKditaYWOO0tJL1vL2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHPH4I (ORCPT
+        id S1728572AbgHPILm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 03:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58490 "EHLO mail.kernel.org"
+        Sun, 16 Aug 2020 04:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgHPH4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 03:56:07 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1725986AbgHPILj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 04:11:39 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0072F2065C;
-        Sun, 16 Aug 2020 07:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FED72065C;
+        Sun, 16 Aug 2020 08:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597564567;
-        bh=WBoK5fgAJLyzBGCPs2ZM73uEvs9Y4AnzIU1vghJTqvA=;
+        s=default; t=1597565499;
+        bh=qR6bXbhqJAxMOnDvTEU8dcP0bKQliVVdnV9L5TbvwnA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y3Z2ilzQuS9+MNNMUvFYwb4DdOAsh2dR6Kldq4ez4/qBX2pBUYOv/bA+voMZpnaA9
-         MooFmMorP1YSsum1MX1PuYoC/gsQ0nFG93G4bV2ijWzS6gSoZw+BNSV1dQCD+1U1QQ
-         dXrXun6sIQTpMEezw0j/hSPvrlI0WvFjSmQY1uO4=
-Received: by pali.im (Postfix)
-        id 677667BC; Sun, 16 Aug 2020 09:56:04 +0200 (CEST)
-Date:   Sun, 16 Aug 2020 09:56:04 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
- Software.
-Message-ID: <20200816075604.nx62kg5qz6ddp6gl@pali>
-References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+        b=EmuYEeBWmyDRQIZBqtgUacqebNk4cbRj3Qtf3RBFwADs4dlKOFf3ntMYhjXVhKa++
+         sebXMlGQpEGNi8jdXPND/vFwr0/HufIuUzZHL4VjgNka80mjNI1VTxayUEaHsfhXCU
+         B84qDMcj1Lp+j0vbD5ibjIyJWYW0yMuNMo1Z1AQs=
+Date:   Sun, 16 Aug 2020 11:11:35 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] IB/mlx5: Fix memleak in subscribe_event_xa_alloc
+Message-ID: <20200816081135.GG7555@unreal>
+References: <20200815034537.9867-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200815034537.9867-1-dinghao.liu@zju.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 14 August 2020 12:29:01 Konstantin Komarov wrote:
-> This patch adds NTFS Read-Write driver to fs/ntfs3.
-> 
-> Having decades of expertise in commercial file systems development and huge
-> test coverage, we at Paragon Software GmbH want to make our contribution to
-> the Open Source Community by providing implementation of NTFS Read-Write
-> driver for the Linux Kernel.
-> 
-> This is fully functional NTFS Read-Write driver. Current version works with
-> NTFS(including v3.1) normal/compressed/sparse files and supports journal replaying.
-> 
-> We plan to support this version after the codebase once merged, and add new
-> features and fix bugs. For example, full journaling support over JBD will be
-> added in later updates.
-> 
-> The patch is too big to handle it within an e-mail body, so it is available to download 
-> on our server: https://dl.paragon-software.com/ntfs3/ntfs3.patch
-> 
-> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+On Sat, Aug 15, 2020 at 11:45:37AM +0800, Dinghao Liu wrote:
+> When xa_insert() fails, obj_event needs to be freed
+> just like what we have done to event when xa_insert()
+> fails. However, current code is returning directly
+> and ends up leaking memory.
+>
+> Fixes: 7597385371425 ("IB/mlx5: Enable subscription for device events over DEVX")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/infiniband/hw/mlx5/devx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
 
-Hello Konstantin! I agree with David that patch is big and could be
-split into smaller patches per file, like exfat driver was reviewed.
-
-When you send a new version of ntfs driver, please add me to CC and I
-will try to find some time to do code review. Thanks!
+Thanks,
+Acked-by: Leon Romanovsky <leonro@nvidia.com>
