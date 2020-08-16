@@ -2,164 +2,192 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3185C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB10520708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755DC20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcqgIT8C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jwq6tJHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgHPLiq (ORCPT
+        id S1729250AbgHPLjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 07:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729211AbgHPLe3 (ORCPT
+        Sun, 16 Aug 2020 07:39:17 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58078 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729104AbgHPLfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 07:34:29 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6B6C061388;
-        Sun, 16 Aug 2020 04:34:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id m20so10123282eds.2;
-        Sun, 16 Aug 2020 04:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xlb2qUCwKe4EF2PdUWQAuMEesAap269IMj+EUyQHrhw=;
-        b=WcqgIT8CuBXJOgYH0CDo9fZeXs5yfYVpiQpyz9mtfnlyE9GF0dEyyx+W1HELiJW0mH
-         o24rLo9hf2fkIJxclgaf9Ky9rPRO9DoNDdJ3huBU3hV7BkLvQldXDvVy8oEIuoRccxNC
-         r2ZyqgkMG3avvD4v7ya5wLKIFnPAFf520a0Lcu/8K3VK9Fw+Yws/lJ1lG0JIqnIvIRUX
-         DSKLNHNFlaKcnHUGPE1MppJXuygcty15vwgx+Rfd5u/cI4MyziENegTkEurZzw+eX9C1
-         jchStWEz358QXPa4R7ryihNVAIDfImjySy1IhRqTIHJ6i9cpTj0MpdhCbIePKcPVxphP
-         e28g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xlb2qUCwKe4EF2PdUWQAuMEesAap269IMj+EUyQHrhw=;
-        b=D5rvEiUDYJau4MofiALIObiucMwX4jQ1esIyufNiHzV7m6xZGJU2Psx+pKZ1TfCRm6
-         V0mmg4WxYwsbJ+qk3BnhXTbveo7jfDEfDJ6YUPnOICgBi2YfYpq5TVPexq+uderUvFxp
-         l447aaXPkPGTqu1fawonjKBD2BmqEVn7d70IBIjulTqetMWaEA2N0V5MenKo43sRZcVO
-         V9KNt1eOQNhDnuhQO3LJnU5Kys/8x42nJQn/0bIORPX2mHm4dO0+e1VAoZR3swpGNKtk
-         3ndQOQT/yFXFHIwyKZ42MhvjZFqncXIjRW/sYjt1tIy1QNl3e9ZxfN+cfRmMjWUJezpv
-         Y3bA==
-X-Gm-Message-State: AOAM531cSULuaMCspYjZKIoUuRitS1seB/CLB+Ie27yA/iTVQOwy5YrB
-        jYykJVSZ4rSKJojKCoctqac=
-X-Google-Smtp-Source: ABdhPJz0ASv6aS4Q1vBhNQA5a64FC1jxRLAGQY0I15yYZvr3Y+/9ieznHix6dQsyT+xkFkWNa2Y32A==
-X-Received: by 2002:a50:dac6:: with SMTP id s6mr10458760edj.378.1597577639278;
-        Sun, 16 Aug 2020 04:33:59 -0700 (PDT)
-Received: from localhost.localdomain ([188.24.144.238])
-        by smtp.gmail.com with ESMTPSA id p1sm11272945edu.11.2020.08.16.04.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 04:33:58 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: [PATCH v4 0/3] Add Actions Semi Owl family sirq support
-Date:   Sun, 16 Aug 2020 14:33:53 +0300
-Message-Id: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Sun, 16 Aug 2020 07:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597577738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u0CIsDKHWA2a1/usJei4d0Ky9e1Z44qr16Jyec3I+3w=;
+        b=Jwq6tJHI0sh0/xj7cipeKfK4lzZUYT/MZYkb047lfy54iBtnm3sL/ZmFTXrFFxs9kiJ2Ks
+        iS5h7DOsC6i2HXx6u5VTys5Ba/W/z44ccm9pxYcouZPw6Ovqvqi4vKMMavMwH9LNbSfHZ3
+        AAcFY49UEgHpnzuFCl2TCAjyOlBnTSM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-dK8FjGpzMYCRG_a2-SYHrQ-1; Sun, 16 Aug 2020 07:35:36 -0400
+X-MC-Unique: dK8FjGpzMYCRG_a2-SYHrQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBB9F802B47;
+        Sun, 16 Aug 2020 11:35:34 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D219A74E36;
+        Sun, 16 Aug 2020 11:35:24 +0000 (UTC)
+Subject: Re: [PATCH v6 11/15] vfio/type1: Allow invalidating first-level/stage
+ IOMMU cache
+To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
+        stefanha@gmail.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+ <1595917664-33276-12-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <f0c7cfc1-ee6b-c98e-77bd-1af3dbaf2a6f@redhat.com>
+Date:   Sun, 16 Aug 2020 13:35:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595917664-33276-12-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for the external interrupt controller
-(SIRQ) found in Actions Semi Owl famil of SoC's (S500, S700 and S900).
-The controller allows connecting up to 3 external interrupt controllers
-through dedicated SIRQ pins.
+Hi Yi,
 
-This is a rework of the patch series submitted some time ago by 
-Parthiban Nallathambi: 
-https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
+On 7/28/20 8:27 AM, Liu Yi L wrote:
+> This patch provides an interface allowing the userspace to invalidate
+> IOMMU cache for first-level page table. It is required when the first
+> level IOMMU page table is not managed by the host kernel in the nested
+> translation setup.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+> v1 -> v2:
+> *) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
+> *) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
+> *) vfio_dev_cache_inv_fn() always successful
+> *) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 42 +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  3 +++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 245436e..bf95a0f 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -3056,6 +3056,45 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+>  	return ret;
+>  }
+>  
+> +static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	unsigned long arg = *(unsigned long *)dc->data;
+> +
+> +	iommu_uapi_cache_invalidate(dc->domain, dev, (void __user *)arg);
+> +	return 0;
+> +}
+> +
+> +static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
+> +					unsigned long arg)
+> +{
+> +	struct domain_capsule dc = { .data = &arg };
+> +	struct iommu_nesting_info *info;
+> +	int ret;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	/*
+> +	 * Cache invalidation is required for any nesting IOMMU,
+So why do we expose the IOMMU_NESTING_FEAT_CACHE_INVLD capability? :-)
+> +	 * so no need to check system-wide PASID support.
+> +	 */
+> +	info = iommu->nesting_info;
+> +	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
+> +		ret = -EOPNOTSUPP;
+> +		goto out_unlock;
+> +	}
+> +
+> +	ret = vfio_get_nesting_domain_capsule(iommu, &dc);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	iommu_group_for_each_dev(dc.group->iommu_group, &dc,
+> +				 vfio_dev_cache_invalidate_fn);
+> +
+> +out_unlock:
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+>  					unsigned long arg)
+>  {
+> @@ -3078,6 +3117,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+>  	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
+>  		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
+>  		break;
+> +	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
+> +		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 9501cfb..48e2fb5 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1225,6 +1225,8 @@ struct vfio_iommu_type1_pasid_request {
+>   * +-----------------+-----------------------------------------------+
+>   * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
+>   * +-----------------+-----------------------------------------------+
+> + * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
+> + * +-----------------+-----------------------------------------------+
+>   *
+>   * returns: 0 on success, -errno on failure.
+>   */
+> @@ -1237,6 +1239,7 @@ struct vfio_iommu_type1_nesting_op {
+>  
+>  #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
+>  #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
+> +#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
+According to my previous comment, you may refine VFIO_NESTING_OP_MASK too
 
-Please note I have dropped, for the moment, the S700 related patches 
-since I do not own a compatible hardware for testing. I'm using, 
-instead, an S500 SoC based board for which I have already provided an
-initial support:
-https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
+Thanks
 
-The SIRQ controller support is a prerequisite of the soon to be
-submitted MFD driver for the Actions Semi ATC260x PMICs.
-
-Thanks and regards,
-Cristi
-
-Changes in v4:
-- Simplified the DTS structure:
-  * dropped 'actions,sirq-shared-reg' node, now the differentiation
-    between SoC variants is handled now via the compatible property
-  * dropped 'actions,sirq-reg-offset', now controller base address in
-    DTS points to SIRQ0 register, so no additional information is 
-	required for S500 and S700, while for S900 SoC the offsets of SIRQ1
-	and SIRQ2 regs are provided by the driver
-  * 'actions,ext-irq-range' was replaced with 'actions,ext-interrupts',
-    an array of the GIC interrupts triggered by the controller
-- Fixed wrong INTC_EXTCTL_TYPE_MASK definition
-- Removed redundant irq_fwspec checks in owl_sirq_domain_alloc()
-- Improved error handling in owl_sirq_of_init()
-- Added yaml binding document
-- Dropped S700 related DTS patches for lack of testing hardware:
-  * arm64: dts: actions: Add sirq node for Actions Semi S700
-  * arm64: dts: actions: s700-cubieboard7: Enable SIRQ
-- Updated MAINTAINERS
-- Rebased patchset on kernel v5.8
-- Cosmetic changes
- * Ordered include statements alphabetically
- * Added comment to owl_sirq_set_type() describing conversion of falling
-   edge or active low signals
- * Replaced IRQF_TRIGGER_* with corresponding IRQ_TYPE_* variants
- * Ensured data types and function naming are consistent regarding the
-   'owl_sirq' prefix
-
-Changes in v3 (Parthiban Nallathambi):
-- Set default operating frequency to 24MHz
-- Falling edge and Low Level interrupts translated to rising edge and high level
-- Introduced common function with lock handling for register read and write
-- Used direct GIC interrupt number for interrupt local hwirq and finding offset
-using DT entry (range) when registers are shared 
-- Changed irq_ack to irq_eoi
-- Added translation method for irq_domain_ops
-- Clearing interrupt pending based on bitmask for edge triggered
-- Added pinctrl definition for sirq for cubieboard7. This depends on,
-https://lore.kernel.org/patchwork/patch/1012859/
-
-Changes in v2 (Parthiban Nallathambi):
-- Added SIRQ as hierarchical chip
-        GIC <----> SIRQ <----> External interrupt controller/Child devices
-- Device binding updates with vendor prefix
-- Register sharing handled globally and common init sequence/data for all
-actions SoC family
-
-Cristian Ciocaltea (3):
-  dt-bindings: interrupt-controller: Add Actions SIRQ controller binding
-  irqchip: Add Actions Semi Owl SIRQ controller
-  MAINTAINERS: Add entries for Actions Semi Owl SIRQ controller
-
- .../actions,owl-sirq.yaml                     |  69 ++++
- MAINTAINERS                                   |   2 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-owl-sirq.c                | 318 ++++++++++++++++++
- 4 files changed, 390 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
- create mode 100644 drivers/irqchip/irq-owl-sirq.c
-
--- 
-2.28.0
+Eric
+>  
+>  #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+>  
+> 
 
