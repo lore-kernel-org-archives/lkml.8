@@ -2,139 +2,175 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D845C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBFB206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4E3206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fPIuVdan"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pL0NxLQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgHPP6f (ORCPT
+        id S1729068AbgHPQG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:58:35 -0400
-Received: from mout.gmx.net ([212.227.15.18]:47669 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgHPP6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:58:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597593486;
-        bh=7j6qXfPm5EI3jykDMS74HC6S0xyBwhkXpq11cquJsww=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=fPIuVdaniS5SKHac+UUsM6tcYRptyPNJ1EaPOylQ7Hf6WWs1vDa0tau+pf5mUkNEf
-         B3zHJmlAn3/WsvAfDWuvaNJ+6JM9vQDIWy3jp5/EHfPnF9hWC6BtZGIz5OB2FC/lOu
-         +LT8vkkufsyk0boPb12UGfCNHQWhihqY4QNIocIM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1k10Bp1lgx-007SYI; Sun, 16
- Aug 2020 17:58:06 +0200
-Date:   Sun, 16 Aug 2020 17:57:51 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
-        leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine 2
- HD
-Message-ID: <20200816155751.GB103070@latitude>
-References: <20200815193336.21598-1-andreas@kemnade.info>
- <20200815193336.21598-3-andreas@kemnade.info>
- <20200816125247.GA103070@latitude>
- <20200816165058.3a17d97a@aktux>
+        Sun, 16 Aug 2020 12:06:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22282 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726407AbgHPQGy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 12:06:54 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07GG2FDE148741;
+        Sun, 16 Aug 2020 12:06:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=G1J9oM2w5VWeZ9aqg+YGQQtjK4Y/nLoJ4itoQujL5Ds=;
+ b=pL0NxLQUOpqHXnm3X0cTJbLjeRb8WLoWynpGTnNiDmQ8R7AM5UX3HPHx+NJKRMhsPlGN
+ GUfAmm27TbNxY+rDyiSgOjdkTb/hZ0WcOASTYKEgU73/ub72AyiB5q4f49D8XNc8q+Fn
+ 8oLO/RvJrwCmvEeDTjwSKb+Aq+EY+YFXGQarqyKG+siPGJHTpM+QhNKAXB1UsQNlfJUa
+ OGQ3gcIFnJsUaijY1NF/VhT6RiRQnwfoSkRsL20U++/oLhsq+abPFVz7TEAN8EpO+7UM
+ NbaMjGau5C1OUDfdrUo9QoXXakyAgDUAS2jJBbQ4NzAj8a5Q3ru5UL2cFEGMjt7TVhNK /A== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32y24he898-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 16 Aug 2020 12:06:48 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07GG4UHN005845;
+        Sun, 16 Aug 2020 16:06:47 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01dal.us.ibm.com with ESMTP id 32x7b8n7be-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 16 Aug 2020 16:06:47 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07GG6fKB55181628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Aug 2020 16:06:41 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA71B6A04D;
+        Sun, 16 Aug 2020 16:06:45 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DAFB6A04F;
+        Sun, 16 Aug 2020 16:06:40 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sun, 16 Aug 2020 16:06:40 +0000 (GMT)
+Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
+To:     Coly Li <colyli@suse.de>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+References: <20200815075143.47082-1-colyli@suse.de>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
+Date:   Sun, 16 Aug 2020 12:06:30 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
-Content-Disposition: inline
-In-Reply-To: <20200816165058.3a17d97a@aktux>
-X-Provags-ID: V03:K1:mT/FQPdide8zSxjSEqchlaAZFDs6iEhlej5xL6GKMHINDQfqMka
- +ZUp7H63mXXEpAunPeJiokUHEdf9lCJAumVPW2U1p4CjEpXOwqHl7Vx4QV6L5bvLnkFfUR5
- Ch2LtONaJELiVauqqbl38zfm81OsbxxMLxctrnwPOpQHsKkWcN6U6nyg/F3XvI8DyishTNy
- NfQrA6TTfDibB/5YzbtHw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w3+rXEc45eE=:7zvYNIT0IbAuDMZjIeuNp1
- LbHZsE9dHGw6nNCcGoKN3loSdbLwophUkjfiU0u60+Rt5nVD8kNjePPQ3oLC07YcUyXiLmEdL
- 3bwuBPC0eGaX5CBxFMcQmjDzX3wNFZJx294NyCDzOgzoMcO3RAI6Yp3O3Ab37xJy4FyyVs9+T
- 0uMhh73kuGZV6VYG12zecd/jSZEPrWUKk5uEX+kzKE5ziHze4jG+VvX5VAqAYXy7TFG/8ZU6e
- sozAdUTtVwwUY3qp9GpbT7b4UYY8jUsrrT5D6+A0HdPnW+e2AN8pttUN/D1ii0U+SIyexGJed
- fpcGQGMjdt2gowL8oB3cPOx/KkxS8z8u7RkYz2jJHlEPJcqFJE9DhsneeEOnvWfXJeh7mKgO5
- D9XYpDGfnuCuJHqjkl6BWafVPZBUYvBSzq34S/ni98YD5tyvsokTaBJjYlUIGRtF7PbRZkAkZ
- Zc7dL1hYIG3bZkBHELOLyqSH/jbJmFZeT27dCKyitEjLyjiLsPDf3NR4CY4LBkrR0P3t18RDs
- 6GKQFVIIdx8GlZeX2uLZ+JQommak9BA2LIhHn7WCF2z0v8qi6dyx03vNRJSfoE6XwzcIDflUX
- SANHSqnHffgE/7oI2SfZ4t9Y/D/MbQcy9e+quYDLTzIRO5l7O3HqQ6C5OsDKaXZYexub2moqY
- aVZF9rQ7xcbp2JwaFwTd+Zlrlu/YjDXXefa/aJ+J7YDqgN8n7uRt/Ng1FtU9ZfM1US735SfxB
- AudgktdTvY1uc2k/ic+P3AcK7g0IPbjBFej4Pa5xybaKlpLiyTash5UxXifpTNy1gwINSR/rA
- bBEMkcJAKrSkp5zUSPzuItyR0DDA46Y6rxLlSCJkHT4ysHsF913rwr0PZGYXgMP31qNkiHjuQ
- R+lu2SWK0hjYpY44OPULRGkwpDYHFJxcfjtSJJ7frJc+P0Td3i3GfgRqtq0L+RgVtPOnBAp9e
- J4s1llx5ntfoYB/mOgKqrmff8Qo1NiY/TdvtbbKzo89JWfpFBxWz5FhBmZTmj4flFCYX430BZ
- EWxYnxArSCBctDm2HZO7+laIbjcBHS5KH9AWczuMginfdUEY6NSLPVQnnESShPTwY4n3GGWJ/
- 2CK18fsFnxgnmW38ItmAS9ucAQ8CPl8roIcr0ybDR+VlDQ1Sz/swqA5bchuUsDulOEXzBpTJL
- jeFFUGTvi9XMAZbGatYuRN7gLw2jx/L52CKPoxN9qS55zbC3gX6wm9Jkk2XiIcx8eVRPosl14
- x11Vk4hOqgszUz8O9y6iHwIA275czjUukrLvqSQ==
+In-Reply-To: <20200815075143.47082-1-colyli@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-16_07:2020-08-14,2020-08-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ clxscore=1011 suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008160128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/15/20 3:51 AM, Coly Li wrote:
+> The parameters in tmp2 commands are outdated, people are not able to
+> create trusted key by the example commands.
+>
+> This patch updates the paramerters of tpm2 commands, they are verified
+> by tpm2-tools-4.1 with Linux v5.8 kernel.
+>
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: James Bottomley <jejb@linux.ibm.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Stefan Berger <stefanb@linux.ibm.com>
+> ---
+>   Documentation/security/keys/trusted-encrypted.rst | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
+> index 9483a7425ad5..442a2775156e 100644
+> --- a/Documentation/security/keys/trusted-encrypted.rst
+> +++ b/Documentation/security/keys/trusted-encrypted.rst
+> @@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
+>   
+>   Or with the Intel TSS 2 stack::
+>   
+> -  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
+> +  #> tpm2_createprimary --hierarchy o -G rsa2048 key.ctxt
+>     [...]
+> -  handle: 0x800000FF
 
---f+W+jCU1fRNres8c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 16, 2020 at 04:50:58PM +0200, Andreas Kemnade wrote:
-> Hi,
->=20
-> Seems that we have different hardware, so the first question is
-> first the most interesting thing: how much does the hw actually differ,
-> especially do they require different device trees?
->=20
-> Can you provide me a photo of your hardware?
-> Or is it a Shine 3?
-
-It is a Shine 2HD
-
->=20
-> Mine is at https://misc.andi.de1.cc/tolino2.jpg
-
-Mine:
-
-https://raw.githubusercontent.com/wiki/neuschaefer/linux/Tolino-Shine2HD.jpg
+Are you sure about this? My documentation for 4.1.3 on F32 states
 
 
-It appears to be the next PCB revision (+4A3 instead of +4A2), but I
-think the PCB layout looks the same. The Realtek-based Wifi module is
-exactly where the CyberTan WC121 was.
+-c, --key-context=FILE:
+
+          The file path to save the object context of the generated 
+primary object.
 
 
-Jonathan
 
---f+W+jCU1fRNres8c
-Content-Type: application/pgp-signature; name="signature.asc"
+> -  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
+> +  #> tpm2_evictcontrol -c key.ctxt 0x81000001
+>     persistentHandle: 0x81000001
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl85V3cACgkQCDBEmo7z
-X9udTRAAnqYWkdOI8tX0fQFUnKd/EwOkrg7Jrg5utNCvVidT3o0nRwjgEAc551f0
-LQSR2+dKjkr7EigcA9YYj0I3v0PJ1CgQuS/xK6mZ/D/YySVg3phF+wlNb8SJ5lcq
-9NRetjWtVTlNatzsADLncF/ZqoZlPo4llgjW0kt/+60mc7CPgtpsEE+9GsFnb/k4
-dw7aisPgGzoMPbbeTEDkPJl5Bik3WfjMAd002dsu/GnHLfEj+XDmI7CVLfz51bvz
-abkkvAYcAIcyPEcGfg714qK9nR1a7HuVGz3dV0A8ZeCTl0IRn1MDpR/6LZJT53y+
-HM1cIV1YfLPU4gEImoymX3pDvhE2DctceEzfw84ng/mhxLqzBGFm8qh5reihwva2
-TiOxZqcKTIMqqfV1nhRwSeahhX8eLoXkfAQ1jbKNCoLFZuvOsQpKkFetUDYXUYUE
-CTwqYrxe67UO3b8lBA82QAfg9fQBnKkczF5euZR3bsFChfoU1QDOGJDt3Si+LNkq
-ILFU9thdfyAH5qeRr4gKq7DecEZnGLz3+ql6/ePNrGwslIz2aicqTNW1Q09xwgxQ
-KerJAbQn+R+kLkLxkOL5+RgAd0VpZAivt62GkDztYRKAHXPtWv9iZDNRBzMfxEQu
-Wzd2yhpQ81slPry7HEM2J4zcy+VraDDvetO/6ZhQzvQXncXG47o=
-=ksBD
------END PGP SIGNATURE-----
+This seems correct.
 
---f+W+jCU1fRNres8c--
+
+>   
+>   Usage::
+> @@ -115,7 +114,7 @@ append 'keyhandle=0x81000001' to statements between quotes, such as
+
+
+A note in this file states this:
+
+Note: When using a TPM 2.0 with a persistent key with handle 0x81000001,
+append 'keyhandle=0x81000001' to statements between quotes, such as
+"new 32 keyhandle=0x81000001".
+
+Now if someone was (still) interested in TPM 1.2 then the below changes 
+you are proposing wouldn't work for them. Maybe you should adapt the 
+note to state that these keyhandle=... should be removed for the TPM 1.2 
+case.
+
+>   
+>   ::
+>   
+> -    $ keyctl add trusted kmk "new 32" @u
+> +    $ keyctl add trusted kmk "new 32 keyhandle=0x81000001" @u
+>       440502848
+>   
+>       $ keyctl show
+> @@ -138,7 +137,7 @@ append 'keyhandle=0x81000001' to statements between quotes, such as
+>   
+>   Load a trusted key from the saved blob::
+>   
+> -    $ keyctl add trusted kmk "load `cat kmk.blob`" @u
+> +    $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001" @u
+>       268728824
+>   
+>       $ keyctl print 268728824
+
+
