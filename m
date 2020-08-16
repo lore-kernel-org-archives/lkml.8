@@ -2,84 +2,154 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF122067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C740206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnfhSjMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgHPHPj (ORCPT
+        id S1726288AbgHPHXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 03:15:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59758 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgHPHPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 03:15:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D2E30B145;
-        Sun, 16 Aug 2020 07:15:58 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH v5 3/3] drbd: code cleanup by using sendpage_ok() to check page for kernel_sendpage()
-Date:   Sun, 16 Aug 2020 15:15:17 +0800
-Message-Id: <20200816071518.6964-3-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200816071518.6964-1-colyli@suse.de>
-References: <20200816071518.6964-1-colyli@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 16 Aug 2020 03:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgHPHXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 03:23:02 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD12C061786;
+        Sun, 16 Aug 2020 00:23:02 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u20so6617362pfn.0;
+        Sun, 16 Aug 2020 00:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XsWzkI7b5pu8oXRoyOcjalYLcDw0bFRQKxSKHW3RdiE=;
+        b=KnfhSjMIJRK9g0L1/TkVJwJ+MZLfx9QY8vyjsQeXdxMvc7pHJ+XF4PXGFngDemEagf
+         uXHun+YRQygAj9a8L+WiXupgmh1V1GckbRqwBBfw6XxOPcpFyzyG34B0oB5q7XM+gurL
+         hZh6j1HEy04Cd1nhn0g5ROqeIINp5tukMDDecpzBX0mT8uBa4hQ4082KYmFEJYfk5iql
+         +g8QBDlUsDxY5rzo8jVgJwHc/WN0BLh4xSRkCyrSmh5b1PTt2uyNJnDYlyLe7vEtk+JA
+         EeEyp9GCqH23grUC4k+powv+wo1ZaJ5la1nrnH0/k6SKrAQAOFvnuBBu2QSmUcf6+L++
+         Z1rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XsWzkI7b5pu8oXRoyOcjalYLcDw0bFRQKxSKHW3RdiE=;
+        b=cCP/YPFut+oN/CRRrSb4XkaB7NB0x7ccW0H1PKl8DfkpWCQGHazZlM0uwWJNvYbu/n
+         1xceoX0jcdf7GO4xlN1Z12Dl/RgTThRGm2iBZV6XYKf4f9y/XBNE+QzoN0Enpnt5Fhbw
+         m6aabaa8yvwdK2+l/WBwlK3PdH584uCDz4AxqYLh93Gt6mtIfz28KR9jKBxIlTYDq9ng
+         rgb8GUZGcwNCf2p1NU41X5L+uXfmjvvD3sVH85V+WHdpO3VaULZAeEXaK/309OAX6Iuq
+         hgGhx/WfYjjWF4MbZb+wjhnEadBPfDeujfJAgSU6UxKhOoz5AAUkJP16p8DVuHqMJ50T
+         ljeA==
+X-Gm-Message-State: AOAM532ySIOdt9lKwnfX0i+l0qi0HiSsLzl2M4lOlAFBu29Kn/8FzSzP
+        eK8n6FsqMTYzIdxNbmQU2Q==
+X-Google-Smtp-Source: ABdhPJzFMl3/Ql1T3hd7ZrGzuMfN4t0G+fRolW4k2ewhaSOf7wlYHj/Nq/apWVEEHy02C1keDckxPA==
+X-Received: by 2002:a62:3486:: with SMTP id b128mr7032696pfa.98.1597562581911;
+        Sun, 16 Aug 2020 00:23:01 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:cea:9294:8100:367f:a3dd:e679])
+        by smtp.gmail.com with ESMTPSA id b22sm14825962pfb.213.2020.08.16.00.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 00:23:01 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     paul@crapouillou.net, Zubair.Kakakhel@imgtec.com,
+        dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrianov@ispras.ru, ldv-project@linuxtesting.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
+Date:   Sun, 16 Aug 2020 12:52:53 +0530
+Message-Id: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In _drbd_send_page() a page is checked by following code before sending
-it by kernel_sendpage(),
-        (page_count(page) < 1) || PageSlab(page)
-If the check is true, this page won't be send by kernel_sendpage() and
-handled by sock_no_sendpage().
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-This kind of check is exactly what macro sendpage_ok() does, which is
-introduced into include/linux/net.h to solve a similar send page issue
-in nvme-tcp code.
+In probe IRQ is requested before zchan->id is initialized which can be
+read in the irq handler. Hence, shift request irq and enable clock after
+other initializations complete. Here, enable clock part is not part of
+the race, it is just shifted down after request_irq to keep the error
+path same as before.
 
-This patch uses macro sendpage_ok() to replace the open coded checks to
-page type and refcount in _drbd_send_page(), as a code cleanup.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
-Changelog:
-v3, introduce a more common sendpage_ok()
-v2, fix typo in patch subject
-v1, the initial version.
- drivers/block/drbd/drbd_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 44 ++++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index cb687ccdbd96..55dc0c91781e 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -1553,7 +1553,7 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
- 	 * put_page(); and would cause either a VM_BUG directly, or
- 	 * __page_cache_release a page that would actually still be referenced
- 	 * by someone, leading to some obscure delayed Oops somewhere else. */
--	if (drbd_disable_sendpage || (page_count(page) < 1) || PageSlab(page))
-+	if (drbd_disable_sendpage || !sendpage_ok(page))
- 		return _drbd_no_send_page(peer_device, page, offset, size, msg_flags);
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 448f663da89c..5cbc8c3bd6c7 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -879,28 +879,6 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- 	msg_flags |= MSG_NOSIGNAL;
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	jzdma->irq = ret;
+-
+-	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
+-			  jzdma);
+-	if (ret) {
+-		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+-		return ret;
+-	}
+-
+-	jzdma->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(jzdma->clk)) {
+-		dev_err(dev, "failed to get clock\n");
+-		ret = PTR_ERR(jzdma->clk);
+-		goto err_free_irq;
+-	}
+-
+-	clk_prepare_enable(jzdma->clk);
+-
+ 	/* Property is optional, if it doesn't exist the value will remain 0. */
+ 	of_property_read_u32_index(dev->of_node, "ingenic,reserved-channels",
+ 				   0, &jzdma->chan_reserved);
+@@ -949,6 +927,28 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
+ 	}
+ 
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		return ret;
++
++	jzdma->irq = ret;
++
++	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
++			  jzdma);
++	if (ret) {
++		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
++		return ret;
++	}
++
++	jzdma->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(jzdma->clk)) {
++		dev_err(dev, "failed to get clock\n");
++		ret = PTR_ERR(jzdma->clk);
++		goto err_free_irq;
++	}
++
++	clk_prepare_enable(jzdma->clk);
++
+ 	ret = dmaenginem_async_device_register(dd);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register device\n");
 -- 
-2.26.2
+2.17.1
 
