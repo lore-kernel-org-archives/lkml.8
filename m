@@ -2,96 +2,117 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1371C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B65DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C111420735
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53FC20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597587856;
+	bh=xkBC+H3ZNkqHkgahGnGRODOgp8Bra4n6v42RR5Q2N+c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YPLxYnPjWaMrC44QxeaxMHmoEEFZ9BRVZMmFhKi7Ims7ayK8aKOV+ego81vyrMqAZ
+	 Ub8GE3YHqoSCHoIvnADFOCt0cWoMfBAKxoK5lb69EHyTvrVPaIKfa2W6sHx/LH4lH+
+	 X8acJAL7EtvUm3cUHxCqyIpxVEYlzhqB9RRndvJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgHPOPR (ORCPT
+        id S1729424AbgHPOYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 10:15:17 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:60651 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729449AbgHPOPL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 10:15:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U5uJ-GC_1597587304;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5uJ-GC_1597587304)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 16 Aug 2020 22:15:05 +0800
-Subject: Re: [PATCH 1/2] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
- <eeb80957-96f7-661c-1510-0e6247570bd3@redhat.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <89b42892-8257-e3fc-34c9-27d9a470ed79@linux.alibaba.com>
-Date:   Sun, 16 Aug 2020 22:14:08 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 16 Aug 2020 10:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729394AbgHPOYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 10:24:13 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB8E204EC;
+        Sun, 16 Aug 2020 14:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597587852;
+        bh=xkBC+H3ZNkqHkgahGnGRODOgp8Bra4n6v42RR5Q2N+c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EfsYUCodboa3hGL+f80lzxiKuB1LjMHShEYEi25qGbkMLB6IqngOQfMsszvYNMhG4
+         gz6VJds3oxi4tBp5s6LVpm0YqavFo9ygT5xoQzB+x0npfhflNvIwUxRyk9Q6yZFmK3
+         IgslH9XPDMyGVxVv9LxATEErdZO+9Ni0UN41P1vg=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-parisc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Meelis Roos <mroos@linux.ee>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] parisc: fix PMD pages allocation by restoring pmd_alloc_one()
+Date:   Sun, 16 Aug 2020 17:24:03 +0300
+Message-Id: <20200816142403.15449-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <eeb80957-96f7-661c-1510-0e6247570bd3@redhat.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mike Rapoport <rppt@linux.ibm.com>
 
+Commit 1355c31eeb7e ("asm-generic: pgalloc: provide generic pmd_alloc_one()
+and pmd_free_one()") converted parisc to use generic version of
+pmd_alloc_one() but it missed the fact that parisc uses order-1 pages for
+PMD.
 
-在 2020/8/16 下午8:16, David Hildenbrand 写道:
-> On 16.08.20 05:47, Alex Shi wrote:
->> pageblock_flags is used as long, since every pageblock_flags is just 4
->> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
->> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
->> flags. It would cause long waiting for sync.
->>
->> If we could change the pageblock_flags variable as char, we could use
->> char size cmpxchg, which just sync up with 2 pageblock flags. it could
->> relief much false sharing in cmpxchg.
-> 
-> Do you have any performance numbers to back your claims? IOW, do we care
-> at all?
-> 
-> 
+Restore the original version of pmd_alloc_one() for parisc, just use
+GFP_PGTABLE_KERNEL that implies __GFP_ZERO instead of GFP_KERNEL and
+memset.
 
-Hi David,
+Fixes: 1355c31eeb7e ("asm-generic: pgalloc: provide generic pmd_alloc_one() and pmd_free_one()")
+Repoerted-by: Meelis Roos <mroos@linux.ee>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Tested-by: Meelis Roos <mroos@linux.ee>
+Link: https://lkml.kernel.org/r/9f2b5ebd-e4a4-0fa1-6cd3-4b9f6892d1ad@linux.ee 
+---
 
-Thanks for comments!
+Hi,
 
-Not yet, I trace the following commit here, with this commit this hot path
-looks be resolved.
+I've trimmed the 'cc list relatively to the bug report and added parisc
+maintainers.
 
-Thanks
-Alex
+ arch/parisc/include/asm/pgalloc.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-e380bebe4771548  mm, compaction: keep migration source private to a single compaction instance
-                if (!locked) {
-                        locked = compact_trylock_irqsave(zone_lru_lock(zone),
-                                                                &flags, cc);
--                       if (!locked)
+diff --git a/arch/parisc/include/asm/pgalloc.h b/arch/parisc/include/asm/pgalloc.h
+index cc7ecc2ef55d..a6482b2ce0ea 100644
+--- a/arch/parisc/include/asm/pgalloc.h
++++ b/arch/parisc/include/asm/pgalloc.h
+@@ -10,6 +10,7 @@
+ 
+ #include <asm/cache.h>
+ 
++#define __HAVE_ARCH_PMD_ALLOC_ONE
+ #define __HAVE_ARCH_PMD_FREE
+ #define __HAVE_ARCH_PGD_FREE
+ #include <asm-generic/pgalloc.h>
+@@ -67,6 +68,11 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+ 			(__u32)(__pa((unsigned long)pmd) >> PxD_VALUE_SHIFT)));
+ }
+ 
++static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
++{
++	return (pmd_t *)__get_free_pages(GFP_PGTABLE_KERNEL, PMD_ORDER);
++}
 +
-+                       /* Allow future scanning if the lock is contended */
-+                       if (!locked) {
-+                               clear_pageblock_skip(page);
-                                break;
-+                       }
-+
-+                       /* Try get exclusive access under lock */
-+                       if (!skip_updated) {
-+                               skip_updated = true;
-+                               if (test_and_set_skip(cc, page, low_pfn))
-+                                       goto isolate_abort;
-+                       }
+ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ {
+ 	if (pmd_flag(*pmd) & PxD_FLAG_ATTACHED) {
+-- 
+2.26.2
 
