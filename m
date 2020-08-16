@@ -2,96 +2,70 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1745C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F2F20885
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:46:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="0PeI6Z1e"
+	by mail.kernel.org (Postfix) with ESMTP id 88D9C206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgHPWqV (ORCPT
+        id S1729759AbgHPWuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 18:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgHPWqR (ORCPT
+        Sun, 16 Aug 2020 18:50:23 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36892 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728964AbgHPWuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 18:46:17 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4D9C061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 15:46:17 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id d4so6772182pjx.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 15:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bdd6W0wjQY4twkrWmtbJVXisCwlRs5bWGrujUBo8Nwk=;
-        b=0PeI6Z1ecW8efJzLFC+P8s1OAkzNy/oopjAlpwdzDP3uBqFkzuM0LC7h2EtUvfrtXA
-         H+KPQMbotMmqQMr8P1MNXZgncjh6panXS2zxueg/UQK8u55yimqp19q2O1qmJlMboUES
-         wLW9x5yYq18B2w7E+DUwjH6CG1fyL99VmUoHlERhAv6vJWsbsCoT7gU0ueR+003bhM/9
-         6BxU2M/y03cfgbvMrygaTCwgmXWcO/G1oRsWk6wGeZnbQEYF1aoqZUxh36DXDIGlGGkp
-         xE8zJPR6Qzexcme83X93JWu1z7YWUiNLMlNDemL2M7hWnVysRVEhUhC1johnNvKiSW/P
-         G34A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bdd6W0wjQY4twkrWmtbJVXisCwlRs5bWGrujUBo8Nwk=;
-        b=SbTgxPjkRb1zHkU6Xa4RIXLpZ4QesljFJ1HTCRFGWrWlxZXsSC5WDsum38St1n5E32
-         5RGBv19rE3XFgeWaympcx7v4a9puekSTQzaC4DTjS66aRVTk0eymoZkTdVscrsqOMbYF
-         3uDCZpvgbaSsLcECJcdCVmgLwiwiAF7fm9DrsNapbm4zDOiULi5JWhe0e4t4DtDSlimv
-         Lss0QfwMJ5l70Riug1UlfdNfRVGxbmCzB84fkGWxNH5pd3LyjtKfPa+5yf9FF082L6gd
-         jdw94K+U36qYo1/J4R03RosBXNLHPi6dSgC3iPILA/OGAb9PN3dmHyzXnToBiNLfuJgk
-         WvJQ==
-X-Gm-Message-State: AOAM531GBV03r+Ld6EaOivEqiipEh2QtWq+MnrseMYSPbqs5KBPLsSpz
-        5/rXFu+sIo2IhFjN/5XOfwJR/w==
-X-Google-Smtp-Source: ABdhPJx2RyitijhpB8HyHg+v11L1TWUQym0dBB5Ie1aetMyyLQqZUL93SvmgA77M5oT0IrbM+Urt/w==
-X-Received: by 2002:a17:90a:24e9:: with SMTP id i96mr10393612pje.148.1597617977195;
-        Sun, 16 Aug 2020 15:46:17 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id a24sm16311197pfg.113.2020.08.16.15.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 15:46:16 -0700 (PDT)
-Date:   Sun, 16 Aug 2020 15:46:08 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <vinicius.gomes@intel.com>,
-        <kuznet@ms2.inr.ac.ru>
-Subject: Re: [net-next iproute2 PATCH v4 1/2] iplink: hsr: add support for
- creating PRP device similar to HSR
-Message-ID: <20200816154608.0fe0917b@hermes.lan>
-In-Reply-To: <20200806203712.2712-2-m-karicheri2@ti.com>
-References: <20200806203712.2712-1-m-karicheri2@ti.com>
-        <20200806203712.2712-2-m-karicheri2@ti.com>
+        Sun, 16 Aug 2020 18:50:22 -0400
+Received: from [IPv6:2804:431:c7f5:9f4e:1121:8b00:83b2:86f4] (unknown [IPv6:2804:431:c7f5:9f4e:1121:8b00:83b2:86f4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 911EA2753ED;
+        Sun, 16 Aug 2020 23:50:19 +0100 (BST)
+Subject: Re: [PATCH] block: blk-mq.c: fix @at_head kernel-doc warning
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+References: <20200816222519.313-1-rdunlap@infradead.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <ce836be4-a430-eec3-9268-a9ad080122e7@collabora.com>
+Date:   Sun, 16 Aug 2020 19:50:14 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200816222519.313-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 16:37:11 -0400
-Murali Karicheri <m-karicheri2@ti.com> wrote:
+Hi Randy,
 
-> +	
+On 8/16/20 7:25 PM, Randy Dunlap wrote:
+> Fix a new kernel-doc warning in block/blk-mq.c:
+> 
+> ../block/blk-mq.c:1844: warning: Function parameter or member 'at_head' not described in 'blk_mq_request_bypass_insert'
+> 
+> Fixes: 105663f73e71 ("blk-mq: Document functions for sending request")
 
-> +		print_int(PRINT_ANY,
-> +			  "proto",
-> +			  "proto %d ",
-> +			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
+By the time commit 105663f73e71 ("blk-mq: Document functions for sending
+request") was merged, the parameter @at_head didn't exist[1].
 
-Since this unsigned value, you probably want to use print_uint, or print_hhu.
-Also please put as many arguments on one line that will fit in 80 (to 90) characters.
+The commit that inserted this warning is 01e99aeca397 ("blk-mq: insert
+passthrough request into hctx->dispatch directly"), that added @at_head
+without updating the documentation.
 
-	if (tb[IFLA_HSR_PROTOCOL])
-		print_hhu(PRINT_ANY, "proto", "proto %hhu ", 
-			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
+Thanks,
+	André
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/block/blk-mq.c?id=105663f73e71b5e79ecf472c0499c9acde654b28#n1673
+
+
