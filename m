@@ -2,76 +2,106 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2963BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39982078A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15F82078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="haONcLnv"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZTmL/jg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgHPX4s (ORCPT
+        id S1726555AbgHPX5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 19:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHPX4r (ORCPT
+        Sun, 16 Aug 2020 19:57:40 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47189 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgHPX5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 19:56:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B727C061786;
-        Sun, 16 Aug 2020 16:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=c9c9G3dB8869nqCG7k3c6jcYL3oO+4rkELQoO6iCoYQ=; b=haONcLnvILixrqRZGxk4vB/7Wv
-        mBlBraJ5BmrqXZvsg9gD+eLwsJEA0PYWChL/mtSe7sTenFvNl66Fa5aI6tEKfrPtI0oejABtOQG0y
-        1BkpLh7J8hAzFaljoeym9VskiPWlkL5d6pQf9EkS4vhFiCUe1qckdiBI7MbmW+hm+8dTQru9wOzxs
-        XmcLj7zbip8jqvoUbF8lMne9q81RtQajFcfqx/oz+tsMrWSDSFVMNjz2TLJbZ2K3tapx4prsNpcU7
-        VBJJm3sz2M7dWidkql3PUlgaHkrB9sT8zuspOlBHjyxBUOfGefeIlwZgQzZz57O1R4R0DVY+AzxQF
-        nOBqKOLw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7SW5-0002f1-3H; Sun, 16 Aug 2020 23:56:45 +0000
-Subject: Re: [PATCH v2] block: blk-mq.c: fix @at_head kernel-doc warning
-To:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org
-References: <20200816233934.1573-1-rdunlap@infradead.org>
- <174779d5-d698-0893-881a-3e371f2a1296@kernel.dk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <525203fc-7f65-7de6-d59d-487d46c4f38f@infradead.org>
-Date:   Sun, 16 Aug 2020 16:56:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 16 Aug 2020 19:57:40 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D25F806B6;
+        Mon, 17 Aug 2020 11:57:34 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1597622254;
+        bh=JhXIFBqKeT7URz6eflkuIZsdIt3uBksb0ispn1x1xTk=;
+        h=From:To:Cc:Subject:Date;
+        b=ZTmL/jg0TgMZmwa2D+p6g4e6h/9m7a7rOGt0jct1upuAZyQURrFJgRiPyyo1+gkR2
+         swwr67p3h6sPYiKKxzdYccDtFw6QRWxe6scq2YDg0gfHvqMEo4QKvK8mCJ0+FzPMpM
+         r4Xl5CgQtIr83Hu2/4eHLTBtZzO29/dfm3sPKRzWHqcbE0QBh7bD18GuW88O+kZVqO
+         pajI+oy0cJvjkbBAW/8CyNBV3ctIKAKqHa0jO8c3AssVwuR03f3PhaMnrQCGXZKqfI
+         IUgndDi7x0goUm8ybo6tbmeL0D6D3+zMYTLV/j4OYU90UmPt9DHubeQfyVTM1wgBDN
+         1SDBODP89HZ6Q==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f39c7ee0000>; Mon, 17 Aug 2020 11:57:34 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 6959113ED33;
+        Mon, 17 Aug 2020 11:57:33 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id F365A28005D; Mon, 17 Aug 2020 11:57:33 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] rtc: ds1307: Ensure oscillator is enabled for DS1388
+Date:   Mon, 17 Aug 2020 11:57:31 +1200
+Message-Id: <20200816235731.21071-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <174779d5-d698-0893-881a-3e371f2a1296@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/20 4:50 PM, Jens Axboe wrote:
-> On 8/16/20 4:39 PM, Randy Dunlap wrote:
->> Fix a new kernel-doc warning in block/blk-mq.c:
->>
->> ../block/blk-mq.c:1844: warning: Function parameter or member 'at_head' not described in 'blk_mq_request_bypass_insert'
-> 
-> Replaced the previous one - and since I was doing that anyway, I removed
-> the 'new' from the commit message. Looks like it was from 5.6, so not
-> what I'd call new.
+Similar to the other variants the DS1388 has a bit to stop the
+oscillator to reduce the power consumption from VBAT. Ensure that the
+oscillator is enabled when the system is up.
 
-Yes, I just hadn't seen it before and I check pretty carefully.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/rtc/rtc-ds1307.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-thanks.
--- 
-~Randy
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 54c85cdd019d..2182f4e97c0a 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -153,6 +153,7 @@ enum ds_type {
+ #define DS1388_REG_CONTROL		0x0c
+ #	define DS1388_BIT_RST		BIT(0)
+ #	define DS1388_BIT_WDE		BIT(1)
++#	define DS1388_BIT_nEOSC		BIT(7)
+=20
+ /* negative offset step is -2.034ppm */
+ #define M41TXX_NEG_OFFSET_STEP_PPB	2034
+@@ -1881,6 +1882,19 @@ static int ds1307_probe(struct i2c_client *client,
+ 				     DS1307_REG_HOUR << 4 | 0x08, hour);
+ 		}
+ 		break;
++	case ds_1388:
++		err =3D regmap_read(ds1307->regmap, DS1388_REG_CONTROL, &tmp);
++		if (err) {
++			dev_dbg(ds1307->dev, "read error %d\n", err);
++			goto exit;
++		}
++
++		/* oscillator off?  turn it on, so clock can tick. */
++		if (tmp & DS1388_BIT_nEOSC) {
++			tmp &=3D ~DS1388_BIT_nEOSC;
++			regmap_write(ds1307->regmap, DS1388_REG_CONTROL, tmp);
++		}
++		break;
+ 	default:
+ 		break;
+ 	}
+--=20
+2.28.0
+
