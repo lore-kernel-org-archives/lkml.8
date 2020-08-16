@@ -2,213 +2,140 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D48AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CACC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DE4207D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE21207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e6NQQl9Y"
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="j55Ja//6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgHPLws (ORCPT
+        id S1728638AbgHPLzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 07:52:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25586 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgHPLwN (ORCPT
+        Sun, 16 Aug 2020 07:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgHPLym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 07:52:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597578729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7OLC89jOoEoJHyExqjmcWiWlu8IwCSnO9Y8nKZy7mHo=;
-        b=e6NQQl9YcnmDEa0/j0b8SjN1W3ltUhgr5MiHcxeS1WCqPCWD8PWCib9nxkGJ2NnxTEYV8f
-        t4TZzKNlH4zPFJquwq3q2SohmZfu8AdjEs7HOqFmnfAWJDXJrkWnks00KSGMC8Lwq/wex9
-        R+ajvqTr44BKEYXWPfeN/+ak8hlgEjc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-AijQ1lieOIqtjUfgma6l5g-1; Sun, 16 Aug 2020 07:52:03 -0400
-X-MC-Unique: AijQ1lieOIqtjUfgma6l5g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEFCD1015DC3;
-        Sun, 16 Aug 2020 11:52:00 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 227817B9FA;
-        Sun, 16 Aug 2020 11:51:50 +0000 (UTC)
-Subject: Re: [PATCH v6 14/15] vfio: Document dual stage control
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
- <1595917664-33276-15-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <aa1297cb-2bde-0cea-70a4-fc8f56d745e6@redhat.com>
-Date:   Sun, 16 Aug 2020 13:51:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 16 Aug 2020 07:54:42 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEBEC061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 04:54:41 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l64so12525182qkb.8
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 04:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=labbott.name; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2z9xB6h0onVuiLPOfpcwkvpQxk2cuNCblaJiNFPAzzs=;
+        b=j55Ja//6hpyID8SYN5OXZxcsDjLL36bzN+ax4aTtyjQyJmqc33kKQrm3ti2+AkwLCl
+         5je5kbHER6uRwNhYwymBdkg7qHG5RvHWu6TA9gTF3VyzMtvIytI3r6xvti9Atk3JE4XG
+         0j/a/dQ/w6bZSOtUA2Zz2aBQDBcHC5s3hkJE4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2z9xB6h0onVuiLPOfpcwkvpQxk2cuNCblaJiNFPAzzs=;
+        b=L9kUmZIhAkp6jFHieuZzFV//E5CuXNQPJ+CNKR7/fX6nbPKmCsqFs77160CyytgMmn
+         jF16VE5fJqvePgJAnr6mRVZqJxmdIRCSDtapvOfdouGHrFAqCt/qJ9umgkpsSeC4O3Xm
+         F31sT19v4CIHht81PNfDi6vfi+mP1wXltjREunUHRqy3lSq6t/10S6/ZoPnGF5tQymGh
+         kLwkqrbQC6ebpFPQnr8D4wAAFQmKO4xhcK109G8YwwIOU7S8QKEoNpxQEEBXxIWtYwDO
+         Eudzgp574vKTENWD6L0qe/7Li6OzMnvtAn6LD7+KPNBD5/O6nmK7Dvdupyjf6tErC4vs
+         NVjQ==
+X-Gm-Message-State: AOAM533FMYYhuipWtTnxp9J5Zj9pbShQmkVZEnyO0TQmkuJY8eabs6bw
+        6RxCxgavgCokBqAwMJC4WRxIAqTwPQC1uzge
+X-Google-Smtp-Source: ABdhPJy717NtIXf4F7Bc/QD5KeATpNzaWMpeduYDvszI77GbKr/KjXiLBY8kQK6l+CdAX1eE4W1duw==
+X-Received: by 2002:a05:620a:c16:: with SMTP id l22mr8774158qki.271.1597578878370;
+        Sun, 16 Aug 2020 04:54:38 -0700 (PDT)
+Received: from [192.168.1.155] (pool-74-109-246-95.pitbpa.fios.verizon.net. [74.109.246.95])
+        by smtp.gmail.com with ESMTPSA id d203sm13836069qkc.10.2020.08.16.04.54.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Aug 2020 04:54:37 -0700 (PDT)
+Subject: Re: [Ksummit-discuss] Linux Foundation 2020 Technical Advisory Board
+ election: call for nominations
+To:     Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     tech-board-discuss@lists.linuxfoundation.org,
+        ksummit-discuss@lists.linuxfoundation.org
+References: <20200803153612.24ef78d9@lwn.net>
+From:   Laura Abbott <laura@labbott.name>
+Message-ID: <2b19dec5-7596-f82e-709a-cd246427d78c@labbott.name>
+Date:   Sun, 16 Aug 2020 07:54:35 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1595917664-33276-15-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200803153612.24ef78d9@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
 
-On 7/28/20 8:27 AM, Liu Yi L wrote:
-> From: Eric Auger <eric.auger@redhat.com>
-> 
-> The VFIO API was enhanced to support nested stage control: a bunch of> new ioctls and usage guideline.
-> 
-> Let's document the process to follow to set up nested mode.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
-> v5 -> v6:
-> *) tweak per Eric's comments.
-> 
-> v3 -> v4:
-> *) add review-by from Stefan Hajnoczi
-> 
-> v2 -> v3:
-> *) address comments from Stefan Hajnoczi
-> 
-> v1 -> v2:
-> *) new in v2, compared with Eric's original version, pasid table bind
->    and fault reporting is removed as this series doesn't cover them.
->    Original version from Eric.
->    https://lkml.org/lkml/2020/3/20/700
-> ---
->  Documentation/driver-api/vfio.rst | 75 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/vfio.rst b/Documentation/driver-api/vfio.rst
-> index f1a4d3c..c0d43f0 100644
-> --- a/Documentation/driver-api/vfio.rst
-> +++ b/Documentation/driver-api/vfio.rst
-> @@ -239,6 +239,81 @@ group and can access them as follows::
->  	/* Gratuitous device reset and go... */
->  	ioctl(device, VFIO_DEVICE_RESET);
->  
-> +IOMMU Dual Stage Control
-> +------------------------
-> +
-> +Some IOMMUs support 2 stages/levels of translation. Stage corresponds
-> +to the ARM terminology while level corresponds to Intel's terminology.
-> +In the following text we use either without distinction.
-> +
-> +This is useful when the guest is exposed with a virtual IOMMU and some
-> +devices are assigned to the guest through VFIO. Then the guest OS can
-> +use stage-1 (GIOVA -> GPA or GVA->GPA), while the hypervisor uses stage
-> +2 for VM isolation (GPA -> HPA).
-> +
-> +Under dual stage translation, the guest gets ownership of the stage-1 page
-> +tables and also owns stage-1 configuration structures. The hypervisor owns
-> +the root configuration structure (for security reason), including stage-2
-> +configuration.
-This is only true for vtd. On ARM the stage2 cfg is the Context
-Descriptor table (aka PASID table). root cfg only store the GPA of the
-CD table.
- This works as long as configuration structures and page table
-> +formats are compatible between the virtual IOMMU and the physical IOMMU.
-> +
-> +Assuming the HW supports it, this nested mode is selected by choosing the
-> +VFIO_TYPE1_NESTING_IOMMU type through:
-> +
-> +    ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
-> +
-> +This forces the hypervisor to use the stage-2, leaving stage-1 available
-> +for guest usage. The stage-1 format and binding method are vendor specific
-. There are reported in the nesting capability ...
-> +and reported in nesting cap (VFIO_IOMMU_TYPE1_INFO_CAP_NESTING) through
-> +VFIO_IOMMU_GET_INFO:
-> +
-> +    ioctl(container->fd, VFIO_IOMMU_GET_INFO, &nesting_info);
-> +
-> +The nesting cap info is available only after NESTING_IOMMU is selected.
-> +If underlying IOMMU doesn't support nesting, VFIO_SET_IOMMU fails and
-If the underlying
-> +userspace should try other IOMMU types. Details of the nesting cap info
-> +can be found in Documentation/userspace-api/iommu.rst.
-> +
-> +The stage-1 page table can be bound to the IOMMU in two methods: directly> +or indirectly. Direct binding requires userspace to notify VFIO of every
-Not sure we shall use this direct/indirect terminology. I don't think
-this is part of either ARM or Intel SPEC.
 
-Suggestion: On Intel, the stage1 page table info are mediated by the
-userspace for each PASID. On ARM, the userspace directly passes the GPA
-of the whole PASID table. Currently only Intel's binding is supported.
-> +guest stage-1 page table binding, while indirect binding allows userspace
-> +to bind once with an intermediate structure (e.g. PASID table) which
-> +indirectly links to guest stage-1 page tables. The actual binding method
-> +depends on IOMMU vendor. Currently only the direct binding capability (
-> +IOMMU_NESTING_FEAT_BIND_PGTBL) is supported:
-> +
-> +    nesting_op->flags = VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
-> +    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
-> +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
-> +
-> +When multiple stage-1 page tables are supported on a device, each page
-> +table is associated with a PASID (Process Address Space ID) to differentiate
-> +with each other. In such case, userspace should include PASID in the
-> +bind_data when issuing direct binding request.
-> +
-> +PASID could be managed per-device or system-wide which, again, depends on
-> +IOMMU vendor and is reported in nesting cap info. When system-wide policy
-> +is reported (IOMMU_NESTING_FEAT_SYSWIDE_PASID), e.g. as by Intel platforms,
-> +userspace *must* allocate PASID from VFIO before attempting binding of
-> +stage-1 page table:
-> +
-> +    req.flags = VFIO_IOMMU_ALLOC_PASID;
-> +    ioctl(container, VFIO_IOMMU_PASID_REQUEST, &req);
-> +
-> +Once the stage-1 page table is bound to the IOMMU, the guest is allowed to
-> +fully manage its mapping at its disposal. The IOMMU walks nested stage-1
-> +and stage-2 page tables when serving DMA requests from assigned device, and
-> +may cache the stage-1 mapping in the IOTLB. When required (IOMMU_NESTING_
-> +FEAT_CACHE_INVLD), userspace *must* forward guest stage-1 invalidation to
-> +the host, so the IOTLB is invalidated:
-> +
-> +    nesting_op->flags = VFIO_IOMMU_NESTING_OP_CACHE_INVLD;
-> +    memcpy(&nesting_op->data, &cache_inv_data, sizeof(cache_inv_data));
-> +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
-> +
-> +Forwarded invalidations can happen at various granularity levels (page
-> +level, context level, etc.)
-> +
->  VFIO User API
->  -------------------------------------------------------------------------------
->  
+On 8/3/20 5:36 PM, Jonathan Corbet wrote:
+> The election for the Linux Foundation Technical Advisory Board (TAB) will
+> be held virtually during the 2020 Kernel Summit and Linux Plumbers
+> Conference, August 24-28 2020.  Nominations for candidates interested in
+> serving on the TAB are currently being sought.
 > 
-Thanks
+> The TAB serves as the interface between the kernel development community
+> and the Linux Foundation, advising the Foundation on kernel-related
+> matters, helping member companies learn to work with the community, and
+> working to resolve community-related problems before they get out of hand.
+> We also support the Code of Conduct committee in their mission.
+> 
+> Over the last year, matters tended to by the TAB include proposals for
+> developer workflow improvement, overseeing the Linux Plumbers Conference,
+> moving toward more inclusive terminology in the kernel, and more.  Minutes
+> from TAB meetings can be found here:
+> 
+> 	https://git.kernel.org/pub/scm/docs/tab/tab.git/tree/minutes
+> 
+> The board has ten members, one of whom sits on the Linux Foundation board
+> of directors.  Half of the board (five members) is elected every year to
+> serve a two-year term.  The members whose terms are expiring this year are:
+> 
+> 	Chris Mason (chair)
+> 	Dan Williams
+> 	Kees Cook
+> 	Laura Abbott
+> 	Olof Johansson
+> 
+> The remaining members' terms will expire in 2021:
+> 
+> 	Greg Kroah-Hartman
+> 	Jonathan Corbet
+> 	Sasha Levin
+> 	Steven Rostedt
+> 	Ted Ts'o
+> 	
+> Anyone is eligible to stand for election; simply send your nomination to:
+> 
+> 	tech-board-discuss@lists.linux-foundation.org
+> 
+> With your nomination, please include a short (<= 200 words) candidate
+> statement focusing on why you are running and what you hope to accomplish
+> on the TAB. We will be collecting these statements and making them publicly
+> available.
+> 
+> The deadline for receiving nominations is 9:00AM GMT-4 (US/Eastern) on
+> August 24 (the first day of Kernel Summit). Due to the use of
+> electronic voting, this will be a hard deadline!
+> 
+> As always, please let us know if you have questions (the TAB can be reached
+> at tech-board@lists.linuxfoundation.org), and please do consider running.
 
-Eric
+As a reminder, the deadline for nominations is coming up. Please get
+your nominations in!
 
+Thanks,
+Laura
