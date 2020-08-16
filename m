@@ -2,178 +2,140 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD779C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30F7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8441520738
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15A32078B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pO7oKfEA"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NRka2OgZ";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LaVsMh+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgHPFWt (ORCPT
+        id S1730120AbgHPFsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 01:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgHPFWs (ORCPT
+        Sun, 16 Aug 2020 01:48:03 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47760 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726985AbgHPFsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 01:22:48 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94E65C061786;
-        Sat, 15 Aug 2020 22:22:48 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id g1so2767795oop.11;
-        Sat, 15 Aug 2020 22:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=PAteESxJKccFpDFj8kKtK40KfGMPkFYwzSmBJNjdRqM=;
-        b=pO7oKfEA3vIZbET8ZwFEO8ajqZVw6svyI2G96Q44zR1niQuye4K4ICeGjJ4hAGdZkY
-         6S2EXXSelaXw/GvnRdxe4Xn7KMq7a0BWcE5RDNhI24p1bBPb6hr4Mo+ibUbeRDIUvYEq
-         qaOJcjkulLHeLJO3hnuRaf8Y1yjfRVq5s4zMc3z1N22EpAhnPOtpAIG7NPV/6P16ESgD
-         vDvJJL2aJurL7ge3T4EE3Ip7IHKkAORcihTagKpc8GfIkCtqZcTrnhsXk9S2OJnAXFZ2
-         QlQ8DfPWQlMIM/r0fQ2BDrkMJlnyZWeWknmm2cVRoObE54JqVUPWywlbFZBVjTFpgfI2
-         Vpvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=PAteESxJKccFpDFj8kKtK40KfGMPkFYwzSmBJNjdRqM=;
-        b=M2yJtNOWNoHm0FZXh3XRjWm386MJTD5e1o5NYjJ4GpUWBKAa25zcABMvIPR2bIA/cs
-         lg9IfUvuh4NilanFnUHkLu9wk1uNVVpgfMCIJjkW3ibdUBBVVreJT72882piubJkHDlG
-         gKkj44sw1X53abMucRgzR6ysx8p7H7d+g6+Drj8RCBV/xZW6DcFAZ9tVKAS4jfgdw90n
-         /ATVOTq7Odfd9y+eKC556KGj1fcQE25mhleq+TFQB9qVsyyL/anEwH3iyQd2QcCdPsgR
-         d8BuWLlRyYZCrKhqwSg8bFT58v70yX8inSRKqbbyqOBX3XuBobAa2cwDhadqI0JwLvSG
-         m9RQ==
-X-Gm-Message-State: AOAM5320mV1EIczPIlIhXIEkJcOqkZkk2wOYfR3QRoMy6KEJ4vN54Nz6
-        WZCG4us4c3zOZ4OaiKfX5i5JeYNY6/tQRAHXkQc=
-X-Google-Smtp-Source: ABdhPJwRkt+zx1Zpfx1bwc74WVWvV4ORKtR4reQCPv+pcbDozTUqfeZrHV3MeZ5nRCFXYkZol+fn5b/WrYNX19LMGoA=
-X-Received: by 2002:a4a:7b4b:: with SMTP id l72mr7081937ooc.74.1597555366947;
- Sat, 15 Aug 2020 22:22:46 -0700 (PDT)
+        Sun, 16 Aug 2020 01:48:01 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07G5i3OE011887;
+        Sat, 15 Aug 2020 22:46:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
+ b=NRka2OgZUkKbMT662lbBa+9GaebK7OxOlUqZAD3H4bg99sm7zl1FLD6eSomtdDjlGBqM
+ ppZAHtlutrRH43xttBXxJONWMYEvJAoT+gC08Xaax5boKjPKnS5LSwvQsriCfznjY9To
+ BaxL2iOdei/nUz4R5QbhPmryYEWS0IZdYzs= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0089730.ppops.net with ESMTP id 32xb6yjx8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 15 Aug 2020 22:46:42 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sat, 15 Aug 2020 22:46:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FwZcOMp1Int2l7qGEJ0qBThhmZOgMRLkZVRPmNUYCey3J2uKmcHyeRSNrjEZZjDP9h3gpG/3IYNR7GD6n5u9gjFG00X1V4Q4k1e8aDYu//iyIbnAaD0CQAcfRJiOIb9vOhQEvu5a3ArVW9lf/VUw2p9OMrjJ87MY7gg7Hm9c86xo8NETeMrptdqGpGI1DokDlmpqkr5J2b6Vppnd0TjNqDjaQLKY17mMCdGuxt60wRu7tLgTSPc4o8drovwCymmdd7YiPzDMj4RFIFhhUMW+5sOwwwtVQBT/4WykuQgtK8h5N0dxejDH4uykt6q1kqcqSzJKQpDBtTN3/l++EITwrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
+ b=DqMCllOqP8cwSrmusFp87FTzrqLD2a7yCh6RCR3B3iiI9QBz7HhA/IvtdZOyZXcPdweJznrx2N6DrUI2ftpDG7nad35sF9e2DIMCSLqPOGF0xcAoAvEym30yWFEVeL7AXdTt0UjKq6cNFkrYK7CpMwbHQsLjC8Ol5HpE33IhLpnGW4Yu//2yOLPKd4rWZ5YTBqcngrreb0QD+5jVfxtCaOy1DxojfrD1Ks5XikXCPHfyX9zUfh7yuUvOCJiQN5K4e+zSuMdNL96SLlURQonyANU/INhMgdF7GFi0wLPMnp6vzj88U/xqH+duAhisMXiYFFsWxDFvL/ujotXn5wHhIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
+ b=LaVsMh+GD7SKsH+Y/hDwVGY4O2Ztla9T6CxFMGy+9BCX+P7+LjovslKYMxLk6ACJpKWqHfcY7Mf8Iz1A5sH0KDQbLkuv1v2ZWXv0QxR3X9xygdvX0NhNLlApDw5h9J2koCVrrsVE5qYFKcgrDTaHDP3OeZdU/wWrDifMLGR4N9s=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BY5PR15MB3666.namprd15.prod.outlook.com (2603:10b6:a03:1fc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Sun, 16 Aug
+ 2020 05:46:38 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3283.027; Sun, 16 Aug 2020
+ 05:46:38 +0000
+Subject: Re: [PATCH v2] bpf: Convert to use the preferred fallthrough macro
+To:     Miaohe Lin <linmiaohe@huawei.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <kafai@fb.com>, <songliubraving@fb.com>,
+        <andriin@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <hawk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200815084745.19291-1-linmiaohe@huawei.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <893c196b-661f-cdad-7171-6b7946e179a5@fb.com>
+Date:   Sat, 15 Aug 2020 22:46:33 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
+In-Reply-To: <20200815084745.19291-1-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR10CA0032.namprd10.prod.outlook.com
+ (2603:10b6:208:120::45) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-References: <20200815014006.GB99152@rani.riverdale.lan> <20200815020946.1538085-1-ndesaulniers@google.com>
- <202008150921.B70721A359@keescook> <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
- <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
- <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com> <20200816001917.4krsnrik7hxxfqfm@google.com>
-In-Reply-To: <20200816001917.4krsnrik7hxxfqfm@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sun, 16 Aug 2020 07:22:35 +0200
-Message-ID: <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-To:     Fangrui Song <maskray@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c0a8:11d9::1056] (2620:10d:c091:480::1:df42) by MN2PR10CA0032.namprd10.prod.outlook.com (2603:10b6:208:120::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Sun, 16 Aug 2020 05:46:35 +0000
+X-Originating-IP: [2620:10d:c091:480::1:df42]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aac91bca-a0ef-4f42-bab5-08d841a7be39
+X-MS-TrafficTypeDiagnostic: BY5PR15MB3666:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR15MB366625405DFFB1880A096B7BD35E0@BY5PR15MB3666.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:177;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4cDo4o/kFp9xrN6acYnBAHemVh66KGp4S9cbwgxlN+aM+vWZ7xOTxc/Q0o9SGFQ3TqMF9rP61DMLm1v6D07XMKQ8Ub+iHXgiBuSEPxolyYCwxgfI0JJ96zOJZOVGIMUWsR8Iz0Fe2c3M0+QFVW9oJInxH21JAxv4umY8wWSSGsx5QAcNmBUKUDPV8x2CUL54MOfpVaKbpTnV+YQuKkmZX43rNnknRb27wX9CnYqgsDPY9pUNcVKdJC46wKr4EdoTcRZkgx+f00AK/aKniv7ryNK3pcrA4UXA2rJacHl247AlAS/0qQzyeYadhDDZffiKymdhNFyw0LvYZixeVNTd7Tr7hC3RC8KiN0Kkm0MLFnzQ+2uWp9z2AXYftq6XPslUK7+/1IgHqhZoqNmMTymp6w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(136003)(39860400002)(376002)(396003)(316002)(4326008)(8936002)(8676002)(31686004)(7416002)(478600001)(53546011)(5660300002)(31696002)(16526019)(186003)(4744005)(6486002)(66556008)(66476007)(66946007)(36756003)(52116002)(86362001)(2616005)(2906002)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: WaKYJp1uyhtUuI1oVtCYIhuzB95BR20Jj3VXfEuPvMhzeD40eeD1vfLij5i934dXgLfI+bK8uNo7/pf+cJOy6jj6OWwEWhADU+bkChEQvzN6osq5npbc0mP0/OefHaOOztg83vAPDozgTmdb+SHVML/H6H6ZYWkPeA+qaObUgnwZ1sO3YzW1OEmWC5+sOo3EFhePk9Buw3wSw00HizWwL62wyYM/3FetBep96HnSrEZuLrz9VZxsZ2Z0eF4timSxZwxjP0MJiqdM3cScTgB/PB/El2h2QqYVEgtg/5nlVu8xqygGj31GXOa2edgtHbgGi4ipU0vgEJn3WwnQz6fOLiB/lgW7SjZ25Sv84j0jjjkI6ToMpEw9NgPpp4h5iZq7FoT0crJnudLETSpcUJHZUVwwe+9M93un8ScHVC7vmIMLnV0/ecc++XazLFP59OO+/VaN89C/J4RGzjtBloXTswtffgVF15mLJ8/kCZg0jSJYUx/K8wHzLPz+MjrlP2LtignHsms+D7TqLdx9e6s2biFb4VR1gmg344v0xDbU4TYerXebOseMV2ijAkIzwCHWUraiKcGsb6YkgGqWmTS7e+rj+N30EXECbgss5LPqQEkLNQSgcb168xtGudb15uBndPJ1+CAgvmMjQi5zwLBzKyY5Rx/aLKUTip8Z/IbY9u4=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aac91bca-a0ef-4f42-bab5-08d841a7be39
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2020 05:46:38.2781
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hFaRKya6i4i4F3QbbDW4tjrjhWwTTfh/NiXQVfJnPDPiKdEAWqtOE18Vf5TGSBhL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3666
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-16_01:2020-08-14,2020-08-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=851 clxscore=1015 malwarescore=0 phishscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008160049
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 2:19 AM 'Fangrui Song' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> On 2020-08-15, 'Nick Desaulniers' via Clang Built Linux wrote:
-> >On Sat, Aug 15, 2020 at 2:31 PM Joe Perches <joe@perches.com> wrote:
-> >>
-> >> On Sat, 2020-08-15 at 14:28 -0700, Nick Desaulniers wrote:
-> >> > On Sat, Aug 15, 2020 at 2:24 PM Joe Perches <joe@perches.com> wrote:
-> >> > > On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
-> >> > > > On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
-> >> > > > > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
-> >> > > > > > LLVM implemented a recent "libcall optimization" that lowers calls to
-> >> > > > > > `sprintf(dest, "%s", str)` where the return value is used to
-> >> > > > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> >> > > > > > in parsing format strings.  Calling `sprintf` with overlapping arguments
-> >> > > > > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
-> >> > > > > >
-> >> > > > > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
-> >> > > > > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
-> >> > > > > > one statement.
-> >> > > > >
-> >> > > > > O_O What?
-> >> > > > >
-> >> > > > > No; this is a _terrible_ API: there is no bounds checking, there are no
-> >> > > > > buffer sizes. Anything using the example sprintf() pattern is _already_
-> >> > > > > wrong and must be removed from the kernel. (Yes, I realize that the
-> >> > > > > kernel is *filled* with this bad assumption that "I'll never write more
-> >> > > > > than PAGE_SIZE bytes to this buffer", but that's both theoretically
-> >> > > > > wrong ("640k is enough for anybody") and has been known to be wrong in
-> >> > > > > practice too (e.g. when suddenly your writing routine is reachable by
-> >> > > > > splice(2) and you may not have a PAGE_SIZE buffer).
-> >> > > > >
-> >> > > > > But we cannot _add_ another dangerous string API. We're already in a
-> >> > > > > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
-> >> > > > > needs to be addressed up by removing the unbounded sprintf() uses. (And
-> >> > > > > to do so without introducing bugs related to using snprintf() when
-> >> > > > > scnprintf() is expected[4].)
-> >> > > >
-> >> > > > Well, everything (-next, mainline, stable) is broken right now (with
-> >> > > > ToT Clang) without providing this symbol.  I'm not going to go clean
-> >> > > > the entire kernel's use of sprintf to get our CI back to being green.
-> >> > >
-> >> > > Maybe this should get place in compiler-clang.h so it isn't
-> >> > > generic and public.
-> >> >
-> >> > https://bugs.llvm.org/show_bug.cgi?id=47162#c7 and
-> >> > https://bugs.llvm.org/show_bug.cgi?id=47144
-> >> > Seem to imply that Clang is not the only compiler that can lower a
-> >> > sequence of libcalls to stpcpy.  Do we want to wait until we have a
-> >> > fire drill w/ GCC to move such an implementation from
-> >> > include/linux/compiler-clang.h back in to lib/string.c?
-> >>
-> >> My guess is yes, wait until gcc, if ever, needs it.
-> >
-> >The suggestion to use static inline doesn't even make sense. The
-> >compiler is lowering calls to other library routines; `stpcpy` isn't
-> >being explicitly called.  Even if it was, not sure we want it being
-> >inlined.  No symbol definition will be emitted; problem not solved.
-> >And I refuse to add any more code using `extern inline`.  Putting the
-> >definition in lib/string.c is the most straightforward and avoids
-> >revisiting this issue in the future for other toolchains.  I'll limit
-> >access by removing the declaration, and adding a comment to avoid its
-> >use.  But if you're going to use a gnu target triple without using
-> >-ffreestanding because you *want* libcall optimizations, then you have
-> >to provide symbols for all possible library routines!
->
-> Adding a definition without a declaration for stpcpy looks good.
-> Clang LTO will work.
->
-> (If the kernel does not want to provide these routines,
-> is http://git.kernel.org/linus/6edfba1b33c701108717f4e036320fc39abe1912
-> probably wrong? (why remove -ffreestanding from the main Makefile) )
->
 
-We had some many issues in arch/x86 where *FLAGS were removed or used
-differently and had to re-add them :-(.
 
-So if -ffreestanding is used in arch/x86 and was! used in top-level
-Makefile - it makes sense to re-add it back?
-( I cannot speak for archs other than x86. )
+On 8/15/20 1:47 AM, Miaohe Lin wrote:
+> Since commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
+> keyword for switch/case use") introduce fallthrough pseudo keyword, then we
+> should convert the uses of fallthrough comments to it.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-- Sedat -
+Acked-by: Yonghong Song <yhs@fb.com>
