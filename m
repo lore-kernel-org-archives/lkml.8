@@ -2,175 +2,110 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A14C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A969C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAAD20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6FF20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 16:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkzxE2I9"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pZOtNhvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgHPQg2 (ORCPT
+        id S1729278AbgHPQgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 12:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgHPQgA (ORCPT
+        Sun, 16 Aug 2020 12:36:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39696 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729270AbgHPQg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 12:36:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFED5C061786;
-        Sun, 16 Aug 2020 09:35:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v4so14944373ljd.0;
-        Sun, 16 Aug 2020 09:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:date:from:to:cc:message-id;
-        bh=a3HvxMbJN8O8Pk372OctYtEv9DFEIGxh+0Dn03YHbM0=;
-        b=rkzxE2I9iYrjfncUm01iSPL+fpmUZTJvYvaHIh2KvkVB1FhtDnBIhvEUKtq0X++cEY
-         /63c7okbpmKmVyvbanxRpGepve2LtYQi+PkJBj9fQw+Yb5nFkcp8aV/gg3TGkHYDMeQY
-         pCIcMjPJIAb5kssi68HEaLZ7tRXVATnN+J5cCiW8/lQ2ky/4YV0aJXk+sD3Vpm2yBOqr
-         WhphYzLpxp0H5ITGS6sSViHGfSJyuHa34yXM+SkdiH1DWM+sx3MTLEqJWHq5loHWF11q
-         2FBl+uE4aZizH58x30ZIxEedy3eDbVeZWkLRE+qs37R2s304UrDXBob0FR0U/A5rOhmC
-         SyJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:from:to:cc:message-id;
-        bh=a3HvxMbJN8O8Pk372OctYtEv9DFEIGxh+0Dn03YHbM0=;
-        b=kzh3++vUk5dMfbz7Pr87hlv77CJdxOB7ddeyTSRERaJbx4B/4egukk3IiNyqXEQShA
-         zURK5RqECb0yTZR6KCRqn+i3iLAY+3URlD8QrzDVATvcydSmCf79tnYnjBzunOvDpw/I
-         xR1Ix/768PgKlRewNafVGkCaJxHtvakgUJWQKpxRpr3KBeOIa8gy06hzqpBmO4hax8E5
-         HAfhndYiqgUjS6o1sGdnY7y/sx3roVq8ZYIjdcyOcJXnwoG+6PoNJZXYCNN34qRstpGY
-         c0kLiAy32MPuQ4ldug+36vLNFaPoniM1qcvQYYlnPOQrNISyFpRHJGB7AGHPJdreY7nw
-         /Cuw==
-X-Gm-Message-State: AOAM533qPld8exRGSNdD8n85njccCneyJkK/9CEKD+L0wPJYTy96osWk
-        Fa7Kvqk2zmHg5VVvEfVCB8o=
-X-Google-Smtp-Source: ABdhPJy4YAYo3KWkWAB5zZYmJDxbttk4PCRkDgp1Gljv2EaSTdVTJ+xB4blbv7P/Gy1cGrilJ8p56w==
-X-Received: by 2002:a2e:b53b:: with SMTP id z27mr5786172ljm.441.1597595753776;
-        Sun, 16 Aug 2020 09:35:53 -0700 (PDT)
-Received: from gmail.com (tor-exit-2.zbau.f3netze.de. [185.220.100.253])
-        by smtp.gmail.com with ESMTPSA id g21sm3875496ljh.103.2020.08.16.09.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 09:35:52 -0700 (PDT)
-Subject: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
-Date:   Sun, 16 Aug 2020 16:35:00 -0000
-From:   Michael Witten <mfwitten@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Message-ID: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
+        Sun, 16 Aug 2020 12:36:28 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07GGVwM5058499;
+        Sun, 16 Aug 2020 12:36:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : reply-to : to : cc : date : in-reply-to : references : content-type
+ : mime-version : content-transfer-encoding; s=pp1;
+ bh=pWPUnCfTTmcgB53FCS/Fqgx50gn2aVg6wZ+tQejc1bY=;
+ b=pZOtNhvILgop3LaQn9adf3GMnMO+eYlsprkn347cWXSYAZWxa/jJtf86eYRgmE+aVcRf
+ 3sv41IxlvA6YVx5U5xJWvTkUy/3REeyfsghVD0R3RyKBQm7hhLeIX6kRXkQdua2gkIxY
+ flA7h+LJHTUT0Za52sIJhAy9oOhY3bCxtHM7GnC2ve37r/bwaTFlHwPAl+TVnuvc5ry8
+ cHNVB9liIW1GBJpVQRdl5TfcFyYMcu1h7x4Pzg1aimD+hEObHR0CsUb42wdL3vhB+136
+ l0dBAkyrfvOpUlS+Cxx/IG9LMQbdK56/4bAk71kGCRRUIK/YlZOmmEIq3QUQw9xTIHkw LA== 
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32y24hepdd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 16 Aug 2020 12:36:24 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07GGYXlo020987;
+        Sun, 16 Aug 2020 16:36:23 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04wdc.us.ibm.com with ESMTP id 32x7b82pyt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 16 Aug 2020 16:36:23 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07GGaLSi41222416
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Aug 2020 16:36:21 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC3E278064;
+        Sun, 16 Aug 2020 16:36:21 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EC5878060;
+        Sun, 16 Aug 2020 16:36:10 +0000 (GMT)
+Received: from [153.66.254.174] (unknown [9.80.233.55])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sun, 16 Aug 2020 16:36:10 +0000 (GMT)
+Message-ID: <1597595769.8344.7.camel@linux.ibm.com>
+Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Stefan Berger <stefanb@linux.ibm.com>, Coly Li <colyli@suse.de>,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Date:   Sun, 16 Aug 2020 09:36:09 -0700
+In-Reply-To: <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
+References: <20200815075143.47082-1-colyli@suse.de>
+         <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-16_07:2020-08-14,2020-08-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ clxscore=1011 suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=870 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008160132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is not just a matter of style; this is a matter of semantics,
-especially with regard to:
+On Sun, 2020-08-16 at 12:06 -0400, Stefan Berger wrote:
+[...]
+> A note in this file states this:
+> 
+> Note: When using a TPM 2.0 with a persistent key with handle
+> 0x81000001, append 'keyhandle=0x81000001' to statements between
+> quotes, such as "new 32 keyhandle=0x81000001".
+> 
+> Now if someone was (still) interested in TPM 1.2 then the below
+> changes you are proposing wouldn't work for them. Maybe you should
+> adapt the  note to state that these keyhandle=... should be removed
+> for the TPM 1.2 case.
 
-  * const Correctness.
-    A const-declared variable must be initialized when defined.
+Actually, I also have a plan to match what userspace does and simply
+assume a keyhandle of 40000001 (generate an EC Storage Primary Key on
+the fly) if it's not specified, which will make the TPM1.2 and 2.0
+versions of this the same.  Unfortunately the necessary precursor
+patches are taking an age to get upstream.
 
-  * Conditional Compilation.
-    When there is complex interaction between compile-time
-    configuration options, it's essential to be able to
-    make declarations where needed; otherwise unnecessary
-    gymnastics are required to silence the compiler.
-
-Gentleman... Just let people say exactly what they mean to say.
-
-Requiring every declaration to be at the top of a block is an
-antiquated, vestigial naivete from a time when C was just a
-glorified abstraction over conventional patterns in assembly
-programming.
-
-We are not just programming anymore. We are now encoding our
-very thoughts, and thus we need this expressiveness in order
-to capture those thoughts with sufficient clarity.
-
-Therefore, this commit removes:
-
-  -Wdeclaration-after-statement
-
-Signed-off-by: Michael Witten <mfwitten@gmail.com>
-
----
- Makefile                          | 3 ---
- arch/arm64/kernel/vdso32/Makefile | 1 -
- tools/power/acpi/Makefile.config  | 1 -
- tools/power/cpupower/Makefile     | 1 -
- tools/scripts/Makefile.include    | 1 -
- 5 files changed, 7 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 254e80a96b23..88ad4e430834 100644
---- a/Makefile
-+++ b/Makefile
-@@ -900,9 +900,6 @@ endif
- # arch Makefile may override CC so keep this after arch Makefile is included
- NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- 
--# warn about C99 declaration after statement
--KBUILD_CFLAGS += -Wdeclaration-after-statement
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
- 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 5139a5f19256..672008c735fb 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -88,7 +88,6 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-                -std=gnu89
- VDSO_CFLAGS  += -O2
- # Some useful compiler-dependent flags from top-level Makefile
--VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
- VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
- VDSO_CFLAGS += $(call cc32-option,-fno-strict-overflow)
- VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
-diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
-index 54a2857c2510..70ac50cfd7eb 100644
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -64,7 +64,6 @@ OPTIMIZATION := $(call cc-supports,-Os,-O2)
- 
- WARNINGS := -Wall
- WARNINGS += $(call cc-supports,-Wstrict-prototypes)
--WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
- 
- KERNEL_INCLUDE := $(OUTPUT)include
- ACPICA_INCLUDE := $(srctree)/../../../drivers/acpi/acpica
-diff --git a/tools/power/cpupower/Makefile b/tools/power/cpupower/Makefile
-index c8622497ef23..d389179d4484 100644
---- a/tools/power/cpupower/Makefile
-+++ b/tools/power/cpupower/Makefile
-@@ -118,7 +118,6 @@ OPTIMIZATION := $(call cc-supports,-Os,-O2)
- 
- WARNINGS := -Wall -Wchar-subscripts -Wpointer-arith -Wsign-compare
- WARNINGS += $(call cc-supports,-Wno-pointer-sign)
--WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
- WARNINGS += -Wshadow
- 
- override CFLAGS += -DVERSION=\"$(VERSION)\" -DPACKAGE=\"$(PACKAGE)\" \
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index a7974638561c..83c2a5a1ed15 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -21,7 +21,6 @@ endif
- # Include saner warnings here, which can catch bugs:
- #
- EXTRA_WARNINGS := -Wbad-function-cast
--EXTRA_WARNINGS += -Wdeclaration-after-statement
- EXTRA_WARNINGS += -Wformat-security
- EXTRA_WARNINGS += -Wformat-y2k
- EXTRA_WARNINGS += -Winit-self
--- 
-2.22.0
+James
 
