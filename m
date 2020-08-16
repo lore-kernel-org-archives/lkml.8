@@ -2,151 +2,132 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAC220716
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5237920657
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgHPPMQ (ORCPT
+        id S1728805AbgHPPR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:12:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4504 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgHPPMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:12:13 -0400
-IronPort-SDR: tg36YUYzgBH+xqhuZDER4EoP1t21UA8E7bxrP+vZ652nJKYRDVsxWXfS5SvTo8dvfbSNQptFMr
- sqhgWcPrvxeA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="154567680"
-X-IronPort-AV: E=Sophos;i="5.76,320,1592895600"; 
-   d="scan'208";a="154567680"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 08:12:12 -0700
-IronPort-SDR: Qyf5OJZh0AtfKvWuMk/nfhWJPKdM+cAv6sM///0y9mNYCl4z31e26uF3xnWfhYhj40TC2jCLyt
- 08+oNtPPZreQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,320,1592895600"; 
-   d="scan'208";a="296235914"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga006.jf.intel.com with ESMTP; 16 Aug 2020 08:12:10 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH][RFC] ACPI: processor: Print more information when acpi_processor_evaluate_cst() failed
-Date:   Sun, 16 Aug 2020 23:12:30 +0800
-Message-Id: <20200816151230.14524-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 16 Aug 2020 11:17:59 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:60368 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgHPPR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 11:17:56 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E3D388050E;
+        Sun, 16 Aug 2020 17:17:50 +0200 (CEST)
+Date:   Sun, 16 Aug 2020 17:17:49 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Daniel Stone <daniel@fooishbar.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v12 0/4] Panel rotation patches
+Message-ID: <20200816151749.GA1394979@ravnborg.org>
+References: <20200813215609.28643-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813215609.28643-1-digetx@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+        a=8w4ccKQgAAAA:20 a=e5mUnYsNAAAA:8 a=TCdPBaVuNUQlGkixCqMA:9
+        a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms have bogus _CST which might cause expectd behavior
-in the cpu idle driver. Some bogus _CST might be unable to be
-disassembled by acpica-tools due to broken format.
-Print extra log if the _CST extraction/verification failed.
-This can be used to help the user narrow down why the cpu
-idle driver fails to behave as expected.
+Hi Dmitry
 
-Suggested-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/acpi/acpi_processor.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
+On Fri, Aug 14, 2020 at 12:56:05AM +0300, Dmitry Osipenko wrote:
+> Hello!
+> 
+> This series adds support for display panel's DT rotation property. It's a
+> continuation of the work that was initially started by Derek Basehore for
+> the panel driver that is used by some Mediatek device [1]. I picked up the
+> Derek's patches and added my t-b and r-b tags to them, I also added
+> rotation support to the panel-lvds and panel-simple drivers.
+> 
+> We need the rotation support for the Nexus 7 tablet device which is now
+> supported by the upstream kernel, the device has display panel mounted
+> upside-down and it uses panel-lvds [2].
+> 
+> [1] https://lkml.org/lkml/2020/3/5/1119
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi?#n1036
+> 
+> Changelog:
+> 
+> v12: - No code changes. The v11 missed v5.9 release, re-sending patches
+>        for the v5.10 kernel. Please review and apply patches to linux-next,
+>        thanks in advance!
+> 
+> v11: - This series is factored out from this patchset [3] because these
+>        patches do not have hard dependency on the Tegra DRM patches and
+>        it should be nicer to review and apply the properly grouped patches.
+> 
+>      - Initially [3] only touched the panel-lvds driver and Emil Velikov
+>        suggested that it will be better to support more panels in the review
+>        comments to [3]. So I included the Derek's patch for the BOE panel
+>        and added rotation support to the panel-simple driver. I tested that
+>        panel-lvds and panel-simple work properly with the rotated panel using
+>        the Opentegra Xorg driver [4] and Wayland Weston [5].
+> 
+>      - The panel-lvds driver now prints a error message if rotation property
+>        fails to be parsed.
+> 
+> [3] https://lore.kernel.org/lkml/20200614200121.14147-1-digetx@gmail.com/
+> [4] https://github.com/grate-driver/xf86-video-opentegra/commit/28eb20a3959bbe5bc3a3b67e55977093fd5114ca
+> [5] https://gitlab.freedesktop.org/wayland/weston/-/merge_requests/315
+> 
+> Derek Basehore (2):
+>   drm/panel: Add helper for reading DT rotation
+>   drm/panel: Read panel orientation for BOE TV101WUM-NL6
+> 
+> Dmitry Osipenko (2):
+>   drm/panel: lvds: Read panel orientation
+>   drm/panel-simple: Read panel orientation
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index b51ddf3bb616..c1d34c448edb 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -798,22 +798,34 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 		memset(&cx, 0, sizeof(cx));
+Thanks for your persistence with these patches.
+While applying I made a few updates:
+- fixed two trivial checkpatch warnings
+- small update to kernel-doc for the new function, to better match
+  surrounding wording
+- added error message to panel-boe-tv101wum-nl6.c when failed to get
+  orientation
+- use same wording in all error messages and use "orientation" and not
+  rotation as this matches the called function
  
- 		element = &cst->package.elements[i];
--		if (element->type != ACPI_TYPE_PACKAGE)
-+		if (element->type != ACPI_TYPE_PACKAGE) {
-+			acpi_handle_warn(handle, "_CST C%d type(%x) is not package, skip...\n",
-+					 i, element->type);
- 			continue;
-+		}
- 
--		if (element->package.count != 4)
-+		if (element->package.count != 4) {
-+			acpi_handle_warn(handle, "_CST C%d package count(%d) is not 4, skip...\n",
-+					 i, element->package.count);
- 			continue;
-+		}
- 
- 		obj = &element->package.elements[0];
- 
--		if (obj->type != ACPI_TYPE_BUFFER)
-+		if (obj->type != ACPI_TYPE_BUFFER) {
-+			acpi_handle_warn(handle, "_CST C%d package element[0] type(%x) is not buffer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		reg = (struct acpi_power_register *)obj->buffer.pointer;
- 
- 		obj = &element->package.elements[1];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_warn(handle, "_CST C[%d] package element[1] type(%x) is not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		cx.type = obj->integer.value;
- 		/*
-@@ -850,6 +862,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 				cx.entry_method = ACPI_CSTATE_HALT;
- 				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
- 			} else {
-+				acpi_handle_warn(handle, "_CST C%d declares FIXED_HARDWARE C-state but not supported in hardware, skip...\n",
-+						 i);
- 				continue;
- 			}
- 		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
-@@ -857,6 +871,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
- 				 cx.address);
- 		} else {
-+			acpi_handle_warn(handle, "_CST C%d space_id(%x) neither FIXED_HARDWARE nor SYSTEM_IO, skip...\n",
-+					 i, reg->space_id);
- 			continue;
- 		}
- 
-@@ -864,14 +880,20 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 			cx.valid = 1;
- 
- 		obj = &element->package.elements[2];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_warn(handle, "_CST C%d package element[2] type(%x) not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		cx.latency = obj->integer.value;
- 
- 		obj = &element->package.elements[3];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_warn(handle, "_CST C%d package element[3] type(%x) not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		memcpy(&info->states[++last_index], &cx, sizeof(cx));
- 	}
--- 
-2.17.1
+	Sam
 
+> 
+>  drivers/gpu/drm/drm_panel.c                   | 43 +++++++++++++++++++
+>  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    |  6 +++
+>  drivers/gpu/drm/panel/panel-lvds.c            | 10 +++++
+>  drivers/gpu/drm/panel/panel-simple.c          | 11 +++++
+>  include/drm/drm_panel.h                       |  9 ++++
+>  5 files changed, 79 insertions(+)
+> 
+> -- 
+> 2.27.0
