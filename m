@@ -2,238 +2,107 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579AFC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C54207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 13:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDCA20826
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 14:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597586453;
+	bh=ORDdZnkhKIIphacByBZiqCEauCeJidLk3JuuxwwjEsw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=I5PRjiZ/cT5Ps19pWFppQ+NH/yfomAzl/ztsH3TWhcAqHV0weOa8a3bwuGnHDqfX4
+	 jFHbjXjEErUhA5K3Z8EZYj2pXGt1w8SZotMn2mBA71I86XbIHhHCc9Zupom51EhaMG
+	 tYfEx4qfS4ZpNDQnT0X6RHRaMj4giQyAsFpzEF48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbgHPNyx (ORCPT
+        id S1729187AbgHPOAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 09:54:53 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:34743 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729102AbgHPNys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 09:54:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U5uIxVf_1597586074;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5uIxVf_1597586074)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 16 Aug 2020 21:54:35 +0800
-Subject: Re: [PATCH 1/2] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200816040905.GF17456@casper.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <112dcd31-70cf-9151-912c-da84fd6be7e9@linux.alibaba.com>
-Date:   Sun, 16 Aug 2020 21:53:37 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 16 Aug 2020 10:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729140AbgHPOAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 10:00:49 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F67A20735;
+        Sun, 16 Aug 2020 14:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597586448;
+        bh=ORDdZnkhKIIphacByBZiqCEauCeJidLk3JuuxwwjEsw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BauJmnr+Ay7ZfeobNWDZKa4kywlEYkqYdZV49veJ62xlKhT2Myiz8WlwtWXZiWc5T
+         koa78xoPs3sc8L352uU2pHXzruE61QOrYF+H/9Svjr4M0ZS+O5TijS0ePovpeSJ4II
+         Z2a3ijRkc7+QWoncRCvQe1ZZmlOsZdX9uOqnG7Lc=
+Message-ID: <116297e8efab260d8dd61e9dcc36aa3414e9b1d9.camel@kernel.org>
+Subject: Re: [PATCH] ceph: remove unnecessary return in switch statement
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.de>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sun, 16 Aug 2020 10:00:46 -0400
+In-Reply-To: <877du1h7db.fsf@suse.de>
+References: <20200814093822.GA293898@suse.de>
+         <a1a68d9a887148ae9a80ca103d112e6b@AcuMS.aculab.com>
+         <877du1h7db.fsf@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200816040905.GF17456@casper.infradead.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-ÔÚ 2020/8/16 ÏÂÎç12:09, Matthew Wilcox Ð´µÀ:
-> On Sun, Aug 16, 2020 at 11:47:56AM +0800, Alex Shi wrote:
->> +++ b/mm/page_alloc.c
->> @@ -467,6 +467,8 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
->>  	return (pfn >> pageblock_order) * NR_PAGEBLOCK_BITS;
->>  }
->>  
->> +#define BITS_PER_CHAR	8
+On Fri, 2020-08-14 at 11:03 +0100, Luis Henriques wrote:
+> David Laight <David.Laight@ACULAB.COM> writes:
 > 
-> include/linux/bits.h:#define BITS_PER_BYTE              8
-
-Thank for reminder!
-
+> > From: Luis Henriques
+> > > Sent: 14 August 2020 10:38
+> > > 
+> > > Since there's a return immediately after the 'break', there's no need for
+> > > this extra 'return' in the S_IFDIR case.
+> > > 
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> > > ---
+> > >  fs/ceph/file.c | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > > 
+> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > index d51c3f2fdca0..04ab99c0223a 100644
+> > > --- a/fs/ceph/file.c
+> > > +++ b/fs/ceph/file.c
+> > > @@ -256,8 +256,6 @@ static int ceph_init_file(struct inode *inode, struct file *file, int fmode)
+> > >  	case S_IFDIR:
+> > >  		ret = ceph_init_file_info(inode, file, fmode,
+> > >  						S_ISDIR(inode->i_mode));
+> > > -		if (ret)
+> > > -			return ret;
+> > >  		break;
+> > > 
+> > >  	case S_IFLNK:
+> > 
+> > I'd move the other way and just do:
+> > 		return ceph_init_file_info(...);
 > 
->>  	bitmap = get_pageblock_bitmap(page, pfn);
->>  	bitidx = pfn_to_bitidx(page, pfn);
->> -	word_bitidx = bitidx / BITS_PER_LONG;
->> -	bitidx &= (BITS_PER_LONG-1);
->> +	word_bitidx = bitidx / BITS_PER_CHAR;
->> +	bitidx &= (BITS_PER_CHAR-1);
-> 
-> It's not a word any more.  it's a byte.
+> Sure, that would work too, although my preference would be to have a
+> single function exit point.  But I'll leave that decision to Jeff :-)
 > 
 
-Yes, will change this.
+I think I agree with Luis here (though it's really a bit subjective). I
+don't think it'll matter much to the compiled result either way, and
+that will probably be better if this function grows in complexity.
+
+I'll plan to merge this patch in the next day or so.
+
 Thanks!
-
-From 963425639f56c1ba1c997653a4ff6885c81dc0ab Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Sat, 15 Aug 2020 22:54:17 +0800
-Subject: [PATCH 1/2] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-
-pageblock_flags is used as long, since every pageblock_flags is just 4
-bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
-that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
-flags. It would cause long waiting for sync.
-
-If we could change the pageblock_flags variable as char, we could use
-char size cmpxchg, which just sync up with 2 pageblock flags. it could
-relief much false sharing in cmpxchg.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/mmzone.h          |  6 +++---
- include/linux/pageblock-flags.h |  2 +-
- mm/page_alloc.c                 | 38 +++++++++++++++++++-------------------
- 3 files changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 0ed520954843..c92d6d24527d 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -438,7 +438,7 @@ struct zone {
- 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
- 	 * In SPARSEMEM, this map is stored in struct mem_section
- 	 */
--	unsigned long		*pageblock_flags;
-+	unsigned char		*pageblock_flags;
- #endif /* CONFIG_SPARSEMEM */
- 
- 	/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
-@@ -1159,7 +1159,7 @@ struct mem_section_usage {
- 	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
- #endif
- 	/* See declaration of similar field in struct zone */
--	unsigned long pageblock_flags[0];
-+	unsigned char	pageblock_flags[0];
- };
- 
- void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
-@@ -1212,7 +1212,7 @@ struct mem_section {
- extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
- #endif
- 
--static inline unsigned long *section_to_usemap(struct mem_section *ms)
-+static inline unsigned char *section_to_usemap(struct mem_section *ms)
- {
- 	return ms->usage->pageblock_flags;
- }
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index fff52ad370c1..d189441568eb 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -54,7 +54,7 @@ enum pageblock_bits {
- /* Forward declaration */
- struct page;
- 
--unsigned long get_pfnblock_flags_mask(struct page *page,
-+unsigned char get_pfnblock_flags_mask(struct page *page,
- 				unsigned long pfn,
- 				unsigned long mask);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 66d45e9cc358..eb5cca7e8683 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -447,7 +447,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
- #endif
- 
- /* Return a pointer to the bitmap storing bits affecting a block of pages */
--static inline unsigned long *get_pageblock_bitmap(struct page *page,
-+static inline unsigned char *get_pageblock_bitmap(struct page *page,
- 							unsigned long pfn)
- {
- #ifdef CONFIG_SPARSEMEM
-@@ -476,24 +476,24 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
-  * Return: pageblock_bits flags
-  */
- static __always_inline
--unsigned long __get_pfnblock_flags_mask(struct page *page,
-+unsigned char __get_pfnblock_flags_mask(struct page *page,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char byte;
- 
- 	bitmap = get_pageblock_bitmap(page, pfn);
- 	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
- 
--	word = bitmap[word_bitidx];
--	return (word >> bitidx) & mask;
-+	byte = bitmap[byte_bitidx];
-+	return (byte >> bitidx) & mask;
- }
- 
--unsigned long get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
-+unsigned char get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
- 					unsigned long mask)
- {
- 	return __get_pfnblock_flags_mask(page, pfn, mask);
-@@ -515,29 +515,29 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long old_word, word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char old_byte, byte;
- 
- 	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
- 	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
- 
- 	bitmap = get_pageblock_bitmap(page, pfn);
- 	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
- 
- 	VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
- 
- 	mask <<= bitidx;
- 	flags <<= bitidx;
- 
--	word = READ_ONCE(bitmap[word_bitidx]);
-+	byte = READ_ONCE(bitmap[byte_bitidx]);
- 	for (;;) {
--		old_word = cmpxchg(&bitmap[word_bitidx], word, (word & ~mask) | flags);
--		if (word == old_word)
-+		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-+		if (byte == old_byte)
- 			break;
--		word = old_word;
-+		byte = old_byte;
- 	}
- }
- 
 -- 
-1.8.3.1
+Jeff Layton <jlayton@kernel.org>
 
