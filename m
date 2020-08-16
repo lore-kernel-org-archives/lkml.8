@@ -2,130 +2,94 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9076FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE874C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 717AA20658
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE6320658
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:17:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tutanota.com header.i=@tutanota.com header.b="dJK0hecX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgHPRPY (ORCPT
+        id S1729324AbgHPRRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 13:15:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37790 "EHLO mx2.suse.de"
+        Sun, 16 Aug 2020 13:17:00 -0400
+Received: from w1.tutanota.de ([81.3.6.162]:39246 "EHLO w1.tutanota.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgHPRPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 13:15:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 98C89ACE3;
-        Sun, 16 Aug 2020 17:15:44 +0000 (UTC)
-Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
-To:     jejb@linux.ibm.com
-Cc:     Stefan Berger <stefanb@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-References: <20200815075143.47082-1-colyli@suse.de>
- <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
- <1597595769.8344.7.camel@linux.ibm.com>
- <f9d4c4a9-5059-eae2-bc89-51f16e8ca4d9@suse.de>
- <1597597933.8344.13.camel@linux.ibm.com>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <254177e3-3b15-e69c-c419-a4da3580bee5@suse.de>
-Date:   Mon, 17 Aug 2020 01:15:14 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        id S1726699AbgHPRQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 13:16:53 -0400
+Received: from w3.tutanota.de (unknown [192.168.1.164])
+        by w1.tutanota.de (Postfix) with ESMTP id ADF43FA03C7;
+        Sun, 16 Aug 2020 17:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1597598210;
+        s=s1; d=tutanota.com;
+        h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:Sender;
+        bh=fFg+yOI86gXXhmSNLal3y6xWuCA7tvRJk3uvQWOzwvc=;
+        b=dJK0hecXw7dRZq4TTfMeFTX4bwq7NRvLeLxmF7gwf09Aj/u1cRxnh72rJMt+M3Gj
+        mgFaBZvdiYDhkUUnwovAWRupa1TqReN/9n1kXekRiYaTxtM8IAqED7btDhq9jdpZRu9
+        6mImnu0Oo1+8AXu1e0ciKCNwRm7VoOtyxBbtnDjnR0rA1MCysXSlch8jUKocap4Qk+U
+        y5fcwU0Z2wKBXmGt8BIZzTtZEON+t2BYkrjy/wdJZMoGOtzVS3wPDjkicDG5xgBofDh
+        vYgKopqg5gOBK+c7RjgFXLWxZUnpxhyiFdAxaHyaNJJ0Mm1+aCZtLaZEbPgZrt9i312
+        g6wYPDrVeA==
+Date:   Sun, 16 Aug 2020 19:16:50 +0200 (CEST)
+From:   Cameron Nemo <cnemo@tutanota.com>
+To:     Devicetree <devicetree@vger.kernel.org>,
+        Linux Arm Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Rockchip <linux-rockchip@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     robh+dt@kernel.org, Heiko <heiko@sntech.de>, balbi@kernel.org,
+        gregkh@linuxfoundation.org
+Message-ID: <MEsGWB_--3-2@tutanota.com>
+Subject: [PATCH 1/3] usb: dwc3: of-simple: Add compatible for rk3328
 MIME-Version: 1.0
-In-Reply-To: <1597597933.8344.13.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/17 01:12, James Bottomley wrote:
-> On Mon, 2020-08-17 at 00:57 +0800, Coly Li wrote:
->> On 2020/8/17 00:36, James Bottomley wrote:
->>> On Sun, 2020-08-16 at 12:06 -0400, Stefan Berger wrote:
->>> [...]
->>>> A note in this file states this:
->>>>
->>>> Note: When using a TPM 2.0 with a persistent key with handle
->>>> 0x81000001, append 'keyhandle=0x81000001' to statements between
->>>> quotes, such as "new 32 keyhandle=0x81000001".
->>>>
->>>> Now if someone was (still) interested in TPM 1.2 
->>>> adapt the  note to state that these keyhandle=... should be
->>>> removed for the TPM 1.2 case.
->>>
->>> Actually, I also have a plan to match what userspace does and
->>> simply assume a keyhandle of 40000001 (generate an EC Storage
->>> Primary Key on the fly) if it's not specified, which will make the
->>> TPM1.2 and 2.0 versions of this the same.  Unfortunately the
->>> necessary precursor patches are taking an age to get upstream.
->>
->> Hi James,
->>
->> Do you have a plan to push such patches into upstream soon? If yes
->> than I may wait for your patch and withdraw this one.
-> 
-> Well, as I said above it depends on not yet upstream precursor patches.
->  They have been pending for about a year, so I've no real idea of the
-> timeline.
+Add a compatible to be hooked into by the Rockchip rk3328 device tree.
 
-I see. Then I will post a v2 patch only does the s/-o/-c fix, and leave
-others untouched.
+The rk3399 compatible cannot be reused because the rk3328 SoCs may
+require a specialized driver in the future, and old device trees must
+remain commpatible with newer kernels.
 
-Thanks.
+Signed-off-by: Cameron Nemo <cnemo@tutanota.com>
+---
+drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+1 file changed, 3 insertions(+), 1 deletion(-)
 
-Coly Li
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-s=
+imple.c
+index 7df115012935..54f38e434028 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -49,7 +49,8 @@ static int dwc3_of_simple_probe(struct platform_device *p=
+dev)
+* Some controllers need to toggle the usb3-otg reset before trying to
+* initialize the PHY, otherwise the PHY times out.
+*/
+-=09if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
++=09if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
++=09=C2=A0=C2=A0=C2=A0 of_device_is_compatible(np, "rockchip,rk3328-dwc3"))
+simple->need_reset =3D true;
+
+simple->resets =3D of_reset_control_array_get(np, false, true,
+@@ -171,6 +172,7 @@ static const struct dev_pm_ops dwc3_of_simple_dev_pm_op=
+s =3D {
+};
+
+static const struct of_device_id of_dwc3_simple_match[] =3D {
++=09{ .compatible =3D "rockchip,rk3328-dwc3" },
+{ .compatible =3D "rockchip,rk3399-dwc3" },
+{ .compatible =3D "xlnx,zynqmp-dwc3" },
+{ .compatible =3D "cavium,octeon-7130-usb-uctl" },
+--
+2.28.0
+
+
