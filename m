@@ -2,133 +2,134 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D38207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6FF20826
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="fb3+potx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEtIn1Qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHPMxl (ORCPT
+        id S1728792AbgHPMx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 08:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgHPMxl (ORCPT
+        Sun, 16 Aug 2020 08:53:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728477AbgHPMxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 08:53:41 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B20C061786;
-        Sun, 16 Aug 2020 05:53:40 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sun, 16 Aug 2020 08:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597582429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=94kv3iM7voNuc/GuCMOJeaJASAgCqOV3S0igLlKUpuI=;
+        b=aEtIn1QdpIl7C0cCNC7CQWi8JbEJQvS1bp+FDaoOHCaluJFnn4uhsMdoafKlH+EEB+0dIU
+        vUtlUfDrQw8eEbU9Q7novd6v3MyBsmckzxdTDoZlIFJ68bg2ikMi8GH6902P0xypagsm2i
+        lxuvHyLbIyGPWJeHuqVIW3Y3k7kaLL4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-uUhABNPhO4auTJOMX9UZDg-1; Sun, 16 Aug 2020 08:53:47 -0400
+X-MC-Unique: uUhABNPhO4auTJOMX9UZDg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BTxtk1wzYz9sTR;
-        Sun, 16 Aug 2020 22:53:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1597582414;
-        bh=xpLVIzLpo/1ZhQwWcKA7c8rb6SmsBOgSF5mqM7GHsWY=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=fb3+potxlS9NiACHDhstC8E0WATgvYJ9izglTZ2GSFNu31rYjqsHvMT3VxJ9fg6Od
-         twnwYvGCoKrRjF7zJRv+8DnUIRRdHeBBq8NH+WFZ1q2oo8X6YmAmhM8rp6Ku5RSf9q
-         HuktcBiE54nMDMbmWUpdYcah3fBc5THqFOJ0H77+s2WA2YKyTfQvbeT1z95WeSw58l
-         brk3dL0BwZFiwYF58Cq08Mb1RLxfYAUOni1AlzkVVvSideVn8Qdn6kQP9Mo87oeOJm
-         BNFEA037TPSBKGrvSeK5CpfSMa6c/xRWS7KYVHk9eqgVIVErt50sFLkjQaaygClnOW
-         OjOMo8L55u9gg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [TECH TOPIC] Planning code obsolescence
-In-Reply-To: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
-References: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
-Date:   Sun, 16 Aug 2020 22:53:29 +1000
-Message-ID: <874kp2ah12.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86FFA1855199;
+        Sun, 16 Aug 2020 12:53:45 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-112-43.ams2.redhat.com [10.36.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87D9D6E717;
+        Sun, 16 Aug 2020 12:53:43 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: [PATCH v5 1/6] mm/page_alloc: tweak comments in has_unmovable_pages()
+Date:   Sun, 16 Aug 2020 14:53:28 +0200
+Message-Id: <20200816125333.7434-2-david@redhat.com>
+In-Reply-To: <20200816125333.7434-1-david@redhat.com>
+References: <20200816125333.7434-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-> I have submitted the below as a topic for the linux/arch/* MC that Mike
-> and I run, but I suppose it also makes sense to discuss it on the
-> ksummit-discuss mailing list (cross-posted to linux-arch and lkml) as well
-> even if we don't discuss it at the main ksummit track.
->
->      Arnd
->
-> 8<---
-...
->
-> I propose adding a Documentation file that keeps track of any notable
-> kernel feature that could be classified as "obsolete", and listing
-> e.g. following properties:
->
-> * Kconfig symbol controlling the feature
->
-> * How long we expect to keep it as a minimum
->
-> * Known use cases, or other reasons this needs to stay
->
-> * Latest kernel in which it was known to have worked
->
-> * Contact information for known users (mailing list, personal email)
->
-> * Other features that may depend on this
->
-> * Possible benefits of eventually removing it
->
-> With that information, my hope is that it becomes easier to plan when
-> some code can be removed after the last users have stopped upgrading
-> their kernels, while also preventing code from being removed that is
-> actually still in active use.
->
-> In the discussion at the linux/arch/* MC, I would hope to answer these
-> questions:
->
-> * Do other developers find this useful to have?
+Let's move the split comment regarding bootmem allocations and memory
+holes, especially in the context of ZONE_MOVABLE, to the PageReserved()
+check.
 
-Yes!
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/page_alloc.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-> * Where should the information be kept (Documentation/*, Kconfig,
-> MAINTAINERS, wiki.kernel.org, ...)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index e028b87ce2942..042ba09d70c5d 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8207,14 +8207,6 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 	unsigned long iter = 0;
+ 	unsigned long pfn = page_to_pfn(page);
+ 
+-	/*
+-	 * TODO we could make this much more efficient by not checking every
+-	 * page in the range if we know all of them are in MOVABLE_ZONE and
+-	 * that the movable zone guarantees that pages are migratable but
+-	 * the later is not the case right now unfortunatelly. E.g. movablecore
+-	 * can still lead to having bootmem allocations in zone_movable.
+-	 */
+-
+ 	if (is_migrate_cma_page(page)) {
+ 		/*
+ 		 * CMA allocations (alloc_contig_range) really need to mark
+@@ -8233,6 +8225,12 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 
+ 		page = pfn_to_page(pfn + iter);
+ 
++		/*
++		 * Both, bootmem allocations and memory holes are marked
++		 * PG_reserved and are unmovable. We can even have unmovable
++		 * allocations inside ZONE_MOVABLE, for example when
++		 * specifying "movablecore".
++		 */
+ 		if (PageReserved(page))
+ 			return page;
+ 
+@@ -8306,14 +8304,6 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		 * it.  But now, memory offline itself doesn't call
+ 		 * shrink_node_slabs() and it still to be fixed.
+ 		 */
+-		/*
+-		 * If the page is not RAM, page_count()should be 0.
+-		 * we don't need more check. This is an _used_ not-movable page.
+-		 *
+-		 * The problematic thing here is PG_reserved pages. PG_reserved
+-		 * is set to both of a memory hole page and a _used_ kernel
+-		 * page at boot.
+-		 */
+ 		return page;
+ 	}
+ 	return NULL;
+-- 
+2.26.2
 
-Documentation/ seems like the obvious place. Possibly also somewhere on
-wiki.kernel.org or elsewhere so that people can contribute information
-without having to submit a formal patch.
-
-> * Which information should be part of an entry?
-
-Your list above is pretty good.
-
-For features that relate to specific hardware I think it would be useful
-to have some more information.
-
-For example when the hardware was last manufactured, who made it, how
-could it be purchased when it was available (eg. was it for sale to the
-public or in limited quantities or only to certain people or internal to
-a particular company).
-
-
-> * What granularity should this be applied to -- only high-level features
-> like CPU architectures and subsystems, or individual drivers and machines?
-
-I think it can make sense at many levels. It probably just depends on
-how much effort folks want to go to in order to track down the
-information.
-
-Looking at powerpc it would be useful to have that sort of info for
-individual boards, as well as each platform, CPU families and specific
-drivers.
-
-cheers
