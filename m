@@ -2,168 +2,135 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A595C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC48207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1F820708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BzmsGUEv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UB0QAMD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgHPMNu (ORCPT
+        id S1728751AbgHPMQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 08:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgHPMNm (ORCPT
+        Sun, 16 Aug 2020 08:16:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23097 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728715AbgHPMQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 08:13:42 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674A4C061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 05:13:42 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id m7so12540011qki.12
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 05:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i8xy2D18ViHXHHnG8eTL6cZ/YMislWq53P97uqX34Nk=;
-        b=BzmsGUEvcpl+VKaOZXMkoqhFaZzJqQRLyTWupIldkAv5pyNXf7IprjB5vmdiKr8pl5
-         wGunRF+MjDc5HfeICdhnYMUxRb2eIdfgI8ooX6e6DQAHSfE+CHUC2NheffguAXHA3V9I
-         S2XAyY9bDu80v+awSkkNpgZawCAUMPx/WKlvC015LkLneT/Qe+9J2TOC8GcZmX9VI3Gs
-         x88PlEXeslxPcMBbVNA4AywqAeOGIwblZWlUWl3mDv9YorfMe36NwDDsAJNGSjhzBkRs
-         MdGxoQiZD6wbYqjtW5qBgxWarFXGA6cgPgSm3eU2LbsccY+SGFUG0r9RQn5zwyS77HjD
-         NaKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i8xy2D18ViHXHHnG8eTL6cZ/YMislWq53P97uqX34Nk=;
-        b=af6xdWQtwA0TcMWMYxwS/G6ivycz8Lp0yNi2bb09jYg0t9nTjTL+i1Hz/sjl17v2b2
-         8tht3s5xq98dMjSVjiYuNIYjnomWHzNLLcUDJlY7auFC01fRtzSs4Ylwaf7B9Sd2zxrg
-         jCFgp93AuNLpyR9PAK2nwStW4LKu6IhKyqw3An3gHGJ0wj6Ab9GNWcJnKY6oDaWkcaYv
-         IymE4kEgZVEluNzjLU2G7c+441prHs6OqQ1uxZPhcZh/CFindKq/LMHuQEo9/HE6wiCn
-         YyReVPI2mK/mkqQtkIL6Nlsr5NZCnpWAJP+Oxw4WTFBzXKtpCjc0TXdybiOcPRFHUIHs
-         HuEw==
-X-Gm-Message-State: AOAM531AhkIqvpJ8nYgAbVMfiwhGGKuCc4fd3TvIWTxdVx03C+Ic+2vt
-        4uOyMjewvYPc/87odCggnAI1aqvrAjHoKO3ozKZL4L+wv7S7xw==
-X-Google-Smtp-Source: ABdhPJx2NWU3wfyK+WZMHR2x6gx8y1fXV28JxK5VMRAmqTiDX20cvzqhkR5qD6xFrVe7kAz9rRT0Xb2tswohITBhBxU=
-X-Received: by 2002:a37:9d97:: with SMTP id g145mr8202450qke.263.1597580021370;
- Sun, 16 Aug 2020 05:13:41 -0700 (PDT)
+        Sun, 16 Aug 2020 08:16:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597580176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=bQ7qrW+ACIz/qE+rPz7vxkZIBPc582AMP5IlCqoGQus=;
+        b=UB0QAMD1i15MkRGGbiph7nTU6sE3JkjeeMOjzDtsS07QMYyPgHMLRWmycA0lTjm0GVsXgC
+        REf+DhJaN/yFxi/pSTexJkUJ1gtp4IybVG2IjRZLM+ACu26TbrfZ74oJlAMX6sDMcjzFAZ
+        J+4dUddAXs6hCXos1Vui3maB+aYAYSQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-1YDz0AVeP8q1eg1qppmisA-1; Sun, 16 Aug 2020 08:16:11 -0400
+X-MC-Unique: 1YDz0AVeP8q1eg1qppmisA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1C5A1854FDC;
+        Sun, 16 Aug 2020 12:16:09 +0000 (UTC)
+Received: from [10.36.112.43] (ovpn-112-43.ams2.redhat.com [10.36.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48F901002382;
+        Sun, 16 Aug 2020 12:16:08 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm/pageblock: mitigation cmpxchg false sharing in
+ pageblock flags
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <eeb80957-96f7-661c-1510-0e6247570bd3@redhat.com>
+Date:   Sun, 16 Aug 2020 14:16:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200814030257.135463-1-warthog618@gmail.com> <20200814030257.135463-8-warthog618@gmail.com>
- <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
- <20200815065309.GA13905@sol> <CAMpxmJVMJYJ71z59Mu-mCTQPNqV9N9sXJXNBjYazGo0tmXthfg@mail.gmail.com>
- <20200815132132.GA26885@sol>
-In-Reply-To: <20200815132132.GA26885@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sun, 16 Aug 2020 14:13:30 +0200
-Message-ID: <CAMpxmJVz=ZYR+PEei4C+xjChkRsCsp7K=L5=GgMt2K4Vv3vBZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 3:21 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Sat, Aug 15, 2020 at 09:21:22AM +0200, Bartosz Golaszewski wrote:
-> > On Sat, Aug 15, 2020 at 8:53 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Fri, Aug 14, 2020 at 09:31:29PM +0200, Bartosz Golaszewski wrote:
-> > > > On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > >
-> > > > > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> > > > > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
-> > > > >
-> > > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > > > ---
-> > > >
-> > > > Hi Kent,
-> > > >
-> > > > not many comments here, just a couple minor details below.
-> > > >
-> > >
-> > > [snip]
-> > >
-> > > > > +
-> > > > > +/**
-> > > > > + * struct line - contains the state of a userspace line request
-> > > > > + * @gdev: the GPIO device the line request pertains to
-> > > > > + * @label: consumer label used to tag descriptors
-> > > > > + * @num_descs: the number of descriptors held in the descs array
-> > > > > + * @descs: the GPIO descriptors held by this line request, with @num_descs
-> > > > > + * elements.
-> > > > > + */
-> > > > > +struct line {
-> > > >
-> > > > How about line_request, line_request_data or line_req_ctx? Something
-> > > > more intuitive than struct line that doesn't even refer to a single
-> > > > line. Same for relevant functions below.
-> > > >
-> > >
-> > > As I've mentioned previously, I'm not a fan of names that include _data,
-> > > _ctx, _state, or similar that don't really add anything.
-> > >
-> >
-> > I certainly disagree with you on this. I think it's useful to discern
-> > the object itself from data associated with it. Let's consider struct
-> > irq_data and let's imagine it would be called struct irq instead. The
-> > latter would be misleading - as this struct contains a lot additional
-> > fields that form the context for the irq but aren't logically part of
-> > the "irq object". And then you have irq_common_data which is even more
-> > disconnected from the irq. This also would make using the name "irq"
-> > for the variables containing the global irq number confusing.
-> >
-> > I think the same happens here: we may want to use the name "line" for
-> > local variables and then having "struct line_data" (or similar) would
-> > make it easier to read.
-> >
->
-> My counter example to both points is "struct file *file".
->
+On 16.08.20 05:47, Alex Shi wrote:
+> pageblock_flags is used as long, since every pageblock_flags is just 4
+> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
+> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
+> flags. It would cause long waiting for sync.
+> 
+> If we could change the pageblock_flags variable as char, we could use
+> char size cmpxchg, which just sync up with 2 pageblock flags. it could
+> relief much false sharing in cmpxchg.
 
-But struct file is always associated with a single file descriptor,
-it's not the case for struct line. I would be fine with this name if
-it was an object representing a single line like in libgpiod's
-gpiod_line.
+Do you have any performance numbers to back your claims? IOW, do we care
+at all?
 
-> > I'll listen to other's suggestions/voices but personally I think that
-> > _ctx, _data etc. suffixes actually make sense.
-> >
-> > > I did consider line_request, but that was too close to the
-> > > gpio_v2_line_request in gpio.d, not just the struct but also the
-> > > resulting local variables, particularly in line_create() where they
-> > > co-exist.
-> > >
-> > > Given the ioctl names, GPIO_V2_GET_LINE_IOCTL and
-> > > GPIO_V2_LINE_GET/SET_xxx, that all create or operate on this struct, and
-> > > that this is within the scope of gpiolib-cdev, the name 'line' seemed the
-> > > best fit.
-> > >
-> >
-> > And that's why line_data or line_request_data do make sense IMO.
-> >
-> > > And how does it not refer to a single line - what are the descs??
-> > >
-> >
-> > I meant the fact that it can refer to multiple lines while being
-> > called "struct line". I do find this misleading.
-> >
->
-> And struct line_data isn't?
 
-struct line sounds as if it represented a single line, struct
-line_data is more ambiguous and can be understood both ways IMO.
 
-Bart
+-- 
+Thanks,
+
+David / dhildenb
+
