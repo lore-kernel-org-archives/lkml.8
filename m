@@ -2,140 +2,151 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE3420674
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NITocUg8"
+	by mail.kernel.org (Postfix) with ESMTP id ACAC220716
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgHPPDL (ORCPT
+        id S1728748AbgHPPMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgHPPC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:02:26 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D614C061786;
-        Sun, 16 Aug 2020 08:02:24 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id s23so10585960qtq.12;
-        Sun, 16 Aug 2020 08:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yw1Hg3YiuW4Axw2+s5MR8uBtZOL99Paku5YKL39/E/o=;
-        b=NITocUg8oj4ejdwrruQJ4mfW1DZ1QiFs/Yz+46KBlUt+O6tvhntiizyyB1n5OLAyHY
-         t4DJS/Fae4SBnSkTvQu1Ysx0/H16JZ9XNVRrr4eWsBJclP/d4wvX5h0hOQkiEqDPShS7
-         Gq/HA4slswlSYEtZ0HdOn2ZxZLdoNQbaMwxiXM8UQWD0i9G1u7BtMECDFrY0hiMXQ55q
-         vHWd7Ne3pBSM+bRiE0bbn5MKOGoJuGi4sXPqenIHwYknr8hNvWtmmLk20Ibiv+A48D7Z
-         X2E7mWPFptqKiV7qlD2h7HMsyau/N9oHA3YwPeWI52aQV2f1mstqkLtdi3AJhS7cU/lx
-         0JUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yw1Hg3YiuW4Axw2+s5MR8uBtZOL99Paku5YKL39/E/o=;
-        b=JWblACco42zDWNafe3Xb2Ix8FEI0TmBlFFnZjWZI+02STBDDr7Lc84WS8kcgZMZ/c6
-         3llMTsF5AT+vbTbruXq4h2X2cdTJ8LrjeAFDsPy0TM3aO0ca9l3VGpQ9LR1Q7D/VMiHS
-         vYmKG/IB1/iftaSS0MO0OZg4jTbzky4TbjDB8rH56Dgk49ig0YUxYiTDj6tD9L5eZnvE
-         jj6pmw6ofuwvrYmgWn8nI4M9FNLSsoYLN+MxRBT/rjPHZqb3Q2mr5rdFdGNPujozXowF
-         6p1v8XZo/zGi+OgRl7CF9hnnqRA/kwdcFgxzYNRc5P2jQe47LSmESuVIix2128eBn5D6
-         AR+Q==
-X-Gm-Message-State: AOAM531pL2kJcZw9ukCkHz/7B5QsSdYgDut2PdBNXSnKAPRNLHnugSRc
-        eJYR2PowqH4uOYY+sr8/8eE=
-X-Google-Smtp-Source: ABdhPJyi1Ths8h43k7ohyjY5Iuz56G1sd5h6PQeosLI12oHRimut945jhqVOnG1fAI+JG7INAhAAsQ==
-X-Received: by 2002:ac8:454b:: with SMTP id z11mr10193757qtn.350.1597590140648;
-        Sun, 16 Aug 2020 08:02:20 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id g3sm15663502qtq.70.2020.08.16.08.02.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 08:02:19 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 16 Aug 2020 11:02:17 -0400
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Message-ID: <20200816150217.GA1306483@rani.riverdale.lan>
-References: <20200815014006.GB99152@rani.riverdale.lan>
- <20200815020946.1538085-1-ndesaulniers@google.com>
- <202008150921.B70721A359@keescook>
- <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
- <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
- <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
- <20200816001917.4krsnrik7hxxfqfm@google.com>
- <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
+        Sun, 16 Aug 2020 11:12:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4504 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727973AbgHPPMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 11:12:13 -0400
+IronPort-SDR: tg36YUYzgBH+xqhuZDER4EoP1t21UA8E7bxrP+vZ652nJKYRDVsxWXfS5SvTo8dvfbSNQptFMr
+ sqhgWcPrvxeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="154567680"
+X-IronPort-AV: E=Sophos;i="5.76,320,1592895600"; 
+   d="scan'208";a="154567680"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 08:12:12 -0700
+IronPort-SDR: Qyf5OJZh0AtfKvWuMk/nfhWJPKdM+cAv6sM///0y9mNYCl4z31e26uF3xnWfhYhj40TC2jCLyt
+ 08+oNtPPZreQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,320,1592895600"; 
+   d="scan'208";a="296235914"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga006.jf.intel.com with ESMTP; 16 Aug 2020 08:12:10 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH][RFC] ACPI: processor: Print more information when acpi_processor_evaluate_cst() failed
+Date:   Sun, 16 Aug 2020 23:12:30 +0800
+Message-Id: <20200816151230.14524-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 07:22:35AM +0200, Sedat Dilek wrote:
-> On Sun, Aug 16, 2020 at 2:19 AM 'Fangrui Song' via Clang Built Linux
-> <clang-built-linux@googlegroups.com> wrote:
-> >
-> > Adding a definition without a declaration for stpcpy looks good.
-> > Clang LTO will work.
-> >
-> > (If the kernel does not want to provide these routines,
-> > is http://git.kernel.org/linus/6edfba1b33c701108717f4e036320fc39abe1912
-> > probably wrong? (why remove -ffreestanding from the main Makefile) )
-> >
-> 
-> We had some many issues in arch/x86 where *FLAGS were removed or used
-> differently and had to re-add them :-(.
-> 
-> So if -ffreestanding is used in arch/x86 and was! used in top-level
-> Makefile - it makes sense to re-add it back?
-> ( I cannot speak for archs other than x86. )
-> 
-> - Sedat -
+Some platforms have bogus _CST which might cause expectd behavior
+in the cpu idle driver. Some bogus _CST might be unable to be
+disassembled by acpica-tools due to broken format.
+Print extra log if the _CST extraction/verification failed.
+This can be used to help the user narrow down why the cpu
+idle driver fails to behave as expected.
 
--ffreestanding disables _all_ builtins and libcall optimizations, which
-is probably not desirable. If we added it back, we'd need to also go
-back to #define various string functions to the __builtin versions.
+Suggested-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+ drivers/acpi/acpi_processor.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
-Though I don't understand the original issue, with -ffreestanding,
-sprintf shouldn't have been turned into strcpy in the first place.
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index b51ddf3bb616..c1d34c448edb 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -798,22 +798,34 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 		memset(&cx, 0, sizeof(cx));
+ 
+ 		element = &cst->package.elements[i];
+-		if (element->type != ACPI_TYPE_PACKAGE)
++		if (element->type != ACPI_TYPE_PACKAGE) {
++			acpi_handle_warn(handle, "_CST C%d type(%x) is not package, skip...\n",
++					 i, element->type);
+ 			continue;
++		}
+ 
+-		if (element->package.count != 4)
++		if (element->package.count != 4) {
++			acpi_handle_warn(handle, "_CST C%d package count(%d) is not 4, skip...\n",
++					 i, element->package.count);
+ 			continue;
++		}
+ 
+ 		obj = &element->package.elements[0];
+ 
+-		if (obj->type != ACPI_TYPE_BUFFER)
++		if (obj->type != ACPI_TYPE_BUFFER) {
++			acpi_handle_warn(handle, "_CST C%d package element[0] type(%x) is not buffer, skip...\n",
++					 i, obj->type);
+ 			continue;
++		}
+ 
+ 		reg = (struct acpi_power_register *)obj->buffer.pointer;
+ 
+ 		obj = &element->package.elements[1];
+-		if (obj->type != ACPI_TYPE_INTEGER)
++		if (obj->type != ACPI_TYPE_INTEGER) {
++			acpi_handle_warn(handle, "_CST C[%d] package element[1] type(%x) is not integer, skip...\n",
++					 i, obj->type);
+ 			continue;
++		}
+ 
+ 		cx.type = obj->integer.value;
+ 		/*
+@@ -850,6 +862,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 				cx.entry_method = ACPI_CSTATE_HALT;
+ 				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
+ 			} else {
++				acpi_handle_warn(handle, "_CST C%d declares FIXED_HARDWARE C-state but not supported in hardware, skip...\n",
++						 i);
+ 				continue;
+ 			}
+ 		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+@@ -857,6 +871,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
+ 				 cx.address);
+ 		} else {
++			acpi_handle_warn(handle, "_CST C%d space_id(%x) neither FIXED_HARDWARE nor SYSTEM_IO, skip...\n",
++					 i, reg->space_id);
+ 			continue;
+ 		}
+ 
+@@ -864,14 +880,20 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
+ 			cx.valid = 1;
+ 
+ 		obj = &element->package.elements[2];
+-		if (obj->type != ACPI_TYPE_INTEGER)
++		if (obj->type != ACPI_TYPE_INTEGER) {
++			acpi_handle_warn(handle, "_CST C%d package element[2] type(%x) not integer, skip...\n",
++					 i, obj->type);
+ 			continue;
++		}
+ 
+ 		cx.latency = obj->integer.value;
+ 
+ 		obj = &element->package.elements[3];
+-		if (obj->type != ACPI_TYPE_INTEGER)
++		if (obj->type != ACPI_TYPE_INTEGER) {
++			acpi_handle_warn(handle, "_CST C%d package element[3] type(%x) not integer, skip...\n",
++					 i, obj->type);
+ 			continue;
++		}
+ 
+ 		memcpy(&info->states[++last_index], &cx, sizeof(cx));
+ 	}
+-- 
+2.17.1
 
-32-bit still has -ffreestanding -- I wonder if that's actually necessary
-any more?
-
-Why does -fno-builtin-stpcpy not work with clang LTO? Isn't that a
-compiler bug?
-
-Thanks.
