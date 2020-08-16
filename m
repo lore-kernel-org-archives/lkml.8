@@ -2,158 +2,91 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C0BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83563C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3C9207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5CE2078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 22:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0Mf5dUxF"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q2WwMNgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbgHPW0K (ORCPT
+        id S1729227AbgHPW1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 18:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
+        Sun, 16 Aug 2020 18:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729688AbgHPW0I (ORCPT
+        with ESMTP id S1726314AbgHPW1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 18:26:08 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC6DC061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 15:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=4ZuT//Bl6b4PkV8plA/Jjn+LXh3a1tN96gpxdoPboSI=; b=0Mf5dUxFI9lgALKHP9FyWeaaEV
-        EjRKCQWsFJBVXjsnRO37G+ZqCuiRxTW+x54I0vpXvt4ZveINQYBiNt1KsV5ATn+MAf+nxM8E73zYr
-        VcEZCo7zXqNMyXel7ryqpv2drW4zNQq2Kc6JX7k2HIHqH4uPxVdwx+TH2YBclWCt+7dnjowOpTEUu
-        lWH68S4fLqK0yY0EqpzkYljSKa0U3htFpnyE+NLK7hKFRr+sATKYoEfhISKYo84lCoARM5yVJ6RNr
-        P2azTvWyVLIm5iJ0orpxJn+olJQQBuZA+dnAldeYWJcQQOm75nyLw3ss8XGxpmpRAI8qaOOAaAoAS
-        sH4qo32Q==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7R6L-0002Pe-Ta; Sun, 16 Aug 2020 22:26:06 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] seqlock: <linux/seqlock.h>: fix multiple kernel-doc warnings
-Date:   Sun, 16 Aug 2020 15:26:02 -0700
-Message-Id: <20200816222602.437-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Sun, 16 Aug 2020 18:27:47 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C31BC061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 15:27:47 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c10so7092659pjn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 15:27:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6Y0aXUk2biw46jG8sHyV+C+5po3p5VP6vf/C5mG6lo8=;
+        b=q2WwMNgpn9uMzDmQA3ncY/lKdYUfZdWVVxX01yTY39QrYq8eKY1072xx6Z3280HNQl
+         HmX11KJnh8FD1lhUxRdNbwapdH0dNF21IR1q7jgyuFJf2zzYX2t5KRqUkXPC4BMlt8of
+         BwIkIgpNF5X01IhGa8TXVGbJoPxw4+7QQpjrqybqYP4k8l8KmxTSOaQaM6rqyIW1IJMT
+         EYlatUsNUbz8aQJ9+p8fabw/QQfQuF1gPJIlvxgBfWP4vEKqBMbYsSMi3EFN/uEqlf7C
+         LY+nF/2587WG1gtyxtHihdB7UDSQFK1S29yGKm0VDxMQduokAHOMj3YyiBZrhIYDt8Pr
+         mTmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6Y0aXUk2biw46jG8sHyV+C+5po3p5VP6vf/C5mG6lo8=;
+        b=Nz2z3RghKwp0UudmGIby12i8xdXSFSLl49R1TQfp0dPZ7A9T7hg29zfr4eDsjchlBc
+         60RGwWUbn4rvruTos7WQo24iHuxZEKVSB0rJcHM6KsdUev4ocj2yk8GScvOUpSKn6czc
+         sT1VEfCNdAauxGO+uUvJgHmhvEhDcQ8WlHPwUJOL3JvJiy30Q13qo+d1X68L05Ap/7C6
+         w3O/CJGWfSW0E/E88zPEvDTAZRsaVZgzK8VYLTilF73xwAK3jhGXcl1iwkyqAnmfj8Yc
+         i4rtNMGAhB7U8wRA4IK3FLJ7hWT0vN+u+HZ0LHOm0dQ9bnO4Tfp0nQ7Qz6sxnhifumaK
+         PXhg==
+X-Gm-Message-State: AOAM531bTjH76ygxE7dZTPkf3dxEdI7RGiMHl8yQ2tsBg9yu3GzAooDr
+        oEtrOuaz2cTwgFwieovbF11TuQ==
+X-Google-Smtp-Source: ABdhPJxYjxxRcA3WlVWUkg7JvhRwxDozSKvh0Ns212XwLPRb04eZ0RJfvTdJ88chO1GTFLbX5wWKuw==
+X-Received: by 2002:a17:902:b943:: with SMTP id h3mr8950156pls.286.1597616866999;
+        Sun, 16 Aug 2020 15:27:46 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:ea1b:63b0:364:3a3b? ([2605:e000:100e:8c61:ea1b:63b0:364:3a3b])
+        by smtp.gmail.com with ESMTPSA id s125sm17512507pfc.63.2020.08.16.15.27.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Aug 2020 15:27:46 -0700 (PDT)
+Subject: Re: [PATCH] block: blk-mq.c: fix @at_head kernel-doc warning
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org
+References: <20200816222519.313-1-rdunlap@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <df01e29e-a863-bfcd-af79-cfbe7634b92a@kernel.dk>
+Date:   Sun, 16 Aug 2020 15:27:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200816222519.313-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kernel-doc warnings in <linux/seqlock.h>.
+On 8/16/20 3:25 PM, Randy Dunlap wrote:
+> Fix a new kernel-doc warning in block/blk-mq.c:
+> 
+> ../block/blk-mq.c:1844: warning: Function parameter or member 'at_head' not described in 'blk_mq_request_bypass_insert'
 
-../include/linux/seqlock.h:152: warning: Incorrect use of kernel-doc format:  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
-../include/linux/seqlock.h:164: warning: Incorrect use of kernel-doc format:  * SEQCOUNT_LOCKTYPE() - Instantiate seqcount_LOCKNAME_t and helpers
-../include/linux/seqlock.h:229: warning: Function parameter or member 'seq_name' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Function parameter or member 'assoc_lock' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Excess function parameter 'name' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Excess function parameter 'lock' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:695: warning: duplicate section name 'NOTE'
+Applied, thanks.
 
-Demote kernel-doc notation for the macros "seqcount_LOCKNAME_init()" and
-"SEQCOUNT_LOCKTYPE()"; scripts/kernel-doc does not handle them correctly.
+-- 
+Jens Axboe
 
-Move the definition of seqcount_LOCKNAME_init() to just after its
-documentation instead of having them separated by SEQCOUNT_LOCKTYPE().
-
-Rename function parameters in SEQCNT_LOCKNAME_ZERO() documentation
-to match the macro's argument names. Change the macro name in the
-documentation to SEQCOUNT_LOCKTYPE_ZERO() to match the macro's name.
-
-For raw_write_seqcount_latch(), rename the second NOTE: to NOTE2:
-to prevent a kernel-doc warning. However, the generated output is not
-quite as nice as it could be for this.
-
-Fix a typo: s/LOCKTYPR/LOCKTYPE/
-
-Fixes: 0efc94c5d15c ("seqcount: Compress SEQCNT_LOCKNAME_ZERO()")
-Fixes: e4e9ab3f9f91 ("seqlock: Fold seqcount_LOCKNAME_init() definition")
-Fixes: a8772dccb2ec ("seqlock: Fold seqcount_LOCKNAME_t definition")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- include/linux/seqlock.h |   25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
-
---- lnx-59-rc1.orig/include/linux/seqlock.h
-+++ lnx-59-rc1/include/linux/seqlock.h
-@@ -138,7 +138,7 @@ static inline void seqcount_lockdep_read
- #endif
- 
- /**
-- * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPR associated
-+ * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPE associated
-  * @seqcount:	The real sequence counter
-  * @lock:	Pointer to the associated spinlock
-  *
-@@ -148,11 +148,17 @@ static inline void seqcount_lockdep_read
-  * that the write side critical section is properly serialized.
-  */
- 
--/**
-+/*
-  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
-  * @s:		Pointer to the seqcount_LOCKNAME_t instance
-  * @lock:	Pointer to the associated LOCKTYPE
-  */
-+static __always_inline void						\
-+seqcount_##lockname##_init(seqcount_##lockname##_t *s, locktype *lock)	\
-+{									\
-+	seqcount_init(&s->seqcount);					\
-+	__SEQ_LOCK(s->lock = lock);					\
-+}									\
- 
- /*
-  * SEQCOUNT_LOCKTYPE() - Instantiate seqcount_LOCKNAME_t and helpers
-@@ -167,13 +173,6 @@ typedef struct seqcount_##lockname {
- 	__SEQ_LOCK(locktype	*lock);					\
- } seqcount_##lockname##_t;						\
- 									\
--static __always_inline void						\
--seqcount_##lockname##_init(seqcount_##lockname##_t *s, locktype *lock)	\
--{									\
--	seqcount_init(&s->seqcount);					\
--	__SEQ_LOCK(s->lock = lock);					\
--}									\
--									\
- static __always_inline seqcount_t *					\
- __seqcount_##lockname##_ptr(seqcount_##lockname##_t *s)			\
- {									\
-@@ -218,9 +217,9 @@ SEQCOUNT_LOCKTYPE(struct mutex,		mutex,
- SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
- 
- /**
-- * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
-- * @name:	Name of the seqcount_LOCKNAME_t instance
-- * @lock:	Pointer to the associated LOCKTYPE
-+ * SEQCOUNT_LOCKTYPE_ZERO - static initializer for seqcount_LOCKNAME_t
-+ * @seq_name:	Name of the seqcount_LOCKNAME_t instance
-+ * @assoc_lock:	Pointer to the associated LOCKTYPE
-  */
- 
- #define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
-@@ -688,7 +687,7 @@ static inline int raw_read_seqcount_t_la
-  *	to miss an entire modification sequence, once it resumes it might
-  *	observe the new entry.
-  *
-- * NOTE:
-+ * NOTE2:
-  *
-  *	When data is a dynamic data structure; one should use regular RCU
-  *	patterns to manage the lifetimes of the objects within.
