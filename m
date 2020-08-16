@@ -2,71 +2,69 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DB9C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14DFD20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745F320674
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 18:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597600931;
+	bh=oDHpnhiCVU4fwXJGrQozV6xTg5w0F66Ducy5HkCWjPo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Au5reHhFVHuKwFqFqgFklfTlRZm2crr5blGu521LYGgCDx16H54cwWaDkQ4IqofCx
+	 h1njZ/AyQqggeI4bzjyBkgpAf7kOeVZTV5i6LHktapJp/JUrFXYXSpAsztnwqHpjHl
+	 niKaq5VXXN9uE6PHpWDQk3/OWc0Z0Bb3Lbm8ufVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgHPR46 (ORCPT
+        id S1729084AbgHPSCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 13:56:58 -0400
-Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:55694 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726855AbgHPR45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 13:56:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 180E0180A9F31;
-        Sun, 16 Aug 2020 17:56:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: drop82_3e0ba4527010
-X-Filterd-Recvd-Size: 1614
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 16 Aug 2020 17:56:54 +0000 (UTC)
-Message-ID: <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
-Subject: Re: [PATCH] Makefile: Yes. Finally remove
- '-Wdeclaration-after-statement'
-From:   Joe Perches <joe@perches.com>
-To:     Michael Witten <mfwitten@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Date:   Sun, 16 Aug 2020 10:56:53 -0700
-In-Reply-To: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 16 Aug 2020 14:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbgHPSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 14:02:07 -0400
+Subject: Re: [GIT PULL] Final io_uring changes for 5.9-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597600927;
+        bh=oDHpnhiCVU4fwXJGrQozV6xTg5w0F66Ducy5HkCWjPo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=dix51MOkZD62plMejkN8nxE7naT7N/QdEuexG0l/8PAEHf9ySsz3F7noZiTI76sSp
+         bfKNd3IhIigvr1IsPWVXJKiUt3TtxP0hzkw3ysuxR3ydc/HsmBYMGj9U+XTJcoo90t
+         a+uOgCCMeeruXFmwRu94LkDldOGjPmnX3auEXK4s=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <32d4a5ea-514f-cb79-94ff-83b0c4e1d47b@kernel.dk>
+References: <32d4a5ea-514f-cb79-94ff-83b0c4e1d47b@kernel.dk>
+X-PR-Tracked-List-Id: <io-uring.vger.kernel.org>
+X-PR-Tracked-Message-Id: <32d4a5ea-514f-cb79-94ff-83b0c4e1d47b@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-15
+X-PR-Tracked-Commit-Id: f91daf565b0e272a33bd3fcd19eaebd331c5cffd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2cc3c4b3c2e9c99e90aaf19cd801ff2c160f283c
+Message-Id: <159760092747.23276.15418199202357287216.pr-tracker-bot@kernel.org>
+Date:   Sun, 16 Aug 2020 18:02:07 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-08-16 at 16:35 +0000, Michael Witten wrote:
-> Requiring every declaration to be at the top of a block is an
-> antiquated, vestigial naivete from a time when C was just a
-> glorified abstraction over conventional patterns in assembly
-> programming.
+The pull request you sent on Sun, 16 Aug 2020 05:22:09 -0700:
 
-I rather prefer block declarations instead of
-sprinkling declarations around with code.
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-15
 
-> We are not just programming anymore. We are now encoding our
-> very thoughts, and thus we need this expressiveness in order
-> to capture those thoughts with sufficient clarity.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2cc3c4b3c2e9c99e90aaf19cd801ff2c160f283c
 
-So how does this removal have anything to do with
-expressiveness and clarity?
+Thank you!
 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
