@@ -2,189 +2,116 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489A32065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A327206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 08:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597568058;
+	bh=jjy0HV8P8cPtylgj4rPo79m0ha6nxzQodJS69nr3LBY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cPrATJN/Rhh/f9TkLJeupFtZUd2G8spXhFmqfJ7owoMYedb8WQXB3TAhn1rw3T6sa
+	 1WeaJtRL/8+HDJXwZpi+y532yAq+UpsDnVpviwvROboyDhkKQKVjmpUs9CmYcBT5ME
+	 WCLmrUl/7wUXSeAoxNYPkcd0E+o68qiNme2SPNJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgHPIty (ORCPT
+        id S1726560AbgHPIyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 04:49:54 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:52856 "EHLO mail.ispras.ru"
+        Sun, 16 Aug 2020 04:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgHPItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 04:49:52 -0400
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-        by mail.ispras.ru (Postfix) with ESMTPS id 36C9440A207A;
-        Sun, 16 Aug 2020 08:49:49 +0000 (UTC)
-Date:   Sun, 16 Aug 2020 11:49:49 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     amd-gfx@lists.freedesktop.org
-cc:     linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: Re: [PATCH v2] drm/amd/display: use correct scale for
- actual_brightness
-In-Reply-To: <20200804201313.6464-1-amonakov@ispras.ru>
-Message-ID: <alpine.LNX.2.20.13.2008161149010.7727@monopod.intra.ispras.ru>
-References: <20200804201313.6464-1-amonakov@ispras.ru>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        id S1725919AbgHPIyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 04:54:16 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D57DB2065C;
+        Sun, 16 Aug 2020 08:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597568055;
+        bh=jjy0HV8P8cPtylgj4rPo79m0ha6nxzQodJS69nr3LBY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qpjQWtyBhuM4nL8cAf3L16AnpXRxJZ7ut9Gg4ozYyCD6nSASmLZ8n5LeW7pWc42lc
+         N5nMHSjUVEdu672pKDt6Jp1PkRotcDWxjeZahQaJbhgQdOMEDN+vwv7N61rKhbd2jy
+         qo18UznfbvMO1IlqMCrvA3oWlM+wgOH4uHQd5Ik4=
+Date:   Sun, 16 Aug 2020 09:54:11 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        alexandru.ardelean@analog.com, hslester96@gmail.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] iio: accel: mma8452: Use dev_err_probe() to
+ simplify error handling
+Message-ID: <20200816095411.4b0d943d@archlinux>
+In-Reply-To: <1597117396-2894-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597117396-2894-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+On Tue, 11 Aug 2020 11:43:14 +0800
+Anson Huang <Anson.Huang@nxp.com> wrote:
 
-On Tue, 4 Aug 2020, Alexander Monakov wrote:
+> dev_err_probe() can reduce code size, uniform error handling and record the
+> defer probe reason etc., use it to simplify the code.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Anson,
 
-> Documentation for sysfs backlight level interface requires that
-> values in both 'brightness' and 'actual_brightness' files are
-> interpreted to be in range from 0 to the value given in the
-> 'max_brightness' file.
-> 
-> With amdgpu, max_brightness gives 255, and values written by the user
-> into 'brightness' are internally rescaled to a wider range. However,
-> reading from 'actual_brightness' gives the raw register value without
-> inverse rescaling. This causes issues for various userspace tools such
-> as PowerTop and systemd that expect the value to be in the correct
-> range.
-> 
-> Introduce a helper to retrieve internal backlight range. Use it to
-> reimplement 'convert_brightness' as 'convert_brightness_from_user' and
-> introduce 'convert_brightness_to_user'.
-> 
-> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-> Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+All look good, but will have to wait for dev_err_probe to be in my
+upstream tree which hasn't quite happened yet.  Give me a poke if 
+I seem to have lost these once that is true!
+
+Thanks,
+
+Jonathan
+
 > ---
-> v2: split convert_brightness to &_from_user and &_to_user (Nicholas)
+>  drivers/iio/accel/mma8452.c | 20 ++++++--------------
+>  1 file changed, 6 insertions(+), 14 deletions(-)
 > 
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 81 +++++++++----------
->  1 file changed, 40 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 710edc70e37e..b60a763f3f95 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2881,51 +2881,50 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
->  	return rc ? 0 : 1;
->  }
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index ba27f86..9b5f23b 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -1538,22 +1538,14 @@ static int mma8452_probe(struct i2c_client *client,
+>  	data->chip_info = match->data;
 >  
-> -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-> -			      const uint32_t user_brightness)
-> +static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
-> +				unsigned *min, unsigned *max)
->  {
-> -	u32 min, max, conversion_pace;
-> -	u32 brightness = user_brightness;
+>  	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> -	if (IS_ERR(data->vdd_reg)) {
+> -		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
 > -
->  	if (!caps)
-> -		goto out;
-> +		return 0;
+> -		dev_err(&client->dev, "failed to get VDD regulator!\n");
+> -		return PTR_ERR(data->vdd_reg);
+> -	}
+> +	if (IS_ERR(data->vdd_reg))
+> +		return dev_err_probe(&client->dev, PTR_ERR(data->vdd_reg),
+> +				     "failed to get VDD regulator!\n");
 >  
-> -	if (!caps->aux_support) {
-> -		max = caps->max_input_signal;
-> -		min = caps->min_input_signal;
-> -		/*
-> -		 * The brightness input is in the range 0-255
-> -		 * It needs to be rescaled to be between the
-> -		 * requested min and max input signal
-> -		 * It also needs to be scaled up by 0x101 to
-> -		 * match the DC interface which has a range of
-> -		 * 0 to 0xffff
-> -		 */
-> -		conversion_pace = 0x101;
-> -		brightness =
-> -			user_brightness
-> -			* conversion_pace
-> -			* (max - min)
-> -			/ AMDGPU_MAX_BL_LEVEL
-> -			+ min * conversion_pace;
-> +	if (caps->aux_support) {
-> +		// Firmware limits are in nits, DC API wants millinits.
-> +		*max = 1000 * caps->aux_max_input_signal;
-> +		*min = 1000 * caps->aux_min_input_signal;
->  	} else {
-> -		/* TODO
-> -		 * We are doing a linear interpolation here, which is OK but
-> -		 * does not provide the optimal result. We probably want
-> -		 * something close to the Perceptual Quantizer (PQ) curve.
-> -		 */
-> -		max = caps->aux_max_input_signal;
-> -		min = caps->aux_min_input_signal;
+>  	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+> -	if (IS_ERR(data->vddio_reg)) {
+> -		if (PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
 > -
-> -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
-> -			       + user_brightness * max;
-> -		// Multiple the value by 1000 since we use millinits
-> -		brightness *= 1000;
-> -		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
-> +		// Firmware limits are 8-bit, PWM control is 16-bit.
-> +		*max = 0x101 * caps->max_input_signal;
-> +		*min = 0x101 * caps->min_input_signal;
->  	}
-> +	return 1;
-> +}
+> -		dev_err(&client->dev, "failed to get VDDIO regulator!\n");
+> -		return PTR_ERR(data->vddio_reg);
+> -	}
+> +	if (IS_ERR(data->vddio_reg))
+> +		return dev_err_probe(&client->dev, PTR_ERR(data->vddio_reg),
+> +				     "failed to get VDDIO regulator!\n");
 >  
-> -out:
-> -	return brightness;
-> +static u32 convert_brightness_from_user(const struct amdgpu_dm_backlight_caps *caps,
-> +					uint32_t brightness)
-> +{
-> +	unsigned min, max;
-> +
-> +	if (!get_brightness_range(caps, &min, &max))
-> +		return brightness;
-> +
-> +	// Rescale 0..255 to min..max
-> +	return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-> +				       AMDGPU_MAX_BL_LEVEL);
-> +}
-> +
-> +static u32 convert_brightness_to_user(const struct amdgpu_dm_backlight_caps *caps,
-> +				      uint32_t brightness)
-> +{
-> +	unsigned min, max;
-> +
-> +	if (!get_brightness_range(caps, &min, &max))
-> +		return brightness;
-> +
-> +	if (brightness < min)
-> +		return 0;
-> +	// Rescale min..max to 0..255
-> +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-> +				 max - min);
->  }
->  
->  static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
-> @@ -2941,7 +2940,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
->  
->  	link = (struct dc_link *)dm->backlight_link;
->  
-> -	brightness = convert_brightness(&caps, bd->props.brightness);
-> +	brightness = convert_brightness_from_user(&caps, bd->props.brightness);
->  	// Change brightness based on AUX property
->  	if (caps.aux_support)
->  		return set_backlight_via_aux(link, brightness);
-> @@ -2958,7 +2957,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
->  
->  	if (ret == DC_ERROR_UNEXPECTED)
->  		return bd->props.brightness;
-> -	return ret;
-> +	return convert_brightness_to_user(&dm->backlight_caps, ret);
->  }
->  
->  static const struct backlight_ops amdgpu_dm_backlight_ops = {
-> 
-> base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
-> 
+>  	ret = regulator_enable(data->vdd_reg);
+>  	if (ret) {
+
