@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C266DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B485C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A253B206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DE4206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgHPRBs (ORCPT
+        id S1729210AbgHPRFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 13:01:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35986 "EHLO mx2.suse.de"
+        Sun, 16 Aug 2020 13:05:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36528 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgHPRBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 13:01:47 -0400
+        id S1726825AbgHPRFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 13:05:31 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6773CAFD5;
-        Sun, 16 Aug 2020 17:02:08 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 2ADEBACE1;
+        Sun, 16 Aug 2020 17:05:54 +0000 (UTC)
 Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
 To:     Stefan Berger <stefanb@linux.ibm.com>
 Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -77,8 +77,8 @@ Autocrypt: addr=colyli@suse.de; keydata=
  K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
  9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
  +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
-Message-ID: <096636f4-a928-dd00-dba6-216651c3d63b@suse.de>
-Date:   Mon, 17 Aug 2020 01:01:38 +0800
+Message-ID: <dbe58528-e445-f637-4e22-fbcff7b6965a@suse.de>
+Date:   Mon, 17 Aug 2020 01:05:24 +0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
@@ -130,56 +130,11 @@ On 2020/8/17 00:06, Stefan Berger wrote:
 >          The file path to save the object context of the generated
 > primary object.
 > 
-> 
 
-Yes of course you are right, it is s/-o/-c
-
-> 
->> -  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
->> +  #> tpm2_evictcontrol -c key.ctxt 0x81000001
->>     persistentHandle: 0x81000001
-> 
-> 
-> This seems correct.
-> 
-> 
->>     Usage::
->> @@ -115,7 +114,7 @@ append 'keyhandle=0x81000001' to statements
->> between quotes, such as
-> 
-> 
-> A note in this file states this:
-> 
-> Note: When using a TPM 2.0 with a persistent key with handle 0x81000001,
-> append 'keyhandle=0x81000001' to statements between quotes, such as
-> "new 32 keyhandle=0x81000001".
-> 
-> Now if someone was (still) interested in TPM 1.2 then the below changes
-> you are proposing wouldn't work for them. Maybe you should adapt the
-> note to state that these keyhandle=... should be removed for the TPM 1.2
-> case.
-> 
-
-I agree. Indeed I have no idea why number 0x81000001 is used, and I
-don't have practice experience with TPM 1.2. Now the purpose of this
-patch accomplished: experts response and confirm my guess :-)
+BTW, where can I get the document you mentioned for "4.1.3 on F32
+states" ? I only have a pdf file "A practical Guide to TPM 2.0" which
+does not have 4.1.3
 
 Thanks.
-
->>     ::
->>   -    $ keyctl add trusted kmk "new 32" @u
->> +    $ keyctl add trusted kmk "new 32 keyhandle=0x81000001" @u
->>       440502848
->>         $ keyctl show
->> @@ -138,7 +137,7 @@ append 'keyhandle=0x81000001' to statements
->> between quotes, such as
->>     Load a trusted key from the saved blob::
->>   -    $ keyctl add trusted kmk "load `cat kmk.blob`" @u
->> +    $ keyctl add trusted kmk "load `cat kmk.blob`
->> keyhandle=0x81000001" @u
->>       268728824
->>         $ keyctl print 268728824
-> 
-> 
 
 Coly Li
