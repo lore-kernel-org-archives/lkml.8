@@ -2,75 +2,77 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7214CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52332068E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC552068E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mEhHsVis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgHPBvA (ORCPT
+        id S1729672AbgHPBy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 21:51:00 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3062 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726029AbgHPBu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 21:50:59 -0400
-Received: from dggeme753-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id AE8CB6034F408C27F43B;
-        Sat, 15 Aug 2020 09:50:20 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme753-chm.china.huawei.com (10.3.19.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 15 Aug 2020 09:50:20 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Sat, 15 Aug 2020 09:50:20 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Yonghong Song <yhs@fb.com>
-CC:     "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "andriin@fb.com" <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bpf: Convert to use the preferred fallthrough macro
-Thread-Topic: [PATCH] bpf: Convert to use the preferred fallthrough macro
-Thread-Index: AdZypir53l10TT+tT3O02hA35HBVZA==
-Date:   Sat, 15 Aug 2020 01:50:20 +0000
-Message-ID: <878cef61a8c549fd92764314e7c07a95@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.252]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 15 Aug 2020 21:54:59 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7195 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbgHPBy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 21:54:59 -0400
+X-UUID: a88aec36c69d42a0858241179003e869-20200816
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5WQE4hm6uoTkhZXy+ZrZXgVLjPUWq85sbjRvsVgzz3Q=;
+        b=mEhHsVisNpDbDgwMZ1JwdOzQq2W08jpb8BaWSWg5FtLUXB82B7IyWdlOSq3MMSjE6dnnJsxG5m0mKW4cd+YEg7Achq6NEMGSr7TQmRlSog0oRRwizQ3mUejIHBurGm7a/qGxYlU2AYZJ/JZtua0OlmAMk4Vr3wA6d7FN/rJ5PPI=;
+X-UUID: a88aec36c69d42a0858241179003e869-20200816
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1037489703; Sun, 16 Aug 2020 09:54:55 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 16 Aug 2020 09:54:53 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 16 Aug
+ 2020 09:54:52 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 16 Aug 2020 09:54:52 +0800
+Message-ID: <1597542893.7483.3.camel@mtkswgap22>
+Subject: Re: [PATCH v2 2/2] scsi: ufs: no need to send one Abort Task TM in
+ case the task in DB was cleared
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Bean Huo <huobean@gmail.com>
+CC:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <beanhuo@micron.com>,
+        <bvanassche@acm.org>, <tomas.winkler@intel.com>,
+        <cang@codeaurora.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Sun, 16 Aug 2020 09:54:53 +0800
+In-Reply-To: <20200811141859.27399-3-huobean@gmail.com>
+References: <20200811141859.27399-1-huobean@gmail.com>
+         <20200811141859.27399-3-huobean@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WW9uZ2hvbmcgU29uZyA8eWhzQGZiLmNvbT4gd3JvdGU6DQo+T24gOC8xNC8yMCAyOjE2IEFNLCBN
-aWFvaGUgTGluIHdyb3RlOg0KPj4gQ29udmVydCB0aGUgdXNlcyBvZiBmYWxsdGhyb3VnaCBjb21t
-ZW50cyB0byBmYWxsdGhyb3VnaCBtYWNyby4NCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogTWlhb2hl
-IExpbiA8bGlubWlhb2hlQGh1YXdlaS5jb20+DQo+DQo+VGhpcyBpcyBub3QgYSBidWcgZml4IGJ1
-dCByYXRoZXIgYW4gZW5oYW5jZW1lbnQgc28gbm90IHN1cmUgd2hldGhlciB0aGlzIHNob3VsZCBw
-dXNoIHRvIGJwZiB0cmVlIG9yIHdhaXQgdW50aWwgYnBmLW5leHQuDQo+DQo+SXQgbWF5IGJlIHdv
-cnRod2hpbGUgdG8gbWVudGlvbiBDb21taXQgMjk0ZjY5ZTY2MmQxDQo+ICgiY29tcGlsZXJfYXR0
-cmlidXRlcy5oOiBBZGQgJ2ZhbGx0aHJvdWdoJyBwc2V1ZG8ga2V5d29yZCBmb3Igc3dpdGNoL2Nh
-c2UgdXNlIikgc28gcGVvcGxlIGNhbiB1bmRlcnN0YW5kIHdoeSB0aGlzIHBhdGNoIGlzIG5lZWRl
-ZC4NCj4NCg0KV2lsbCBkby4gTWFueSB0aGFua3MuDQoNCj5XaXRoIGFib3ZlIHN1Z2dlc3Rpb25z
-LA0KPkFja2VkLWJ5OiBZb25naG9uZyBTb25nIDx5aHNAZmIuY29tPg0KPg0KDQo=
+T24gVHVlLCAyMDIwLTA4LTExIGF0IDE2OjE4ICswMjAwLCBCZWFuIEh1byB3cm90ZToNCj4gRnJv
+bTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCj4gDQo+IElmIHRoZSBiaXQgY29ycmVz
+cG9uZHMgdG8gYSB0YXNrIGluIHRoZSBEb29yYmVsbCByZWdpc3RlciBoYXMgYmVlbg0KPiBjbGVh
+cmVkLCBubyBuZWVkIHRvIHBvbGwgdGhlIHN0YXR1cyBvZiB0aGUgdGFzayBvbiB0aGUgZGV2aWNl
+IHNpZGUNCj4gYW5kIHRvIHNlbmQgYW4gQWJvcnQgVGFzayBUTS4gSW5zdGVhZCwgbGV0IGl0IGRp
+cmVjdGx5IGdvdG8gY2xlYW51cC4NCj4gDQo+IE1lYW53aGlsZSwgdG8ga2VlcCBvcmlnaW5hbCBk
+ZWJ1ZyBwcmludCwgbW92ZSB0aGlzIGdvdG8gYmVsb3cgdGhlIGRlYnVnDQo+IHByaW50Lg0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCg0KUmV2aWV3
+ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQoNCg==
+
