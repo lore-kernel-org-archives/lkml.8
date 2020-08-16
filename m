@@ -2,169 +2,171 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67399C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F66C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43AC72068E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63F5206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XQiMWXwG"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FVsjzKBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgHPATZ (ORCPT
+        id S1728887AbgHPAUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 20:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgHPATY (ORCPT
+        Sat, 15 Aug 2020 20:20:48 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:57127 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726063AbgHPAUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 20:19:24 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29446C061786
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 17:19:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mt12so6028274pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 17:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GdNLwnlPFkQHFOd6Xy60wVgrBimGSKOXtSoP9QOa/Ns=;
-        b=XQiMWXwGHmbC34v17SmqPih9NvHLjX68PR7xIbiyZM6UG++TmXKlFLA1xjihqHJ16y
-         7yZvm2dN+S2b3RGXSiw4CT8n9xETzpC95wooaPCWTNIXp1qzBL0wAascCahjmRrm+HaR
-         jprx3YKxQk+PX/vN2sIOw0J3ShvVuF0zOEyjXQPdnwdwGFP9r/vJd84k2wKAO/4g3EQy
-         eyF2WkWoMmABhwtQQJj8xJAf9cLT1AvG+QWnyplTnmhg5L2xN0tAYSGMlzh2nbbGA3nQ
-         /CsRFEXsTxhX2NeWWLfsHdn6r/SOBH6TLQLeakTDO+Gu0vSqAK6wTpeosnsbPRz4FkrS
-         C17A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GdNLwnlPFkQHFOd6Xy60wVgrBimGSKOXtSoP9QOa/Ns=;
-        b=CFg224hJu5hsl03BEqhyxUARVn+A8AFM7eVrm7wfFwx+1w75TLf36kP4WDCxRawIS4
-         ADgUnNEfn6nk/wsyasyalSsPa6LnLipvUL7KwHoGbDvmN23kjASQ0wNcQGgJ8xqg5DTl
-         uDSVjTqmRhkn6U/LRvfAe8ptp52bSgdIMDsscLNphYw4/0NbstyB80Yb+ePkyLxB/aIa
-         ABChor9hDrei3Jomb9yeeiNMRHtuQreMwWXLPkwPVlYG+z+KCiPZ46Gsz2/apN8juAES
-         +Mc0ug+O/XI2SHqeGJiMJDMI9vGXagyHOFGmbsB4yxBA+zmt4y2XldzHFXJGDIf+TmEX
-         gibQ==
-X-Gm-Message-State: AOAM531si9FAS9HvcY0HqQlozGS2YA/aUOtxQqn9aGrau8kSwBdIbcpt
-        TjB7MTmvpcdUn4sYK4lvcxjMjw==
-X-Google-Smtp-Source: ABdhPJxw2uMEic+JG/5VKDXnNzRKmfzkU29/IOf6VMaBx4mbWTUnI6WBx00akiJyQupuwQuLeuFiXw==
-X-Received: by 2002:a17:902:7609:: with SMTP id k9mr6530697pll.187.1597537162547;
-        Sat, 15 Aug 2020 17:19:22 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
-        by smtp.gmail.com with ESMTPSA id b63sm13070308pfg.43.2020.08.15.17.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 17:19:21 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 17:19:17 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Joe Perches <joe@perches.com>, Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Message-ID: <20200816001917.4krsnrik7hxxfqfm@google.com>
-References: <20200815014006.GB99152@rani.riverdale.lan>
- <20200815020946.1538085-1-ndesaulniers@google.com>
- <202008150921.B70721A359@keescook>
- <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
- <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
- <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
+        Sat, 15 Aug 2020 20:20:47 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id B568C510;
+        Sat, 15 Aug 2020 20:20:45 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sat, 15 Aug 2020 20:20:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=A0mrph
+        MNQJCIq8PAlAuE6KRh99jtx5MpPqdv/o0PurU=; b=FVsjzKBaVYthGLFB9Wz2lx
+        bZkwMhC/GNcdlUM4IvbhMHFkDZI2Q/I9QuBeNDZN429u2QcHqr8N3D5e2gd95RVS
+        MdCNs9H265X5gE42M3CjOVhdHApfdvuKDMMkWc80lUo1dwrTbWzCClECGfefoByF
+        KY7SZas/foU7HgFpiouN81fQB4HUEOokQKkewIBUj7bC8+614oHP6Ii18GFW44GA
+        cbiSJyXrpLMaRCRv+XnF2npCZKhzRjd4UxkCG3/yWiD8v1ajkmBtoqRuoO69BFCu
+        bh6qsLiUta4Hd0OHezdSUyVWuB+RqH13f4Dce3v4oQvnxkBODdKL48IGS+/XtM5A
+        ==
+X-ME-Sender: <xms:3Hs4X7FmxD9_gGHwye4o5HenW7DUR1D5h1raZxFEriEdiT4Xd1IoDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddttddgfeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffogggtohfgsehtkeertdertdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeetgeet
+    keeukeffhfejueeludehtedtkeeuiedtgffgtdfhveefueeiiefhudehgeenucfkpheple
+    durdeigedrudejtddrkeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsg
+    drtghomh
+X-ME-Proxy: <xmx:3Hs4X4XbBAzqs-NWG2VeNwy4myd_AWRp2G0JqPqVGCxu1cu-NlbUEQ>
+    <xmx:3Hs4X9JNRydVz4SPURvDioivXTWl_xmNPScufBuykqkfbV_5HNAW4w>
+    <xmx:3Hs4X5E6wudnksFsi-3tqKdCML5Aw3whZS-vZt6BYHCeBlr4450gGQ>
+    <xmx:3Xs4XwentSPrJe04T-NV5FtkhH49NCWiqq6vFnShW10izUXvpyS5bA>
+Received: from localhost.localdomain (ip5b40aa59.dynamic.kabel-deutschland.de [91.64.170.89])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0D67C3060067;
+        Sat, 15 Aug 2020 20:20:43 -0400 (EDT)
+From:   =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
+Cc:     =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>, norbert.kaminski@3mdeb.com,
+        xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] efi: discover ESRT table on Xen PV too
+Date:   Sun, 16 Aug 2020 02:19:49 +0200
+Message-Id: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Organization: Invisible Things Lab
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-15, 'Nick Desaulniers' via Clang Built Linux wrote:
->On Sat, Aug 15, 2020 at 2:31 PM Joe Perches <joe@perches.com> wrote:
->>
->> On Sat, 2020-08-15 at 14:28 -0700, Nick Desaulniers wrote:
->> > On Sat, Aug 15, 2020 at 2:24 PM Joe Perches <joe@perches.com> wrote:
->> > > On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
->> > > > On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
->> > > > > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
->> > > > > > LLVM implemented a recent "libcall optimization" that lowers calls to
->> > > > > > `sprintf(dest, "%s", str)` where the return value is used to
->> > > > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
->> > > > > > in parsing format strings.  Calling `sprintf` with overlapping arguments
->> > > > > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
->> > > > > >
->> > > > > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
->> > > > > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
->> > > > > > one statement.
->> > > > >
->> > > > > O_O What?
->> > > > >
->> > > > > No; this is a _terrible_ API: there is no bounds checking, there are no
->> > > > > buffer sizes. Anything using the example sprintf() pattern is _already_
->> > > > > wrong and must be removed from the kernel. (Yes, I realize that the
->> > > > > kernel is *filled* with this bad assumption that "I'll never write more
->> > > > > than PAGE_SIZE bytes to this buffer", but that's both theoretically
->> > > > > wrong ("640k is enough for anybody") and has been known to be wrong in
->> > > > > practice too (e.g. when suddenly your writing routine is reachable by
->> > > > > splice(2) and you may not have a PAGE_SIZE buffer).
->> > > > >
->> > > > > But we cannot _add_ another dangerous string API. We're already in a
->> > > > > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
->> > > > > needs to be addressed up by removing the unbounded sprintf() uses. (And
->> > > > > to do so without introducing bugs related to using snprintf() when
->> > > > > scnprintf() is expected[4].)
->> > > >
->> > > > Well, everything (-next, mainline, stable) is broken right now (with
->> > > > ToT Clang) without providing this symbol.  I'm not going to go clean
->> > > > the entire kernel's use of sprintf to get our CI back to being green.
->> > >
->> > > Maybe this should get place in compiler-clang.h so it isn't
->> > > generic and public.
->> >
->> > https://bugs.llvm.org/show_bug.cgi?id=47162#c7 and
->> > https://bugs.llvm.org/show_bug.cgi?id=47144
->> > Seem to imply that Clang is not the only compiler that can lower a
->> > sequence of libcalls to stpcpy.  Do we want to wait until we have a
->> > fire drill w/ GCC to move such an implementation from
->> > include/linux/compiler-clang.h back in to lib/string.c?
->>
->> My guess is yes, wait until gcc, if ever, needs it.
->
->The suggestion to use static inline doesn't even make sense. The
->compiler is lowering calls to other library routines; `stpcpy` isn't
->being explicitly called.  Even if it was, not sure we want it being
->inlined.  No symbol definition will be emitted; problem not solved.
->And I refuse to add any more code using `extern inline`.  Putting the
->definition in lib/string.c is the most straightforward and avoids
->revisiting this issue in the future for other toolchains.  I'll limit
->access by removing the declaration, and adding a comment to avoid its
->use.  But if you're going to use a gnu target triple without using
->-ffreestanding because you *want* libcall optimizations, then you have
->to provide symbols for all possible library routines!
+In case of Xen PV dom0, Xen passes along info about system tables (see
+arch/x86/xen/efi.c), but not the memory map from EFI. This makes sense
+as it is Xen responsible for managing physical memory address space.
+In this case, it doesn't make sense to condition using ESRT table on
+availability of EFI memory map, as it isn't Linux kernel responsible for
+it. Skip this part on Xen PV (let Xen do the right thing if it deems
+necessary) and use ESRT table normally.
 
-Adding a definition without a declaration for stpcpy looks good.
-Clang LTO will work.
+This is a requirement for using fwupd in PV dom0 to update UEFI using
+capsules.
 
-(If the kernel does not want to provide these routines,
-is http://git.kernel.org/linus/6edfba1b33c701108717f4e036320fc39abe1912
-probably wrong? (why remove -ffreestanding from the main Makefile) )
+Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+---
+ drivers/firmware/efi/esrt.c | 47 ++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+index d5915272141f..5c49f2aaa4b1 100644
+--- a/drivers/firmware/efi/esrt.c
++++ b/drivers/firmware/efi/esrt.c
+@@ -245,36 +245,38 @@ void __init efi_esrt_init(void)
+ 	int rc;
+ 	phys_addr_t end;
+ 
+-	if (!efi_enabled(EFI_MEMMAP))
++	if (!efi_enabled(EFI_MEMMAP) && !efi_enabled(EFI_PARAVIRT))
+ 		return;
+ 
+ 	pr_debug("esrt-init: loading.\n");
+ 	if (!esrt_table_exists())
+ 		return;
+ 
+-	rc = efi_mem_desc_lookup(efi.esrt, &md);
+-	if (rc < 0 ||
+-	    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+-	     md.type != EFI_BOOT_SERVICES_DATA &&
+-	     md.type != EFI_RUNTIME_SERVICES_DATA)) {
+-		pr_warn("ESRT header is not in the memory map.\n");
+-		return;
+-	}
++	if (efi_enabled(EFI_MEMMAP)) {
++		rc = efi_mem_desc_lookup(efi.esrt, &md);
++		if (rc < 0 ||
++		    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
++		     md.type != EFI_BOOT_SERVICES_DATA &&
++		     md.type != EFI_RUNTIME_SERVICES_DATA)) {
++			pr_warn("ESRT header is not in the memory map.\n");
++			return;
++		}
+ 
+-	max = efi_mem_desc_end(&md);
+-	if (max < efi.esrt) {
+-		pr_err("EFI memory descriptor is invalid. (esrt: %p max: %p)\n",
+-		       (void *)efi.esrt, (void *)max);
+-		return;
+-	}
++		max = efi_mem_desc_end(&md);
++		if (max < efi.esrt) {
++			pr_err("EFI memory descriptor is invalid. (esrt: %p max: %p)\n",
++			       (void *)efi.esrt, (void *)max);
++			return;
++		}
+ 
+-	size = sizeof(*esrt);
+-	max -= efi.esrt;
++		size = sizeof(*esrt);
++		max -= efi.esrt;
+ 
+-	if (max < size) {
+-		pr_err("ESRT header doesn't fit on single memory map entry. (size: %zu max: %zu)\n",
+-		       size, max);
+-		return;
++		if (max < size) {
++			pr_err("ESRT header doesn't fit on single memory map entry. (size: %zu max: %zu)\n",
++			       size, max);
++			return;
++		}
+ 	}
+ 
+ 	va = early_memremap(efi.esrt, size);
+@@ -331,7 +333,8 @@ void __init efi_esrt_init(void)
+ 
+ 	end = esrt_data + size;
+ 	pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
+-	if (md.type == EFI_BOOT_SERVICES_DATA)
++
++	if (efi_enabled(EFI_MEMMAP) && md.type == EFI_BOOT_SERVICES_DATA)
+ 		efi_mem_reserve(esrt_data, esrt_data_size);
+ 
+ 	pr_debug("esrt-init: loaded.\n");
+-- 
+2.25.4
+
