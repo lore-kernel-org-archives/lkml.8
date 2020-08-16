@@ -2,348 +2,99 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96280C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 21:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EABC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 21:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672732078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 21:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222EA204FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 21:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Uq3neAOG"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qKGBnTIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgHPVDN (ORCPT
+        id S1728572AbgHPVF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 17:03:13 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33746 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728651AbgHPVDB (ORCPT
+        Sun, 16 Aug 2020 17:05:26 -0400
+Received: from mail.efficios.com ([167.114.26.124]:35876 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbgHPVFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 17:03:01 -0400
-Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 078F220B490D;
-        Sun, 16 Aug 2020 14:02:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 078F220B490D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597611779;
-        bh=NuFmESyJGNFBP58x+U/isopuX3DzXmJqPKW36Wj4jK8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq3neAOGRaSfweNqt0NjcRjqp75MrXbX+ty+g82RmGIGUN4dz8MPsvwYSaTAU2B74
-         5LfU0CBJppWFPMzc3bRF8GdACyGMRo0fcSuGrLNARsndX6PkURkR3Xi6czgGAYg0OE
-         YorcRViSVRU/cDwqGlGD+5J6CbnNgXRQeRm4rkcs=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, agk@redhat.com, snitzer@redhat.com,
-        gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH 2/2] dm-crypt: collect data and submit to DM to measure
-Date:   Sun, 16 Aug 2020 14:02:50 -0700
-Message-Id: <20200816210250.11506-3-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200816210250.11506-1-tusharsu@linux.microsoft.com>
-References: <20200816210250.11506-1-tusharsu@linux.microsoft.com>
+        Sun, 16 Aug 2020 17:05:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id DAA9B2CD070;
+        Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id mXJFxJKv4xmv; Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 834D12CD2DA;
+        Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 834D12CD2DA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1597611922;
+        bh=UJk0iDK6i/D5vytzbwL67FL+4Gn317iKgz3d3kMyssI=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=qKGBnTICgxQ2itmJABPx7EhVNoBmOY04vtFZoexbu0cirnpu3hoA+YGgRwUFfBlyQ
+         /jjfofteztn/IqOZWdCCCVVWqznZOocCy966A7Y+YhbIy/DE0omCikrMjx2h2XVx12
+         gn2HWEOctGt4nF8+8FI583vErmPiIkKQ4WCJGkgbkjntQGIs5Rr4dCh1D8zygoo642
+         V3SUJaKScG1TIY4DANiVYWrlqzksHXdxiabva451mwVal9qUqfLxPc1f8LE8g2eDRH
+         e3bEOiD1kASIQyACLqhNUigPPTXe/qB6HVhBDOmlR8XDB0ipXQ66+pOl8wod5gtHoc
+         EfAvfzA7NJ9qw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 9hMwMGCXnLHo; Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 527F52CD179;
+        Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+Date:   Sun, 16 Aug 2020 17:05:22 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Nicholas Piggin <npiggin@gmail.com>
+Message-ID: <833020242.9878.1597611922236.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200816070932.10752-1-hdanton@sina.com>
+References: <20200814164358.4783-1-mathieu.desnoyers@efficios.com> <20200816070932.10752-1-hdanton@sina.com>
+Subject: Re: [RFC PATCH 2/3] sched: membarrier: cover kthread_use_mm (v2)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
+Thread-Topic: sched: membarrier: cover kthread_use_mm (v2)
+Thread-Index: rImpRoT9yXbFw6ZT6L56QCI7o+oPnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, dm-crypt does not take advantage of IMA measuring
-capabilities, and ultimately the benefits of remote attestation.
+----- On Aug 16, 2020, at 3:09 AM, Hillf Danton hdanton@sina.com wrote:
 
-Measure various dm-crypt constructs by calling various device-mapper
-functions - dm_ima_*() that use IMA measuring capabilities. Implement
-ima_measure_dm_crypt_data() to measure various dm-crypt constructs.
+> On Fri, 14 Aug 2020 12:43:57 -0400 Mathieu Desnoyers wrote:
+>> 
+>> Given that no prior kthread use this guarantee and that it only affects
+>> kthreads, adding this guarantee does not affect user-space ABI.
+> 
+> Can you expand a bit on why kthreads like ksoftirqd have to ack the
+> IPIs from Dave who's not CAP_SYS_ADMIN.
 
-Ensure that ima_measure_dm_crypt_data() is non intrusive, i.e. failures
-in this function and the call-stack below should not affect the core
-functionality of dm-crypt.
+Do ksoftirqd kthreads ever use kthread_use_mm() to access user
+processes' memory ? If not, then they won't be disturbed by any IPI.
 
-A demonstrative usage of above functionality on a system:
+Thanks,
 
-If the IMA policy contains the following rule:
+Mathieu
 
-    measure func=CRITICAL_DATA data_sources=dm-crypt template=ima-buf
 
-and, the following commands are used to setup a crypt target:
-
- #key="faf453b4ee938cff2f0d2c869a0b743f59125c0a37f5bcd8f1dbbd911a78abaa"
- #arg="'0 1953125 crypt aes-xts-plain64 "
- #arg="$arg $key 0 "
- #arg="$arg /dev/loop0 0 1 allow_discards'"
- #tgt_name="test-crypt"
- #cmd="dmsetup create $tgt_name --table $arg"
- #eval $cmd
-
-then, the IMA log at
-/sys/kernel/security/integrity/ima/ascii_runtime_measurements should
-contain the dm-crypt measurements. And, the following IMA log entry
-should be added in the IMA log,
-
- ima-buf sha1:4cbca71967d6b48e13ff5283d8e657899b005f70 
- 1597518359:539244018:dm-crypt:add_target
- 74695f6e756d5f646973636172645f62696f733d313b7065725f62696f5f646
- 174615f73697a653d3830383b646d7265715f73746172743d3136383b74666d
- 735f636f756e743d313b6f6e5f6469736b5f7461675f73697a653d303b696e7
- 46567726974795f69765f73697a653d303b696e746567726974795f7461675f
- 73697a653d303b69765f73697a653d31363b69765f6f66667365743d303b736
- 563746f725f73686966743d303b736563746f725f73697a653d3531323b666c
- 6167733d323b6369706865725f666c6167733d303b73746172743d303b6b657
- 95f6d61635f73697a653d303b6b65795f65787472615f73697a653d303b6b65
- 795f70617274733d313b6b65795f73697a653d33323b6369706865725f73747
- 2696e673d6165732d7874732d706c61696e36343b6465766963655f6e616d65
- 3d3235333a303b
-
-where, the ascii representation of the above data is:
-
- ti_num_discard_bios=1;per_bio_data_size=808;dmreq_start=168;
- tfms_count=1;on_disk_tag_size=0;integrity_iv_size=0;
- integrity_tag_size=0;iv_size=16;iv_offset=0;sector_shift=0;
- sector_size=512;flags=2;cipher_flags=0;start=0;key_mac_size=0;
- key_extra_size=0;key_parts=1;key_size=32;
- cipher_string=aes-xts-plain64;device_name=253:0;
-
-Some of the above values can be verified using:
-
- #dmsetup table --showkeys
-
-where, the output of the command should be similar to:
-
- test-crypt: 0 1953125 crypt aes-xts-plain64
- faf453b4ee938cff2f0d2c869a0b743f59125c0a37f5bcd8f1dbbd911a78abaa
- 0 7:0 0 1 allow_discards
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
----
- drivers/md/dm-crypt.c          | 170 +++++++++++++++++++++++++++++++++
- security/integrity/ima/Kconfig |   2 +-
- 2 files changed, 171 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 000ddfab5ba0..cf78628c984b 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -2465,6 +2465,8 @@ static void crypt_dtr(struct dm_target *ti)
- 
- 	ti->private = NULL;
- 
-+	dm_ima_exit_measurements(ti->type);
-+
- 	if (!cc)
- 		return;
- 
-@@ -2908,6 +2910,166 @@ static int crypt_ctr_optional(struct dm_target *ti, unsigned int argc, char **ar
- 	return 0;
- }
- 
-+#ifdef CONFIG_IMA
-+/*
-+ * append integer values to dm-crypt specific data
-+ * to be measured through IMA
-+ */
-+static int ima_append_num_values(struct dm_target *ti,
-+				 const char *key,
-+				 long long num_val)
-+{
-+	char *num_str = NULL;
-+	int length = 0;
-+	int r = 0;
-+
-+	if (!ti || !key) {
-+		r = -EINVAL;
-+		goto error;
-+	}
-+
-+	length = snprintf(NULL, 0, "%lld", num_val);
-+	num_str = kzalloc(length + 1, GFP_KERNEL);
-+	if (!num_str) {
-+		r = -ENOMEM;
-+		goto error;
-+	}
-+	snprintf(num_str, length + 1, "%lld", num_val);
-+	dm_ima_append_measurement_list(ti->type,
-+				       key,
-+				       (const void *)num_str,
-+				       length);
-+	kzfree(num_str);
-+	return r;
-+error:
-+	DMERR("appending num values to IMA measurement list failed %d", r);
-+	return r;
-+}
-+/*
-+ * Measure dm-crypt specific data through IMA.
-+ * It appends all the needed data to the list as a key-val pair using
-+ * dm_ima_append_measurement_list() and internal ima_append_num_values(),
-+ * and finally measures the list using dm_ima_finalize_and_measure().
-+ */
-+static void ima_measure_dm_crypt_data(struct dm_target *ti, const char *desc)
-+{
-+	int r = 0;
-+	struct crypt_config *cc = NULL;
-+	const char *devname = dm_table_device_name(ti->table);
-+
-+	if (!ti) {
-+		r = -EINVAL;
-+		goto out;
-+	}
-+
-+	cc = ti->private;
-+
-+	if (devname) {
-+		dm_ima_append_measurement_list(ti->type,
-+					       "device_name",
-+					       (const void *)devname,
-+					       strlen(devname));
-+	}
-+
-+	if (cc->cipher_string) {
-+		dm_ima_append_measurement_list(ti->type,
-+					       "cipher_string",
-+					       (const void *)cc->cipher_string,
-+					       strlen(cc->cipher_string));
-+	}
-+
-+	if (cc->cipher_auth) {
-+		dm_ima_append_measurement_list(ti->type,
-+					       "cipher_auth",
-+					       (const void *)cc->cipher_auth,
-+					       strlen(cc->cipher_auth));
-+	}
-+
-+	r = ima_append_num_values(ti, "key_size", cc->key_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "key_parts", cc->key_parts);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "key_extra_size", cc->key_extra_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "key_mac_size", cc->key_mac_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "start", cc->start);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "cipher_flags", cc->cipher_flags);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "flags", cc->flags);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "sector_size", cc->sector_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "sector_shift", cc->sector_shift);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "iv_offset", cc->iv_offset);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "iv_size", cc->iv_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "integrity_tag_size", cc->integrity_tag_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "integrity_iv_size", cc->integrity_iv_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "on_disk_tag_size", cc->on_disk_tag_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "tfms_count", cc->tfms_count);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "dmreq_start", cc->dmreq_start);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "per_bio_data_size", cc->per_bio_data_size);
-+	if (r)
-+		goto out;
-+
-+	r = ima_append_num_values(ti, "ti_num_discard_bios",
-+			      ti->num_discard_bios);
-+	if (r)
-+		goto out;
-+
-+	dm_ima_finalize_and_measure(ti->type, desc);
-+	return;
-+
-+out:
-+	DMERR("IMA measurement of dm-crypt data failed %d", r);
-+
-+}
-+#else
-+static inline void ima_measure_dm_crypt_data(struct dm_target *ti,
-+					     const char *desc) {}
-+#endif /* CONFIG_IMA */
-+
- /*
-  * Construct an encryption mapping:
-  * <cipher> [<key>|:<key_size>:<user|logon>:<key_description>] <iv_offset> <dev_path> <start>
-@@ -3093,6 +3255,10 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 
- 	ti->num_flush_bios = 1;
- 
-+	dm_ima_init_measurements(ti->type);
-+
-+	ima_measure_dm_crypt_data(ti, "add_target");
-+
- 	return 0;
- 
- bad:
-@@ -3225,6 +3391,8 @@ static void crypt_postsuspend(struct dm_target *ti)
- 	struct crypt_config *cc = ti->private;
- 
- 	set_bit(DM_CRYPT_SUSPENDED, &cc->flags);
-+
-+	ima_measure_dm_crypt_data(ti, "post_suspend");
- }
- 
- static int crypt_preresume(struct dm_target *ti)
-@@ -3244,6 +3412,8 @@ static void crypt_resume(struct dm_target *ti)
- 	struct crypt_config *cc = ti->private;
- 
- 	clear_bit(DM_CRYPT_SUSPENDED, &cc->flags);
-+
-+	ima_measure_dm_crypt_data(ti, "resume");
- }
- 
- /* Message interface
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index e4fb1761d64a..ac6708daeaac 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -324,7 +324,7 @@ config IMA_MEASURE_ASYMMETRIC_KEYS
- 
- config IMA_QUEUE_EARLY_BOOT_DATA
- 	bool
--	depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
-+	depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING) || DM_CRYPT
- 	default y
- 
- config IMA_SECURE_AND_OR_TRUSTED_BOOT
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
