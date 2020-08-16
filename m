@@ -1,128 +1,170 @@
-Return-Path: <SRS0=qJsj=BZ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8929C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67399C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BC0206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Aug 2020 23:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AC72068E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XQiMWXwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgHOXyV (ORCPT
+        id S1728088AbgHPATZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 19:54:21 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:42337 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726429AbgHOXyU (ORCPT
+        Sat, 15 Aug 2020 20:19:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgHPATY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 19:54:20 -0400
-Received: (qmail 52558 invoked by uid 1000); 14 Aug 2020 22:07:39 -0400
-Date:   Fri, 14 Aug 2020 22:07:39 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-usb <linux-usb@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Protecting usb_set_interface() against device removal
-Message-ID: <20200815020739.GB52242@rowland.harvard.edu>
-References: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
+        Sat, 15 Aug 2020 20:19:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29446C061786
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 17:19:23 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mt12so6028274pjb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 17:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GdNLwnlPFkQHFOd6Xy60wVgrBimGSKOXtSoP9QOa/Ns=;
+        b=XQiMWXwGHmbC34v17SmqPih9NvHLjX68PR7xIbiyZM6UG++TmXKlFLA1xjihqHJ16y
+         7yZvm2dN+S2b3RGXSiw4CT8n9xETzpC95wooaPCWTNIXp1qzBL0wAascCahjmRrm+HaR
+         jprx3YKxQk+PX/vN2sIOw0J3ShvVuF0zOEyjXQPdnwdwGFP9r/vJd84k2wKAO/4g3EQy
+         eyF2WkWoMmABhwtQQJj8xJAf9cLT1AvG+QWnyplTnmhg5L2xN0tAYSGMlzh2nbbGA3nQ
+         /CsRFEXsTxhX2NeWWLfsHdn6r/SOBH6TLQLeakTDO+Gu0vSqAK6wTpeosnsbPRz4FkrS
+         C17A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GdNLwnlPFkQHFOd6Xy60wVgrBimGSKOXtSoP9QOa/Ns=;
+        b=CFg224hJu5hsl03BEqhyxUARVn+A8AFM7eVrm7wfFwx+1w75TLf36kP4WDCxRawIS4
+         ADgUnNEfn6nk/wsyasyalSsPa6LnLipvUL7KwHoGbDvmN23kjASQ0wNcQGgJ8xqg5DTl
+         uDSVjTqmRhkn6U/LRvfAe8ptp52bSgdIMDsscLNphYw4/0NbstyB80Yb+ePkyLxB/aIa
+         ABChor9hDrei3Jomb9yeeiNMRHtuQreMwWXLPkwPVlYG+z+KCiPZ46Gsz2/apN8juAES
+         +Mc0ug+O/XI2SHqeGJiMJDMI9vGXagyHOFGmbsB4yxBA+zmt4y2XldzHFXJGDIf+TmEX
+         gibQ==
+X-Gm-Message-State: AOAM531si9FAS9HvcY0HqQlozGS2YA/aUOtxQqn9aGrau8kSwBdIbcpt
+        TjB7MTmvpcdUn4sYK4lvcxjMjw==
+X-Google-Smtp-Source: ABdhPJxw2uMEic+JG/5VKDXnNzRKmfzkU29/IOf6VMaBx4mbWTUnI6WBx00akiJyQupuwQuLeuFiXw==
+X-Received: by 2002:a17:902:7609:: with SMTP id k9mr6530697pll.187.1597537162547;
+        Sat, 15 Aug 2020 17:19:22 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
+        by smtp.gmail.com with ESMTPSA id b63sm13070308pfg.43.2020.08.15.17.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2020 17:19:21 -0700 (PDT)
+Date:   Sat, 15 Aug 2020 17:19:17 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Joe Perches <joe@perches.com>, Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
+Message-ID: <20200816001917.4krsnrik7hxxfqfm@google.com>
+References: <20200815014006.GB99152@rani.riverdale.lan>
+ <20200815020946.1538085-1-ndesaulniers@google.com>
+ <202008150921.B70721A359@keescook>
+ <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
+ <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
+ <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
+ <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
+ <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 04:07:03PM -0700, Guenter Roeck wrote:
-> Hi all,
-> 
-> over time, there have been a number of reports of crashes in usb_ifnum_to_if(),
-> called from usb_hcd_alloc_bandwidth, which is in turn called from usb_set_interface().
-> Examples are [1] [2] [3]. A typical backtrace is:
-> 
-> <3>[ 3489.445468] intel_sst_acpi 808622A8:00: sst: Busy wait failed, cant send this msg
-> <6>[ 3490.507273] usb 1-4: USB disconnect, device number 3
-> <1>[ 3490.516670] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-> <6>[ 3490.516680] PGD 0 P4D 0
-> <4>[ 3490.516687] Oops: 0000 [#1] PREEMPT SMP PTI
-> <4>[ 3490.516693] CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
-> <4>[ 3490.516696] Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
-> <4>[ 3490.516706] RIP: 0010:usb_ifnum_to_if+0x29/0x40
-> <4>[ 3490.516710] Code: ee 0f 1f 44 00 00 55 48 89 e5 48 8b 8f f8 03 00 00 48 85 c9 74 27 44 0f b6 41 04 4d 85 c0 74 1d 31 ff 48 8b 84 f9 98 00 00 00 <48> 8b 10 0f b6 52 02 39 f2 74 0a 48 ff c7 4c 39 c7 72 e5 31 c0 5d
-> <4>[ 3490.516714] RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
-> <4>[ 3490.516718] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
-> <4>[ 3490.516721] RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
-> <4>[ 3490.516724] RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
-> <4>[ 3490.516727] R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
-> <4>[ 3490.516731] R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
-> <4>[ 3490.516735] FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
-> <4>[ 3490.516738] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[ 3490.516742] CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
-> <4>[ 3490.516745] Call Trace:
-> <4>[ 3490.516756] usb_hcd_alloc_bandwidth+0x1ee/0x30f
-> <4>[ 3490.516762] usb_set_interface+0x1a3/0x2b7
-> <4>[ 3490.516773] uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
-> <4>[ 3490.516781] uvc_video_start_streaming+0x91/0xdd [uvcvideo]
-> <4>[ 3490.516787] uvc_start_streaming+0x28/0x5d [uvcvideo]
-> <4>[ 3490.516795] vb2_start_streaming+0x61/0x143 [videobuf2_common]
-> <4>[ 3490.516801] vb2_core_streamon+0xf7/0x10f [videobuf2_common]
-> <4>[ 3490.516807] uvc_queue_streamon+0x2e/0x41 [uvcvideo]
-> <4>[ 3490.516814] uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
-> <4>[ 3490.516820] __video_do_ioctl+0x33d/0x42a
-> <4>[ 3490.516826] video_usercopy+0x34e/0x5ff
-> <4>[ 3490.516831] ? video_ioctl2+0x16/0x16
-> <4>[ 3490.516837] v4l2_ioctl+0x46/0x53
-> <4>[ 3490.516843] do_vfs_ioctl+0x50a/0x76f
-> <4>[ 3490.516848] ksys_ioctl+0x58/0x83
-> <4>[ 3490.516853] __x64_sys_ioctl+0x1a/0x1e
-> <4>[ 3490.516858] do_syscall_64+0x54/0xde
-> 
-> I have been able to reproduce the problem on a Chromebook by strategically placing
-> msleep() calls into usb_set_interface() and usb_disable_device(). Ultimately, the
-> problem boils down to lack of protection against device removal in usb_set_interface()
-> [and/or possibly other callers of usb_ifnum_to_if()].
-> 
-> Sequence of events is roughly as follows:
-> 
-> - usb_set_interface() is called and proceeds to some point, possibly to
->   mutex_lock(hcd->bandwidth_mutex);
-> - Device removal event is detected, and usb_disable_device() is called
+On 2020-08-15, 'Nick Desaulniers' via Clang Built Linux wrote:
+>On Sat, Aug 15, 2020 at 2:31 PM Joe Perches <joe@perches.com> wrote:
+>>
+>> On Sat, 2020-08-15 at 14:28 -0700, Nick Desaulniers wrote:
+>> > On Sat, Aug 15, 2020 at 2:24 PM Joe Perches <joe@perches.com> wrote:
+>> > > On Sat, 2020-08-15 at 13:47 -0700, Nick Desaulniers wrote:
+>> > > > On Sat, Aug 15, 2020 at 9:34 AM Kees Cook <keescook@chromium.org> wrote:
+>> > > > > On Fri, Aug 14, 2020 at 07:09:44PM -0700, Nick Desaulniers wrote:
+>> > > > > > LLVM implemented a recent "libcall optimization" that lowers calls to
+>> > > > > > `sprintf(dest, "%s", str)` where the return value is used to
+>> > > > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+>> > > > > > in parsing format strings.  Calling `sprintf` with overlapping arguments
+>> > > > > > was clarified in ISO C99 and POSIX.1-2001 to be undefined behavior.
+>> > > > > >
+>> > > > > > `stpcpy` is just like `strcpy` except it returns the pointer to the new
+>> > > > > > tail of `dest`. This allows you to chain multiple calls to `stpcpy` in
+>> > > > > > one statement.
+>> > > > >
+>> > > > > O_O What?
+>> > > > >
+>> > > > > No; this is a _terrible_ API: there is no bounds checking, there are no
+>> > > > > buffer sizes. Anything using the example sprintf() pattern is _already_
+>> > > > > wrong and must be removed from the kernel. (Yes, I realize that the
+>> > > > > kernel is *filled* with this bad assumption that "I'll never write more
+>> > > > > than PAGE_SIZE bytes to this buffer", but that's both theoretically
+>> > > > > wrong ("640k is enough for anybody") and has been known to be wrong in
+>> > > > > practice too (e.g. when suddenly your writing routine is reachable by
+>> > > > > splice(2) and you may not have a PAGE_SIZE buffer).
+>> > > > >
+>> > > > > But we cannot _add_ another dangerous string API. We're already in a
+>> > > > > terrible mess trying to remove strcpy[1], strlcpy[2], and strncpy[3]. This
+>> > > > > needs to be addressed up by removing the unbounded sprintf() uses. (And
+>> > > > > to do so without introducing bugs related to using snprintf() when
+>> > > > > scnprintf() is expected[4].)
+>> > > >
+>> > > > Well, everything (-next, mainline, stable) is broken right now (with
+>> > > > ToT Clang) without providing this symbol.  I'm not going to go clean
+>> > > > the entire kernel's use of sprintf to get our CI back to being green.
+>> > >
+>> > > Maybe this should get place in compiler-clang.h so it isn't
+>> > > generic and public.
+>> >
+>> > https://bugs.llvm.org/show_bug.cgi?id=47162#c7 and
+>> > https://bugs.llvm.org/show_bug.cgi?id=47144
+>> > Seem to imply that Clang is not the only compiler that can lower a
+>> > sequence of libcalls to stpcpy.  Do we want to wait until we have a
+>> > fire drill w/ GCC to move such an implementation from
+>> > include/linux/compiler-clang.h back in to lib/string.c?
+>>
+>> My guess is yes, wait until gcc, if ever, needs it.
+>
+>The suggestion to use static inline doesn't even make sense. The
+>compiler is lowering calls to other library routines; `stpcpy` isn't
+>being explicitly called.  Even if it was, not sure we want it being
+>inlined.  No symbol definition will be emitted; problem not solved.
+>And I refuse to add any more code using `extern inline`.  Putting the
+>definition in lib/string.c is the most straightforward and avoids
+>revisiting this issue in the future for other toolchains.  I'll limit
+>access by removing the declaration, and adding a comment to avoid its
+>use.  But if you're going to use a gnu target triple without using
+>-ffreestanding because you *want* libcall optimizations, then you have
+>to provide symbols for all possible library routines!
 
-At this point all interface drivers get unbound (their disconnect 
-routines are called).
+Adding a definition without a declaration for stpcpy looks good.
+Clang LTO will work.
 
-> - usb_disable_device() starts removing actconfig data. It has removed
->   and cleared dev->actconfig->interface[i], but not dev->actconfig
-> - usb_set_interface() calls usb_hcd_alloc_bandwidth(), which calls
->   usb_ifnum_to_if()
-> - In usb_ifnum_to_if(), dev->actconfig is not NULL, but
->   dev->actconfig->interface[i] is NULL
-> - crash
-> 
-> Question is what we can do about this. Checking if dev->state != USB_STATE_NOTATTACHED
-> in usb_ifnum_to_if() might be a possible approach, but strictly speaking it would
-> still be racy since there is still no lock against device removal. I have not tried
-> calling usb_lock_device() in usb_set_interface() - would that possibly be an option ?
-
-As far as I know, protecting against these races is the responsibility 
-of the USB interface drivers.  They must make sure that their disconnect 
-routines block until all outstanding calls to usb_set_interface return 
-(in fact, until all outstanding device accesses have finished).
-
-For instance, in the log extract you showed, it's obvious that the 
-uvc_start_streaming routine was running after the disconnect routine had 
-returned, which looks like a bug in itself: Once the disconnect routine 
-returns, the driver is not supposed to try to access the device at all 
-because some other driver may now be bound to it.
-
-We can't just call usb_lock_device from within usb_set_interface, 
-because usb_set_interface is often called with that lock already held.
-
-Alan Stern
+(If the kernel does not want to provide these routines,
+is http://git.kernel.org/linus/6edfba1b33c701108717f4e036320fc39abe1912
+probably wrong? (why remove -ffreestanding from the main Makefile) )
