@@ -2,218 +2,131 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57A0C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 09:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB74EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 09:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91EFC206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 09:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597570606;
-	bh=juovi0J4Pza8QjxX62PquhxnT2vWe5L7cKG6gR8LUqY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=13adVLwvVS0yofGW4RdCgYauAMmL5hRq6461lNJpWppGFx6n9KZTpE66ET+Paz7kM
-	 6/X92/Tthl5bwyv4oE9hFENX3h2W8+RvPX058a5LiwA9h51u67A9Ut0WRc75itJB5E
-	 spMplUtaaSOyeNkOJdk8jyO13lFMMOAe+Jatk3/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 86820206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 09:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHZrxLVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgHPJgp (ORCPT
+        id S1729161AbgHPJhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 05:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgHPJgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 05:36:44 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D2682065C;
-        Sun, 16 Aug 2020 09:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597570603;
-        bh=juovi0J4Pza8QjxX62PquhxnT2vWe5L7cKG6gR8LUqY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0WLEEcwMhr52vvlDJ3kLscapI/Q7bR7OlEp8i+jjcnAzZV0pSnzF7cWEANGf5t76I
-         1Bzx6KySkUZBwBKkwrxT0qm2Ts7vyMIpVzxENw2qOgatAe9jTARVnliO5v/u9ZI+Zy
-         yQz52jltvSFH5dDcIUFIleJ/jykll4+GBeZZSjwg=
-Date:   Sun, 16 Aug 2020 10:36:38 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 07/15] iio: sx9310: Use long instead of int for
- channel bitmaps
-Message-ID: <20200816103638.4669f841@archlinux>
-In-Reply-To: <20200806193057.163e2363@archlinux>
-References: <20200803235815.778997-1-campello@chromium.org>
-        <20200803175559.v5.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
-        <20200806193057.163e2363@archlinux>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 16 Aug 2020 05:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgHPJht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 05:37:49 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC3FFC061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 02:37:49 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id l204so12233179oib.3
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 02:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=vdeFolz54S0qQkKk6HM9/kh8B5+wcpI8HQoAZlCYNWk=;
+        b=AHZrxLVV24TyadXoffwqmI0BdAYIP7udTzaHqoU59+6ye8Uwfx6Z4iB/RR3srIsg8q
+         UNsvKIBoSAZrObDUfxG0V7Lrt6+ObL6KhqM8+kNwxl/xJO3sGIj3lCzzFleQiKFX8RdT
+         mMtU+IJ/yGm/QY5ihtJhwx2fFzPzQv7fW8FKR8WfHf2mAREGXrfe9X31w1kxxlmRFUDx
+         wbxKlwSqJJNByLmxH/e6Mm+D6ZdUVAeZugeiJ5R7wbeU4oIiGVRPQnQCxQkiRQAweHWf
+         CymZvtxRG84L8y1v+UHHtYMzYjKB0fEjbsotpXEN8RuQqg63VKop7b9xOUMLJgQmLm2f
+         jXUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=vdeFolz54S0qQkKk6HM9/kh8B5+wcpI8HQoAZlCYNWk=;
+        b=UK4v3tYSJDgX+EXA5ehZBKcwyatMOvndiU6KpLEOKQCF3tGPeaahjIiispaBRAbXG9
+         ym2jc5oeFU+RUagSTVqsJFwNgyKKFgHuULGC5f0C5DXxNO9O906NFVRn1ulpO8EDROhV
+         IouBNPT80S/++qv4Cn7kvyuybU2niIIvSGo7j3FGnHSbxCEs4+a9en42duS90z9nZZV1
+         AtxRazHy6zgYg4PU6uPOrFs8TuWKYVU9YmhgWeRE++sGM4GfUzirSOiX0k6jzXtkv6lU
+         kkMP5kI0n3itMRicxBCayldbUBTBXN/Q2qYdQioj5+qf/elDm22QqKLF5w9iZj8l/u4I
+         DydA==
+X-Gm-Message-State: AOAM531QGybRxdq1vIXQFg5uO1ZBqu/fjuVUvwzaSYuY05xS76BdVu6E
+        tqLV1j7jmUpgb7xGlkPG5SZikjN22c4YQnT251k=
+X-Google-Smtp-Source: ABdhPJypkmXVafvWQ4nHtbXg12blS7k3B5AX7+pZOgWkTN5uxT90H/u2ZEJwaru8S73eTNyn790MQt5JXna3FYTrw7I=
+X-Received: by 2002:aca:724f:: with SMTP id p76mr6348374oic.35.1597570669063;
+ Sun, 16 Aug 2020 02:37:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200527135329.1172644-1-arnd@arndb.de> <CAKwvOdmA29WzTd7APsQCsG_a=NVWuR53Z2h8NTLza5sisnV2PA@mail.gmail.com>
+ <CA+icZUUjtu3fCNTngY52h3uRL+eUaimNJb0UNwj5v-QwKggs5A@mail.gmail.com>
+ <CA+icZUWH5f4B_6eYy2_OOi45VjUkE_kN9akqvcOxxmmmM3TSrg@mail.gmail.com>
+ <CAKwvOdnj6ObdpsdVYkDxWp-dVTTg=xMkBm84y419SNtLuAqfMg@mail.gmail.com>
+ <CAKwvOdnahyqQQMdWhzpaYkJNi21Ux=8qyBmRnPidiT_RAn0YFw@mail.gmail.com>
+ <CA+icZUVKBsp4cJV5V=ZtywEi=Ary5w-fNSijkNknU+U9xiKRRg@mail.gmail.com>
+ <CA+icZUV5m+kPWpk0ovoWD+DK0Tn8=c0MdWnr2XTxStwXf_VF0g@mail.gmail.com>
+ <CA+icZUW6vb2JgKCnWMx-yRU24benZNLizwk30HLPGwYrNDR-3A@mail.gmail.com> <CA+icZUWpExhm951r9C2XCrMXiZ4KXMioc_YzhxWW3i+tHNDqLw@mail.gmail.com>
+In-Reply-To: <CA+icZUWpExhm951r9C2XCrMXiZ4KXMioc_YzhxWW3i+tHNDqLw@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sun, 16 Aug 2020 11:37:37 +0200
+Message-ID: <CA+icZUUV-vXQFkhDrLTCtnCpuKR5BpZ_SG+9376aK2g+BcE-hA@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 19:30:57 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+GCC toolchain simply ignores if kaslr_64.o has __force_order means the
+build ends up successfully whereas LLVM toolchain and IAS breaks and
+the build stops and needs explicitly commit
+df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ("x86/boot/compressed: Don't
+declare __force_order in kaslr_64.c") reverted to fix this.
+With the revert GCC toolchain is also fine.
 
-> On Mon,  3 Aug 2020 17:58:07 -0600
-> Daniel Campello <campello@chromium.org> wrote:
-> 
-> > Uses for_each_set_bit() macro to loop over channel bitmaps.
-> > 
-> > Signed-off-by: Daniel Campello <campello@chromium.org>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>  
-> Applied,
-> 
-> Thanks,
-> 
-> Jonathan
+Maybe it is good to revert that commit?
 
-0-day sent a rather silly warning on this, but in the interests of
-suppressing noisy warnings I've fixed it...
+This is with [1]:
 
-> 
-> > ---
-> > 
-> > Changes in v5: None
-> > Changes in v4: None
-> > Changes in v3:
-> >  - Added static assert for number of channels.
-> > 
-> > Changes in v2:
-> >  - Changed prox_stat to chan_prox_stat bitmap.
-> > 
-> >  drivers/iio/proximity/sx9310.c | 39 ++++++++++++++++++----------------
-> >  1 file changed, 21 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > index 127b1ba79e2dea..f78500b8a5841e 100644
-> > --- a/drivers/iio/proximity/sx9310.c
-> > +++ b/drivers/iio/proximity/sx9310.c
-> > @@ -119,6 +119,7 @@
-> >  
-> >  /* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
-> >  #define SX9310_NUM_CHANNELS				4
-> > +static_assert(SX9310_NUM_CHANNELS < BITS_PER_LONG);
-> >  
-> >  struct sx9310_data {
-> >  	/* Serialize access to registers and channel configuration */
-> > @@ -130,7 +131,7 @@ struct sx9310_data {
-> >  	 * Last reading of the proximity status for each channel.
-> >  	 * We only send an event to user space when this changes.
-> >  	 */
-> > -	bool prox_stat[SX9310_NUM_CHANNELS];
-> > +	unsigned long chan_prox_stat;
-> >  	bool trigger_enabled;
-> >  	/* Ensure correct alignment of timestamp when present. */
-> >  	struct {
-> > @@ -140,7 +141,8 @@ struct sx9310_data {
-> >  	/* Remember enabled channels and sample rate during suspend. */
-> >  	unsigned int suspend_ctrl0;
-> >  	struct completion completion;
-> > -	unsigned int chan_read, chan_event;
-> > +	unsigned long chan_read;
-> > +	unsigned long chan_event;
-> >  	int channel_users[SX9310_NUM_CHANNELS];
-> >  	unsigned int whoami;
-> >  };
-> > @@ -283,15 +285,16 @@ static const struct regmap_config sx9310_regmap_config = {
-> >  };
-> >  
-> >  static int sx9310_update_chan_en(struct sx9310_data *data,
-> > -				 unsigned int chan_read,
-> > -				 unsigned int chan_event)
-> > +				 unsigned long chan_read,
-> > +				 unsigned long chan_event)
-> >  {
-> >  	int ret;
-> > +	unsigned long channels = chan_read | chan_event;
-> >  
-> > -	if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
-> > +	if ((data->chan_read | data->chan_event) != channels) {
-> >  		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
-> >  					 SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
-> > -					 chan_read | chan_event);
-> > +					 channels);
-> >  		if (ret)
-> >  			return ret;
-> >  	}
-> > @@ -532,6 +535,7 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
-> >  	unsigned int val, chan;
-> >  	struct sx9310_data *data = iio_priv(indio_dev);
-> >  	s64 timestamp = iio_get_time_ns(indio_dev);
-> > +	unsigned long prox_changed;
-> >  
-> >  	/* Read proximity state on all channels */
-> >  	ret = regmap_read(data->regmap, SX9310_REG_STAT0, &val);
-> > @@ -540,24 +544,23 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
-> >  		return;
-> >  	}
-> >  
-> > -	for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
-> > +	/*
-> > +	 * Only iterate over channels with changes on proximity status that have
-> > +	 * events enabled.
-> > +	 */
-> > +	prox_changed = (data->chan_prox_stat ^ val) & data->chan_event;
-> > +
-> > +	for_each_set_bit(chan, &prox_changed, SX9310_NUM_CHANNELS) {
-> >  		int dir;
-> >  		u64 ev;
-> > -		bool new_prox = val & BIT(chan);
-> > -
-> > -		if (!(data->chan_event & BIT(chan)))
-> > -			continue;
-> > -		if (new_prox == data->prox_stat[chan])
-> > -			/* No change on this channel. */
-> > -			continue;
-> >  
-> > -		dir = new_prox ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
-> > +		dir = val & BIT(chan) ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
+diff --git a/arch/x86/include/asm/special_insns.h
+b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..e1c19c5ecd5e 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -17,7 +17,7 @@
+  * all loads stores around it, which can hurt performance. Solution is to
+  * use a variable and mimic reads and writes to it to enforce serialization
+  */
+-extern unsigned long __force_order;
++extern unsigned long __force_order __weak;
 
-cpp check is moaning about no brackets around
-val & BIT(CHAN) so I've added some.
+ void native_write_cr0(unsigned long val);
 
-> >  		ev = IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, chan,
-> >  					  IIO_EV_TYPE_THRESH, dir);
-> >  
-> >  		iio_push_event(indio_dev, ev, timestamp);
-> > -		data->prox_stat[chan] = new_prox;
-> >  	}
-> > +	data->chan_prox_stat = val;
-> >  }
-> >  
-> >  static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
-> > @@ -714,13 +717,13 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
-> >  static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
-> >  {
-> >  	struct sx9310_data *data = iio_priv(indio_dev);
-> > -	unsigned int channels = 0;
-> > +	unsigned long channels = 0;
-> >  	int bit, ret;
-> >  
-> >  	mutex_lock(&data->mutex);
-> >  	for_each_set_bit(bit, indio_dev->active_scan_mask,
-> >  			 indio_dev->masklength)
-> > -		channels |= BIT(indio_dev->channels[bit].channel);
-> > +		__set_bit(indio_dev->channels[bit].channel, &channels);
-> >  
-> >  	ret = sx9310_update_chan_en(data, channels, data->chan_event);
-> >  	mutex_unlock(&data->mutex);  
-> 
+...and the patchset of "x86/boot: Remove run-time relocations from
+compressed kernel" applied [3].
 
+More details in [4].
+
+- Sedat -
+
+References:
+[1] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674182703
+[2] https://git.kernel.org/linus/df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc
+[3] https://lore.kernel.org/patchwork/project/lkml/list/?series=456251
+[4] https://github.com/ClangBuiltLinux/linux/issues/1120#issuecomment-674502114
