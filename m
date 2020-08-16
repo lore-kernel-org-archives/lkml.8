@@ -4,87 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36EFC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C8E2065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD8220674
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgHPHOI (ORCPT
+        id S1730206AbgHPHP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 03:14:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9740 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726708AbgHPHOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 03:14:07 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2DC612D125E6899B1B39;
-        Sun, 16 Aug 2020 15:14:04 +0800 (CST)
-Received: from ubuntu.huawei.com (100.120.247.70) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 16 Aug 2020 15:13:53 +0800
-From:   Liang Wang <wangliang101@huawei.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wangle6@huawei.com>
-Subject: [PATCH] sound/isa:fix spelling mistakes in the comments
-Date:   Sun, 16 Aug 2020 15:13:09 +0800
-Message-ID: <20200816071309.121461-1-wangliang101@huawei.com>
-X-Mailer: git-send-email 2.28.0
+        Sun, 16 Aug 2020 03:15:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59670 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgHPHP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 03:15:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A6283B142;
+        Sun, 16 Aug 2020 07:15:49 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jan Kara <jack@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
+Subject: [PATCH v5 1/3] net: introduce helper sendpage_ok() in include/linux/net.h
+Date:   Sun, 16 Aug 2020 15:15:15 +0800
+Message-Id: <20200816071518.6964-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [100.120.247.70]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spelling mistakes in the comments:
-	initailise ==> initialise
-	tranfer ==> transfer
-	Initialse ==> Initialise
+The original problem was from nvme-over-tcp code, who mistakenly uses
+kernel_sendpage() to send pages allocated by __get_free_pages() without
+__GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+from a corrupted kernel heap, because these pages are incorrectly freed
+in network stack as page_count 0 pages.
 
-Signed-off-by: Liang Wang <wangliang101@huawei.com>
+This patch introduces a helper sendpage_ok(), it returns true if the
+checking page,
+- is not slab page: PageSlab(page) is false.
+- has page refcount: page_count(page) is not zero
+
+All drivers who want to send page to remote end by kernel_sendpage()
+may use this helper to check whether the page is OK. If the helper does
+not return true, the driver should try other non sendpage method (e.g.
+sock_no_sendpage()) to handle the page.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Jan Kara <jack@suse.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Vlastimil Babka <vbabka@suse.com>
+Cc: stable@vger.kernel.org
 ---
- sound/isa/sscape.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changelog:
+v5, include linux/mm.h in include/linux/net.h
+v4, change sendpage_ok() as an inline helper, and post it as
+    separate patch.
+v3, introduce a more common sendpage_ok()
+v2, fix typo in patch subject
+v1, the initial version.
+ include/linux/net.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/sound/isa/sscape.c b/sound/isa/sscape.c
-index 5363d88cc4b9..2e5a5c5279e8 100644
---- a/sound/isa/sscape.c
-+++ b/sound/isa/sscape.c
-@@ -308,7 +308,7 @@ static inline int verify_mpu401(const struct snd_mpu401 *mpu)
- }
+diff --git a/include/linux/net.h b/include/linux/net.h
+index d48ff1180879..a807fad31958 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -21,6 +21,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/once.h>
+ #include <linux/fs.h>
++#include <linux/mm.h>
+ #include <linux/sockptr.h>
  
- /*
-- * This is apparently the standard way to initailise an MPU-401
-+ * This is apparently the standard way to initialise an MPU-401
-  */
- static inline void initialise_mpu401(const struct snd_mpu401 *mpu)
- {
-@@ -339,7 +339,7 @@ static void soundscape_free(struct snd_card *c)
- }
+ #include <uapi/linux/net.h>
+@@ -286,6 +287,21 @@ do {									\
+ #define net_get_random_once_wait(buf, nbytes)			\
+ 	get_random_once_wait((buf), (nbytes))
  
- /*
-- * Tell the SoundScape to begin a DMA tranfer using the given channel.
-+ * Tell the SoundScape to begin a DMA transfer using the given channel.
-  * All locking issues are left to the caller.
-  */
- static void sscape_start_dma_unsafe(unsigned io_base, enum GA_REG reg)
-@@ -803,7 +803,7 @@ static int mpu401_open(struct snd_mpu401 *mpu)
- }
- 
- /*
-- * Initialse an MPU-401 subdevice for MIDI support on the SoundScape.
-+ * Initialise an MPU-401 subdevice for MIDI support on the SoundScape.
-  */
- static int create_mpu401(struct snd_card *card, int devnum,
- 			 unsigned long port, int irq)
++/*
++ * E.g. XFS meta- & log-data is in slab pages, or bcache meta
++ * data pages, or other high order pages allocated by
++ * __get_free_pages() without __GFP_COMP, which have a page_count
++ * of 0 and/or have PageSlab() set. We cannot use send_page for
++ * those, as that does get_page(); put_page(); and would cause
++ * either a VM_BUG directly, or __page_cache_release a page that
++ * would actually still be referenced by someone, leading to some
++ * obscure delayed Oops somewhere else.
++ */
++static inline bool sendpage_ok(struct page *page)
++{
++	return  (!PageSlab(page) && page_count(page) >= 1);
++}
++
+ int kernel_sendmsg(struct socket *sock, struct msghdr *msg, struct kvec *vec,
+ 		   size_t num, size_t len);
+ int kernel_sendmsg_locked(struct sock *sk, struct msghdr *msg,
 -- 
-2.27.0
+2.26.2
 
