@@ -2,198 +2,106 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C054DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB41C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DF320735
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B01A20735
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kek4xuub"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="Ui6mVn6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgHPPXk (ORCPT
+        id S1728907AbgHPPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgHPPXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:23:36 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71DBFC061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:23:36 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id b2so6640621qvp.9
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:23:36 -0700 (PDT)
+        Sun, 16 Aug 2020 11:24:24 -0400
+Received: from mail-db8eur05on2099.outbound.protection.outlook.com ([40.107.20.99]:13792
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbgHPPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 11:24:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iLiikZDSCmRJlV8bMs6AyM7xfjJlg5bl95oGf9br3JlWv6CnrF+PHEDrh03xcTTBwG9HKsqQkhj3bSNOuLXAm6rO7yUuHgJpS8AV82VZUVzWAdZpjqyPFuo0NNQwakD/LoF/+VtFo5kPDWB6vL6nYP32pPuP0BUVCHAeCatorIWZgXPjbtpHIHqxbF2zwF23PrrdE4saqUZ+LXTcIIW9smHfg7PFIJ6aWocGsW+4d/J/FlEuSZhKE65hhjtLUDi3vs8i84b0UJda+2ZIZoYZZtnoQy0BtVigJpDr4hJGg6HoN9p1r5v3Eit24dTOnYkXYjBNl+U/SL1fhC8EabO60Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/3uuFUbIHoaTU2u6nAewllkqSt+Nobavs/GWZP9YK74=;
+ b=hvVnwyRG17mrZVmryJ5CjpCWUXxRQGHNDNak8+ErGQlie1ETVVWvopw+HAPwcMF2caMtP9Gd/lL09Fp4ebSl6GgtmjV9mJwbl/gEJezRiUhgScOTcHi2Kvuyc16NPKVRMjPeYEsdXPB7PdAmqmmKH+2ye61ovg4rhaV5RHLfTCTwA7zAJBCITnJWDBQZ/BZnsyVCSXCJAOBPHz/lQUftX7fafRJ82plXRpKoDRqw4wtElxTZL0mj2vPpQ+oXBNxDZLuXy//arqrnOSuydfSSocXD0mDyVtcceifeEjAtKA+luIhGuHrlT6Ah829WJjZFu0ugspl2je66b8ai9ixhzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZSsQfyI5SIsyIr1d2hd10y1kYresPy7/xEx4V1MJNQA=;
-        b=kek4xuubACnt25VOzJ56L4Duh1WO3Q4hhIkyHWsYAD9V4KuPGu3ww8lA2lDWDWldp4
-         Pi2d5mMbch5vS8s75F97+WOsTigVJRhdB60V7JWx7Uv308cL3XOJNLl9CGIdDZc0h7Ua
-         q+4NyxogAVdRvIkehNjJLQCkz6RVc0QBO4ajO+3s8iJFu7WPdkNI4vPPOsEAi1N+o8V9
-         sMQUIuPIvBdS5HBfnVfy8juSPz+7qdQRyLj7RcWVLrU6gLf21XbnWyDtu/7vK1HG6ewM
-         sfX97PugBH1dCCV+TA6ahmWdXwN/g5q7mMOH62Cl/8XBg67li/T798Sdm/aiumrCd1dV
-         mgBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZSsQfyI5SIsyIr1d2hd10y1kYresPy7/xEx4V1MJNQA=;
-        b=bT8rTaSj0kR6VdvQ8vwKrqTuS0Tq67Ba+oKtjZuu0E0f5Xt3Wfg2CLD6kVqns5VehW
-         3QHD1/jnCCevs1F6hM0F/ITH+qNDnWraKfSMrq8Mopqqh1C9+YPDwU0rZ0bCM1gOp6tI
-         4BFdGWZ+zwtM+AEB1p6I0jiJYnkrpecm8/alCVpFvysIvYuCWVCOBTuye5eIn9ClaPxZ
-         AOnCtEQfokSCn0Qnyy7Ft6MwnW0TU2Id3kr8tD4gXYQeK1UBuyjNYeYpKJScV4IkMZ1M
-         n8jjCyLNx42UY7nk3EZpYs2jmFOcXhd4aWCzDFdKY+27hs8FuEHHMaUzGp+uZ64nzI44
-         rGAg==
-X-Gm-Message-State: AOAM5306710rq0tBh5AfQQuyQcSvwMRntPZdLoQMqO9yvt43weNeyAvo
-        NGu+/pbGFaiJB5zfpczQVPI=
-X-Google-Smtp-Source: ABdhPJxcFUP7pPB4jSaWyI6xl6cio0huCBsw8GaBreokm/yKKBm+U/dT9vonOd1o1lME5DznAg04Lw==
-X-Received: by 2002:ad4:4365:: with SMTP id u5mr10880053qvt.109.1597591415715;
-        Sun, 16 Aug 2020 08:23:35 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id x12sm17337484qta.67.2020.08.16.08.23.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Aug 2020 08:23:34 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id DE96927C0054;
-        Sun, 16 Aug 2020 11:23:33 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 16 Aug 2020 11:23:33 -0400
-X-ME-Sender: <xms:dE85X-TbFlaHUQoxGberTo9_6b78ZxniNCYg5D36xHPcQ5GvngoUKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtuddgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:dE85XzyUcOePgCZTSc8tHM8wAL6HNNICFBP5MQX7BubiE0UBHjLkSA>
-    <xmx:dE85X71dzVY16F5WZxxttSnTPThJx-LvhG9cvNTYQqaYDx7laFiQ-A>
-    <xmx:dE85X6AjyAyQATpDFYF_H0W3-sudKkER1hbs2zqx8zjQIgVujnwBdw>
-    <xmx:dU85X2NsrRAT-aX3ewgun3g4sqXNmmD69yLFeIz9MB2HRYBuNxfspR84zB8>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 30073328005A;
-        Sun, 16 Aug 2020 11:23:32 -0400 (EDT)
-Date:   Sun, 16 Aug 2020 23:23:30 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/3] sched: fix exit_mm vs membarrier (v2)
-Message-ID: <20200816152330.GA87259@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200814164358.4783-1-mathieu.desnoyers@efficios.com>
- <20200814164358.4783-2-mathieu.desnoyers@efficios.com>
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/3uuFUbIHoaTU2u6nAewllkqSt+Nobavs/GWZP9YK74=;
+ b=Ui6mVn6w+5PFRhHmlutcVrmEFqijN8rFc6NXWsCC3N3afFQzuyEyo7GSqTXJNdZBWji2Nh6EdNIoyuvCLxg72S137kZb0WPugGc7GQjVnYKsW0F/0K4VSx6LZQIHan2wuSzW2hfWdNT30aOOWls8B6vvXKGOBgO15WXRE/Vuk8U=
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
+ by DB3PR0202MB3547.eurprd02.prod.outlook.com (2603:10a6:8:11::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Sun, 16 Aug
+ 2020 15:24:19 +0000
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3283.027; Sun, 16 Aug 2020
+ 15:24:19 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SW_Drivers <SW_Drivers@habana.ai>
+Subject: RE: [PATCH 1/9] habanalabs: change CB's ID to be 64 bits
+Thread-Topic: [PATCH 1/9] habanalabs: change CB's ID to be 64 bits
+Thread-Index: AQHWcy3aM59q1tQEpEedrTOlSBitE6k6tVLg
+Date:   Sun, 16 Aug 2020 15:24:19 +0000
+Message-ID: <DB8PR02MB546864405E2E113A0CF2A144D25E0@DB8PR02MB5468.eurprd02.prod.outlook.com>
+References: <20200815175938.16619-1-oded.gabbay@gmail.com>
+In-Reply-To: <20200815175938.16619-1-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+x-originating-ip: [46.116.96.176]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a7e37c2e-876e-43ec-9cc8-08d841f8722f
+x-ms-traffictypediagnostic: DB3PR0202MB3547:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0202MB3547A7FE73A0BFC6A4100957D25E0@DB3PR0202MB3547.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LbGduv8WzHFPpqeJxLQx7PnGjZO8bLMbVIUl4V76Gqn2dbQYcGxxIyoIjBixmQlN2CEC2E6jUHYdxSHeb8/fWrZPwdA7yuf2ImexG7DHEXhBtVyIaTjTTIghK3r/Z0GwKBtQk2eHSZM6wFYGyvyvq3Tag01e2UshMFqbsRoUd2QSShsMY9uvlP9T+VJoMr2yAitNwhFCYDtwrCf2wg4ncPLmcZJRefmaHa7Q/H8Zewpq3Buy/406LZosJgb20M5IN+XBOBY07V32JQnculV7jp1znkFl1YzF39wX6V0uOdfpgWPPjoxFE+5VZdp+i3e0RALb9Qq5HFCrMu2pMEJN3g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(366004)(396003)(39850400004)(7696005)(86362001)(4744005)(110136005)(52536014)(76116006)(55016002)(6636002)(8676002)(316002)(9686003)(5660300002)(53546011)(6506007)(8936002)(66556008)(33656002)(2906002)(66476007)(66446008)(26005)(64756008)(478600001)(66946007)(186003)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: nWmFrmbvCbrZ+IoAo3BM1xApFB/mtTLEBTP6OgUFII5KeKXeeICwbSzINFPzQOz6ywzrFdevYQD9IbD0NR27oY+byREQbNYiFl77SuXJKh2+UFtwSLC/NvhHHumEs9QcrT3F4KrR5E06oCYdehHnyudKa2Dv1RdfDEXuzskWgbE0xDBqcymqzq0Zee989Ibb3wC5o8WdPxjzAKTrjIAd9cawuqiv7XX+3gLYeNXKVKMhki4WlSZT6apB8C10aA9ST++P5n4LZtpxIvx02BOzK1WdB8GyLlQc5csrvmJvNmQERAP5IBCCywQe3nNXlGb1slaVHJvEozSrkPNItgqmJSQyjzNexI5IndjLssWKeqWVKvrKpLRf8DK6X7lpAfiVxY7eENwjUxFYvdocJFy5uU8OKWYtnOvP8ync6ikNr67ji1KHnVt332nV92MJ56YYeQY8hK798ZroVXAR5vn92eWD4d2J+joImocjM3OxyDePjbz0IiZa+tMqIBZQ6tWP/wSLuYFuMjjp71nvzYO+el1VydkkgPypHR1R30RvUoJvUemUyvA7CbxJNBdmq464LcsUm+Qt1uCfw+Pn1qb/VeC+ll4g2MH0L9OCwt80+9rjq9nVyvxsmsX9eB4Ji6WTZeJGaqdUVWaZFpKn75r4/g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814164358.4783-2-mathieu.desnoyers@efficios.com>
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7e37c2e-876e-43ec-9cc8-08d841f8722f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2020 15:24:19.4783
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tCffGUvrDzQqwSivZc8BE1iB3Qca9kqQ4hQcRZIE1RnCNZ6N9VsBQNh0uw+UMyNUzjc87HM4qbc3N3IGp2/clw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3547
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On Sat, Aug 15, 2020 at 21:00 Oded Gabbay <oded.gabbay@gmail.com> wrote:
+> Although the possible values for CB's ID are only 32 bits, there are a fe=
+w
+> places in the code where this field is shifted and passed into a function
+> which expects 64 bits.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 
-On Fri, Aug 14, 2020 at 12:43:56PM -0400, Mathieu Desnoyers wrote:
-> exit_mm should issue memory barriers after user-space memory accesses,
-> before clearing current->mm, to order user-space memory accesses
-> performed prior to exit_mm before clearing tsk->mm, which has the
-> effect of skipping the membarrier private expedited IPIs.
-> 
-> The membarrier system call can be issued concurrently with do_exit
-> if we have thread groups created with CLONE_VM but not CLONE_THREAD.
-> 
-> Here is the scenario I have in mind:
-> 
-> Two thread groups are created, A and B. Thread group B is created by
-> issuing clone from group A with flag CLONE_VM set, but not CLONE_THREAD.
-> Let's assume we have a single thread within each thread group (Thread A
-> and Thread B).
-> 
-> The AFAIU we can have:
-> 
-> Userspace variables:
-> 
-> int x = 0, y = 0;
-> 
-> CPU 0                   CPU 1
-> Thread A                Thread B
-> (in thread group A)     (in thread group B)
-> 
-> x = 1
-> barrier()
-> y = 1
-> exit()
-> exit_mm()
-> current->mm = NULL;
->                         r1 = load y
->                         membarrier()
->                           skips CPU 0 (no IPI) because its current mm is NULL
->                         r2 = load x
->                         BUG_ON(r1 == 1 && r2 == 0)
-> 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: linux-mm@kvack.org
-> ---
-> Changes since v1:
-> - Use smp_mb__after_spinlock rather than smp_mb.
-> - Document race scenario in commit message.
-> ---
->  kernel/exit.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 733e80f334e7..fe64e6e28dd5 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -475,6 +475,14 @@ static void exit_mm(void)
->  	BUG_ON(mm != current->active_mm);
->  	/* more a memory barrier than a real lock */
->  	task_lock(current);
-> +	/*
-> +	 * When a thread stops operating on an address space, the loop
-> +	 * in membarrier_{private,global}_expedited() may not observe
-
-Is it accurate to say that the correctness of
-membarrier_global_expedited() relies on the observation of ->mm? Because
-IIUC membarrier_global_expedited() loop doesn't check ->mm.
-
-Regards,
-Boqun
-
-> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
-> +	 * memory barrier after accessing user-space memory, before
-> +	 * clearing tsk->mm.
-> +	 */
-> +	smp_mb__after_spinlock();
->  	current->mm = NULL;
->  	mmap_read_unlock(mm);
->  	enter_lazy_tlb(mm, current);
-> -- 
-> 2.11.0
-> 
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
