@@ -2,112 +2,138 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8408820708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqG4KJNv"
+	by mail.kernel.org (Postfix) with ESMTP id E1B1420658
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 17:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgHPRWW (ORCPT
+        id S1729427AbgHPRWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 13:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgHPRWU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 13:22:20 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD76C061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 10:22:20 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so12629025wrx.9
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 10:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4HYSjJrSFbsKSpAjQ67ycGR7vDjT9ve1UESwTHkkkXI=;
-        b=DqG4KJNvN/4SaxKEUnB/lPtAsnBT+0hftqgEbD/ELCi11rHCN37HnLFWRg7z/TPjcu
-         RjLn2Jz6ClO+qvALHNVx18vuJTnSZpa6/01Fm9IbvrDbvh5g2oTB2REorFLoj2zRbsTz
-         H1CmbgT+dHD2iaetUduqjbZ7J8Z/nAa+r+L+AdUBHJq0ricgeXhvbetZr+oC3rMj5Nwx
-         CJAWZJcNrLn4CMSCVClcdUc2bqtz1NqY4htBSZ86aAXeAfAqeMhTLchb+eRTB+lwXs6W
-         RErNdIPdP3Wze55IxRYk9afAfE2Jck4gwmfdUzwTWOwHwhb8eKJkbFS2lV907TI4fAJu
-         XJ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4HYSjJrSFbsKSpAjQ67ycGR7vDjT9ve1UESwTHkkkXI=;
-        b=JMBJDe46Ww/A9WQRFYXuC7YTuEefn3q53YqsA+2YjJ1CZmgsVYdo1sSiDX6tlxNw+9
-         kAuKrQQogw/ySfupKiAIx2oFpUek5dndCPitBzTp6Dq4k0y+00Quw0rKPfl+WK74DUix
-         8nm2EYXn9VPZ+ysZWyAaAuQMhu4b4Zh0Sz6bZuX3ZjTlMCyrt4D/bH8cuEnMmxip4Nee
-         tzGJu7J9iOBuXTbPKbIqn6Y1/IcIzAa+vXBBD2ufZ+HGbxy4j1B0ppmcZNM6SxPsGDpm
-         KgbLtlmyIgOIqsiYdUxH7hPqtJ6OMZGDIyjCmO9axJlar7k+15Gfo49VBNY/PgbqbIPN
-         ARLw==
-X-Gm-Message-State: AOAM531gE2fTl0TYwjFdWFcDzIEljKoc01hRwjRwTTMCqJ4lghzrlpk2
-        J7uEBMNe7laOTRP2P2fgjsU=
-X-Google-Smtp-Source: ABdhPJzy1vPocCt/eIvyGsJigo6Dhh4MR4Zy5q2onubILtVAnZm5kyjJMAnHnm1ZiMt3s+q2sOwhwg==
-X-Received: by 2002:adf:f207:: with SMTP id p7mr12392922wro.292.1597598538151;
-        Sun, 16 Aug 2020 10:22:18 -0700 (PDT)
-Received: from tsnow ([94.159.146.190])
-        by smtp.gmail.com with ESMTPSA id m14sm27342247wrx.76.2020.08.16.10.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 10:22:17 -0700 (PDT)
-Date:   Sun, 16 Aug 2020 20:22:14 +0300
-From:   Tomer Samara <tomersamara98@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Riley Andrews <riandrews@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] staging: androind: Add error handling to
- ion_page_pool_shrink
-Message-ID: <b061899043eba10091cdba36ef0adde170eda801.1597597955.git.tomersamara98@gmail.com>
-References: <cover.1597597955.git.tomersamara98@gmail.com>
+        Sun, 16 Aug 2020 13:22:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39286 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgHPRWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 13:22:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4A928B020;
+        Sun, 16 Aug 2020 17:22:55 +0000 (UTC)
+To:     jejb@linux.ibm.com
+Cc:     Stefan Berger <stefanb@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+References: <20200815075143.47082-1-colyli@suse.de>
+ <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
+ <096636f4-a928-dd00-dba6-216651c3d63b@suse.de>
+ <1597597699.8344.11.camel@linux.ibm.com>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ mQINBFYX6S8BEAC9VSamb2aiMTQREFXK4K/W7nGnAinca7MRuFUD4JqWMJ9FakNRd/E0v30F
+ qvZ2YWpidPjaIxHwu3u9tmLKqS+2vnP0k7PRHXBYbtZEMpy3kCzseNfdrNqwJ54A430BHf2S
+ GMVRVENiScsnh4SnaYjFVvB8SrlhTsgVEXEBBma5Ktgq9YSoy5miatWmZvHLFTQgFMabCz/P
+ j5/xzykrF6yHo0rHZtwzQzF8rriOplAFCECp/t05+OeHHxjSqSI0P/G79Ll+AJYLRRm9til/
+ K6yz/1hX5xMToIkYrshDJDrUc8DjEpISQQPhG19PzaUf3vFpmnSVYprcWfJWsa2wZyyjRFkf
+ J51S82WfclafNC6N7eRXedpRpG6udUAYOA1YdtlyQRZa84EJvMzW96iSL1Gf+ZGtRuM3k49H
+ 1wiWOjlANiJYSIWyzJjxAd/7Xtiy/s3PRKL9u9y25ftMLFa1IljiDG+mdY7LyAGfvdtIkanr
+ iBpX4gWXd7lNQFLDJMfShfu+CTMCdRzCAQ9hIHPmBeZDJxKq721CyBiGAhRxDN+TYiaG/UWT
+ 7IB7LL4zJrIe/xQ8HhRO+2NvT89o0LxEFKBGg39yjTMIrjbl2ZxY488+56UV4FclubrG+t16
+ r2KrandM7P5RjR+cuHhkKseim50Qsw0B+Eu33Hjry7YCihmGswARAQABtBhDb2x5IExpIDxj
+ b2x5bGlAc3VzZS5kZT6JAlYEEwEIAEACGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYh
+ BOo+RS/0+Uhgjej60Mc5B5Nrffj8BQJcR84dBQkY++fuAAoJEMc5B5Nrffj8ixcP/3KAKg1X
+ EcoW4u/0z+Ton5rCyb/NpAww8MuRjNW82UBUac7yCi1y3OW7NtLjuBLw5SaVG5AArb7IF3U0
+ qTOobqfl5XHsT0o5wFHZaKUrnHb6y7V3SplsJWfkP3JmOooJsQB3z3K96ZTkFelsNb0ZaBRu
+ gV+LA4MomhQ+D3BCDR1it1OX/tpvm2uaDF6s/8uFtcDEM9eQeqATN/QAJ49nvU/I8zDSY9rc
+ 0x9mP0x+gH4RccbnoPu/rUG6Fm1ZpLrbb6NpaYBBJ/V1BC4lIOjnd24bsoQrQmnJn9dSr60X
+ 1MY60XDszIyzRw7vbJcUn6ZzPNFDxFFT9diIb+wBp+DD8ZlD/hnVpl4f921ZbvfOSsXAJrKB
+ 1hGY17FPwelp1sPcK2mDT+pfHEMV+OQdZzD2OCKtza/5IYismJJm3oVUYMogb5vDNAw9X2aP
+ XgwUuG+FDEFPamFMUwIfzYHcePfqf0mMsaeSgtA/xTxzx/0MLjUJHl46Bc0uKDhv7QUyGz0j
+ Ywgr2mHTvG+NWQ/mDeHNGkcnsnp3IY7koDHnN2xMFXzY4bn9m8ctqKo2roqjCzoxD/njoAhf
+ KBzdybLHATqJG/yiZSbCxDA1n/J4FzPyZ0rNHUAJ/QndmmVspE9syFpFCKigvvyrzm016+k+
+ FJ59Q6RG4MSy/+J565Xj+DNY3/dCuQINBFYX6S8BEADZP+2cl4DRFaSaBms08W8/smc5T2CO
+ YhAoygZn71rB7Djml2ZdvrLRjR8Qbn0Q/2L2gGUVc63pJnbrjlXSx2LfAFE0SlfYIJ11aFdF
+ 9w7RvqWByQjDJor3Z0fWvPExplNgMvxpD0U0QrVT5dIGTx9hadejCl/ug09Lr6MPQn+a4+qs
+ aRWwgCSHaIuDkH3zI1MJXiqXXFKUzJ/Fyx6R72rqiMPHH2nfwmMu6wOXAXb7+sXjZz5Po9GJ
+ g2OcEc+rpUtKUJGyeQsnCDxUcqJXZDBi/GnhPCcraQuqiQ7EGWuJfjk51vaI/rW4bZkA9yEP
+ B9rBYngbz7cQymUsfxuTT8OSlhxjP3l4ZIZFKIhDaQeZMj8pumBfEVUyiF6KVSfgfNQ/5PpM
+ R4/pmGbRqrAAElhrRPbKQnCkGWDr8zG+AjN1KF6rHaFgAIO7TtZ+F28jq4reLkur0N5tQFww
+ wFwxzROdeLHuZjL7eEtcnNnzSkXHczLkV4kQ3+vr/7Gm65mQfnVpg6JpwpVrbDYQeOFlxZ8+
+ GERY5Dag4KgKa/4cSZX2x/5+KkQx9wHwackw5gDCvAdZ+Q81nm6tRxEYBBiVDQZYqO73stgT
+ ZyrkxykUbQIy8PI+g7XMDCMnPiDncQqgf96KR3cvw4wN8QrgA6xRo8xOc2C3X7jTMQUytCz9
+ 0MyV1QARAQABiQI8BBgBCAAmAhsMFiEE6j5FL/T5SGCN6PrQxzkHk2t9+PwFAlxHziAFCRj7
+ 5/EACgkQxzkHk2t9+PxgfA//cH5R1DvpJPwraTAl24SUcG9EWe+NXyqveApe05nk15zEuxxd
+ e4zFEjo+xYZilSveLqYHrm/amvQhsQ6JLU+8N60DZHVcXbw1Eb8CEjM5oXdbcJpXh1/1BEwl
+ 4phsQMkxOTns51bGDhTQkv4lsZKvNByB9NiiMkT43EOx14rjkhHw3rnqoI7ogu8OO7XWfKcL
+ CbchjJ8t3c2XK1MUe056yPpNAT2XPNF2EEBPG2Y2F4vLgEbPv1EtpGUS1+JvmK3APxjXUl5z
+ 6xrxCQDWM5AAtGfM/IswVjbZYSJYyH4BQKrShzMb0rWUjkpXvvjsjt8rEXpZEYJgX9jvCoxt
+ oqjCKiVLpwje9WkEe9O9VxljmPvxAhVqJjX62S+TGp93iD+mvpCoHo3+CcvyRcilz+Ko8lfO
+ hS9tYT0HDUiDLvpUyH1AR2xW9RGDevGfwGTpF0K6cLouqyZNdhlmNciX48tFUGjakRFsxRmX
+ K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
+ 9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
+ +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
+Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
+Message-ID: <90ce83bf-3547-7ad4-ea6d-40e2e77e29dd@suse.de>
+Date:   Mon, 17 Aug 2020 01:22:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1597597955.git.tomersamara98@gmail.com>
+In-Reply-To: <1597597699.8344.11.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error check to ion_page_pool_shrink after calling
-ion_page_pool_remove, due to converting BUG_ON to WARN_ON.
+On 2020/8/17 01:08, James Bottomley wrote:
+> On Mon, 2020-08-17 at 01:01 +0800, Coly Li wrote:
+>> On 2020/8/17 00:06, Stefan Berger wrote:
+>>> On 8/15/20 3:51 AM, Coly Li wrote:
+> [...]
+>>>>     Usage::
+>>>> @@ -115,7 +114,7 @@ append 'keyhandle=0x81000001' to statements
+>>>> between quotes, such as
+>>>
+>>>
+>>> A note in this file states this:
+>>>
+>>> Note: When using a TPM 2.0 with a persistent key with handle
+>>> 0x81000001, append 'keyhandle=0x81000001' to statements between
+>>> quotes, such as "new 32 keyhandle=0x81000001".
+>>>
+>>> Now if someone was (still) interested in TPM 1.2 then the below
+>>> changes you are proposing wouldn't work for them. Maybe you should
+>>> adapt the note to state that these keyhandle=... should be removed
+>>> for the TPM 1.2 case.
+>>>
+>>
+>> I agree. Indeed I have no idea why number 0x81000001 is used, and I
+>> don't have practice experience with TPM 1.2. Now the purpose of this
+>> patch accomplished: experts response and confirm my guess :-)
+> 
+> It was the conventional persistent value for the RSA 2048 version of
+> the primary storage seed.  Originally the PC spec required the
+> manufacturer provision this on all TPM 2.0 based PC class systems. 
+> Unfortunately in spite of it being in the Windows Hardware guide no
+> manufacturer ever did, meaning you either have to create it yourself or
+> do something different.  Because of usability problems, every consumer
+> of TPM key function has opted to do something different, namely derive
+> the EC primary if no parent is specified.
 
-Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
----
- drivers/staging/android/ion/ion_page_pool.c | 2 ++
- 1 file changed, 2 insertions(+)
+Aha, thanks for the hint :-)
 
-diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
-index 4acc0eebf781..c61548ecf7f2 100644
---- a/drivers/staging/android/ion/ion_page_pool.c
-+++ b/drivers/staging/android/ion/ion_page_pool.c
-@@ -128,6 +128,8 @@ int ion_page_pool_shrink(struct ion_page_pool *pool, gfp_t gfp_mask,
- 			break;
- 		}
- 		mutex_unlock(&pool->mutex);
-+		if (!page)
-+			break;
- 		ion_page_pool_free_pages(pool, page);
- 		freed += (1 << pool->order);
- 	}
--- 
-2.25.1
+My motivation is for the NVDIMM security with TPM 2.0 chip on x86 server
+(Lenovo SR650). To automatically load a trusted key, I encounter the
+outdated command line in trusted-encrypted.rst. From your response, it
+seems 0x81000001 is still a working value that I can recommend to other
+people who want to encrypt/decrypt their NVDIMM banks.
+
+Coly Li
 
