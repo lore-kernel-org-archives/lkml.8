@@ -2,87 +2,191 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE025C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE3C207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76C5207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A8/paoz9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAuYll2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgHPMbb (ORCPT
+        id S1728169AbgHPMdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 08:31:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:15920 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726389AbgHPMb2 (ORCPT
+        Sun, 16 Aug 2020 08:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgHPMdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 08:31:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597581088; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=A5endb3UXC0CBZPpVKQijXSpyYPPkWE4IYQIb4AXgrY=; b=A8/paoz9slfYRExd73VahG2LlP0hLULZueQiu9modXaLwNzWGBW6HrsiKaqQYLCvRi2Douuq
- UxNL6MvbSN6vma/10k13ONmY59L5WL1TKgfeDKmp0QTPGg0mrZI7NDtB+j/SSMwWLoWTeGK4
- nVF1CnVelYi76BRXUDIeBlrDBDo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f3926f8d96d28d61ed51d0b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 16 Aug 2020 12:30:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F3521C43395; Sun, 16 Aug 2020 12:30:47 +0000 (UTC)
-Received: from [192.168.1.15] (unknown [117.247.20.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40B76C433C6;
-        Sun, 16 Aug 2020 12:30:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40B76C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH] opp: Fix dev_pm_opp_set_rate() to not return early
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     nm@ti.com, vireshk@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
- <159718019170.1360974.4800051292737590657@swboyd.mtv.corp.google.com>
- <20200813042940.dg75g7oj3iiyuu4k@vireshk-mac-ubuntu>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <40a1e82d-96b4-4930-a0e8-740e41a57cbf@codeaurora.org>
-Date:   Sun, 16 Aug 2020 18:00:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 16 Aug 2020 08:33:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920C1C061786;
+        Sun, 16 Aug 2020 05:33:01 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g8so11119074wmk.3;
+        Sun, 16 Aug 2020 05:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MfCToj5fbHI7JRT/feY7+qoIZofsnRKXYm4oWvFRch4=;
+        b=HAuYll2nnzgU1Tfo7xD18oUdMvsHaPU6eKUbwXNzPm/QUlmzMMWood1PHXqnbFx2Cz
+         9zLLodjcx04CfDTkmmUGonOBO1KdFagbBc9xCq8aEHtT6TaKHTEZiDauWNnuOsaf7azg
+         0K+BMP4grebvKJ1hIhbwVlOXI6C1PmDfGAMBv3a4ixRTDO/R0y9JmrUXM1y4dcOWQ1Je
+         BkCFs9vquwMP0M+r5anjTKQbNbClByAstk5N7SbNW5M3HfaPZ0fBKBpgtf1rwXg5Po/Q
+         1vt20yv1oFC4OIK+kaC2VjtgJ1FYJnMjJv6rMYWd7XwYko04u+Mw5TGsxD6UPozYHPju
+         LS2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MfCToj5fbHI7JRT/feY7+qoIZofsnRKXYm4oWvFRch4=;
+        b=V13WyxWPfEE54KromkizstONoSK+AhgIbh250tGiyFqVEYbhH2nhDheV2pkOU7XzsV
+         c653/rIjsWrY5qn8lZT2Rb6Ii1C4KZ+lh51CRrHnZgu3CsdgT6hbKVdeAhjEOfvf66HS
+         Ug1CkRZ6NrP7lgiyxywmLxKo0Ih9mGOUD29Ey/JtZWGD7Ovsc6VBG96k9bIlV7DJcHG3
+         am/w0x+S0agDDor0shWZuKbQyIMk7G1aA3j61KiJXnneLcwlqNqXFjIJc/qTjiL4QTmE
+         GRkm0nRrl8EO4C4jF7HVWMhtcf8V8cSCGVu4FFptg+7H/n9PY9TIu656pppVqT0i6F/O
+         20Yw==
+X-Gm-Message-State: AOAM533YplcXglHPeVJiM1TPjnJYJJxhrhkRHhGhQP1s9+BGx4GUqxSc
+        T8tyIwjDHJV7NUUEVsimxMs=
+X-Google-Smtp-Source: ABdhPJxLoC9lFKgiyLxbjUbz3yk6gT7ft+gGuse8oAgP4890Msgi7dHR2dr8183b1N5iblKh47yz4A==
+X-Received: by 2002:a1c:a54e:: with SMTP id o75mr11015587wme.181.1597581180276;
+        Sun, 16 Aug 2020 05:33:00 -0700 (PDT)
+Received: from localhost.localdomain ([46.114.106.58])
+        by smtp.gmail.com with ESMTPSA id 111sm26304515wrc.53.2020.08.16.05.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 05:32:59 -0700 (PDT)
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH] kbuild: Simplify DEBUG_INFO Kconfig handling
+Date:   Sun, 16 Aug 2020 14:32:44 +0200
+Message-Id: <20200816123248.97770-1-sedat.dilek@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200813042940.dg75g7oj3iiyuu4k@vireshk-mac-ubuntu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While playing with [1] I saw that the handling
+of CONFIG_DEBUG_INFO can be simplified.
 
-On 8/13/2020 9:59 AM, Viresh Kumar wrote:
-> On 11-08-20, 14:09, Stephen Boyd wrote:
->> This is a goto maze! Any chance we can clean this up?
-> 
-> I have sent a short series in reply to this series, please have a
-> look. It should look better now.
+[1] https://patchwork.kernel.org/patch/11716107/
 
-Thanks, I was out a few days so could not get to the cleanups
-that Stephen was suggesting.
-I will give your series a try.
+Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+---
+ Makefile          |  6 +++++-
+ lib/Kconfig.debug | 10 ++++------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
+diff --git a/Makefile b/Makefile
+index 24a4c1b97bb0..f7af83393a49 100644
+--- a/Makefile
++++ b/Makefile
+@@ -810,13 +810,15 @@ endif
+ DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
+ 
+ ifdef CONFIG_DEBUG_INFO
++
+ ifdef CONFIG_DEBUG_INFO_SPLIT
+ DEBUG_CFLAGS	+= -gsplit-dwarf
+ else
+ DEBUG_CFLAGS	+= -g
+ endif
++
+ KBUILD_AFLAGS	+= -Wa,-gdwarf-2
+-endif
++
+ ifdef CONFIG_DEBUG_INFO_DWARF4
+ DEBUG_CFLAGS	+= -gdwarf-4
+ endif
+@@ -832,6 +834,8 @@ KBUILD_AFLAGS	+= -gz=zlib
+ KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
+ endif
+ 
++endif # CONFIG_DEBUG_INFO
++
+ KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+ export DEBUG_CFLAGS
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..19930c412b93 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -212,9 +212,10 @@ config DEBUG_INFO
+ 
+ 	  If unsure, say N.
+ 
++if DEBUG_INFO
++
+ config DEBUG_INFO_REDUCED
+ 	bool "Reduce debugging information"
+-	depends on DEBUG_INFO
+ 	help
+ 	  If you say Y here gcc is instructed to generate less debugging
+ 	  information for structure types. This means that tools that
+@@ -227,7 +228,6 @@ config DEBUG_INFO_REDUCED
+ 
+ config DEBUG_INFO_COMPRESSED
+ 	bool "Compressed debugging information"
+-	depends on DEBUG_INFO
+ 	depends on $(cc-option,-gz=zlib)
+ 	depends on $(ld-option,--compress-debug-sections=zlib)
+ 	help
+@@ -243,7 +243,6 @@ config DEBUG_INFO_COMPRESSED
+ 
+ config DEBUG_INFO_SPLIT
+ 	bool "Produce split debuginfo in .dwo files"
+-	depends on DEBUG_INFO
+ 	depends on $(cc-option,-gsplit-dwarf)
+ 	help
+ 	  Generate debug info into separate .dwo files. This significantly
+@@ -259,7 +258,6 @@ config DEBUG_INFO_SPLIT
+ 
+ config DEBUG_INFO_DWARF4
+ 	bool "Generate dwarf4 debuginfo"
+-	depends on DEBUG_INFO
+ 	depends on $(cc-option,-gdwarf-4)
+ 	help
+ 	  Generate dwarf4 debug info. This requires recent versions
+@@ -269,7 +267,6 @@ config DEBUG_INFO_DWARF4
+ 
+ config DEBUG_INFO_BTF
+ 	bool "Generate BTF typeinfo"
+-	depends on DEBUG_INFO
+ 	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
+ 	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
+ 	help
+@@ -279,7 +276,6 @@ config DEBUG_INFO_BTF
+ 
+ config GDB_SCRIPTS
+ 	bool "Provide GDB scripts for kernel debugging"
+-	depends on DEBUG_INFO
+ 	help
+ 	  This creates the required links to GDB helper scripts in the
+ 	  build directory. If you load vmlinux into gdb, the helper
+@@ -288,6 +284,8 @@ config GDB_SCRIPTS
+ 	  instance. See Documentation/dev-tools/gdb-kernel-debugging.rst
+ 	  for further details.
+ 
++endif # DEBUG_INFO
++
+ config ENABLE_MUST_CHECK
+ 	bool "Enable __must_check logic"
+ 	default y
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.28.0
+
