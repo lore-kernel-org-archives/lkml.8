@@ -2,112 +2,112 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84094C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E820B20716
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Krl/v7U3"
+	by mail.kernel.org (Postfix) with ESMTP id 5F85620716
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597577018;
+	bh=6LokpQwfqgW5BehVbZZQHyXA11ff8IliLriuXnIbjGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SsDzUoXV1Nn36b06JenPLNXPMbFkLo9E4RucDYo2XRg5+NDAhltJuJTljbLv5RbuL
+	 xPWLIvAvMEiE4Izr/bMETpg9NGGSlIbXxgzCGGt90GSbnsRY0Ql8z0CbBb3hgLwcMX
+	 Gv22lDxSzFKQTCq2dYL8GiApOTcfymyP5+1Ospec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgHPLWs (ORCPT
+        id S1728935AbgHPLXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 07:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgHPLWL (ORCPT
+        Sun, 16 Aug 2020 07:23:17 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:35470 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgHPLWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 16 Aug 2020 07:22:11 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E52C061786;
-        Sun, 16 Aug 2020 04:21:56 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f26be005d37f199a58e243d.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:be00:5d37:f199:a58e:243d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3CC941EC027B;
-        Sun, 16 Aug 2020 13:21:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597576910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cMXvEXkyTsrY8sFsp1lnP4ixT5jJSQ6YbHxQfH0FNg4=;
-        b=Krl/v7U3lVDL8glqCYGHcilbKhYp7xlwSoeGOYfIWisRhmgp569YSVCqhzsCaIfn8zjoc0
-        mC+uzv36mSVuWb++7yBXMOS+hyDvHpjaWPjVrT4ymB62HU4Xv+pfqAn+Eb9BtkifX2ovaW
-        60JxbV021VbIljRwwcb0rQgiuI1C5Ug=
-Date:   Sun, 16 Aug 2020 13:22:44 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Shenhar, Talel" <talel@amazon.com>
-Cc:     mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
-        will@kernel.org, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, hhhawa@amazon.com,
-        ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        eitan@amazon.com
-Subject: Re: [PATCH v9 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20200816112244.GG21914@zn.tnic>
-References: <20200728095155.18506-1-talel@amazon.com>
- <20200728095155.18506-3-talel@amazon.com>
- <20200815183358.GE25814@zn.tnic>
- <5d516c64-ecd8-6f36-5f95-6708fe0f3fd5@amazon.com>
+Received: by mail-ej1-f67.google.com with SMTP id a26so14565847ejc.2;
+        Sun, 16 Aug 2020 04:21:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NDqZLaZAT+LKFKOpKoexWRgxjioc2twCyNagGsOfYI0=;
+        b=Ol5HWjxsnpw0TwFhp89MWVzJlrwCpi97GXJzJPVICjBVV0bWGa4dvyw7pnXPmY5Cyn
+         +zXSD+ZCX4/yRttWcvgMnaCQKjriH7pA3TOBgL4PcFSXIINslFAtv3V0VIyBpsuJOEps
+         ncpnCLFG3Hu6vXBDKbd2wQNOSLFfD272VGPQV52AfeUdnEEdy0kL89bQFWrov9C+9mjf
+         u9cAdl61vseRTRRlFTEtDz6I3SUEOgeNUrp8CoCkHqTH05Ev5hgHNQYOWDwsvxg+Vg3S
+         F/mIVmYR0L7rB5eoM2lFEkfx14PuYiUze6TE/K61Tv3/CN2ZIxTZVEe+NUN68LaDrB4x
+         4+6A==
+X-Gm-Message-State: AOAM533zvTFGznh3TD/Zv5w1XDTVFnVZzOKGzhRXepv+2nPXOc/YLFeN
+        fzFntXNhdS0axwY6UA+2MG6xpNWy8jp7/dDU
+X-Google-Smtp-Source: ABdhPJzjHr1zmNZpLW256mgTL4s+DvfPwKy+KJBLcHS6IN6oDBwYBiC8ZTrX/nGXdo0JTwN1TgdTvw==
+X-Received: by 2002:a17:907:213c:: with SMTP id qo28mr10334391ejb.174.1597576913965;
+        Sun, 16 Aug 2020 04:21:53 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.201])
+        by smtp.googlemail.com with ESMTPSA id b62sm11435753edf.61.2020.08.16.04.21.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 16 Aug 2020 04:21:52 -0700 (PDT)
+Date:   Sun, 16 Aug 2020 13:21:51 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Kalyani Akula <kalyani.akula@xilinx.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: xilinx: Align IOMMU nodename with dtschema
+Message-ID: <20200816112151.GA20020@kozik-lap>
+References: <20200629081744.13916-1-krzk@kernel.org>
+ <3c28bb72-35ae-6c76-6935-624e90316f71@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5d516c64-ecd8-6f36-5f95-6708fe0f3fd5@amazon.com>
+In-Reply-To: <3c28bb72-35ae-6c76-6935-624e90316f71@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 12:17:31PM +0300, Shenhar, Talel wrote:
-> Let me know what you think.
+On Wed, Jul 08, 2020 at 02:46:55PM +0200, Michal Simek wrote:
+> 
+> 
+> On 29. 06. 20 10:17, Krzysztof Kozlowski wrote:
+> > Fix dtschema validator warnings like:
+> >     smmu@fd800000: $nodename:0: 'smmu@fd800000' does not match '^iommu@[0-9a-f]*'
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> > index 9174ddc76bdc..2b82206eba02 100644
+> > --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> > +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> > @@ -601,7 +601,7 @@
+> >  			power-domains = <&zynqmp_firmware PD_SD_1>;
+> >  		};
+> >  
+> > -		smmu: smmu@fd800000 {
+> > +		smmu: iommu@fd800000 {
+> >  			compatible = "arm,mmu-500";
+> >  			reg = <0x0 0xfd800000 0x0 0x20000>;
+> >  			status = "disabled";
+> > 
+> 
+> Applied.
 
-Well, devm_al_mc_edac_free() devm_al_mc_edac_del() look like useless
-wrappers to me and can be removed and you can use edac_mc_del_mc() and
-edac_mc_free() directly. But then you need to cast them in an ugly way
-so that it builds:
+Hi Michal,
 
-        ret = devm_add_action(&pdev->dev, (void (*)(void *data))edac_mc_free, mci);
+What happened with this patch? I cannot find it in Linus' nor in
+next/master trees.
 
-I guess we can leave them as is and then lift them into the EDAC core if
-someone else wants to do the same devm_* thing.
+Best regards,
+Krzysztof
 
-al_mc_edac_get_scrub_mode() doesn't need a prefix because it is used
-only once and the compiler is simply inlining it so you can forget the
-stack trace visibility:
-
-$ readelf -s drivers/edac/al_mc_edac.ko | grep scrub
-$
-
-The others are fine, I guess, since they're function pointers and cannot be
-inlined as such so you want them prefixed:
-
-$ readelf -s drivers/edac/al_mc_edac.ko | grep al_mc_edac
-    23: 00000000     0 FILE    LOCAL  DEFAULT  ABS al_mc_edac.c
-    25: 00000000     4 FUNC    LOCAL  DEFAULT    1 devm_al_mc_edac_free
-    27: 00000004     4 FUNC    LOCAL  DEFAULT    1 devm_al_mc_edac_del
-    31: 00000124    24 FUNC    LOCAL  DEFAULT    1 al_mc_edac_irq_handler_ce
-    35: 00000260    24 FUNC    LOCAL  DEFAULT    1 al_mc_edac_irq_handler_ue
-    36: 00000278    56 FUNC    LOCAL  DEFAULT    1 al_mc_edac_check
-    37: 000002b0   680 FUNC    LOCAL  DEFAULT    1 al_mc_edac_probe
-    47: 00000000    20 FUNC    LOCAL  DEFAULT    3 al_mc_edac_driver_init
-    51: 00000000    12 FUNC    LOCAL  DEFAULT    5 al_mc_edac_driver_exit
-    53: 00000000   392 OBJECT  LOCAL  DEFAULT   16 al_mc_edac_of_match
-    59: 00000000   104 OBJECT  LOCAL  DEFAULT   20 al_mc_edac_driver
-    61: 00000000     0 FILE    LOCAL  DEFAULT  ABS al_mc_edac.mod.c
-    88: 00000000   392 OBJECT  GLOBAL DEFAULT   16 __mod_of__al_mc_edac_of_m
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
