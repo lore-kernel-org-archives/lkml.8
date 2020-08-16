@@ -2,74 +2,69 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4914CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BC9206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BE2206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 00:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GYkSt1nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgHPAhb (ORCPT
+        id S1729032AbgHPAnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 20:37:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbgHPAha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 20:37:30 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 250A529CA57D55BDBB3C;
-        Sat, 15 Aug 2020 16:50:06 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Sat, 15 Aug 2020
- 16:49:56 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <pshelar@ovn.org>,
-        <martin.varghese@nokia.com>, <fw@strlen.de>, <dcaratti@redhat.com>,
-        <edumazet@google.com>, <steffen.klassert@secunet.com>,
-        <pabeni@redhat.com>, <shmulik@metanetworks.com>,
-        <kyk.segfault@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH v2] net: eliminate meaningless memcpy to data in pskb_carve_inside_nonlinear()
-Date:   Sat, 15 Aug 2020 04:48:53 -0400
-Message-ID: <20200815084853.20216-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 15 Aug 2020 20:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgHPAnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 20:43:04 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C90AC061786;
+        Sat, 15 Aug 2020 17:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=o+wfFvyLhA+em4AovIaNYnXy15NfLyZt8dI3Gf4MNPg=; b=GYkSt1nq2R2qXTgU+gByKs4Lmx
+        /SVnvwplK1CMF+zm7WNQ78W1OnoUzIj+m9UxcYpdOMpsLTelQoy4tOPuhVwdMDTpm5NLrq1H4LhLW
+        ffeOhEKwlV0aXDKLRSKFR+Y+5c9b4o7Wn9zz0q/KZLSIZRB3P2aw3F+kkc1vq/FCCBwTxgle4AdqC
+        jzdl5pJUCqfjjo5pfOIxpyskQ9bxtBmrZ8rGZogeHbSS0yrPF4twuJU6SenahkylKb5hRltAKaCn9
+        46R5WCHQjGsi19+pQA1RfqMgCoHSx1x6P2fcQdwsTlC2uRlx2LArhzZ6HZgejUwVERWuh4mZlhgmY
+        M74Fi/0g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k76lH-0008J5-CY; Sun, 16 Aug 2020 00:42:59 +0000
+Date:   Sun, 16 Aug 2020 01:42:59 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     dsterba@suse.cz,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Message-ID: <20200816004259.GD17456@casper.infradead.org>
+References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+ <20200815190642.GZ2026@twin.jikos.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815190642.GZ2026@twin.jikos.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The frags of skb_shared_info of the data is assigned in following loop. It
-is meaningless to do a memcpy of frags here.
+On Sat, Aug 15, 2020 at 09:06:42PM +0200, David Sterba wrote:
+> There's maybe more I missed, but hopefully HTH.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/core/skbuff.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+One thing you missed is adding support to fstests
+git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index afbc1a79dc8a..44b7010e4813 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5953,8 +5953,7 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
- 	size = SKB_WITH_OVERHEAD(ksize(data));
- 
- 	memcpy((struct skb_shared_info *)(data + size),
--	       skb_shinfo(skb), offsetof(struct skb_shared_info,
--					 frags[skb_shinfo(skb)->nr_frags]));
-+	       skb_shinfo(skb), offsetof(struct skb_shared_info, frags[0]));
- 	if (skb_orphan_frags(skb, gfp_mask)) {
- 		kfree(data);
- 		return -ENOMEM;
--- 
-2.19.1
+If it passes that torture test, I think we can have confidence that
+this is a really good implementation of a filesystem.
 
