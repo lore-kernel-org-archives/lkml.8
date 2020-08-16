@@ -2,140 +2,104 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30F7C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15A32078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515F22078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 05:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NRka2OgZ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LaVsMh+G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqDQw0LG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgHPFsD (ORCPT
+        id S1730142AbgHPFu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 01:48:03 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47760 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726985AbgHPFsB (ORCPT
+        Sun, 16 Aug 2020 01:50:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbgHPFu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 01:48:01 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07G5i3OE011887;
-        Sat, 15 Aug 2020 22:46:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
- b=NRka2OgZUkKbMT662lbBa+9GaebK7OxOlUqZAD3H4bg99sm7zl1FLD6eSomtdDjlGBqM
- ppZAHtlutrRH43xttBXxJONWMYEvJAoT+gC08Xaax5boKjPKnS5LSwvQsriCfznjY9To
- BaxL2iOdei/nUz4R5QbhPmryYEWS0IZdYzs= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 32xb6yjx8p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 15 Aug 2020 22:46:42 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sat, 15 Aug 2020 22:46:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FwZcOMp1Int2l7qGEJ0qBThhmZOgMRLkZVRPmNUYCey3J2uKmcHyeRSNrjEZZjDP9h3gpG/3IYNR7GD6n5u9gjFG00X1V4Q4k1e8aDYu//iyIbnAaD0CQAcfRJiOIb9vOhQEvu5a3ArVW9lf/VUw2p9OMrjJ87MY7gg7Hm9c86xo8NETeMrptdqGpGI1DokDlmpqkr5J2b6Vppnd0TjNqDjaQLKY17mMCdGuxt60wRu7tLgTSPc4o8drovwCymmdd7YiPzDMj4RFIFhhUMW+5sOwwwtVQBT/4WykuQgtK8h5N0dxejDH4uykt6q1kqcqSzJKQpDBtTN3/l++EITwrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
- b=DqMCllOqP8cwSrmusFp87FTzrqLD2a7yCh6RCR3B3iiI9QBz7HhA/IvtdZOyZXcPdweJznrx2N6DrUI2ftpDG7nad35sF9e2DIMCSLqPOGF0xcAoAvEym30yWFEVeL7AXdTt0UjKq6cNFkrYK7CpMwbHQsLjC8Ol5HpE33IhLpnGW4Yu//2yOLPKd4rWZ5YTBqcngrreb0QD+5jVfxtCaOy1DxojfrD1Ks5XikXCPHfyX9zUfh7yuUvOCJiQN5K4e+zSuMdNL96SLlURQonyANU/INhMgdF7GFi0wLPMnp6vzj88U/xqH+duAhisMXiYFFsWxDFvL/ujotXn5wHhIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V4o1snjal95R00cUfRG4SiYt3+IkzQaFaCqaANmULjs=;
- b=LaVsMh+GD7SKsH+Y/hDwVGY4O2Ztla9T6CxFMGy+9BCX+P7+LjovslKYMxLk6ACJpKWqHfcY7Mf8Iz1A5sH0KDQbLkuv1v2ZWXv0QxR3X9xygdvX0NhNLlApDw5h9J2koCVrrsVE5qYFKcgrDTaHDP3OeZdU/wWrDifMLGR4N9s=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BY5PR15MB3666.namprd15.prod.outlook.com (2603:10b6:a03:1fc::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Sun, 16 Aug
- 2020 05:46:38 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3283.027; Sun, 16 Aug 2020
- 05:46:38 +0000
-Subject: Re: [PATCH v2] bpf: Convert to use the preferred fallthrough macro
-To:     Miaohe Lin <linmiaohe@huawei.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <kafai@fb.com>, <songliubraving@fb.com>,
-        <andriin@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <hawk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200815084745.19291-1-linmiaohe@huawei.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <893c196b-661f-cdad-7171-6b7946e179a5@fb.com>
-Date:   Sat, 15 Aug 2020 22:46:33 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200815084745.19291-1-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR10CA0032.namprd10.prod.outlook.com
- (2603:10b6:208:120::45) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c0a8:11d9::1056] (2620:10d:c091:480::1:df42) by MN2PR10CA0032.namprd10.prod.outlook.com (2603:10b6:208:120::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Sun, 16 Aug 2020 05:46:35 +0000
-X-Originating-IP: [2620:10d:c091:480::1:df42]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aac91bca-a0ef-4f42-bab5-08d841a7be39
-X-MS-TrafficTypeDiagnostic: BY5PR15MB3666:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR15MB366625405DFFB1880A096B7BD35E0@BY5PR15MB3666.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:177;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4cDo4o/kFp9xrN6acYnBAHemVh66KGp4S9cbwgxlN+aM+vWZ7xOTxc/Q0o9SGFQ3TqMF9rP61DMLm1v6D07XMKQ8Ub+iHXgiBuSEPxolyYCwxgfI0JJ96zOJZOVGIMUWsR8Iz0Fe2c3M0+QFVW9oJInxH21JAxv4umY8wWSSGsx5QAcNmBUKUDPV8x2CUL54MOfpVaKbpTnV+YQuKkmZX43rNnknRb27wX9CnYqgsDPY9pUNcVKdJC46wKr4EdoTcRZkgx+f00AK/aKniv7ryNK3pcrA4UXA2rJacHl247AlAS/0qQzyeYadhDDZffiKymdhNFyw0LvYZixeVNTd7Tr7hC3RC8KiN0Kkm0MLFnzQ+2uWp9z2AXYftq6XPslUK7+/1IgHqhZoqNmMTymp6w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(136003)(39860400002)(376002)(396003)(316002)(4326008)(8936002)(8676002)(31686004)(7416002)(478600001)(53546011)(5660300002)(31696002)(16526019)(186003)(4744005)(6486002)(66556008)(66476007)(66946007)(36756003)(52116002)(86362001)(2616005)(2906002)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: WaKYJp1uyhtUuI1oVtCYIhuzB95BR20Jj3VXfEuPvMhzeD40eeD1vfLij5i934dXgLfI+bK8uNo7/pf+cJOy6jj6OWwEWhADU+bkChEQvzN6osq5npbc0mP0/OefHaOOztg83vAPDozgTmdb+SHVML/H6H6ZYWkPeA+qaObUgnwZ1sO3YzW1OEmWC5+sOo3EFhePk9Buw3wSw00HizWwL62wyYM/3FetBep96HnSrEZuLrz9VZxsZ2Z0eF4timSxZwxjP0MJiqdM3cScTgB/PB/El2h2QqYVEgtg/5nlVu8xqygGj31GXOa2edgtHbgGi4ipU0vgEJn3WwnQz6fOLiB/lgW7SjZ25Sv84j0jjjkI6ToMpEw9NgPpp4h5iZq7FoT0crJnudLETSpcUJHZUVwwe+9M93un8ScHVC7vmIMLnV0/ecc++XazLFP59OO+/VaN89C/J4RGzjtBloXTswtffgVF15mLJ8/kCZg0jSJYUx/K8wHzLPz+MjrlP2LtignHsms+D7TqLdx9e6s2biFb4VR1gmg344v0xDbU4TYerXebOseMV2ijAkIzwCHWUraiKcGsb6YkgGqWmTS7e+rj+N30EXECbgss5LPqQEkLNQSgcb168xtGudb15uBndPJ1+CAgvmMjQi5zwLBzKyY5Rx/aLKUTip8Z/IbY9u4=
-X-MS-Exchange-CrossTenant-Network-Message-Id: aac91bca-a0ef-4f42-bab5-08d841a7be39
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2020 05:46:38.2781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hFaRKya6i4i4F3QbbDW4tjrjhWwTTfh/NiXQVfJnPDPiKdEAWqtOE18Vf5TGSBhL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3666
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-16_01:2020-08-14,2020-08-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=851 clxscore=1015 malwarescore=0 phishscore=0
- adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008160049
-X-FB-Internal: deliver
+        Sun, 16 Aug 2020 01:50:57 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B84C061786
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 22:50:57 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 17so6549997pfw.9
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Aug 2020 22:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=y8IbMlSvYeV7TuMHFK5bjwWRDCnF/ixMBMv2DD2BAzY=;
+        b=LqDQw0LGtg9nA50EIOSJkM9B61pEAaPXaGH5qyL7I9qrqz1Nx8wkt+MLpmcLyvNaX/
+         xnOObUry8iqHpBity5FlQc56RHZUl5crwoygjMZLQJ+Pta5nP+IXJaiQ76qWuVdULIiY
+         0JgB8aPdi34Ea0xNg3fCR7YS+Wkta7TSnKxr73qYz0m8aTO9cM7uP6yDQYzrCMSL+lna
+         1xVophSU5jJHQS8Jo43ysexFTF6lwuOvZXuv7F0dOLwX/MUHLskt68N2nnEnwdgwiKOe
+         BlFC9IGWFAXpk8adM16j43T7E2VOtGNs8/nrthEZvIo922lo2mmJb4sZYc7GuJQpX/pb
+         W/cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=y8IbMlSvYeV7TuMHFK5bjwWRDCnF/ixMBMv2DD2BAzY=;
+        b=oON0i7geSGTqkmk3LrLPFd0GCHKEkvGlOCULC2U4NhzdPY/lz0CRKpRC0t1k1Yzm5g
+         +qB2mazqecNAV6mv5+7kJ5ZWpLmdj52YbIreDRgal/Gb0f4YjZgk0xSRGILSEvStgLlU
+         oYAOAB1pFl3FJ8SSKgh6VkSVh6keTbNnOXtSbPxhPnIsSW7PZDh0gYdT60X4FFPqf+oc
+         BoPyxDx4WnGyu24s4A0BkLL5F+nbaO7APU/YRxp+TaZNp5fNsRDClEmFsJQEd7u3Ru/5
+         5/RttFlzdrUFzBBFbR3zNlGlf9JB8W20ZtxHhrmlib9fYiWJqS1o6otwBQpmbK+ebUD9
+         80VQ==
+X-Gm-Message-State: AOAM530j7LM62Kx0iIKHhuk6BXLDkoQrX9oV+8VjKMqA193/USKmXLPn
+        LBAYv5EG9SM3/Tf0VL3Qd3g=
+X-Google-Smtp-Source: ABdhPJw9jizrjHsIQvcg5ILlLHHR92ovY96FJUYVDQwtTLE0Gtl06KnhM4Bdb8wPIROjVDZiktAWhw==
+X-Received: by 2002:aa7:95b8:: with SMTP id a24mr6942242pfk.219.1597557056656;
+        Sat, 15 Aug 2020 22:50:56 -0700 (PDT)
+Received: from inforce-server-Z9PE-D8-WS.routereb3c90.com ([106.51.138.45])
+        by smtp.gmail.com with ESMTPSA id x22sm14009310pfn.41.2020.08.15.22.50.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Aug 2020 22:50:56 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/bridge/tc358775: Fix for PTR_ERR
+Date:   Sun, 16 Aug 2020 11:20:41 +0530
+Message-Id: <1597557042-5154-1-git-send-email-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+passing zero to 'PTR_ERR'
 
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+---
+ drivers/gpu/drm/bridge/tc358775.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 8/15/20 1:47 AM, Miaohe Lin wrote:
-> Since commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
-> keyword for switch/case use") introduce fallthrough pseudo keyword, then we
-> should convert the uses of fallthrough comments to it.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
+index 7da15cd..d951cdc 100644
+--- a/drivers/gpu/drm/bridge/tc358775.c
++++ b/drivers/gpu/drm/bridge/tc358775.c
+@@ -684,7 +684,7 @@ static int tc_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	tc->vdd = devm_regulator_get(dev, "vdd-supply");
+ 	if (IS_ERR(tc->vdd)) {
+-		ret = PTR_ERR(tc->vddio);
++		ret = PTR_ERR(tc->vdd);
+ 		dev_err(dev, "vdd-supply not found\n");
+ 		return ret;
+ 	}
+-- 
+2.7.4
 
-Acked-by: Yonghong Song <yhs@fb.com>
