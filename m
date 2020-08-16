@@ -8,213 +8,357 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED0420708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB00B206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 15:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYqMOi69"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jd5DCA0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgHPP3Q (ORCPT
+        id S1728137AbgHPPcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:29:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        Sun, 16 Aug 2020 11:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgHPP3L (ORCPT
+        with ESMTP id S1726407AbgHPPcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:29:11 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1185CC061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:29:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so10632437qtg.4
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:29:10 -0700 (PDT)
+        Sun, 16 Aug 2020 11:32:45 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03DCC061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:32:44 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g19so15204546ioh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 08:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OCx+RS8NPX726H3XUFLncrukio6tPMlhHsFehrH4Fpc=;
-        b=UYqMOi69M7V+6Xdj76vGNOrkX3GlTqRKL2cFb/yFsz07THalfRDk44oMYmS2RxHS4/
-         V+3AZ119emRJ/PFUu+WxU861gxE8HZE7slv8whMGK075quVkpDd3qMHzCc19JPBv1ZCr
-         zVaipyiyS36OqWPuMlvomQknO81ufTY1ElhiJSV6KEpO9i4cy5mQJk/+wmbtTvFeV2nC
-         A160I1BZrW0UDy+ATRnnn6w51p/b5COsOVaFhCTDwP+Ca6LodnZUt1YSJJPbSKokFvc6
-         78C/Gcf9nAHUiXz3EoeYbN+1UTjYQITAUZnznM068cKQ/P5P+JxxQCcZHtlnvEUEsYLh
-         CoCg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BBFIS37XssQZkKcIduebc/1OWwcktUvuSbhvJVzo7qM=;
+        b=Jd5DCA0m1oi5SF3F13+rkmeBB3DKCajDW0QmQndzj8BGBYWbS5qHAy5CgTMxrODvSk
+         4IUTj5zgV4F1EGl7a0289jPZEqD62gPFYKmL0fsUkSYAzVLkTMXcL4h0oRENk7hVo5vM
+         FXysPp563k7dMVlJEzAWKFYGRnFzWGSZ4uLxs+YFl+IRUZQQquZHcLEhaH4PbvODjSHG
+         bh463lZH+NHB8xnrm1qid/cs44QDi7wHwMcKXik6JbV6aI2u4+nHE7xVTd21vksHG6+W
+         0ECJxs8tPdz0WiLamXLLOBMQ2RyZOMonzPr+70kDyQAinFG6quraPNx7xRd0ukCAM3ls
+         k6gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OCx+RS8NPX726H3XUFLncrukio6tPMlhHsFehrH4Fpc=;
-        b=LaD2PvZWztWeDjMQUIYiXzR86GGe2bOLHUK3qLVmy0iq5JIRlzsFMt5rAG2+gHe+Ia
-         31iWAcN05z0frg5aaADU0fVpAs7gUOOJbHzoEn5UDRJJlppDZKBwWEsjT1+UCfXWFUy4
-         qhNWjxwAba65+w0JDdsVZ2/JYLnbmTv/fr3ex/QJd4WjVBhea+NgEt9inGbESgu1tJmY
-         GyD2QgDgB/yCi0LuLC0abbQqSozGxBu2Xza4OhuMh728ohBZuZBCifAFrrr4Q/kqlEfF
-         bfkfYpNPwIAcQgYpezBeLC0uv6qwYgCMHbglSeLPtc2eqYPIR0IhXpk8/ZdQ1P7O7tu7
-         Q8Xw==
-X-Gm-Message-State: AOAM532/d8Wwm7zpoN3Ya/pVnnJGs33PHZN0EphTuLpo35ZMTGPSXSiv
-        6qipncVdjHQdwGAZtEFVNg8=
-X-Google-Smtp-Source: ABdhPJwMms2XqQQJcBbF2/+GO8LN1v8NxBbNwSx0uZ9756CtCJqTftGnjBqf5aveYY1YJJV4xFjm7w==
-X-Received: by 2002:aed:2352:: with SMTP id i18mr10272753qtc.167.1597591750197;
-        Sun, 16 Aug 2020 08:29:10 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id p202sm14190937qke.97.2020.08.16.08.29.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Aug 2020 08:29:09 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 51A1D27C0054;
-        Sun, 16 Aug 2020 11:29:09 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sun, 16 Aug 2020 11:29:09 -0400
-X-ME-Sender: <xms:xFA5X9QMT5E2f64TW6FwQc0nHeeBWzskFpgI1hq_B_eZnqvek1WVKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtuddgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:xFA5X2wKldcHwHYf69_Up6jdfIvU_kJWuqS3lN2ngk2srGQsryTNFQ>
-    <xmx:xFA5Xy3Qwuwewwy-ZjWOIMTHQAfTbcKfI6DlJ1egBdqs8g_0ylfRjg>
-    <xmx:xFA5X1B9WgqYSXUc7e6o2BFGsfWZynnKTdMnNY31WScCnumx0020aA>
-    <xmx:xVA5XxVPqX4u1tNQ1eAaArjJ2pt1ITSynYGSGPMw_i13kEAj7LOb2w>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7160330600A6;
-        Sun, 16 Aug 2020 11:29:08 -0400 (EDT)
-Date:   Sun, 16 Aug 2020 23:29:07 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 2/3] sched: membarrier: cover kthread_use_mm (v2)
-Message-ID: <20200816152907.GB87259@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200814164358.4783-1-mathieu.desnoyers@efficios.com>
- <20200814164358.4783-3-mathieu.desnoyers@efficios.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BBFIS37XssQZkKcIduebc/1OWwcktUvuSbhvJVzo7qM=;
+        b=KLY8jSRHGTkeiIv/Ov1U83pPrUmEzegVnfvzH4RyeaLp4/RREoRq2w5J8OEiTFmBmg
+         BcgAFoux3NkGVSM3mA/pDBmCQmaylQg7Y7pmaDH+ecy6yJ4eN/uWzUeB3ZUc9q1P1IxL
+         4//upfwGIk63ir0JS5386saQH7C3BwHIEnrFNvduE8ZGcZy6UlblHE0eBbO+sMKil+0g
+         KwQKMK9XXhinN7m8oAUMMDrbThAqS9/Am4VpKilWVyqfz4R1xwDg70+IZDB+ufGa2pUH
+         +h+tUqLhskiKDL42970x3eWJfGgQS+qEgkYfRs9PdAnwc57iob1nO3yK++xZm3FiCWKW
+         rylw==
+X-Gm-Message-State: AOAM5333ylzAIcVuruP7Prwskm6hIYqk6ReUYcyErctd/fsbPDsTumof
+        b4H8esVpn2HPIAjg/p/l+Kg7/1yUJZsH9JCnr+w=
+X-Google-Smtp-Source: ABdhPJy9a6a7UQKw9ctEsrcIxI210RSxcbvsvAU2EgZfQd7GkJbRtCNV+8eoMgRLxoc53DZdy898atbjHL4bWbjmv2w=
+X-Received: by 2002:a05:6638:1685:: with SMTP id f5mr11151955jat.48.1597591964248;
+ Sun, 16 Aug 2020 08:32:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814164358.4783-3-mathieu.desnoyers@efficios.com>
+References: <08985916e4bfc3835207ff87634392ae2eac698e.1597307180.git.zhaoqianli@xiaomi.com>
+ <159747950551.33733.18397049074515181528@swboyd.mtv.corp.google.com>
+In-Reply-To: <159747950551.33733.18397049074515181528@swboyd.mtv.corp.google.com>
+From:   qianli zhao <zhaoqianligood@gmail.com>
+Date:   Sun, 16 Aug 2020 23:32:35 +0800
+Message-ID: <CAPx_LQGQx8eaT2V8iGwUE1ptKtmRZ9VZz5Oa0Bybv2+whteKGg@mail.gmail.com>
+Subject: Re: [PATCH v3] kthread: add objectdebug support
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Felix.Kuehling@amd.com, akpm@linux-foundation.org, axboe@kernel.dk,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        ben.dooks@codethink.co.uk, bfields@redhat.com, cl@rock-chips.com,
+        linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:43:57PM -0400, Mathieu Desnoyers wrote:
-> Add comments and memory barrier to kthread_use_mm and kthread_unuse_mm
-> to allow the effect of membarrier(2) to apply to kthreads accessing
-> user-space memory as well.
-> 
-> Given that no prior kthread use this guarantee and that it only affects
-> kthreads, adding this guarantee does not affect user-space ABI.
-> 
-> Refine the check in membarrier_global_expedited to exclude runqueues
-> running the idle thread rather than all kthreads from the IPI cpumask.
-> 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> Changes since v1:
-> - Add WARN_ON_ONCE(current->mm) in play_idle_precise (PeterZ),
-> - Use smp_mb__after_spinlock rather than smp_mb after task_lock.
-> ---
->  kernel/kthread.c          | 19 +++++++++++++++++++
->  kernel/sched/idle.c       |  1 +
->  kernel/sched/membarrier.c |  8 ++------
->  3 files changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index 3edaa380dc7b..77aaaa7bc8d9 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -1255,8 +1255,19 @@ void kthread_use_mm(struct mm_struct *mm)
->  	finish_arch_post_lock_switch();
->  #endif
->  
-> +	/*
-> +	 * When a kthread starts operating on an address space, the loop
-> +	 * in membarrier_{private,global}_expedited() may not observe
-> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
-> +	 * memory barrier after storing to tsk->mm, before accessing
-> +	 * user-space memory. A full memory barrier for membarrier
-> +	 * {PRIVATE,GLOBAL}_EXPEDITED is implicitly provided by
-> +	 * mmdrop(), or explicitly with smp_mb().
-> +	 */
->  	if (active_mm != mm)
->  		mmdrop(active_mm);
-> +	else
-> +		smp_mb();
+Hi,Stephen
+Thanks for your suggestion, i will improve my patch.
 
-Similar question here: could smp_mb() guarantee the correctness of
-GLOBAL_EXPEDITED? Don't you need membarrier_switch_mm() here and in
-kthread_unuse_mm(), too?
+Thanks.
 
-Am I miss something here?
-
-Regards,
-Boqun
-
->  
->  	to_kthread(tsk)->oldfs = force_uaccess_begin();
->  }
-> @@ -1276,6 +1287,14 @@ void kthread_unuse_mm(struct mm_struct *mm)
->  	force_uaccess_end(to_kthread(tsk)->oldfs);
->  
->  	task_lock(tsk);
-> +	/*
-> +	 * When a kthread stops operating on an address space, the loop
-> +	 * in membarrier_{private,global}_expedited() may not observe
-> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
-> +	 * memory barrier after accessing user-space memory, before
-> +	 * clearing tsk->mm.
-> +	 */
-> +	smp_mb__after_spinlock();
->  	sync_mm_rss(mm);
->  	local_irq_disable();
->  	tsk->mm = NULL;
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 6bf34986f45c..3443ee8335d0 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -341,6 +341,7 @@ void play_idle_precise(u64 duration_ns, u64 latency_ns)
->  	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
->  	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
->  	WARN_ON_ONCE(!duration_ns);
-> +	WARN_ON_ONCE(current->mm);
->  
->  	rcu_sleep_check();
->  	preempt_disable();
-> diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-> index 168479a7d61b..8a294483074d 100644
-> --- a/kernel/sched/membarrier.c
-> +++ b/kernel/sched/membarrier.c
-> @@ -100,13 +100,9 @@ static int membarrier_global_expedited(void)
->  		    MEMBARRIER_STATE_GLOBAL_EXPEDITED))
->  			continue;
->  
-> -		/*
-> -		 * Skip the CPU if it runs a kernel thread. The scheduler
-> -		 * leaves the prior task mm in place as an optimization when
-> -		 * scheduling a kthread.
-> -		 */
-> +		/* Skip the CPU if it runs the idle thread. */
->  		p = rcu_dereference(cpu_rq(cpu)->curr);
-> -		if (p->flags & PF_KTHREAD)
-> +		if (is_idle_task(p))
->  			continue;
->  
->  		__cpumask_set_cpu(cpu, tmpmask);
-> -- 
-> 2.11.0
-> 
+On Sat, Aug 15, 2020 at 4:18 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Qianli Zhao (2020-08-13 02:55:16)
+> > From: Qianli Zhao <zhaoqianli@xiaomi.com>
+> >
+> > Add debugobject support to track the life time of kthread_work
+>
+> Subject says 'objectdebug' but then this says debugobject. Use
+> debugobject throughout please.
+>
+> > which is used to detect reinitialization/free active object problems
+>
+> which is used to detect reinitialization/free active object problems.
+>
+> > Add kthread_init_work_onstack/kthread_init_delayed_work_onstack for
+> > kthread onstack support
+>
+> kthread onstack support.
+>
+> Also, mark functions with parenthesis please.
+>
+> >
+> > If we reinitialize a kthread_work that has been activated,
+> > this will cause delayed_work_list/work_list corruption.
+> > enable this config,there is an chance to fixup these errors
+>
+> Capitalize enable.
+>
+> > or WARNING the wrong use of kthread_work
+> >
+> > [30858.395766] list_del corruption. next->prev should be ffffffe388ebbf88, but was ffffffe388ebb588
+> > [30858.395788] WARNING: CPU: 2 PID: 387 at /home/work/data/codes/build_home/kernel/msm-4.19/lib/list_debug.c:56 __list_del_entry_valid+0xc8/0xd0
+> > ...
+> > [30858.405951] list_add corruption. next->prev should be prev (ffffffe389392620), but was ffffffe388ebbf88. (next=ffffffe388ebbf88).
+> > [30858.405977] WARNING: CPU: 0 PID: 7721 at /home/work/data/codes/build_home/kernel/msm-4.19/lib/list_debug.c:25 __list_add_valid+0x7c/0xc8
+> >
+> > crash> struct kthread_worker.delayed_work_list 0xffffffe3893925f0
+> >  [ffffffe389392620] delayed_work_list = {
+> >     next = 0xffffffe388ebbf88,
+> >     prev = 0xffffffe388ebb588
+> >   }
+> > crash> list 0xffffffe388ebbf88
+> > ffffffe388ebbf88
+> >
+> > Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
+> [...]
+> > diff --git a/include/linux/poison.h b/include/linux/poison.h
+> > index df34330..2e6a370 100644
+> > --- a/include/linux/poison.h
+> > +++ b/include/linux/poison.h
+> > @@ -86,4 +86,7 @@
+> >  /********** security/ **********/
+> >  #define KEY_DESTROY            0xbd
+> >
+> > +/********** kernel/kthread **********/
+> > +#define KWORK_ENTRY_STATIC     ((void *) 0x600 + POISON_POINTER_DELTA)
+>
+> Can we get a comment above this like there is for TIMER_ENTRY_STATIC?
+>
+> > +
+> >  #endif
+> > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > index 132f84a..68a16cc 100644
+> > --- a/kernel/kthread.c
+> > +++ b/kernel/kthread.c
+> > @@ -67,6 +67,118 @@ enum KTHREAD_BITS {
+> >         KTHREAD_SHOULD_PARK,
+> >  };
+> >
+> > +#ifdef CONFIG_DEBUG_OBJECTS_KTHREAD_WORK
+> > +static struct debug_obj_descr kwork_debug_descr;
+> > +
+> > +static void *kwork_debug_hint(void *addr)
+> > +{
+> > +       return ((struct kthread_work *) addr)->func;
+> > +}
+> > +
+> > +static bool kwork_is_static_object(void *addr)
+> > +{
+> > +       struct kthread_work *kwork = addr;
+> > +
+> > +       return (kwork->node.prev == NULL &&
+> > +               kwork->node.next == KWORK_ENTRY_STATIC);
+> > +}
+> > +
+> > +static bool kwork_fixup_init(void *addr, enum debug_obj_state state)
+> > +{
+> > +       struct kthread_work *kwork = addr;
+> > +
+> > +       switch (state) {
+> > +       case ODEBUG_STATE_ACTIVE:
+> > +               kthread_cancel_work_sync(kwork);
+> > +               debug_object_init(kwork, &kwork_debug_descr);
+> > +               return true;
+> > +       default:
+> > +               return false;
+> > +       }
+> > +}
+> > +
+> > +static bool kwork_fixup_free(void *addr, enum debug_obj_state state)
+> > +{
+> > +       struct kthread_work *kwork = addr;
+> > +
+> > +       switch (state) {
+> > +       case ODEBUG_STATE_ACTIVE:
+> > +               kthread_cancel_work_sync(kwork);
+> > +               debug_object_free(kwork, &kwork_debug_descr);
+> > +               return true;
+> > +       default:
+> > +               return false;
+> > +       }
+> > +}
+> > +
+> > +static void stub_kthread_work(struct kthread_work *unuse)
+> > +{
+> > +       WARN_ON(1);
+> > +}
+> > +
+> > +static bool kwork_fixup_assert_init(void *addr, enum debug_obj_state state)
+> > +{
+> > +       struct kthread_work *kwork = addr;
+> > +       switch (state) {
+> > +       case ODEBUG_STATE_NOTAVAILABLE:
+> > +               kthread_init_work(kwork, stub_kthread_work);
+> > +               return true;
+> > +       default:
+> > +               return false;
+> > +       }
+> > +}
+> > +
+> > +static struct debug_obj_descr kwork_debug_descr = {
+> > +               .name           = "kthread_work",
+> > +               .debug_hint     = kwork_debug_hint,
+> > +               .is_static_object = kwork_is_static_object,
+> > +               .fixup_init     = kwork_fixup_init,
+> > +               .fixup_free     = kwork_fixup_free,
+> > +               .fixup_assert_init = kwork_fixup_assert_init,
+>
+> Nitpick: This needs some formatting to deindent one tab and align the
+> equals signs.
+>
+> > +};
+> > +
+> > +static inline void debug_kwork_activate(struct kthread_work *kwork)
+> > +{
+> > +       debug_object_activate(kwork, &kwork_debug_descr);
+> > +}
+> > +
+> > +static inline void debug_kwork_deactivate(struct kthread_work *kwork)
+> > +{
+> > +       debug_object_deactivate(kwork, &kwork_debug_descr);
+> > +}
+> > +
+> > +static inline void debug_kwork_assert_init(struct kthread_work *kwork)
+> > +{
+> > +       debug_object_assert_init(kwork, &kwork_debug_descr);
+> > +}
+> > +
+> > +void __init_kwork(struct kthread_work *kwork, int onstack)
+> > +{
+> > +       if (onstack)
+> > +               debug_object_init_on_stack(kwork, &kwork_debug_descr);
+> > +       else
+> > +               debug_object_init(kwork, &kwork_debug_descr);
+> > +}
+> > +EXPORT_SYMBOL_GPL(__init_kwork);
+> > +
+> > +void destroy_kwork_on_stack(struct kthread_work *kwork)
+> > +{
+> > +       debug_object_free(kwork, &kwork_debug_descr);
+> > +}
+> > +EXPORT_SYMBOL_GPL(destroy_kwork_on_stack);
+> > +
+> > +void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork)
+> > +{
+> > +       destroy_timer_on_stack(&kdwork->timer);
+> > +       debug_object_free(&kdwork->work, &kwork_debug_descr);
+> > +}
+> > +EXPORT_SYMBOL_GPL(destroy_delayed_kwork_on_stack);
+> > +#else
+> > +static inline void debug_kwork_activate(struct kthread_work *kwork) { }
+> > +static inline void debug_kwork_deactivate(struct kthread_work *kwork) { }
+> > +static inline void debug_kwork_assert_init(struct kthread_work *kwork) { }
+> > +#endif
+> > +
+> >  static inline void set_kthread_struct(void *kthread)
+> >  {
+> >         /*
+> > @@ -697,6 +809,7 @@ int kthread_worker_fn(void *worker_ptr)
+> >         if (!list_empty(&worker->work_list)) {
+> >                 work = list_first_entry(&worker->work_list,
+> >                                         struct kthread_work, node);
+> > +               debug_kwork_deactivate(work);
+> >                 list_del_init(&work->node);
+> >         }
+> >         worker->current_work = work;
+> > @@ -833,8 +946,10 @@ static void kthread_insert_work(struct kthread_worker *worker,
+> >  {
+> >         kthread_insert_work_sanity_check(worker, work);
+> >
+> > +       debug_kwork_activate(work);
+> >         list_add_tail(&work->node, pos);
+> >         work->worker = worker;
+> > +
+>
+> Drop this newline.
+>
+> >         if (!worker->current_work && likely(worker->task))
+> >                 wake_up_process(worker->task);
+> >  }
+> > @@ -857,6 +972,7 @@ bool kthread_queue_work(struct kthread_worker *worker,
+> >         bool ret = false;
+> >         unsigned long flags;
+> >
+> > +       debug_kwork_assert_init(work);
+> >         raw_spin_lock_irqsave(&worker->lock, flags);
+> >         if (!queuing_blocked(worker, work)) {
+> >                 kthread_insert_work(worker, work, &worker->work_list);
+> > @@ -895,6 +1011,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
+> >
+> >         /* Move the work from worker->delayed_work_list. */
+> >         WARN_ON_ONCE(list_empty(&work->node));
+> > +       debug_kwork_deactivate(work);
+> >         list_del_init(&work->node);
+> >         kthread_insert_work(worker, work, &worker->work_list);
+> >
+> > @@ -924,7 +1041,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+> >
+> >         /* Be paranoid and try to detect possible races already now. */
+> >         kthread_insert_work_sanity_check(worker, work);
+> > -
+> > +       debug_kwork_activate(work);
+> >         list_add(&work->node, &worker->delayed_work_list);
+> >         work->worker = worker;
+> >         timer->expires = jiffies + delay;
+> > @@ -954,6 +1071,7 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
+> >         unsigned long flags;
+> >         bool ret = false;
+> >
+> > +       debug_kwork_assert_init(work);
+> >         raw_spin_lock_irqsave(&worker->lock, flags);
+> >
+> >         if (!queuing_blocked(worker, work)) {
+> > @@ -987,15 +1105,16 @@ static void kthread_flush_work_fn(struct kthread_work *work)
+> >  void kthread_flush_work(struct kthread_work *work)
+> >  {
+> >         struct kthread_flush_work fwork = {
+> > -               KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
+> > -               COMPLETION_INITIALIZER_ONSTACK(fwork.done),
+> > +               .done = COMPLETION_INITIALIZER_ONSTACK(fwork.done),
+> >         };
+> >         struct kthread_worker *worker;
+> >         bool noop = false;
+> >
+> > +       kthread_init_work_onstack(&fwork.work, kthread_flush_work_fn);
+> > +       debug_kwork_assert_init(work);
+> >         worker = work->worker;
+> >         if (!worker)
+> > -               return;
+> > +               goto out;
+>
+> Why make the worker and init it on the stack if there isn't anything to
+> do? The !worker check should be early and then bail out before doing
+> anything else.
+>
+> >
+> >         raw_spin_lock_irq(&worker->lock);
+> >         /* Work must not be used with >1 worker, see kthread_queue_work(). */
+> > @@ -1013,6 +1132,9 @@ void kthread_flush_work(struct kthread_work *work)
+> >
+> >         if (!noop)
+> >                 wait_for_completion(&fwork.done);
+> > +
+> > +out:
+>
+> Then this label can be dropped.
+>
+> > +       destroy_kwork_on_stack(&fwork.work);
+> >  }
+> >  EXPORT_SYMBOL_GPL(kthread_flush_work);
+> >
