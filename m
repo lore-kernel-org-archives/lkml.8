@@ -2,475 +2,446 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9568BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F9DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6821720708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0776320760
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 11:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqB/iint"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzJaLGhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgHPLcQ (ORCPT
+        id S1729179AbgHPLhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 07:32:16 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729090AbgHPLaC (ORCPT
+        Sun, 16 Aug 2020 07:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbgHPLe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 07:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597577377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o5cAWUQRA5XB1MFHVWhDK++WAr/4C79VFKZZhmoXBWE=;
-        b=SqB/iintMNNd3g4rgtPmRG7EueligqK3dBKVX4lmFRdp+CYHvTfNK+ULE4RD2YyTTPRTYC
-        zRoZyvZuW3zYmMipjPNQhRC/eqg/kFYxWhSgXiMPtJoE+YUQtN5j0KywgzJrHSznybfp4j
-        fm6hs835kZTLouDmUGFWDjFgVuxHJRs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-549-07dPfwgYOYCOxj4sxI6T8g-1; Sun, 16 Aug 2020 07:29:35 -0400
-X-MC-Unique: 07dPfwgYOYCOxj4sxI6T8g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19630100558D;
-        Sun, 16 Aug 2020 11:29:33 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF8E55C1DA;
-        Sun, 16 Aug 2020 11:29:20 +0000 (UTC)
-Subject: Re: [PATCH v6 10/15] vfio/type1: Support binding guest page tables to
- PASID
-To:     Liu Yi L <yi.l.liu@intel.com>, alex.williamson@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        stefanha@gmail.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
- <1595917664-33276-11-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d54e0327-70cb-d58e-e521-e647f0cc024b@redhat.com>
-Date:   Sun, 16 Aug 2020 13:29:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 16 Aug 2020 07:34:29 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5FEC061389;
+        Sun, 16 Aug 2020 04:34:04 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w17so10097306edt.8;
+        Sun, 16 Aug 2020 04:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K/Xk9vqsFa2pytcZR9ZEjV+eE9g6nLCPU/rDSAimPno=;
+        b=UzJaLGhHPGRYCf1XSubqG9MTpbrvITheAIv7kV4wyCZcDFRenDGdJWCldDeAiE+TZK
+         JdBLWGN7Yb/KfF6AN6R6rW5D9HL8whMEWVj8f+1p2UhVgmgEY/pWTFjdsiS0nJ0b0gOm
+         CPLU/9IjZ2DpN22S1LQ1VPmx53CjOg7zwjmncaz19Y0xneDuzaKE8BY8mFW8eRuV3GaD
+         FuC7EAl8ru+/srrroweUgR4Jqccjnrf9ucINI8cm4+8zEQ6p/16hArc5bNIyIysuDTAQ
+         2ppJqL8vJcz4zmePXz5WX3jwthKMx3wcUrlvD+JLIYfoWMi/wRteEzZaCnoKf6Li6D+w
+         8XKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K/Xk9vqsFa2pytcZR9ZEjV+eE9g6nLCPU/rDSAimPno=;
+        b=bsbjFEsWwm4uRI2lJXk2sko1LgqttW6odazgKxCdmU56MawGc5Vv+gAC3UeJT9/qEa
+         Ki+/nFd1s92Z4pAYS4qzOAWZlh6TWmEdbTiwkMm9dNt33XH/bJpT7GxxUgwmhXlZ1dOc
+         53XZmf17ZBKAMPPphocpHCy24rRJVyRBw3ssFdVnkI/kbhjfHDqZIK7ms7YxG0jmUwrg
+         VhHqFdyB9wvw0ZCVdlqrlthUNKx8eRAWJnmKhokPXRwkjvScOgQsDDBCzXnSFBPnx6Qo
+         g/GBv67zmKdvkF4BVIHP8N1m3y0Q1qbWCrhxYBR+QSdl1RHa4z3TvqKmJOSVVE6y8MPd
+         yeAA==
+X-Gm-Message-State: AOAM530wGD0nlkFOTrjO8p6bRRtgDkAXXna3DreHXeV46btxF3i9hWf1
+        pPsQS33pKQTWFpd7m0AEUUg=
+X-Google-Smtp-Source: ABdhPJxx5cQuV+5JU7Cb5jz1ijuFSesE5B9q177XEHYSWQxSytOpwWwHXlgS13NllYxAy13nf/lBBQ==
+X-Received: by 2002:a05:6402:1a46:: with SMTP id bf6mr10296238edb.284.1597577642444;
+        Sun, 16 Aug 2020 04:34:02 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.144.238])
+        by smtp.gmail.com with ESMTPSA id p1sm11272945edu.11.2020.08.16.04.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 04:34:01 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org,
+        Parthiban Nallathambi <pn@denx.de>,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v4 2/3] irqchip: Add Actions Semi Owl SIRQ controller
+Date:   Sun, 16 Aug 2020 14:33:55 +0300
+Message-Id: <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
+References: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1595917664-33276-11-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+This controller appears on Actions Semi Owl family SoC's S500, S700 and
+S900 and provides support for 3 external interrupt controllers through
+dedicated SIRQ pins.
 
-On 7/28/20 8:27 AM, Liu Yi L wrote:
-> Nesting translation allows two-levels/stages page tables, with 1st level
-> for guest translations (e.g. GVA->GPA), 2nd level for host translations
-> (e.g. GPA->HPA). This patch adds interface for binding guest page tables
-> to a PASID. This PASID must have been allocated by the userspace before
-> the binding request.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> v5 -> v6:
-> *) dropped vfio_find_nesting_group() and add vfio_get_nesting_domain_capsule().
->    per comment from Eric.
-> *) use iommu_uapi_sva_bind/unbind_gpasid() and iommu_sva_unbind_gpasid() in
->    linux/iommu.h for userspace operation and in-kernel operation.
-> 
-> v3 -> v4:
-> *) address comments from Alex on v3
-> 
-> v2 -> v3:
-> *) use __iommu_sva_unbind_gpasid() for unbind call issued by VFIO
->    https://lore.kernel.org/linux-iommu/1592931837-58223-6-git-send-email-jacob.jun.pan@linux.intel.com/
-> 
-> v1 -> v2:
-> *) rename subject from "vfio/type1: Bind guest page tables to host"
-> *) remove VFIO_IOMMU_BIND, introduce VFIO_IOMMU_NESTING_OP to support bind/
->    unbind guet page table
-> *) replaced vfio_iommu_for_each_dev() with a group level loop since this
->    series enforces one group per container w/ nesting type as start.
-> *) rename vfio_bind/unbind_gpasid_fn() to vfio_dev_bind/unbind_gpasid_fn()
-> *) vfio_dev_unbind_gpasid() always successful
-> *) use vfio_mm->pasid_lock to avoid race between PASID free and page table
->    bind/unbind
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 161 ++++++++++++++++++++++++++++++++++++++++
->  drivers/vfio/vfio_pasid.c       |  26 +++++++
->  include/linux/vfio.h            |  20 +++++
->  include/uapi/linux/vfio.h       |  31 ++++++++
->  4 files changed, 238 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index ea89c7c..245436e 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -149,6 +149,36 @@ struct vfio_regions {
->  #define DIRTY_BITMAP_PAGES_MAX	 ((u64)INT_MAX)
->  #define DIRTY_BITMAP_SIZE_MAX	 DIRTY_BITMAP_BYTES(DIRTY_BITMAP_PAGES_MAX)
->  
-> +struct domain_capsule {
-> +	struct vfio_group *group;
-> +	struct iommu_domain *domain;
-> +	void *data;
-You may add a bool indicating whether the data is a user pointer or the
-direct IOMMU UAPI struct.
-> +};
-> +
-> +/* iommu->lock must be held */
-> +static int vfio_get_nesting_domain_capsule(struct vfio_iommu *iommu,
-> +					   struct domain_capsule *dc)
-I would rename the function into vfio_prepare_nesting_domain_capsule
-> +{
-> +	struct vfio_domain *domain = NULL;
-> +	struct vfio_group *group = NULL;
-> +
-> +	if (!iommu->nesting_info)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Only support singleton container with nesting type.
-> +	 * If nesting_info is non-NULL, the conatiner should
-s/should/is here and below
-s/conatiner/container
-> +	 * be non-empty. Also domain should be non-empty.
-> +	 */
-> +	domain = list_first_entry(&iommu->domain_list,
-> +				  struct vfio_domain, next);
-> +	group = list_first_entry(&domain->group_list,
-> +				 struct vfio_group, next);
-> +	dc->group = group;
-> +	dc->domain = domain->domain;
-dc->user = true;?
-> +	return 0;
-> +}
-> +
->  static int put_pfn(unsigned long pfn, int prot);
->  
->  static struct vfio_group *vfio_iommu_find_iommu_group(struct vfio_iommu *iommu,
-> @@ -2349,6 +2379,48 @@ static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static int vfio_dev_bind_gpasid_fn(struct device *dev, void *data)
-> +{
-> +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> +	unsigned long arg = *(unsigned long *)dc->data;
-> +
-> +	return iommu_uapi_sva_bind_gpasid(dc->domain, dev, (void __user *)arg);
-> +}
-> +
-> +static int vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
-> +{
-> +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> +	unsigned long arg = *(unsigned long *)dc->data;
-> +
-> +	iommu_uapi_sva_unbind_gpasid(dc->domain, dev, (void __user *)arg);
-> +	return 0;
-> +}
-> +
-> +static int __vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
-can be removed if dc->user flag gets added
-> +{
-> +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> +	struct iommu_gpasid_bind_data *unbind_data =
-> +				(struct iommu_gpasid_bind_data *)dc->data;
-> +
-> +	iommu_sva_unbind_gpasid(dc->domain, dev, unbind_data);
-> +	return 0;
-> +}
-> +
-> +static void vfio_group_unbind_gpasid_fn(ioasid_t pasid, void *data)
-> +{
-> +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> +	struct iommu_gpasid_bind_data unbind_data;
-> +
-> +	unbind_data.argsz = offsetof(struct iommu_gpasid_bind_data, vendor);
-I do not remember to have seen this documented anywhere, ie. on unbind,
-the vendor data are not used.
-> +	unbind_data.flags = 0;
-> +	unbind_data.hpasid = pasid;
-> +
-> +	dc->data = &unbind_data;
-> +
-> +	iommu_group_for_each_dev(dc->group->iommu_group,
-> +				 dc, __vfio_dev_unbind_gpasid_fn);
-> +}
-> +
->  static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					  struct iommu_group *iommu_group)
->  {
-> @@ -2392,6 +2464,21 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  		if (!group)
->  			continue;
->  
-> +		if (iommu->nesting_info && iommu->vmm &&
-if vmm is set, doesn't it mean nesting_info is set?
-> +		    (iommu->nesting_info->features &
-> +					IOMMU_NESTING_FEAT_BIND_PGTBL)) {
-> +			struct domain_capsule dc = { .group = group,
-> +						     .domain = domain->domain,
-> +						     .data = NULL };
-> +
-> +			/*
-> +			 * Unbind page tables bound with system wide PASIDs
-> +			 * which are allocated to userspace.
-> +			 */
-> +			vfio_mm_for_each_pasid(iommu->vmm, &dc,
-> +					       vfio_group_unbind_gpasid_fn);
-> +		}
-> +
->  		vfio_iommu_detach_group(domain, group);
->  		update_dirty_scope = !group->pinned_page_dirty_scope;
->  		list_del(&group->next);
-> @@ -2926,6 +3013,78 @@ static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
-> +				       bool is_bind, unsigned long arg)
-> +{
-> +	struct domain_capsule dc = { .data = &arg };
-> +	struct iommu_nesting_info *info;
-> +	int ret;
-> +
-> +	mutex_lock(&iommu->lock);
-> +
-> +	info = iommu->nesting_info;
-> +	if (!info || !(info->features & IOMMU_NESTING_FEAT_BIND_PGTBL)) {
-> +		ret = -EOPNOTSUPP;
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (!iommu->vmm) {
-Is it documented anywhere, besides in this commit message that
-IOMMU_NESTING_FEAT_BIND_PGTBL requires IOMMU_NESTING_FEAT_SYSWIDE_PASID
-(in uapi doc)?
-> +		ret = -EINVAL;
-> +		goto out_unlock;
-> +	}
-> +
-> +	ret = vfio_get_nesting_domain_capsule(iommu, &dc);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	/* Avoid race with other containers within the same process */
-> +	vfio_mm_pasid_lock(iommu->vmm);
-> +
-> +	ret = 0;
-non needed
-> +	if (is_bind)
-> +		ret = iommu_group_for_each_dev(dc.group->iommu_group, &dc,
-> +					       vfio_dev_bind_gpasid_fn);
-> +	if (ret || !is_bind) {
-> +		iommu_group_for_each_dev(dc.group->iommu_group,
-> +					 &dc, vfio_dev_unbind_gpasid_fn);
-> +		ret = 0;
-ret is not correct in case bind previously failed. You should return the
-original ret in that case.
-> +	}
-> +
-> +	vfio_mm_pasid_unlock(iommu->vmm);
-> +out_unlock:
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
-> +}
-> +
-> +static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
-> +					unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_nesting_op hdr;
-> +	unsigned int minsz;
-> +	int ret;
-> +
-> +	minsz = offsetofend(struct vfio_iommu_type1_nesting_op, flags);
-> +
-> +	if (copy_from_user(&hdr, (void __user *)arg, minsz))
-> +		return -EFAULT;
-> +
-> +	if (hdr.argsz < minsz || hdr.flags & ~VFIO_NESTING_OP_MASK)
-Checking against VFIO_NESTING_OP_MASK is not enough precise enough (I
-mean OP_MASK should only encompasses the actual supported ops). If a a
-userspace tries to use a new OP in the future and if this runs on this
-kernel version, you will fait to recognize the lack of support.
-> +		return -EINVAL;
-> +
-> +	switch (hdr.flags & VFIO_NESTING_OP_MASK) {
-> +	case VFIO_IOMMU_NESTING_OP_BIND_PGTBL:
-> +		ret = vfio_iommu_handle_pgtbl_op(iommu, true, arg + minsz);
-> +		break;
-> +	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
-> +		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -2944,6 +3103,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  		return vfio_iommu_type1_dirty_pages(iommu, arg);
->  	case VFIO_IOMMU_PASID_REQUEST:
->  		return vfio_iommu_type1_pasid_request(iommu, arg);
-> +	case VFIO_IOMMU_NESTING_OP:
-> +		return vfio_iommu_type1_nesting_op(iommu, arg);
->  	default:
->  		return -ENOTTY;
->  	}
-> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-> index 8d0317f..e531d4a 100644
-> --- a/drivers/vfio/vfio_pasid.c
-> +++ b/drivers/vfio/vfio_pasid.c
-> @@ -221,6 +221,8 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
->  	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
->  	 * teardown necessary structures depending on the to-be-freed
->  	 * PASID.
-> +	 * Hold pasid_lock also avoids race with PASID usages like bind/
-> +	 * unbind page tables to requested PASID.
->  	 */
->  	mutex_lock(&vmm->pasid_lock);
->  	while ((vid = vfio_find_pasid(vmm, min, max)) != NULL)
-> @@ -229,6 +231,30 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
->  }
->  EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
->  
-> +int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
-> +			   void (*fn)(ioasid_t id, void *data))
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&vmm->pasid_lock);
-> +	ret = ioasid_set_for_each_ioasid(vmm->ioasid_sid, fn, data);
-> +	mutex_unlock(&vmm->pasid_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_mm_for_each_pasid);
-> +
-> +void vfio_mm_pasid_lock(struct vfio_mm *vmm)
-> +{
-> +	mutex_lock(&vmm->pasid_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_mm_pasid_lock);
-> +
-> +void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
-> +{
-> +	mutex_unlock(&vmm->pasid_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_mm_pasid_unlock);
-> +
->  static int __init vfio_pasid_init(void)
->  {
->  	mutex_init(&vfio_mm_lock);
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index a355d01..e835c23 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -105,6 +105,11 @@ extern int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
->  extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
->  extern void vfio_pasid_free_range(struct vfio_mm *vmm,
->  				  ioasid_t min, ioasid_t max);
-> +extern int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
-> +				  void (*fn)(ioasid_t id, void *data));
-> +extern void vfio_mm_pasid_lock(struct vfio_mm *vmm);
-> +extern void vfio_mm_pasid_unlock(struct vfio_mm *vmm);
-> +
->  #else
->  static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
->  {
-> @@ -129,6 +134,21 @@ static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
->  					  ioasid_t min, ioasid_t max)
->  {
->  }
-> +
-> +static inline int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
-> +					 void (*fn)(ioasid_t id, void *data))
-> +{
-> +	return -ENOTTY;
-> +}
-> +
-> +static inline void vfio_mm_pasid_lock(struct vfio_mm *vmm)
-> +{
-> +}
-> +
-> +static inline void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
-> +{
-> +}
-> +
->  #endif /* CONFIG_VFIO_PASID */
->  
->  /*
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 6d79557..9501cfb 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1209,6 +1209,37 @@ struct vfio_iommu_type1_pasid_request {
->  
->  #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
->  
-> +/**
-> + * VFIO_IOMMU_NESTING_OP - _IOW(VFIO_TYPE, VFIO_BASE + 19,
-> + *				struct vfio_iommu_type1_nesting_op)
-> + *
-> + * This interface allows userspace to utilize the nesting IOMMU
-> + * capabilities as reported in VFIO_IOMMU_TYPE1_INFO_CAP_NESTING
-> + * cap through VFIO_IOMMU_GET_INFO.
-PASID alloc/free are handled through another IOCTL so you should be more
-precise I think.
-> + *
-> + * @data[] types defined for each op:
-> + * +=================+===============================================+
-> + * | NESTING OP      |      @data[]                                  |
-> + * +=================+===============================================+
-> + * | BIND_PGTBL      |      struct iommu_gpasid_bind_data            |
-> + * +-----------------+-----------------------------------------------+
-> + * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
-> + * +-----------------+-----------------------------------------------+
-> + *
-> + * returns: 0 on success, -errno on failure.
-> + */
-> +struct vfio_iommu_type1_nesting_op {
-> +	__u32	argsz;
-> +	__u32	flags;
-> +#define VFIO_NESTING_OP_MASK	(0xffff) /* lower 16-bits for op */
-> +	__u8	data[];
-> +};
-> +
-> +#define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
-> +#define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
-> +
-> +#define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
-> 
-Thanks
+Each line can be independently configured as interrupt and triggers
+on either of the edges (raising or falling) or either of the levels
+(high or low). Each line can also be masked independently.
 
-Eric
+This is based on the patch series submitted by Parthiban Nallathambi:
+https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
+
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+[cristi: optimized DT, various fixes/cleanups/improvements]
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+---
+ drivers/irqchip/Makefile       |   1 +
+ drivers/irqchip/irq-owl-sirq.c | 318 +++++++++++++++++++++++++++++++++
+ 2 files changed, 319 insertions(+)
+ create mode 100644 drivers/irqchip/irq-owl-sirq.c
+
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 133f9c45744a..b8eb5b8b766d 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
+ obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
++obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
+ obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
+ obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
+ obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
+diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
+new file mode 100644
+index 000000000000..29b7ffc40ac7
+--- /dev/null
++++ b/drivers/irqchip/irq-owl-sirq.c
+@@ -0,0 +1,318 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Actions Semi Owl SoCs SIRQ interrupt controller driver
++ *
++ * Copyright (C) 2014 Actions Semi Inc.
++ * David Liu <liuwei@actions-semi.com>
++ *
++ * Author: Parthiban Nallathambi <pn@denx.de>
++ * Author: Saravanan Sekar <sravanhome@gmail.com>
++ * Author: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
++ */
++
++#include <linux/interrupt.h>
++#include <linux/irqchip.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#define NUM_SIRQ			3
++
++#define INTC_EXTCTL_PENDING		BIT(0)
++#define INTC_EXTCTL_CLK_SEL		BIT(4)
++#define INTC_EXTCTL_EN			BIT(5)
++#define INTC_EXTCTL_TYPE_MASK		GENMASK(7, 6)
++#define INTC_EXTCTL_TYPE_HIGH		0
++#define INTC_EXTCTL_TYPE_LOW		BIT(6)
++#define INTC_EXTCTL_TYPE_RISING		BIT(7)
++#define INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
++
++/* S900 SIRQ1 & SIRQ2 control register offsets, relative to SIRQ0 */
++#define INTC_EXTCTL1			0x0328
++#define INTC_EXTCTL2			0x032c
++
++struct owl_sirq_params {
++	/* INTC_EXTCTL reg shared for all three SIRQ lines */
++	bool reg_shared;
++	/* INTC_EXTCTL reg offsets relative to controller base address */
++	u16 reg_offset[NUM_SIRQ];
++};
++
++struct owl_sirq_chip_data {
++	const struct owl_sirq_params *params;
++	void __iomem *base;
++	raw_spinlock_t lock;
++	u32 ext_irqs[NUM_SIRQ];
++	u8 trigger;
++};
++
++/* S500 and S700 SoCs */
++static const struct owl_sirq_params owl_sirq_s500_params = {
++	.reg_shared = true,
++	.reg_offset = { 0, 0, 0 },
++};
++
++/* S900 SoC */
++static const struct owl_sirq_params owl_sirq_s900_params = {
++	.reg_shared = false,
++	.reg_offset = { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
++};
++
++static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32 index)
++{
++	u32 val;
++
++	val = readl_relaxed(data->base + data->params->reg_offset[index]);
++	if (data->params->reg_shared)
++		val = (val >> (2 - index) * 8) & 0xff;
++
++	return val;
++}
++
++static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
++				  u32 extctl, u32 index)
++{
++	u32 val;
++
++	if (data->params->reg_shared) {
++		val = readl_relaxed(data->base + data->params->reg_offset[index]);
++		val &= ~(0xff << (2 - index) * 8);
++		extctl &= 0xff;
++		extctl = (extctl << (2 - index) * 8) | val;
++	}
++
++	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
++}
++
++static void owl_sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
++				      u32 clear, u32 set, u32 index)
++{
++	unsigned long flags;
++	u32 val;
++
++	raw_spin_lock_irqsave(&d->lock, flags);
++	val = owl_sirq_read_extctl(d, index);
++	val &= ~clear;
++	val |= set;
++	owl_sirq_write_extctl(d, val, index);
++	raw_spin_unlock_irqrestore(&d->lock, flags);
++}
++
++static void owl_sirq_eoi(struct irq_data *data)
++{
++	struct owl_sirq_chip_data *chip_data = irq_data_get_irq_chip_data(data);
++
++	/*
++	 * Software must clear external interrupt pending, when interrupt type
++	 * is edge triggered, so we need per SIRQ based clearing.
++	 */
++	if (chip_data->trigger & (1 << data->hwirq))
++		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_PENDING,
++					  data->hwirq);
++
++	irq_chip_eoi_parent(data);
++}
++
++static void owl_sirq_mask(struct irq_data *data)
++{
++	struct owl_sirq_chip_data *chip_data = irq_data_get_irq_chip_data(data);
++
++	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_EN, 0, data->hwirq);
++	irq_chip_mask_parent(data);
++}
++
++static void owl_sirq_unmask(struct irq_data *data)
++{
++	struct owl_sirq_chip_data *chip_data = irq_data_get_irq_chip_data(data);
++
++	owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_EN, data->hwirq);
++	irq_chip_unmask_parent(data);
++}
++
++/*
++ * GIC does not handle falling edge or active low, hence SIRQ shall be
++ * programmed to convert falling edge to rising edge signal and active
++ * low to active high signal.
++ */
++static int owl_sirq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct owl_sirq_chip_data *chip_data = irq_data_get_irq_chip_data(data);
++	u32 sirq_type;
++
++	switch (type) {
++	case IRQ_TYPE_LEVEL_LOW:
++		sirq_type = INTC_EXTCTL_TYPE_LOW;
++		chip_data->trigger &= ~(1 << data->hwirq);
++		type = IRQ_TYPE_LEVEL_HIGH;
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		sirq_type = INTC_EXTCTL_TYPE_HIGH;
++		chip_data->trigger &= ~(1 << data->hwirq);
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		sirq_type = INTC_EXTCTL_TYPE_FALLING;
++		chip_data->trigger |= 1 << data->hwirq;
++		type = IRQ_TYPE_EDGE_RISING;
++		break;
++	case IRQ_TYPE_EDGE_RISING:
++		sirq_type = INTC_EXTCTL_TYPE_RISING;
++		chip_data->trigger |= 1 << data->hwirq;
++		break;
++	default:
++		WARN_ON(1);
++		return -EINVAL;
++	}
++
++	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_TYPE_MASK, sirq_type,
++				  data->hwirq);
++
++	return irq_chip_set_type_parent(data, type);
++}
++
++static struct irq_chip owl_sirq_chip = {
++	.name		= "owl-sirq",
++	.irq_mask	= owl_sirq_mask,
++	.irq_unmask	= owl_sirq_unmask,
++	.irq_eoi	= owl_sirq_eoi,
++	.irq_set_type	= owl_sirq_set_type,
++	.irq_retrigger	= irq_chip_retrigger_hierarchy,
++};
++
++static int owl_sirq_domain_translate(struct irq_domain *d,
++				     struct irq_fwspec *fwspec,
++				     unsigned long *hwirq,
++				     unsigned int *type)
++{
++	if (!is_of_node(fwspec->fwnode))
++		return -EINVAL;
++
++	if (fwspec->param_count != 2 || fwspec->param[0] >= NUM_SIRQ)
++		return -EINVAL;
++
++	*hwirq = fwspec->param[0];
++	*type = fwspec->param[1];
++
++	return 0;
++}
++
++static int owl_sirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				 unsigned int nr_irqs, void *data)
++{
++	struct owl_sirq_chip_data *chip_data = domain->host_data;
++	struct irq_fwspec *fwspec = data;
++	struct irq_fwspec parent_fwspec;
++	irq_hw_number_t hwirq;
++	unsigned int type;
++	int ret;
++
++	if (WARN_ON(nr_irqs != 1))
++		return -EINVAL;
++
++	ret = owl_sirq_domain_translate(domain, fwspec, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++	case IRQ_TYPE_LEVEL_HIGH:
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		type = IRQ_TYPE_EDGE_RISING;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		type = IRQ_TYPE_LEVEL_HIGH;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &owl_sirq_chip,
++				      chip_data);
++
++	parent_fwspec.fwnode = domain->parent->fwnode;
++	parent_fwspec.param_count = 3;
++	parent_fwspec.param[0] = 0;	/* SPI */
++	parent_fwspec.param[1] = chip_data->ext_irqs[hwirq];
++	parent_fwspec.param[2] = type;
++
++	return irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
++}
++
++static const struct irq_domain_ops owl_sirq_domain_ops = {
++	.translate	= owl_sirq_domain_translate,
++	.alloc		= owl_sirq_domain_alloc,
++	.free		= irq_domain_free_irqs_common,
++};
++
++static const struct of_device_id owl_sirq_of_match[] = {
++	{ .compatible = "actions,s500-sirq", .data = &owl_sirq_s500_params },
++	{ .compatible = "actions,s700-sirq", .data = &owl_sirq_s500_params },
++	{ .compatible = "actions,s900-sirq", .data = &owl_sirq_s900_params },
++	{ /* sentinel */ }
++};
++
++static int __init owl_sirq_of_init(struct device_node *node,
++				   struct device_node *parent)
++{
++	const struct of_device_id *match;
++	struct irq_domain *domain, *parent_domain;
++	struct owl_sirq_chip_data *chip_data;
++	int ret, i;
++
++	parent_domain = irq_find_host(parent);
++	if (!parent_domain) {
++		pr_err("%pOF: failed to find sirq parent domain\n", node);
++		return -ENXIO;
++	}
++
++	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
++	if (!chip_data)
++		return -ENOMEM;
++
++	match = of_match_node(owl_sirq_of_match, node);
++	if (!match) {
++		pr_warn("owl-sirq: assuming S500/S700 compatible controller\n");
++		chip_data->params = &owl_sirq_s500_params;
++	} else {
++		chip_data->params = match->data;
++	}
++
++	raw_spin_lock_init(&chip_data->lock);
++
++	chip_data->base = of_iomap(node, 0);
++	if (!chip_data->base) {
++		pr_err("%pOF: failed to map sirq registers\n", node);
++		ret = -ENXIO;
++		goto out_free;
++	}
++
++	ret = of_property_read_variable_u32_array(node, "actions,ext-interrupts",
++						  chip_data->ext_irqs,
++						  NUM_SIRQ, NUM_SIRQ);
++	if (ret < NUM_SIRQ) {
++		pr_err("%pOF: failed to read sirq interrupts\n", node);
++		goto out_unmap;
++	}
++
++	/* Set 24MHz external interrupt clock freq */
++	for (i = 0; i < NUM_SIRQ; i++)
++		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_CLK_SEL, i);
++
++	domain = irq_domain_add_hierarchy(parent_domain, 0, NUM_SIRQ, node,
++					  &owl_sirq_domain_ops, chip_data);
++	if (!domain) {
++		pr_err("%pOF: failed to add domain\n", node);
++		ret = -ENOMEM;
++		goto out_unmap;
++	}
++
++	return 0;
++
++out_unmap:
++	iounmap(chip_data->base);
++out_free:
++	kfree(chip_data);
++
++	return ret;
++}
++
++IRQCHIP_DECLARE(owl_sirq, "actions,owl-sirq", owl_sirq_of_init);
+-- 
+2.28.0
 
