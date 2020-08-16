@@ -2,69 +2,74 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6220A20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TDFP7WDt"
+	by mail.kernel.org (Postfix) with ESMTP id 94FA7206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 01:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgHPBBf (ORCPT
+        id S1728798AbgHPBYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 21:01:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:1349 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726177AbgHPBBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 21:01:35 -0400
-X-UUID: 8a6bad4c50ac426a8ac4670e5d7dabe9-20200816
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=IDErbtAWX1NDJEPZMKsgOloJQKGKV4XyKZTxb6CpxlM=;
-        b=TDFP7WDteTvL0le2lQgmdb2FzGg6GYg1NBR+FkRXqD5KlO3KukztMQj7/3erMNJ1KYDiTNX9jNRqaAPRjwMtyprNf1dwJK+23897EYQX1Mx/RGaI/IpN1uwOIdQQoXA/Vw6hgrpVToA29Slx+8jeOWDtxvDpfyD8jRSH5wIO0r0=;
-X-UUID: 8a6bad4c50ac426a8ac4670e5d7dabe9-20200816
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 342660871; Sun, 16 Aug 2020 09:01:29 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 16 Aug 2020 09:01:27 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 16 Aug 2020 09:01:27 +0800
-Message-ID: <1597539688.7483.2.camel@mtkswgap22>
-Subject: Re: [PATCH v3 2/2] scsi: ufs: remove several redundant goto
- statements
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Bean Huo <huobean@gmail.com>
-CC:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <beanhuo@micron.com>,
-        <bvanassche@acm.org>, <tomas.winkler@intel.com>,
-        <cang@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Sun, 16 Aug 2020 09:01:28 +0800
-In-Reply-To: <20200814095034.20709-3-huobean@gmail.com>
-References: <20200814095034.20709-1-huobean@gmail.com>
-         <20200814095034.20709-3-huobean@gmail.com>
+        Sat, 15 Aug 2020 21:24:15 -0400
+Received: from comms.puri.sm ([159.203.221.185]:59668 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgHPBYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 21:24:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 18552E11EE;
+        Sat, 15 Aug 2020 18:23:43 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RK4kC8KZ4Uyc; Sat, 15 Aug 2020 18:23:42 -0700 (PDT)
+From:   Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, "kernel@puri.sm" <kernel@puri.sm>
+Subject: [PATCH] ASoC: wm8962: Export DAC/ADC monomix switches
+Date:   Sun, 16 Aug 2020 03:23:34 +0200
+Message-ID: <3662154.EqNIRYjrc8@pliszka>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA4LTE0IGF0IDExOjUwICswMjAwLCBCZWFuIEh1byB3cm90ZToNCj4gRnJv
-bTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEJl
-YW4gSHVvIDxiZWFuaHVvQG1pY3Jvbi5jb20+DQoNClJldmlld2VkLWJ5OiBTdGFubGV5IENodSA8
-c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KDQoNCg0K
+This allows solutions like ALSA UCM to utilize hardware mono downmix
+for cases where mono output to a single speaker is desired only in
+specific situations (like on a mobile phone).
+
+Signed-off-by: Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>
+---
+ sound/soc/codecs/wm8962.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 317916cb4e27..d36aa24da7e0 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -1702,6 +1702,8 @@ SOC_DOUBLE_R_TLV("Digital Playback Volume", WM8962_LEFT_DAC_VOLUME,
+ SOC_SINGLE("DAC High Performance Switch", WM8962_ADC_DAC_CONTROL_2, 0, 1, 0),
+ SOC_SINGLE("DAC L/R Swap Switch", WM8962_AUDIO_INTERFACE_0, 5, 1, 0),
+ SOC_SINGLE("ADC L/R Swap Switch", WM8962_AUDIO_INTERFACE_0, 8, 1, 0),
++SOC_SINGLE("DAC Monomix Switch", WM8962_DAC_DSP_MIXING_1, WM8962_DAC_MONOMIX_SHIFT, 1, 0),
++SOC_SINGLE("ADC Monomix Switch", WM8962_THREED1, WM8962_ADC_MONOMIX_SHIFT, 1, 0),
+ 
+ SOC_SINGLE("ADC High Performance Switch", WM8962_ADDITIONAL_CONTROL_1,
+ 	   5, 1, 0),
+-- 
+2.28.0
+
+
+
 
