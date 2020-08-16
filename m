@@ -2,135 +2,204 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1F820708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DCF20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UB0QAMD1"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Bc4OsO7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgHPMQa (ORCPT
+        id S1728856AbgHPMSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 08:16:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23097 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728715AbgHPMQS (ORCPT
+        Sun, 16 Aug 2020 08:18:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52480 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgHPMSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 08:16:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597580176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=bQ7qrW+ACIz/qE+rPz7vxkZIBPc582AMP5IlCqoGQus=;
-        b=UB0QAMD1i15MkRGGbiph7nTU6sE3JkjeeMOjzDtsS07QMYyPgHMLRWmycA0lTjm0GVsXgC
-        REf+DhJaN/yFxi/pSTexJkUJ1gtp4IybVG2IjRZLM+ACu26TbrfZ74oJlAMX6sDMcjzFAZ
-        J+4dUddAXs6hCXos1Vui3maB+aYAYSQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-1YDz0AVeP8q1eg1qppmisA-1; Sun, 16 Aug 2020 08:16:11 -0400
-X-MC-Unique: 1YDz0AVeP8q1eg1qppmisA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1C5A1854FDC;
-        Sun, 16 Aug 2020 12:16:09 +0000 (UTC)
-Received: from [10.36.112.43] (ovpn-112-43.ams2.redhat.com [10.36.112.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 48F901002382;
-        Sun, 16 Aug 2020 12:16:08 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <eeb80957-96f7-661c-1510-0e6247570bd3@redhat.com>
-Date:   Sun, 16 Aug 2020 14:16:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 16 Aug 2020 08:18:39 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7A3A229F;
+        Sun, 16 Aug 2020 14:18:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597580311;
+        bh=MuES0GAg6jVJbbv5zM7qHHkXA4xwbq1xmfJHtpWTwNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bc4OsO7vUokbXdzoXVowO5aoYamxc7UUCNFadNJvbCLblPTnM5DJmVN1+mE/vOxjG
+         574M89+f9m0HQ6xmy6PLkpF9q3fscH3232gJ+o7sL5gD4XypZ1mrzl+Wg2Q8J9+sV+
+         J7efesawnxyoJ9osUSjfWERjoLspkH5XUejiamdo=
+Date:   Sun, 16 Aug 2020 15:18:16 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-media@vger.kernel.org, linux-uvc-devel@lists.sourceforge.net,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: Protecting uvcvideo againt USB device disconnect [Was: Re:
+ Protecting usb_set_interface() against device removal]
+Message-ID: <20200816121816.GC32174@pendragon.ideasonboard.com>
+References: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
+ <20200815020739.GB52242@rowland.harvard.edu>
+ <20200816003315.GA13826@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <1597549677-7480-1-git-send-email-alex.shi@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Disposition: inline
+In-Reply-To: <20200816003315.GA13826@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.08.20 05:47, Alex Shi wrote:
-> pageblock_flags is used as long, since every pageblock_flags is just 4
-> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
-> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
-> flags. It would cause long waiting for sync.
+Hi Guenter,
+
+CC'ing Hans Verkuil and Sakari Ailus for the discussion about handling
+file operations and disconnect in V4L2.
+
+On Sat, Aug 15, 2020 at 05:33:15PM -0700, Guenter Roeck wrote:
+> + linux-uvc-devel@lists.sourceforge.net
+> + linux-media@vger.kernel.org
+> + laurent.pinchart@ideasonboard.com
 > 
-> If we could change the pageblock_flags variable as char, we could use
-> char size cmpxchg, which just sync up with 2 pageblock flags. it could
-> relief much false sharing in cmpxchg.
+> and changed subject
+> 
+> On Fri, Aug 14, 2020 at 10:07:39PM -0400, Alan Stern wrote:
+> > On Fri, Aug 14, 2020 at 04:07:03PM -0700, Guenter Roeck wrote:
+> > > Hi all,
+> > > 
+> > > over time, there have been a number of reports of crashes in usb_ifnum_to_if(),
+> > > called from usb_hcd_alloc_bandwidth, which is in turn called from usb_set_interface().
+> > > Examples are [1] [2] [3]. A typical backtrace is:
+> > > 
+> > > <3>[ 3489.445468] intel_sst_acpi 808622A8:00: sst: Busy wait failed, cant send this msg
+> > > <6>[ 3490.507273] usb 1-4: USB disconnect, device number 3
+> > > <1>[ 3490.516670] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+> > > <6>[ 3490.516680] PGD 0 P4D 0
+> > > <4>[ 3490.516687] Oops: 0000 [#1] PREEMPT SMP PTI
+> > > <4>[ 3490.516693] CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
+> > > <4>[ 3490.516696] Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
+> > > <4>[ 3490.516706] RIP: 0010:usb_ifnum_to_if+0x29/0x40
+> > > <4>[ 3490.516710] Code: ee 0f 1f 44 00 00 55 48 89 e5 48 8b 8f f8 03 00 00 48 85 c9 74 27 44 0f b6 41 04 4d 85 c0 74 1d 31 ff 48 8b 84 f9 98 00 00 00 <48> 8b 10 0f b6 52 02 39 f2 74 0a 48 ff c7 4c 39 c7 72 e5 31 c0 5d
+> > > <4>[ 3490.516714] RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
+> > > <4>[ 3490.516718] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
+> > > <4>[ 3490.516721] RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
+> > > <4>[ 3490.516724] RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
+> > > <4>[ 3490.516727] R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
+> > > <4>[ 3490.516731] R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
+> > > <4>[ 3490.516735] FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
+> > > <4>[ 3490.516738] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > <4>[ 3490.516742] CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
+> > > <4>[ 3490.516745] Call Trace:
+> > > <4>[ 3490.516756] usb_hcd_alloc_bandwidth+0x1ee/0x30f
+> > > <4>[ 3490.516762] usb_set_interface+0x1a3/0x2b7
+> > > <4>[ 3490.516773] uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
+> > > <4>[ 3490.516781] uvc_video_start_streaming+0x91/0xdd [uvcvideo]
+> > > <4>[ 3490.516787] uvc_start_streaming+0x28/0x5d [uvcvideo]
+> > > <4>[ 3490.516795] vb2_start_streaming+0x61/0x143 [videobuf2_common]
+> > > <4>[ 3490.516801] vb2_core_streamon+0xf7/0x10f [videobuf2_common]
+> > > <4>[ 3490.516807] uvc_queue_streamon+0x2e/0x41 [uvcvideo]
+> > > <4>[ 3490.516814] uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
+> > > <4>[ 3490.516820] __video_do_ioctl+0x33d/0x42a
+> > > <4>[ 3490.516826] video_usercopy+0x34e/0x5ff
+> > > <4>[ 3490.516831] ? video_ioctl2+0x16/0x16
+> > > <4>[ 3490.516837] v4l2_ioctl+0x46/0x53
+> > > <4>[ 3490.516843] do_vfs_ioctl+0x50a/0x76f
+> > > <4>[ 3490.516848] ksys_ioctl+0x58/0x83
+> > > <4>[ 3490.516853] __x64_sys_ioctl+0x1a/0x1e
+> > > <4>[ 3490.516858] do_syscall_64+0x54/0xde
+> > > 
+> > > I have been able to reproduce the problem on a Chromebook by strategically placing
+> > > msleep() calls into usb_set_interface() and usb_disable_device(). Ultimately, the
+> > > problem boils down to lack of protection against device removal in usb_set_interface()
+> > > [and/or possibly other callers of usb_ifnum_to_if()].
+> > > 
+> > > Sequence of events is roughly as follows:
+> > > 
+> > > - usb_set_interface() is called and proceeds to some point, possibly to
+> > >   mutex_lock(hcd->bandwidth_mutex);
+> > > - Device removal event is detected, and usb_disable_device() is called
+> > 
+> > At this point all interface drivers get unbound (their disconnect 
+> > routines are called).
+> > 
+> > > - usb_disable_device() starts removing actconfig data. It has removed
+> > >   and cleared dev->actconfig->interface[i], but not dev->actconfig
+> > > - usb_set_interface() calls usb_hcd_alloc_bandwidth(), which calls
+> > >   usb_ifnum_to_if()
+> > > - In usb_ifnum_to_if(), dev->actconfig is not NULL, but
+> > >   dev->actconfig->interface[i] is NULL
+> > > - crash
+> > > 
+> > > Question is what we can do about this. Checking if dev->state != USB_STATE_NOTATTACHED
+> > > in usb_ifnum_to_if() might be a possible approach, but strictly speaking it would
+> > > still be racy since there is still no lock against device removal. I have not tried
+> > > calling usb_lock_device() in usb_set_interface() - would that possibly be an option ?
+> > 
+> > As far as I know, protecting against these races is the responsibility 
+> > of the USB interface drivers.  They must make sure that their disconnect 
+> > routines block until all outstanding calls to usb_set_interface return 
+> > (in fact, until all outstanding device accesses have finished).
+> > 
+> > For instance, in the log extract you showed, it's obvious that the 
+> > uvc_start_streaming routine was running after the disconnect routine had 
+> > returned, which looks like a bug in itself: Once the disconnect routine 
+> > returns, the driver is not supposed to try to access the device at all 
+> > because some other driver may now be bound to it.
+> > 
+> > We can't just call usb_lock_device from within usb_set_interface, 
+> > because usb_set_interface is often called with that lock already held.
+> > 
+> I had a closer look into the uvcvideo driver and compared it to other usb
+> drivers, including drivers in drivers/media/usb/ which connect to the video
+> subsystem.
+> 
+> The usbvideo driver lacks protection against calls to uvc_disconnect() while
 
-Do you have any performance numbers to back your claims? IOW, do we care
-at all?
+Are you confusing usbvideo and uvcvideo ? Both exist, and uvcvideo would
+have been called usbvideo if the former hadn't already been in use.
 
+> calls into file operations are ongoing. This is pretty widespread, and not
+> even limited to file operations (for example, there is a worker which is only
+> canceled in uvc_delete, not in ucv_disconnect). The existing protection only
+> ensures that no file operations are started after the call to ucv_disconnect,
+> but that is insufficient.
+> 
+> Other drivers do have that protection and make sure that no usb operations
+> can happen after the disconnect call.
+> 
+> The only remedy I can see is to rework the usbvideo driver and add the
+> necessary protections. At first glance, it looks like this may be a
+> substantial amount of work. I'd sign up for that, but before I start,
+> I would like to get input from the usbvideo community. Is such an effort
+> already going on ? If yes, how can I help ? If not, is the problem
+> understood and accepted ? Are there any ideas on how to solve it ?
 
+This is something that has been discussed before, and needs to be solved
+in the V4L2 framework itself, not in individual drivers. Not only would
+this avoid rolling out the same code manually everywhere (in different
+incorrect ways, as races are difficult to solve and implementations are
+more often wrong than right), but it will also avoid similar issues for
+non-USB devices.
+
+It shouldn't take more than two flags (to track user-space operations in
+progress and disconnection), a spinlock and a wait queue entry. I'm not
+sure if someone has already given it a try, and don't recall why this
+hasn't been done yet, as it should be fairly straightforward.
+
+On the UVC side, the work queue probably has to be flushed in
+uvc_disconnect(). I'd keep the destroy call in uvc_delete() though.
+Please make sure to look for potential race conditions between the URB
+completion handler and the .disconnect() handler (they shouldn't be any,
+but I haven't checked lately myself).
 
 -- 
-Thanks,
+Regards,
 
-David / dhildenb
-
+Laurent Pinchart
