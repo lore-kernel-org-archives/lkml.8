@@ -2,204 +2,178 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67DCF20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489E420708
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 12:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Bc4OsO7v"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lnZ4ysom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgHPMSt (ORCPT
+        id S1726645AbgHPMWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 08:18:49 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52480 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgHPMSj (ORCPT
+        Sun, 16 Aug 2020 08:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgHPMWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 08:18:39 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7A3A229F;
-        Sun, 16 Aug 2020 14:18:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597580311;
-        bh=MuES0GAg6jVJbbv5zM7qHHkXA4xwbq1xmfJHtpWTwNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bc4OsO7vUokbXdzoXVowO5aoYamxc7UUCNFadNJvbCLblPTnM5DJmVN1+mE/vOxjG
-         574M89+f9m0HQ6xmy6PLkpF9q3fscH3232gJ+o7sL5gD4XypZ1mrzl+Wg2Q8J9+sV+
-         J7efesawnxyoJ9osUSjfWERjoLspkH5XUejiamdo=
-Date:   Sun, 16 Aug 2020 15:18:16 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-usb <linux-usb@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-media@vger.kernel.org, linux-uvc-devel@lists.sourceforge.net,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: Protecting uvcvideo againt USB device disconnect [Was: Re:
- Protecting usb_set_interface() against device removal]
-Message-ID: <20200816121816.GC32174@pendragon.ideasonboard.com>
-References: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
- <20200815020739.GB52242@rowland.harvard.edu>
- <20200816003315.GA13826@roeck-us.net>
+        Sun, 16 Aug 2020 08:22:13 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBC2C061385
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 05:22:12 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 128so6729084pgd.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 05:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=JiyQ0hn30lqOvJM/11zRcWta3YTwWRdZptnKCK7iwBM=;
+        b=lnZ4ysom0mqu5MpA/BUZirTsvxQ6LDK3pBXy9TnUdYnNAKPENV/i9h3MUtvJyouSGR
+         i7BZGOejlKqVyD/LFrPvz+ZPaa/1hmznIkHanjuCuu8kZCW42qSYieVP2aVSgOd0kQGY
+         J8wq5fVRDJiXubw0L8FpNzldeTJRSqa1+6dxF1z3wgDz2HUjDWOpN4oQQ0I4Y6hEcRn1
+         M/NRp1pzwAc01464TNzSz06zfhSEJvfrJIT6PhrX88dH8DITzDcfhXPw7Ww/p5eFn9G+
+         kPACAhRkaHUh38sL9y9Sdh/3rTQnR/QDy47RQ87Hxatek5TNoWzm2GM+9DcimplHV5L2
+         DNhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=JiyQ0hn30lqOvJM/11zRcWta3YTwWRdZptnKCK7iwBM=;
+        b=nSa08eaFq4PBvOO3KdS4dxmGPMcR098aNSv78U6UzmCrFERy6fFOn6f+81gSUR/ckt
+         Yt637W+P7LI1gFwo1GL7rWjp049hIfW8wePLwCg9BsDk5ofOobJCRkig7O126FFxtqJ1
+         mtZgQ58GAsy61iLpgszNkz0WSh8v7s3uPWQ7hFm/A1HtAx2TrddXH8EHRuOGAe6HHQGJ
+         9h9EoGcDOgDUKKNIomZzYvLr0BloaVuQe5lOSSIH58CH++Toealj/DRNZw9A0zyG6cM8
+         KZeWjjjhYit0LsSEkCluIE/ruDCW7qzmZF69Y303aXxD4vL1cBe/AqhCnyEjrRMdpoOY
+         8DAw==
+X-Gm-Message-State: AOAM530s5nUbTPW1wBoVoWy5YFVkzbnSvGWgnHWvPqc2mGuf2rKo6vSv
+        CATB3YlQHBnuXqrTKW476TU9K3Df29ZGxA==
+X-Google-Smtp-Source: ABdhPJwLRmFR2xE68+0VS0RTzj2P6F8SubmURo0FhsSur3WgNEKARmK//UKbNZ7IlXsaF9Hxpm77/g==
+X-Received: by 2002:a62:52d6:: with SMTP id g205mr8163291pfb.144.1597580531195;
+        Sun, 16 Aug 2020 05:22:11 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:80d9:87c:7a0f:8256? ([2605:e000:100e:8c61:80d9:87c:7a0f:8256])
+        by smtp.gmail.com with ESMTPSA id b20sm15294245pfo.88.2020.08.16.05.22.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Aug 2020 05:22:10 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Final io_uring changes for 5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <32d4a5ea-514f-cb79-94ff-83b0c4e1d47b@kernel.dk>
+Date:   Sun, 16 Aug 2020 05:22:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200816003315.GA13826@roeck-us.net>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+Hi Linus,
 
-CC'ing Hans Verkuil and Sakari Ailus for the discussion about handling
-file operations and disconnect in V4L2.
+A few differerent things in here. Seems like syzbot got some more
+io_uring bits wired up, and we got a handful of reports and the
+associated fixes are in here. General fixes too, and a lot of them
+marked for stable. Lastly, a bit of fallout from the async buffered
+reads, where we now more easily trigger short reads. Some applications
+don't really like that, so the io_read() code now handles short reads
+internally, and got a cleanup along the way so that it's now easier to
+read (and documented). We're now passing tests that failed with current
+-git.
 
-On Sat, Aug 15, 2020 at 05:33:15PM -0700, Guenter Roeck wrote:
-> + linux-uvc-devel@lists.sourceforge.net
-> + linux-media@vger.kernel.org
-> + laurent.pinchart@ideasonboard.com
-> 
-> and changed subject
-> 
-> On Fri, Aug 14, 2020 at 10:07:39PM -0400, Alan Stern wrote:
-> > On Fri, Aug 14, 2020 at 04:07:03PM -0700, Guenter Roeck wrote:
-> > > Hi all,
-> > > 
-> > > over time, there have been a number of reports of crashes in usb_ifnum_to_if(),
-> > > called from usb_hcd_alloc_bandwidth, which is in turn called from usb_set_interface().
-> > > Examples are [1] [2] [3]. A typical backtrace is:
-> > > 
-> > > <3>[ 3489.445468] intel_sst_acpi 808622A8:00: sst: Busy wait failed, cant send this msg
-> > > <6>[ 3490.507273] usb 1-4: USB disconnect, device number 3
-> > > <1>[ 3490.516670] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-> > > <6>[ 3490.516680] PGD 0 P4D 0
-> > > <4>[ 3490.516687] Oops: 0000 [#1] PREEMPT SMP PTI
-> > > <4>[ 3490.516693] CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
-> > > <4>[ 3490.516696] Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
-> > > <4>[ 3490.516706] RIP: 0010:usb_ifnum_to_if+0x29/0x40
-> > > <4>[ 3490.516710] Code: ee 0f 1f 44 00 00 55 48 89 e5 48 8b 8f f8 03 00 00 48 85 c9 74 27 44 0f b6 41 04 4d 85 c0 74 1d 31 ff 48 8b 84 f9 98 00 00 00 <48> 8b 10 0f b6 52 02 39 f2 74 0a 48 ff c7 4c 39 c7 72 e5 31 c0 5d
-> > > <4>[ 3490.516714] RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
-> > > <4>[ 3490.516718] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
-> > > <4>[ 3490.516721] RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
-> > > <4>[ 3490.516724] RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
-> > > <4>[ 3490.516727] R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
-> > > <4>[ 3490.516731] R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
-> > > <4>[ 3490.516735] FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
-> > > <4>[ 3490.516738] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > <4>[ 3490.516742] CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
-> > > <4>[ 3490.516745] Call Trace:
-> > > <4>[ 3490.516756] usb_hcd_alloc_bandwidth+0x1ee/0x30f
-> > > <4>[ 3490.516762] usb_set_interface+0x1a3/0x2b7
-> > > <4>[ 3490.516773] uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
-> > > <4>[ 3490.516781] uvc_video_start_streaming+0x91/0xdd [uvcvideo]
-> > > <4>[ 3490.516787] uvc_start_streaming+0x28/0x5d [uvcvideo]
-> > > <4>[ 3490.516795] vb2_start_streaming+0x61/0x143 [videobuf2_common]
-> > > <4>[ 3490.516801] vb2_core_streamon+0xf7/0x10f [videobuf2_common]
-> > > <4>[ 3490.516807] uvc_queue_streamon+0x2e/0x41 [uvcvideo]
-> > > <4>[ 3490.516814] uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
-> > > <4>[ 3490.516820] __video_do_ioctl+0x33d/0x42a
-> > > <4>[ 3490.516826] video_usercopy+0x34e/0x5ff
-> > > <4>[ 3490.516831] ? video_ioctl2+0x16/0x16
-> > > <4>[ 3490.516837] v4l2_ioctl+0x46/0x53
-> > > <4>[ 3490.516843] do_vfs_ioctl+0x50a/0x76f
-> > > <4>[ 3490.516848] ksys_ioctl+0x58/0x83
-> > > <4>[ 3490.516853] __x64_sys_ioctl+0x1a/0x1e
-> > > <4>[ 3490.516858] do_syscall_64+0x54/0xde
-> > > 
-> > > I have been able to reproduce the problem on a Chromebook by strategically placing
-> > > msleep() calls into usb_set_interface() and usb_disable_device(). Ultimately, the
-> > > problem boils down to lack of protection against device removal in usb_set_interface()
-> > > [and/or possibly other callers of usb_ifnum_to_if()].
-> > > 
-> > > Sequence of events is roughly as follows:
-> > > 
-> > > - usb_set_interface() is called and proceeds to some point, possibly to
-> > >   mutex_lock(hcd->bandwidth_mutex);
-> > > - Device removal event is detected, and usb_disable_device() is called
-> > 
-> > At this point all interface drivers get unbound (their disconnect 
-> > routines are called).
-> > 
-> > > - usb_disable_device() starts removing actconfig data. It has removed
-> > >   and cleared dev->actconfig->interface[i], but not dev->actconfig
-> > > - usb_set_interface() calls usb_hcd_alloc_bandwidth(), which calls
-> > >   usb_ifnum_to_if()
-> > > - In usb_ifnum_to_if(), dev->actconfig is not NULL, but
-> > >   dev->actconfig->interface[i] is NULL
-> > > - crash
-> > > 
-> > > Question is what we can do about this. Checking if dev->state != USB_STATE_NOTATTACHED
-> > > in usb_ifnum_to_if() might be a possible approach, but strictly speaking it would
-> > > still be racy since there is still no lock against device removal. I have not tried
-> > > calling usb_lock_device() in usb_set_interface() - would that possibly be an option ?
-> > 
-> > As far as I know, protecting against these races is the responsibility 
-> > of the USB interface drivers.  They must make sure that their disconnect 
-> > routines block until all outstanding calls to usb_set_interface return 
-> > (in fact, until all outstanding device accesses have finished).
-> > 
-> > For instance, in the log extract you showed, it's obvious that the 
-> > uvc_start_streaming routine was running after the disconnect routine had 
-> > returned, which looks like a bug in itself: Once the disconnect routine 
-> > returns, the driver is not supposed to try to access the device at all 
-> > because some other driver may now be bound to it.
-> > 
-> > We can't just call usb_lock_device from within usb_set_interface, 
-> > because usb_set_interface is often called with that lock already held.
-> > 
-> I had a closer look into the uvcvideo driver and compared it to other usb
-> drivers, including drivers in drivers/media/usb/ which connect to the video
-> subsystem.
-> 
-> The usbvideo driver lacks protection against calls to uvc_disconnect() while
+In detail:
 
-Are you confusing usbvideo and uvcvideo ? Both exist, and uvcvideo would
-have been called usbvideo if the former hadn't already been in use.
+- Fail read/writes if no ->read/write or iter based versions exist.
+  (Guoyu)
 
-> calls into file operations are ongoing. This is pretty widespread, and not
-> even limited to file operations (for example, there is a worker which is only
-> canceled in uvc_delete, not in ucv_disconnect). The existing protection only
-> ensures that no file operations are started after the call to ucv_disconnect,
-> but that is insufficient.
-> 
-> Other drivers do have that protection and make sure that no usb operations
-> can happen after the disconnect call.
-> 
-> The only remedy I can see is to rework the usbvideo driver and add the
-> necessary protections. At first glance, it looks like this may be a
-> substantial amount of work. I'd sign up for that, but before I start,
-> I would like to get input from the usbvideo community. Is such an effort
-> already going on ? If yes, how can I help ? If not, is the problem
-> understood and accepted ? Are there any ideas on how to solve it ?
+- Cleanups based on the wait_on_page_bit_common() rewrite
 
-This is something that has been discussed before, and needs to be solved
-in the V4L2 framework itself, not in individual drivers. Not only would
-this avoid rolling out the same code manually everywhere (in different
-incorrect ways, as races are difficult to solve and implementations are
-more often wrong than right), but it will also avoid similar issues for
-non-USB devices.
+- Add comments explaining the task_work based flow
 
-It shouldn't take more than two flags (to track user-space operations in
-progress and disconnection), a spinlock and a wait queue entry. I'm not
-sure if someone has already given it a try, and don't recall why this
-hasn't been done yet, as it should be fairly straightforward.
+- Use TWA_SIGNAL for everything. This comes with a fix from Oleg that
+  ensures that repeated task_work_add(..., TWA_SIGNAL) isn't overly
+  expensive. The 5.8 eventfd fix that drove the addition of TWA_SIGNAL
+  has counterparts that can trigger without eventfd, so this removes the
+  eventfd check and just does it unconditionally. Thanks to Peter
+  Zijlstra, Oleg Nesterov, and Jann Horn for helping get this done.
 
-On the UVC side, the work queue probably has to be flushed in
-uvc_disconnect(). I'd keep the destroy call in uvc_delete() though.
-Please make sure to look for potential race conditions between the URB
-completion handler and the .disconnect() handler (they shouldn't be any,
-but I haven't checked lately myself).
+- syzbot related fixes:
+	- Recursive locking for overflows with links
+	- File table dropping fix
+	- Hold 'ctx' ref around task_work
+	- Double poll issue
+
+- Netty implementation found two bugs, fixes:
+	- Enable cancellation of 'head' link of file table grabbing
+	  requests 
+	- TWA_SIGNAL change
+
+- Fix a regression with RWF_NOWAIT now triggering read-ahead, whereas
+  before it did not.
+
+- Handling of short page cache reads, by cleaning up io_read() and
+  having the iov_iter be persistent across retries. As a nice side
+  effect, this is also more efficient internally, and now io_read() has
+  a codeflow that is actually readable. Similarly, having a persistent
+  struct iov_iter instead of maintaining separate state is a lot less
+  error prone too, and eliminates magic storing/restoring of said state.
+  Thanks a lot to Andres Freund for diligently testing this change.
+
+Please pull!
+
+
+The following changes since commit e4cbce4d131753eca271d9d67f58c6377f27ad21:
+
+  Merge tag 'sched-core-2020-08-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2020-08-03 14:58:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-15
+
+for you to fetch changes up to f91daf565b0e272a33bd3fcd19eaebd331c5cffd:
+
+  io_uring: short circuit -EAGAIN for blocking read attempt (2020-08-15 15:58:42 -0700)
+
+----------------------------------------------------------------
+io_uring-5.9-2020-08-15
+
+----------------------------------------------------------------
+Guoyu Huang (1):
+      io_uring: Fix NULL pointer dereference in loop_rw_iter()
+
+Jens Axboe (17):
+      io_uring: io_async_buf_func() need not test page bit
+      io_uring: add comments on how the async buffered read retry works
+      io_uring: set ctx sq/cq entry count earlier
+      io_uring: account locked memory before potential error case
+      io_uring: use TWA_SIGNAL for task_work uncondtionally
+      io_uring: fix recursive completion locking on oveflow flush
+      io_uring: add missing REQ_F_COMP_LOCKED for nested requests
+      io_uring: defer file table grabbing request cleanup for locked requests
+      fs: RWF_NOWAIT should imply IOCB_NOIO
+      io_uring: hold 'ctx' reference around task_work queue + execute
+      io_uring: fail poll arm on queue proc failure
+      io_uring: enable lookup of links holding inflight files
+      task_work: only grab task signal lock when needed
+      io_uring: retain iov_iter state over io_read/io_write calls
+      io_uring: internally retry short reads
+      io_uring: sanitize double poll handling
+      io_uring: short circuit -EAGAIN for blocking read attempt
+
+ fs/io_uring.c      | 539 ++++++++++++++++++++++++++++++++++++++---------------
+ include/linux/fs.h |   2 +-
+ kernel/signal.c    |  16 +-
+ kernel/task_work.c |   8 +-
+ 4 files changed, 409 insertions(+), 156 deletions(-)
 
 -- 
-Regards,
+Jens Axboe
 
-Laurent Pinchart
