@@ -2,83 +2,107 @@ Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 02:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 02:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACFA20675
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 02:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42402068E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 02:30:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8mGhCEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgHPCSn (ORCPT
+        id S1729928AbgHPC20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Aug 2020 22:18:43 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3129 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726926AbgHPCSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Aug 2020 22:18:43 -0400
-Received: from dggeme703-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 028F7DC27C6FD4B9E471;
-        Sat, 15 Aug 2020 10:18:10 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme703-chm.china.huawei.com (10.1.199.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 15 Aug 2020 10:18:09 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Sat, 15 Aug 2020 10:18:09 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        "jeremy@azazel.net" <jeremy@azazel.net>,
-        "mashirle@us.ibm.com" <mashirle@us.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] net: Fix potential deadloop in skb_copy_ubufs()
-Thread-Topic: [PATCH 1/5] net: Fix potential deadloop in skb_copy_ubufs()
-Thread-Index: AdZyqSQrc7cmKqN7TBW6GVt2+y7YJA==
-Date:   Sat, 15 Aug 2020 02:18:09 +0000
-Message-ID: <d4390fcd400a4dc2b8f2a61b9190155f@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.252]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 15 Aug 2020 22:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgHPC20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Aug 2020 22:28:26 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B133C061786;
+        Sat, 15 Aug 2020 19:28:26 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f9so6030001pju.4;
+        Sat, 15 Aug 2020 19:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hdWuVMBr25WAMERNCsCJ/+D2iaw+OKauMCpYgioq/Tw=;
+        b=K8mGhCEWw2CjwKCIlw5S56kNnFLiEPTdk3Mrb8NdZYVgqduliLdJ6vmzmb3vbD1PG2
+         JGe1A84KHTwqTQKW3d1oJfFSue6+qIi+4uCzDLp+IqqYo+NCPB28VM2KQZtIzzcDlWIT
+         WfVvUIP/BX89mh1uyMlUClSBXnLvFjcbcXySHn/W14gvEDRtPQhfMqXvFjEQErUHQxi7
+         K/7CzTiSSU4Bn+foCa3gcMvnSfSNjorEu34wn/Trz1ollGXg2zqBFV6qIAWc6Lf/DMQc
+         +oVYWjCCHVexMnoTo3W5SawAseIpYwo/xECcz1Se/byp273PCzfAyV34Rc74GV8CgfWL
+         jxrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hdWuVMBr25WAMERNCsCJ/+D2iaw+OKauMCpYgioq/Tw=;
+        b=mUreC7Sj9bZroGfRp4QAip9cJ343jAXcUDGx+HTLSgAUEhVFYIft+eRx7Y4Jewaxqs
+         aNXKNujyRjUbZPITSDB5XYXSLdA6CP9c7RH/oGPwHnbYnhVNzJLNErE5RiB+1B1RZT9W
+         PY+2HI2W9/tHkK+BIbFCh9uPuVWFoHfI/9ACEBBoVnzjz/thC2t3hkwPpgxDUFHYI5kH
+         1eE2JEERElI/a9im9Ixvv5IRiSj5HMppW3cFgo8tCHaRX8dI9eSQDugE0RjDAtdZgbYw
+         N3jK57gsHz+i1UK06m9c/sPsiPbeG0FSZio9mvxABax/n8aqdokxxxYU81eBYdgtg0KO
+         zlyw==
+X-Gm-Message-State: AOAM532Vth5X3Nr26speEtw4exsKPJl7gLQYe9tGsBazT5bQW7KPfb4L
+        DWmBtBuEYl0v99yefXd6HREJ4GkXGqjq5yvPPKmKIscvhM0=
+X-Google-Smtp-Source: ABdhPJyYExaqaMixUHDjbr013pxxLQEBupwdZZx5tENDQ0DmhxhtR2QkekpSzUPOaLZZP0WrZQzztEmHnNIYV/2wUUE=
+X-Received: by 2002:a17:90a:aa90:: with SMTP id l16mr7583607pjq.210.1597544905667;
+ Sat, 15 Aug 2020 19:28:25 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200808175251.582781-1-xie.he.0141@gmail.com>
+ <CA+FuTSfxWhq0pxEGPtOMjFUB7-4Vax6XMGsLL++28LwSOU5b3g@mail.gmail.com>
+ <CAJht_EM9q9u34LMAeYsYe5voZ54s3Z7OzxtvSomcF9a9wRvuCQ@mail.gmail.com>
+ <CA+FuTSdBNn218kuswND5OE4vZ4mxz3_hTDkcRmZn2Z9-gaYQZg@mail.gmail.com> <CAJht_EPGD1RmnU6-ZJYocXCY-qcPxXeEuurQ6GJod=WGO69-jg@mail.gmail.com>
+In-Reply-To: <CAJht_EPGD1RmnU6-ZJYocXCY-qcPxXeEuurQ6GJod=WGO69-jg@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Sat, 15 Aug 2020 19:28:14 -0700
+Message-ID: <CAJht_EOsQ-QLFBeJCytTRSRuor6jnCEE+zMBV+ngtwr25OSCSQ@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/lapbether: Added needed_tailroom
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RXJpYyBEdW1hemV0IDxlZHVtYXpldEBnb29nbGUuY29tPiB3cm90ZToNCj5PbiBGcmksIEF1ZyAx
-NCwgMjAyMCBhdCAxMjoxNCBBTSBsaW5taWFvaGUgPGxpbm1pYW9oZUBodWF3ZWkuY29tPiB3cm90
-ZToNCj4+DQo+PiBXaWxsZW0gZGUgQnJ1aWpuIDx3aWxsZW1kZWJydWlqbi5rZXJuZWxAZ21haWwu
-Y29tPiB3cm90ZToNCj4+DQo+PiBTaW5jZSB3ZSBhbHdheXMgY2FsbCBza2Jfb3JwaGFuX2ZyYWdz
-IGluIHNrYl9jbG9uZSwgaXMgaXQgdW5uZWNlc3NhcnkgdG8gY2FsbCBza2Jfb3JwaGFuX2ZyYWdz
-IGluIHBza2JfZXhwYW5kX2hlYWQgd2hlbiBza2IgaXMgY2xvbmVkID8NCj4NCj5QbGVhc2UgZ2l2
-ZSB1cyBhIHJlYWwgY2FzZS4NCj4NCj5JIGZlYXIgdGhhdCB5b3VyIHBhdGNoZXMgYXJlIGNvbWlu
-ZyBkaXJlY3RseSBmcm9tIHNvbWUga2luZCBvZiBhdXRvbWF0ZWQgdG9vbCwgdGhhdCByZWFsbHkg
-bWlzc2VzIGhvdyB0aGUgY29kZSBpcyByZWFsbHkgdXNlZCBmcm9tIF9jdXJyZW50XyBjb2RlIGJh
-c2UsIG5vdCBfaHlwb3RoZXRpY2FsXyBvbmUuDQo+DQo+VGhpcyBpcyB2ZXJ5IHRpbWUgY29uc3Vt
-aW5nLiBQbGVhc2UgcHJvdmlkZSBldmlkZW5jZSBmaXJzdC4NCj4NCj5UaGFuayB5b3UuDQoNCkkn
-YW0gc29ycnkgYWJvdXQgaXQuIEkgZG8gdGhpcyBtYWlubHkgdGhyb3VnaCBjb2RlIHJldmlldyBh
-bmQgZG8gc29tZSB0ZXN0IGNvZGUuIFNvIHRoZSBwcm9ibGVtIGNvZGVwYXRoIG1heSBub3QgZXhp
-c3QgZnJvbSBjdXJyZW50IGNvZGUgYmFzZSwgYnV0IG1heQ0KaGFwcGVuIHdoZW4gd2UgZG8gbm90
-IHRha2UgY2FyZSBvZiBpdCBpbiB0aGUgZnV0dXJlIHVzZS4gV2UgbWF5IGZvcmdldCBzYW1lIGFz
-c3VtcHRpb24uIEFuZCBtYWtlIHRoZXNlIGFzc3VtcHRpb25zIGNsZWFyIHNlZW1zIG5vdCBhIGJh
-ZCB0aGluZy4NCkJ1dCBJJ2FtIGdvaW5nIHRvIGp1c3QgZHJvcCB0aGlzIHBhdGNoLiBJIGJlbGll
-dmUgeW91IGFsbCBjYW4gaGFuZGxlIHRoZSB0aGluZ3MgY29ycmVjdGx5Lg0KDQpNYW55IHRoYW5r
-cy4NCg0K
+I took some time to look at the history of needed_tailroom. I found it
+was added in this commit:
+f5184d267c1a (net: Allow netdevices to specify needed head/tailroom)
+
+The author tried to make use of needed_tailroom at various places in
+the kernel by replacing the macro LL_RESERVED_SPACE with his new macro
+LL_ALLOCATED_SPACE.
+
+However, the macro LL_ALLOCATED_SPACE was later found to have
+problems. So it was removed 3 years later and was replaced by explicit
+handling of needed_tailroom. See:
+https://lkml.org/lkml/2011/11/18/198
+
+So maybe only those places considered by these two authors have taken
+needed_tailroom into account.
+
+Other places might not have taken needed_tailroom into account because
+of the rarity of the usage of needed_tailroom.
+
+The second author also said in the commit message of his Patch 5/6
+(which changes af_packet.c), that:
+    While auditing LL_ALLOCATED_SPACE I noticed that packet_sendmsg_spkt
+    did not include needed_tailroom when allocating an skb.  This isn't
+    a fatal error as we should always tolerate inadequate tail room but
+    it isn't optimal.
+
+This shows not taking needed_tailroom into account is not a bug but
+it'd be better to take it into account.
