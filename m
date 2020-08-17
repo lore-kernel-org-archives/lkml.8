@@ -2,152 +2,104 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C15BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDC420716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686012;
-	bh=NfUegQHp701VI/9vB3DTU9av/uxtI0FjP/hSjjOVqIE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1ebRyWwnRQrl9nF6LCPIxmJW265Rywx0veyEf9Fh84W/ce/dlsPb85UmOaxCnFzl
-	 2SiyWeI7TSXzjmFmELtbuDzKUGL4UenYlq3tiM8VTUxsi3Igt6gce0SOb3HEXosSeO
-	 pMI6MN6JBfjrMyE50d+/QU1mfcTPu79+kz0lytsY=
+	by mail.kernel.org (Postfix) with ESMTP id E615020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="1KYk0y+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbgHQRj4 (ORCPT
+        id S1731454AbgHQRkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730860AbgHQQQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ACC922D2B;
-        Mon, 17 Aug 2020 16:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680986;
-        bh=NfUegQHp701VI/9vB3DTU9av/uxtI0FjP/hSjjOVqIE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJc2MIDdH9GWP/5y91RI6fM3zDZExvPXkPQDnTxo9NlwuEVxj5oeuj9ESnKtdK0Op
-         0MvTneK/wNEF7z4lSPX6OfVV67rDS7mNlxWHZOSY5MEqPZowo8LuLu6BV3mArqcnTq
-         qzEd6Eh07XH3+o8YOCmPcvKIgvBS9L6JoFGN4VJE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
-        Mauri Sandberg <sandberg@mailfence.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/168] net: dsa: rtl8366: Fix VLAN semantics
-Date:   Mon, 17 Aug 2020 17:17:18 +0200
-Message-Id: <20200817143739.041697692@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 13:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731336AbgHQRjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:39:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C79FC061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:39:32 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d190so13931008wmd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UGi7nUmnSU2AxJ3eHG2eTFsMqNAfZu9moA2MOVQZI4w=;
+        b=1KYk0y+8JsMaFBq6jYJRs0ApLLfRkYIJlOrYd4R26WriO5pVrCEeVrNH8WV2wmallB
+         NxLm00PrOYQzbSgTZNLhTJq5AMmcb8J1qcd254ez5/Drafrad0Cqh8HBLXbP8i7BuYtu
+         ndJHlIJ/3auHSGqX6LwyUNZz12S2jkRJ5w+gSv/a0htU3zpOx+O/apFbokMrjORoSXEV
+         E9Pthgcf7Dh6TxDpUQO+CyjUdwyMbolritSwpfDV6VUBOkDzDggHwiGT6VYdDdZDpA3H
+         rRaQMDQBSQgbioY1bRFfxDPFHIaaV2EmXQdOxAAswmDsjYhiMACKUioQx/AbE9esX9C0
+         hIMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UGi7nUmnSU2AxJ3eHG2eTFsMqNAfZu9moA2MOVQZI4w=;
+        b=BY7x5t/k+wPH+IKHcM+W0B60tC+4PlRc9bPTqHzgvtiCmLXVTfqjM6UXjqdW/LzbmB
+         7bXaFtHxqxjRDeO3l3+0k/MVsmwgJRNeh73SyNHzDKw+93og0TeSvlbeC/x4kVfHTD83
+         pAbX5p2W0na7fMQX2faX5LE1eIrISv8SXr7xNkunn3zKqRT8b6W8WN6B/Hvti4oZXlhC
+         6wMJDFzDXCD6xvbgCzUqcqy5TbOfhR9QfDhnrujfSnsIcnTTVEoHwxwGI6meftMQAJf7
+         t3e5w/6yRNK10WbqIFEq3ZChn9qi8airhPrF8tu0pyuFJcxQyNiKhq8CSrJZPvo8Y9Kv
+         HAAA==
+X-Gm-Message-State: AOAM532wXd3sA7pMjhkrVp9KHq9yvtpRIcKdcEjHWMLxZOQVg48aKJve
+        UJnqaCon53Xj6i/vvgeahYe5zoZjqBH1Sw==
+X-Google-Smtp-Source: ABdhPJytG3rX7acI30gpSc7TqlK9Uh77srnc9MMySIvka/xac3M3wjSRX0b+Appyv1zZLD8RNNUNgg==
+X-Received: by 2002:a05:600c:245:: with SMTP id 5mr15339803wmj.22.1597685970965;
+        Mon, 17 Aug 2020 10:39:30 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id v20sm9659205wrd.6.2020.08.17.10.39.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 10:39:30 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RESEND PATCH] mm: util: update the kerneldoc for kstrdup_const()
+Date:   Mon, 17 Aug 2020 19:39:27 +0200
+Message-Id: <20200817173927.23389-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 15ab7906cc9290afb006df1bb1074907fbcc7061 ]
+Memory allocated with kstrdup_const() must not be passed to regular
+krealloc() as it is not aware of the possibility of the chunk residing
+in .rodata. Since there are no potential users of krealloc_const()
+at the moment, let's just update the doc to make it explicit.
 
-The RTL8366 would not handle adding new members (ports) to
-a VLAN: the code assumed that ->port_vlan_add() was only
-called once for a single port. When intializing the
-switch with .configure_vlan_while_not_filtering set to
-true, the function is called numerous times for adding
-all ports to VLAN1, which was something the code could
-not handle.
-
-Alter rtl8366_set_vlan() to just |= new members and
-untagged flags to 4k and MC VLAN table entries alike.
-This makes it possible to just add new ports to a
-VLAN.
-
-Put in some helpful debug code that can be used to find
-any further bugs here.
-
-Cc: DENG Qingfang <dqfext@gmail.com>
-Cc: Mauri Sandberg <sandberg@mailfence.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/dsa/rtl8366.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ mm/util.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/rtl8366.c b/drivers/net/dsa/rtl8366.c
-index c281c488a306f..145f34de7b416 100644
---- a/drivers/net/dsa/rtl8366.c
-+++ b/drivers/net/dsa/rtl8366.c
-@@ -43,18 +43,26 @@ int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
- 	int ret;
- 	int i;
- 
-+	dev_dbg(smi->dev,
-+		"setting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
-+		vid, member, untag);
-+
- 	/* Update the 4K table */
- 	ret = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
- 	if (ret)
- 		return ret;
- 
--	vlan4k.member = member;
--	vlan4k.untag = untag;
-+	vlan4k.member |= member;
-+	vlan4k.untag |= untag;
- 	vlan4k.fid = fid;
- 	ret = smi->ops->set_vlan_4k(smi, &vlan4k);
- 	if (ret)
- 		return ret;
- 
-+	dev_dbg(smi->dev,
-+		"resulting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
-+		vid, vlan4k.member, vlan4k.untag);
-+
- 	/* Try to find an existing MC entry for this VID */
- 	for (i = 0; i < smi->num_vlan_mc; i++) {
- 		struct rtl8366_vlan_mc vlanmc;
-@@ -65,11 +73,16 @@ int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
- 
- 		if (vid == vlanmc.vid) {
- 			/* update the MC entry */
--			vlanmc.member = member;
--			vlanmc.untag = untag;
-+			vlanmc.member |= member;
-+			vlanmc.untag |= untag;
- 			vlanmc.fid = fid;
- 
- 			ret = smi->ops->set_vlan_mc(smi, i, &vlanmc);
-+
-+			dev_dbg(smi->dev,
-+				"resulting VLAN%d MC members: 0x%02x, untagged: 0x%02x\n",
-+				vid, vlanmc.member, vlanmc.untag);
-+
- 			break;
- 		}
- 	}
+diff --git a/mm/util.c b/mm/util.c
+index 5ef378a2a038..bb902f5a6582 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -69,7 +69,8 @@ EXPORT_SYMBOL(kstrdup);
+  * @s: the string to duplicate
+  * @gfp: the GFP mask used in the kmalloc() call when allocating memory
+  *
+- * Note: Strings allocated by kstrdup_const should be freed by kfree_const.
++ * Note: Strings allocated by kstrdup_const should be freed by kfree_const and
++ * must not be passed to krealloc().
+  *
+  * Return: source string if it is in .rodata section otherwise
+  * fallback to kstrdup.
 -- 
-2.25.1
-
-
+2.26.1
 
