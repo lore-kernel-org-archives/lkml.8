@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F339B20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8E420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688143;
-	bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
+	s=default; t=1597688147;
+	bh=gHmsU+XG61m0rQS0oJmH2tnjbgwl5bnj4xGsCcFs6/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XHcbf6Lu1tS4k8dNdiIg+UgRtD4NggFosR0BidtG2Q5ynG7zgdmK+Ns7tkLDenLRS
-	 kV+tAGzt6GOdi5rrVVd20nWx0ly+DMWIyT5X/fKRmtbj73fpHmw/feQbcOfCxvKNuD
-	 N+LTlcQcPyUXkzeH+74kHol2PsB0Df+geMAsw+yM=
+	b=zqZlCLAADX42nv/34/v8asUTheSf6kotEILzRSTV4w3Wjo6PtgXs2Osbng5KSER7M
+	 Wi5aEt4l28TYJBHwjxE3n18T/kKFfrgdABPvlW13MrRvvO9MZw8c0HW9iMmGoFXZX2
+	 GKidxFO+9rE3wN4vPf+0ovITFQoQqIMUrkVVmmVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390679AbgHQSPh (ORCPT
+        id S2390669AbgHQSPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53970 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbgHQQGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:06:04 -0400
+        id S1731027AbgHQQGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A63820866;
-        Mon, 17 Aug 2020 16:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC86321744;
+        Mon, 17 Aug 2020 16:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680363;
-        bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
+        s=default; t=1597680366;
+        bh=gHmsU+XG61m0rQS0oJmH2tnjbgwl5bnj4xGsCcFs6/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ca9LiBUQ92g453SXnJ916Qsk4tnS/tKC7Bu3AI5txOmqWMF3W4tl7OEHUVdw5NjW4
-         IiqV5+IqeoonqkomWdlhDaoRqzoLnoYVzd5+LpqCz/stVKIFPkJBk6m+hUIHbHc4A3
-         pVKa016qWEweSsEf2IfjajaezySmue2vhfwLvJpA=
+        b=zs49VldXE8voZxZkZbuL1qZq9dHG6J371IMaTcj59Myo7l1wIYz6ukytT50IDYQwT
+         XCC1RQ6Wlvc01zxer/hHpVV6+vakoH1XhNJGFG0xd7/TmAfnNc+hezGYlE2COqMAAA
+         axJImmPOHnw+FCDJqsHwhUshOY8BBab1L8/mMTjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kars Mulder <kerneldev@karsmulder.nl>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 156/270] usb: core: fix quirks_param_set() writing to a const pointer
-Date:   Mon, 17 Aug 2020 17:15:57 +0200
-Message-Id: <20200817143803.596772999@linuxfoundation.org>
+Subject: [PATCH 5.4 157/270] thermal: ti-soc-thermal: Fix reversed condition in ti_thermal_expose_sensor()
+Date:   Mon, 17 Aug 2020 17:15:58 +0200
+Message-Id: <20200817143803.663682485@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,80 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kars Mulder <kerneldev@karsmulder.nl>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b1b6bed3b5036509b449b5965285d5057ba42527 ]
+[ Upstream commit 0f348db01fdf128813fdd659fcc339038fb421a4 ]
 
-The function quirks_param_set() takes as argument a const char* pointer
-to the new value of the usbcore.quirks parameter. It then casts this
-pointer to a non-const char* pointer and passes it to the strsep()
-function, which overwrites the value.
+This condition is reversed and will cause breakage.
 
-Fix this by creating a copy of the value using kstrdup() and letting
-that copy be written to by strsep().
-
-Fixes: 027bd6cafd9a ("usb: core: Add "quirks" parameter for usbcore")
-Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
-
-Link: https://lore.kernel.org/r/5ee2-5f048a00-21-618c5c00@230659773
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7440f518dad9 ("thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200616091949.GA11940@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/quirks.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index e0b77674869ce..c96c50faccf72 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -25,17 +25,23 @@ static unsigned int quirk_count;
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 85776db4bf346..2ce4b19f312ac 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
  
- static char quirks_param[128];
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
  
--static int quirks_param_set(const char *val, const struct kernel_param *kp)
-+static int quirks_param_set(const char *value, const struct kernel_param *kp)
- {
--	char *p, *field;
-+	char *val, *p, *field;
- 	u16 vid, pid;
- 	u32 flags;
- 	size_t i;
- 	int err;
+-	if (!IS_ERR_OR_NULL(data))
++	if (IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
  
-+	val = kstrdup(value, GFP_KERNEL);
-+	if (!val)
-+		return -ENOMEM;
-+
- 	err = param_set_copystring(val, kp);
--	if (err)
-+	if (err) {
-+		kfree(val);
- 		return err;
-+	}
- 
- 	mutex_lock(&quirk_mutex);
- 
-@@ -60,10 +66,11 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
- 	if (!quirk_list) {
- 		quirk_count = 0;
- 		mutex_unlock(&quirk_mutex);
-+		kfree(val);
- 		return -ENOMEM;
- 	}
- 
--	for (i = 0, p = (char *)val; p && *p;) {
-+	for (i = 0, p = val; p && *p;) {
- 		/* Each entry consists of VID:PID:flags */
- 		field = strsep(&p, ":");
- 		if (!field)
-@@ -144,6 +151,7 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
- 
- unlock:
- 	mutex_unlock(&quirk_mutex);
-+	kfree(val);
- 
- 	return 0;
- }
+ 	if (!data)
 -- 
 2.25.1
 
