@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED48BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A0C2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A980E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="W3SWtXbc"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kuhIjlEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgHQNOT (ORCPT
+        id S1728830AbgHQNOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:14:19 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:27796 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbgHQNNS (ORCPT
+        Mon, 17 Aug 2020 09:14:33 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:48153 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728791AbgHQNMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:13:18 -0400
+        Mon, 17 Aug 2020 09:12:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597669998; x=1629205998;
+  t=1597669957; x=1629205957;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3wCnCkfoS6eWoqMLxN1SWV/HlSl8sbP9wEv/BoEIfFQ=;
-  b=W3SWtXbcJpsS8mCEIbtJZUE4bpnqIPbJH/isplbrsHFPnALIsdMr1/um
-   y2okebwG7d7OcO1QZ/75qm3wTnm9qm7/5MRsKNaUT0etF41nqIZA6FJpY
-   n5dN8563w6hCz/VhF35DpIxltZyKEl6l9ftPtzDeX2jMvmjjiA9e7MwYz
-   k=;
+  bh=usAlHPYmCBEm91UOz1pBRknHhC8ZRTxGoS5yWVCKABA=;
+  b=kuhIjlEb6sKnbtem6oqQefpI/f1ud4SuLB/Dow5Wn0varq+dVQH501Q6
+   zsrfDu1MkvehIsUKZNHi6f7chp/bRiudPFEbOcKL+vdGcDJCgQMzHODvF
+   mAzwK3fkqlGt9AyDC1az7o0BgRLGitGvulzhhT9qo89XZzU5hv0yckkdo
+   s=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="49637923"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 17 Aug 2020 13:13:16 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 1E625A229F;
-        Mon, 17 Aug 2020 13:13:15 +0000 (UTC)
+   d="scan'208";a="67311445"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Aug 2020 13:12:36 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 6CD2DA1E4D;
+        Mon, 17 Aug 2020 13:12:33 +0000 (UTC)
 Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:13:13 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:32 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.228) by
  EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:13:04 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:23 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -70,15 +70,15 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v7 17/18] nitro_enclaves: Add overview documentation
-Date:   Mon, 17 Aug 2020 16:10:02 +0300
-Message-ID: <20200817131003.56650-18-andraprs@amazon.com>
+Subject: [PATCH v7 13/18] nitro_enclaves: Add logic for terminating an enclave
+Date:   Mon, 17 Aug 2020 16:09:58 +0300
+Message-ID: <20200817131003.56650-14-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200817131003.56650-1-andraprs@amazon.com>
 References: <20200817131003.56650-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D03UWA001.ant.amazon.com (10.43.160.141) To
+X-Originating-IP: [10.43.162.228]
+X-ClientProxiedBy: EX13D34UWC004.ant.amazon.com (10.43.162.155) To
  EX13D16EUB001.ant.amazon.com (10.43.166.28)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -87,132 +87,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+An enclave is associated with an fd that is returned after the enclave
+creation logic is completed. This enclave fd is further used to setup
+enclave resources. Once the enclave needs to be terminated, the enclave
+fd is closed.
+
+Add logic for enclave termination, that is mapped to the enclave fd
+release callback. Free the internal enclave info used for bookkeeping.
+
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
 Changelog
 
 v6 -> v7
 
-* No changes.
+* Remove the pci_dev_put() call as the NE misc device parent field is
+  used now to get the NE PCI device.
+* Update the naming and add more comments to make more clear the logic
+  of handling full CPU cores and dedicating them to the enclave.
 
 v5 -> v6
 
-* No changes.
+* Update documentation to kernel-doc format.
+* Use directly put_page() instead of unpin_user_pages(), to match the
+  get_user_pages() calls.
 
 v4 -> v5
 
-* No changes.
+* Release the reference to the NE PCI device on enclave fd release.
+* Adapt the logic to cpumask enclave vCPU ids and CPU cores.
+* Remove sanity checks for situations that shouldn't happen, only if
+  buggy system or broken logic at all.
 
 v3 -> v4
 
-* Update doc type from .txt to .rst.
-* Update documentation based on the changes from v4.
+* Use dev_err instead of custom NE log pattern.
 
 v2 -> v3
 
-* No changes.
+* Remove the WARN_ON calls.
+* Update static calls sanity checks.
+* Update kzfree() calls to kfree().
 
 v1 -> v2
 
-* New in v2.
+* Add log pattern for NE.
+* Remove the BUG_ON calls.
+* Update goto labels to match their purpose.
+* Add early exit in release() if there was a slot alloc error in the fd
+  creation path.
 ---
- Documentation/nitro_enclaves/ne_overview.rst | 87 ++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/nitro_enclaves/ne_overview.rst
+ drivers/virt/nitro_enclaves/ne_misc_dev.c | 166 ++++++++++++++++++++++
+ 1 file changed, 166 insertions(+)
 
-diff --git a/Documentation/nitro_enclaves/ne_overview.rst b/Documentation/nitro_enclaves/ne_overview.rst
-new file mode 100644
-index 000000000000..9cc7a2720955
---- /dev/null
-+++ b/Documentation/nitro_enclaves/ne_overview.rst
-@@ -0,0 +1,87 @@
-+Nitro Enclaves
-+==============
+diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+index be81ff5634af..787428390d94 100644
+--- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
++++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+@@ -1221,6 +1221,171 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	return 0;
+ }
+ 
++/**
++ * ne_enclave_remove_all_mem_region_entries() - Remove all memory region entries
++ *						from the enclave data structure.
++ * @ne_enclave :	Private data associated with the current enclave.
++ *
++ * Context: Process context. This function is called with the ne_enclave mutex held.
++ */
++static void ne_enclave_remove_all_mem_region_entries(struct ne_enclave *ne_enclave)
++{
++	unsigned long i = 0;
++	struct ne_mem_region *ne_mem_region = NULL;
++	struct ne_mem_region *ne_mem_region_tmp = NULL;
 +
-+Nitro Enclaves (NE) is a new Amazon Elastic Compute Cloud (EC2) capability
-+that allows customers to carve out isolated compute environments within EC2
-+instances [1].
++	list_for_each_entry_safe(ne_mem_region, ne_mem_region_tmp,
++				 &ne_enclave->mem_regions_list,
++				 mem_region_list_entry) {
++		list_del(&ne_mem_region->mem_region_list_entry);
 +
-+For example, an application that processes sensitive data and runs in a VM,
-+can be separated from other applications running in the same VM. This
-+application then runs in a separate VM than the primary VM, namely an enclave.
++		for (i = 0; i < ne_mem_region->nr_pages; i++)
++			put_page(ne_mem_region->pages[i]);
 +
-+An enclave runs alongside the VM that spawned it. This setup matches low latency
-+applications needs. The resources that are allocated for the enclave, such as
-+memory and CPUs, are carved out of the primary VM. Each enclave is mapped to a
-+process running in the primary VM, that communicates with the NE driver via an
-+ioctl interface.
++		kfree(ne_mem_region->pages);
 +
-+In this sense, there are two components:
++		kfree(ne_mem_region);
++	}
++}
 +
-+1. An enclave abstraction process - a user space process running in the primary
-+VM guest that uses the provided ioctl interface of the NE driver to spawn an
-+enclave VM (that's 2 below).
++/**
++ * ne_enclave_remove_all_vcpu_id_entries() - Remove all vCPU id entries from
++ *					     the enclave data structure.
++ * @ne_enclave :	Private data associated with the current enclave.
++ *
++ * Context: Process context. This function is called with the ne_enclave mutex held.
++ */
++static void ne_enclave_remove_all_vcpu_id_entries(struct ne_enclave *ne_enclave)
++{
++	unsigned int cpu = 0;
++	unsigned int i = 0;
 +
-+There is a NE emulated PCI device exposed to the primary VM. The driver for this
-+new PCI device is included in the NE driver.
++	mutex_lock(&ne_cpu_pool.mutex);
 +
-+The ioctl logic is mapped to PCI device commands e.g. the NE_START_ENCLAVE ioctl
-+maps to an enclave start PCI command. The PCI device commands are then
-+translated into  actions taken on the hypervisor side; that's the Nitro
-+hypervisor running on the host where the primary VM is running. The Nitro
-+hypervisor is based on core KVM technology.
++	for (i = 0; i < ne_enclave->nr_parent_vm_cores; i++) {
++		for_each_cpu(cpu, ne_enclave->threads_per_core[i])
++			/* Update the available NE CPU pool. */
++			cpumask_set_cpu(cpu, ne_cpu_pool.avail_threads_per_core[i]);
 +
-+2. The enclave itself - a VM running on the same host as the primary VM that
-+spawned it. Memory and CPUs are carved out of the primary VM and are dedicated
-+for the enclave VM. An enclave does not have persistent storage attached.
++		free_cpumask_var(ne_enclave->threads_per_core[i]);
++	}
 +
-+The memory regions carved out of the primary VM and given to an enclave need to
-+be aligned 2 MiB / 1 GiB physically contiguous memory regions (or multiple of
-+this size e.g. 8 MiB). The memory can be allocated e.g. by using hugetlbfs from
-+user space [2][3]. The memory size for an enclave needs to be at least 64 MiB.
-+The enclave memory and CPUs need to be from the same NUMA node.
++	mutex_unlock(&ne_cpu_pool.mutex);
 +
-+An enclave runs on dedicated cores. CPU 0 and its CPU siblings need to remain
-+available for the primary VM. A CPU pool has to be set for NE purposes by an
-+user with admin capability. See the cpu list section from the kernel
-+documentation [4] for how a CPU pool format looks.
++	kfree(ne_enclave->threads_per_core);
 +
-+An enclave communicates with the primary VM via a local communication channel,
-+using virtio-vsock [5]. The primary VM has virtio-pci vsock emulated device,
-+while the enclave VM has a virtio-mmio vsock emulated device. The vsock device
-+uses eventfd for signaling. The enclave VM sees the usual interfaces - local
-+APIC and IOAPIC - to get interrupts from virtio-vsock device. The virtio-mmio
-+device is placed in memory below the typical 4 GiB.
++	free_cpumask_var(ne_enclave->vcpu_ids);
++}
 +
-+The application that runs in the enclave needs to be packaged in an enclave
-+image together with the OS ( e.g. kernel, ramdisk, init ) that will run in the
-+enclave VM. The enclave VM has its own kernel and follows the standard Linux
-+boot protocol.
++/**
++ * ne_pci_dev_remove_enclave_entry() - Remove the enclave entry from the data
++ *				       structure that is part of the NE PCI
++ *				       device private data.
++ * @ne_enclave :	Private data associated with the current enclave.
++ * @ne_pci_dev :	Private data associated with the PCI device.
++ *
++ * Context: Process context. This function is called with the ne_pci_dev enclave
++ *	    mutex held.
++ */
++static void ne_pci_dev_remove_enclave_entry(struct ne_enclave *ne_enclave,
++					    struct ne_pci_dev *ne_pci_dev)
++{
++	struct ne_enclave *ne_enclave_entry = NULL;
++	struct ne_enclave *ne_enclave_entry_tmp = NULL;
 +
-+The kernel bzImage, the kernel command line, the ramdisk(s) are part of the
-+Enclave Image Format (EIF); plus an EIF header including metadata such as magic
-+number, eif version, image size and CRC.
++	list_for_each_entry_safe(ne_enclave_entry, ne_enclave_entry_tmp,
++				 &ne_pci_dev->enclaves_list, enclave_list_entry) {
++		if (ne_enclave_entry->slot_uid == ne_enclave->slot_uid) {
++			list_del(&ne_enclave_entry->enclave_list_entry);
 +
-+Hash values are computed for the entire enclave image (EIF), the kernel and
-+ramdisk(s). That's used, for example, to check that the enclave image that is
-+loaded in the enclave VM is the one that was intended to be run.
++			break;
++		}
++	}
++}
 +
-+These crypto measurements are included in a signed attestation document
-+generated by the Nitro Hypervisor and further used to prove the identity of the
-+enclave; KMS is an example of service that NE is integrated with and that checks
-+the attestation doc.
++/**
++ * ne_enclave_release() - Release function provided by the enclave file.
++ * @inode:	Inode associated with this file release function.
++ * @file:	File associated with this release function.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_enclave_release(struct inode *inode, struct file *file)
++{
++	struct ne_pci_dev_cmd_reply cmd_reply = {};
++	struct enclave_stop_req enclave_stop_request = {};
++	struct ne_enclave *ne_enclave = file->private_data;
++	struct ne_pci_dev *ne_pci_dev = NULL;
++	int rc = -EINVAL;
++	struct slot_free_req slot_free_req = {};
 +
-+The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB. The
-+init process in the enclave connects to the vsock CID of the primary VM and a
-+predefined port - 9000 - to send a heartbeat value - 0xb7. This mechanism is
-+used to check in the primary VM that the enclave has booted.
++	if (!ne_enclave)
++		return 0;
 +
-+If the enclave VM crashes or gracefully exits, an interrupt event is received by
-+the NE driver. This event is sent further to the user space enclave process
-+running in the primary VM via a poll notification mechanism. Then the user space
-+enclave process can exit.
++	/*
++	 * Early exit in case there is an error in the enclave creation logic
++	 * and fput() is called on the cleanup path.
++	 */
++	if (!ne_enclave->slot_uid)
++		return 0;
 +
-+[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-+[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
-+[3] https://lwn.net/Articles/807108/
-+[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
-+[5] https://man7.org/linux/man-pages/man7/vsock.7.html
++	ne_pci_dev = pci_get_drvdata(ne_enclave->pdev);
++
++	/*
++	 * Acquire the enclave list mutex before the enclave mutex
++	 * in order to avoid deadlocks with @ref ne_event_work_handler.
++	 */
++	mutex_lock(&ne_pci_dev->enclaves_list_mutex);
++	mutex_lock(&ne_enclave->enclave_info_mutex);
++
++	if (ne_enclave->state != NE_STATE_INIT && ne_enclave->state != NE_STATE_STOPPED) {
++		enclave_stop_request.slot_uid = ne_enclave->slot_uid;
++
++		rc = ne_do_request(ne_enclave->pdev, ENCLAVE_STOP,
++				   &enclave_stop_request, sizeof(enclave_stop_request),
++				   &cmd_reply, sizeof(cmd_reply));
++		if (rc < 0) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Error in enclave stop [rc=%d]\n", rc);
++
++			goto unlock_mutex;
++		}
++
++		memset(&cmd_reply, 0, sizeof(cmd_reply));
++	}
++
++	slot_free_req.slot_uid = ne_enclave->slot_uid;
++
++	rc = ne_do_request(ne_enclave->pdev, SLOT_FREE, &slot_free_req, sizeof(slot_free_req),
++			   &cmd_reply, sizeof(cmd_reply));
++	if (rc < 0) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Error in slot free [rc=%d]\n", rc);
++
++		goto unlock_mutex;
++	}
++
++	ne_pci_dev_remove_enclave_entry(ne_enclave, ne_pci_dev);
++	ne_enclave_remove_all_mem_region_entries(ne_enclave);
++	ne_enclave_remove_all_vcpu_id_entries(ne_enclave);
++
++	mutex_unlock(&ne_enclave->enclave_info_mutex);
++	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
++
++	kfree(ne_enclave);
++
++	return 0;
++
++unlock_mutex:
++	mutex_unlock(&ne_enclave->enclave_info_mutex);
++	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
++
++	return rc;
++}
++
+ /**
+  * ne_enclave_poll() - Poll functionality used for enclave out-of-band events.
+  * @file:	File associated with this poll function.
+@@ -1250,6 +1415,7 @@ static const struct file_operations ne_enclave_fops = {
+ 	.llseek		= noop_llseek,
+ 	.poll		= ne_enclave_poll,
+ 	.unlocked_ioctl	= ne_enclave_ioctl,
++	.release	= ne_enclave_release,
+ };
+ 
+ /**
 -- 
 2.20.1 (Apple Git-117)
 
