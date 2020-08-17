@@ -2,87 +2,113 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A017C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB99CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C2F2076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB0520789
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgHQNcK (ORCPT
+        id S1728530AbgHQNdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:32:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbgHQNcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:32:09 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D47C061389;
-        Mon, 17 Aug 2020 06:32:09 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id D1F48297BC1
-Subject: Re: [PATCH 2/2] tty/sysrq: Add configurable handler to execute a
- compound action
-To:     Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, kernel@collabora.com
-References: <20200804162402.2087-1-andrzej.p@collabora.com>
- <20200804162402.2087-3-andrzej.p@collabora.com>
- <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <5fc8d6df-ff33-1afd-5a83-d79d41e0fefc@collabora.com>
-Date:   Mon, 17 Aug 2020 15:32:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Aug 2020 09:33:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35962 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728349AbgHQNdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:33:31 -0400
+IronPort-SDR: Zqd+1GQ132B98LPpABbjGyUe359esc4Plb3EsYBuZzc6KOjAmGvXurNpYitgj6haNerrgcSswG
+ /HzMjD5vcLLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134759639"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="134759639"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 06:33:31 -0700
+IronPort-SDR: E8WEF2UhFAYaIvOt4bObPNnuNOrUKIp59q5nUuKU6+1HdLopvbzewb86ff9KmBzhtV+NOrHO+v
+ EIe8iW/nshXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="334075644"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Aug 2020 06:33:30 -0700
+From:   richard.gong@linux.intel.com
+To:     derek.kiernan@xilinx.com, dragan.cvetic@xilinx.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, dinguyen@kernel.org,
+        richard.gong@intel.com
+Subject: [PATCHv2 0/2] add Intel SoCFPGA crypto service driver 
+Date:   Mon, 17 Aug 2020 08:47:28 -0500
+Message-Id: <1597672050-25829-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+From: Richard Gong <richard.gong@intel.com>
 
-W dniu 12.08.2020 o 13:45, Jiri Slaby pisze:
-> On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
->> Userland might want to execute e.g. 'w' (show blocked tasks), followed
->> by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
->> upon a single magic SysRq. Or one might want to execute the famous "Raising
->> Elephants Is So Utterly Boring" action. This patch adds a configurable
->> handler, triggered with 'C', for this exact purpose. The user specifies the
->> composition of the compound action using syntax similar to getopt, where
->> each letter corresponds to an individual action and a colon followed by a
->> number corresponds to a delay of that many milliseconds, e.g.:
->>
->> ws:1000c
->>
->> or
->>
->> r:100eis:1000ub
-> 
-> I think I miss what's that good for, given I can do it one-by-one
-> without setting such strings anywhere (I usually want to do different
-> things on different kinds of crashes)?
-> 
+This is the 2nd submission of Intel SoCFPGA crypto service driver.
 
-The "REISUB" action is a common way of handling a bad situation, though,
-so having a shortcut for a common way is helpful, yet we are not forcing
-this particular action to happen when the 'C' sysrq is invoked and offer
-configurability instead.
+I followed the process to register or request a valid IOCTL number/letter,
+but I got the delivery failure status notification.
 
-I addressed the comments you had with regard to the code in a v2 series.
+Cypto service driver and service layer driver patches have been reviewed
+internally by colleagues at Intel.
 
-Regards,
+Intel SoCFPGA is composed of a 64 bit quad-core ARM Cortex A53 hard
+processor system (HPS) and Secure Device Manager (SDM). SDM is the
+hardware which does the FPGA configuration, QSPI, remote system update,
+crypto and warm reset.
 
-Andrzej
+To meet the whole system security needs and support virtual machine
+requesting communication with SDM, only the secure world of software (EL3,
+Exception Level 3) can interface with SDM. All software entities running
+on other exception levels must channel through the EL3 software whenever
+it needs service from SDM.
+
+Intel Stratix10 service layer driver is added to provide the service for
+FPGA configuration, Remote System Update and FPGA crypto service (FCS).
+Running at privileged exception level (EL1, Exception Level 1), Intel
+Stratix10 service layer driver interfaces with the service clients at EL1
+and manages secure monitor call (SMC) to communicate with secure monitor
+software at secure monitor exception level (EL3).
+
+The crypto services include security certificate, image boot validation,
+security key cancellation, get provision data, random number generation,
+advance encryption standard (AES) encryption and decryption services.
+
+To perform supporting crypto features on Intel SoCFPGA platforms, Linux
+user-space application interacts with FPGA crypto service (FCS) driver via
+structures defined in include/uapi/linux/intel_fcs-ioctl.h.
+
+The application allocates spaces for IOCTL structure to hold the contents
+or points to the data that FCS driver needs, uses IOCTL calls to passes
+data to kernel FCS driver for processing at low level firmware and get
+processed data or status back form the low level firmware via FCS driver.
+
+The user-space application named as fcs_client is at
+https://github.com/altera-opensource/fcs_apps/tree/fcs_client.
+
+Richard Gong (2):
+  firmware: stratix10-svc: extend svc to support new crypto features
+  misc: add Intel SoCFPGA crypto service driver
+
+ drivers/firmware/stratix10-svc.c                   | 178 +++++-
+ drivers/misc/Kconfig                               |  12 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/intel-fcs.c                           | 709 +++++++++++++++++++++
+ include/linux/firmware/intel/stratix10-smc.h       | 147 ++++-
+ .../linux/firmware/intel/stratix10-svc-client.h    |  42 ++
+ include/uapi/linux/intel-fcs_ioctl.h               | 222 +++++++
+ 7 files changed, 1292 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/misc/intel-fcs.c
+ create mode 100644 include/uapi/linux/intel-fcs_ioctl.h
+
+-- 
+2.7.4
 
