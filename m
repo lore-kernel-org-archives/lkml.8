@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3518FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C11AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08EB720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E7620758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687523;
-	bh=0twkCdG4JqCbSm6fsCcGK0oLqz8tjy0hd07lO6A9CZw=;
+	s=default; t=1597687537;
+	bh=lMGiXrzYGdWXjhjBqQbKNddRV33RGM0bKcrYbvO8UZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LalapfnRuRmvZzXAw9Kka2BvqKm1YhHdA+Okdg2+gRfixKj8jIcwjeLID3DotfyAC
-	 p38ZT6s5i/IbmmFlqa3tDU2j9e1NKjDGJ/rERssB/eOD5LKJZZd6o+I5LAFP+x0LV3
-	 9PM+9LpmiyqtYoDXctiqr9aRwuREhbTQEnW/uaJE=
+	b=br9XgOmgzDKJtfAxktXo3tuGkFvxYzDDxWeEvZVA9un1jax0e3u2AnB0F0NVO0JSt
+	 mhSehsJw+qgKbCqkBwllmPA2jnh1fLsk/vW+L38zF8YFpeTNQhABgPJDLRm+jyC+Zl
+	 gmUgxLUpS8YJk2fNdyvq1q4smZNO+fxIsJnhoN8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390244AbgHQSFT (ORCPT
+        id S2390261AbgHQSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60508 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388504AbgHQQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:09:21 -0400
+        id S2388498AbgHQQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:09:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0902620760;
-        Mon, 17 Aug 2020 16:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECBA122D02;
+        Mon, 17 Aug 2020 16:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680560;
-        bh=0twkCdG4JqCbSm6fsCcGK0oLqz8tjy0hd07lO6A9CZw=;
+        s=default; t=1597680553;
+        bh=lMGiXrzYGdWXjhjBqQbKNddRV33RGM0bKcrYbvO8UZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KCB9Dwe+j/YiTnd13xh1JJLwDDOAaleCERS+dD3Gi8Ni+oODx4ZoymWhHfuW+Aazm
-         s1Cd/EI777wQqFacNVdvYRRnS8F/mjKhEd4JaOhQ4ZjPvXodNUD1IuXVgiQJJkKRJu
-         om9Cb1hnrJ5PfU6v6llYb68asQ7ek1tIA0tYSPyc=
+        b=WNFa5F6Kf1cYMIgYRg2wCqfQltkEbLdHXkK/qZwHWOzLXVaWJdxTgaGvpm2fto53f
+         CP0DwmezAkol22JHbGC8mp8wIjIQTo92JAqZcPVr0qZrLq5lDfRCTndN6DgrgBG0xB
+         fvyDGaBtsBqQcdfYOZuuD8lD+blQQhbRlZbm16fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.4 236/270] drm/ttm/nouveau: dont call tt destroy callback on alloc failure.
-Date:   Mon, 17 Aug 2020 17:17:17 +0200
-Message-Id: <20200817143807.551078136@linuxfoundation.org>
+        stable@vger.kernel.org, Ronak Doshi <doshir@vmware.com>,
+        Guolin Yang <gyang@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 225/270] vmxnet3: use correct tcp hdr length when packet is encapsulated
+Date:   Mon, 17 Aug 2020 17:17:06 +0200
+Message-Id: <20200817143806.984713313@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,73 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Ronak Doshi <doshir@vmware.com>
 
-commit 5de5b6ecf97a021f29403aa272cb4e03318ef586 upstream.
+[ Upstream commit 8a7f280f29a80f6e0798f5d6e07c5dd8726620fe ]
 
-This is confusing, and from my reading of all the drivers only
-nouveau got this right.
+Commit dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload
+support") added support for encapsulation offload. However, while
+calculating tcp hdr length, it does not take into account if the
+packet is encapsulated or not.
 
-Just make the API act under driver control of it's own allocation
-failing, and don't call destroy, if the page table fails to
-create there is nothing to cleanup here.
+This patch fixes this issue by using correct reference for inner
+tcp header.
 
-(I'm willing to believe I've missed something here, so please
-review deeply).
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200728041736.20689-1-airlied@gmail.com
+Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
+Signed-off-by: Ronak Doshi <doshir@vmware.com>
+Acked-by: Guolin Yang <gyang@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/nouveau/nouveau_sgdma.c |    9 +++------
- drivers/gpu/drm/ttm/ttm_tt.c            |    3 ---
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_drv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-@@ -96,12 +96,9 @@ nouveau_sgdma_create_ttm(struct ttm_buff
- 	else
- 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -861,7 +861,8 @@ vmxnet3_parse_hdr(struct sk_buff *skb, s
  
--	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
--		/*
--		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
--		 * and thus our nouveau_sgdma_destroy() hook, so we don't need
--		 * to free nvbe here.
--		 */
-+	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
-+		kfree(nvbe);
- 		return NULL;
-+	}
- 	return &nvbe->ttm.ttm;
- }
---- a/drivers/gpu/drm/ttm/ttm_tt.c
-+++ b/drivers/gpu/drm/ttm/ttm_tt.c
-@@ -241,7 +241,6 @@ int ttm_tt_init(struct ttm_tt *ttm, stru
- 	ttm_tt_init_fields(ttm, bo, page_flags);
- 
- 	if (ttm_tt_alloc_page_directory(ttm)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
-@@ -265,7 +264,6 @@ int ttm_dma_tt_init(struct ttm_dma_tt *t
- 
- 	INIT_LIST_HEAD(&ttm_dma->pages_list);
- 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
-@@ -287,7 +285,6 @@ int ttm_sg_tt_init(struct ttm_dma_tt *tt
- 	else
- 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
- 	if (ret) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
+ 			switch (protocol) {
+ 			case IPPROTO_TCP:
+-				ctx->l4_hdr_size = tcp_hdrlen(skb);
++				ctx->l4_hdr_size = skb->encapsulation ? inner_tcp_hdrlen(skb) :
++						   tcp_hdrlen(skb);
+ 				break;
+ 			case IPPROTO_UDP:
+ 				ctx->l4_hdr_size = sizeof(struct udphdr);
 
 
