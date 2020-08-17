@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99149C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE29C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B1320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0032207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688634;
-	bh=+Y1DzkyI+kZ28L22vtpFDz1VUlAl175pQab8vEfGv3w=;
+	s=default; t=1597688642;
+	bh=OVDkHsSG07NKTNVnTJzwLv0lVIcR7G7fqta95REk53A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBZPj/5ODazFWCTV5mbyNAJ3g6AMjPvdUhbVpPGhqDZHHUxUD5wH6GhCqvTYDiwhy
-	 TUqkZmGiz9M4cvhX2dryCRxcpQ8n+FPzZBg00wjxdbTc1d4sKQuO0tkOTE7Eywu24w
-	 vtUlmeCcpefUdSjzZbii/rGJg79WVt+tsY3KZmN0=
+	b=yJGdxY07RL3QEHnAJ990Cwru9lN5eU7Ci4ohdYWBPK2t0GKqxtyUhzNF/4QwNyH8R
+	 pQGITAGCgOHvsWimPrBZvgU3KBaGRw2fqt00b6CdF+LGdxr7vs8B16680ic6FS7Uty
+	 pDNzEs4uoAlifiud55w/3r14mLnLRDOOQREupRpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390832AbgHQSXv (ORCPT
+        id S2390842AbgHQSX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388237AbgHQQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388233AbgHQQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B4B020729;
-        Mon, 17 Aug 2020 16:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9041A206FA;
+        Mon, 17 Aug 2020 16:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680200;
-        bh=+Y1DzkyI+kZ28L22vtpFDz1VUlAl175pQab8vEfGv3w=;
+        s=default; t=1597680196;
+        bh=OVDkHsSG07NKTNVnTJzwLv0lVIcR7G7fqta95REk53A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=izx/8saaP8dgQtXerBbzc2JA2c2YcjeSz9vCFOW7fGr7Be0iS2YR2qp8+bX0l6NHf
-         RxXe9BL3pc7mOesZa7epzw50jy6XLXGJE+rN7wAdg0QLHYlAAm+KJEUp74Stlwvgcx
-         9vS+WeYhKzJJv0E407/3DZQjErEyvUAe31zhLVwM=
+        b=MGc6lIU1cyLo1mkZbCfZ/6C8++A9HZUOZ/47zNq1h/EZorG3WoWzLN2q1VSTmofi1
+         DZX7h7buaS3MOcv9lM8jGOVm+4319e0GsOsveKWv0hdDRYGNJD3wnWhdh7HLDrHDwC
+         HAFQ5HJPbybeGsNa2gE2graY+XqPun3F7odHPMVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/270] drm/gem: Fix a leak in drm_gem_objects_lookup()
-Date:   Mon, 17 Aug 2020 17:14:51 +0200
-Message-Id: <20200817143800.244798042@linuxfoundation.org>
+Subject: [PATCH 5.4 062/270] drm/nouveau: fix multiple instances of reference count leaks
+Date:   Mon, 17 Aug 2020 17:14:23 +0200
+Message-Id: <20200817143758.844564966@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,44 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit ec0bb482de0ad5e4aba2a4537ea53eaeb77d11a6 ]
+[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
 
-If the "handles" allocation or the copy_from_user() fails then we leak
-"objs".  It's supposed to be freed in panfrost_job_cleanup().
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+ref count before returning the error.
 
-Fixes: c117aa4d8701 ("drm: Add a drm_gem_objects_lookup helper")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200320132334.GC95012@mwanda
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_gem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 46ad14470d066..1fdc85a71cec4 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -710,6 +710,8 @@ int drm_gem_objects_lookup(struct drm_file *filp, void __user *bo_handles,
- 	if (!objs)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index b1beed40e746a..5347e5bdee8cc 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -1052,8 +1052,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
  
-+	*objs_out = objs;
-+
- 	handles = kvmalloc_array(count, sizeof(u32), GFP_KERNEL);
- 	if (!handles) {
- 		ret = -ENOMEM;
-@@ -723,8 +725,6 @@ int drm_gem_objects_lookup(struct drm_file *filp, void __user *bo_handles,
- 	}
+ 	/* need to bring up power immediately if opening device */
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- 	ret = objects_lookup(filp, handles, count, objs);
--	*objs_out = objs;
--
- out:
- 	kvfree(handles);
- 	return ret;
+ 	get_task_comm(tmpname, current);
+ 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
+@@ -1135,8 +1137,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	long ret;
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
+ 	case DRM_NOUVEAU_NVIF:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index 1324c19f4e5cf..fbfe254227740 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -45,8 +45,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (WARN_ON(ret < 0 && ret != -EACCES))
++	if (WARN_ON(ret < 0 && ret != -EACCES)) {
++		pm_runtime_put_autosuspend(dev);
+ 		return;
++	}
+ 
+ 	if (gem->import_attach)
+ 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
