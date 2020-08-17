@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F329C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1989B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E150220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693595;
-	bh=n4p+AeW6JiuIsLx1WW7NJfTXfksep1+709oM9kBwEgI=;
+	s=default; t=1597693603;
+	bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AISBiPTgpdnshYoiKD0CAKoUFUQBsWwUl+XJtbWpTmk7r9VC4AwfX53dnIDQkrJRz
-	 qNEsRWjuvL+96pN71AOQrX4PSiDFXjlvefcCPZ8bD+k9LbBGZr+GY3770aYk/gOfDz
-	 gntLbVpktGinqBAXnN6lBBFSqsUG8dtnocUg3ark=
+	b=ipILC307hZXPhZ8qpZZXpDEptWnJz3OXvv9XmjV/6hM8armIMq7k1HGh5N0txxbYb
+	 gZSRCexf1TwZOc8D6hKRDQkhDxpx4hYZ6dWP3MWS+UqbKFuCqwHIE0rSwWFXIwuh0o
+	 rJ0q2FKukyQINccw+FND/Zr8zwcvlr4A+jbc6omg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404408AbgHQTqa (ORCPT
+        id S1729296AbgHQPVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbgHQPV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:27 -0400
+        id S1729235AbgHQPTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6BFD20709;
-        Mon, 17 Aug 2020 15:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E19D20748;
+        Mon, 17 Aug 2020 15:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677687;
-        bh=n4p+AeW6JiuIsLx1WW7NJfTXfksep1+709oM9kBwEgI=;
+        s=default; t=1597677587;
+        bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lx7J+ALfUbQCjO1biPZ99KKu6gegwiNOdKXS6lXMg7QIRr/h2WJqqB/tTd9kwmX1e
-         9HON5CNEc+Dlx6Z9+/eEZhef3ld+aRxnZ4PknPqrvOXm4Y3mtIMK6Bu/W0jMos4bZd
-         VOGqic4yfsYbsTwZw1Gxks2p9/e4v/Eu8SDMAaCw=
+        b=bpLfIQlmlzixEuMZSBROXgSwVPF7k8ZOp19vn6Y6vrF3SP+xIMbvjKAV0Xth/tGhb
+         KyRCFK87/EYnjoBdsvpVX+20vPrMz8nLi7yy5bdxT2gFNal216hic8eqsgCTqkzDTi
+         gFByfgwxU7zh8y8yUULTywDh1lsxjWkwdARRti60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 071/464] nvme-tcp: fix controller reset hang during traffic
-Date:   Mon, 17 Aug 2020 17:10:24 +0200
-Message-Id: <20200817143837.169466159@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 036/464] ARM: dts: gose: Fix ports node name for adv7180
+Date:   Mon, 17 Aug 2020 17:09:49 +0200
+Message-Id: <20200817143835.484097430@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,69 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit 2875b0aecabe2f081a8432e2bc85b85df0529490 ]
+[ Upstream commit d344234abde938ae1062edb6c05852b0bafb4a03 ]
 
-commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-exposed an issue where we may hang trying to wait for queue freeze
-during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
-queue maps (which we have now for default/read/poll) is attempting to
-freeze the queue. However we never started queue freeze when starting the
-reset, which means that we have inflight pending requests that entered the
-queue that we will not complete once the queue is quiesced.
+When adding the adv7180 device node the ports node was misspelled as
+port, fix this.
 
-So start a freeze before we quiesce the queue, and unfreeze the queue
-after we successfully connected the I/O queues (and make sure to call
-blk_mq_update_nr_hw_queues only after we are sure that the queue was
-already frozen).
-
-This follows to how the pci driver handles resets.
-
-Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 8cae359049a88b75 ("ARM: dts: gose: add composite video input")
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20200704155856.3037010-2-niklas.soderlund+renesas@ragnatech.se
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index f3a91818167b1..83bb329d4113a 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1744,15 +1744,20 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
- 			ret = PTR_ERR(ctrl->connect_q);
- 			goto out_free_tag_set;
- 		}
--	} else {
--		blk_mq_update_nr_hw_queues(ctrl->tagset,
--			ctrl->queue_count - 1);
- 	}
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 79baf06019f5a..a378b54867bb4 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -336,7 +336,7 @@ composite-in@20 {
+ 			reg = <0x20>;
+ 			remote = <&vin1>;
  
- 	ret = nvme_tcp_start_io_queues(ctrl);
- 	if (ret)
- 		goto out_cleanup_connect_q;
+-			port {
++			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
-+	if (!new) {
-+		nvme_start_queues(ctrl);
-+		nvme_wait_freeze(ctrl);
-+		blk_mq_update_nr_hw_queues(ctrl->tagset,
-+			ctrl->queue_count - 1);
-+		nvme_unfreeze(ctrl);
-+	}
-+
- 	return 0;
- 
- out_cleanup_connect_q:
-@@ -1857,6 +1862,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
- {
- 	if (ctrl->queue_count <= 1)
- 		return;
-+	nvme_start_freeze(ctrl);
- 	nvme_stop_queues(ctrl);
- 	nvme_tcp_stop_io_queues(ctrl);
- 	if (ctrl->tagset) {
 -- 
 2.25.1
 
