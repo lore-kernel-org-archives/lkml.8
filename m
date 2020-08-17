@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C38C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D2D2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7812063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681456;
-	bh=byHwtIwlZgL0WdEMuf+rCeZTZK2eJE6pssQD0B2LeE4=;
+	s=default; t=1597681496;
+	bh=9NZH0q7CTWWwtkIduIXGOeXVGAzkqjgQw8Knk8ePCOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dPB7Fy7FVcvSsBt8lxqFNXY9hhiUYV0kyy/kmDjKPBRvxhZzL22Lzsk0fN/UHfUMB
-	 62k6J0EBRuMBV+B6eqgCCLbcaaVbA/QSwCrAFKQ5o7DfGpVcoY+lDldFgEwL0qDorF
-	 GLbnlRVGpZX5/0aXx3e9UMk1VKU/YouhEfW4oazA=
+	b=tlJh6U3RUqF+JL1Y8YUIYpGuHpWKBTLIneWU8mrDVabsAoYQepX43VA+/XJ4B9vYo
+	 aPm0X8xKcwFi02H25pWmZjA3j1+T6adVDpKsG9FyIEfWvJGtHAuXgnKeGLymZoVNLf
+	 sXFBfk79dTn+pZ1X5nHV/+9ACh6mAa+/RCiTm86w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgHQQYL (ORCPT
+        id S1731011AbgHQQYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbgHQPum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:42 -0400
+        id S1730895AbgHQPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126932063A;
-        Mon, 17 Aug 2020 15:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE16E2063A;
+        Mon, 17 Aug 2020 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679441;
-        bh=byHwtIwlZgL0WdEMuf+rCeZTZK2eJE6pssQD0B2LeE4=;
+        s=default; t=1597679449;
+        bh=9NZH0q7CTWWwtkIduIXGOeXVGAzkqjgQw8Knk8ePCOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/P4WAVgDrB/ZQrUFw7/xweb+cIu9Ajxs46XrBtGM5bfEMHkJMwjitwceLKrDkQHt
-         /CvrtZHfp6C/uxYqnjwF/766uEjvo41h0ntBXy5gZ16Quk0jmh5RTKIkVz4HYs7bui
-         DkLufo0s5k0BdJ5ugKt+8n5kUL9z1vCJrbA7QniI=
+        b=wPWUXQjZWG3/CFONKbSdsE2m6Pls6Ov7A+64J88YmEa61qVFwO+GsWhdrwUjtOHoU
+         WQhuxJ2830vOCfkkoA/fJzFctGFtiFBYEb5u86uBFnKvPRy3KEIOsrVFuY1MVc3eaI
+         1J+EI9pJFYQriPZtXoypqD7XKoc11ugrfMee4CrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 212/393] ima: Fail rule parsing when the KEY_CHECK hook is combined with an invalid cond
-Date:   Mon, 17 Aug 2020 17:14:22 +0200
-Message-Id: <20200817143829.909642782@linuxfoundation.org>
+Subject: [PATCH 5.7 215/393] PCI/ASPM: Add missing newline in sysfs policy
+Date:   Mon, 17 Aug 2020 17:14:25 +0200
+Message-Id: <20200817143830.056364327@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit eb624fe214a2e156ddafd9868377cf91499f789d ]
+[ Upstream commit 3167e3d340c092fd47924bc4d23117a3074ef9a9 ]
 
-The KEY_CHECK function only supports the uid, pcr, and keyrings
-conditionals. Make this clear at policy load so that IMA policy authors
-don't assume that other conditionals are supported.
+When I cat ASPM parameter 'policy' by sysfs, it displays as follows.  Add a
+newline for easy reading.  Other sysfs attributes already include a
+newline.
 
-Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+  [root@localhost ~]# cat /sys/module/pcie_aspm/parameters/policy
+  [default] performance powersave powersupersave [root@localhost ~]#
+
+Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+Link: https://lore.kernel.org/r/1594972765-10404-1-git-send-email-wangxiongfeng2@huawei.com
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/pcie/aspm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index a77e0b34e72f7..3e3e568c81309 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1023,6 +1023,13 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 		if (entry->action & ~(MEASURE | DONT_MEASURE))
- 			return false;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index b17e5ffd31b14..253c30cc19678 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1182,6 +1182,7 @@ static int pcie_aspm_get_policy(char *buffer, const struct kernel_param *kp)
+ 			cnt += sprintf(buffer + cnt, "[%s] ", policy_str[i]);
+ 		else
+ 			cnt += sprintf(buffer + cnt, "%s ", policy_str[i]);
++	cnt += sprintf(buffer + cnt, "\n");
+ 	return cnt;
+ }
  
-+		if (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
-+				     IMA_KEYRINGS))
-+			return false;
-+
-+		if (ima_rule_contains_lsm_cond(entry))
-+			return false;
-+
- 		break;
- 	default:
- 		return false;
 -- 
 2.25.1
 
