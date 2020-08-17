@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9997C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C27A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF40A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691702;
-	bh=BFM0aHLr6cc0jtGytIfnjTesWK9Evh4IARFIdsrE21A=;
+	s=default; t=1597691707;
+	bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SIhC+N4Z02brJFV/0ITNvUXd0epWX9fJHpOB7glX4INDitMbfRnUvxSHmIm0Vjzr0
-	 oJUeIXmI7Ggch00sND25dTEQyNbvlWHc1+NPPCwgPCOdVMDn8jZonUQRAscHQxoyGm
-	 RdlF0ThuPJ0fjVZoH2A70NIxhgoIea6ZVDRWIu0s=
+	b=tslikwiiY9fj6SVL7G31qi7+78R2T1mg/EGw6jfHEE0QCq2lAw6Jd64R+7qG5SdcX
+	 Htcv8Y0r0yodZyGke12m01zMD8O7mdcbSVKQMjFHcqGs4dCB/Q/Ob/pp4X/RZHMg6d
+	 C1vaTy50xX/5WNMfssmw7mIphQchqU7JWCFHDwvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404020AbgHQTPB (ORCPT
+        id S2392159AbgHQTO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387465AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387473AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0237422C9F;
-        Mon, 17 Aug 2020 15:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5053023134;
+        Mon, 17 Aug 2020 15:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678792;
-        bh=BFM0aHLr6cc0jtGytIfnjTesWK9Evh4IARFIdsrE21A=;
+        s=default; t=1597678800;
+        bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZ9LX1xz7xWX5uC3yt7JRcahS1UoMGUJcb1LquL4en/eHzbmh4ekIaF2SXa5osj0K
-         h7tdwAb6JSceOCzlFOWqSPmUI+H7Z0150/V7kr/7DRLjMbiWpJLqJcO6L8mJ9H42PN
-         3RQo9baAQE/HX/ZezqGsGIppbYRTja3e1cvfkfX4=
+        b=P4+vxnFmRkQqfpWKjGJhG6ASD5VoOgplMPENxbRmev91oKDGXj8QpKatQoZJPrvls
+         K7vUTX/Kk9WMr/Rp8CMHfKTuU/c/sGa22tslr09/V0EsrFFI8UZEuJ+D3ql4nr4gBZ
+         gInB8YXkLWFuEmj+w/hWB9ypNEeF7Yu/ulZT51Fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef <josef.grieb@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 425/464] io_uring: use TWA_SIGNAL for task_work uncondtionally
-Date:   Mon, 17 Aug 2020 17:16:18 +0200
-Message-Id: <20200817143854.133460948@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.8 459/464] s390/gmap: improve THP splitting
+Date:   Mon, 17 Aug 2020 17:16:52 +0200
+Message-Id: <20200817143855.761687827@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,64 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
 
-commit 0ba9c9edcd152158a0e321a4c13ac1dfc571ff3d upstream.
+commit ba925fa35057a062ac98c3e8138b013ce4ce351c upstream.
 
-An earlier commit:
+During s390_enable_sie(), we need to take care of splitting all qemu user
+process THP mappings. This is currently done with follow_page(FOLL_SPLIT),
+by simply iterating over all vma ranges, with PAGE_SIZE increment.
 
-b7db41c9e03b ("io_uring: fix regression with always ignoring signals in io_cqring_wait()")
+This logic is sub-optimal and can result in a lot of unnecessary overhead,
+especially when using qemu and ASAN with large shadow map. Ilya reported
+significant system slow-down with one CPU busy for a long time and overall
+unresponsiveness.
 
-ensured that we didn't get stuck waiting for eventfd reads when it's
-registered with the io_uring ring for event notification, but we still
-have cases where the task can be waiting on other events in the kernel and
-need a bigger nudge to make forward progress. Or the task could be in the
-kernel and running, but on its way to blocking.
+Fix this by using walk_page_vma() and directly calling split_huge_pmd()
+only for present pmds, which greatly reduces overhead.
 
-This means that TWA_RESUME cannot reliably be used to ensure we make
-progress. Use TWA_SIGNAL unconditionally.
-
-Cc: stable@vger.kernel.org # v5.7+
-Reported-by: Josef <josef.grieb@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org> # v5.4+
+Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Tested-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/s390/mm/gmap.c |   27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4100,22 +4100,22 @@ static int io_req_task_work_add(struct i
- {
- 	struct task_struct *tsk = req->task;
- 	struct io_ring_ctx *ctx = req->ctx;
--	int ret, notify = TWA_RESUME;
-+	int ret, notify;
- 
- 	/*
--	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
--	 * If we're not using an eventfd, then TWA_RESUME is always fine,
--	 * as we won't have dependencies between request completions for
--	 * other kernel wait conditions.
-+	 * SQPOLL kernel thread doesn't need notification, just a wakeup. For
-+	 * all other cases, use TWA_SIGNAL unconditionally to ensure we're
-+	 * processing task_work. There's no reliable way to tell if TWA_RESUME
-+	 * will do the job.
- 	 */
--	if (ctx->flags & IORING_SETUP_SQPOLL)
--		notify = 0;
--	else if (ctx->cq_ev_fd)
-+	notify = 0;
-+	if (!(ctx->flags & IORING_SETUP_SQPOLL))
- 		notify = TWA_SIGNAL;
- 
- 	ret = task_work_add(tsk, cb, notify);
- 	if (!ret)
- 		wake_up_process(tsk);
-+
- 	return ret;
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -2485,23 +2485,36 @@ void gmap_sync_dirty_log_pmd(struct gmap
  }
+ EXPORT_SYMBOL_GPL(gmap_sync_dirty_log_pmd);
  
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static int thp_split_walk_pmd_entry(pmd_t *pmd, unsigned long addr,
++				    unsigned long end, struct mm_walk *walk)
++{
++	struct vm_area_struct *vma = walk->vma;
++
++	split_huge_pmd(vma, pmd, addr);
++	return 0;
++}
++
++static const struct mm_walk_ops thp_split_walk_ops = {
++	.pmd_entry	= thp_split_walk_pmd_entry,
++};
++
+ static inline void thp_split_mm(struct mm_struct *mm)
+ {
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	struct vm_area_struct *vma;
+-	unsigned long addr;
+ 
+ 	for (vma = mm->mmap; vma != NULL; vma = vma->vm_next) {
+-		for (addr = vma->vm_start;
+-		     addr < vma->vm_end;
+-		     addr += PAGE_SIZE)
+-			follow_page(vma, addr, FOLL_SPLIT);
+ 		vma->vm_flags &= ~VM_HUGEPAGE;
+ 		vma->vm_flags |= VM_NOHUGEPAGE;
++		walk_page_vma(vma, &thp_split_walk_ops, NULL);
+ 	}
+ 	mm->def_flags |= VM_NOHUGEPAGE;
+-#endif
+ }
++#else
++static inline void thp_split_mm(struct mm_struct *mm)
++{
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ /*
+  * Remove all empty zero pages from the mapping for lazy refaulting
 
 
