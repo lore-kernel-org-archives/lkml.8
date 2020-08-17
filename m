@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB15C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4231D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F8E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+VGCUsp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRLKS+MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHQIdA (ORCPT
+        id S1726806AbgHQIc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:33:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
+        Mon, 17 Aug 2020 04:32:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgHQIcr (ORCPT
+        with ESMTP id S1728143AbgHQIcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:32:47 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC7EC061389;
-        Mon, 17 Aug 2020 01:32:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 128so7772677pgd.5;
-        Mon, 17 Aug 2020 01:32:47 -0700 (PDT)
+        Mon, 17 Aug 2020 04:32:33 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE91C061389;
+        Mon, 17 Aug 2020 01:32:32 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y10so5582290plr.11;
+        Mon, 17 Aug 2020 01:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jjvDDq/8L15Sv7VUgqoIMZQVb7xUNFz5WyPYgZ5irWo=;
-        b=d+VGCUspw14qYJuXoZkofwmewEPLwDoqAhfQWhxRAiRzuc4CC5op9Jo8Pk21mbzXrr
-         1uN0G6TbIBH/sUQRwlZ+wg2iYL1iXUn784j8XL0V7yzj/Mhr993koq+QW72sAQ2tD8e8
-         dFbKzTrY5Ge1rn9Mjz8MJq7F6rROW7bj8YEBdEezlDX58Qx10GX9BLMqw4uj2A3K8KyJ
-         A9lc7iv1QMOOBs9iZp4atM50JObFBIgAQuM3gLsCap55F4OeXql4cXbjolMZqqhoTq1W
-         /sTx7ipxPKLAhoGw8FWtiDtYW0SC7z/xzz6c3m9R2vq9nWfhKoyioMAZ68CU04IeJ8t0
-         6ZmQ==
+        bh=Ahy70Yk2bRVB7QBIejUmD1G9Y2W/MzcgwHjWYQelH0I=;
+        b=WRLKS+MMnDOkRIFbCcdWRCCHhHc4NwPn/uvQL8gU6YF85p2FTJdK8xTGsE7T6dsj3U
+         M5m5R7c22PVaRHYYlJrTCNAVVSA9Ry9vsR9LR/18XxF4S3771cEBSmJRDHFCFuI4jQ9m
+         RwzaQWZb16vkJmf6I6rRBVfBehuKZp4pKepBsJttncXoKZr21hfqlHPKLANXMoFkBnC4
+         diwKPpcz6XxHWurdG2aD+q4V1SIH0iV7TZFvaqP8SlRphmAZiVHGyF0ykisJe5lBCaG5
+         b+BjELiv1yH0kF6J38RYp5CXxrp/u/PDEfKbkqURS8m2aBrU6fFcwy3yc+7eW5icEApv
+         nC2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=jjvDDq/8L15Sv7VUgqoIMZQVb7xUNFz5WyPYgZ5irWo=;
-        b=CoylhD8iEISUUmSd1lSX7T2NFlyWNk5sTlBVrpCWIkCpY6ruuqnT7aIzwUJVzgZE2S
-         oSyQvdeJXXKVVnk94rgQ8wbLjHpwzXuXwhDtM0ntHmteDLTtV0E6i9NpS2D1j7lYFggE
-         TShSmskioThVCBKd/xyAkQkYaxD4RZMRyhim2NIer/cmQk+jsR/CjD55ZKZncxQut1nD
-         bOmkNHyvjervUr9ESth7zn2lalY1oJHO44QzjnPw3y1djAznloFLD4t98FuRL42xozg/
-         6IFqoxCC+yaW5KnM7XEixGFbrv7TwBLGcYMlTXibYGflMZoaqnpbTeliYLRqkUQ1t2US
-         Dk7Q==
-X-Gm-Message-State: AOAM530s3z1+C1A/sx/cH5nThwJ+My1qrZQINZluB9Yy9Zlno6uKirew
-        JKmfxmxCaopmrBpxGVUgBvk=
-X-Google-Smtp-Source: ABdhPJyTu4zxbEbd5s2N3jMG1TWfoMJhqkj4QdJNVr58XHa/J2AnOn05SJcGSqAWcG9POyc7s9+u9A==
-X-Received: by 2002:a62:6887:: with SMTP id d129mr10726892pfc.279.1597653166944;
-        Mon, 17 Aug 2020 01:32:46 -0700 (PDT)
+        bh=Ahy70Yk2bRVB7QBIejUmD1G9Y2W/MzcgwHjWYQelH0I=;
+        b=LCDQuMyDEHjwcj+Zjudk69KKqSd/9HgEY0tDlZOaN3+iOJdtNldptPVcEzlanKWAam
+         hJ+f5XZeg4O+4PJCPySQdA0TxDNVC2TkUEIn+HNAgGDCxnrHAqJ4LBhnXXTF06QfRbtM
+         +Lg3A4sX3zCWdhebiWZhFoe9o5HTDx9lrnx4aQztN80NpFXJMNl56SqcJrIq7FHmIlK4
+         ZkP/urR81CYyewOhs+PZHAVd/vfinrvv2TVA4495yoPs8oR4VFIuOJts2ZuRyNR3Nj1+
+         dSroE3K5KNEkvscUNXjj1hpLfiIBaYEU8Y1KWwCqipfXCLLaOb4S195Us+uxBwSzXjNL
+         bI6g==
+X-Gm-Message-State: AOAM531yMs1fGuYbcfSqGWBplOIC/aB7fgagRWzfW212ML75d/L/VC2C
+        MkyH/PtHTi3TAQG++tWpcJI=
+X-Google-Smtp-Source: ABdhPJwF+cEnYujAMr0ykZx6WmkvBbF37TVTpNJT6zlrJJGif2tX3AG7dRZY1glR0Xvx5drCCwEEsw==
+X-Received: by 2002:a17:90a:88:: with SMTP id a8mr11612469pja.196.1597653152014;
+        Mon, 17 Aug 2020 01:32:32 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.43
+        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:32:46 -0700 (PDT)
+        Mon, 17 Aug 2020 01:32:31 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     mchehab@kernel.org, maintainers@bluecherrydvr.com,
         patrice.chotard@st.com
@@ -66,9 +66,9 @@ Cc:     keescook@chromium.org, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 10/11] media/radio: wl128x: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:01:52 +0530
-Message-Id: <20200817083153.22218-11-allen.lkml@gmail.com>
+Subject: [PATCH 06/11] media: tw5864: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:01:48 +0530
+Message-Id: <20200817083153.22218-7-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817083153.22218-1-allen.lkml@gmail.com>
 References: <20200817083153.22218-1-allen.lkml@gmail.com>
@@ -85,61 +85,44 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/pci/tw5864/tw5864-video.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
-index cce97c9d5409..5c395da74e17 100644
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -244,7 +244,7 @@ void fmc_update_region_info(struct fmdev *fmdev, u8 region_to_set)
-  * FM common sub-module will schedule this tasklet whenever it receives
-  * FM packet from ST driver.
-  */
--static void recv_tasklet(unsigned long arg)
-+static void recv_tasklet(struct tasklet_struct *t)
- {
- 	struct fmdev *fmdev;
- 	struct fm_irq *irq_info;
-@@ -253,7 +253,7 @@ static void recv_tasklet(unsigned long arg)
- 	u8 num_fm_hci_cmds;
- 	unsigned long flags;
+diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
+index ec1e06da7e4f..e232c6535a0a 100644
+--- a/drivers/media/pci/tw5864/tw5864-video.c
++++ b/drivers/media/pci/tw5864/tw5864-video.c
+@@ -175,7 +175,7 @@ static const unsigned int intra4x4_lambda3[] = {
+ static v4l2_std_id tw5864_get_v4l2_std(enum tw5864_vid_std std);
+ static enum tw5864_vid_std tw5864_from_v4l2_std(v4l2_std_id v4l2_std);
  
--	fmdev = (struct fmdev *)arg;
-+	fmdev = from_tasklet(fmdev, t, tx_task);
- 	irq_info = &fmdev->irq_info;
- 	/* Process all packets in the RX queue */
- 	while ((skb = skb_dequeue(&fmdev->rx_q))) {
-@@ -328,13 +328,13 @@ static void recv_tasklet(unsigned long arg)
+-static void tw5864_handle_frame_task(unsigned long data);
++static void tw5864_handle_frame_task(struct tasklet_struct *t);
+ static void tw5864_handle_frame(struct tw5864_h264_frame *frame);
+ static void tw5864_frame_interval_set(struct tw5864_input *input);
+ 
+@@ -1057,8 +1057,7 @@ int tw5864_video_init(struct tw5864_dev *dev, int *video_nr)
+ 	dev->irqmask |= TW5864_INTR_VLC_DONE | TW5864_INTR_TIMER;
+ 	tw5864_irqmask_apply(dev);
+ 
+-	tasklet_init(&dev->tasklet, tw5864_handle_frame_task,
+-		     (unsigned long)dev);
++	tasklet_setup(&dev->tasklet, tw5864_handle_frame_task);
+ 
+ 	for (i = 0; i < TW5864_INPUTS; i++) {
+ 		dev->inputs[i].root = dev;
+@@ -1313,9 +1312,9 @@ static int tw5864_is_motion_triggered(struct tw5864_h264_frame *frame)
+ 	return detected;
  }
  
- /* FM send tasklet: is scheduled when FM packet has to be sent to chip */
--static void send_tasklet(unsigned long arg)
-+static void send_tasklet(struct tasklet_struct *t)
+-static void tw5864_handle_frame_task(unsigned long data)
++static void tw5864_handle_frame_task(struct tasklet_struct *t)
  {
- 	struct fmdev *fmdev;
- 	struct sk_buff *skb;
- 	int len;
+-	struct tw5864_dev *dev = (struct tw5864_dev *)data;
++	struct tw5864_dev *dev = from_tasklet(dev, t, tasklet);
+ 	unsigned long flags;
+ 	int batch_size = H264_BUF_CNT;
  
--	fmdev = (struct fmdev *)arg;
-+	fmdev = from_tasklet(fmdev, t, tx_task);
- 
- 	if (!atomic_read(&fmdev->tx_cnt))
- 		return;
-@@ -1535,11 +1535,11 @@ int fmc_prepare(struct fmdev *fmdev)
- 
- 	/* Initialize TX queue and TX tasklet */
- 	skb_queue_head_init(&fmdev->tx_q);
--	tasklet_init(&fmdev->tx_task, send_tasklet, (unsigned long)fmdev);
-+	tasklet_setup(&fmdev->tx_task, send_tasklet);
- 
- 	/* Initialize RX Queue and RX tasklet */
- 	skb_queue_head_init(&fmdev->rx_q);
--	tasklet_init(&fmdev->rx_task, recv_tasklet, (unsigned long)fmdev);
-+	tasklet_setup(&fmdev->rx_task, recv_tasklet);
- 
- 	fmdev->irq_info.stage = 0;
- 	atomic_set(&fmdev->tx_cnt, 1);
 -- 
 2.17.1
 
