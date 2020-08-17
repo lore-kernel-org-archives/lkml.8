@@ -2,50 +2,51 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A78EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C362067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D701B2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vj9oc96k"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gTb3sQEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgHQK54 (ORCPT
+        id S1726597AbgHQK6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:57:56 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:12048 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgHQK4j (ORCPT
+        Mon, 17 Aug 2020 06:58:34 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:49464 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbgHQK5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:56:39 -0400
+        Mon, 17 Aug 2020 06:57:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597661796; x=1629197796;
+  t=1597661842; x=1629197842;
   h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=SIoSEngI2eemfi2/EbayhNeBrKRKIgdsYAuUe8kXRwY=;
-  b=Vj9oc96k5qhsCdtJp4LWcgSdSFGX5sI/YknV+2QMhpKqXQQxHrNqYvTZ
-   D0kNhI6lN4Mg9Ic2ANG82fOohCuzTZDWJeWj/adid7jrEK4klvEZ4BY4y
-   zkLJimDPGJn+Lq7wufJiMUIdH38hfIsvzqwru2/NbEfDpykQUP5oDBYJs
-   s=;
+   references:mime-version:content-transfer-encoding;
+  bh=W5slt6h0ldzO6EOg13JTdEA3p2Ph9qj003brJxltDKM=;
+  b=gTb3sQEFwNlE0FOBLYx8FVYkw6elef0jATFbGR30rQdhSx3g+iNrZYJO
+   RVdGUPbbYtjlyhxnih+N+rtzNS5nPdF8F47ARrdnr2pyP9IsjVn5S6gCO
+   dSgATEbI/YF7v0PhFL1OGSANLNpRJqKAa+XtX1TVeEty3q5pryQRwKO74
+   I=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="68486103"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Aug 2020 10:56:28 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 70F5FA231C;
-        Mon, 17 Aug 2020 10:56:16 +0000 (UTC)
+   d="scan'208";a="48282337"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 17 Aug 2020 10:56:49 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id CAE47A0753;
+        Mon, 17 Aug 2020 10:56:36 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:56:15 +0000
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:56:35 +0000
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.192) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:55:58 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:56:18 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,14 +68,15 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v20 11/15] tools: Introduce a minimal user-space tool for DAMON
-Date:   Mon, 17 Aug 2020 12:51:33 +0200
-Message-ID: <20200817105137.19296-12-sjpark@amazon.com>
+Subject: [PATCH v20 12/15] Documentation: Add documents for DAMON
+Date:   Mon, 17 Aug 2020 12:51:34 +0200
+Message-ID: <20200817105137.19296-13-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817105137.19296-1-sjpark@amazon.com>
 References: <20200817105137.19296-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.43.160.192]
 X-ClientProxiedBy: EX13D02UWC004.ant.amazon.com (10.43.162.236) To
  EX13D31EUA001.ant.amazon.com (10.43.165.15)
@@ -85,1130 +87,1218 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit imtroduces a shallow wrapper python script,
-``/tools/damon/damo`` that provides more convenient interface.  Note
-that it is only aimed to be used for minimal reference of the DAMON's
-debugfs interfaces and for debugging of the DAMON itself.
+This commit adds documents for DAMON under
+`Documentation/admin-guide/mm/damon/` and `Documentation/vm/damon/`.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/damon/.gitignore    |   1 +
- tools/damon/_damon.py     | 130 ++++++++++++++
- tools/damon/_dist.py      |  36 ++++
- tools/damon/_recfile.py   |  23 +++
- tools/damon/bin2txt.py    |  67 +++++++
- tools/damon/damo          |  37 ++++
- tools/damon/heats.py      | 362 ++++++++++++++++++++++++++++++++++++++
- tools/damon/nr_regions.py |  91 ++++++++++
- tools/damon/record.py     | 135 ++++++++++++++
- tools/damon/report.py     |  45 +++++
- tools/damon/wss.py        | 100 +++++++++++
- 11 files changed, 1027 insertions(+)
- create mode 100644 tools/damon/.gitignore
- create mode 100644 tools/damon/_damon.py
- create mode 100644 tools/damon/_dist.py
- create mode 100644 tools/damon/_recfile.py
- create mode 100644 tools/damon/bin2txt.py
- create mode 100755 tools/damon/damo
- create mode 100644 tools/damon/heats.py
- create mode 100644 tools/damon/nr_regions.py
- create mode 100644 tools/damon/record.py
- create mode 100644 tools/damon/report.py
- create mode 100644 tools/damon/wss.py
+ Documentation/admin-guide/mm/damon/guide.rst | 157 ++++++++++
+ Documentation/admin-guide/mm/damon/index.rst |  15 +
+ Documentation/admin-guide/mm/damon/plans.rst |  29 ++
+ Documentation/admin-guide/mm/damon/start.rst |  96 ++++++
+ Documentation/admin-guide/mm/damon/usage.rst | 302 +++++++++++++++++++
+ Documentation/admin-guide/mm/index.rst       |   1 +
+ Documentation/vm/damon/api.rst               |  20 ++
+ Documentation/vm/damon/design.rst            | 166 ++++++++++
+ Documentation/vm/damon/eval.rst              | 225 ++++++++++++++
+ Documentation/vm/damon/faq.rst               |  58 ++++
+ Documentation/vm/damon/index.rst             |  31 ++
+ Documentation/vm/index.rst                   |   1 +
+ 12 files changed, 1101 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/damon/guide.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/index.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/plans.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/start.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/usage.rst
+ create mode 100644 Documentation/vm/damon/api.rst
+ create mode 100644 Documentation/vm/damon/design.rst
+ create mode 100644 Documentation/vm/damon/eval.rst
+ create mode 100644 Documentation/vm/damon/faq.rst
+ create mode 100644 Documentation/vm/damon/index.rst
 
-diff --git a/tools/damon/.gitignore b/tools/damon/.gitignore
+diff --git a/Documentation/admin-guide/mm/damon/guide.rst b/Documentation/admin-guide/mm/damon/guide.rst
 new file mode 100644
-index 000000000000..96403d36ff93
+index 000000000000..c51fb843efaa
 --- /dev/null
-+++ b/tools/damon/.gitignore
-@@ -0,0 +1 @@
-+__pycache__/*
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
++++ b/Documentation/admin-guide/mm/damon/guide.rst
+@@ -0,0 +1,157 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==================
++Optimization Guide
++==================
++
++This document helps you estimating the amount of benefit that you could get
++from DAMON-based optimizations, and describes how you could achieve it.  You
++are assumed to already read :doc:`start`.
++
++
++Check The Signs
++===============
++
++No optimization can provide same extent of benefit to every case.  Therefore
++you should first guess how much improvements you could get using DAMON.  If
++some of below conditions match your situation, you could consider using DAMON.
++
++- *Low IPC and High Cache Miss Ratios.*  Low IPC means most of the CPU time is
++  spent waiting for the completion of time-consuming operations such as memory
++  access, while high cache miss ratios mean the caches don't help it well.
++  DAMON is not for cache level optimization, but DRAM level.  However,
++  improving DRAM management will also help this case by reducing the memory
++  operation latency.
++- *Memory Over-commitment and Unknown Users.*  If you are doing memory
++  overcommitment and you cannot control every user of your system, a memory
++  bank run could happen at any time.  You can estimate when it will happen
++  based on DAMON's monitoring results and act earlier to avoid or deal better
++  with the crisis.
++- *Frequent Memory Pressure.*  Frequent memory pressure means your system has
++  wrong configurations or memory hogs.  DAMON will help you find the right
++  configuration and/or the criminals.
++- *Heterogeneous Memory System.*  If your system is utilizing memory devices
++  that placed between DRAM and traditional hard disks, such as non-volatile
++  memory or fast SSDs, DAMON could help you utilizing the devices more
++  efficiently.
++
++
++Profile
++=======
++
++If you found some positive signals, you could start by profiling your workloads
++using DAMON.  Find major workloads on your systems and analyze their data
++access pattern to find something wrong or can be improved.  The DAMON user
++space tool (``damo``) will be useful for this.
++
++We recommend you to start from working set size distribution check using ``damo
++report wss``.  If the distribution is ununiform or quite different from what
++you estimated, you could consider `Memory Configuration`_ optimization.
++
++Then, review the overall access pattern in heatmap form using ``damo report
++heats``.  If it shows a simple pattern consists of a small number of memory
++regions having high contrast of access temperature, you could consider manual
++`Program Modification`_.
++
++If you still want to absorb more benefits, you should develop `Personalized
++DAMON Application`_ for your special case.
++
++You don't need to take only one approach among the above plans, but you could
++use multiple of the above approaches to maximize the benefit.
++
++
++Optimize
++========
++
++If the profiling result also says it's worth trying some optimization, you
++could consider below approaches.  Note that some of the below approaches assume
++that your systems are configured with swap devices or other types of auxiliary
++memory so that you don't strictly required to accommodate the whole working set
++in the main memory.  Most of the detailed optimization should be made on your
++concrete understanding of your memory devices.
++
++
++Memory Configuration
++--------------------
++
++No more no less, DRAM should be large enough to accommodate only important
++working sets, because DRAM is highly performance critical but expensive and
++heavily consumes the power.  However, knowing the size of the real important
++working sets is difficult.  As a consequence, people usually equips
++unnecessarily large or too small DRAM.  Many problems stem from such wrong
++configurations.
++
++Using the working set size distribution report provided by ``damo report wss``,
++you can know the appropriate DRAM size for you.  For example, roughly speaking,
++if you worry about only 95 percentile latency, you don't need to equip DRAM of
++a size larger than 95 percentile working set size.
++
++Let's see a real example.  This `page
++<https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#memory-configuration>`_
++shows the heatmap and the working set size distributions/changes of
++``freqmine`` workload in PARSEC3 benchmark suite.  The working set size spikes
++up to 180 MiB, but keeps smaller than 50 MiB for more than 95% of the time.
++Even though you give only 50 MiB of memory space to the workload, it will work
++well for 95% of the time.  Meanwhile, you can save the 130 MiB of memory space.
++
++
++Program Modification
++--------------------
++
++If the data access pattern heatmap plotted by ``damo report heats`` is quite
++simple so that you can understand how the things are going in the workload with
++your human eye, you could manually optimize the memory management.
++
++For example, suppose that the workload has two big memory object but only one
++object is frequently accessed while the other one is only occasionally
++accessed.  Then, you could modify the program source code to keep the hot
++object in the main memory by invoking ``mlock()`` or ``madvise()`` with
++``MADV_WILLNEED``.  Or, you could proactively evict the cold object using
++``madvise()`` with ``MADV_COLD`` or ``MADV_PAGEOUT``.  Using both together
++would be also worthy.
++
++A research work [1]_ using the ``mlock()`` achieved up to 2.55x performance
++speedup.
++
++Let's see another realistic example access pattern for this kind of
++optimizations.  This `page
++<https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#program-modification>`_
++shows the visualized access patterns of streamcluster workload in PARSEC3
++benchmark suite.  We can easily identify the 100 MiB sized hot object.
++
++
++Personalized DAMON Application
++------------------------------
++
++Above approaches will work well for many general cases, but would not enough
++for some special cases.
++
++If this is the case, it might be the time to forget the comfortable use of the
++user space tool and dive into the debugfs interface (refer to :doc:`usage` for
++the detail) of DAMON.  Using the interface, you can control the DAMON more
++flexibly.  Therefore, you can write your personalized DAMON application that
++controls the monitoring via the debugfs interface, analyzes the result, and
++applies complex optimizations itself.  Using this, you can make more creative
++and wise optimizations.
++
++If you are a kernel space programmer, writing kernel space DAMON applications
++using the API (refer to the :doc:`/vm/damon/api` for more detail) would be an
++option.
++
++
++Reference Practices
++===================
++
++Referencing previously done successful practices could help you getting the
++sense for this kind of optimizations.  There is an academic paper [1]_
++reporting the visualized access pattern and manual `Program
++Modification`_ results for a number of realistic workloads.  You can also get
++the visualized access patterns [3]_ [4]_ [5]_ and automated DAMON-based memory
++operations results for other realistic workloads that collected with latest
++version of DAMON [2]_ .
++
++.. [1] https://dl.acm.org/doi/10.1145/3366626.3368125
++.. [2] https://damonitor.github.io/test/result/perf/latest/html/
++.. [3] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html
++.. [4] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html
++.. [5] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
+diff --git a/Documentation/admin-guide/mm/damon/index.rst b/Documentation/admin-guide/mm/damon/index.rst
 new file mode 100644
-index 000000000000..1f6a292e8c25
+index 000000000000..0baae7a5402b
 --- /dev/null
-+++ b/tools/damon/_damon.py
-@@ -0,0 +1,130 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/admin-guide/mm/damon/index.rst
+@@ -0,0 +1,15 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+"""
-+Contains core functions for DAMON debugfs control.
-+"""
++========================
++Monitoring Data Accesses
++========================
 +
-+import os
-+import subprocess
++:doc:`DAMON </vm/damon/index>` allows light-weight data access monitoring.
++Using this, users can analyze and optimize their systems.
 +
-+debugfs_attrs = None
-+debugfs_record = None
-+debugfs_target_ids = None
-+debugfs_monitor_on = None
++.. toctree::
++   :maxdepth: 2
 +
-+def set_target_id(tid):
-+    with open(debugfs_target_ids, 'w') as f:
-+        f.write('%s\n' % tid)
-+
-+def turn_damon(on_off):
-+    return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-+            shell=True, executable="/bin/bash")
-+
-+def is_damon_running():
-+    with open(debugfs_monitor_on, 'r') as f:
-+        return f.read().strip() == 'on'
-+
-+class Attrs:
-+    sample_interval = None
-+    aggr_interval = None
-+    regions_update_interval = None
-+    min_nr_regions = None
-+    max_nr_regions = None
-+    rbuf_len = None
-+    rfile_path = None
-+
-+    def __init__(self, s, a, r, n, x, l, f):
-+        self.sample_interval = s
-+        self.aggr_interval = a
-+        self.regions_update_interval = r
-+        self.min_nr_regions = n
-+        self.max_nr_regions = x
-+        self.rbuf_len = l
-+        self.rfile_path = f
-+
-+    def __str__(self):
-+        return "%s %s %s %s %s %s %s" % (self.sample_interval,
-+                self.aggr_interval, self.regions_update_interval,
-+                self.min_nr_regions, self.max_nr_regions, self.rbuf_len,
-+                self.rfile_path)
-+
-+    def attr_str(self):
-+        return "%s %s %s %s %s " % (self.sample_interval, self.aggr_interval,
-+                self.regions_update_interval, self.min_nr_regions,
-+                self.max_nr_regions)
-+
-+    def record_str(self):
-+        return '%s %s ' % (self.rbuf_len, self.rfile_path)
-+
-+    def apply(self):
-+        ret = subprocess.call('echo %s > %s' % (self.attr_str(), debugfs_attrs),
-+                shell=True, executable='/bin/bash')
-+        if ret:
-+            return ret
-+        ret = subprocess.call('echo %s > %s' % (self.record_str(),
-+            debugfs_record), shell=True, executable='/bin/bash')
-+        if ret:
-+            return ret
-+
-+def current_attrs():
-+    with open(debugfs_attrs, 'r') as f:
-+        attrs = f.read().split()
-+    attrs = [int(x) for x in attrs]
-+
-+    with open(debugfs_record, 'r') as f:
-+        rattrs = f.read().split()
-+    attrs.append(int(rattrs[0]))
-+    attrs.append(rattrs[1])
-+
-+    return Attrs(*attrs)
-+
-+def chk_update_debugfs(debugfs):
-+    global debugfs_attrs
-+    global debugfs_record
-+    global debugfs_target_ids
-+    global debugfs_monitor_on
-+
-+    debugfs_damon = os.path.join(debugfs, 'damon')
-+    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-+    debugfs_record = os.path.join(debugfs_damon, 'record')
-+    debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
-+    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
-+
-+    if not os.path.isdir(debugfs_damon):
-+        print("damon debugfs dir (%s) not found", debugfs_damon)
-+        exit(1)
-+
-+    for f in [debugfs_attrs, debugfs_record, debugfs_target_ids,
-+            debugfs_monitor_on]:
-+        if not os.path.isfile(f):
-+            print("damon debugfs file (%s) not found" % f)
-+            exit(1)
-+
-+def cmd_args_to_attrs(args):
-+    "Generate attributes with specified arguments"
-+    sample_interval = args.sample
-+    aggr_interval = args.aggr
-+    regions_update_interval = args.updr
-+    min_nr_regions = args.minr
-+    max_nr_regions = args.maxr
-+    rbuf_len = args.rbuf
-+    if not os.path.isabs(args.out):
-+        args.out = os.path.join(os.getcwd(), args.out)
-+    rfile_path = args.out
-+    return Attrs(sample_interval, aggr_interval, regions_update_interval,
-+            min_nr_regions, max_nr_regions, rbuf_len, rfile_path)
-+
-+def set_attrs_argparser(parser):
-+    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-+            default='/sys/kernel/debug', help='debugfs mounted path')
-+    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-+            default=5000, help='sampling interval')
-+    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-+            default=100000, help='aggregate interval')
-+    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
-+            default=1000000, help='regions update interval')
-+    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
-+            default=10, help='minimal number of regions')
-+    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-+            default=1000, help='maximum number of regions')
-diff --git a/tools/damon/_dist.py b/tools/damon/_dist.py
++   start
++   guide
++   usage
+diff --git a/Documentation/admin-guide/mm/damon/plans.rst b/Documentation/admin-guide/mm/damon/plans.rst
 new file mode 100644
-index 000000000000..9851ec964e5c
+index 000000000000..e3aa5ab96c29
 --- /dev/null
-+++ b/tools/damon/_dist.py
-@@ -0,0 +1,36 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/admin-guide/mm/damon/plans.rst
+@@ -0,0 +1,29 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+import os
-+import struct
-+import subprocess
++============
++Future Plans
++============
 +
-+def access_patterns(f):
-+    nr_regions = struct.unpack('I', f.read(4))[0]
++DAMON is still on its first stage.  Below plans are still under development.
 +
-+    patterns = []
-+    for r in range(nr_regions):
-+        saddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = struct.unpack('L', f.read(8))[0]
-+        nr_accesses = struct.unpack('I', f.read(4))[0]
-+        patterns.append([eaddr - saddr, nr_accesses])
-+    return patterns
 +
-+def plot_dist(data_file, output_file, xlabel, ylabel):
-+    terminal = output_file.split('.')[-1]
-+    if not terminal in ['pdf', 'jpeg', 'png', 'svg']:
-+        os.remove(data_file)
-+        print("Unsupported plot output type.")
-+        exit(-1)
++Automate Data Access Monitoring-based Memory Operation Schemes Execution
++========================================================================
 +
-+    gnuplot_cmd = """
-+    set term %s;
-+    set output '%s';
-+    set key off;
-+    set xlabel '%s';
-+    set ylabel '%s';
-+    plot '%s' with linespoints;""" % (terminal, output_file, xlabel, ylabel,
-+            data_file)
-+    subprocess.call(['gnuplot', '-e', gnuplot_cmd])
-+    os.remove(data_file)
++The ultimate goal of DAMON is to be used as a building block for the data
++access pattern aware kernel memory management optimization.  It will make
++system just works efficiently.  However, some users having very special
++workloads will want to further do their own optimization.  DAMON will automate
++most of the tasks for such manual optimizations in near future.  Users will be
++required to only describe what kind of data access pattern-based operation
++schemes they want in a simple form.
 +
-diff --git a/tools/damon/_recfile.py b/tools/damon/_recfile.py
++By applying a very simple scheme for THP promotion/demotion with a prototype
++implementation, DAMON reduced 60% of THP memory footprint overhead while
++preserving 50% of the THP performance benefit.  The detailed results can be
++seen on an external web page [1]_.
++
++Several RFC patchsets for this plan are available [2]_.
++
++.. [1] https://damonitor.github.io/test/result/perf/latest/html/
++.. [2] https://lore.kernel.org/linux-mm/20200616073828.16509-1-sjpark@amazon.com/
+diff --git a/Documentation/admin-guide/mm/damon/start.rst b/Documentation/admin-guide/mm/damon/start.rst
 new file mode 100644
-index 000000000000..45dd8ffdb5ae
+index 000000000000..deed2ea2321e
 --- /dev/null
-+++ b/tools/damon/_recfile.py
-@@ -0,0 +1,23 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/admin-guide/mm/damon/start.rst
+@@ -0,0 +1,96 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+import struct
++===============
++Getting Started
++===============
 +
-+fmt_version = 0
++This document briefly describes how you can use DAMON by demonstrating its
++default user space tool.  Please note that this document describes only a part
++of its features for brevity.  Please refer to :doc:`usage` for more details.
 +
-+def set_fmt_version(f):
-+    global fmt_version
 +
-+    mark = f.read(16)
-+    if mark == b'damon_recfmt_ver':
-+        fmt_version = struct.unpack('i', f.read(4))[0]
-+    else:
-+        fmt_version = 0
-+        f.seek(0)
-+    return fmt_version
++TL; DR
++======
 +
-+def target_id(f):
-+    if fmt_version == 1:
-+        return struct.unpack('i', f.read(4))[0]
-+    else:
-+        return struct.unpack('L', f.read(8))[0]
-diff --git a/tools/damon/bin2txt.py b/tools/damon/bin2txt.py
++Follow below 5 commands to monitor and visualize the access pattern of your
++workload. ::
++
++    $ git clone https://github.com/sjp38/linux -b damon/master
++    /* build the kernel with CONFIG_DAMON=y, install, reboot */
++    $ mount -t debugfs none /sys/kernel/debug/
++    $ cd linux/tools/damon
++    $ ./damo record $(pidof <your workload>)
++    $ ./damo report heats --heatmap access_pattern.png
++
++
++Prerequisites
++=============
++
++Kernel
++------
++
++You should first ensure your system is running on a kernel built with
++``CONFIG_DAMON=y``.
++
++
++User Space Tool
++---------------
++
++For the demonstration, we will use the default user space tool for DAMON,
++called DAMON Operator (DAMO).  It is located at ``tools/damon/damo`` of the
++kernel source tree.  For brevity, below examples assume you set ``$PATH`` to
++point it.  It's not mandatory, though.
++
++Because DAMO is using the debugfs interface (refer to :doc:`usage` for the
++detail) of DAMON, you should ensure debugfs is mounted.  Mount it manually as
++below::
++
++    # mount -t debugfs none /sys/kernel/debug/
++
++or append below line to your ``/etc/fstab`` file so that your system can
++automatically mount debugfs from next booting::
++
++    debugfs /sys/kernel/debug debugfs defaults 0 0
++
++
++Recording Data Access Patterns
++==============================
++
++Below commands record memory access pattern of a program and save the
++monitoring results in a file. ::
++
++    $ git clone https://github.com/sjp38/masim
++    $ cd masim; make; ./masim ./configs/zigzag.cfg &
++    $ sudo damo record -o damon.data $(pidof masim)
++
++The first two lines of the commands get an artificial memory access generator
++program and runs it in the background.  It will repeatedly access two 100 MiB
++sized memory regions one by one.  You can substitute this with your real
++workload.  The last line asks ``damo`` to record the access pattern in
++``damon.data`` file.
++
++
++Visualizing Recorded Patterns
++=============================
++
++Below three commands visualize the recorded access patterns into three
++image files. ::
++
++    $ damo report heats --heatmap access_pattern_heatmap.png
++    $ damo report wss --range 0 101 1 --plot wss_dist.png
++    $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
++
++- ``access_pattern_heatmap.png`` will show the data access pattern in a
++  heatmap, which shows when (x-axis) what memory region (y-axis) is how
++  frequently accessed (color).
++- ``wss_dist.png`` will show the distribution of the working set size.
++- ``wss_chron_change.png`` will show how the working set size has
++  chronologically changed.
++
++You can show the images in a web page [1]_ .  Those made with other realistic
++workloads are also available [2]_ [3]_ [4]_.
++
++.. [1] https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/start.html#visualizing-recorded-patterns
++.. [2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html
++.. [3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html
++.. [4] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
+diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
 new file mode 100644
-index 000000000000..79516c72f449
+index 000000000000..a6606d27a559
 --- /dev/null
-+++ b/tools/damon/bin2txt.py
-@@ -0,0 +1,67 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/admin-guide/mm/damon/usage.rst
+@@ -0,0 +1,302 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+import argparse
-+import os
-+import struct
-+import sys
++===============
++Detailed Usages
++===============
 +
-+import _recfile
++DAMON provides below three interfaces for different users.
 +
-+def parse_time(bindat):
-+    "bindat should be 16 bytes"
-+    sec = struct.unpack('l', bindat[0:8])[0]
-+    nsec = struct.unpack('l', bindat[8:16])[0]
-+    return sec * 1000000000 + nsec;
++- *DAMON user space tool.*
++  This is for privileged people such as system administrators who want a
++  just-working human-friendly interface.  Using this, users can use the DAMON’s
++  major features in a human-friendly way.  It may not be highly tuned for
++  special cases, though.  It supports only virtual address spaces monitoring.
++- *debugfs interface.*
++  This is for privileged user space programmers who want more optimized use of
++  DAMON.  Using this, users can use DAMON’s major features by reading
++  from and writing to special debugfs files.  Therefore, you can write and use
++  your personalized DAMON debugfs wrapper programs that reads/writes the
++  debugfs files instead of you.  The DAMON user space tool is also a reference
++  implementation of such programs.  It supports only virtual address spaces
++  monitoring.
++- *Kernel Space Programming Interface.*
++  This is for kernel space programmers.  Using this, users can utilize every
++  feature of DAMON most flexibly and efficiently by writing kernel space
++  DAMON application programs for you.  You can even extend DAMON for various
++  address spaces.
 +
-+def pr_region(f):
-+    saddr = struct.unpack('L', f.read(8))[0]
-+    eaddr = struct.unpack('L', f.read(8))[0]
-+    nr_accesses = struct.unpack('I', f.read(4))[0]
-+    print("%012x-%012x(%10d):\t%d" %
-+            (saddr, eaddr, eaddr - saddr, nr_accesses))
++This document does not describe the kernel space programming interface in
++detail.  For that, please refer to the :doc:`/vm/damon/api`.
 +
-+def pr_task_info(f):
-+    target_id = _recfile.target_id(f)
-+    print("target_id: ", target_id)
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+    print("nr_regions: ", nr_regions)
-+    for r in range(nr_regions):
-+        pr_region(f)
 +
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
++DAMON User Space Tool
++=====================
 +
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
++A reference implementation of the DAMON user space tools which provides a
++convenient user interface is in the kernel source tree.  It is located at
++``tools/damon/damo`` of the tree.
 +
-+    file_path = args.input
++The tool provides a subcommands based interface.  Every subcommand provides
++``-h`` option, which provides the minimal usage of it.  Currently, the tool
++supports two subcommands, ``record`` and ``report``.
 +
-+    if not os.path.isfile(file_path):
-+        print('input file (%s) is not exist' % file_path)
-+        exit(1)
++Below example commands assume you set ``$PATH`` to point ``tools/damon/`` for
++brevity.  It is not mandatory for use of ``damo``, though.
 +
-+    with open(file_path, 'rb') as f:
-+        _recfile.set_fmt_version(f)
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            time = parse_time(timebin)
-+            if not start_time:
-+                start_time = time
-+                print("start_time: ", start_time)
-+            print("rel time: %16d" % (time - start_time))
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            print("nr_tasks: ", nr_tasks)
-+            for t in range(nr_tasks):
-+                pr_task_info(f)
-+                print("")
 +
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/damo b/tools/damon/damo
-new file mode 100755
-index 000000000000..58e1099ae5fc
---- /dev/null
-+++ b/tools/damon/damo
-@@ -0,0 +1,37 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++Recording Data Access Pattern
++-----------------------------
 +
-+import argparse
++The ``record`` subcommand records the data access pattern of target workloads
++in a file (``./damon.data`` by default).  You can specify the target with 1)
++the command for execution of the monitoring target process, or 2) pid of
++running target process.  Below example shows a command target usage::
 +
-+import record
-+import report
++    # cd <kernel>/tools/damon/
++    # damo record "sleep 5"
 +
-+class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
-+    def _format_action(self, action):
-+        parts = super(argparse.RawDescriptionHelpFormatter,
-+                self)._format_action(action)
-+        # skip sub parsers help
-+        if action.nargs == argparse.PARSER:
-+            parts = '\n'.join(parts.split('\n')[1:])
-+        return parts
++The tool will execute ``sleep 5`` by itself and record the data access patterns
++of the process.  Below example shows a pid target usage::
 +
-+parser = argparse.ArgumentParser(formatter_class=SubCmdHelpFormatter)
++    # sleep 5 &
++    # damo record `pidof sleep`
 +
-+subparser = parser.add_subparsers(title='command', dest='command',
-+        metavar='<command>')
-+subparser.required = True
++The location of the recorded file can be explicitly set using ``-o`` option.
++You can further tune this by setting the monitoring attributes.  To know about
++the monitoring attributes in detail, please refer to the
++:doc:`/vm/damon/design`.
 +
-+parser_record = subparser.add_parser('record',
-+        help='record data accesses of the given target processes')
-+record.set_argparser(parser_record)
 +
-+parser_report = subparser.add_parser('report',
-+        help='report the recorded data accesses in the specified form')
-+report.set_argparser(parser_report)
++Analyzing Data Access Pattern
++-----------------------------
 +
-+args = parser.parse_args()
++The ``report`` subcommand reads a data access pattern record file (if not
++explicitly specified using ``-i`` option, reads ``./damon.data`` file by
++default) and generates human-readable reports.  You can specify what type of
++report you want using a sub-subcommand to ``report`` subcommand.  ``raw``,
++``heats``, and ``wss`` report types are supported for now.
 +
-+if args.command == 'record':
-+    record.main(args)
-+elif args.command == 'report':
-+    report.main(args)
-diff --git a/tools/damon/heats.py b/tools/damon/heats.py
++
++raw
++~~~
++
++``raw`` sub-subcommand simply transforms the binary record into a
++human-readable text.  For example::
++
++    $ damo report raw
++    start_time:  193485829398
++    rel time:                0
++    nr_tasks:  1
++    target_id:  1348
++    nr_regions:  4
++    560189609000-56018abce000(  22827008):  0
++    7fbdff59a000-7fbdffaf1a00(   5601792):  0
++    7fbdffaf1a00-7fbdffbb5000(    800256):  1
++    7ffea0dc0000-7ffea0dfd000(    249856):  0
++
++    rel time:        100000731
++    nr_tasks:  1
++    target_id:  1348
++    nr_regions:  6
++    560189609000-56018abce000(  22827008):  0
++    7fbdff59a000-7fbdff8ce933(   3361075):  0
++    7fbdff8ce933-7fbdffaf1a00(   2240717):  1
++    7fbdffaf1a00-7fbdffb66d99(    480153):  0
++    7fbdffb66d99-7fbdffbb5000(    320103):  1
++    7ffea0dc0000-7ffea0dfd000(    249856):  0
++
++The first line shows the recording started timestamp (nanosecond).  Records of
++data access patterns follows.  Each record is separated by a blank line.  Each
++record first specifies the recorded time (``rel time``) in relative to the
++start time, the number of monitored tasks in this record (``nr_tasks``).
++Recorded data access patterns of each task follow.  Each data access pattern
++for each task shows the target's pid (``target_id``) and a number of monitored
++address regions in this access pattern (``nr_regions``) first.  After that,
++each line shows the start/end address, size, and the number of observed
++accesses of each region.
++
++
++heats
++~~~~~
++
++The ``raw`` output is very detailed but hard to manually read.  ``heats``
++sub-subcommand plots the data in 3-dimensional form, which represents the time
++in x-axis, address of regions in y-axis, and the access frequency in z-axis.
++Users can set the resolution of the map (``--tres`` and ``--ares``) and
++start/end point of each axis (``--tmin``, ``--tmax``, ``--amin``, and
++``--amax``) via optional arguments.  For example::
++
++    $ damo report heats --tres 3 --ares 3
++    0               0               0.0
++    0               7609002         0.0
++    0               15218004        0.0
++    66112620851     0               0.0
++    66112620851     7609002         0.0
++    66112620851     15218004        0.0
++    132225241702    0               0.0
++    132225241702    7609002         0.0
++    132225241702    15218004        0.0
++
++This command shows a recorded access pattern in heatmap of 3x3 resolution.
++Therefore it shows 9 data points in total.  Each line shows each of the data
++points.  The three numbers in each line represent time in nanosecond, address,
++and the observed access frequency.
++
++Users will be able to convert this text output into a heatmap image (represents
++z-axis values with colors) or other 3D representations using various tools such
++as 'gnuplot'.  For more convenience, ``heats`` sub-subcommand provides the
++'gnuplot' based heatmap image creation.  For this, you can use ``--heatmap``
++option.  Also, note that because it uses 'gnuplot' internally, it will fail if
++'gnuplot' is not installed on your system.  For example::
++
++    $ ./damo report heats --heatmap heatmap.png
++
++Creates the heatmap image in ``heatmap.png`` file.  It supports ``pdf``,
++``png``, ``jpeg``, and ``svg``.
++
++If the target address space is virtual memory address space and you plot the
++entire address space, the huge unmapped regions will make the picture looks
++only black.  Therefore you should do proper zoom in / zoom out using the
++resolution and axis boundary-setting arguments.  To make this effort minimal,
++you can use ``--guide`` option as below::
++
++    $ ./damo report heats --guide
++    target_id:1348
++    time: 193485829398-198337863555 (4852034157)
++    region   0: 00000094564599762944-00000094564622589952 (22827008)
++    region   1: 00000140454009610240-00000140454016012288 (6402048)
++    region   2: 00000140731597193216-00000140731597443072 (249856)
++
++The output shows unions of monitored regions (start and end addresses in byte)
++and the union of monitored time duration (start and end time in nanoseconds) of
++each target task.  Therefore, it would be wise to plot the data points in each
++union.  If no axis boundary option is given, it will automatically find the
++biggest union in ``--guide`` output and set the boundary in it.
++
++
++wss
++~~~
++
++The ``wss`` type extracts the distribution and chronological working set size
++changes from the records.  For example::
++
++    $ ./damo report wss
++    # <percentile> <wss>
++    # target_id   1348
++    # avr:  66228
++    0       0
++    25      0
++    50      0
++    75      0
++    100     1920615
++
++Without any option, it shows the distribution of the working set sizes as
++above.  It shows 0th, 25th, 50th, 75th, and 100th percentile and the average of
++the measured working set sizes in the access pattern records.  In this case,
++the working set size was zero for 75th percentile but 1,920,615 bytes in max
++and 66,228 bytes on average.
++
++By setting the sort key of the percentile using '--sortby', you can show how
++the working set size has chronologically changed.  For example::
++
++    $ ./damo report wss --sortby time
++    # <percentile> <wss>
++    # target_id   1348
++    # avr:  66228
++    0       0
++    25      0
++    50      0
++    75      0
++    100     0
++
++The average is still 66,228.  And, because the access was spiked in very short
++duration and this command plots only 4 data points, we cannot show when the
++access spikes made.  Users can specify the resolution of the distribution
++(``--range``).  By giving more fine resolution, the short duration spikes could
++be found.
++
++Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
++visualization of the distribution via ``--plot`` option.
++
++
++debugfs Interface
++=================
++
++DAMON exports four files, ``attrs``, ``target_ids``, ``record``, and
++``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
++
++
++Attributes
++----------
++
++Users can get and set the ``sampling interval``, ``aggregation interval``,
++``regions update interval``, and min/max number of monitoring target regions by
++reading from and writing to the ``attrs`` file.  To know about the monitoring
++attributes in detail, please refer to the :doc:`/vm/damon/design`.  For
++example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and
++1000, and then check it again::
++
++    # cd <debugfs>/damon
++    # echo 5000 100000 1000000 10 1000 > attrs
++    # cat attrs
++    5000 100000 1000000 10 1000
++
++
++Target IDs
++----------
++
++Some types of address spaces supports multiple monitoring target.  For example,
++the virtual memory address spaces monitoring can have multiple processes as the
++monitoring targets.  Users can set the targets by writing relevant id values of
++the targets to, and get the ids of the current targets by reading from the
++``target_ids`` file.  In case of the virtual address spaces monitoring, the
++values should be pids of the monitoring target processes.  For example, below
++commands set processes having pids 42 and 4242 as the monitoring targets and
++check it again::
++
++    # cd <debugfs>/damon
++    # echo 42 4242 > target_ids
++    # cat target_ids
++    42 4242
++
++Note that setting the target ids doesn't start the monitoring.
++
++
++Record
++------
++
++This debugfs file allows you to record monitored access patterns in a regular
++binary file.  The recorded results are first written in an in-memory buffer and
++flushed to a file in batch.  Users can get and set the size of the buffer and
++the path to the result file by reading from and writing to the ``record`` file.
++For example, below commands set the buffer to be 4 KiB and the result to be
++saved in ``/damon.data``. ::
++
++    # cd <debugfs>/damon
++    # echo "4096 /damon.data" > record
++    # cat record
++    4096 /damon.data
++
++The recording can be disabled by setting the buffer size zero.
++
++
++Turning On/Off
++--------------
++
++Setting the files as described above doesn't incur effect unless you explicitly
++start the monitoring.  You can start, stop, and check the current status of the
++monitoring by writing to and reading from the ``monitor_on`` file.  Writing
++``on`` to the file starts the monitoring of the targets with the attributes.
++Writing ``off`` to the file stops those.  DAMON also stops if every target
++process is terminated.  Below example commands turn on, off, and check the
++status of DAMON::
++
++    # cd <debugfs>/damon
++    # echo on > monitor_on
++    # echo off > monitor_on
++    # cat monitor_on
++    off
++
++Please note that you cannot write to the above-mentioned debugfs files while
++the monitoring is turned on.  If you write to the files while DAMON is running,
++an error code such as ``-EBUSY`` will be returned.
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index 11db46448354..e6de5cd41945 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -27,6 +27,7 @@ the Linux memory management.
+ 
+    concepts
+    cma_debugfs
++   damon/index
+    hugetlbpage
+    idle_page_tracking
+    ksm
+diff --git a/Documentation/vm/damon/api.rst b/Documentation/vm/damon/api.rst
 new file mode 100644
-index 000000000000..78a2a793f50e
+index 000000000000..649409828eab
 --- /dev/null
-+++ b/tools/damon/heats.py
-@@ -0,0 +1,362 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/vm/damon/api.rst
+@@ -0,0 +1,20 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+"""
-+Transform binary trace data into human readable text that can be used for
-+heatmap drawing, or directly plot the data in a heatmap format.
++=============
++API Reference
++=============
 +
-+Format of the text is:
++Kernel space programs can use every feature of DAMON using below APIs.  All you
++need to do is including ``damon.h``, which is located in ``include/linux/`` of
++the source tree.
 +
-+    <time> <space> <heat>
-+    ...
++Structures
++==========
 +
-+"""
++.. kernel-doc:: include/linux/damon.h
 +
-+import argparse
-+import os
-+import struct
-+import subprocess
-+import sys
-+import tempfile
 +
-+import _recfile
++Functions
++=========
 +
-+class HeatSample:
-+    space_idx = None
-+    sz_time_space = None
-+    heat = None
-+
-+    def __init__(self, space_idx, sz_time_space, heat):
-+        if sz_time_space < 0:
-+            raise RuntimeError()
-+        self.space_idx = space_idx
-+        self.sz_time_space = sz_time_space
-+        self.heat = heat
-+
-+    def total_heat(self):
-+        return self.heat * self.sz_time_space
-+
-+    def merge(self, sample):
-+        "sample must have a space idx that same to self"
-+        heat_sum = self.total_heat() + sample.total_heat()
-+        self.heat = heat_sum / (self.sz_time_space + sample.sz_time_space)
-+        self.sz_time_space += sample.sz_time_space
-+
-+def pr_samples(samples, time_idx, time_unit, region_unit):
-+    display_time = time_idx * time_unit
-+    for idx, sample in enumerate(samples):
-+        display_addr = idx * region_unit
-+        if not sample:
-+            print("%s\t%s\t%s" % (display_time, display_addr, 0.0))
-+            continue
-+        print("%s\t%s\t%s" % (display_time, display_addr, sample.total_heat() /
-+            time_unit / region_unit))
-+
-+def to_idx(value, min_, unit):
-+    return (value - min_) // unit
-+
-+def read_task_heats(f, tid, aunit, amin, amax):
-+    tid_ = _recfile.target_id(f)
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+    if tid_ != tid:
-+        f.read(20 * nr_regions)
-+        return None
-+    samples = []
-+    for i in range(nr_regions):
-+        saddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = min(eaddr, amax - 1)
-+        heat = struct.unpack('I', f.read(4))[0]
-+
-+        if eaddr <= amin:
-+            continue
-+        if saddr >= amax:
-+            continue
-+        saddr = max(amin, saddr)
-+        eaddr = min(amax, eaddr)
-+
-+        sidx = to_idx(saddr, amin, aunit)
-+        eidx = to_idx(eaddr - 1, amin, aunit)
-+        for idx in range(sidx, eidx + 1):
-+            sa = max(amin + idx * aunit, saddr)
-+            ea = min(amin + (idx + 1) * aunit, eaddr)
-+            sample = HeatSample(idx, (ea - sa), heat)
-+            samples.append(sample)
-+    return samples
-+
-+def parse_time(bindat):
-+    sec = struct.unpack('l', bindat[0:8])[0]
-+    nsec = struct.unpack('l', bindat[8:16])[0]
-+    return sec * 1000000000 + nsec
-+
-+def apply_samples(target_samples, samples, start_time, end_time, aunit, amin):
-+    for s in samples:
-+        sample = HeatSample(s.space_idx,
-+                s.sz_time_space * (end_time - start_time), s.heat)
-+        idx = sample.space_idx
-+        if not target_samples[idx]:
-+            target_samples[idx] = sample
-+        else:
-+            target_samples[idx].merge(sample)
-+
-+def __pr_heats(f, tid, tunit, tmin, tmax, aunit, amin, amax):
-+    heat_samples = [None] * ((amax - amin) // aunit)
-+
-+    start_time = 0
-+    end_time = 0
-+    last_flushed = -1
-+    while True:
-+        start_time = end_time
-+        timebin = f.read(16)
-+        if (len(timebin)) != 16:
-+            break
-+        end_time = parse_time(timebin)
-+        nr_tasks = struct.unpack('I', f.read(4))[0]
-+        samples_set = {}
-+        for t in range(nr_tasks):
-+            samples = read_task_heats(f, tid, aunit, amin, amax)
-+            if samples:
-+                samples_set[tid] = samples
-+        if not tid in samples_set:
-+            continue
-+        if start_time >= tmax:
-+            continue
-+        if end_time <= tmin:
-+            continue
-+        start_time = max(start_time, tmin)
-+        end_time = min(end_time, tmax)
-+
-+        sidx = to_idx(start_time, tmin, tunit)
-+        eidx = to_idx(end_time - 1, tmin, tunit)
-+        for idx in range(sidx, eidx + 1):
-+            if idx != last_flushed:
-+                pr_samples(heat_samples, idx, tunit, aunit)
-+                heat_samples = [None] * ((amax - amin) // aunit)
-+                last_flushed = idx
-+            st = max(start_time, tmin + idx * tunit)
-+            et = min(end_time, tmin + (idx + 1) * tunit)
-+            apply_samples(heat_samples, samples_set[tid], st, et, aunit, amin)
-+
-+def pr_heats(args):
-+    binfile = args.input
-+    tid = args.tid
-+    tres = args.tres
-+    tmin = args.tmin
-+    ares = args.ares
-+    amin = args.amin
-+
-+    tunit = (args.tmax - tmin) // tres
-+    aunit = (args.amax - amin) // ares
-+
-+    # Compensate the values so that those fit with the resolution
-+    tmax = tmin + tunit * tres
-+    amax = amin + aunit * ares
-+
-+    with open(binfile, 'rb') as f:
-+        _recfile.set_fmt_version(f)
-+        __pr_heats(f, tid, tunit, tmin, tmax, aunit, amin, amax)
-+
-+class GuideInfo:
-+    tid = None
-+    start_time = None
-+    end_time = None
-+    lowest_addr = None
-+    highest_addr = None
-+    gaps = None
-+
-+    def __init__(self, tid, start_time):
-+        self.tid = tid
-+        self.start_time = start_time
-+        self.gaps = []
-+
-+    def regions(self):
-+        regions = []
-+        region = [self.lowest_addr]
-+        for gap in self.gaps:
-+            for idx, point in enumerate(gap):
-+                if idx == 0:
-+                    region.append(point)
-+                    regions.append(region)
-+                else:
-+                    region = [point]
-+        region.append(self.highest_addr)
-+        regions.append(region)
-+        return regions
-+
-+    def total_space(self):
-+        ret = 0
-+        for r in self.regions():
-+            ret += r[1] - r[0]
-+        return ret
-+
-+    def __str__(self):
-+        lines = ['target_id:%d' % self.tid]
-+        lines.append('time: %d-%d (%d)' % (self.start_time, self.end_time,
-+                    self.end_time - self.start_time))
-+        for idx, region in enumerate(self.regions()):
-+            lines.append('region\t%2d: %020d-%020d (%d)' %
-+                    (idx, region[0], region[1], region[1] - region[0]))
-+        return '\n'.join(lines)
-+
-+def is_overlap(region1, region2):
-+    if region1[1] < region2[0]:
-+        return False
-+    if region2[1] < region1[0]:
-+        return False
-+    return True
-+
-+def overlap_region_of(region1, region2):
-+    return [max(region1[0], region2[0]), min(region1[1], region2[1])]
-+
-+def overlapping_regions(regions1, regions2):
-+    overlap_regions = []
-+    for r1 in regions1:
-+        for r2 in regions2:
-+            if is_overlap(r1, r2):
-+                r1 = overlap_region_of(r1, r2)
-+        if r1:
-+            overlap_regions.append(r1)
-+    return overlap_regions
-+
-+def get_guide_info(binfile):
-+    "Read file, return the set of guide information objects of the data"
-+    guides = {}
-+    with open(binfile, 'rb') as f:
-+        _recfile.set_fmt_version(f)
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            monitor_time = parse_time(timebin)
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                tid = _recfile.target_id(f)
-+                nr_regions = struct.unpack('I', f.read(4))[0]
-+                if not tid in guides:
-+                    guides[tid] = GuideInfo(tid, monitor_time)
-+                guide = guides[tid]
-+                guide.end_time = monitor_time
-+
-+                last_addr = None
-+                gaps = []
-+                for r in range(nr_regions):
-+                    saddr = struct.unpack('L', f.read(8))[0]
-+                    eaddr = struct.unpack('L', f.read(8))[0]
-+                    f.read(4)
-+
-+                    if not guide.lowest_addr or saddr < guide.lowest_addr:
-+                        guide.lowest_addr = saddr
-+                    if not guide.highest_addr or eaddr > guide.highest_addr:
-+                        guide.highest_addr = eaddr
-+
-+                    if not last_addr:
-+                        last_addr = eaddr
-+                        continue
-+                    if last_addr != saddr:
-+                        gaps.append([last_addr, saddr])
-+                    last_addr = eaddr
-+
-+                if not guide.gaps:
-+                    guide.gaps = gaps
-+                else:
-+                    guide.gaps = overlapping_regions(guide.gaps, gaps)
-+    return sorted(list(guides.values()), key=lambda x: x.total_space(),
-+                    reverse=True)
-+
-+def pr_guide(binfile):
-+    for guide in get_guide_info(binfile):
-+        print(guide)
-+
-+def region_sort_key(region):
-+    return region[1] - region[0]
-+
-+def set_missed_args(args):
-+    if args.tid and args.tmin and args.tmax and args.amin and args.amax:
-+        return
-+    guides = get_guide_info(args.input)
-+    guide = guides[0]
-+    if not args.tid:
-+        args.tid = guide.tid
-+    for g in guides:
-+        if g.tid == args.tid:
-+            guide = g
-+            break
-+
-+    if not args.tmin:
-+        args.tmin = guide.start_time
-+    if not args.tmax:
-+        args.tmax = guide.end_time
-+
-+    if not args.amin or not args.amax:
-+        region = sorted(guide.regions(), key=lambda x: x[1] - x[0],
-+                reverse=True)[0]
-+        args.amin = region[0]
-+        args.amax = region[1]
-+
-+def plot_heatmap(data_file, output_file):
-+    terminal = output_file.split('.')[-1]
-+    if not terminal in ['pdf', 'jpeg', 'png', 'svg']:
-+        os.remove(data_file)
-+        print("Unsupported plot output type.")
-+        exit(-1)
-+
-+    gnuplot_cmd = """
-+    set term %s;
-+    set output '%s';
-+    set key off;
-+    set xrange [0:];
-+    set yrange [0:];
-+    set xlabel 'Time (ns)';
-+    set ylabel 'Address (bytes)';
-+    plot '%s' using 1:2:3 with image;""" % (terminal, output_file, data_file)
-+    subprocess.call(['gnuplot', '-e', gnuplot_cmd])
-+    os.remove(data_file)
-+
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--tid', metavar='<id>', type=int,
-+            help='target id')
-+    parser.add_argument('--tres', metavar='<resolution>', type=int,
-+            default=500, help='time resolution of the output')
-+    parser.add_argument('--tmin', metavar='<time>', type=lambda x: int(x,0),
-+            help='minimal time of the output')
-+    parser.add_argument('--tmax', metavar='<time>', type=lambda x: int(x,0),
-+            help='maximum time of the output')
-+    parser.add_argument('--ares', metavar='<resolution>', type=int, default=500,
-+            help='space address resolution of the output')
-+    parser.add_argument('--amin', metavar='<address>', type=lambda x: int(x,0),
-+            help='minimal space address of the output')
-+    parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
-+            help='maximum space address of the output')
-+    parser.add_argument('--guide', action='store_true',
-+            help='print a guidance for the min/max/resolution settings')
-+    parser.add_argument('--heatmap', metavar='<file>', type=str,
-+            help='heatmap image file to create')
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    if args.guide:
-+        pr_guide(args.input)
-+    else:
-+        set_missed_args(args)
-+        orig_stdout = sys.stdout
-+        if args.heatmap:
-+            tmp_path = tempfile.mkstemp()[1]
-+            tmp_file = open(tmp_path, 'w')
-+            sys.stdout = tmp_file
-+
-+        pr_heats(args)
-+
-+        if args.heatmap:
-+            sys.stdout = orig_stdout
-+            tmp_file.flush()
-+            tmp_file.close()
-+            plot_heatmap(tmp_path, args.heatmap)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/nr_regions.py b/tools/damon/nr_regions.py
++.. kernel-doc:: mm/damon.c
+diff --git a/Documentation/vm/damon/design.rst b/Documentation/vm/damon/design.rst
 new file mode 100644
-index 000000000000..960dd4362472
+index 000000000000..727d72093f8f
 --- /dev/null
-+++ b/tools/damon/nr_regions.py
-@@ -0,0 +1,91 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/vm/damon/design.rst
+@@ -0,0 +1,166 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+"Print out distribution of the number of regions in the given record"
++======
++Design
++======
 +
-+import argparse
-+import struct
-+import sys
-+import tempfile
++Configurable Layers
++===================
 +
-+import _dist
-+import _recfile
++DAMON provides data access monitoring functionality while making the accuracy
++and the overhead controllable.  The fundamental access monitorings require
++primitives that dependent on and optimized for the target address space.  On
++the other hand, the accuracy and overhead tradeoff mechanism, which is the core
++of DAMON, is in the pure logic space.  DAMON separates the two parts in
++different layers and defines its interface to allow various low level
++primitives implementations configurable with the core logic.
 +
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--range', '-r', type=int, nargs=3,
-+            metavar=('<start>', '<stop>', '<step>'),
-+            help='range of percentiles to print')
-+    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-+            help='the metric to be used for sorting the number of regions')
-+    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-+            help='plot the distribution to an image file')
++Due to this separated design and the configurable interface, users can extend
++DAMON for any address space by configuring the core logics with appropriate low
++level primitive implementations.  If appropriate one is not provided, users can
++implement the primitives on their own.
 +
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
++For example, physical memory, virtual memory, swap space, those for specific
++processes, NUMA nodes, files, and backing memory devices would be supportable.
++Also, if some architectures or devices support special optimized access check
++primitives, those will be easily configurable.
 +
-+    percentiles = [0, 25, 50, 75, 100]
 +
-+    file_path = args.input
-+    if args.range:
-+        percentiles = range(args.range[0], args.range[1], args.range[2])
-+    nr_regions_sort = True
-+    if args.sortby == 'time':
-+        nr_regions_sort = False
++Reference Implementations of Address Space Specific Primitives
++==============================================================
 +
-+    tid_pattern_map = {}
-+    with open(file_path, 'rb') as f:
-+        _recfile.set_fmt_version(f)
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                tid = _recfile.target_id(f)
-+                if not tid in tid_pattern_map:
-+                    tid_pattern_map[tid] = []
-+                tid_pattern_map[tid].append(_dist.access_patterns(f))
++The low level primitives for the fundamental access monitoring are defined in
++two parts:
 +
-+    orig_stdout = sys.stdout
-+    if args.plot:
-+        tmp_path = tempfile.mkstemp()[1]
-+        tmp_file = open(tmp_path, 'w')
-+        sys.stdout = tmp_file
++1. Identification of the monitoring target address range for the address space.
++2. Access check of specific address range in the target space.
 +
-+    print('# <percentile> <# regions>')
-+    for tid in tid_pattern_map.keys():
-+        # Skip firs 20 regions as those would not adaptively adjusted
-+        snapshots = tid_pattern_map[tid][20:]
-+        nr_regions_dist = []
-+        for snapshot in snapshots:
-+            nr_regions_dist.append(len(snapshot))
-+        if nr_regions_sort:
-+            nr_regions_dist.sort(reverse=False)
++DAMON currently provides the implementation of the primitives for only the
++virtual address spaces. Below two subsections describe how it works.
 +
-+        print('# target_id\t%s' % tid)
-+        print('# avr:\t%d' % (sum(nr_regions_dist) / len(nr_regions_dist)))
-+        for percentile in percentiles:
-+            thres_idx = int(percentile / 100.0 * len(nr_regions_dist))
-+            if thres_idx == len(nr_regions_dist):
-+                thres_idx -= 1
-+            threshold = nr_regions_dist[thres_idx]
-+            print('%d\t%d' % (percentile, nr_regions_dist[thres_idx]))
 +
-+    if args.plot:
-+        sys.stdout = orig_stdout
-+        tmp_file.flush()
-+        tmp_file.close()
-+        xlabel = 'runtime (percent)'
-+        if nr_regions_sort:
-+            xlabel = 'percentile'
-+        _dist.plot_dist(tmp_path, args.plot, xlabel,
-+                'number of monitoring target regions')
++PTE Accessed-bit Based Access Check
++-----------------------------------
 +
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/record.py b/tools/damon/record.py
++The implementation for the virtual address space uses PTE Accessed-bit for
++basic access checks.  It finds the relevant PTE Accessed bit from the address
++by walking the page table for the target task of the address.  In this way, the
++implementation finds and clears the bit for next sampling target address and
++checks whether the bit set again after one sampling period.  This could disturb
++other kernel subsystems using the Accessed bits, namely Idle page tracking and
++the reclaim logic.  To avoid such disturbances, DAMON makes it mutually
++exclusive with Idle page tracking and uses ``PG_idle`` and ``PG_young`` page
++flags to solve the conflict with the reclaim logic, as Idle page tracking does.
++
++
++VMA-based Target Address Range Construction
++-------------------------------------------
++
++Only small parts in the super-huge virtual address space of the processes are
++mapped to the physical memory and accessed.  Thus, tracking the unmapped
++address regions is just wasteful.  However, because DAMON can deal with some
++level of noise using the adaptive regions adjustment mechanism, tracking every
++mapping is not strictly required but could even incur a high overhead in some
++cases.  That said, too huge unmapped areas inside the monitoring target should
++be removed to not take the time for the adaptive mechanism.
++
++For the reason, this implementation converts the complex mappings to three
++distinct regions that cover every mapped area of the address space.  The two
++gaps between the three regions are the two biggest unmapped areas in the given
++address space.  The two biggest unmapped areas would be the gap between the
++heap and the uppermost mmap()-ed region, and the gap between the lowermost
++mmap()-ed region and the stack in most of the cases.  Because these gaps are
++exceptionally huge in usual address spaces, excluding these will be sufficient
++to make a reasonable trade-off.  Below shows this in detail::
++
++    <heap>
++    <BIG UNMAPPED REGION 1>
++    <uppermost mmap()-ed region>
++    (small mmap()-ed regions and munmap()-ed regions)
++    <lowermost mmap()-ed region>
++    <BIG UNMAPPED REGION 2>
++    <stack>
++
++
++Address Space Independent Core Mechanisms
++=========================================
++
++Below four sections describe each of the DAMON core mechanisms and the five
++monitoring attributes, ``sampling interval``, ``aggregation interval``,
++``regions update interval``, ``minimum number of regions``, and ``maximum
++number of regions``.
++
++
++Access Frequency Monitoring
++---------------------------
++
++The output of DAMON says what pages are how frequently accessed for a given
++duration.  The resolution of the access frequency is controlled by setting
++``sampling interval`` and ``aggregation interval``.  In detail, DAMON checks
++access to each page per ``sampling interval`` and aggregates the results.  In
++other words, counts the number of the accesses to each page.  After each
++``aggregation interval`` passes, DAMON calls callback functions that previously
++registered by users so that users can read the aggregated results and then
++clears the results.  This can be described in below simple pseudo-code::
++
++    while monitoring_on:
++        for page in monitoring_target:
++            if accessed(page):
++                nr_accesses[page] += 1
++        if time() % aggregation_interval == 0:
++            for callback in user_registered_callbacks:
++                callback(monitoring_target, nr_accesses)
++            for page in monitoring_target:
++                nr_accesses[page] = 0
++        sleep(sampling interval)
++
++The monitoring overhead of this mechanism will arbitrarily increase as the
++size of the target workload grows.
++
++
++Region Based Sampling
++---------------------
++
++To avoid the unbounded increase of the overhead, DAMON groups adjacent pages
++that assumed to have the same access frequencies into a region.  As long as the
++assumption (pages in a region have the same access frequencies) is kept, only
++one page in the region is required to be checked.  Thus, for each ``sampling
++interval``, DAMON randomly picks one page in each region, waits for one
++``sampling interval``, checks whether the page is accessed meanwhile, and
++increases the access frequency of the region if so.  Therefore, the monitoring
++overhead is controllable by setting the number of regions.  DAMON allows users
++to set the minimum and the maximum number of regions for the trade-off.
++
++This scheme, however, cannot preserve the quality of the output if the
++assumption is not guaranteed.
++
++
++Adaptive Regions Adjustment
++---------------------------
++
++Even somehow the initial monitoring target regions are well constructed to
++fulfill the assumption (pages in same region have similar access frequencies),
++the data access pattern can be dynamically changed.  This will result in low
++monitoring quality.  To keep the assumption as much as possible, DAMON
++adaptively merges and splits each region based on their access frequency.
++
++For each ``aggregation interval``, it compares the access frequencies of
++adjacent regions and merges those if the frequency difference is small.  Then,
++after it reports and clears the aggregated access frequency of each region, it
++splits each region into two or three regions if the total number of regions
++will not exceed the user-specified maximum number of regions after the split.
++
++In this way, DAMON provides its best-effort quality and minimal overhead while
++keeping the bounds users set for their trade-off.
++
++
++Dynamic Target Space Updates Handling
++-------------------------------------
++
++The monitoring target address range could dynamically changed.  For example,
++virtual memory could be dynamically mapped and unmapped.  Physical memory could
++be hot-plugged.
++
++As the changes could be quite frequent in some cases, DAMON checks the dynamic
++memory mapping changes and applies it to the abstracted target area only for
++each of a user-specified time interval (``regions update interval``).
+diff --git a/Documentation/vm/damon/eval.rst b/Documentation/vm/damon/eval.rst
 new file mode 100644
-index 000000000000..6d1cbe593b94
+index 000000000000..cb80c63c3ed2
 --- /dev/null
-+++ b/tools/damon/record.py
-@@ -0,0 +1,135 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/vm/damon/eval.rst
+@@ -0,0 +1,225 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+"""
-+Record data access patterns of the target process.
-+"""
++==========
++Evaluation
++==========
 +
-+import argparse
-+import os
-+import signal
-+import subprocess
-+import time
++DAMON is lightweight.  It increases system memory usage by 0.12% and slows
++target workloads down by 1.39%.
 +
-+import _damon
++DAMON is accurate and useful for memory management optimizations.  An
++experimental DAMON-based operation scheme for THP, 'ethp', removes 88.16% of
++THP memory overheads while preserving 88.73% of THP speedup.  Another
++experimental DAMON-based 'proactive reclamation' implementation, 'prcl',
++reduces 91.34% of residential sets and 25.59% of system memory footprint while
++incurring only 1.58% runtime overhead in the best case (parsec3/freqmine).
 +
-+def pidfd_open(pid):
-+    import ctypes
-+    libc = ctypes.CDLL(None)
-+    syscall = libc.syscall
-+    syscall.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_uint]
-+    syscall.restype = ctypes.c_long
 +
-+    NR_pidfd_open = 434
++Setup
++=====
 +
-+    return syscall(NR_pidfd_open, pid, 0)
++On QEMU/KVM based virtual machines utilizing 130GB of RAM and 36 vCPUs hosted
++by AWS EC2 i3.metal instances that running a kernel that v20 DAMON patchset is
++applied, I measure runtime and consumed system memory while running various
++realistic workloads with several configurations.  I use 13 and 12 workloads in
++PARSEC3 [3]_ and SPLASH-2X [4]_ benchmark suites, respectively.  I use another
++wrapper scripts [5]_ for convenient setup and run of the workloads.
 +
-+def do_record(target, is_target_cmd, attrs, old_attrs, pidfd):
-+    if os.path.isfile(attrs.rfile_path):
-+        os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 +
-+    if attrs.apply():
-+        print('attributes (%s) failed to be applied' % attrs)
-+        cleanup_exit(old_attrs, -1)
-+    print('# damon attrs: %s %s' % (attrs.attr_str(), attrs.record_str()))
-+    if is_target_cmd:
-+        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-+        target = p.pid
++Measurement
++-----------
 +
-+    if pidfd:
-+        fd = pidfd_open(int(target))
-+        if fd < 0:
-+            print('failed getting pidfd of %s: %s' % (target, fd))
-+            cleanup_exit(old_attrs, -1)
++For the measurement of the amount of consumed memory in system global scope, I
++drop caches before starting each of the workloads and monitor 'MemFree' in the
++'/proc/meminfo' file.  To make results more stable, I repeat the runs 5 times
++and average results.
 +
-+        # NOTE: The race is still possible because the pid might be already
-+        # reused before above pidfd_open() returned.  Eliminating the race is
-+        # impossible unless we drop the pid support.  This option handling is
-+        # only for reference of the pidfd usage.
-+        target = 'pidfd %s' % fd
 +
-+    if _damon.set_target_id(target):
-+        print('target id setting (%s) failed' % target)
-+        cleanup_exit(old_attrs, -2)
-+    if _damon.turn_damon('on'):
-+        print('could not turn on damon' % target)
-+        cleanup_exit(old_attrs, -3)
-+    while not _damon.is_damon_running():
-+        time.sleep(1)
-+    print('Press Ctrl+C to stop')
-+    if is_target_cmd:
-+        p.wait()
-+    while True:
-+        # damon will turn it off by itself if the target tasks are terminated.
-+        if not _damon.is_damon_running():
-+            break
-+        time.sleep(1)
++Configurations
++--------------
 +
-+    if pidfd:
-+        os.close(fd)
-+    cleanup_exit(old_attrs, 0)
++The configurations I use are as below.
 +
-+def cleanup_exit(orig_attrs, exit_code):
-+    if _damon.is_damon_running():
-+        if _damon.turn_damon('off'):
-+            print('failed to turn damon off!')
-+        while _damon.is_damon_running():
-+            time.sleep(1)
-+    if orig_attrs:
-+        if orig_attrs.apply():
-+            print('original attributes (%s) restoration failed!' % orig_attrs)
-+    exit(exit_code)
++- orig: Linux v5.8 with 'madvise' THP policy
++- rec: 'orig' plus DAMON running with virtual memory access recording
++- prec: 'orig' plus DAMON running with physical memory access recording
++- thp: same with 'orig', but use 'always' THP policy
++- ethp: 'orig' plus a DAMON operation scheme, 'efficient THP'
++- prcl: 'orig' plus a DAMON operation scheme, 'proactive reclaim [6]_'
 +
-+def sighandler(signum, frame):
-+    print('\nsignal %s received' % signum)
-+    cleanup_exit(orig_attrs, signum)
++I use 'rec' for measurement of DAMON overheads to target workloads and system
++memory.  'prec' is for physical memory monitroing and recording.  It monitors
++17GB sized 'System RAM' region.  The remaining configs including 'thp', 'ethp',
++and 'prcl' are for measurement of DAMON monitoring accuracy.
 +
-+def chk_permission():
-+    if os.geteuid() != 0:
-+        print("Run as root")
-+        exit(1)
++'ethp' and 'prcl' are simple DAMON-based operation schemes developed for
++proof of concepts of DAMON.  'ethp' reduces memory space waste of THP by using
++DAMON for the decision of promotions and demotion for huge pages, while 'prcl'
++is as similar as the original work.  Those are implemented as below::
 +
-+def set_argparser(parser):
-+    _damon.set_attrs_argparser(parser)
-+    parser.add_argument('target', type=str, metavar='<target>',
-+            help='the target command or the pid to record')
-+    parser.add_argument('--pidfd', action='store_true',
-+            help='use pidfd type target id')
-+    parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-+            default=1024*1024, help='length of record result buffer')
-+    parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-+            default='damon.data', help='output file path')
++    # format: <min/max size> <min/max frequency (0-100)> <min/max age> <action>
++    # ethp: Use huge pages if a region shows >=5% access rate, use regular
++    # pages if a region >=2MB shows 0 access rate for >=7 seconds
++    min     max     5       max     min     max     hugepage
++    2M      max     min     min     7s      max     nohugepage
 +
-+def main(args=None):
-+    global orig_attrs
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
++    # prcl: If a region >=4KB shows 0 access rate for >=10 seconds, page out.
++    4K      max     0       0       10s     max     pageout
 +
-+    chk_permission()
-+    _damon.chk_update_debugfs(args.debugfs)
++Note that both 'ethp' and 'prcl' are designed with my only straightforward
++intuition because those are for only proof of concepts and monitoring accuracy
++of DAMON.  In other words, those are not for production.  For production use,
++those should be more tuned.
 +
-+    signal.signal(signal.SIGINT, sighandler)
-+    signal.signal(signal.SIGTERM, sighandler)
-+    orig_attrs = _damon.current_attrs()
++.. [1] "Redis latency problems troubleshooting", https://redis.io/topics/latency
++.. [2] "Disable Transparent Huge Pages (THP)",
++    https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
++.. [3] "The PARSEC Becnhmark Suite", https://parsec.cs.princeton.edu/index.htm
++.. [4] "SPLASH-2x", https://parsec.cs.princeton.edu/parsec3-doc.htm#splash2x
++.. [5] "parsec3_on_ubuntu", https://github.com/sjp38/parsec3_on_ubuntu
++.. [6] "Proactively reclaiming idle memory", https://lwn.net/Articles/787611/
 +
-+    args.schemes = ''
-+    pidfd = args.pidfd
-+    new_attrs = _damon.cmd_args_to_attrs(args)
-+    target = args.target
 +
-+    target_fields = target.split()
-+    if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-+            shell=True, executable='/bin/bash'):
-+        do_record(target, True, new_attrs, orig_attrs, pidfd)
-+    else:
-+        try:
-+            pid = int(target)
-+        except:
-+            print('target \'%s\' is neither a command, nor a pid' % target)
-+            exit(1)
-+        do_record(target, False, new_attrs, orig_attrs, pidfd)
++Results
++=======
 +
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/report.py b/tools/damon/report.py
++Below two tables show the measurement results.  The runtimes are in seconds
++while the memory usages are in KiB.  Each configuration except 'orig' shows
++its overhead relative to 'orig' in percent within parenthesizes.::
++
++    runtime                 orig     rec      (overhead) prec     (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
++    parsec3/blackscholes    137.688  139.910  (1.61)     138.226  (0.39)     138.524  (0.61)     138.548  (0.62)     150.562  (9.35)
++    parsec3/bodytrack       124.496  123.294  (-0.97)    124.482  (-0.01)    124.874  (0.30)     123.514  (-0.79)    126.380  (1.51)
++    parsec3/canneal         196.513  209.465  (6.59)     223.213  (13.59)    189.302  (-3.67)    199.453  (1.50)     242.217  (23.26)
++    parsec3/dedup           18.060   18.128   (0.38)     18.378   (1.76)     18.210   (0.83)     18.397   (1.87)     20.545   (13.76)
++    parsec3/facesim         343.697  344.917  (0.36)     341.367  (-0.68)    337.696  (-1.75)    344.805  (0.32)     361.169  (5.08)
++    parsec3/ferret          288.868  286.110  (-0.95)    292.308  (1.19)     287.814  (-0.36)    284.243  (-1.60)    284.200  (-1.62)
++    parsec3/fluidanimate    342.267  337.743  (-1.32)    330.680  (-3.39)    337.356  (-1.43)    340.604  (-0.49)    343.565  (0.38)
++    parsec3/freqmine        437.385  436.854  (-0.12)    437.641  (0.06)     435.008  (-0.54)    436.998  (-0.09)    444.276  (1.58)
++    parsec3/raytrace        183.036  182.039  (-0.54)    184.859  (1.00)     187.330  (2.35)     185.660  (1.43)     209.707  (14.57)
++    parsec3/streamcluster   611.075  675.108  (10.48)    656.373  (7.41)     541.711  (-11.35)   473.679  (-22.48)   815.450  (33.45)
++    parsec3/swaptions       220.338  220.948  (0.28)     220.891  (0.25)     220.387  (0.02)     219.986  (-0.16)    -100.000 (0.00)
++    parsec3/vips            87.710   88.581   (0.99)     88.423   (0.81)     88.460   (0.86)     88.471   (0.87)     89.661   (2.22)
++    parsec3/x264            114.927  117.774  (2.48)     116.630  (1.48)     112.237  (-2.34)    110.709  (-3.67)    124.560  (8.38)
++    splash2x/barnes         131.034  130.895  (-0.11)    129.088  (-1.48)    118.213  (-9.78)    124.497  (-4.99)    167.966  (28.19)
++    splash2x/fft            59.805   60.237   (0.72)     59.895   (0.15)     47.008   (-21.40)   57.962   (-3.08)    87.183   (45.78)
++    splash2x/lu_cb          132.353  132.157  (-0.15)    132.473  (0.09)     131.561  (-0.60)    135.541  (2.41)     141.720  (7.08)
++    splash2x/lu_ncb         149.050  150.496  (0.97)     151.912  (1.92)     150.974  (1.29)     148.329  (-0.48)    152.227  (2.13)
++    splash2x/ocean_cp       82.189   77.735   (-5.42)    84.466   (2.77)     77.498   (-5.71)    82.586   (0.48)     113.737  (38.38)
++    splash2x/ocean_ncp      154.934  154.656  (-0.18)    164.204  (5.98)     101.861  (-34.26)   142.600  (-7.96)    281.650  (81.79)
++    splash2x/radiosity      142.710  141.643  (-0.75)    143.940  (0.86)     141.982  (-0.51)    142.017  (-0.49)    152.116  (6.59)
++    splash2x/radix          50.357   50.331   (-0.05)    50.717   (0.72)     45.664   (-9.32)    50.222   (-0.27)    73.981   (46.91)
++    splash2x/raytrace       134.039  132.650  (-1.04)    134.583  (0.41)     131.570  (-1.84)    133.050  (-0.74)    141.463  (5.54)
++    splash2x/volrend        120.769  120.220  (-0.45)    119.895  (-0.72)    120.159  (-0.50)    119.311  (-1.21)    119.581  (-0.98)
++    splash2x/water_nsquared 376.599  373.411  (-0.85)    382.601  (1.59)     348.701  (-7.41)    357.033  (-5.20)    397.427  (5.53)
++    splash2x/water_spatial  132.619  133.432  (0.61)     135.505  (2.18)     134.865  (1.69)     133.940  (1.00)     148.196  (11.75)
++    total                   4772.510 4838.740 (1.39)     4862.740 (1.89)     4568.970 (-4.26)    4592.160 (-3.78)    5189.560 (8.74)
++
++
++    memused.avg             orig         rec          (overhead) prec         (overhead) thp          (overhead) ethp         (overhead) prcl         (overhead)
++    parsec3/blackscholes    1825022.800  1863815.200  (2.13)     1830082.000  (0.28)     1800999.800  (-1.32)    1807743.800  (-0.95)    1580027.800  (-13.42)
++    parsec3/bodytrack       1425506.800  1438323.400  (0.90)     1439260.600  (0.96)     1400505.600  (-1.75)    1412295.200  (-0.93)    1412759.600  (-0.89)
++    parsec3/canneal         1040902.600  1050404.000  (0.91)     1053535.200  (1.21)     1027175.800  (-1.32)    1035229.400  (-0.55)    1039159.400  (-0.17)
++    parsec3/dedup           2526700.400  2540671.600  (0.55)     2503689.800  (-0.91)    2544440.200  (0.70)     2510519.000  (-0.64)    2503148.200  (-0.93)
++    parsec3/facesim         545844.600   550680.000   (0.89)     543658.600   (-0.40)    532320.200   (-2.48)    539429.600   (-1.18)    470836.800   (-13.74)
++    parsec3/ferret          352118.600   326782.600   (-7.20)    322645.600   (-8.37)    304054.800   (-13.65)   317259.000   (-9.90)    313532.400   (-10.96)
++    parsec3/fluidanimate    651597.600   580045.200   (-10.98)   578297.400   (-11.25)   569431.600   (-12.61)   577322.800   (-11.40)   482061.600   (-26.02)
++    parsec3/freqmine        989212.000   996291.200   (0.72)     989405.000   (0.02)     970891.000   (-1.85)    981122.000   (-0.82)    736030.000   (-25.59)
++    parsec3/raytrace        1749470.400  1751183.200  (0.10)     1740937.600  (-0.49)    1717138.800  (-1.85)    1731298.200  (-1.04)    1528069.000  (-12.66)
++    parsec3/streamcluster   123425.400   151548.200   (22.79)    144024.800   (16.69)    118379.000   (-4.09)    124845.400   (1.15)     118629.800   (-3.89)
++    parsec3/swaptions       4150.600     25679.200    (518.69)   19914.800    (379.80)   8577.000     (106.64)   17348.200    (317.97)   -100.000     (0.00)
++    parsec3/vips            2989801.200  3003285.400  (0.45)     3012055.400  (0.74)     2958369.000  (-1.05)    2970897.800  (-0.63)    2962063.000  (-0.93)
++    parsec3/x264            3242663.400  3256091.000  (0.41)     3248949.400  (0.19)     3195605.400  (-1.45)    3206571.600  (-1.11)    3219046.333  (-0.73)
++    splash2x/barnes         1208017.600  1212702.600  (0.39)     1194143.600  (-1.15)    1208450.200  (0.04)     1212607.600  (0.38)     878554.667   (-27.27)
++    splash2x/fft            9786259.000  9705563.600  (-0.82)    9391006.800  (-4.04)    9967230.600  (1.85)     9657639.400  (-1.31)    10215759.333 (4.39)
++    splash2x/lu_cb          512130.400   521431.800   (1.82)     513051.400   (0.18)     508534.200   (-0.70)    512643.600   (0.10)     328017.333   (-35.95)
++    splash2x/lu_ncb         511156.200   526566.400   (3.01)     513230.400   (0.41)     509823.800   (-0.26)    516302.000   (1.01)     418078.333   (-18.21)
++    splash2x/ocean_cp       3353269.200  3319496.000  (-1.01)    3251575.000  (-3.03)    3379639.800  (0.79)     3326416.600  (-0.80)    3143859.667  (-6.24)
++    splash2x/ocean_ncp      3905538.200  3914929.600  (0.24)     3877493.200  (-0.72)    7053949.400  (80.61)    4633035.000  (18.63)    3527482.667  (-9.68)
++    splash2x/radiosity      1462030.400  1468050.000  (0.41)     1454997.600  (-0.48)    1466985.400  (0.34)     1461777.400  (-0.02)    441332.000   (-69.81)
++    splash2x/radix          2367200.800  2363995.000  (-0.14)    2251124.600  (-4.90)    2417603.800  (2.13)     2317804.000  (-2.09)    2495581.667  (5.42)
++    splash2x/raytrace       42356.200    56270.200    (32.85)    49419.000    (16.67)    86408.400    (104.00)   50547.600    (19.34)    40341.000    (-4.76)
++    splash2x/volrend        148631.600   162954.600   (9.64)     153305.200   (3.14)     140089.200   (-5.75)    149831.200   (0.81)     150232.000   (1.08)
++    splash2x/water_nsquared 39835.800    54268.000    (36.23)    53659.400    (34.70)    41073.600    (3.11)     85322.600    (114.19)   49463.667    (24.17)
++    splash2x/water_spatial  669746.600   679634.200   (1.48)     667518.600   (-0.33)    664383.800   (-0.80)    684470.200   (2.20)     401946.000   (-39.99)
++    total                   41472600.000 41520700.000 (0.12)     40796900.000 (-1.63)    44592000.000 (7.52)     41840100.000 (0.89)     38456146.000 (-7.27)
++
++
++DAMON Overheads
++---------------
++
++In total, DAMON virtual memory access recording feature ('rec') incurs 1.39%
++runtime overhead and 0.12% memory space overhead.  Even though the size of the
++monitoring target region becomes much larger with the physical memory access
++recording ('prec'), it still shows only modest amount of overhead (1.89% for
++runtime and -1.63% for memory footprint).
++
++For a convenient test run of 'rec' and 'prec', I use a Python wrapper.  The
++wrapper constantly consumes about 10-15MB of memory.  This becomes a high
++memory overhead if the target workload has a small memory footprint.
++Nonetheless, the overheads are not from DAMON, but from the wrapper, and thus
++should be ignored.  This fake memory overhead continues in 'ethp' and 'prcl',
++as those configurations are also using the Python wrapper.
++
++
++Efficient THP
++-------------
++
++THP 'always' enabled policy achieves 4.26% speedup but incurs 7.52% memory
++overhead.  It achieves 34.26% speedup in the best case, but 80.61% memory
++overhead in the worst case.  Interestingly, both the best and worst-case are
++with 'splash2x/ocean_ncp').
++
++The 2-lines implementation of data access monitoring based THP version ('ethp')
++shows 3.78% speedup and 0.89% memory overhead.  In other words, 'ethp' removes
++88.16% of THP memory waste while preserving 88.73% of THP speedup in total.  In
++the case of the 'splash2x/ocean_ncp', 'ethp' removes 76.90% of THP memory waste
++while preserving 23.23% of THP speedup.
++
++
++Proactive Reclamation
++---------------------
++
++As similar to the original work, I use 4G 'zram' swap device for this
++configuration.
++
++In total, our 1 line implementation of Proactive Reclamation, 'prcl', incurred
++8.74% runtime overhead in total while achieving 7.27% system memory footprint
++reduction.
++
++Nonetheless, as the memory usage is calculated with 'MemFree' in
++'/proc/meminfo', it contains the SwapCached pages.  As the swapcached pages can
++be easily evicted, I also measured the residential set size of the workloads::
++
++    rss.avg                 orig         rec          (overhead) prec         (overhead) thp          (overhead) ethp         (overhead) prcl         (overhead)
++    parsec3/blackscholes    587078.800   586930.400   (-0.03)    586355.200   (-0.12)    586147.400   (-0.16)    585203.400   (-0.32)    243110.800   (-58.59)
++    parsec3/bodytrack       32470.800    32488.400    (0.05)     32351.000    (-0.37)    32433.400    (-0.12)    32429.000    (-0.13)    18804.800    (-42.09)
++    parsec3/canneal         842418.600   842442.800   (0.00)     844396.000   (0.23)     840756.400   (-0.20)    841242.000   (-0.14)    825296.200   (-2.03)
++    parsec3/dedup           1180100.000  1179309.200  (-0.07)    1160477.800  (-1.66)    1198789.200  (1.58)     1171802.600  (-0.70)    595531.600   (-49.54)
++    parsec3/facesim         312056.000   312109.200   (0.02)     312044.400   (-0.00)    318102.200   (1.94)     316239.600   (1.34)     192002.600   (-38.47)
++    parsec3/ferret          99792.200    99641.800    (-0.15)    99044.800    (-0.75)    102041.800   (2.25)     100854.000   (1.06)     83628.200    (-16.20)
++    parsec3/fluidanimate    530735.400   530759.000   (0.00)     530865.200   (0.02)     532440.800   (0.32)     522778.600   (-1.50)    433547.400   (-18.31)
++    parsec3/freqmine        552951.000   552788.000   (-0.03)    552761.800   (-0.03)    556004.400   (0.55)     554001.200   (0.19)     47881.200    (-91.34)
++    parsec3/raytrace        883966.600   880061.400   (-0.44)    883144.800   (-0.09)    871786.400   (-1.38)    881000.200   (-0.34)    267210.800   (-69.77)
++    parsec3/streamcluster   110901.600   110863.400   (-0.03)    110893.600   (-0.01)    115612.600   (4.25)     114976.800   (3.67)     109728.600   (-1.06)
++    parsec3/swaptions       5708.800     5712.400     (0.06)     5681.400     (-0.48)    5720.400     (0.20)     5726.000     (0.30)     -100.000     (0.00)
++    parsec3/vips            32272.200    32427.400    (0.48)     31959.800    (-0.97)    34177.800    (5.90)     33306.400    (3.20)     28869.000    (-10.55)
++    parsec3/x264            81878.000    81914.200    (0.04)     81823.600    (-0.07)    83579.400    (2.08)     83236.800    (1.66)     81220.667    (-0.80)
++    splash2x/barnes         1211917.400  1211328.200  (-0.05)    1212450.400  (0.04)     1221951.000  (0.83)     1218924.600  (0.58)     489430.333   (-59.62)
++    splash2x/fft            9874359.000  9934912.400  (0.61)     9843789.600  (-0.31)    10204484.600 (3.34)     9980640.400  (1.08)     7003881.000  (-29.07)
++    splash2x/lu_cb          509066.200   509222.600   (0.03)     509059.600   (-0.00)    509594.600   (0.10)     509479.000   (0.08)     315538.667   (-38.02)
++    splash2x/lu_ncb         509192.200   508437.000   (-0.15)    509331.000   (0.03)     509606.000   (0.08)     509578.200   (0.08)     412065.667   (-19.07)
++    splash2x/ocean_cp       3380283.800  3380301.000  (0.00)     3377617.200  (-0.08)    3416531.200  (1.07)     3389845.200  (0.28)     2398084.000  (-29.06)
++    splash2x/ocean_ncp      3917913.600  3924529.200  (0.17)     3934911.800  (0.43)     7123907.400  (81.83)    4703623.600  (20.05)    2428288.000  (-38.02)
++    splash2x/radiosity      1467978.600  1468655.400  (0.05)     1467534.000  (-0.03)    1477722.600  (0.66)     1471036.000  (0.21)     148573.333   (-89.88)
++    splash2x/radix          2413933.400  2408367.600  (-0.23)    2381122.400  (-1.36)    2480169.400  (2.74)     2367118.800  (-1.94)    1848857.000  (-23.41)
++    splash2x/raytrace       23280.000    23272.800    (-0.03)    23259.000    (-0.09)    28715.600    (23.35)    28354.400    (21.80)    13302.333    (-42.86)
++    splash2x/volrend        44079.400    44091.600    (0.03)     44022.200    (-0.13)    44547.200    (1.06)     44615.600    (1.22)     29833.000    (-32.32)
++    splash2x/water_nsquared 29392.800    29425.600    (0.11)     29422.400    (0.10)     30317.800    (3.15)     30602.200    (4.11)     21769.000    (-25.94)
++    splash2x/water_spatial  658604.400   660276.800   (0.25)     660334.000   (0.26)     660491.000   (0.29)     660636.400   (0.31)     304246.667   (-53.80)
++    total                   29292400.000 29350400.000 (0.20)     29224634.000 (-0.23)    32985491.000 (12.61)    30157300.000 (2.95)     18340700.000 (-37.39)
++
++In total, 37.39% of residential sets were reduced.
++
++With parsec3/freqmine, 'prcl' reduced 91.34% of residential sets and 25.59% of
++system memory usage while incurring only 1.58% runtime overhead.
+diff --git a/Documentation/vm/damon/faq.rst b/Documentation/vm/damon/faq.rst
 new file mode 100644
-index 000000000000..c661c7b2f1af
+index 000000000000..088128bbf22b
 --- /dev/null
-+++ b/tools/damon/report.py
-@@ -0,0 +1,45 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/vm/damon/faq.rst
+@@ -0,0 +1,58 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+import argparse
++==========================
++Frequently Asked Questions
++==========================
 +
-+import bin2txt
-+import heats
-+import nr_regions
-+import wss
++Why a new subsystem, instead of extending perf or other user space tools?
++=========================================================================
 +
-+def set_argparser(parser):
-+    subparsers = parser.add_subparsers(title='report type', dest='report_type',
-+            metavar='<report type>', help='the type of the report to generate')
-+    subparsers.required = True
++First, because it needs to be lightweight as much as possible so that it can be
++used online, any unnecessary overhead such as kernel - user space context
++switching cost should be avoided.  Second, DAMON aims to be used by other
++programs including the kernel.  Therefore, having a dependency on specific
++tools like perf is not desirable.  These are the two biggest reasons why DAMON
++is implemented in the kernel space.
 +
-+    parser_raw = subparsers.add_parser('raw', help='human readable raw data')
-+    bin2txt.set_argparser(parser_raw)
 +
-+    parser_heats = subparsers.add_parser('heats', help='heats of regions')
-+    heats.set_argparser(parser_heats)
++Can 'idle pages tracking' or 'perf mem' substitute DAMON?
++=========================================================
 +
-+    parser_wss = subparsers.add_parser('wss', help='working set size')
-+    wss.set_argparser(parser_wss)
++Idle page tracking is a low level primitive for access check of the physical
++address space.  'perf mem' is similar, though it can use sampling to minimize
++the overhead.  On the other hand, DAMON is a higher-level framework for the
++monitoring of various address spaces.  It is focused on memory management
++optimization and provides sophisticated accuracy/overhead handling mechanisms.
++Therefore, 'idle pages tracking' and 'perf mem' could provide a subset of
++DAMON's output, but cannot substitute DAMON.
 +
-+    parser_nr_regions = subparsers.add_parser('nr_regions',
-+            help='number of regions')
-+    nr_regions.set_argparser(parser_nr_regions)
 +
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
++How can I optimize my system's memory management using DAMON?
++=============================================================
 +
-+    if args.report_type == 'raw':
-+        bin2txt.main(args)
-+    elif args.report_type == 'heats':
-+        heats.main(args)
-+    elif args.report_type == 'wss':
-+        wss.main(args)
-+    elif args.report_type == 'nr_regions':
-+        nr_regions.main(args)
++Because there are several ways for the DAMON-based optimizations, we wrote a
++separate document, :doc:`/admin-guide/mm/damon/guide`.  Please refer to that.
 +
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/wss.py b/tools/damon/wss.py
++
++Does DAMON support virtual memory only?
++=======================================
++
++No.  The core of the DAMON is address space independent.  The address space
++specific low level primitive parts including monitoring target regions
++constructions and actual access checks can be implemented and configured on the
++DAMON core by the users.  In this way, DAMON users can monitor any address
++space with any access check technique.
++
++Nonetheless, DAMON provides vma tracking and PTE Accessed bit check based
++implementations of the address space dependent functions for the virtual memory
++by default, for a reference and convenient use.  In near future, we will
++provide those for physical memory address space.
++
++
++Can I simply monitor page granularity?
++======================================
++
++Yes.  You can do so by setting the ``min_nr_regions`` attribute higher than the
++working set size divided by the page size.  Because the monitoring target
++regions size is forced to be ``>=page size``, the region split will make no
++effect.
+diff --git a/Documentation/vm/damon/index.rst b/Documentation/vm/damon/index.rst
 new file mode 100644
-index 000000000000..54e2ac7cf83b
+index 000000000000..17dca3c12aad
 --- /dev/null
-+++ b/tools/damon/wss.py
-@@ -0,0 +1,100 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/vm/damon/index.rst
+@@ -0,0 +1,31 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+"Print out the distribution of the working set sizes of the given trace"
++==========================
++DAMON: Data Access MONitor
++==========================
 +
-+import argparse
-+import struct
-+import sys
-+import tempfile
++DAMON is a data access monitoring framework subsystem for the Linux kernel.
++The core mechanisms of DAMON (refer to :doc:`design` for the detail) make it
 +
-+import _dist
-+import _recfile
++ - *accurate* (the monitoring output is useful enough for DRAM level memory
++   management; It might not appropriate for CPU Cache levels, though),
++ - *light-weight* (the monitoring overhead is low enough to be applied online),
++   and
++ - *scalable* (the upper-bound of the overhead is in constant range regardless
++   of the size of target workloads).
 +
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--range', '-r', type=int, nargs=3,
-+            metavar=('<start>', '<stop>', '<step>'),
-+            help='range of wss percentiles to print')
-+    parser.add_argument('--thres', '-t', type=int, default=1,
-+            metavar='<# accesses>',
-+            help='minimal number of accesses for treated as working set')
-+    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-+            help='the metric to be used for the sort of the working set sizes')
-+    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-+            help='plot the distribution to an image file')
++Using this framework, therefore, the kernel's memory management mechanisms can
++make advanced decisions.  Experimental memory management optimization works
++that incurring high data accesses monitoring overhead could implemented again.
++In user space, meanwhile, users who have some special workloads can write
++personalized applications for better understanding and optimizations of their
++workloads and systems.
 +
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
++.. toctree::
++   :maxdepth: 2
 +
-+    percentiles = [0, 25, 50, 75, 100]
-+
-+    file_path = args.input
-+    if args.range:
-+        percentiles = range(args.range[0], args.range[1], args.range[2])
-+    wss_sort = True
-+    if args.sortby == 'time':
-+        wss_sort = False
-+
-+    tid_pattern_map = {}
-+    with open(file_path, 'rb') as f:
-+        _recfile.set_fmt_version(f)
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                tid = _recfile.target_id(f)
-+                if not tid in tid_pattern_map:
-+                    tid_pattern_map[tid] = []
-+                tid_pattern_map[tid].append(_dist.access_patterns(f))
-+
-+    orig_stdout = sys.stdout
-+    if args.plot:
-+        tmp_path = tempfile.mkstemp()[1]
-+        tmp_file = open(tmp_path, 'w')
-+        sys.stdout = tmp_file
-+
-+    print('# <percentile> <wss>')
-+    for tid in tid_pattern_map.keys():
-+        # Skip first 20 snapshots as regions may not adjusted yet.
-+        snapshots = tid_pattern_map[tid][20:]
-+        wss_dist = []
-+        for snapshot in snapshots:
-+            wss = 0
-+            for p in snapshot:
-+                # Ignore regions not accessed
-+                if p[1] < args.thres:
-+                    continue
-+                wss += p[0]
-+            wss_dist.append(wss)
-+        if wss_sort:
-+            wss_dist.sort(reverse=False)
-+
-+        print('# target_id\t%s' % tid)
-+        print('# avr:\t%d' % (sum(wss_dist) / len(wss_dist)))
-+        for percentile in percentiles:
-+            thres_idx = int(percentile / 100.0 * len(wss_dist))
-+            if thres_idx == len(wss_dist):
-+                thres_idx -= 1
-+            threshold = wss_dist[thres_idx]
-+            print('%d\t%d' % (percentile, wss_dist[thres_idx]))
-+
-+    if args.plot:
-+        sys.stdout = orig_stdout
-+        tmp_file.flush()
-+        tmp_file.close()
-+        xlabel = 'runtime (percent)'
-+        if wss_sort:
-+            xlabel = 'percentile'
-+        _dist.plot_dist(tmp_path, args.plot, xlabel,
-+                'working set size (bytes)')
-+
-+if __name__ == '__main__':
-+    main()
++   faq
++   design
++   eval
++   api
++   plans
+diff --git a/Documentation/vm/index.rst b/Documentation/vm/index.rst
+index 611140ffef7e..8d8d088bc7af 100644
+--- a/Documentation/vm/index.rst
++++ b/Documentation/vm/index.rst
+@@ -31,6 +31,7 @@ descriptions of data structures and algorithms.
+    active_mm
+    balance
+    cleancache
++   damon/index
+    free_page_reporting
+    frontswap
+    highmem
 -- 
 2.17.1
 
