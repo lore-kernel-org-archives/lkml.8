@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8602AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54335238E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FD42054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678192;
-	bh=Be9bnFR/qhCB1VOcb3WJyzG81zm0wVIlrCEePGk53wo=;
+	s=default; t=1597678199;
+	bh=k2Y/wdQBPBwdqVEJvQH4Trnk31ZgtBleldriB3usG08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtYUJVXzUZ0RSQpWnzGB20H7Cc73eIjzZWTQgJjLjm7uC8Ydssj9GueHGI+s0vy/J
-	 BsZSNuCTAuZOD7n9OwLeiJgHkuTEEwMAPsOQBcbwI+/WOc1JrkakZTSgyQ4DOYPnO/
-	 0FTiUqFtPfS6xA+XyraRsxa8wNiU6Ve1Z5U4dZPY=
+	b=XJIAENytBIm7AVx3pVWn/GaJqpg0Ap6/Gh6Xi1og7FXbiciM5jBJz4XUBfrobaMIm
+	 pXULh14Q5vVbdC3RxzkyF4BJ+YwFA92Jn6znNeaoJOvuTTy9SsQbV4HBZJPUhH/K+k
+	 kjDvXwNMVZlM9SU+ZLM4co8GxDm8OJ4hMDfXAfyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgHQP3t (ORCPT
+        id S1730149AbgHQP3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgHQP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:43 -0400
+        id S1729979AbgHQP15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48012395A;
-        Mon, 17 Aug 2020 15:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE40923B54;
+        Mon, 17 Aug 2020 15:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678062;
-        bh=Be9bnFR/qhCB1VOcb3WJyzG81zm0wVIlrCEePGk53wo=;
+        s=default; t=1597678076;
+        bh=k2Y/wdQBPBwdqVEJvQH4Trnk31ZgtBleldriB3usG08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJGGHDrHTcEVB0uCZJSvPQBsZyhpg7tGvnERrTwPGYAMwbL2Pu7l0usSyRiCb9rB9
-         7kb37VhI42w3uXInOjKjIf0zSm11AirYqHoah7/DY6QUMQAyM9YAv43adD9tgq+cpi
-         GVqzs12s/okjS8DI6ilEPRJtzSZQTP2SoBRSbkUI=
+        b=pZMh1mq6555IRosI6DLOIDUwgGj9CKQn/C7R9kbhfg8wzfEEcdv+vqWJWoop8DhOk
+         fqwfzfdxz4OI5j1914BsuSA037XxA2T9S0ndhmNnu/bsUg0qTRKK0GdWQwXa5mVuqT
+         F3abRg99vT7fAYsK2eI0i64kSnCgwcIypvc0yC1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Dariusz Marcinkiewicz <darekm@google.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 205/464] media: allegro: Fix some NULL vs IS_ERR() checks in probe
-Date:   Mon, 17 Aug 2020 17:12:38 +0200
-Message-Id: <20200817143843.634712149@linuxfoundation.org>
+Subject: [PATCH 5.8 210/464] media: cros-ec-cec: do not bail on device_init_wakeup failure
+Date:   Mon, 17 Aug 2020 17:12:43 +0200
+Message-Id: <20200817143843.870989130@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,50 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dariusz Marcinkiewicz <darekm@google.com>
 
-[ Upstream commit d93d45ab716e4107056be54969c8c70e50a8346d ]
+[ Upstream commit 6f01dfb760c027d5dd6199d91ee9599f2676b5c6 ]
 
-The devm_ioremap() function doesn't return error pointers, it returns
-NULL on error.
+Do not fail probing when device_init_wakeup fails.
 
-Fixes: f20387dfd065 ("media: allegro: add Allegro DVT video IP core driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+device_init_wakeup fails when the device is already enabled as wakeup
+device. Hence, the driver fails to probe the device if:
+- The device has already been enabled for wakeup (by e.g. sysfs)
+- The driver has been unloaded and is being loaded again.
+
+This goal of the patch is to fix the above cases.
+
+Overwhelming majority of the drivers do not check device_init_wakeup
+return code.
+
+Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
+Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/allegro-dvt/allegro-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
-index 70f133a842ddf..3ed66aae741d5 100644
---- a/drivers/staging/media/allegro-dvt/allegro-core.c
-+++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-@@ -3065,9 +3065,9 @@ static int allegro_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 	regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
--	if (IS_ERR(regs)) {
-+	if (!regs) {
- 		dev_err(&pdev->dev, "failed to map registers\n");
--		return PTR_ERR(regs);
-+		return -ENOMEM;
- 	}
- 	dev->regmap = devm_regmap_init_mmio(&pdev->dev, regs,
- 					    &allegro_regmap_config);
-@@ -3085,9 +3085,9 @@ static int allegro_probe(struct platform_device *pdev)
- 	sram_regs = devm_ioremap(&pdev->dev,
- 				 sram_res->start,
- 				 resource_size(sram_res));
--	if (IS_ERR(sram_regs)) {
-+	if (!sram_regs) {
- 		dev_err(&pdev->dev, "failed to map sram\n");
--		return PTR_ERR(sram_regs);
-+		return -ENOMEM;
- 	}
- 	dev->sram = devm_regmap_init_mmio(&pdev->dev, sram_regs,
- 					  &allegro_sram_config);
+diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+index 0e7e2772f08f9..2d95e16cd2489 100644
+--- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
++++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+@@ -277,11 +277,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, cros_ec_cec);
+ 	cros_ec_cec->cros_ec = cros_ec;
+ 
+-	ret = device_init_wakeup(&pdev->dev, 1);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to initialize wakeup\n");
+-		return ret;
+-	}
++	device_init_wakeup(&pdev->dev, 1);
+ 
+ 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
+ 						 DRV_NAME,
 -- 
 2.25.1
 
