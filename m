@@ -2,107 +2,111 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966E5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183D720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD41207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597651657;
+	bh=brGKh7glX5r5oiJ5N4dduRMuN53pF28YcimSGGrgpKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LVVW6Od1dgc/HiLv8WBp1BFG57CBxk8KCZl5L81oR/3oE1hcJMt5OtEB92rp2VGfJ
+	 vwtTAAf+CxdVEbzsN7THjmjcJ1Jjzd7OqB8Md6Qjr2nURMM9SBri0Vgf/eYN0OeS5S
+	 HQlNBA6rFddo/RIuyKcQ56gzCOOC/eOXBjHSFbqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHQIH2 (ORCPT
+        id S1726962AbgHQIHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:07:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4979 "EHLO mga17.intel.com"
+        Mon, 17 Aug 2020 04:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgHQIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:07:26 -0400
-IronPort-SDR: g8VbzN/3k8gkn+U8de9XFeyrvQNgA8AYHCnjm5HExa4oqR7uiqdEpF/kqsGz+UEDOCbZY/Sxm4
- PtbFqJCAbOqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134714646"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="134714646"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:07:26 -0700
-IronPort-SDR: UprZgQpDHZHN14fzFVEaiHymPDrfMsQnr0c7TfR/wV0ycE/rljC7OUHhOmc9FZ24iLIM0W/Jtw
- fNMHYcNHnY+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="400121917"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 17 Aug 2020 01:07:23 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 17 Aug 2020 11:07:23 +0300
-Date:   Mon, 17 Aug 2020 11:07:23 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2 v3] tcpm: During PR_SWAP, source caps should be sent
- only after tSwapSourceStart
-Message-ID: <20200817080723.GB1448906@kuha.fi.intel.com>
-References: <20200812022934.568134-1-badhri@google.com>
- <20200813082507.GE1169992@kuha.fi.intel.com>
- <CAPTae5KUdTN5fVn45xFwhWS5Gy_xFJ91gAObb7qMk2KA+n72yQ@mail.gmail.com>
+        id S1726934AbgHQIHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:07:35 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40D2720758;
+        Mon, 17 Aug 2020 08:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597651655;
+        bh=brGKh7glX5r5oiJ5N4dduRMuN53pF28YcimSGGrgpKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z9SiSTSNK4ZGq5qzaEX4UGpdRQLuI5evIPschXW1F8xJeSZfDBOKgyYOSkcv6GCGZ
+         bThQsKb6Tfdi/eQNHmA/gMjyPVVCBuAJaaKY0sybfjOmR5gAIt1FIYVETtj6zlPlyR
+         IZYI5SUsWrtU/ub0hx4bFP3T9FR8o4S4m86qE7MM=
+Date:   Mon, 17 Aug 2020 16:07:19 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] hwrng: add support for i.MX6 rngb
+Message-ID: <20200817080718.GD16951@dragon>
+References: <20200715152604.10407-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPTae5KUdTN5fVn45xFwhWS5Gy_xFJ91gAObb7qMk2KA+n72yQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715152604.10407-1-horia.geanta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:40:04PM -0700, Badhri Jagan Sridharan wrote:
-> Hi Heikki,
+On Wed, Jul 15, 2020 at 06:25:59PM +0300, Horia Geantă wrote:
+> Add support for RNGB found in some i.MX6 SoCs (6SL, 6SLL, 6ULL, 6ULZ),
+> based on RNGC driver (drivers/char/hw_random/imx-rngc.c).
 > 
-> Sure. Same as the other patch I will try to address your question here
-> and will update the commit description once you are satisfied with the
-> description.
+> This driver claims support also for RNGB (besides RNGC),
+> and is currently used only by i.MX25.
 > 
-> Subject:
-> During PR_SWAP, source caps should be sent only after tSwapSourceStart
+> Note:
 > 
-> Commit description:
-> The patch addresses the compliance test failures while running
-> TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 of the "Deterministic PD
-> Compliance MOI" test plan published in https://www.usb.org/usbc.
-> For a product to be Type-C compliant, it's expected that these tests
-> are run on usb.org certified Type-C compliance tester as mentioned in
-> https://www.usb.org/usbc.
+> Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
+> also have a RNGB, however it's part of the CAAM
+> (Cryptograhic Accelerator and Assurance Module) crypto accelerator.
+> In this case, RNGB is managed in the caam driver
+> (drivers/crypto/caam/), since it's tightly related to
+> the caam "job ring" interface, not to mention CAAM internally relying on
+> RNGB as source of randomness.
 > 
-> The purpose of the tests TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 is to
-> verify the PR_SWAP response of the device. While doing so, the test
-> asserts that Source Capabilities message is NOT received from the test
-> device within tSwapSourceStart min (20 ms) from the time the last bit
-> of GoodCRC corresponding to the RS_RDY message sent by the UUT was
-> sent. If it does then the test fails.
+> On the other hand, the i.MX6 SoCs with RNGB have a DCP
+> (Data Co-Processor) crypto accelerator and this block and RNGB
+> are independent.
 > 
-> This is in line with the requirements from the USB Power Delivery
-> Specification Revision 3.0, Version 1.2:
-> "6.6.8.1 SwapSourceStartTimer
-> The SwapSourceStartTimer Shall be used by the new Source, after a
-> Power Role Swap or Fast Role Swap, to ensure that it does not send
-> Source_Capabilities Message before the new Sink is ready to receive
-> the
-> Source_Capabilities Message. The new Source Shall Not send the
-> Source_Capabilities Message earlier than tSwapSourceStart after the
-> last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
-> Message sent by the new Source indicating that its power supply is
-> ready."
+> Changelog:
+> v4
+> -remove unneeded compatible strings from the driver
+> v3
+> -mention in the DT binding the compatibility with "fsl,imx25-rngb"
+> -collected Reviewed-by
+> v2
+> -update rngb DT binding with compatible strings for i.MX6 SoCs
 > 
-> The patch makes sure that TCPM does not send the Source_Capabilities
-> Message within tSwapSourceStart(20ms) by transitioning into
-> SRC_STARTUP only after  tSwapSourceStart(20ms).
+> Horia Geantă (5):
+...
+>   ARM: dts: imx6sl: fix rng node
+>   ARM: dts: imx6sll: add rng
+>   ARM: dts: imx6ull: add rng
 
-That looks good to me. Thanks.
+Applied these 3, thanks.
 
-Br,
-
--- 
-heikki
+Shawn
