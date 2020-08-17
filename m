@@ -2,102 +2,168 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE9FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA75C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02AD2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe3/6KY/"
+	by mail.kernel.org (Postfix) with ESMTP id 8DEC52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbgHQRwJ (ORCPT
+        id S2389283AbgHQRwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731593AbgHQRv5 (ORCPT
+        Mon, 17 Aug 2020 13:52:21 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:41775 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731432AbgHQRvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:51:57 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3494DC061342;
-        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 9so13962310wmj.5;
-        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
-        b=qe3/6KY/1aTKBl1WQFgXFC40bTLgZOhTgB+yybOXo/tGEKIa0WRgScLkwV33tS+ULG
-         oIJ19F5ZwhqTlECblt1iol+TLr9mlxxn9kdL/Wj5WQwuoMJV7zeqx1Jy2Pd38nDkLilr
-         3pAnSSkRXsTvSCiyUhG6pqtpkIYQxiZfa9xPUxELUcfgSy4N3YQgNSl0OMNHuGYjvLDB
-         L8597F33Gu1VWUAywWhF+7O47/jA6pXlYQU4p8U+WUYzVzdaUfMDAPs2HLg9SXtRWCCX
-         lMI8avypezSj448rVviZn/04ab7wDAYaePMGIc0nJzDwD8dfksX/gpebm1ceeCBtSPrv
-         dIMw==
+        Mon, 17 Aug 2020 13:51:23 -0400
+Received: by mail-il1-f200.google.com with SMTP id l71so12442442ild.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:51:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
-        b=PW+2y40aQrxqPx+yYzIms/0KbpZhEcE7xzfMVPrZRY2qLt3PbsOFSi7N/FvBFQX637
-         /mmloFb4Yk6oSOEWL7yR1mHVdWru7Z04b7BL1aT0uOQ/Uox+r/vl4AhHB3E1bpug6jQK
-         VZ28eE3UmaGL33UapZV3AnyZMfnFSUJRFpFjrdb1VPkpTNFrkp35GFio1DQN/ACfg3uG
-         HtZkVoUw7Fjx2O84NwkE8lbdG2c2d4pc32xFFXowSTXLTujALpV+EuMQeCQH6WjzJCz+
-         FM6GcT4eACdcsL/upmHNDtxRmiu8l2XhAvpDahTYdaRbH7rnZPTk1dRSomR3ALxN0BB6
-         bilA==
-X-Gm-Message-State: AOAM531r6vbHuoT4xZhcpzXuxo9cEuPRt4CfErr4MSQM6Tz3A+o6GlKc
-        THZqKJyNHrVDddRZx/p7ieqYUmDMDiUMp17U
-X-Google-Smtp-Source: ABdhPJzGgoktrcxtenVcIw5km7o778RFF8aKHINYvTEPT0kBbK7+bgi75b8Od5p3vgeaWcJZsQRTVA==
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr16412074wme.171.1597686714011;
-        Mon, 17 Aug 2020 10:51:54 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id d14sm32738176wre.44.2020.08.17.10.51.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 10:51:53 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Alex Dewar <alex.dewar90@gmail.com>
-Subject: [PATCH] nfsd: Fix typo in comment
-Date:   Mon, 17 Aug 2020 18:51:26 +0100
-Message-Id: <20200817175125.6441-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jtcE9RlLgcXYjCTz74DN683CktsK5ycgf7I8jYj6CIA=;
+        b=GXKOclCgfCz+sbum9Y92I7wZ7qRZtL/flnoU+u+TRULJLJ8a6AhQWx+de+NJuFtpre
+         KyR2Otsatk+QL/QxRiFo+Nws//HyUgBiSJSeG1L8d8l2oVSAIybDD4uZ2B50/h/CbK4o
+         wwJR3ExMk+rK29i/kds//fJ9Fb73teleWk6Wvg5Nn7FraXC8uEcmyCPP498xQ1kIrFWu
+         iydjPFyg+FgvGMhdtpJL/xUlonnFtOeYszribvdc0EIME8nD9XYjllACN6tZvSRnCcf0
+         DOjot4Pp+xgB6MoAXRBiA8GQAU6i8Yp45uBt8Zc3MuTq0ZpJc8OU0I/PzJTb59773pAP
+         Ccuw==
+X-Gm-Message-State: AOAM530QZiNpsgkS30CwNX2Da30pMtAokzn6mIsDNyseq7d/HZV4gbMw
+        8bvkgM/NbEF4OKddGjc9r+QVyIdWL3PQZJZGfJjfLVFgRDi1
+X-Google-Smtp-Source: ABdhPJwWXTJZH/tUbtofby2vODuwxMNHTDwDDML2YNXnT1gAkNHwpDyqDv03J3HxAw+N2jEzJgYm6mBzyvQ/fVbnYwNlSrB+VyEJ
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:419:: with SMTP id q25mr15885995jap.85.1597686681864;
+ Mon, 17 Aug 2020 10:51:21 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 10:51:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000022934305ad166be3@google.com>
+Subject: KASAN: slab-out-of-bounds Write in xt_compat_target_from_user
+From:   syzbot <syzbot+cfc0247ac173f597aaaa@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Missing "is".
+Hello,
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    4b6c093e Merge tag 'block-5.9-2020-08-14' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14741412900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a98b778f5fca0653
+dashboard link: https://syzkaller.appspot.com/bug?extid=cfc0247ac173f597aaaa
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1283a731900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10dd10ce900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cfc0247ac173f597aaaa@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memset include/linux/string.h:391 [inline]
+BUG: KASAN: slab-out-of-bounds in xt_compat_target_from_user+0x232/0x470 net/netfilter/x_tables.c:1129
+Write of size 4 at addr ffff88809c971ba1 by task syz-executor166/6841
+
+CPU: 1 PID: 6841 Comm: syz-executor166 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ memset+0x20/0x40 mm/kasan/common.c:84
+ memset include/linux/string.h:391 [inline]
+ xt_compat_target_from_user+0x232/0x470 net/netfilter/x_tables.c:1129
+ compat_copy_entry_from_user net/ipv6/netfilter/ip6_tables.c:1392 [inline]
+ translate_compat_table+0x1011/0x1720 net/ipv6/netfilter/ip6_tables.c:1455
+ compat_do_replace.constprop.0+0x1f0/0x470 net/ipv6/netfilter/ip6_tables.c:1526
+ do_ip6t_set_ctl+0x5b0/0xb73 net/ipv6/netfilter/ip6_tables.c:1633
+ nf_setsockopt+0x83/0xe0 net/netfilter/nf_sockopt.c:101
+ ipv6_setsockopt+0x122/0x180 net/ipv6/ipv6_sockglue.c:1008
+ udpv6_setsockopt+0x76/0xc0 net/ipv6/udp.c:1626
+ __sys_setsockopt+0x2db/0x610 net/socket.c:2132
+ __do_sys_setsockopt net/socket.c:2143 [inline]
+ __se_sys_setsockopt net/socket.c:2140 [inline]
+ __ia32_sys_setsockopt+0xb9/0x150 net/socket.c:2140
+ do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+ __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7fd3549
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f7fad18c EFLAGS: 00000292 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000000029
+RDX: 0000000000000040 RSI: 0000000020000a00 RDI: 0000000000000001
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 6841:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ kmalloc_node include/linux/slab.h:577 [inline]
+ kvmalloc_node+0x61/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:750 [inline]
+ xt_alloc_table_info+0x3c/0xa0 net/netfilter/x_tables.c:1176
+ translate_compat_table+0xc50/0x1720 net/ipv6/netfilter/ip6_tables.c:1442
+ compat_do_replace.constprop.0+0x1f0/0x470 net/ipv6/netfilter/ip6_tables.c:1526
+ do_ip6t_set_ctl+0x5b0/0xb73 net/ipv6/netfilter/ip6_tables.c:1633
+ nf_setsockopt+0x83/0xe0 net/netfilter/nf_sockopt.c:101
+ ipv6_setsockopt+0x122/0x180 net/ipv6/ipv6_sockglue.c:1008
+ udpv6_setsockopt+0x76/0xc0 net/ipv6/udp.c:1626
+ __sys_setsockopt+0x2db/0x610 net/socket.c:2132
+ __do_sys_setsockopt net/socket.c:2143 [inline]
+ __se_sys_setsockopt net/socket.c:2140 [inline]
+ __ia32_sys_setsockopt+0xb9/0x150 net/socket.c:2140
+ do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+ __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+
+The buggy address belongs to the object at ffff88809c971800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 929 bytes inside of
+ 1024-byte region [ffff88809c971800, ffff88809c971c00)
+The buggy address belongs to the page:
+page:00000000d9974640 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809c971000 pfn:0x9c971
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000269a448 ffffea00027cc908 ffff8880aa040700
+raw: ffff88809c971000 ffff88809c971000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809c971a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809c971b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff88809c971b80: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                               ^
+ ffff88809c971c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88809c971c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
-Ahh I see. Is this better?
----
- fs/nfsd/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 259d5ad0e3f47..309a6d5f895ae 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4828,7 +4828,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		slen = strlen(sp);
- 
- 		/*
--		 * Check if this a user. attribute, skip it if not.
-+		 * Check if this is a user. attribute, skip it if not.
- 		 */
- 		if (strncmp(sp, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
- 			goto contloop;
--- 
-2.28.0
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
