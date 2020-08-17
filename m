@@ -2,121 +2,98 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB14520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A518920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="l/hLxTcq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LfnIXtg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404470AbgHQTvr (ORCPT
+        id S1730883AbgHQTwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:51:47 -0400
-Received: from mail-eopbgr750079.outbound.protection.outlook.com ([40.107.75.79]:43281
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729088AbgHQPSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:18:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JTWXBTt9ucjJPqBTliEpbBaaOtdSPwjpjWIoD1To5rhesYG1B9nGscBMgSgtNdDxJJlA3Wbw3e44fr1t3lJU+Fqtb+jQRiLqDu2x67BornAbF8tw6RNThl0s2YdlUFm7I5HBxEh3G3M4fJdsUo+lZNXXTJgK5yru6e/v5IAHp6qf/Q1tyJ4AvoxuYlIxPIG3mEUZtG6JKXPkCXJmWjWbfJgiyI7lAJt2d/4EqBdTtvda2HEkUmDOTYDiItA6esqABS2kwCksuOOtwz7t7Ngeqgl3pJPbgQZzrxhN1YZpn5N/RNm3F45t3idxhml02wNIhR+8EUjT1FH9lwNMD6TgUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gtWaFkLwatG3eoF1Vaf674r01GT6enB0ABlDnlGefhc=;
- b=FQBlpmVP7rL5wlRlhFvxCLqA03x5YGZuCpchb1qtT5tVWWiC/CQgQxAfnOexgblIlauYpBDNF6B0Atv9C9DpBCQ5XCsaIhMGkYOneMSi2WWh8sAuKHmbfGthpJGblUhJho+GMsGzP+FbnnAG/oPcCKrNbo7bKeazcU7WH/V9bTY5qoeEqDHxnNzuOdSSbDiiBu248aVsIzHxvwvH2TyP7zS/UIyqahWMRP3FuUMi6sIczStV9xVn6KX1hZahVzmEZg9tQvaHSfu4gnvnwSFYKK/OKKOuH83Ebpxhjocd+q3IaS3Ex2PkpwCPEMGmDpbsbG3yS/F8VCROqwn0Oadj0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gtWaFkLwatG3eoF1Vaf674r01GT6enB0ABlDnlGefhc=;
- b=l/hLxTcq+rDQnrvk3JjIZXia33OBHmKIZfPXkU9EjOU9ylcTxsxUyDmVr4XMC8/L2MMG9pSS4SXOBE0ewko5BE0GVyg1T8GldZLcTVS/T8NGH3PUCYkbthU57bvxnap2N9GN3rqQ7Pr/Nu5LmJGZzWp1ewDi4vQHl9RgGjrERF0=
-Authentication-Results: alien8.de; dkim=none (message not signed)
- header.d=none;alien8.de; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by BN6PR12MB1379.namprd12.prod.outlook.com (2603:10b6:404:20::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.23; Mon, 17 Aug
- 2020 15:18:29 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0%4]) with mapi id 15.20.3283.024; Mon, 17 Aug 2020
- 15:18:29 +0000
-Date:   Mon, 17 Aug 2020 10:18:21 -0500
-From:   Yazen Ghannam <yazen.ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH] x86/MCE/AMD, EDAC/mce_amd: Remove struct
- smca_hwid.xec_bitmap
-Message-ID: <20200817151821.GA1095089@yaz-nikka.amd.com>
-References: <20200720145353.43924-1-Yazen.Ghannam@amd.com>
- <20200817093956.GC549@zn.tnic>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817093956.GC549@zn.tnic>
-X-ClientProxiedBy: DM3PR12CA0093.namprd12.prod.outlook.com
- (2603:10b6:0:55::13) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+        Mon, 17 Aug 2020 15:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729118AbgHQTwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:52:14 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32A9C061389;
+        Mon, 17 Aug 2020 12:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=/50Vf226YKYxDgzVuszalUGR1bKVm91XXFmViiVkF8g=; b=LfnIXtg265gHoZPo/q2evzspn4
+        8IBVqBha4asgKp8oT2B0wntbg+OySyIehJR0xQ2fgRG+uYzia9WB8LRpFBW0VuUCD8unqiQ5edJTj
+        ArjeYTKSW8dsxLAQg5T/zNk7rsAcxw0EfKxV7ams9wvCpWUrFctdHoeIWNKpEyiIRMUoQ3WwWUwPb
+        M9k77jNMrUrU08XKTSb45Ln9UT0f5rNZQP8CxhA6lILpQcYFIfvmJcxNyzUrxkJUomLY0jzaWs2fz
+        i4tA24VUw/DJ27xdWmzTVFFS3olmdIjumfWLZm2xci0XaEAUrWOemRZ3vkW1huSbbWsYGeWj3fxnE
+        pvLn7zeA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7lAw-0003xl-QK; Mon, 17 Aug 2020 19:52:10 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH] block: Fix page_is_mergeable() for compound pages
+Date:   Mon, 17 Aug 2020 20:52:06 +0100
+Message-Id: <20200817195206.15172-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yaz-nikka.amd.com (165.204.77.1) by DM3PR12CA0093.namprd12.prod.outlook.com (2603:10b6:0:55::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Mon, 17 Aug 2020 15:18:28 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3f3774bf-eaea-4375-89f8-08d842c0cb6b
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1379:
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1379C655D342CC128F4DB4A3F85F0@BN6PR12MB1379.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PTWhaS/7YXuUeF6NHcVMjRcO9PW54ui/dmNMGUxA3RGPXtdsM7oLzQykmkLQRtQFI/L0tJsM3rVnSjnM2ynxkXRGp/BjDBUs6Hdn03xiobvoAiUTkZ61KF89+hKIN4pXhkS7ME2egmsvVxYgss8cLj719CJDBg3AEJt7ot95ZGNSV9mCLNqbQMq2L5tERnpH6kiP9ixBG1b+rgc0b8YWuLCuj61utqkYxjXJOxRvOjGuNAqUOGwAboIUUsNHd8mxnE7C2VC4NIzPkBsRcfCPt3eDFiyqIqKaIlKf98aLn0ObSQ5qASLGITDuJsVTMr+MhKQn3SvAFX9rGtY+iEZA5A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(366004)(136003)(346002)(39860400002)(66946007)(2906002)(66476007)(66556008)(4326008)(8676002)(52116002)(7696005)(55016002)(1076003)(4744005)(86362001)(83380400001)(44832011)(8936002)(16526019)(478600001)(316002)(5660300002)(6916009)(186003)(26005)(956004)(6666004)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: YafB6aEAbXr4KEIGNoh7V4xLMamwfm1FaaC6LMMh0fXw7HwGUxO0S8MLp7R7m/0e02Tf7Cizi0WlEmaS0dUlyCfWW0THlQY4YKIQyqhlqWqfTUE/gCNdHP3ajflauOl7FEjiNNHg/DOrqN/6yAxeRZqzuZ6jPAlv6tBFCV1YApgU4EdXQPrOXmtu5/6xxxyDMFZT11kazSgdDot9ByM5XDjsvpzBNZD9dFA81QoR2XCRqZ2t8KmeFdotj3CTKeRDOzRgZX7AJOLXALzJaSQ7HUFuSbIZlBKIIb9bpn/Jum+qaT2hhVqcwdrZeY+HUzceW3qhUvGfzGuRejsIEkikaWbkH5mH9Zfg+2e7ZE0PKDvbirc9Nh4yWWDzCNrBGy8BoiOdR2B/u/sIqGVWUd0suid7PUj7+9609LW/THpqEd+ftoHEZeRtQr6Bv2kPwaPkW/9HP4Y52ycr6dj2x2qznrOWq23UV+8rO2m8vmvUXJRSIroWQwGuT7yWL3nY4Iuw+uvZGPWt63Lzv1qftqwLtICCFxoCDFMYcAwvRnIm3ooAwm1QqxaAmv5tJuKlLRob2T6F2p55sgIuU/XkFCZbyhOXnKzQpRBPi4JSKHk8cxp0hKFE8R4z2D6cR6qkNdQqjRmd4AHNdyb/Rk3bdo1gJA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f3774bf-eaea-4375-89f8-08d842c0cb6b
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2020 15:18:28.9100
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kTbDKjXHNMHiNaAxYm5O4w+0c80cZidks7Q48w1ZFtfCEHrBvwaGQFh/MKGABtDFhXDizCAJB4dMgmapZIi8qA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1379
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:40:07AM +0200, Borislav Petkov wrote:
-> On Mon, Jul 20, 2020 at 02:53:53PM +0000, Yazen Ghannam wrote:
-> > From: Yazen Ghannam <yazen.ghannam@amd.com>
-> > 
-> > The Extended Error Code Bitmap (xec_bitmap) for a Scalable MCA bank type
-> > was intended to be used by the kernel to filter out invalid error codes
-> > on a system. However, this is unnecessary because the hardware will only
-> > report valid error codes.
-> 
-> That's a kinda bold statement. :)
-> 
+If we pass in an offset which is larger than PAGE_SIZE, then
+page_is_mergeable() thinks it's not mergeable with the previous bio_vec,
+leading to a large number of bio_vecs being used.  Use a slightly more
+obvious test that the two pages are compatible with each other.
 
-Yeah, I'm trying to keep "may" out of my vocabulary. :)
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Fixes: 52d52d1c98a9 ("block: only allow contiguous page structs in a bio_vec")
 
-> Are you saying, you wanna trust verification and that check is totally
-> useless?
-> 
+---
+ block/bio.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I do. This check was added because I wasn't sure what to expect with
-this new architecural extension. But after a few product releases, it
-has been unnecessary. And I don't see a need for it with future systems.
+diff --git a/block/bio.c b/block/bio.c
+index c63ba04bd629..a9931f23d933 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -740,8 +740,8 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
+ 		struct page *page, unsigned int len, unsigned int off,
+ 		bool *same_page)
+ {
+-	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) +
+-		bv->bv_offset + bv->bv_len - 1;
++	size_t bv_end = bv->bv_offset + bv->bv_len;
++	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) + bv_end - 1;
+ 	phys_addr_t page_addr = page_to_phys(page);
+ 
+ 	if (vec_end_addr + 1 != page_addr + off)
+@@ -750,9 +750,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
+ 		return false;
+ 
+ 	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
+-	if (!*same_page && pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
+-		return false;
+-	return true;
++	if (*same_page)
++		return true;
++	return (bv->bv_page + bv_end / PAGE_SIZE) == (page + off / PAGE_SIZE);
+ }
+ 
+ /*
+-- 
+2.28.0
 
-Thanks,
-Yazen
