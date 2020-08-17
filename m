@@ -2,56 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1532FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C022067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0E6206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683821;
-	bh=on4WbdGmOnMIsMJpFF44wrMNQFSXXwarxFatc7BnNyg=;
+	s=default; t=1597683868;
+	bh=p6srLh1mO7qTqUiHJN5XSOb7Rqkscs42yAAUQYlVUcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIjzMMNI90mWY0rISoKGGgfroFSpMHWsKudrf2IqxO+ZoDfGcJToX6XzSWQRnaxaI
-	 puUJ0HcqOcBKTudZuw+rPK1GMFAkaK0OuS3d2y+Rs0tLavA5jlTmeekwk8bFtdcGm6
-	 hbu/JRinWl1hk4KgNGHqt4IFhIK2VsZNqAHUikME=
+	b=kDhNgJfhDrhrSW4XDmO8Ij48ZxcoVGQfVN9lVDDdTLaQotMScFdJJvDA0gOe1z9e4
+	 sSwCdrO7jOqPJvb1/rzFpO32qMrbkHd2RBdlf6qQGTamAwRDaPxo1mnJTXCjJEY/R3
+	 9MqLyqxWMK+845HLfFiGY5E1MAwC0x6Mx0fcIgCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbgHQRDb (ORCPT
+        id S1729669AbgHQRES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58296 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388465AbgHQQIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:47 -0400
+        id S2388485AbgHQQI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26CD820772;
-        Mon, 17 Aug 2020 16:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EBDA22CAE;
+        Mon, 17 Aug 2020 16:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680518;
-        bh=on4WbdGmOnMIsMJpFF44wrMNQFSXXwarxFatc7BnNyg=;
+        s=default; t=1597680535;
+        bh=p6srLh1mO7qTqUiHJN5XSOb7Rqkscs42yAAUQYlVUcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FV5Bq00nVnkw/voXL4p8jv9RX6d7sz6fxXbzqvD/RHRXTg90zluVUVN3THxajJnHc
-         yEYvxckr7SH5zGF1qCXCxpQPmodMOqwHmfBsoEB69Xz8C/UquP/NfL7/pWlB1idtVW
-         yHToDOaHTuhjY037bimt2aiyJzQXhSEwunXkESD8=
+        b=leH3YKXJwE4BzZkmuL56Re8kgWaFT289355CLHTQj2XyRtBPIoQU5J7wXxXxBJM5V
+         LrL4tMte1qOVlfjjcTfd5o13v+Aub2M4O3zMXzjJ1zgLR0dKmSvYufljEaGVjHHAZW
+         0EDA5gmqztJlnfREu797aUwvCKK3D0uKOrIbO00U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Brian Norris <briannorris@chromium.org>,
-        Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 218/270] drivers/net/wan/lapbether: Added needed_headroom and a skb->len check
-Date:   Mon, 17 Aug 2020 17:16:59 +0200
-Message-Id: <20200817143806.638736975@linuxfoundation.org>
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 195/270] rtw88: coex: only skip coex triggered by BT info
+Date:   Mon, 17 Aug 2020 17:16:36 +0200
+Message-Id: <20200817143805.505591723@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -64,107 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit c7ca03c216acb14466a713fedf1b9f2c24994ef2 ]
+[ Upstream commit 3f194bd4ca1cd9b8eef34d37d562279dbeb80319 ]
 
-1. Added a skb->len check
+The coex mechanism used to skip upon the freeze flag is raised.
+That will cause the coex mechanism being skipped unexpectedly.
+Coex only wanted to keep the TDMA table from being changed by
+BT side.
 
-This driver expects upper layers to include a pseudo header of 1 byte
-when passing down a skb for transmission. This driver will read this
-1-byte header. This patch added a skb->len check before reading the
-header to make sure the header exists.
+So, check the freeze and reason, if the coex reason is coming
+from BT info, skip it, to make sure the coex triggered by Wifi
+itself can work.
 
-2. Changed to use needed_headroom instead of hard_header_len to request
-necessary headroom to be allocated
+This is required for the AP mode, while the control flow is
+different with STA mode. When starting an AP mode, the AP mode
+needs to start working immedaitely after leaving IPS, and the
+freeze flag could be raised. If the coex info is skipped, then
+the AP mode will not set the antenna owner, leads to TX stuck.
 
-In net/packet/af_packet.c, the function packet_snd first reserves a
-headroom of length (dev->hard_header_len + dev->needed_headroom).
-Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-which calls dev->header_ops->create, to create the link layer header.
-If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-length (dev->hard_header_len), and assumes the user to provide the
-appropriate link layer header.
-
-So according to the logic of af_packet.c, dev->hard_header_len should
-be the length of the header that would be created by
-dev->header_ops->create.
-
-However, this driver doesn't provide dev->header_ops, so logically
-dev->hard_header_len should be 0.
-
-So we should use dev->needed_headroom instead of dev->hard_header_len
-to request necessary headroom to be allocated.
-
-This change fixes kernel panic when this driver is used with AF_PACKET
-SOCK_RAW sockets.
-
-Call stack when panic:
-
-[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
-put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
-dev:veth0
-...
-[  168.399255] Call Trace:
-[  168.399259]  skb_push.cold+0x14/0x24
-[  168.399262]  eth_header+0x2b/0xc0
-[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
-[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
-[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
-[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
-[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
-[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
-[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
-[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
-[  168.399291]  __dev_queue_xmit+0x721/0x8e0
-[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
-[  168.399297]  dev_queue_xmit+0x10/0x20
-[  168.399298]  packet_sendmsg+0xbf0/0x19b0
-......
-
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Cc: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4136214f7c46 ("rtw88: add BT co-existence support")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200717064937.27966-5-yhchuang@realtek.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/lapbether.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/coex.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -157,6 +157,12 @@ static netdev_tx_t lapbeth_xmit(struct s
- 	if (!netif_running(dev))
- 		goto drop;
+diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wireless/realtek/rtw88/coex.c
+index 3e95ad1989123..853ac1c2ed73c 100644
+--- a/drivers/net/wireless/realtek/rtw88/coex.c
++++ b/drivers/net/wireless/realtek/rtw88/coex.c
+@@ -1923,7 +1923,8 @@ static void rtw_coex_run_coex(struct rtw_dev *rtwdev, u8 reason)
+ 	if (coex_stat->wl_under_ips)
+ 		return;
  
-+	/* There should be a pseudo header of 1 byte added by upper layers.
-+	 * Check to make sure it is there before reading it.
-+	 */
-+	if (skb->len < 1)
-+		goto drop;
-+
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:
- 		break;
-@@ -305,6 +311,7 @@ static void lapbeth_setup(struct net_dev
- 	dev->netdev_ops	     = &lapbeth_netdev_ops;
- 	dev->needs_free_netdev = true;
- 	dev->type            = ARPHRD_X25;
-+	dev->hard_header_len = 0;
- 	dev->mtu             = 1000;
- 	dev->addr_len        = 0;
- }
-@@ -331,7 +338,8 @@ static int lapbeth_new_device(struct net
- 	 * then this driver prepends a length field of 2 bytes,
- 	 * then the underlying Ethernet device prepends its own header.
- 	 */
--	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
-+	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
-+					   + dev->needed_headroom;
+-	if (coex->freeze && !coex_stat->bt_setup_link)
++	if (coex->freeze && coex_dm->reason == COEX_RSN_BTINFO &&
++	    !coex_stat->bt_setup_link)
+ 		return;
  
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+ 	coex_stat->cnt_wl[COEX_CNT_WL_COEXRUN]++;
+-- 
+2.25.1
+
 
 
