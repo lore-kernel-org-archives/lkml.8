@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6957C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD7A2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C7020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691450;
-	bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
+	s=default; t=1597691452;
+	bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=il5gu02VPoE58ChhMVoepngsyDbpqG1oU/KYfbZW4GBQd1JTTj7PTS4ZhYyUztRlm
-	 6JXR8TaA1/RUb0kxFol+X4VXoaQZ5ljvQX/4tqw40xLMY7cIKVtQPQxbOkmPXi592B
-	 qL0j3A7bi06sCKzYMwUC7S0wV/O4wE/7LPk2X9iY=
+	b=hrIRootlQ38547gUSufUqAGZGuoaGWuuoDw4P4PJchdB+BrJKkCBKB9ZghgQq6j/2
+	 o53JbOcxuROlGFOUcziVhtDMqYrpAT/4N1oXjeLWejHPQOv9mNQQh9kPKkgOY9UACk
+	 aOwNLS09FJGOWHMJWYENXf7U3p7CVwdvR5P76Yvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404069AbgHQTKt (ORCPT
+        id S2404146AbgHQTKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730753AbgHQPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:41:36 -0400
+        id S1730750AbgHQPlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:41:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C382075B;
-        Mon, 17 Aug 2020 15:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2720220760;
+        Mon, 17 Aug 2020 15:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678895;
-        bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
+        s=default; t=1597678892;
+        bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcoACj3KE218q7U1qc7Kf26gmoJsv+5oGQWbNxbQLR9EagWGfGhbuErCLwvUPJwxZ
-         EwZWCXk4BTC64o7cRJTIiRNvzJM223DA+p2SrT0eUvyTKjk9H+4iT/1xVrjB0ZgQYM
-         yU87yxjEiysgRvLrammdIX91H33AYA+wBILqGi+U=
+        b=GUkreXvEIo1Ufl2tZbKVq4kSGe/ztOtBi6x7TETQaEPsFnr0JjoORqGOutH8VW/kL
+         snp1qagZRCmvzpytMLm771jQWJ3mwbdRZmXbZRbSg4oHo8IaEjIh1GwunaAs1X2oYx
+         xcS2AbOUheFhhR97bPZnHWjUAazDt5ncX7nt+UL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        stable@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 008/393] x86, sched: Bail out of frequency invariance if turbo frequency is unknown
-Date:   Mon, 17 Aug 2020 17:10:58 +0200
-Message-Id: <20200817143819.989905377@linuxfoundation.org>
+        Chao Qin <chao.qin@intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 007/393] perf/x86/intel/uncore: Fix oops when counting IMC uncore events on some TGL
+Date:   Mon, 17 Aug 2020 17:10:57 +0200
+Message-Id: <20200817143819.947028640@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,44 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giovanni Gherdovich <ggherdovich@suse.cz>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 51beea8862a3095559862df39554f05042e1195b ]
+[ Upstream commit 2af834f1faab3f1e218fcbcab70a399121620d62 ]
 
-There may be CPUs that support turbo boost but don't declare any turbo
-ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
-scale-invariant calculations can't be performed.
+When counting IMC uncore events on some TGL machines, an oops will be
+triggered.
+  [ 393.101262] BUG: unable to handle page fault for address:
+  ffffb45200e15858
+  [ 393.101269] #PF: supervisor read access in kernel mode
+  [ 393.101271] #PF: error_code(0x0000) - not-present page
 
-Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
-Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Current perf uncore driver still use the IMC MAP SIZE inherited from
+SNB, which is 0x6000.
+However, the offset of IMC uncore counters is larger than 0x6000,
+e.g. 0xd8a0.
+
+Enlarge the IMC MAP SIZE for TGL to 0xe000.
+
+Fixes: fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
+Reported-by: Ammy Yi <ammy.yi@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200531182453.15254-3-ggherdovich@suse.cz
+Tested-by: Ammy Yi <ammy.yi@intel.com>
+Tested-by: Chao Qin <chao.qin@intel.com>
+Link: https://lkml.kernel.org/r/1590679169-61823-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smpboot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/uncore_snb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 2f24c334a938b..3917a2de1580c 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1999,9 +1999,11 @@ static bool intel_set_max_freq_ratio(void)
- 	/*
- 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
- 	 * but then fill all MSR's with zeroes.
-+	 * Some CPUs have turbo boost but don't declare any turbo ratio
-+	 * in MSR_TURBO_RATIO_LIMIT.
- 	 */
--	if (!base_freq) {
--		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
-+	if (!base_freq || !turbo_freq) {
-+		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
- 		return false;
- 	}
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 3de1065eefc44..1038e9f1e3542 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -1085,6 +1085,7 @@ static struct pci_dev *tgl_uncore_get_mc_dev(void)
+ }
  
+ #define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
++#define TGL_UNCORE_PCI_IMC_MAP_SIZE		0xe000
+ 
+ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
+ {
+@@ -1112,7 +1113,7 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
+ 	addr |= ((resource_size_t)mch_bar << 32);
+ #endif
+ 
+-	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
++	box->io_addr = ioremap(addr, TGL_UNCORE_PCI_IMC_MAP_SIZE);
+ }
+ 
+ static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
 -- 
 2.25.1
 
