@@ -2,164 +2,111 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E492AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA83C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF85720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685285;
-	bh=ZD0J8YBkO0KVXTkVaLC2OlcG4smLzYi8u9H7onA3kPk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HqyB5WU5LFJHWirabfxXsYu+gbqRRQSlZBOSWXpO+dH9ZtxBnpl8/ZdRzB2oT3Nlo
-	 4+bD9i0HlfJgGbbb4YO1OmQCQVK7V+1VXlwkPeVK/Nj0Z/sY483BgdhJjTSc2wDJOR
-	 y6CLfv/EyZLMVTGSVN3Z1wjA2ynCmVyxDXqqKH7A=
+	by mail.kernel.org (Postfix) with ESMTP id 0D17D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gpu1742R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389566AbgHQR2E (ORCPT
+        id S2389583AbgHQR2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50246 "EHLO
+        Mon, 17 Aug 2020 13:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389564AbgHQRP3 (ORCPT
+        with ESMTP id S2389474AbgHQRMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:15:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55D0C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:15:28 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v9so18341887ljk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:15:28 -0700 (PDT)
+        Mon, 17 Aug 2020 13:12:40 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5436AC061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:12:40 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id r4so15695517wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DTKpRQCJHedRM3FbZvyYbTIR6de/XsGxhtwq6dwi9YM=;
-        b=PMBxHujDdM06S7/LBYxWztuV9Qz9M9XMftYKfNncXrXEOWl8S9SfA8Rombi+0je/I0
-         A84g6y4oncHBFuyCuaStiv1xllCcI1u554NplHzJl+AHhh3aSCdz63J8MUzhGeEWT8sx
-         kXa9iLijsc9rTUTCiHyOc6bHkoxCbBHR8fr9M=
+        bh=AueLUpVNwOplEaRIeklXnlMpQk/hv9PNTq+/4iLo0R0=;
+        b=Gpu1742R6bQKiE7BaePK5diMLvF+iZfSSkZ0BOARPwt42lhi8nz00uW6K89/MGg4zm
+         hZXZDUrk/4N+XUcR0wbbQo713rcnKWaOX9p4s60ZhAx89+KzEZhhA4saULYqOxNRGYdx
+         hUyQy65h8Dy4+B9yFynN1Kh1R/12oHa6Gs3j4u3Q4o3r9uQOP6RgH+35nG01K9CZdK68
+         rzoGzIXjOR9WHXTKTHVQO9vD4+jdCw3iMYQLPoCTJcpW+4tvowsYeLvIo21HjWRa2vmV
+         04Cx09aiVDy2hFLu9lZ+jRZdQNHnPp6FILixg0q9oSK7M9y8md8BFE7vFrK7eGa8X8yl
+         WMrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DTKpRQCJHedRM3FbZvyYbTIR6de/XsGxhtwq6dwi9YM=;
-        b=CBIs4l2ZQ0yKO+4Qa4w5lHy+Fr1aoz5uING42deoKUPQcqehYwTdCir/JmCwz9WVLu
-         pB/RSVkLo9a3YqpJHPN+GRMILVyDqGBwoe9WFGb6mKKu6o3wX9BuTEMgyZ5e2830TUSr
-         BmRNuDJHAeNanAVbRr4aNSxbtUe2FTTQvgiTHmQvvzaHpIKCNIdE6b2g4UNTgL/7eETU
-         8GmWwtiNS+mbVzqn95RbNWRtMqjznAeLCrHBra5hHYAdPokLKxGm2aBiDH1hc0q56/oL
-         bdvotqkM9/99ynev2fXJ2hkH54AN1iYszjSfjqEiEKsJvvOC2QcnKaC9Ak2q9nqd1piL
-         ptgg==
-X-Gm-Message-State: AOAM533WKRhQ+gCBtwCkvwsqT67TjB4hI2kEDO+MiXIvfHlP92JjLMWb
-        bw/yMa/ocrtfjXswKeUFQzvLLcyKgrcGgw==
-X-Google-Smtp-Source: ABdhPJxNiaKgRwBdvYQVc+ahxVFFVofoX8zq2vc4ulLGKX0fT2dbsiOnsy7fHVYb0NxF0R2UNADFqw==
-X-Received: by 2002:a2e:9617:: with SMTP id v23mr8215224ljh.365.1597684526644;
-        Mon, 17 Aug 2020 10:15:26 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id j16sm5120895ljg.31.2020.08.17.10.15.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 10:15:25 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id t6so18305821ljk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:15:24 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr8363984ljp.312.1597684524581;
- Mon, 17 Aug 2020 10:15:24 -0700 (PDT)
+        bh=AueLUpVNwOplEaRIeklXnlMpQk/hv9PNTq+/4iLo0R0=;
+        b=gG99knuWUx6D2FgLYOJkYOFRNUAQ69GMYjaPrMofv5NWt8ou2LnMEMh6wOYC+EkNmE
+         0dqF9+4MGG5ofuo28yoHO9G4Bq269xqYCdJGUpBqDz2KPB46NhFMXWAjX9RWMfwHmoRQ
+         hocWBI9c0B2rz8XOD01wYe5jCKnHVoR1DOGvX6ie/VLFVfXbL8Ekn2MqsWj79baGV5Sz
+         iu/BTpCS164Pk3q2c0Zq32xYwIJhAHvznWz1usoHoaV07m7AUOxAJthgpOjy8Y2sx3XQ
+         c5s61hp3Dne8WWOag1whcmi8Xj0Jh25ql/gdgCNyQ4w6j+AfkI3y6MTGcATqdZOejQdG
+         AFSw==
+X-Gm-Message-State: AOAM532J16NPPyzU6NbBEw1WwC3oi/A5775+ST4+coT9OQPBcd601y30
+        bbp2QcnUavZR9/Ey0wokG8DtZ7v6FZA1GEeTEmMfUKRhncQcOg==
+X-Google-Smtp-Source: ABdhPJwzzJqqKP8Dz57WEH4mjrx29gWDTGQSyhqQk/3EQMn3h+P+wfHkvWUG7jnjma/rWD/FdEgspqJzfrhXMf85F+M=
+X-Received: by 2002:adf:fc06:: with SMTP id i6mr16257949wrr.79.1597684357045;
+ Mon, 17 Aug 2020 10:12:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com>
-In-Reply-To: <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 17 Aug 2020 10:15:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
-Message-ID: <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
+ <20200806223134.42748-1-konradybcio@gmail.com> <20200813070448.GA499758@builder.lan>
+In-Reply-To: <20200813070448.GA499758@builder.lan>
+From:   Amit Pundir <amit.pundir@linaro.org>
+Date:   Mon, 17 Aug 2020 22:42:00 +0530
+Message-ID: <CAMi1Hd3j-A1Se9swD0TQ9YzTBGicPDc1nFZbf4uisVk5A+u1GQ@mail.gmail.com>
+Subject: Re: your mail
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 4:33 AM Steven Whitehouse <swhiteho@redhat.com> wrote:
+On Thu, 13 Aug 2020 at 12:38, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> That said, the overall aim here is to solve the problem and if there are
-> better solutions available then I'm sure that everyone is very open to
-> those. I agree very much that monitoring at kHz frequencies is not
-> useful, but at the same time, there are cases which can generate large
-> amounts of mount changes in a very short time period.
+> On Thu 06 Aug 15:31 PDT 2020, Konrad Dybcio wrote:
+>
+> > Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+> >
+> > >// This removed_region is needed to boot the device
+> > >               // TODO: Find out the user of this reserved memory
+> > >               removed_region: memory@88f00000 {
+> >
+> > This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
+> >
+>
+> This is in line with what the documentation indicates and then it would
+> be better to just bump &tz_mem to a size of 0x4900000.
 
-So the thing is, I absolutely believe in the kernel _notifying_ about
-changes so that people don't need to poll. It's why I did merge the
-notification queues, although I wanted to make sure that those worked.
+Hi, so just to be sure that I got this right, you want me to extend
+&tz_mem to the size of 0x4900000 from the default size of 0x2D00000 by
+including this downstream &removed_region (of size 0x1A00000) +
+previously unreserved downstream memory region (of size 0x200000), to
+align with the starting address of &qseecom_mem?
 
-> You recently requested some details of real users for the notifications,
-> and (I assumed) by extension fsinfo too.
+I just gave this &tz_mem change a spin and I do not see any obvious
+regression in my limited smoke testing (Boots AOSP to UI with
+v5.9-rc1. Touch/BT/WiFi works) so far, with 20+ out-of-tree patches.
 
-No, fsinfo wasn't on the table there. To me, notifications are a
-completely separate issue, because you *can* get the information from
-existing sources (ie things like /proc/mounts etc), and notification
-seemed to be the much more fundamental issue.
+Regards,
+Amit Pundir
 
-If you poll for changes, parsing something like /proc/mounts is
-obviously very heavy indeed. I don't find that particularly
-controversial. Plus the notification queues had other uses, even if it
-wasn't clear how many or who would use them.
-
-But honestly, the actual fsinfo thing seems (a) overdesigned and (b)
-broken. I've now had two different people say how they want to use it
-to figure out whether a filesystem supports certain things that aren't
-even per-filesystem things in the first place.
-
-And this feature is clearly controversial, with actual discussion about it.
-
-And I find the whole thing confusing and over-engineered. If this was
-a better statfs(), that would be one thing. But it is designed to be
-this monstoer thing that does many different things, and I find it
-distasteful.  Yes, you can query "extended statfs" kind of data with
-it and get the per-file attributes. I find it really annoying how the
-vfs layer calls to the filesystems, that then call back to the vfs
-layer to fill things in, but I guess we have that nasty pattern from
-stat() already. I'd rather have the VFS layer just fill in all the
-default values and the stuff it already knows about, and then maybe
-have the filesystem callback fill in the ones the vfs *doesn't* know
-about, but whatever.
-
-But then you can *also* query odd things like mounts that aren't even
-visible, and the topology, and completely random error state.
-
-So it has this very complex "random structures of random things"
-implementation. It's a huge sign of over-design and "I don't know what
-the hell I want to expose, so I'll make this generic thing that can
-expose anything, and then I start adding random fields".
-
-Some things are per-file, some things are per-mount, and some things
-are per-namespace and cross mount boundaries.
-
-And honestly, the "random binary interfaces" just turns me off a lot.
-
-A simple and straightforward struct? Sure. But this random "whatever
-goes" thing? No.
-
-                 Linus
+>
+> Regards,
+> Bjorn
