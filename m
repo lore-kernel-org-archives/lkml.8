@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80528C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A23622CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4508822D00
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678960;
-	bh=q61iwKxty6pQwSJKWSlbwBdJz6N4UwWGth0ffNuPeBw=;
+	s=default; t=1597678967;
+	bh=4FCTFl2gzUbVg54z/gtL1p8dbf5EZnnL4xV1WIitkvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvsjj25rGzc/j7M9NFg3vbxAFIJ7auM7sw2IlFNIOvdo+aBQR4KnExmARgIl1H+B3
-	 6HaGPc/LA6CyACyXm+quoVd1pJj95rkJunUiigZ9eVS9HEJ1s5EMAgwg3wlpYzOWiM
-	 w9aDhh07Bwnnkxs/9XbmJk4AN4Tklv5K2lUCnLUA=
+	b=ud9zSpYksOW7tmjxq7W+C6AGqmThR5wGuxj1yR29YehZiCN/BBzk/r4s/u8qaVNJx
+	 TUMe5t+fPYicV7ay+74VPOkESjrD1urmByf79PkwHaRTYnrR4fEwSiseZx+kz5hZbW
+	 Hph5PoNhxCBo9+8Vh/nzhBhBIpGvVq4Ji5wmHY9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387562AbgHQPmi (ORCPT
+        id S2387575AbgHQPmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730472AbgHQPfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:35:54 -0400
+        id S1730259AbgHQPfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:35:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66E2A22BEF;
-        Mon, 17 Aug 2020 15:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B866B2078D;
+        Mon, 17 Aug 2020 15:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678554;
-        bh=q61iwKxty6pQwSJKWSlbwBdJz6N4UwWGth0ffNuPeBw=;
+        s=default; t=1597678551;
+        bh=4FCTFl2gzUbVg54z/gtL1p8dbf5EZnnL4xV1WIitkvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWyRBvXrX8lt/JhrNzL1vCf5gnw1QUZ/BQgIOskfzQv18hMzmSOW7ombx8ZdyPxHT
-         c2Oa0il/+NPrQB+Nn0VS0w2tITfu5vw8ssN6BwuB6pP5VgoS9rzkKvBUcMhUui6uLr
-         IgxQnQ3Z9IA55/AoFz9SE+a/vf8FEOufc5hognZw=
+        b=Yos5Veve62MInGjDgBzfM/VTh1AEEwfFaOa6rwkJR6wcAmHL7IfpCfrL80woMUyyf
+         haGLhx3vSVfpLdBlR+CuehkMOxgYH2nr2lHRNoaxPJyHWyUPTbI1l9+N1c3sXfmeH4
+         DWZcfGPfskSQyGtFdFWT9qUnM+Cyi1Gg8WXpkK+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 374/464] dlm: Fix kobject memleak
-Date:   Mon, 17 Aug 2020 17:15:27 +0200
-Message-Id: <20200817143851.687829580@linuxfoundation.org>
+Subject: [PATCH 5.8 373/464] media: mtk-mdp: Fix a refcounting bug on error in init
+Date:   Mon, 17 Aug 2020 17:15:26 +0200
+Message-Id: <20200817143851.641745549@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,50 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0ffddafc3a3970ef7013696e7f36b3d378bc4c16 ]
+[ Upstream commit dd4eddc4ba31fbf4554fc5fa12d3a553b50e1469 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+We need to call of_node_put(comp->dev_node); on the error paths in this
+function.
 
-Set do_unreg = 1 before kobject_init_and_add() to ensure that
-kobject_put() can be called in its error patch.
-
-Fixes: 901195ed7f4b ("Kobject: change GFS2 to use kobject_init_and_add")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: c8eb2d7e8202 ("[media] media: Add Mediatek MDP Driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/lockspace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index e93670ecfae5b..624617c12250a 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -622,6 +622,9 @@ static int new_lockspace(const char *name, const char *cluster,
- 	wait_event(ls->ls_recover_lock_wait,
- 		   test_bit(LSFL_RECOVER_LOCK, &ls->ls_flags));
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+index 58abfbdfb82d3..90b6d939f3adb 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+@@ -96,6 +96,7 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+ {
+ 	struct device_node *larb_node;
+ 	struct platform_device *larb_pdev;
++	int ret;
+ 	int i;
  
-+	/* let kobject handle freeing of ls if there's an error */
-+	do_unreg = 1;
-+
- 	ls->ls_kobj.kset = dlm_kset;
- 	error = kobject_init_and_add(&ls->ls_kobj, &dlm_ktype, NULL,
- 				     "%s", ls->ls_name);
-@@ -629,9 +632,6 @@ static int new_lockspace(const char *name, const char *cluster,
- 		goto out_recoverd;
- 	kobject_uevent(&ls->ls_kobj, KOBJ_ADD);
- 
--	/* let kobject handle freeing of ls if there's an error */
--	do_unreg = 1;
+ 	if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
+@@ -113,8 +114,8 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+ 		if (IS_ERR(comp->clk[i])) {
+ 			if (PTR_ERR(comp->clk[i]) != -EPROBE_DEFER)
+ 				dev_err(dev, "Failed to get clock\n");
 -
- 	/* This uevent triggers dlm_controld in userspace to add us to the
- 	   group of nodes that are members of this lockspace (managed by the
- 	   cluster infrastructure.)  Once it's done that, it tells us who the
+-			return PTR_ERR(comp->clk[i]);
++			ret = PTR_ERR(comp->clk[i]);
++			goto put_dev;
+ 		}
+ 
+ 		/* Only RDMA needs two clocks */
+@@ -133,20 +134,27 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+ 	if (!larb_node) {
+ 		dev_err(dev,
+ 			"Missing mediadek,larb phandle in %pOF node\n", node);
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto put_dev;
+ 	}
+ 
+ 	larb_pdev = of_find_device_by_node(larb_node);
+ 	if (!larb_pdev) {
+ 		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
+ 		of_node_put(larb_node);
+-		return -EPROBE_DEFER;
++		ret = -EPROBE_DEFER;
++		goto put_dev;
+ 	}
+ 	of_node_put(larb_node);
+ 
+ 	comp->larb_dev = &larb_pdev->dev;
+ 
+ 	return 0;
++
++put_dev:
++	of_node_put(comp->dev_node);
++
++	return ret;
+ }
+ 
+ void mtk_mdp_comp_deinit(struct device *dev, struct mtk_mdp_comp *comp)
 -- 
 2.25.1
 
