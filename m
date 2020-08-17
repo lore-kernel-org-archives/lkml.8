@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E08CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6006F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6EA2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691678;
-	bh=Pp+vN7qB4/2ERCceyOTqwYXEP0XhOyD+YA3d2GFVuFs=;
+	s=default; t=1597691681;
+	bh=tUyQ7JpyxQCiTaMfaKNXuEnfPYLvnXB2tbmFxJwSzBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LL7CnzQ3w+1iju0ITQxASaMOwBRWpi/JTmyWR8AH0aOCJyMN4yithq15RRvih5Y1/
-	 rO0ht+0fxQ4OAoD7kSCAfg2bUPqD6QhLYat3Uth8+ANn8wPNV/zdjKkQFUjx2pkd5+
-	 NRYOkeProFgGiLCbW7ohmTPsJFPH8xVPDeyE5oJU=
+	b=BynvEh85bz/4VUvCzinwvH/jfCon6g0kxI7r3y/Txs+V4FFxVpIb9Di+zhJUMaNQo
+	 KtTaO439/8iiJIcXWWQOH/kqKm+87fmwSyVFRATNIYF4BQB/0T1i5lrvnd6O8+fskw
+	 DRNQOqwUNOxurTriPtGkOtHVI51qHY6msFCK+RyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgHQTOh (ORCPT
+        id S2392154AbgHQTOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48846 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:14:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387472AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677CA23105;
-        Mon, 17 Aug 2020 15:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62A423121;
+        Mon, 17 Aug 2020 15:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678809;
-        bh=Pp+vN7qB4/2ERCceyOTqwYXEP0XhOyD+YA3d2GFVuFs=;
+        s=default; t=1597678798;
+        bh=tUyQ7JpyxQCiTaMfaKNXuEnfPYLvnXB2tbmFxJwSzBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJRlFvRWep+x8nsvpeCdxnN7gpfOTZSGYk9uUsfn2qdieIG+DpWtQVnqeAgxiECtt
-         JXLKAtxKp7p/yrZqJWAWD3hxrydrYqS6ek+6PEZNFCyshbMgNmuqWtKR2CGb0Ewyk3
-         B/N4PcHr5z56FTl3yRMBL5u5bK3hLuPr7vk+gzOw=
+        b=PhQQrwaP/hfWguynCa25WNPv5Q+NSqTzz+m4Ka+g17mh5sbekCGVNQPEOsTHEBmtZ
+         1NVe7rlao1y5zf76OEp0eKCOi/UQNpVeEq1PgTXENILrd/aHQnwSQyFcxGbMCfizSI
+         Y/3nkVt1dKM7IicOpj/c7O1IQiAZUrUKryQd7xj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 462/464] io_uring: add missing REQ_F_COMP_LOCKED for nested requests
-Date:   Mon, 17 Aug 2020 17:16:55 +0200
-Message-Id: <20200817143855.909267241@linuxfoundation.org>
+        stable@vger.kernel.org, Elliot Berman <eberman@codeaurora.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.8 450/464] firmware: qcom_scm: Fix legacy convention SCM accessors
+Date:   Mon, 17 Aug 2020 17:16:43 +0200
+Message-Id: <20200817143855.321195613@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -58,76 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Jonathan McDowell <noodles@earth.li>
 
-commit 9b7adba9eaec28e0e4343c96d0dbeb9578802f5f upstream.
+commit b88c28280c3f7097546db93824686db1e7dceee1 upstream.
 
-When we traverse into failing links or timeouts, we need to ensure we
-propagate the REQ_F_COMP_LOCKED flag to ensure that we correctly signal
-to the completion side that we already hold the completion lock.
+The move to a combined driver for the QCOM SCM hardware changed the
+io_writel and io_readl helpers to use non-atomic calls, despite the
+commit message saying that atomic was a better option. This breaks these
+helpers on hardware that uses the old legacy convention (access fails
+with a -95 return code). Switch back to using the atomic calls.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Observed as a failure routing GPIO interrupts to the Apps processor on
+an IPQ8064; fix is confirmed as correctly allowing the interrupts to be
+routed and observed.
+
+Reviewed-by: Elliot Berman <eberman@codeaurora.org>
+Fixes: 57d3b816718c ("firmware: qcom_scm: Remove thin wrappers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Link: https://lore.kernel.org/r/20200704172334.GA759@earth.li
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/io_uring.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/firmware/qcom_scm.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1549,12 +1549,9 @@ static void io_req_link_next(struct io_k
- /*
-  * Called if REQ_F_LINK_HEAD is set, and we fail the head request
-  */
--static void io_fail_links(struct io_kiocb *req)
-+static void __io_fail_links(struct io_kiocb *req)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
--	unsigned long flags;
--
--	spin_lock_irqsave(&ctx->completion_lock, flags);
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -391,7 +391,7 @@ static int __qcom_scm_set_dload_mode(str
  
- 	while (!list_empty(&req->link_list)) {
- 		struct io_kiocb *link = list_first_entry(&req->link_list,
-@@ -1568,13 +1565,29 @@ static void io_fail_links(struct io_kioc
- 			io_link_cancel_timeout(link);
- 		} else {
- 			io_cqring_fill_event(link, -ECANCELED);
-+			link->flags |= REQ_F_COMP_LOCKED;
- 			__io_double_put_req(link);
- 		}
- 		req->flags &= ~REQ_F_LINK_TIMEOUT;
- 	}
+ 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
  
- 	io_commit_cqring(ctx);
--	spin_unlock_irqrestore(&ctx->completion_lock, flags);
-+}
-+
-+static void io_fail_links(struct io_kiocb *req)
-+{
-+	struct io_ring_ctx *ctx = req->ctx;
-+
-+	if (!(req->flags & REQ_F_COMP_LOCKED)) {
-+		unsigned long flags;
-+
-+		spin_lock_irqsave(&ctx->completion_lock, flags);
-+		__io_fail_links(req);
-+		spin_unlock_irqrestore(&ctx->completion_lock, flags);
-+	} else {
-+		__io_fail_links(req);
-+	}
-+
- 	io_cqring_ev_posted(ctx);
+-	return qcom_scm_call(__scm->dev, &desc, NULL);
++	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
  }
  
-@@ -4767,6 +4780,7 @@ static int io_timeout_cancel(struct io_r
- 		return -EALREADY;
+ static void qcom_scm_set_download_mode(bool enable)
+@@ -650,7 +650,7 @@ int qcom_scm_io_readl(phys_addr_t addr,
+ 	int ret;
  
- 	req_set_fail_links(req);
-+	req->flags |= REQ_F_COMP_LOCKED;
- 	io_cqring_fill_event(req, -ECANCELED);
- 	io_put_req(req);
- 	return 0;
+ 
+-	ret = qcom_scm_call(__scm->dev, &desc, &res);
++	ret = qcom_scm_call_atomic(__scm->dev, &desc, &res);
+ 	if (ret >= 0)
+ 		*val = res.result[0];
+ 
+@@ -669,8 +669,7 @@ int qcom_scm_io_writel(phys_addr_t addr,
+ 		.owner = ARM_SMCCC_OWNER_SIP,
+ 	};
+ 
+-
+-	return qcom_scm_call(__scm->dev, &desc, NULL);
++	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+ }
+ EXPORT_SYMBOL(qcom_scm_io_writel);
+ 
 
 
