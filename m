@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111C0C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA35C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC186204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440DD204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691963;
-	bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
+	s=default; t=1597691969;
+	bh=qqQlDeNP9ll3TBVFHzlpclXEDbLIy2T5o7RyM+U8G1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E05tuCilL/QhZ3TlqAbB5hJRwbwY1WHsTUdfR1WaG/RfFY3XSwJwq/bIF4VmUAfjz
-	 1gID50jSj05X5VngVWLLicCFttsGYjXU/iJ9NE0UysycC4FQ/NRwMHLQlGCzwUmkYp
-	 68R+NvdY6lkQfv9JFwBnmhedcT9PE/yuAuy2IIQ8=
+	b=qRUKSoN4EFeJvqQ1XwP/arskYipukJuMVD+6wIPb0GeN1q/zgoLDKo6DYExxYLs6i
+	 7/YQMzkcjxAc15Zv5gz6d21RfsRH28ku32GE4iI6WXt78fcsmLqOL6gZhiGx7FhuXS
+	 hsTvOqz4RIpbxkwzFtKmLi9QD+x76roQq0zSm/4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbgHQTTV (ORCPT
+        id S2404197AbgHQTT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45482 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730527AbgHQPhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:43 -0400
+        id S1730239AbgHQPha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F2323105;
-        Mon, 17 Aug 2020 15:37:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCBE208E4;
+        Mon, 17 Aug 2020 15:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678662;
-        bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
+        s=default; t=1597678650;
+        bh=qqQlDeNP9ll3TBVFHzlpclXEDbLIy2T5o7RyM+U8G1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3zdm/WIZ7wWjCmDHBvYT1piMfTl4XMi+aqXUX/1Wl3fJOR75PV21l7lIvz7Hjm1y
-         DtPT4E6/xI6vGZW9OQABaXSVz7k4sUaLdLoDC3Ds4QuhRY/4GTfaOSJ24Ob+S6+Pe/
-         tOwBvBVWaBKzdCuw6oQR/NP0wW4qMxEVizDBuUR8=
+        b=KwK0EVh3sls/fGnvNuTIsWR4OUC1YW+D4Cth26atggdFSILJevuqJpeZmJ7QfHaNO
+         rdj5Gamr+F8dDzmnG/XL90tH+BxanRqdXKfH9t1PGkidteTaBwBUillhQTlFsRkQMW
+         NHI+KI/TDJpHDhPRkGy4lI9WouP4aY+ceT42ns+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.8 411/464] crypto: qat - fix double free in qat_uclo_create_batch_init_list
-Date:   Mon, 17 Aug 2020 17:16:04 +0200
-Message-Id: <20200817143853.467362317@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 407/464] ALSA: usb-audio: add quirk for Pioneer DDJ-RB
+Date:   Mon, 17 Aug 2020 17:16:00 +0200
+Message-Id: <20200817143853.276111725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,91 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit c06c76602e03bde24ee69a2022a829127e504202 upstream.
+commit 6e8596172ee1cd46ec0bfd5adcf4ff86371478b6 upstream.
 
-clang static analysis flags this error
+This is just another Pioneer device with fixed endpoints. Input is dummy
+but used as feedback (it always returns silence).
 
-qat_uclo.c:297:3: warning: Attempt to free released memory
-  [unix.Malloc]
-                kfree(*init_tab_base);
-                ^~~~~~~~~~~~~~~~~~~~~
-
-When input *init_tab_base is null, the function allocates memory for
-the head of the list.  When there is problem allocating other list
-elements the list is unwound and freed.  Then a check is made if the
-list head was allocated and is also freed.
-
-Keeping track of the what may need to be freed is the variable 'tail_old'.
-The unwinding/freeing block is
-
-	while (tail_old) {
-		mem_init = tail_old->next;
-		kfree(tail_old);
-		tail_old = mem_init;
-	}
-
-The problem is that the first element of tail_old is also what was
-allocated for the list head
-
-		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
-		...
-		*init_tab_base = init_header;
-		flag = 1;
-	}
-	tail_old = init_header;
-
-So *init_tab_base/init_header are freed twice.
-
-There is another problem.
-When the input *init_tab_base is non null the tail_old is calculated by
-traveling down the list to first non null entry.
-
-	tail_old = init_header;
-	while (tail_old->next)
-		tail_old = tail_old->next;
-
-When the unwinding free happens, the last entry of the input list will
-be freed.
-
-So the freeing needs a general changed.
-If locally allocated the first element of tail_old is freed, else it
-is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
-as null.
-
-Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082502.225979-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/qat/qat_common/qat_uclo.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/usb/quirks-table.h |   56 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
---- a/drivers/crypto/qat/qat_common/qat_uclo.c
-+++ b/drivers/crypto/qat/qat_common/qat_uclo.c
-@@ -332,13 +332,18 @@ static int qat_uclo_create_batch_init_li
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3541,6 +3541,62 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ 		}
  	}
- 	return 0;
- out_err:
-+	/* Do not free the list head unless we allocated it. */
-+	tail_old = tail_old->next;
-+	if (flag) {
-+		kfree(*init_tab_base);
-+		*init_tab_base = NULL;
+ },
++{
++	/*
++	 * PIONEER DJ DDJ-RB
++	 * PCM is 4 channels out, 2 dummy channels in @ 44.1 fixed
++	 * The feedback for the output is the dummy input.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x000e),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 4,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						   USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 2,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x82,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						 USB_ENDPOINT_SYNC_ASYNC|
++						 USB_ENDPOINT_USAGE_IMPLICIT_FB,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
 +	}
-+
- 	while (tail_old) {
- 		mem_init = tail_old->next;
- 		kfree(tail_old);
- 		tail_old = mem_init;
- 	}
--	if (flag)
--		kfree(*init_tab_base);
- 	return -ENOMEM;
- }
++},
  
+ #define ALC1220_VB_DESKTOP(vend, prod) { \
+ 	USB_DEVICE(vend, prod),	\
 
 
