@@ -2,79 +2,115 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA5EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 474DC20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D684E205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHQD3c (ORCPT
+        id S1727070AbgHQDeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:29:32 -0400
-Received: from smtp21.cstnet.cn ([159.226.251.21]:42702 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726235AbgHQD3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:29:30 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-01 (Coremail) with SMTP id qwCowADHz2+P+TlfauNCAQ--.38977S2;
-        Mon, 17 Aug 2020 11:29:19 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     axboe@kernel.dk, linux-ide@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] ata: ahci: use ata_link_info() instead of ata_link_printk()
-Date:   Mon, 17 Aug 2020 03:29:13 +0000
-Message-Id: <20200817032913.10173-1-vulab@iscas.ac.cn>
+        Sun, 16 Aug 2020 23:34:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53823 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgHQDeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 23:34:03 -0400
+IronPort-SDR: YIEa31w2swtxAqRNFC2VcIuSpRjC1bc2I1laB9FVuIoqlFZeNEighA1RlH2eA51OEHD9el+0Bx
+ bHC9g54/ePfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="152033205"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="152033205"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 20:34:02 -0700
+IronPort-SDR: PltlBRmDYfP48D4atAeBMnSdSCFuNuJtAkGrZLnksfFXSV/qsc/iEobDyooZkb6XAUgGi1yR2C
+ PrCS7L9mYB/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="400075235"
+Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2020 20:34:00 -0700
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND RFC v2 0/2] add bus lock VM exit support
+Date:   Mon, 17 Aug 2020 11:36:02 +0800
+Message-Id: <20200817033604.5836-1-chenyi.qiang@intel.com>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: qwCowADHz2+P+TlfauNCAQ--.38977S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13Gr1fCr18JFWxuw4rKrg_yoWxCFc_uF
-        y8Zw47WrWjyF15Zr17Ja13ZF90k3Wvvw1kXFyIganxury5Ww4fJrW0q3W5X34DXw4IkF98
-        ArWUAFy5CrnIgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
-        6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjoKZJ
-        UUUUU==
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAw4LA13qZTb7pwAAs9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using ata_link_info() instead of ata_link_printk().
+Resend to rebase on 5.9-rc1.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- drivers/ata/ahci.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 0c0a736eb861..fbd8eaa32d32 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -807,8 +807,7 @@ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
- 				(sstatus & 0xf) != 1)
- 			break;
- 
--		ata_link_printk(link, KERN_INFO, "avn bounce port%d\n",
--				port);
-+		ata_link_info(link,  "avn bounce port%d\n", port);
- 
- 		pci_read_config_word(pdev, 0x92, &val);
- 		val &= ~(1 << port);
+Add the support for bus lock VM exit in KVM. It is a sub-feature of bus
+lock detection. Another sub-feature named bus lock debug exception is
+blocked due to requirement to rework the HW design:
+https://lore.kernel.org/lkml/87r1stmi1x.fsf@nanos.tec.linutronix.de/
+
+In this patch series, the first patch applies Sean's refactor to
+vcpu_vmx.exit_reason available at
+https://patchwork.kernel.org/patch/11500659.
+It is necessary as bus lock VM exit adds a new modifier bit(bit 26) in
+exit_reason field in VMCS.
+
+The second patch is the enabling work for bus lock VM exit. Add the
+support to set the capability to enable bus lock vm exit. The current
+implementation just exit to user space when handling the bus lock
+detected in guest.
+
+The concrete throttling policy in user space still needs to be
+discussed. We can enforce ratelimit on bus lock in guest, just inject
+some sleep time, or any other ideas?
+
+Document for Bus Lock Detection is now available at the latest "Intel
+Architecture Instruction Set Extensions Programming Reference".
+
+Document Link:
+https://software.intel.com/content/www/us/en/develop/download/intel-architecture-instruction-set-extensions-programming-reference.html
+
+
+v1->v2 Changelogs:
+- resolve Vitaly's comment to introduce the KVM_EXIT_BUS_LOCK and a
+  capability to enable it.
+- add the support to exit to user space when handling bus locks.
+- extend the vcpu->run->flags to indicate bus lock detected for other
+  exit reasons when exiting to user space.
+
+Chenyi Qiang (1):
+  KVM: VMX: Enable bus lock VM exit
+
+Sean Christopherson (1):
+  KVM: VMX: Convert vcpu_vmx.exit_reason to a union
+
+ arch/x86/include/asm/kvm_host.h    |  9 +++
+ arch/x86/include/asm/vmx.h         |  1 +
+ arch/x86/include/asm/vmxfeatures.h |  1 +
+ arch/x86/include/uapi/asm/kvm.h    |  1 +
+ arch/x86/include/uapi/asm/vmx.h    |  4 +-
+ arch/x86/kvm/vmx/capabilities.h    |  6 ++
+ arch/x86/kvm/vmx/nested.c          | 42 ++++++++-----
+ arch/x86/kvm/vmx/vmx.c             | 97 ++++++++++++++++++++----------
+ arch/x86/kvm/vmx/vmx.h             | 25 +++++++-
+ arch/x86/kvm/x86.c                 | 36 ++++++++++-
+ arch/x86/kvm/x86.h                 |  5 ++
+ include/uapi/linux/kvm.h           |  2 +
+ 12 files changed, 179 insertions(+), 50 deletions(-)
+
 -- 
 2.17.1
 
