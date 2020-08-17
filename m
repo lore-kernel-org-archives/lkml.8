@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F54C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C13C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61CA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DB42065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692443;
-	bh=nrJEqP40ZR2hqulL9zfKStqb14ZXK7kIm751aLXO3kM=;
+	s=default; t=1597692444;
+	bh=DTe92InpxRqfPQxpIm07sLBWL8mODR2YUc+SJgOrp04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xCVf5MsEhlKt2yNt6cF3whQqoPLHhl9S+NIz64kjilv4/sB51J7t4heQCHjJyonK+
-	 8J0vkgUXtsBwS+awfLmXpatQf/5MOV5+Cz5Y/D2LzmJhHj3cppRRAcS/1czFzveoiX
-	 ENQEviByXJHey870EKdEKr2CzplW4yJWoOYRGPdM=
+	b=suHhekZlW7h2co8XkWq0q5xzN9TdTWiyX+ngTW7XDfR8oP+5MtgFxraqa3TCyjgaQ
+	 /LiRPH3TkP42JpZAy1Fw3bNdrU3pnIsuMhtIII4Me/XcbXjdUw4OGyg/7aLldVg+Tb
+	 +4aIG4C4fja1mLmmE8dyC5tOhHk+L/hKt74WbzNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbgHQT1W (ORCPT
+        id S1732172AbgHQT1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35404 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbgHQPdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:21 -0400
+        id S1730368AbgHQPdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:33:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4655208E4;
-        Mon, 17 Aug 2020 15:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BAF622DD3;
+        Mon, 17 Aug 2020 15:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678400;
-        bh=nrJEqP40ZR2hqulL9zfKStqb14ZXK7kIm751aLXO3kM=;
+        s=default; t=1597678397;
+        bh=DTe92InpxRqfPQxpIm07sLBWL8mODR2YUc+SJgOrp04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvqd6Sc9l29Hmw3z0SIMI0Qhurx3iaNQ6s6EILEb3ZEuvW61BfAc/Vf4l3bZuhhPU
-         7m7v2NpulzUOPJGf0h4vYujph2Nn37M/E7MD27qV/1vAkaHY8ebw/40eRo9zQC6W7v
-         12og5lin5gReIae9Nv+rzGDX05KKOkpJ0tlTtQsQ=
+        b=dPZP+z0tvwKrDgFsIYTJf0YQck7UZBtKmY5pR/6ikdr2bRJ2lwmxkfWqvWvcKEGEz
+         C5krUxLdx3mGexYEuFlkdfVPn9/Kikz7Nz270b29fdH2caUz+i53+gNzdIg2oPtcFO
+         2QAN+smhDUiKWFicmWskoldlfQqS5uXOuoU0qQps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 291/464] net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
-Date:   Mon, 17 Aug 2020 17:14:04 +0200
-Message-Id: <20200817143847.693087057@linuxfoundation.org>
+Subject: [PATCH 5.8 290/464] scsi: core: Add missing scsi_device_put() in scsi_host_block()
+Date:   Mon, 17 Aug 2020 17:14:03 +0200
+Message-Id: <20200817143847.645336277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,36 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Ye Bin <yebin10@huawei.com>
 
-[ Upstream commit 0f3c66a3c7b4e8b9f654b3c998e9674376a51b0f ]
+[ Upstream commit f30785db7546520acd53aac7497d42352ff031e0 ]
 
-The MV88E6097 chip does not support configuring jumbo frames. Prior to
-commit 5f4366660d65 only the 6352, 6351, 6165 and 6320 chips configured
-jumbo mode. The refactor accidentally added the function for the 6097.
-Remove the erroneous function pointer assignment.
+The scsi_host_block() case was missing in commit 4dea170f4fb2 ("scsi: core:
+Fix incorrect usage of shost_for_each_device").
 
-Fixes: 5f4366660d65 ("net: dsa: mv88e6xxx: Refactor setting of jumbo frames")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200717090921.29243-1-yebin10@huawei.com
+Fixes: 2bb955840c1d ("scsi: core: add scsi_host_(block,unblock) helper function")
+Fixes: 4dea170f4fb2 ("scsi: core: Fix incorrect usage of shost_for_each_device")
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/scsi_lib.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index fee16c947c2e8..359043659327e 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -3485,7 +3485,6 @@ static const struct mv88e6xxx_ops mv88e6097_ops = {
- 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
- 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
- 	.port_set_ether_type = mv88e6351_port_set_ether_type,
--	.port_set_jumbo_size = mv88e6165_port_set_jumbo_size,
- 	.port_egress_rate_limiting = mv88e6095_port_egress_rate_limiting,
- 	.port_pause_limit = mv88e6097_port_pause_limit,
- 	.port_disable_learn_limit = mv88e6xxx_port_disable_learn_limit,
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 06056e9ec3335..ae620dada8ce5 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2841,8 +2841,10 @@ scsi_host_block(struct Scsi_Host *shost)
+ 		mutex_lock(&sdev->state_mutex);
+ 		ret = scsi_internal_device_block_nowait(sdev);
+ 		mutex_unlock(&sdev->state_mutex);
+-		if (ret)
++		if (ret) {
++			scsi_device_put(sdev);
+ 			break;
++		}
+ 	}
+ 
+ 	/*
 -- 
 2.25.1
 
