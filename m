@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D67AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A94B23718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594C823442
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677953;
-	bh=YGP+YkstFN3gOd4TajzXgMtqYNsJ02VYfzwME3k7kY0=;
+	s=default; t=1597677958;
+	bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H8qtpSzAmZORPsqiDQ2Zk0E79IDy+pVBoeWkGOhvfoUIHoWWcpExRkf1JR4GTFKkR
-	 iX4Q4HLBd1UlKouh8vmQ0dI8F6aiJp6f93RCRhFGYit6C15iztD3qj3zI5wwL/M1zL
-	 LxYB7530kU9Ei8f3a/O2yeO20XXrJkMYtnE660bc=
+	b=CLUCm2s4F4pk+fh5ICgJ54HftiHAaf3GoJmkg5s6AE3cwwyuJM1eXBjX6N6yGldp+
+	 zmsJt1kkwE4RzfkJYayYiAWs5xmDg7PJjtq3Kr+vxE1wvvr3/3Iq3httKcenA+1/6x
+	 oeeG5kHaX6g3UR9UXLDGcRNNGODbwhiyjfL6sXw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgHQPZv (ORCPT
+        id S1729774AbgHQPZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:25:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729631AbgHQPYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:13 -0400
+        id S1729520AbgHQPYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E002313B;
-        Mon, 17 Aug 2020 15:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354472312E;
+        Mon, 17 Aug 2020 15:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677853;
-        bh=YGP+YkstFN3gOd4TajzXgMtqYNsJ02VYfzwME3k7kY0=;
+        s=default; t=1597677858;
+        bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEiaFxrhpoSc6yO1FODIBRnfxqzQkHBNFqfa3fKqWqqTn5lcJWJNcI1N4ir2QCq+i
-         0AO6a7vhleYdZqaTdyOqhcogASPMM5+XmvvRlIpwcJaQ3qNWddR42hfKv/K3lOOIVa
-         vT5iPt1Lq1b/lTMmH6k6LIlnTEROM2KLwbNspQ/0=
+        b=zhhyQ7dxEpsCBFSiTDB9ZHf9+ZjG7ziDFKCUG1PJTGEf5mflGqPPTarxayKaXF8vb
+         FAB3YPYqd+k2n0inMexC1LU2sjpEsH2W0CXr6KRAQSBlzwUA9HleAf+VvvnZ1Vy6EX
+         lZ84vEM2LcfuC5gpdZLC6kSglZvxLjyxSdAe+nGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 132/464] bcache: fix super block seq numbers comparision in register_cache_set()
-Date:   Mon, 17 Aug 2020 17:11:25 +0200
-Message-Id: <20200817143840.135707528@linuxfoundation.org>
+Subject: [PATCH 5.8 134/464] btrfs: qgroup: free per-trans reserved space when a subvolume gets dropped
+Date:   Mon, 17 Aug 2020 17:11:27 +0200
+Message-Id: <20200817143840.232957576@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,76 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 117f636ea695270fe492d0c0c9dfadc7a662af47 ]
+[ Upstream commit a3cf0e4342b6af9e6b34a4b913c630fbd03a82ea ]
 
-In register_cache_set(), c is pointer to struct cache_set, and ca is
-pointer to struct cache, if ca->sb.seq > c->sb.seq, it means this
-registering cache has up to date version and other members, the in-
-memory version and other members should be updated to the newer value.
+[BUG]
+Sometime fsstress could lead to qgroup warning for case like
+generic/013:
 
-But current implementation makes a cache set only has a single cache
-device, so the above assumption works well except for a special case.
-The execption is when a cache device new created and both ca->sb.seq and
-c->sb.seq are 0, because the super block is never flushed out yet. In
-the location for the following if() check,
-2156         if (ca->sb.seq > c->sb.seq) {
-2157                 c->sb.version           = ca->sb.version;
-2158                 memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
-2159                 c->sb.flags             = ca->sb.flags;
-2160                 c->sb.seq               = ca->sb.seq;
-2161                 pr_debug("set version = %llu\n", c->sb.version);
-2162         }
-c->sb.version is not initialized yet and valued 0. When ca->sb.seq is 0,
-the if() check will fail (because both values are 0), and the cache set
-version, set_uuid, flags and seq won't be updated.
+  BTRFS warning (device dm-3): qgroup 0/259 has unreleased space, type 1 rsv 81920
+  ------------[ cut here ]------------
+  WARNING: CPU: 9 PID: 24535 at fs/btrfs/disk-io.c:4142 close_ctree+0x1dc/0x323 [btrfs]
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:close_ctree+0x1dc/0x323 [btrfs]
+  Call Trace:
+   btrfs_put_super+0x15/0x17 [btrfs]
+   generic_shutdown_super+0x72/0x110
+   kill_anon_super+0x18/0x30
+   btrfs_kill_super+0x17/0x30 [btrfs]
+   deactivate_locked_super+0x3b/0xa0
+   deactivate_super+0x40/0x50
+   cleanup_mnt+0x135/0x190
+   __cleanup_mnt+0x12/0x20
+   task_work_run+0x64/0xb0
+   __prepare_exit_to_usermode+0x1bc/0x1c0
+   __syscall_return_slowpath+0x47/0x230
+   do_syscall_64+0x64/0xb0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ---[ end trace 6c341cdf9b6cc3c1 ]---
+  BTRFS error (device dm-3): qgroup reserved space leaked
 
-The above problem is hiden for current code, because the bucket size is
-compatible among different super block version. And the next time when
-running cache set again, ca->sb.seq will be larger than 0 and cache set
-super block version will be updated properly.
+While that subvolume 259 is no longer in that filesystem.
 
-But if the large bucket feature is enabled,  sb->bucket_size is the low
-16bits of the bucket size. For a power of 2 value, when the actual
-bucket size exceeds 16bit width, sb->bucket_size will always be 0. Then
-read_super_common() will fail because the if() check to
-is_power_of_2(sb->bucket_size) is false. This is how the long time
-hidden bug is triggered.
+[CAUSE]
+Normally per-trans qgroup reserved space is freed when a transaction is
+committed, in commit_fs_roots().
 
-This patch modifies the if() check to the following way,
-2156         if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
-Then cache set's version, set_uuid, flags and seq will always be updated
-corectly including for a new created cache device.
+However for completely dropped subvolume, that subvolume is completely
+gone, thus is no longer in the fs_roots_radix, and its per-trans
+reserved qgroup will never be freed.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Since the subvolume is already gone, leaked per-trans space won't cause
+any trouble for end users.
+
+[FIX]
+Just call btrfs_qgroup_free_meta_all_pertrans() before a subvolume is
+completely dropped.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 2014016f9a60d..445bb84ee27f8 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2100,7 +2100,14 @@ static const char *register_cache_set(struct cache *ca)
- 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
- 		goto err;
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index c0bc35f932bf7..96223813b6186 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -5466,6 +5466,14 @@ int btrfs_drop_snapshot(struct btrfs_root *root, int update_ref, int for_reloc)
+ 		}
+ 	}
  
--	if (ca->sb.seq > c->sb.seq) {
 +	/*
-+	 * A special case is both ca->sb.seq and c->sb.seq are 0,
-+	 * such condition happens on a new created cache device whose
-+	 * super block is never flushed yet. In this case c->sb.version
-+	 * and other members should be updated too, otherwise we will
-+	 * have a mistaken super block version in cache set.
++	 * This subvolume is going to be completely dropped, and won't be
++	 * recorded as dirty roots, thus pertrans meta rsv will not be freed at
++	 * commit transaction time.  So free it here manually.
 +	 */
-+	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
- 		c->sb.version		= ca->sb.version;
- 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
- 		c->sb.flags             = ca->sb.flags;
++	btrfs_qgroup_convert_reserved_meta(root, INT_MAX);
++	btrfs_qgroup_free_meta_all_pertrans(root);
++
+ 	if (test_bit(BTRFS_ROOT_IN_RADIX, &root->state))
+ 		btrfs_add_dropped_root(trans, root);
+ 	else
 -- 
 2.25.1
 
