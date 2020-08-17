@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99C0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9059F20885
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCA92067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679340;
-	bh=CsHthHehN7Oq9N7RKyJZNpDPp0iklDcRQQ7X8Zxd+CQ=;
+	s=default; t=1597679354;
+	bh=0t5POLBWNfw7QFM1DJCV/inOcg3oxp4uCilRlsw1hfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQRyTe53Hrnf7/oaNKZr/InztO1MluJwwQ23bo3rK6W2oRbrrgCIWn6xIXC4Or7F7
-	 gBo0MtnP8KfEbBTTq5rYthShBtTGZiNl750L2H2BQu3mY9Lqew59qa1gECxKhVSuaw
-	 VhiNVGbDMthpyhntWt8CJx8oJ/m7JoZpdEVAibSc=
+	b=jbOGBzJc27sesrTVPUMo6LtYnlFf1Y58r33J2XG8v7+UxkkbnUo8CWb9IST5zMLFZ
+	 OePDrimS35zYGzHaatZLeZTEgOIIrinjWZR9VlATwfE6E/r+XgiTnKg62tPuN04YV9
+	 ZPchZmutVGXnyo2RH5stfnH5TxgqzqGkXj80KS0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbgHQPs5 (ORCPT
+        id S2387769AbgHQPtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730617AbgHQPis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:48 -0400
+        id S2387424AbgHQPi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47613208E4;
-        Mon, 17 Aug 2020 15:38:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D3CC208E4;
+        Mon, 17 Aug 2020 15:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678727;
-        bh=CsHthHehN7Oq9N7RKyJZNpDPp0iklDcRQQ7X8Zxd+CQ=;
+        s=default; t=1597678735;
+        bh=0t5POLBWNfw7QFM1DJCV/inOcg3oxp4uCilRlsw1hfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2q344K0V7H44BLO7h8zGnz6NxleCl4TdqDYD3CvR+eyGUHSwgKTDLD5jSmjypLxf/
-         EbPraJb5LjJwpVyct9AnxZ40erjx2pmcoQZxPg22cBSyrCp9mlR4hJXegCkZRaLGXj
-         3c7yGnK3/eZURgSxGfddgd8nIJ4HFnfzrAEw8p7Y=
+        b=b9nzOz5G2VVDm5WjPtyT69/61bNgjBaYzJBLzBMSiuPdtFWwV5YIgBQqvFKNEuzWo
+         CRaz4RNdTRGTutcQncWEYicMa5mmaUFcWYMf4GcEz/K+A9eQrgr+//hqhELFhDXFWn
+         hL2rb/J5C79G+vRFaPF5wcaPcqSDNCb64r45GNh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 5.8 434/464] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
-Date:   Mon, 17 Aug 2020 17:16:27 +0200
-Message-Id: <20200817143854.567216826@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Eggers <ceggers@arri.de>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.8 436/464] spi: spidev: Align buffers for DMA
+Date:   Mon, 17 Aug 2020 17:16:29 +0200
+Message-Id: <20200817143854.663083713@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,97 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Christian Eggers <ceggers@arri.de>
 
-commit 63ef91f24f9bfc70b6446319f6cabfd094481372 upstream.
+commit aa9e862d7d5bcecd4dca9f39e8b684b93dd84ee7 upstream.
 
-Booting a recent kernel on a rk3399-based system (nanopc-t4),
-equipped with a recent u-boot and ATF results in an Oops due
-to a NULL pointer dereference.
+Simply copying all xfers from userspace into one bounce buffer causes
+alignment problems if the SPI controller uses DMA.
 
-This turns out to be due to the rk3399-dmc driver looking for
-an *undocumented* property (rockchip,pmu), and happily using
-a NULL pointer when the property isn't there.
+Ensure that all transfer data blocks within the rx and tx bounce buffers
+are aligned for DMA (according to ARCH_KMALLOC_MINALIGN).
 
-Instead, make most of what was brought in with 9173c5ceb035
-("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
-to TF-A.") conditioned on finding this property in the device-tree,
-preventing the driver from exploding.
+Alignment may increase the usage of the bounce buffers. In some cases,
+the buffers may need to be increased using the "bufsiz" module
+parameter.
 
+Signed-off-by: Christian Eggers <ceggers@arri.de>
 Cc: stable@vger.kernel.org
-Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Link: https://lore.kernel.org/r/20200728100832.24788-1-ceggers@arri.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/devfreq/rk3399_dmc.c |   42 +++++++++++++++++++++++-------------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ drivers/spi/spidev.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
---- a/drivers/devfreq/rk3399_dmc.c
-+++ b/drivers/devfreq/rk3399_dmc.c
-@@ -95,18 +95,20 @@ static int rk3399_dmcfreq_target(struct
- 
- 	mutex_lock(&dmcfreq->lock);
- 
--	if (target_rate >= dmcfreq->odt_dis_freq)
--		odt_enable = true;
--
--	/*
--	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
--	 * timings and to enable or disable the ODT (on-die termination)
--	 * resistors.
--	 */
--	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
--		      dmcfreq->odt_pd_arg1,
--		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
--		      odt_enable, 0, 0, 0, &res);
-+	if (dmcfreq->regmap_pmu) {
-+		if (target_rate >= dmcfreq->odt_dis_freq)
-+			odt_enable = true;
-+
-+		/*
-+		 * This makes a SMC call to the TF-A to set the DDR PD
-+		 * (power-down) timings and to enable or disable the
-+		 * ODT (on-die termination) resistors.
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -224,6 +224,11 @@ static int spidev_message(struct spidev_
+ 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
+ 			n;
+ 			n--, k_tmp++, u_tmp++) {
++		/* Ensure that also following allocations from rx_buf/tx_buf will meet
++		 * DMA alignment requirements.
 +		 */
-+		arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-+			      dmcfreq->odt_pd_arg1,
-+			      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-+			      odt_enable, 0, 0, 0, &res);
-+	}
- 
- 	/*
- 	 * If frequency scaling from low to high, adjust voltage first.
-@@ -371,13 +373,14 @@ static int rk3399_dmcfreq_probe(struct p
- 	}
- 
- 	node = of_parse_phandle(np, "rockchip,pmu", 0);
--	if (node) {
--		data->regmap_pmu = syscon_node_to_regmap(node);
--		of_node_put(node);
--		if (IS_ERR(data->regmap_pmu)) {
--			ret = PTR_ERR(data->regmap_pmu);
--			goto err_edev;
--		}
-+	if (!node)
-+		goto no_pmu;
++		unsigned int len_aligned = ALIGN(u_tmp->len, ARCH_KMALLOC_MINALIGN);
 +
-+	data->regmap_pmu = syscon_node_to_regmap(node);
-+	of_node_put(node);
-+	if (IS_ERR(data->regmap_pmu)) {
-+		ret = PTR_ERR(data->regmap_pmu);
-+		goto err_edev;
+ 		k_tmp->len = u_tmp->len;
+ 
+ 		total += k_tmp->len;
+@@ -239,17 +244,17 @@ static int spidev_message(struct spidev_
+ 
+ 		if (u_tmp->rx_buf) {
+ 			/* this transfer needs space in RX bounce buffer */
+-			rx_total += k_tmp->len;
++			rx_total += len_aligned;
+ 			if (rx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+ 			}
+ 			k_tmp->rx_buf = rx_buf;
+-			rx_buf += k_tmp->len;
++			rx_buf += len_aligned;
+ 		}
+ 		if (u_tmp->tx_buf) {
+ 			/* this transfer needs space in TX bounce buffer */
+-			tx_total += k_tmp->len;
++			tx_total += len_aligned;
+ 			if (tx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+@@ -259,7 +264,7 @@ static int spidev_message(struct spidev_
+ 						(uintptr_t) u_tmp->tx_buf,
+ 					u_tmp->len))
+ 				goto done;
+-			tx_buf += k_tmp->len;
++			tx_buf += len_aligned;
+ 		}
+ 
+ 		k_tmp->cs_change = !!u_tmp->cs_change;
+@@ -293,16 +298,16 @@ static int spidev_message(struct spidev_
+ 		goto done;
+ 
+ 	/* copy any rx data out of bounce buffer */
+-	rx_buf = spidev->rx_buffer;
+-	for (n = n_xfers, u_tmp = u_xfers; n; n--, u_tmp++) {
++	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
++			n;
++			n--, k_tmp++, u_tmp++) {
+ 		if (u_tmp->rx_buf) {
+ 			if (copy_to_user((u8 __user *)
+-					(uintptr_t) u_tmp->rx_buf, rx_buf,
++					(uintptr_t) u_tmp->rx_buf, k_tmp->rx_buf,
+ 					u_tmp->len)) {
+ 				status = -EFAULT;
+ 				goto done;
+ 			}
+-			rx_buf += u_tmp->len;
+ 		}
  	}
- 
- 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-@@ -399,6 +402,7 @@ static int rk3399_dmcfreq_probe(struct p
- 		goto err_edev;
- 	};
- 
-+no_pmu:
- 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
- 		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
- 		      0, 0, 0, 0, &res);
+ 	status = total;
 
 
