@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5284C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D849AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE87B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A872072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691512;
-	bh=lKORXuK1Vq7++6LFUb5ugaddd/IrZZClPHqLCVvqZtw=;
+	s=default; t=1597691518;
+	bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yyu0zFir7uex3uAIe7XBXikj+jP4A62r/bV+xr43D/d9l3a43dCmXNeEmBVSsFkAs
-	 UzeuPeBc31y6dd9gGI0B5SrJ71+yrn2ZLv6visvY3dSTseev2xln1rHD8O/nXsUCha
-	 ph51mcDfwwWqF9dKGNACgE7Fr9e4W55UPYxqCcm8=
+	b=pbX2tavAMFNWp4FGAnKFyeX/78gnQK/W4GeLoxEnEG4P8PcXe98uTlKodvrSrQBbs
+	 MEn7drKouLsy5QcUk0ftt3lXw3qqyRoD7u4yND15JzEsTfBvaIriCCuzT4A3SN3kQE
+	 blQ9k/fqlVFHHSWqm1gXSnC2+IQxZfp4DdMSCdtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgHQTLu (ORCPT
+        id S1731707AbgHQTL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50696 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730720AbgHQPlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:41:15 -0400
+        id S1730716AbgHQPlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:41:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E783020760;
-        Mon, 17 Aug 2020 15:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7C120825;
+        Mon, 17 Aug 2020 15:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678874;
-        bh=lKORXuK1Vq7++6LFUb5ugaddd/IrZZClPHqLCVvqZtw=;
+        s=default; t=1597678868;
+        bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2N6v7dhDy2GTkMSz6BoFWthDzdft1Ld9hOVnxPHRsyIOrbm+0b4L1/Dbe+51CGfL
-         trMaWCkOGb2oZjb+Gk9Zabetx7Wk93VcnsiqmrOS/ugywXUt6G5bj/iuVUwRTKLswX
-         izO1zep/0ST+aR01t+tJkbXYgF3575fbmrllXSRM=
+        b=0y5y9z0g5wHE9RfdzPupqS8rhx+uz5mpTxt0e3yMYfK2i/UCFc83bQmRa9Pc93L3u
+         NKDRuaEjXymQCK04emfMT92pkGNEFR5JWR/GR+05jvii/Cf552B71HsStfD7zSfZ4x
+         fkvd5+6JDbUgb86rApw9o4i5X8uSJ9zq0w5+g2Rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Chen <chenwi@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 002/393] kunit: capture stderr on all make subprocess calls
-Date:   Mon, 17 Aug 2020 17:10:52 +0200
-Message-Id: <20200817143819.708468992@linuxfoundation.org>
+Subject: [PATCH 5.7 018/393] memory: tegra: Fix an error handling path in tegra186_emc_probe()
+Date:   Mon, 17 Aug 2020 17:11:08 +0200
+Message-Id: <20200817143820.472375761@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,63 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Chen <chenwi@google.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 5a9fcad71caa970f30aef99134a1cd19bc4b8eea ]
+[ Upstream commit c3d4eb3bf6ad32466555b31094f33a299444f795 ]
 
-Direct stderr to subprocess.STDOUT so error messages get included in the
-subprocess.CalledProcessError exceptions output field. This results in
-more meaningful error messages for the user.
+The call to tegra_bpmp_get() must be balanced by a call to
+tegra_bpmp_put() in case of error, as already done in the remove
+function.
 
-This is already being done in the make_allyesconfig method. Do the same
-for make_mrproper, make_olddefconfig, and make methods.
+Add an error handling path and corresponding goto.
 
-With this, failures on unclean trees [1] will give users an error
-message that includes:
-"The source tree is not clean, please run 'make ARCH=um mrproper'"
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=205219
-
-Signed-off-by: Will Chen <chenwi@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 52d15dd23f0b ("memory: tegra: Support DVFS on Tegra186 and later")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/kunit/kunit_kernel.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/memory/tegra/tegra186-emc.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index 63dbda2d029f6..e20e2056cb380 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -34,7 +34,7 @@ class LinuxSourceTreeOperations(object):
+diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
+index 97f26bc77ad41..c900948881d5b 100644
+--- a/drivers/memory/tegra/tegra186-emc.c
++++ b/drivers/memory/tegra/tegra186-emc.c
+@@ -185,7 +185,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(emc->clk)) {
+ 		err = PTR_ERR(emc->clk);
+ 		dev_err(&pdev->dev, "failed to get EMC clock: %d\n", err);
+-		return err;
++		goto put_bpmp;
+ 	}
  
- 	def make_mrproper(self):
- 		try:
--			subprocess.check_output(['make', 'mrproper'])
-+			subprocess.check_output(['make', 'mrproper'], stderr=subprocess.STDOUT)
- 		except OSError as e:
- 			raise ConfigError('Could not call make command: ' + e)
- 		except subprocess.CalledProcessError as e:
-@@ -47,7 +47,7 @@ class LinuxSourceTreeOperations(object):
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command, stderr=subprocess.PIPE)
-+			subprocess.check_output(command, stderr=subprocess.STDOUT)
- 		except OSError as e:
- 			raise ConfigError('Could not call make command: ' + e)
- 		except subprocess.CalledProcessError as e:
-@@ -77,7 +77,7 @@ class LinuxSourceTreeOperations(object):
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command)
-+			subprocess.check_output(command, stderr=subprocess.STDOUT)
- 		except OSError as e:
- 			raise BuildError('Could not call execute make: ' + e)
- 		except subprocess.CalledProcessError as e:
+ 	platform_set_drvdata(pdev, emc);
+@@ -201,7 +201,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 	err = tegra_bpmp_transfer(emc->bpmp, &msg);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to EMC DVFS pairs: %d\n", err);
+-		return err;
++		goto put_bpmp;
+ 	}
+ 
+ 	emc->debugfs.min_rate = ULONG_MAX;
+@@ -211,8 +211,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 
+ 	emc->dvfs = devm_kmalloc_array(&pdev->dev, emc->num_dvfs,
+ 				       sizeof(*emc->dvfs), GFP_KERNEL);
+-	if (!emc->dvfs)
+-		return -ENOMEM;
++	if (!emc->dvfs) {
++		err = -ENOMEM;
++		goto put_bpmp;
++	}
+ 
+ 	dev_dbg(&pdev->dev, "%u DVFS pairs:\n", emc->num_dvfs);
+ 
+@@ -237,7 +239,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 			"failed to set rate range [%lu-%lu] for %pC\n",
+ 			emc->debugfs.min_rate, emc->debugfs.max_rate,
+ 			emc->clk);
+-		return err;
++		goto put_bpmp;
+ 	}
+ 
+ 	emc->debugfs.root = debugfs_create_dir("emc", NULL);
+@@ -254,6 +256,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 			    emc, &tegra186_emc_debug_max_rate_fops);
+ 
+ 	return 0;
++
++put_bpmp:
++	tegra_bpmp_put(emc->bpmp);
++	return err;
+ }
+ 
+ static int tegra186_emc_remove(struct platform_device *pdev)
 -- 
 2.25.1
 
