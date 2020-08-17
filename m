@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A95C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB6DD205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F6E205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681682;
-	bh=PEIF5s5bOK0Rz4QWL+fmZFTs5nPWRTg7RKyh87EV3ZU=;
+	s=default; t=1597681723;
+	bh=OICnLkXlVe5P+5n/vyf978ebwQib89u725aBI8qOb9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtxfxCgAgTMMWYgP6HmY5cd3NnXm+/8CSDKt2HF4weSW1nWPJT7Q3v1osgmS5ntDd
-	 JiRMF7OfKruDEJ7aAEEFMssMajcivNKcTR9mFVnREAKq5QFqhpd5fsGX9RbvjjBFSs
-	 vascPXiaQk82UtLtEytLFYLmKrhWVows9Q8Q6YvY=
+	b=iyuFuVZ7d/BGLiG6iZ7gmh8n9V8bHaYmL2ufMUNP8CMI5UJSSzQJ3jvRYe58Z941L
+	 T+fVtneavbm55aQZFdQWBK3Po0mknhLC77ChEDyVuAQl6DHDSzcnvS80B1J8sGYCND
+	 l4pYmWTxi+MTojEX9SZlwoUkYRSt/XrWyNUjyxSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgHQQ17 (ORCPT
+        id S1731068AbgHQQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38514 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387852AbgHQPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:52:26 -0400
+        id S2387858AbgHQPwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0ACC20657;
-        Mon, 17 Aug 2020 15:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A4B32063A;
+        Mon, 17 Aug 2020 15:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679546;
-        bh=PEIF5s5bOK0Rz4QWL+fmZFTs5nPWRTg7RKyh87EV3ZU=;
+        s=default; t=1597679553;
+        bh=OICnLkXlVe5P+5n/vyf978ebwQib89u725aBI8qOb9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=emh8DWd4nElDY3ZfzHjxudNBEhXX1kPgoUKFrDyk0bH/YyyvoKixUhjULD5PRNLqC
-         JiE87NVT7k2WBPbBRxLASzI/5W90gDodFZ+5lEW8ZhLtSzTemWGffDREvg+Ng+CEoe
-         klpaGhd72uDnt6zbz3H+H7XSs3hBquWUQf95NRmc=
+        b=WkG5IOQ5m4bdCIdSFAPFn+ZcZjbuF4PZV1kgaOznT+eO2gMvyZ1Elzzjy3oNJdvBb
+         +5A4fcIUctEKvJlWtEIYvih4l94/GQwiPdYg5kBJ5bVyxNPewNeWP15tBa1/EA5ICk
+         2rGnx/wCZyY7K9g8QtjCazZTRnhQZhZ9JSdp3IZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 249/393] macintosh/via-macii: Access autopoll_devs when inside lock
-Date:   Mon, 17 Aug 2020 17:14:59 +0200
-Message-Id: <20200817143831.699880711@linuxfoundation.org>
+Subject: [PATCH 5.7 223/393] spi: lantiq-ssc: Fix warning by using WQ_MEM_RECLAIM
+Date:   Mon, 17 Aug 2020 17:14:33 +0200
+Message-Id: <20200817143830.440172053@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,46 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-[ Upstream commit 59ea38f6b3af5636edf541768a1ed721eeaca99e ]
+[ Upstream commit ba3548cf29616b58c93bbaffc3d636898d009858 ]
 
-The interrupt handler should be excluded when accessing the autopoll_devs
-variable.
+The lantiq-ssc driver uses internally an own workqueue to wait till the
+data is not only written out of the FIFO but really written to the wire.
+This workqueue is flushed while the SPI subsystem is working in some
+other system workqueue.
 
-Fixes: d95fd5fce88f0 ("m68k: Mac II ADB fixes") # v5.0+
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/5952dd8a9bc9de90f1acc4790c51dd42b4c98065.1593318192.git.fthain@telegraphics.com.au
+The system workqueue is marked as WQ_MEM_RECLAIM, but the workqueue in
+the lantiq-ssc driver does not use WQ_MEM_RECLAIM for now. Add this flag
+too to prevent this warning.
+
+This fixes the following warning:
+[    2.975956] WARNING: CPU: 1 PID: 17 at kernel/workqueue.c:2614 check_flush_dependency+0x168/0x184
+[    2.984752] workqueue: WQ_MEM_RECLAIM kblockd:blk_mq_run_work_fn is flushing !WQ_MEM_RECLAIM 1e100800.spi:0x0
+
+Fixes: 891b7c5fbf61 ("mtd_blkdevs: convert to blk-mq")
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Link: https://lore.kernel.org/r/20200717215648.20522-1-hauke@hauke-m.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/macintosh/via-macii.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/spi/spi-lantiq-ssc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/macintosh/via-macii.c b/drivers/macintosh/via-macii.c
-index ac824d7b2dcfc..6aa903529570d 100644
---- a/drivers/macintosh/via-macii.c
-+++ b/drivers/macintosh/via-macii.c
-@@ -270,15 +270,12 @@ static int macii_autopoll(int devs)
- 	unsigned long flags;
- 	int err = 0;
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index 44600fb71c484..049a64451c750 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -909,7 +909,7 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(2, 8) |
+ 				     SPI_BPW_MASK(16) | SPI_BPW_MASK(32);
  
-+	local_irq_save(flags);
-+
- 	/* bit 1 == device 1, and so on. */
- 	autopoll_devs = devs & 0xFFFE;
- 
--	if (!autopoll_devs)
--		return 0;
--
--	local_irq_save(flags);
--
--	if (current_req == NULL) {
-+	if (autopoll_devs && !current_req) {
- 		/* Send a Talk Reg 0. The controller will repeatedly transmit
- 		 * this as long as it is idle.
- 		 */
+-	spi->wq = alloc_ordered_workqueue(dev_name(dev), 0);
++	spi->wq = alloc_ordered_workqueue(dev_name(dev), WQ_MEM_RECLAIM);
+ 	if (!spi->wq) {
+ 		err = -ENOMEM;
+ 		goto err_clk_put;
 -- 
 2.25.1
 
