@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9601C22CF8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FF622CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678981;
-	bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
+	s=default; t=1597679005;
+	bh=RPEiQDy6a3Jp0/Ow1vYnPqNQ//IIH6hyciHaIjsqhoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iFDDRd7rlOaYYQkHf/9854LwUgpdXjXxGFdvKswSbcGk1zi0r0fo0b+YMhpMBFWve
-	 vaM1w2+sxBV/cuJhUgLNY0x6brHbwpYC6pDZZvd7v0rju7e0B7KCvgtpKijNP9UhWV
-	 7wgFmclOJcitm0C7glJKWvpu0gNnYRXJz+CXw+fA=
+	b=ZyjLlKVqvydpfTPrQvmBwUDwW9sMV0qrsTU5PzFOB35hw12lXBbg6c1bhUjzJlUFr
+	 TH/TnNcVDyPZhnLoC7cfGY10wYiR9f54ip2CsvR1BxVaZBCt6VtB5GRx7FV4V9aroA
+	 GGIk0OypA02Kqh5CYPycIJ32nQIZAb8h6AtZMaL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgHQPm7 (ORCPT
+        id S2387638AbgHQPnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730138AbgHQPg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:36:58 -0400
+        id S1730188AbgHQPhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F3222DD6;
-        Mon, 17 Aug 2020 15:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12BE23120;
+        Mon, 17 Aug 2020 15:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678617;
-        bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
+        s=default; t=1597678639;
+        bh=RPEiQDy6a3Jp0/Ow1vYnPqNQ//IIH6hyciHaIjsqhoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Exde/JLcxDIUqrrdt+2XwBCyejWxswl3yCJWo8r8z9kM1AvqmFEsHEd1TjCru1nZ
-         YY9X17WUXNsuQMPbMvR5kcWIHT8fnS1cXkqSyOwJXdnm+Od8ZuzW317jFCTDQQBxN8
-         wTMEWcOpC2XbVQ2Ou4GiZBM/B1YwZQnZ/6IHJ7ls=
+        b=avsa6ZDi/p0b8Vzaeo3rD4HYjxsNNfwo9SNa4kLqHtuqzM8s1AmyFlERjRVJQ+Wze
+         m3Ul3ibg3XlHJuWj6qMNVEz7dZw0ozbyPp7B0GsT6y0J8sZrQOt6IpL6joxFCObCdk
+         4I6xu8edythlOJ60c4AY12p1J+01NBf2NFmJzu8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
-        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.8 397/464] USB: serial: cp210x: re-enable auto-RTS on open
-Date:   Mon, 17 Aug 2020 17:15:50 +0200
-Message-Id: <20200817143852.796011036@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 5.8 403/464] ALSA: hda - reverse the setting value in the micmute_led_set
+Date:   Mon, 17 Aug 2020 17:15:56 +0200
+Message-Id: <20200817143853.084754257@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,61 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brant Merryman <brant.merryman@silabs.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit c7614ff9b73a1e6fb2b1b51396da132ed22fecdb upstream.
+commit 404690649e6a52ee39817168f2d984726412e091 upstream.
 
-CP210x hardware disables auto-RTS but leaves auto-CTS when in hardware
-flow control mode and UART on cp210x hardware is disabled. When
-re-opening the port, if auto-CTS is enabled on the cp210x, then auto-RTS
-must be re-enabled in the driver.
+Before the micmute_led_set() is introduced, the function of
+alc_gpio_micmute_update() will set the gpio value with the
+!micmute_led.led_value, and the machines have the correct micmute led
+status. After the micmute_led_set() is introduced, it sets the gpio
+value with !!micmute_led.led_value, so the led status is not correct
+anymore, we need to set micmute_led_polarity = 1 to workaround it.
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-Co-developed-by: Phu Luu <phu.luu@silabs.com>
-Signed-off-by: Phu Luu <phu.luu@silabs.com>
-Link: https://lore.kernel.org/r/ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com
-[ johan: fix up tags and problem description ]
-Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
-Cc: stable <stable@vger.kernel.org>     # 2.6.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Now we fix the micmute_led_set() and remove micmute_led_polarity = 1.
+
+Fixes: 87dc36482cab ("ALSA: hda/realtek - Add LED class support for micmute LED")
+Reported-and-suggested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200811122430.6546-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ sound/pci/hda/patch_realtek.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -915,6 +915,7 @@ static void cp210x_get_termios_port(stru
- 	u32 baud;
- 	u16 bits;
- 	u32 ctl_hs;
-+	u32 flow_repl;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4118,7 +4118,7 @@ static int micmute_led_set(struct led_cl
+ 	struct alc_spec *spec = codec->spec;
  
- 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+ 	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
+-			    spec->micmute_led_polarity, !!brightness);
++			    spec->micmute_led_polarity, !brightness);
+ 	return 0;
+ }
  
-@@ -1015,6 +1016,22 @@ static void cp210x_get_termios_port(stru
- 	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
- 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
- 		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
-+		/*
-+		 * When the port is closed, the CP210x hardware disables
-+		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
-+		 * in hardware flow control mode. When re-opening the port, if
-+		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
-+		 * re-enabled in the driver.
-+		 */
-+		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
-+		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
-+		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
-+		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
-+		cp210x_write_reg_block(port,
-+				CP210X_SET_FLOW,
-+				&flow_ctl,
-+				sizeof(flow_ctl));
-+
- 		cflag |= CRTSCTS;
- 	} else {
- 		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
+@@ -4173,8 +4173,6 @@ static void alc285_fixup_hp_gpio_led(str
+ {
+ 	struct alc_spec *spec = codec->spec;
+ 
+-	spec->micmute_led_polarity = 1;
+-
+ 	alc_fixup_hp_gpio_led(codec, action, 0x04, 0x01);
+ }
+ 
+@@ -4426,7 +4424,6 @@ static void alc233_fixup_lenovo_line2_mi
+ {
+ 	struct alc_spec *spec = codec->spec;
+ 
+-	spec->micmute_led_polarity = 1;
+ 	alc_fixup_hp_gpio_led(codec, action, 0, 0x04);
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+ 		spec->init_amp = ALC_INIT_DEFAULT;
 
 
