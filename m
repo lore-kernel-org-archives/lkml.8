@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86715C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 411BD23718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8F6205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678060;
-	bh=Bkk7uSPyPlKR0GzH9CuZpxOaO+KfwSErAJhcc2HJeWc=;
+	s=default; t=1597678065;
+	bh=1XFPFE0sJKoxL1C0uECPNsIw+Kvaz1aUejOSXQzcn50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0SokumkV069vAdzGMvZfsygNSapfYRbLaOBVGuLdA9LbGbBnFg73V+yn/IzD+lCqB
-	 rdOm6WDuViHtmPwsyqh9mDVP0H1+dGJkHHh7BITsHEoyr5oXpA+4ga4VUtJY+J+HL0
-	 dQOxWTnKzkRo9lOfoaucbKElJ0gS20zqUwD6qVb0=
+	b=qaGxu3S3gtWoFwFuT7jlg16njFhszTPUSVX9xbVmQJqDG+NbQNRPUEZsz+lun/Dzs
+	 2N2Z6YHzCus7Pwob61Pc1FAj9o0S8yoaiyuoCPvRl0pRLNxEi0Qvhb2kqS3LatGfzm
+	 S3hmAG6/1J4gxfhsOhSaY6sz8AImLj4g/vobvvak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgHQP1j (ORCPT
+        id S1729943AbgHQP1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59332 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729735AbgHQPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:24 -0400
+        id S1729751AbgHQPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 891D22395A;
-        Mon, 17 Aug 2020 15:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 036C82333B;
+        Mon, 17 Aug 2020 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677924;
-        bh=Bkk7uSPyPlKR0GzH9CuZpxOaO+KfwSErAJhcc2HJeWc=;
+        s=default; t=1597677947;
+        bh=1XFPFE0sJKoxL1C0uECPNsIw+Kvaz1aUejOSXQzcn50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghx8xo6eH1XAVpKQV0tW2NaiaPXVRoa7ZWEmZwP3kE5mNIchlZX+kR0PMiu19i23R
-         dawKTN6CZm1OF7RIhyhfMSfDbM5BRiGCVYdTdduHtincjjjCRkoGzqJ3rRArkJHmTW
-         jpw4QDZgfeWuiKymG4+4G0LhvaY1qHxCSQk1N990=
+        b=0tHjlpm2MqFMmQWXhryJKkVjCvTZ9hzzLDG93u2QhxYjhY8pA7QJTzoVaAhjWCsZw
+         zYNE9jV0yXumY9RaYTnwg8aydQBfgblJ2zewFJK5GkcISgBQ1vxNai83cnnNYcmp2n
+         yM6RE2Zvwhl6qqet8nu2iYsQuuRD3E16gMEaMbYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirley Her <shirley.her@bayhubtech.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 127/464] mmc: sdhci-pci-o2micro: Bug fix for O2 host controller Seabird1
-Date:   Mon, 17 Aug 2020 17:11:20 +0200
-Message-Id: <20200817143839.894195097@linuxfoundation.org>
+Subject: [PATCH 5.8 166/464] powerpc/mm: Fix typo in IS_ENABLED()
+Date:   Mon, 17 Aug 2020 17:11:59 +0200
+Message-Id: <20200817143841.765738351@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,40 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: shirley her <shirley.her@bayhubtech.com>
+From: Joe Perches <joe@perches.com>
 
-[ Upstream commit cdd2b769789ae1a030e1a26f6c37c5833cabcb34 ]
+[ Upstream commit 55bd9ac468397c4f12a33b7ec714b5d0362c3aa2 ]
 
-To fix support for the O2 host controller Seabird1, set the quirk
-SDHCI_QUIRK2_PRESET_VALUE_BROKEN and the capability bit MMC_CAP2_NO_SDIO.
-Moreover, assign the ->get_cd() callback.
+IS_ENABLED() matches names exactly, so the missing "CONFIG_" prefix
+means this code would never be built.
 
-Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
-Link: https://lore.kernel.org/r/20200721011733.8416-1-shirley.her@bayhubtech.com
-[Ulf: Updated the commit message]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Also fixes a missing newline in pr_warn().
+
+Fixes: 970d54f99cea ("powerpc/book3s64/hash: Disable 16M linear mapping size if not aligned")
+Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/202006050717.A2F9809E@keescook
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-o2micro.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index e2a846885902f..ed3c605fcf0c4 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -561,6 +561,12 @@ static int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
- 			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 9b9f92ad0e7ab..3d5c9092feb19 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -663,11 +663,10 @@ static void __init htab_init_page_sizes(void)
+ 		 * Pick a size for the linear mapping. Currently, we only
+ 		 * support 16M, 1M and 4K which is the default
+ 		 */
+-		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
++		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
+ 		    (unsigned long)_stext % 0x1000000) {
+ 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
+-				pr_warn("Kernel not 16M aligned, "
+-					"disabling 16M linear map alignment");
++				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
+ 			aligned = false;
  		}
  
-+		if (chip->pdev->device == PCI_DEVICE_ID_O2_SEABIRD1) {
-+			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
-+			host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+			host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
-+		}
-+
- 		host->mmc_host_ops.execute_tuning = sdhci_o2_execute_tuning;
- 
- 		if (chip->pdev->device != PCI_DEVICE_ID_O2_FUJIN2)
 -- 
 2.25.1
 
