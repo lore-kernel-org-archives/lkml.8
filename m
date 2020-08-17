@@ -2,57 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBA22067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D072067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690792;
-	bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+	s=default; t=1597690809;
+	bh=WyO2If/OfFCea9PXnScXqeh4WKPM3dmI5l5aslUJ0Zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mshb1DDdXk/S4aa8iq1RhYWL5a4JWpSt/w55mVMlSgQl5BkItzFMtqaZQ8Zk/MU3q
-	 8rYebxOfm9RSnhEeIA9GZpe0d2MI0oq8D9M4EwvKsI+AslpcZ6FDZEYUkLdgnaysq+
-	 ZNta+X/hjfxKMHLBDdP2JDDFlULAhUhEPUG9U19A=
+	b=WtsgOOGxJZ/pj5gi3DlnSUaMI+ieA9rFjQQMX5rDeBojkwLuX8lNVPt3dqdc2uYkJ
+	 /ctXNXcEAcSfJ8Eq4Rt+fK389K31Y6762e9Aok7H0WfNCEmCWVVfDeHK3NmlFsMlyA
+	 7KiLkEC1PiA/btYnz9V+NFZKNF3aJROUfoKDbjA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391877AbgHQS7u (ORCPT
+        id S1730845AbgHQPsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730852AbgHQPsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:48:19 -0400
+        id S1730612AbgHQPiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD3E20885;
-        Mon, 17 Aug 2020 15:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271D223120;
+        Mon, 17 Aug 2020 15:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679298;
-        bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+        s=default; t=1597678730;
+        bh=WyO2If/OfFCea9PXnScXqeh4WKPM3dmI5l5aslUJ0Zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8704IthNOUtJaGUtPudum6bxhZvjn3Hq4jK/MhJLlhN3Wzxv1Ct8umlbv0q2BtH+
-         fmNyY4F3kUZmWkC3xXE6+KITOAGq3j6hAWc24ywYiwalHBGUcXrGTNQnda7FZzmCnt
-         SEkdEKDTlKpriJG8u3UxlYdGZpjKChs45ylJaXzw=
+        b=cAmoaSWDvih/JxKoA87g9851GFfeDKgjpGoWyoZewldYnjEhmuTBLCOYZwEXtCMjL
+         QlF6hsO0Ir0dbCMXde+zeBjAZNrQohub3ZOUAgmYx9rOF6/Ufcb9khnYzgM3rrd+SG
+         sgf570FiHTV0oVIHBx8XasCyqQNi/imd4AWtIHHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 164/393] cxl: Fix kobject memleak
-Date:   Mon, 17 Aug 2020 17:13:34 +0200
-Message-Id: <20200817143827.571586506@linuxfoundation.org>
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.8 435/464] PM / devfreq: Fix indentaion of devfreq_summary debugfs node
+Date:   Mon, 17 Aug 2020 17:16:28 +0200
+Message-Id: <20200817143854.615375831@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,44 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
 
-[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
+commit 0aae11bcdefb4894b6100656ad24cbd85ff34b52 upstream.
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+The commit 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name
+as devfreq(X) for sysfs"") roll back the device name from 'devfreqX'
+to device name explained in DT. After applied commit 66d0e797bf09,
+the indentation of devfreq_summary debugfs node was broken.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+So, fix indentaion of devfreq_summary debugfs node as following:
 
-Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
+For example on Exynos5422-based Odroid-XU3 board,
+$ cat /sys/kernel/debug/devfreq/devfreq_summary
+dev                            parent_dev                     governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
+------------------------------ ------------------------------ --------------- ---------- ------------ ------------ ------------
+10c20000.memory-controller     null                           simple_ondemand          0    413000000    165000000    825000000
+soc:bus_wcore                  null                           simple_ondemand         50     88700000     88700000    532000000
+soc:bus_noc                    soc:bus_wcore                  passive                  0     66600000     66600000    111000000
+soc:bus_fsys_apb               soc:bus_wcore                  passive                  0    111000000    111000000    222000000
+soc:bus_fsys                   soc:bus_wcore                  passive                  0     75000000     75000000    200000000
+soc:bus_fsys2                  soc:bus_wcore                  passive                  0     75000000     75000000    200000000
+soc:bus_mfc                    soc:bus_wcore                  passive                  0     83250000     83250000    333000000
+soc:bus_gen                    soc:bus_wcore                  passive                  0     88700000     88700000    266000000
+soc:bus_peri                   soc:bus_wcore                  passive                  0     66600000     66600000     66600000
+soc:bus_g2d                    soc:bus_wcore                  passive                  0     83250000     83250000    333000000
+soc:bus_g2d_acp                soc:bus_wcore                  passive                  0            0     66500000    266000000
+soc:bus_jpeg                   soc:bus_wcore                  passive                  0            0     75000000    300000000
+soc:bus_jpeg_apb               soc:bus_wcore                  passive                  0            0     83250000    166500000
+soc:bus_disp1_fimd             soc:bus_wcore                  passive                  0            0    120000000    200000000
+soc:bus_disp1                  soc:bus_wcore                  passive                  0            0    120000000    300000000
+soc:bus_gscl_scaler            soc:bus_wcore                  passive                  0            0    150000000    300000000
+soc:bus_mscl                   soc:bus_wcore                  passive                  0            0     84000000    666000000
+
+Cc: stable@vger.kernel.org
+Fixes: 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"")
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/misc/cxl/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
-index f0263d1a1fdf2..d97a243ad30c0 100644
---- a/drivers/misc/cxl/sysfs.c
-+++ b/drivers/misc/cxl/sysfs.c
-@@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
- 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
- 				  &afu->dev.kobj, "cr%i", cr->cr);
- 	if (rc)
--		goto err;
-+		goto err1;
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1657,8 +1657,7 @@ static int devfreq_summary_show(struct s
+ 	unsigned long cur_freq, min_freq, max_freq;
+ 	unsigned int polling_ms;
  
- 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
- 	if (rc)
--- 
-2.25.1
-
+-	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
+-			"dev_name",
++	seq_printf(s, "%-30s %-30s %-15s %10s %12s %12s %12s\n",
+ 			"dev",
+ 			"parent_dev",
+ 			"governor",
+@@ -1666,10 +1665,9 @@ static int devfreq_summary_show(struct s
+ 			"cur_freq_Hz",
+ 			"min_freq_Hz",
+ 			"max_freq_Hz");
+-	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
++	seq_printf(s, "%30s %30s %15s %10s %12s %12s %12s\n",
++			"------------------------------",
+ 			"------------------------------",
+-			"----------",
+-			"----------",
+ 			"---------------",
+ 			"----------",
+ 			"------------",
+@@ -1698,8 +1696,7 @@ static int devfreq_summary_show(struct s
+ 		mutex_unlock(&devfreq->lock);
+ 
+ 		seq_printf(s,
+-			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
+-			dev_name(devfreq->dev.parent),
++			"%-30s %-30s %-15s %10d %12ld %12ld %12ld\n",
+ 			dev_name(&devfreq->dev),
+ 			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
+ 			devfreq->governor_name,
 
 
