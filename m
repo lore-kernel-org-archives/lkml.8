@@ -2,125 +2,77 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AB3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93DCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F7020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597649958;
-	bh=5f7u17TvsjTrzreApIZ4x0jr/04LEQs1hIO1IBZJBVg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cEu479Wpq3i8RwZhWe/ata/DVGqSoR0KhRU8U7N23qAkYQ3G3cLf6l8fNprj8jlV0
-	 D6XHYeyGyaUDlG9/zFW461w2qv4CnjPInP7Y4jQDQE0oYJQexY96YJovnmGDo5hX9V
-	 dxVX6Zbu7SwhYHs+7ITK9yxxlV9HuOBV1A80vp30=
+	by mail.kernel.org (Postfix) with ESMTP id BA81020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHQHjQ (ORCPT
+        id S1726854AbgHQHjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40500 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:39:49 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40712 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgHQHjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:39:15 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14CC420758;
-        Mon, 17 Aug 2020 07:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597649954;
-        bh=5f7u17TvsjTrzreApIZ4x0jr/04LEQs1hIO1IBZJBVg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MZk/ZzO0Xwj51vzBkOh6djd6cauo+roP/pRXxR0PLsTP9CxwmDwEQWJzTOZ+efS5N
-         QUUrA+K/1xW95pGQ2wvCVRVUyJzPQ17UZXIXt1cfl5+9y6EMMgKTNeEDjcoRzAfaIj
-         XlILTLZZUpgl+E35JmvL+d76aYnLmH9VvHC3F0nA=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k7Zjc-003T4X-BL; Mon, 17 Aug 2020 08:39:12 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 08:39:12 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Keqian Zhu <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Steven Price <steven.price@arm.com>, wanghaibin.wang@huawei.com
-Subject: Re: [PATCH 2/3] KVM: uapi: Remove KVM_DEV_TYPE_ARM_PV_TIME in
- kvm_device_type
-In-Reply-To: <20200817033729.10848-3-zhukeqian1@huawei.com>
-References: <20200817033729.10848-1-zhukeqian1@huawei.com>
- <20200817033729.10848-3-zhukeqian1@huawei.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <f97633b4a39c301f916bb76030dcabf0@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, steven.price@arm.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1726782AbgHQHjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:39:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 40D34200A52;
+        Mon, 17 Aug 2020 09:39:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 388BE200022;
+        Mon, 17 Aug 2020 09:39:44 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1B2F740249;
+        Mon, 17 Aug 2020 09:39:40 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com,
+        linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] hwmon: pwm-fan: Use dev_err_probe() to simplify error handling
+Date:   Mon, 17 Aug 2020 15:34:33 +0800
+Message-Id: <1597649673-22329-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 04:37, Keqian Zhu wrote:
-> ARM64 PV-time ST is configured by userspace through vCPU attribute,
-> and KVM_DEV_TYPE_ARM_PV_TIME is unused.
-> 
-> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-> ---
->  include/uapi/linux/kvm.h       | 2 --
->  tools/include/uapi/linux/kvm.h | 2 --
->  2 files changed, 4 deletions(-)
-> 
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4fdf303..9a6b97e 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1258,8 +1258,6 @@ enum kvm_device_type {
->  #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
->  	KVM_DEV_TYPE_XIVE,
->  #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
-> -	KVM_DEV_TYPE_ARM_PV_TIME,
-> -#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
->  	KVM_DEV_TYPE_MAX,
->  };
-> 
-> diff --git a/tools/include/uapi/linux/kvm.h 
-> b/tools/include/uapi/linux/kvm.h
-> index 4fdf303..9a6b97e 100644
-> --- a/tools/include/uapi/linux/kvm.h
-> +++ b/tools/include/uapi/linux/kvm.h
-> @@ -1258,8 +1258,6 @@ enum kvm_device_type {
->  #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
->  	KVM_DEV_TYPE_XIVE,
->  #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
-> -	KVM_DEV_TYPE_ARM_PV_TIME,
-> -#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
->  	KVM_DEV_TYPE_MAX,
->  };
+dev_err_probe() can reduce code size, uniform error handling and record the
+defer probe reason etc., use it to simplify the code.
 
-No. You can't drop anything from UAPI, used or not. Doing so will
-break the compilation of any userspace that, for any reason, references
-this value. We cannot reuse this value in the future either, as it would
-create a we wouldn't know which device to create.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/hwmon/pwm-fan.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-It is pretty unfortunate that PV time has turned into such a train 
-wreck,
-but that's what we have now, and it has to stay.
-
-         M.
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 17bb642..bdba214 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -293,14 +293,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 	mutex_init(&ctx->lock);
+ 
+ 	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
+-	if (IS_ERR(ctx->pwm)) {
+-		ret = PTR_ERR(ctx->pwm);
+-
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Could not get PWM: %d\n", ret);
+-
+-		return ret;
+-	}
++	if (IS_ERR(ctx->pwm))
++		return dev_err_probe(dev, PTR_ERR(ctx->pwm), "Could not get PWM\n");
+ 
+ 	platform_set_drvdata(pdev, ctx);
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
