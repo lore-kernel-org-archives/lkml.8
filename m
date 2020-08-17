@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56569C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A0820758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B0620758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1cZQ4ub"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAqvBoa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgHQI5g (ORCPT
+        id S1728648AbgHQI5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
+        Mon, 17 Aug 2020 04:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728562AbgHQI5b (ORCPT
+        with ESMTP id S1726828AbgHQI5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:57:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF06C061388
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g15so3273298plj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:31 -0700 (PDT)
+        Mon, 17 Aug 2020 04:57:35 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897C1C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:35 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s15so7796915pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GYPUX223cEk7sfseKTxO6Wl2a86PZnTF5NOlEuFwhHI=;
-        b=e1cZQ4ubmOyb/7m500QwlXNssWIHPs/Q6N0IXUiEuPicA0waQPM4rXDUgS7oGR1Qi5
-         SxkjfKNWKAdDGf6wQs8A5OntcwIGD6wJ5R4FQSDrNtT46ITVL+EnIO0dBjRhPZ31NI+9
-         xcBpGocniVNBTR3H6kqL1Om6YbYXsebwlyln067CWz+8PoKojJEszmQQbUKxcEP459M2
-         iBXIB5ZyzBj56xcaODPTZYpADcPDMshAIby+J/sslm3j9yQN7gB6mhZ2XsW+ifVENTAz
-         BLGumgFxMoG1PEiJKxXhZH7jwu32FIbUgdIGMW2GH6TsGWDQB5JTr1WO/Xy+NbOkTUR5
-         mxUA==
+        bh=5ir2EUoXSC9UiT6j30BKzwTi2avjOse2gHmZ0bVuRLw=;
+        b=QAqvBoa/dd6F4tETAI6u/nDKz/8vA4EoePLKL2jn8cWNCqTVZrYl40CYqJxWTcf+eH
+         ruK1J6R7QGdhsuqcJisS4p1gaDyPL/E5YLmfLh4tTdGhUmDWoUx+iH0koSkUGUQXliO7
+         2JCpmXvCn5GzZPEKehV89mhI9YhIgsKxPYCzx0sEZdZFgiJvmspJz6zSMpHviaIGekwJ
+         1z8BTY5fdbhG0uMJgtP8lqMAWPG/KEBRDetYK87jDM6OGa5X6bN2ruy4ecHjDY2vFviz
+         XLsP4x+jKhVxq0vODvOPtstM1fIX6fFJxk0zucKQXdSgLhefDyQlIGj7mM8phP46n4ur
+         aMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GYPUX223cEk7sfseKTxO6Wl2a86PZnTF5NOlEuFwhHI=;
-        b=WgX8QRA4eFlkmTMm8SguDFyAhh0tw4qXbodj+YlzFtdHPp1XwOEYorR/sI6SmoS/6s
-         IUxm/Y6XG7O4sK8Q5AjLgGjinU0NoQwyUvndq2kGRxQqIb3o+53I+rPeLf8QLsiSecct
-         iT7tuxC/FLVhAT6wnU7RmpgDH/s+JPqTIFYDKhpy9DpsyuBdoWdFMfjdGIV1ZX956nyi
-         dsJf60ofrjgw+ILJ9JEmNC0J93OGpD8M7EspD+i5GOO5pNrwLBeFbiP8NPrUfZignppx
-         e+ooMVk+C7v5zhHUnX8fAavSnz3jnhrHEyGXXUrPBckogsYBsk4bARcEbYlxQynlOuBP
-         brow==
-X-Gm-Message-State: AOAM531NE8xt1f6ngUNz2ZDg87e8Uz5e/6lTX/ig4HqqGRTILtmRfoBi
-        NnNiscDaIY66LoolieY+ovw=
-X-Google-Smtp-Source: ABdhPJwIJG3YXsNl5fJt9BlQ6Vtf6Rc8gfiB60iBmkaUop2zKiVr9jOHcWia3jkqjMEsJzNj8Bm4+w==
-X-Received: by 2002:a17:902:9e04:: with SMTP id d4mr10015126plq.296.1597654650775;
-        Mon, 17 Aug 2020 01:57:30 -0700 (PDT)
+        bh=5ir2EUoXSC9UiT6j30BKzwTi2avjOse2gHmZ0bVuRLw=;
+        b=jA/fXmUbsgH2jm6IlqdbwnokJsLTCTHHzsyRn0Im+2OZyNzi7lvSwpAXzHdH2ZixHq
+         3SSxLkb4h7T1qGv4wuOgOuQiMp58yeLBOMDnFNAUL8gsrxIhwXA1t/ARsFcO1iVu85gH
+         +wtba84NTxgTkCuhi7zj39wP2HSVLOEfxw3OtX4+WpcH9LmlYijeS1Ynt3Dfuo5caDCR
+         7kW1CX/zGJdPIMP/sOrxsvaTYDLCWsqapx0FY7bIDkuZ+g4Nb+3T2p0VjTc7E6dymkRW
+         UAZudcrNe1p9lfZCdlIvNE/WH4gzZPqQgaSwzQIaPU4O5LaenR0zP+CIUSu/eDTqjhnN
+         g0uA==
+X-Gm-Message-State: AOAM531DZDn69tTxkBK84lJ29ayMaKlBOW+22b/HrsHUgyfSsdwfffSy
+        wYu24KJGdqLD+iD/5nGel1I=
+X-Google-Smtp-Source: ABdhPJzGb3DXb0HExdoQilfc10prLDt115mewJJXkDS4HvxKOzPFoSgMOQt2dPqyE+lXYYhpi5FbKw==
+X-Received: by 2002:a63:6dc2:: with SMTP id i185mr9441882pgc.190.1597654654967;
+        Mon, 17 Aug 2020 01:57:34 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id j5sm19057245pfg.80.2020.08.17.01.57.26
+        by smtp.gmail.com with ESMTPSA id j5sm19057245pfg.80.2020.08.17.01.57.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:57:30 -0700 (PDT)
+        Mon, 17 Aug 2020 01:57:34 -0700 (PDT)
 From:   Allen Pais <allen.cryptic@gmail.com>
 To:     perex@perex.cz, tiwai@suse.com, clemens@ladisch.de,
         o-takashi@sakamocchi.jp, timur@kernel.org, nicoleotsuka@gmail.com,
@@ -67,9 +67,9 @@ Cc:     keescook@chromium.org, alsa-devel@alsa-project.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 03/10] sound: asihpi: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:26:56 +0530
-Message-Id: <20200817085703.25732-4-allen.cryptic@gmail.com>
+Subject: [PATCH 04/10] sound: riptide: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:26:57 +0530
+Message-Id: <20200817085703.25732-5-allen.cryptic@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817085703.25732-1-allen.cryptic@gmail.com>
 References: <20200817085703.25732-1-allen.cryptic@gmail.com>
@@ -88,37 +88,34 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- sound/pci/asihpi/asihpi.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ sound/pci/riptide/riptide.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
-index 023c35a2a951..35e76480306e 100644
---- a/sound/pci/asihpi/asihpi.c
-+++ b/sound/pci/asihpi/asihpi.c
-@@ -921,10 +921,10 @@ static void snd_card_asihpi_timer_function(struct timer_list *t)
- 		add_timer(&dpcm->timer);
+diff --git a/sound/pci/riptide/riptide.c b/sound/pci/riptide/riptide.c
+index b4f300281822..098c69b3b7aa 100644
+--- a/sound/pci/riptide/riptide.c
++++ b/sound/pci/riptide/riptide.c
+@@ -1070,9 +1070,9 @@ getmixer(struct cmdif *cif, short num, unsigned short *rval,
+ 	return 0;
  }
  
--static void snd_card_asihpi_int_task(unsigned long data)
-+static void snd_card_asihpi_int_task(struct tasklet_struct *t)
+-static void riptide_handleirq(unsigned long dev_id)
++static void riptide_handleirq(struct tasklet_struct *t)
  {
--	struct hpi_adapter *a = (struct hpi_adapter *)data;
--	struct snd_card_asihpi *asihpi;
-+	struct snd_card_asihpi *asihpi = from_tasklet(asihpi, t, t);
-+	struct hpi_adapter *a = asihpi->hpi;
+-	struct snd_riptide *chip = (void *)dev_id;
++	struct snd_riptide *chip = from_tasklet(chip, t, riptide_tq);
+ 	struct cmdif *cif = chip->cif;
+ 	struct snd_pcm_substream *substream[PLAYBACK_SUBSTREAMS + 1];
+ 	struct snd_pcm_runtime *runtime;
+@@ -1843,7 +1843,7 @@ snd_riptide_create(struct snd_card *card, struct pci_dev *pci,
+ 	chip->received_irqs = 0;
+ 	chip->handled_irqs = 0;
+ 	chip->cif = NULL;
+-	tasklet_init(&chip->riptide_tq, riptide_handleirq, (unsigned long)chip);
++	tasklet_setup(&chip->riptide_tq, riptide_handleirq);
  
- 	WARN_ON(!a || !a->snd_card || !a->snd_card->private_data);
- 	asihpi = (struct snd_card_asihpi *)a->snd_card->private_data;
-@@ -2871,8 +2871,7 @@ static int snd_asihpi_probe(struct pci_dev *pci_dev,
- 	if (hpi->interrupt_mode) {
- 		asihpi->pcm_start = snd_card_asihpi_pcm_int_start;
- 		asihpi->pcm_stop = snd_card_asihpi_pcm_int_stop;
--		tasklet_init(&asihpi->t, snd_card_asihpi_int_task,
--			(unsigned long)hpi);
-+		tasklet_setup(&asihpi->t, snd_card_asihpi_int_task);
- 		hpi->interrupt_callback = snd_card_asihpi_isr;
- 	} else {
- 		asihpi->pcm_start = snd_card_asihpi_pcm_timer_start;
+ 	if ((chip->res_port =
+ 	     request_region(chip->port, 64, "RIPTIDE")) == NULL) {
 -- 
 2.17.1
 
