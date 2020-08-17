@@ -2,51 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D372067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5FF206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684182;
-	bh=b6eX7ifBXiMIhLGrhTJBbIm8XMK4WsR85T2xCvWD8Cw=;
+	s=default; t=1597684185;
+	bh=oiYqFNOTIqWznWy5oZ7YjAKLAwxOQpK6HJg4N1XZrkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItlOLCGtNdo3I438n6DfQIJtuUbnaS8Et6hsdnOd/jkKbaP44dmsDRw3marIgXFjR
-	 N95lAdb10tT5ls8ZMHOswHdXNLWV9lEkwPpKf9vTOrO02BDsmUPYc4u7XhrytU6PXe
-	 FCGjzw8N3Fm9xPQGaXClNU4txZ+f+sjLlUqQt20o=
+	b=PuQAlOzJFZ9nkOpZ4JrLCVMJVkFzPLTHN83CIZLu+ZmEQtU34MXehuc9oa6+2F1WV
+	 9ol4y9rZsBgsVS5kOK+WxSXP+bLW8zPya6BO4kfNY/WgpxMgDdbnMXoQDNOx6VT9Lm
+	 nDxdD15HMDb4oGjHWp/2euF6aAUMuEIUtoLIIOxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389373AbgHQRJ2 (ORCPT
+        id S2389279AbgHQRHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:07:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388413AbgHQQKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:10:45 -0400
+        id S2388068AbgHQQKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5204322BED;
-        Mon, 17 Aug 2020 16:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6DC1207FB;
+        Mon, 17 Aug 2020 16:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680644;
-        bh=b6eX7ifBXiMIhLGrhTJBbIm8XMK4WsR85T2xCvWD8Cw=;
+        s=default; t=1597680602;
+        bh=oiYqFNOTIqWznWy5oZ7YjAKLAwxOQpK6HJg4N1XZrkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PMHDbrmQnqIEV1kU9iDfoCWLIVCgDluQVTxiJ0g/rYwTlpUHn8V7of7N3SA9+8sAY
-         vomn9cNvxcfcM+1wmMNlNa/Fp6NH4GdlSaPR8/anYFaXb3HzPNY6is8kAmtKiZy0LZ
-         x8CC03V2q/jF+NgRAJYjiNXu2TE0FLjCbp0FTjaM=
+        b=un5+yekWstP0TsRjI27b/SOtwSDdiquGZtCxG3r1LEof7exyt7oRuIbip8vSKCnec
+         xvOMyoCLIxjdj7PB0za1Pjk7BgVranWscgsQaDpXTEykWHcv6PWTThastJ7Kos0Tjf
+         WWL5OnmYViadoa4xl7YXF/Uo9opXbwg3IcUQq/Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoyu Huang <hgy5945@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 270/270] io_uring: Fix NULL pointer dereference in loop_rw_iter()
-Date:   Mon, 17 Aug 2020 17:17:51 +0200
-Message-Id: <20200817143809.254945655@linuxfoundation.org>
+        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.4 252/270] ARM: 8992/1: Fix unwind_frame for clang-built kernels
+Date:   Mon, 17 Aug 2020 17:17:33 +0200
+Message-Id: <20200817143808.377939444@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,106 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoyu Huang <hgy5945@gmail.com>
+From: Nathan Huckleberry <nhuck@google.com>
 
-commit 2dd2111d0d383df104b144e0d1f6b5a00cb7cd88 upstream.
+commit b4d5ec9b39f8b31d98f65bc5577b5d15d93795d7 upstream.
 
-loop_rw_iter() does not check whether the file has a read or
-write function. This can lead to NULL pointer dereference
-when the user passes in a file descriptor that does not have
-read or write function.
+Since clang does not push pc and sp in function prologues, the current
+implementation of unwind_frame does not work. By using the previous
+frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
+kernels.
 
-The crash log looks like this:
+The bounds check on next frame pointer must be changed as well since
+there are 8 less bytes between frames.
 
-[   99.834071] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[   99.835364] #PF: supervisor instruction fetch in kernel mode
-[   99.836522] #PF: error_code(0x0010) - not-present page
-[   99.837771] PGD 8000000079d62067 P4D 8000000079d62067 PUD 79d8c067 PMD 0
-[   99.839649] Oops: 0010 [#2] SMP PTI
-[   99.840591] CPU: 1 PID: 333 Comm: io_wqe_worker-0 Tainted: G      D           5.8.0 #2
-[   99.842622] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
-[   99.845140] RIP: 0010:0x0
-[   99.845840] Code: Bad RIP value.
-[   99.846672] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
-[   99.848018] RAX: 0000000000000000 RBX: ffff92363bd67300 RCX: ffff92363d461208
-[   99.849854] RDX: 0000000000000010 RSI: 00007ffdbf696bb0 RDI: ffff92363bd67300
-[   99.851743] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
-[   99.853394] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
-[   99.855148] R13: 0000000000000000 R14: ffff92363d461208 R15: ffffa1c7c01ebc68
-[   99.856914] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
-[   99.858651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   99.860032] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
-[   99.861979] Call Trace:
-[   99.862617]  loop_rw_iter.part.0+0xad/0x110
-[   99.863838]  io_write+0x2ae/0x380
-[   99.864644]  ? kvm_sched_clock_read+0x11/0x20
-[   99.865595]  ? sched_clock+0x9/0x10
-[   99.866453]  ? sched_clock_cpu+0x11/0xb0
-[   99.867326]  ? newidle_balance+0x1d4/0x3c0
-[   99.868283]  io_issue_sqe+0xd8f/0x1340
-[   99.869216]  ? __switch_to+0x7f/0x450
-[   99.870280]  ? __switch_to_asm+0x42/0x70
-[   99.871254]  ? __switch_to_asm+0x36/0x70
-[   99.872133]  ? lock_timer_base+0x72/0xa0
-[   99.873155]  ? switch_mm_irqs_off+0x1bf/0x420
-[   99.874152]  io_wq_submit_work+0x64/0x180
-[   99.875192]  ? kthread_use_mm+0x71/0x100
-[   99.876132]  io_worker_handle_work+0x267/0x440
-[   99.877233]  io_wqe_worker+0x297/0x350
-[   99.878145]  kthread+0x112/0x150
-[   99.878849]  ? __io_worker_unuse+0x100/0x100
-[   99.879935]  ? kthread_park+0x90/0x90
-[   99.880874]  ret_from_fork+0x22/0x30
-[   99.881679] Modules linked in:
-[   99.882493] CR2: 0000000000000000
-[   99.883324] ---[ end trace 4453745f4673190b ]---
-[   99.884289] RIP: 0010:0x0
-[   99.884837] Code: Bad RIP value.
-[   99.885492] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
-[   99.886851] RAX: 0000000000000000 RBX: ffff92363acd7f00 RCX: ffff92363d461608
-[   99.888561] RDX: 0000000000000010 RSI: 00007ffe040d9e10 RDI: ffff92363acd7f00
-[   99.890203] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
-[   99.891907] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
-[   99.894106] R13: 0000000000000000 R14: ffff92363d461608 R15: ffffa1c7c01ebc68
-[   99.896079] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
-[   99.898017] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   99.899197] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
+This fixes /proc/<pid>/stack.
 
-Fixes: 32960613b7c3 ("io_uring: correctly handle non ->{read,write}_iter() file_operations")
+Link: https://github.com/ClangBuiltLinux/linux/issues/912
+
+Reported-by: Miles Chen <miles.chen@mediatek.com>
+Tested-by: Miles Chen <miles.chen@mediatek.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Guoyu Huang <hgy5945@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/kernel/stacktrace.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1433,8 +1433,10 @@ static int io_read(struct io_kiocb *req,
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -22,6 +22,19 @@
+  * A simple function epilogue looks like this:
+  *	ldm	sp, {fp, sp, pc}
+  *
++ * When compiled with clang, pc and sp are not pushed. A simple function
++ * prologue looks like this when built with clang:
++ *
++ *	stmdb	{..., fp, lr}
++ *	add	fp, sp, #x
++ *	sub	sp, sp, #y
++ *
++ * A simple function epilogue looks like this when built with clang:
++ *
++ *	sub	sp, fp, #x
++ *	ldm	{..., fp, pc}
++ *
++ *
+  * Note that with framepointer enabled, even the leaf functions have the same
+  * prologue and epilogue, therefore we can ignore the LR value in this case.
+  */
+@@ -34,6 +47,16 @@ int notrace unwind_frame(struct stackfra
+ 	low = frame->sp;
+ 	high = ALIGN(low, THREAD_SIZE);
  
- 		if (file->f_op->read_iter)
- 			ret2 = call_read_iter(file, kiocb, &iter);
--		else
-+		else if (req->file->f_op->read)
- 			ret2 = loop_rw_iter(READ, file, kiocb, &iter);
-+		else
-+			ret2 = -EINVAL;
++#ifdef CONFIG_CC_IS_CLANG
++	/* check current frame pointer is within bounds */
++	if (fp < low + 4 || fp > high - 4)
++		return -EINVAL;
++
++	frame->sp = frame->fp;
++	frame->fp = *(unsigned long *)(fp);
++	frame->pc = frame->lr;
++	frame->lr = *(unsigned long *)(fp + 4);
++#else
+ 	/* check current frame pointer is within bounds */
+ 	if (fp < low + 12 || fp > high - 4)
+ 		return -EINVAL;
+@@ -42,6 +65,7 @@ int notrace unwind_frame(struct stackfra
+ 	frame->fp = *(unsigned long *)(fp - 12);
+ 	frame->sp = *(unsigned long *)(fp - 8);
+ 	frame->pc = *(unsigned long *)(fp - 4);
++#endif
  
- 		/*
- 		 * In case of a short read, punt to async. This can happen
-@@ -1524,8 +1526,10 @@ static int io_write(struct io_kiocb *req
- 
- 		if (file->f_op->write_iter)
- 			ret2 = call_write_iter(file, kiocb, &iter);
--		else
-+		else if (req->file->f_op->write)
- 			ret2 = loop_rw_iter(WRITE, file, kiocb, &iter);
-+		else
-+			ret2 = -EINVAL;
- 
- 		if (!force_nonblock)
- 			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
+ 	return 0;
+ }
 
 
