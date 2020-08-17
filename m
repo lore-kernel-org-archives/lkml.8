@@ -2,202 +2,108 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1767DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14C9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0CDA20855
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B48B20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693543;
-	bh=wNpQYJFvzAHC3btzCqiA6w25nsGp1ZuOBw4d9rOui6k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2sl1Tkap6LFDzqA8yXw11Yq0QDVvvFqJJCOzgYEE+EKJhG1D6Ny7z95vcnxkrqmgb
-	 hQdK7FVNAXR/1W97VImbnX8cK818PtU6A2bn5ZjwA25uVNVPsDA4O5DjMnklav6yVM
-	 oOvsCLxS1dPk42IfzHIgnYFmdH1aer7tDIroVJ2k=
+	s=default; t=1597693546;
+	bh=AFRY6qmw8k/Fvb4oECFHqM2opKMoQZO1D/wIYL5UJEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cgm7W5bqIDINXe4jRcD4F/WUu30U+7ZQamvVUC6Y4PVLYJJytr72J2tyoXioND0m1
+	 UykrVhlE3cK5/yj8ldMMJQrbtyAz6g9pigHlruiN400sikvpAovIJ0mlfH+kYrUUnZ
+	 rETgp3DgtF1N99qvgBW6LJLfFlEa9Jl5EAW5nASo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404368AbgHQTpl (ORCPT
+        id S2404380AbgHQTpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Aug 2020 15:45:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41421 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404369AbgHQTpl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 15:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbgHQPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA9222D07;
-        Mon, 17 Aug 2020 15:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677716;
-        bh=wNpQYJFvzAHC3btzCqiA6w25nsGp1ZuOBw4d9rOui6k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIblKl/g4U/pQViUtorHAlX6eopfBcRhEQoMhjpQQ7aZtSeHtI/fe8UdxnNelGMrp
-         VVmDeFiy9eeddgJwdQyEw94AOXV9ssbEPjAeP1shsubLkftgBEeV30SMqs2wJMZCtr
-         4j+qU+gW8XULJsRGUow3SIFD4OURYj7CkULjc8Pk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
-        Lihong Kou <koulihong@huawei.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 081/464] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
-Date:   Mon, 17 Aug 2020 17:10:34 +0200
-Message-Id: <20200817143837.661655849@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-io1-f65.google.com with SMTP id g19so18833500ioh.8;
+        Mon, 17 Aug 2020 12:45:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9167b1zAfSDWY5dpby+m+hSASEzloHe7rPOI9rnQvoI=;
+        b=iDp1FWAT2kCePFOeuPKe/VOs1RYNiZbsPeCm4Ny83PCcKvx3Y1sdmf3M0MMGrMLPvm
+         vKxk9zACd6R+ZxJ8Di9PXyHiQc+feEJ1ay2Mbe4fa6+86joPUzezdNoCG/m899aqkisL
+         9AlKoE1nV/tcnfc28yLerb6IET6TILWcDQtGVyIONBtPgdQ5PvcHT7rTHlyhphgt3Ola
+         fk2Vxv0XndjRur6/JuZwvlxb2bCb/QhMAwSpC6jiORR+deSz311+QtqpitlEGc2sWD3M
+         ZptV78BRRpkqVJJiPueVuUamSRKzD3U7qcykNESCe0K9iPt1S4/MclHpyUiv+IIJ9usk
+         O7OQ==
+X-Gm-Message-State: AOAM533G9HSKgAa3VHZcZrz6v3FTwQCJCPJk2zxZ53k2JP0pJMZwivPZ
+        a2NMyBkpWStrZ1LRD4YCgoTOEelSeg==
+X-Google-Smtp-Source: ABdhPJy/Kg9h4YQFjm3/QHraZGHGwQWqnX/EVeFFvEUcAqfRDNDEvMiIk7cblt87y9uIOl6p98xH8Q==
+X-Received: by 2002:a5e:d514:: with SMTP id e20mr13493344iom.183.1597693540798;
+        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id w13sm10186284ilj.70.2020.08.17.12.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
+Received: (nullmailer pid 1431277 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:45:39 -0000
+Date:   Mon, 17 Aug 2020 13:45:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     cy_huang <u0084500@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, cy_huang@richtek.com,
+        gene_chen@richtek.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] regulator: rt4801: Fix the dt-binding document for
+ dtc check.
+Message-ID: <20200817194539.GA1429240@bogus>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+ <1597461262-25878-3-git-send-email-u0084500@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597461262-25878-3-git-send-email-u0084500@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihong Kou <koulihong@huawei.com>
+On Sat, Aug 15, 2020 at 11:14:22AM +0800, cy_huang wrote:
+> From: ChiYuan Huang <cy_huang@richtek.com>
+> 
+> Fix the dt-binding document for dtc check.
 
-[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
+This should be squashed into the prior patch.
 
-In the case we set or free the global value listen_chan in
-different threads, we can encounter the UAF problems because
-the method is not protected by any lock, add one to avoid
-this bug.
+> 
+> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> ---
+>  .../devicetree/bindings/regulator/richtek,rt4801-regulator.yaml        | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> index 28d30e2..fa075c6 100644
+> --- a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> @@ -49,9 +49,6 @@ required:
+>    - compatible
+>    - reg
+>  
+> -additionalProperties:
+> -  - enable-gpios
+> -
 
-BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
-net/bluetooth/l2cap_core.c:730
-Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+This should be:
 
-CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Workqueue: events do_enable_set
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
- do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+additionalProperties: false
 
-Allocated by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
- chan_create net/bluetooth/6lowpan.c:640 [inline]
- bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
- do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
- kref_put include/linux/kref.h:65 [inline]
- l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
- do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff888096950000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 0 bytes inside of
- 2048-byte region [ffff888096950000, ffff888096950800)
-The buggy address belongs to the page:
-page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
-raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
-Signed-off-by: Lihong Kou <koulihong@huawei.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/6lowpan.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index bb55d92691b06..cff4944d5b663 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -50,6 +50,7 @@ static bool enable_6lowpan;
- /* We are listening incoming connections via this channel
-  */
- static struct l2cap_chan *listen_chan;
-+static DEFINE_MUTEX(set_lock);
- 
- struct lowpan_peer {
- 	struct list_head list;
-@@ -1078,12 +1079,14 @@ static void do_enable_set(struct work_struct *work)
- 
- 	enable_6lowpan = set_enable->flag;
- 
-+	mutex_lock(&set_lock);
- 	if (listen_chan) {
- 		l2cap_chan_close(listen_chan, 0);
- 		l2cap_chan_put(listen_chan);
- 	}
- 
- 	listen_chan = bt_6lowpan_listen();
-+	mutex_unlock(&set_lock);
- 
- 	kfree(set_enable);
- }
-@@ -1135,11 +1138,13 @@ static ssize_t lowpan_control_write(struct file *fp,
- 		if (ret == -EINVAL)
- 			return ret;
- 
-+		mutex_lock(&set_lock);
- 		if (listen_chan) {
- 			l2cap_chan_close(listen_chan, 0);
- 			l2cap_chan_put(listen_chan);
- 			listen_chan = NULL;
- 		}
-+		mutex_unlock(&set_lock);
- 
- 		if (conn) {
- 			struct lowpan_peer *peer;
--- 
-2.25.1
-
-
-
+>  examples:
+>    - |
+>      i2c {
+> -- 
+> 2.7.4
+> 
