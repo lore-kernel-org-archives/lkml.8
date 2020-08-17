@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF72C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB48C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFC122072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7394E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHQHFb (ORCPT
+        id S1726766AbgHQHFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:05:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62957 "EHLO mga17.intel.com"
+        Mon, 17 Aug 2020 03:05:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63040 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgHQHFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:05:24 -0400
-IronPort-SDR: e14gWh4QBkE6+VpikAxXjJF/yalOnNAU9Eub4zZziy3DX88z1VY/+sVvJfoPW8ldb1JUPuauXK
- d/sq9BUoKpew==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134708026"
+        id S1726511AbgHQHFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:05:30 -0400
+IronPort-SDR: petFCSW7UzQBC6duDvh83bqFOltG8P8FovUJ/d0dCS4fxRiZwbwPpR1SIEK6wxRqgHkH5uUNai
+ bR2tnU3jqkDw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="239469626"
 X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="134708026"
+   d="scan'208";a="239469626"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 00:05:23 -0700
-IronPort-SDR: xqUuwHBh6p22HxZZiplVJrFfbRbEWnLLzPcm3kauAukhZfyXDlqcndpsmEWYjhjfEM6dlXdHpo
- RB2BGln0GLBA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 00:05:30 -0700
+IronPort-SDR: H6433/XWDS/r54DT1wV2NcHOvpGHSiJj7Aiw8wsOgqaCJ71TZkDnPaqABPgwrXNWbnfV7Zpvxt
+ zmOUjvhOrHBA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="277689340"
+   d="scan'208";a="496389393"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Aug 2020 00:05:20 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 17 Aug 2020 00:05:25 -0700
 From:   "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -46,9 +46,9 @@ Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
         qi-ming.wu@intel.com, yin1.li@intel.com,
         Ramuthevar Vadivel Murugan 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [RESEND PATCH v8 1/2] dt-bindings: phy: Add USB PHY support for Intel LGM SoC
-Date:   Mon, 17 Aug 2020 15:05:12 +0800
-Message-Id: <20200817070513.34376-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [RESEND PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
+Date:   Mon, 17 Aug 2020 15:05:13 +0800
+Message-Id: <20200817070513.34376-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200817070513.34376-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 References: <20200817070513.34376-1-vadivel.muruganx.ramuthevar@linux.intel.com>
@@ -59,79 +59,335 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Add the dt-schema to support USB PHY on Intel LGM SoC
+Add support for USB PHY on Intel LGM SoC.
 
 Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ drivers/phy/Kconfig       |  11 ++
+ drivers/phy/Makefile      |   1 +
+ drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 290 insertions(+)
+ create mode 100644 drivers/phy/phy-lgm-usb.c
 
-diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index de9362c25c07..01b53f86004c 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -49,6 +49,17 @@ config PHY_XGENE
+ 	help
+ 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+ 
++config USB_LGM_PHY
++	tristate "INTEL Lightning Mountain USB PHY Driver"
++	depends on USB_SUPPORT
++	select USB_PHY
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
++	help
++	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
++	  interface to interact with USB GEN-II and USB 3.x PHY that is part
++	  of the Intel network SOC.
++
+ source "drivers/phy/allwinner/Kconfig"
+ source "drivers/phy/amlogic/Kconfig"
+ source "drivers/phy/broadcom/Kconfig"
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index c27408e4daae..6eb2916773c5 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
+ obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+ obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+ obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
++obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
+ obj-y					+= allwinner/	\
+ 					   amlogic/	\
+ 					   broadcom/	\
+diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
 new file mode 100644
-index 000000000000..ce62c0b94daf
+index 000000000000..1ec9ab266e08
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/intel,lgm-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/phy/phy-lgm-usb.c
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel LGM USB PHY driver
++ *
++ * Copyright (C) 2020 Intel Corporation.
++ */
 +
-+title: Intel LGM USB PHY Device Tree Bindings
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/usb/phy.h>
++#include <linux/workqueue.h>
 +
-+maintainers:
-+  - Vadivel Murugan Ramuthevar <vadivel.muruganx.ramuthevar@linux.intel.com>
++#define CTRL1_OFFSET		0x14
++#define SRAM_EXT_LD_DONE	BIT(25)
++#define SRAM_INIT_DONE		BIT(26)
 +
-+properties:
-+  compatible:
-+    const: intel,lgm-usb-phy
++#define TCPC_OFFSET		0x1014
++#define TCPC_MUX_CTL		GENMASK(1, 0)
++#define MUX_NC			0
++#define MUX_USB			1
++#define MUX_DP			2
++#define MUX_USBDP		3
++#define TCPC_FLIPPED		BIT(2)
++#define TCPC_LOW_POWER_EN	BIT(3)
++#define TCPC_VALID		BIT(4)
++#define TCPC_CONN		\
++	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
++#define TCPC_DISCONN		\
++	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
 +
-+  reg:
-+    maxItems: 1
++static const char *const PHY_RESETS[] = { "phy31", "phy", };
++static const char *const CTL_RESETS[] = { "apb", "ctrl", };
 +
-+  clocks:
-+    maxItems: 1
++struct tca_apb {
++	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
++	struct regulator *vbus;
++	struct work_struct wk;
++	struct usb_phy phy;
 +
-+  resets:
-+    items:
-+      - description: USB PHY and Host controller reset
-+      - description: APB BUS reset
-+      - description: General Hardware reset
++	bool phy_initialized;
++	bool connected;
++};
 +
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: apb
-+      - const: phy31
++static int get_flipped(struct tca_apb *ta, bool *flipped)
++{
++	union extcon_property_value property;
++	int ret;
 +
-+  "#phy-cells":
-+    const: 0
++	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
++				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
++	if (ret) {
++		dev_err(ta->phy.dev, "no polarity property from extcon\n");
++		return ret;
++	}
 +
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
++	*flipped = property.intval;
 +
-+additionalProperties: false
++	return ret;
++}
 +
-+examples:
-+  - |
-+    usb-phy@e7e00000 {
-+        compatible = "intel,lgm-usb-phy";
-+        reg = <0xe7e00000 0x10000>;
-+        clocks = <&cgu0 153>;
-+        resets = <&rcu 0x70 0x24>,
-+                 <&rcu 0x70 0x26>,
-+                 <&rcu 0x70 0x28>;
-+        reset-names = "phy", "apb", "phy31";
-+        #phy-cells = <0>;
-+    };
++static int phy_init(struct usb_phy *phy)
++{
++	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
++	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
++	int val, ret, i;
++
++	if (ta->phy_initialized)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
++		reset_control_deassert(ta->resets[i]);
++
++	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
++	if (ret) {
++		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
++		return ret;
++	}
++
++	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
++
++	ta->phy_initialized = true;
++	if (!ta->phy.edev) {
++		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
++		return phy->set_vbus(phy, true);
++	}
++
++	schedule_work(&ta->wk);
++
++	return ret;
++}
++
++static void phy_shutdown(struct usb_phy *phy)
++{
++	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
++	int i;
++
++	if (!ta->phy_initialized)
++		return;
++
++	ta->phy_initialized = false;
++	flush_work(&ta->wk);
++	ta->phy.set_vbus(&ta->phy, false);
++
++	ta->connected = false;
++	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
++
++	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
++		reset_control_assert(ta->resets[i]);
++}
++
++static int phy_set_vbus(struct usb_phy *phy, int on)
++{
++	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
++	int ret;
++
++	if (on) {
++		ret = regulator_enable(ta->vbus);
++		if (ret)
++			dev_err(ta->phy.dev, "regulator not enabled\n");
++	} else {
++		ret = regulator_disable(ta->vbus);
++		if (ret)
++			dev_err(ta->phy.dev, "regulator not disabled\n");
++	}
++
++	return ret;
++}
++
++static void tca_work(struct work_struct *work)
++{
++	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
++	bool connected;
++	bool flipped = false;
++	u32 val;
++	int ret;
++
++	ret = get_flipped(ta, &flipped);
++	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
++	if (connected == ta->connected)
++		return;
++
++	ta->connected = connected;
++	if (connected) {
++		val = TCPC_CONN;
++		if (flipped)
++			val |= TCPC_FLIPPED;
++		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
++	} else {
++		val = TCPC_DISCONN;
++		dev_info(ta->phy.dev, "disconnected\n");
++	}
++
++	writel(val, ta->phy.io_priv + TCPC_OFFSET);
++
++	ret = ta->phy.set_vbus(&ta->phy, connected);
++	if (ret)
++		dev_err(ta->phy.dev, "failed to set VBUS\n");
++}
++
++static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
++{
++	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
++
++	if (ta->phy_initialized)
++		schedule_work(&ta->wk);
++
++	return NOTIFY_DONE;
++}
++
++static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
++{
++	return NOTIFY_DONE;
++}
++
++static int phy_probe(struct platform_device *pdev)
++{
++	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
++	struct device *dev = &pdev->dev;
++	struct usb_phy *phy;
++	struct tca_apb *ta;
++	int i;
++
++	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
++	if (!ta)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, ta);
++	INIT_WORK(&ta->wk, tca_work);
++
++	phy = &ta->phy;
++	phy->dev = dev;
++	phy->label = dev_name(dev);
++	phy->type = USB_PHY_TYPE_USB3;
++	phy->init = phy_init;
++	phy->shutdown = phy_shutdown;
++	phy->set_vbus = phy_set_vbus;
++	phy->id_nb.notifier_call = id_notifier;
++	phy->vbus_nb.notifier_call = vbus_notifier;
++
++	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(phy->io_priv))
++		return PTR_ERR(phy->io_priv);
++
++	ta->vbus = devm_regulator_get(dev, "vbus");
++	if (IS_ERR(ta->vbus))
++		return PTR_ERR(ta->vbus);
++
++	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
++		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
++		if (IS_ERR(resets[i])) {
++			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
++			return PTR_ERR(resets[i]);
++		}
++	}
++
++	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
++		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
++		if (IS_ERR(ta->resets[i])) {
++			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
++			return PTR_ERR(ta->resets[i]);
++		}
++	}
++
++	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
++		reset_control_assert(resets[i]);
++
++	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
++		reset_control_assert(ta->resets[i]);
++	/*
++	 * Out-of-band reset of the controller after PHY reset will cause
++	 * controller malfunctioning, so we should use in-band controller
++	 * reset only and leave the controller de-asserted here.
++	 */
++	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
++		reset_control_deassert(resets[i]);
++
++	/* Need to wait at least 20us after de-assert the controller */
++	usleep_range(20, 100);
++
++	return usb_add_phy_dev(phy);
++}
++
++static int phy_remove(struct platform_device *pdev)
++{
++	struct tca_apb *ta = platform_get_drvdata(pdev);
++
++	usb_remove_phy(&ta->phy);
++
++	return 0;
++}
++
++static const struct of_device_id intel_usb_phy_dt_ids[] = {
++	{ .compatible = "intel,lgm-usb-phy" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
++
++static struct platform_driver lgm_phy_driver = {
++	.driver = {
++		.name = "lgm-usb-phy",
++		.of_match_table = intel_usb_phy_dt_ids,
++	},
++	.probe = phy_probe,
++	.remove = phy_remove,
++};
++
++module_platform_driver(lgm_phy_driver);
++
++MODULE_DESCRIPTION("Intel LGM USB PHY driver");
++MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
++MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
 
