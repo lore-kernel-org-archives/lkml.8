@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D512EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAAA220748
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192082054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681313;
-	bh=iPCciwlE+Izoq2VcPO5gcCSP/vAeWEixAgllqOvtQMY=;
+	s=default; t=1597681336;
+	bh=JEA0NdZUgq77O/7u7QLc4RQyD/hHbwBMkh5PrP5MDy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04j+PCif7s5qJtB63z5HdN/MzQ1C4Ov9vUZ/sPMOvn/yl0zEjfDdC6eG/EZ1gshtv
-	 nG1qvlejJB8x56rvob/Zl7vZZrHTJ/Tsl/crSL/RanKHfiIsW3hRZR59Ns1xmZJlds
-	 fPgxBkQbXMSj7HQF6JEy+pNVKm5b/CN4IAtKTbYk=
+	b=dNSnFH9fgOGlpvDOGUsuZqqu8KsHyczSA+UywSNlQgUFD3e3nwviu1dMpKZ6/QbE6
+	 NVV/O/aRKucsxuZ9JsIZnuoIqiz1SjbCXL87r2p/Q5U4IchrXjU7bDKp6sMqovGxRi
+	 k1on8kXHK+dlAdVb7CgaA0+UKkybvRQunzKhDlc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbgHQQVv (ORCPT
+        id S2387488AbgHQQWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387782AbgHQPt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:49:26 -0400
+        id S2387786AbgHQPt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:49:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F08020855;
-        Mon, 17 Aug 2020 15:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C892065D;
+        Mon, 17 Aug 2020 15:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679366;
-        bh=iPCciwlE+Izoq2VcPO5gcCSP/vAeWEixAgllqOvtQMY=;
+        s=default; t=1597679369;
+        bh=JEA0NdZUgq77O/7u7QLc4RQyD/hHbwBMkh5PrP5MDy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyxLSKSSmCNvL+ixamkFDOv76g+Yak4Yye0hhB6MuVgFeMbSO22YNd0uvfgVI9b/S
-         UFY3waDB+WyCvtDi8lezo+Q1r0ucoPuMIKuQVwgtrzqW2lXCw0RR0mJOFczMENH2ru
-         3dEIoEWOzMHbB7KmsVncAeOTXx19z3PYWFSfcfwI=
+        b=chDlST8b0Pk5Up3RILmvwe9lNz3BR3DOAfWXteDhhB7w5zMlVXlTdfEIINz4LzHqS
+         xZsCBLbgeYG7KIsp02cjV0X+svTPUsuzW1MwFmCUSPhMPY9FI7Lev3GklGO9X6nUTM
+         wfglOe4U+QWgr2vtT0rdeIRCNi18C8SjyqdY3GaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 185/393] media: cros-ec-cec: do not bail on device_init_wakeup failure
-Date:   Mon, 17 Aug 2020 17:13:55 +0200
-Message-Id: <20200817143828.594817240@linuxfoundation.org>
+Subject: [PATCH 5.7 157/393] ASoC: SOF: nocodec: add missing .owner field
+Date:   Mon, 17 Aug 2020 17:13:27 +0200
+Message-Id: <20200817143827.232406803@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,48 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 6f01dfb760c027d5dd6199d91ee9599f2676b5c6 ]
+[ Upstream commit 8753889e2720c1ef7ebf03370e384f5bf5ff4fab ]
 
-Do not fail probing when device_init_wakeup fails.
+This field is required for ASoC cards. Not setting it will result in a
+module->name pointer being NULL and generate problems such as
 
-device_init_wakeup fails when the device is already enabled as wakeup
-device. Hence, the driver fails to probe the device if:
-- The device has already been enabled for wakeup (by e.g. sysfs)
-- The driver has been unloaded and is being loaded again.
+cat /proc/asound/modules
+ 0 (efault)
 
-This goal of the patch is to fix the above cases.
-
-Overwhelming majority of the drivers do not check device_init_wakeup
-return code.
-
-Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 8017b8fd37bf ('ASoC: SOF: Add Nocodec machine driver support')
+Reported-by: Jaroslav Kysela <perex@perex.cz>
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200625191308.3322-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/cros-ec-cec/cros-ec-cec.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ sound/soc/sof/nocodec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-index 0e7e2772f08f9..2d95e16cd2489 100644
---- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-+++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-@@ -277,11 +277,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cros_ec_cec);
- 	cros_ec_cec->cros_ec = cros_ec;
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index 71cf5f9db79d0..849c3bcdca9ed 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -14,6 +14,7 @@
  
--	ret = device_init_wakeup(&pdev->dev, 1);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to initialize wakeup\n");
--		return ret;
--	}
-+	device_init_wakeup(&pdev->dev, 1);
+ static struct snd_soc_card sof_nocodec_card = {
+ 	.name = "nocodec", /* the sof- prefix is added by the core */
++	.owner = THIS_MODULE
+ };
  
- 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
- 						 DRV_NAME,
+ static int sof_nocodec_bes_setup(struct device *dev,
 -- 
 2.25.1
 
