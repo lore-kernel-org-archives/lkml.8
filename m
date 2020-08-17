@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD784C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D8F2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D372067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684158;
-	bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
+	s=default; t=1597684182;
+	bh=b6eX7ifBXiMIhLGrhTJBbIm8XMK4WsR85T2xCvWD8Cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkVb0Pm52iUJWng0lFkwJ7gRrnuijJ5uonn/7f/GlbUQyjOq1aKwy8/I/fVM4nTu2
-	 hF8zheAHOKZK+lcnjWCPpLFWWLQV3idQnL4edBF7v3QSHJk4NsgwLKUVgbtHuYlrDk
-	 PXKoBVQAor0Yf2m6KZ5WN1Qg0ypwZ5LT3s8hbSho=
+	b=ItlOLCGtNdo3I438n6DfQIJtuUbnaS8Et6hsdnOd/jkKbaP44dmsDRw3marIgXFjR
+	 N95lAdb10tT5ls8ZMHOswHdXNLWV9lEkwPpKf9vTOrO02BDsmUPYc4u7XhrytU6PXe
+	 FCGjzw8N3Fm9xPQGaXClNU4txZ+f+sjLlUqQt20o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHQRJL (ORCPT
+        id S2389373AbgHQRJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388571AbgHQQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:10:48 -0400
+        id S2388413AbgHQQKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361B720772;
-        Mon, 17 Aug 2020 16:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5204322BED;
+        Mon, 17 Aug 2020 16:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680647;
-        bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
+        s=default; t=1597680644;
+        bh=b6eX7ifBXiMIhLGrhTJBbIm8XMK4WsR85T2xCvWD8Cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzW8fv6KXPvdyKaLjFmLRMi67TYQtB2J4JV90716PCou3Y640lc/emMAnc9dyBLRd
-         fZENQuOIgWAGkXcR1RYwQ6gqtXfrT3mCVGASvMoBsb/8mFuHSOxcqVjjODH8w9CDyX
-         DJBiek8jsIAELG/vSdxfVXfP+wmSimFsXh2Zv2gg=
+        b=PMHDbrmQnqIEV1kU9iDfoCWLIVCgDluQVTxiJ0g/rYwTlpUHn8V7of7N3SA9+8sAY
+         vomn9cNvxcfcM+1wmMNlNa/Fp6NH4GdlSaPR8/anYFaXb3HzPNY6is8kAmtKiZy0LZ
+         x8CC03V2q/jF+NgRAJYjiNXu2TE0FLjCbp0FTjaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 259/270] crypto: ccp - Fix use of merged scatterlists
-Date:   Mon, 17 Aug 2020 17:17:40 +0200
-Message-Id: <20200817143808.720843563@linuxfoundation.org>
+        stable@vger.kernel.org, Guoyu Huang <hgy5945@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 270/270] io_uring: Fix NULL pointer dereference in loop_rw_iter()
+Date:   Mon, 17 Aug 2020 17:17:51 +0200
+Message-Id: <20200817143809.254945655@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,176 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Allen <john.allen@amd.com>
+From: Guoyu Huang <hgy5945@gmail.com>
 
-commit 8a302808c60d441d9884cb00ea7f2b534f2e3ca5 upstream.
+commit 2dd2111d0d383df104b144e0d1f6b5a00cb7cd88 upstream.
 
-Running the crypto manager self tests with
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
-when using the ccp-crypto driver:
+loop_rw_iter() does not check whether the file has a read or
+write function. This can lead to NULL pointer dereference
+when the user passes in a file descriptor that does not have
+read or write function.
 
-alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
+The crash log looks like this:
 
-alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
+[   99.834071] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   99.835364] #PF: supervisor instruction fetch in kernel mode
+[   99.836522] #PF: error_code(0x0010) - not-present page
+[   99.837771] PGD 8000000079d62067 P4D 8000000079d62067 PUD 79d8c067 PMD 0
+[   99.839649] Oops: 0010 [#2] SMP PTI
+[   99.840591] CPU: 1 PID: 333 Comm: io_wqe_worker-0 Tainted: G      D           5.8.0 #2
+[   99.842622] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
+[   99.845140] RIP: 0010:0x0
+[   99.845840] Code: Bad RIP value.
+[   99.846672] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+[   99.848018] RAX: 0000000000000000 RBX: ffff92363bd67300 RCX: ffff92363d461208
+[   99.849854] RDX: 0000000000000010 RSI: 00007ffdbf696bb0 RDI: ffff92363bd67300
+[   99.851743] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+[   99.853394] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+[   99.855148] R13: 0000000000000000 R14: ffff92363d461208 R15: ffffa1c7c01ebc68
+[   99.856914] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+[   99.858651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   99.860032] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
+[   99.861979] Call Trace:
+[   99.862617]  loop_rw_iter.part.0+0xad/0x110
+[   99.863838]  io_write+0x2ae/0x380
+[   99.864644]  ? kvm_sched_clock_read+0x11/0x20
+[   99.865595]  ? sched_clock+0x9/0x10
+[   99.866453]  ? sched_clock_cpu+0x11/0xb0
+[   99.867326]  ? newidle_balance+0x1d4/0x3c0
+[   99.868283]  io_issue_sqe+0xd8f/0x1340
+[   99.869216]  ? __switch_to+0x7f/0x450
+[   99.870280]  ? __switch_to_asm+0x42/0x70
+[   99.871254]  ? __switch_to_asm+0x36/0x70
+[   99.872133]  ? lock_timer_base+0x72/0xa0
+[   99.873155]  ? switch_mm_irqs_off+0x1bf/0x420
+[   99.874152]  io_wq_submit_work+0x64/0x180
+[   99.875192]  ? kthread_use_mm+0x71/0x100
+[   99.876132]  io_worker_handle_work+0x267/0x440
+[   99.877233]  io_wqe_worker+0x297/0x350
+[   99.878145]  kthread+0x112/0x150
+[   99.878849]  ? __io_worker_unuse+0x100/0x100
+[   99.879935]  ? kthread_park+0x90/0x90
+[   99.880874]  ret_from_fork+0x22/0x30
+[   99.881679] Modules linked in:
+[   99.882493] CR2: 0000000000000000
+[   99.883324] ---[ end trace 4453745f4673190b ]---
+[   99.884289] RIP: 0010:0x0
+[   99.884837] Code: Bad RIP value.
+[   99.885492] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+[   99.886851] RAX: 0000000000000000 RBX: ffff92363acd7f00 RCX: ffff92363d461608
+[   99.888561] RDX: 0000000000000010 RSI: 00007ffe040d9e10 RDI: ffff92363acd7f00
+[   99.890203] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+[   99.891907] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+[   99.894106] R13: 0000000000000000 R14: ffff92363d461608 R15: ffffa1c7c01ebc68
+[   99.896079] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+[   99.898017] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   99.899197] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
 
-alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
-
-These errors are the result of improper processing of scatterlists mapped
-for DMA.
-
-Given a scatterlist in which entries are merged as part of mapping the
-scatterlist for DMA, the DMA length of a merged entry will reflect the
-combined length of the entries that were merged. The subsequent
-scatterlist entry will contain DMA information for the scatterlist entry
-after the last merged entry, but the non-DMA information will be that of
-the first merged entry.
-
-The ccp driver does not take this scatterlist merging into account. To
-address this, add a second scatterlist pointer to track the current
-position in the DMA mapped representation of the scatterlist. Both the DMA
-representation and the original representation of the scatterlist must be
-tracked as while most of the driver can use just the DMA representation,
-scatterlist_map_and_copy() must use the original representation and
-expects the scatterlist pointer to be accurate to the original
-representation.
-
-In order to properly walk the original scatterlist, the scatterlist must
-be walked until the combined lengths of the entries seen is equal to the
-DMA length of the current entry being processed in the DMA mapped
-representation.
-
-Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
-Signed-off-by: John Allen <john.allen@amd.com>
+Fixes: 32960613b7c3 ("io_uring: correctly handle non ->{read,write}_iter() file_operations")
 Cc: stable@vger.kernel.org
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Guoyu Huang <hgy5945@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-dev.h |    1 +
- drivers/crypto/ccp/ccp-ops.c |   37 ++++++++++++++++++++++++++-----------
- 2 files changed, 27 insertions(+), 11 deletions(-)
+ fs/io_uring.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/ccp/ccp-dev.h
-+++ b/drivers/crypto/ccp/ccp-dev.h
-@@ -469,6 +469,7 @@ struct ccp_sg_workarea {
- 	unsigned int sg_used;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1433,8 +1433,10 @@ static int io_read(struct io_kiocb *req,
  
- 	struct scatterlist *dma_sg;
-+	struct scatterlist *dma_sg_head;
- 	struct device *dma_dev;
- 	unsigned int dma_count;
- 	enum dma_data_direction dma_dir;
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -63,7 +63,7 @@ static u32 ccp_gen_jobid(struct ccp_devi
- static void ccp_sg_free(struct ccp_sg_workarea *wa)
- {
- 	if (wa->dma_count)
--		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
-+		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
+ 		if (file->f_op->read_iter)
+ 			ret2 = call_read_iter(file, kiocb, &iter);
+-		else
++		else if (req->file->f_op->read)
+ 			ret2 = loop_rw_iter(READ, file, kiocb, &iter);
++		else
++			ret2 = -EINVAL;
  
- 	wa->dma_count = 0;
- }
-@@ -92,6 +92,7 @@ static int ccp_init_sg_workarea(struct c
- 		return 0;
+ 		/*
+ 		 * In case of a short read, punt to async. This can happen
+@@ -1524,8 +1526,10 @@ static int io_write(struct io_kiocb *req
  
- 	wa->dma_sg = sg;
-+	wa->dma_sg_head = sg;
- 	wa->dma_dev = dev;
- 	wa->dma_dir = dma_dir;
- 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
-@@ -104,14 +105,28 @@ static int ccp_init_sg_workarea(struct c
- static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
- {
- 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
-+	unsigned int sg_combined_len = 0;
+ 		if (file->f_op->write_iter)
+ 			ret2 = call_write_iter(file, kiocb, &iter);
+-		else
++		else if (req->file->f_op->write)
+ 			ret2 = loop_rw_iter(WRITE, file, kiocb, &iter);
++		else
++			ret2 = -EINVAL;
  
- 	if (!wa->sg)
- 		return;
- 
- 	wa->sg_used += nbytes;
- 	wa->bytes_left -= nbytes;
--	if (wa->sg_used == wa->sg->length) {
--		wa->sg = sg_next(wa->sg);
-+	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
-+		/* Advance to the next DMA scatterlist entry */
-+		wa->dma_sg = sg_next(wa->dma_sg);
-+
-+		/* In the case that the DMA mapped scatterlist has entries
-+		 * that have been merged, the non-DMA mapped scatterlist
-+		 * must be advanced multiple times for each merged entry.
-+		 * This ensures that the current non-DMA mapped entry
-+		 * corresponds to the current DMA mapped entry.
-+		 */
-+		do {
-+			sg_combined_len += wa->sg->length;
-+			wa->sg = sg_next(wa->sg);
-+		} while (wa->sg_used > sg_combined_len);
-+
- 		wa->sg_used = 0;
- 	}
- }
-@@ -299,7 +314,7 @@ static unsigned int ccp_queue_buf(struct
- 	/* Update the structures and generate the count */
- 	buf_count = 0;
- 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
--		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
-+		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
- 			     dm_wa->length - buf_count);
- 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
- 
-@@ -331,11 +346,11 @@ static void ccp_prepare_data(struct ccp_
- 	 * and destination. The resulting len values will always be <= UINT_MAX
- 	 * because the dma length is an unsigned int.
- 	 */
--	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
-+	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
- 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
- 
- 	if (dst) {
--		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
-+		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
- 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
- 		op_len = min(sg_src_len, sg_dst_len);
- 	} else {
-@@ -365,7 +380,7 @@ static void ccp_prepare_data(struct ccp_
- 		/* Enough data in the sg element, but we need to
- 		 * adjust for any previously copied data
- 		 */
--		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
-+		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
- 		op->src.u.dma.offset = src->sg_wa.sg_used;
- 		op->src.u.dma.length = op_len & ~(block_size - 1);
- 
-@@ -386,7 +401,7 @@ static void ccp_prepare_data(struct ccp_
- 			/* Enough room in the sg element, but we need to
- 			 * adjust for any previously used area
- 			 */
--			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
-+			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
- 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
- 			op->dst.u.dma.length = op->src.u.dma.length;
- 		}
-@@ -2028,7 +2043,7 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
- 	dst.sg_wa.sg_used = 0;
- 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
- 		if (!dst.sg_wa.sg ||
--		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
-+		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
- 			ret = -EINVAL;
- 			goto e_dst;
- 		}
-@@ -2054,8 +2069,8 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
- 			goto e_dst;
- 		}
- 
--		dst.sg_wa.sg_used += src.sg_wa.sg->length;
--		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
-+		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
-+		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
- 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
- 			dst.sg_wa.sg_used = 0;
- 		}
+ 		if (!force_nonblock)
+ 			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
 
 
