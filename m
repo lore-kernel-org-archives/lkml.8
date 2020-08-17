@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE20AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F403C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0B82063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8AA2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685797;
-	bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+	s=default; t=1597685809;
+	bh=mI8PCUrsUO9qLk+bSDFKXHpYLx2CG2hsDgwY8dJoT/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztOLwIIu0Y9e7/hT5b0FO3jb/jfSOV1DdfXgSxb3WDeP/L5UPpZliiwJayeXd3DXp
-	 AlGhHsz1OuZn3ULlvt283uS78xxvVw7iREe89tKn9ipwNeiehfj71SxnbYkw/VIiI8
-	 7EAGBBz9H35sfG1uUhJyAzYFVhRJJSBp8oK5v/qQ=
+	b=QRx9x2hc3CtY7FLkzxkkH6dQ1seIXyUyICM4NEkUMmVzPdd/F8eEUXXlIwldHh5GI
+	 fPpREMnGidsyiA4EGdQNlI5ACWnWuXY/oRP+uAOrGVq4MIgIEna3jnTPigNu7W1Y/d
+	 PvFi2ewvD0rqYCHK9IqgPufSJF5WHEnS9/kMPJhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbgHQRgg (ORCPT
+        id S1731314AbgHQRgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:36:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:36:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbgHQQRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:36 -0400
+        id S1729731AbgHQQRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4925622BF3;
-        Mon, 17 Aug 2020 16:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 710BD204FD;
+        Mon, 17 Aug 2020 16:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681055;
-        bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+        s=default; t=1597681050;
+        bh=mI8PCUrsUO9qLk+bSDFKXHpYLx2CG2hsDgwY8dJoT/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BiioFDVkmV/zn8zzMG9on7oYhdj8bcLdqHlu2n4xk/3cpgpEgvgEPhs9rjXQIC2JS
-         ekPmekzJAJVwbQVmZsMqUcLgwxI3u65gowcWZ/Xj6As027cJ5mEaWLMTTEiUYvWaod
-         2hzITFLfepwAQoCR7V2sL6UoFce9rSMpmmpHSKnE=
+        b=uqmgqIDiMl+oe6j6OqFWz/1cCPltkRcAR8puS+lRjTCAUU+Niv9o/J2jY5e4K5Z/9
+         86FeHNe9ruqU3OVXaf1gC7QtkVDZD01/XiJTB4R0f+nwzrNdGYbejzzLkLIuku1dJG
+         qfwiZWUdFqF+4xZkY/PjsYhcbyj+tXO5VtYnnNhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.19 162/168] parisc: Implement __smp_store_release and __smp_load_acquire barriers
-Date:   Mon, 17 Aug 2020 17:18:13 +0200
-Message-Id: <20200817143741.752606471@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 134/168] net: Set fput_needed iff FDPUT_FPUT is set
+Date:   Mon, 17 Aug 2020 17:17:45 +0200
+Message-Id: <20200817143740.392546819@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,92 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit e96ebd589debd9a6a793608c4ec7019c38785dea upstream.
+[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
 
-This patch implements the __smp_store_release and __smp_load_acquire barriers
-using ordered stores and loads.  This avoids the sync instruction present in
-the generic implementation.
+We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+accordingly.
 
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Dave Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/parisc/include/asm/barrier.h |   61 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ net/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/include/asm/barrier.h
-+++ b/arch/parisc/include/asm/barrier.h
-@@ -26,6 +26,67 @@
- #define __smp_rmb()	mb()
- #define __smp_wmb()	mb()
- 
-+#define __smp_store_release(p, v)					\
-+do {									\
-+	typeof(p) __p = (p);						\
-+        union { typeof(*p) __val; char __c[1]; } __u =			\
-+                { .__val = (__force typeof(*p)) (v) };			\
-+	compiletime_assert_atomic_type(*p);				\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile("stb,ma %0,0(%1)"				\
-+				: : "r"(*(__u8 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile("sth,ma %0,0(%1)"				\
-+				: : "r"(*(__u16 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile("stw,ma %0,0(%1)"				\
-+				: : "r"(*(__u32 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 8:								\
-+		if (IS_ENABLED(CONFIG_64BIT))				\
-+			asm volatile("std,ma %0,0(%1)"			\
-+				: : "r"(*(__u64 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	}								\
-+} while (0)
-+
-+#define __smp_load_acquire(p)						\
-+({									\
-+	union { typeof(*p) __val; char __c[1]; } __u;			\
-+	typeof(p) __p = (p);						\
-+	compiletime_assert_atomic_type(*p);				\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile("ldb,ma 0(%1),%0"				\
-+				: "=r"(*(__u8 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile("ldh,ma 0(%1),%0"				\
-+				: "=r"(*(__u16 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile("ldw,ma 0(%1),%0"				\
-+				: "=r"(*(__u32 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 8:								\
-+		if (IS_ENABLED(CONFIG_64BIT))				\
-+			asm volatile("ldd,ma 0(%1),%0"			\
-+				: "=r"(*(__u64 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	}								\
-+	__u.__val;							\
-+})
- #include <asm-generic/barrier.h>
- 
- #endif /* !__ASSEMBLY__ */
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -474,7 +474,7 @@ static struct socket *sockfd_lookup_ligh
+ 	if (f.file) {
+ 		sock = sock_from_file(f.file, err);
+ 		if (likely(sock)) {
+-			*fput_needed = f.flags;
++			*fput_needed = f.flags & FDPUT_FPUT;
+ 			return sock;
+ 		}
+ 		fdput(f);
 
 
