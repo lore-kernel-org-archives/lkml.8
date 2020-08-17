@@ -2,243 +2,144 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABDB220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6719620772
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FYXzOWao"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BwB6onwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgHQHTc (ORCPT
+        id S1726909AbgHQHVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:19:32 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53614 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726858AbgHQHT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:19:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597648765; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=T6J1BLrMRe5XgTTOrvOmU4kPBJ/Amc6FHePTJxi9s0Q=; b=FYXzOWaoGKMhuCjPSq7WUGEj5dK8HNUb+KtLvJ7R3mAxNh98QVb2erwzOQKoJMC1YL2xXuac
- fitxidlYKnWfffKMRu1Qs29C5tImbEFH6n0IF+ckQLy2ivYUEtl3UQvba/PNG1DuBTKi0yN1
- EhKK6K7dY97X6UGy2Uw4aMeKO0I=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f3a2f6661f1d41834cd3b36 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 07:19:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 72738C43387; Mon, 17 Aug 2020 07:19:01 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76657C433CB;
-        Mon, 17 Aug 2020 07:18:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76657C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, sivaprak@codeaurora.org,
-        devicetree@vger.kernel.org
-Cc:     kathirav@codeaurora.org
-Subject: [PATCH V2 2/2] arm64: dts: ipq6018: enable DVFS support
-Date:   Mon, 17 Aug 2020 12:48:40 +0530
-Message-Id: <1597648720-13649-3-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597648720-13649-1-git-send-email-kathirav@codeaurora.org>
-References: <1597648720-13649-1-git-send-email-kathirav@codeaurora.org>
+        Mon, 17 Aug 2020 03:21:17 -0400
+Received: from mout.gmx.net ([212.227.17.20]:32923 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgHQHVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:21:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597648863;
+        bh=LDcWdHJDKvbRXTcscXlY+66WEBzsgmri1TA1vVDn7MY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=BwB6onwTkfOx2BrJAfJ5l0uRVFpjF/4OPw1ONlxAn3nW9juC5b3AjZh69iMNRcO63
+         ormbok+vsD9Ekv5eATRZ7b1sg5ZXbQKtDeMgTel0nRBZ5DNjsV/xdHtsTDuylWB1AF
+         HWJJYn7elivEGatvPI+7IKtTqVRN3fNon4DxxS1o=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.223.54.124]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MtfNf-1kxBKa32Br-00vB7g; Mon, 17 Aug 2020 09:21:03 +0200
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 75DC5800D9; Mon, 17 Aug 2020 09:20:59 +0200 (CEST)
+From:   Sven Joachim <svenjoac@gmx.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Vazquez <brianvv@google.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+References: <20200729212721.1ee4eef8@canb.auug.org.au>
+Date:   Mon, 17 Aug 2020 09:20:59 +0200
+In-Reply-To: <20200729212721.1ee4eef8@canb.auug.org.au> (Stephen Rothwell's
+        message of "Wed, 29 Jul 2020 21:27:21 +1000")
+Message-ID: <87ft8lwxes.fsf@turtle.gmx.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Provags-ID: V03:K1:+gMeo5T9ZZBMhvY3gxLb824G7oBZvNHYbIZviNetkD4ThGjJTtb
+ d16OaFHdenKQ3Ufx87ia4cqNIM+INUVK+3Ni4KrHLyo+QjVc+YJxBVSmjv0tXSoBVd88LWT
+ zyf/vb6aEygqglWm27aB4K12eRMUYQSpHHFAN0reOamIFJdldkPL9JP5LpcBrAvskeWulxm
+ ioGyfEwKpOLEql6D/ukLA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LJiQNcqpV6I=:ZE2E42FsBcKDzna8tFNlkj
+ O5fjb3yF8RDFlWt+ed6CufAHrYWdazHkSIL+ir2Fwtzwc6HT3IS18WP65K3Uqn7Mtg4DPbJ2u
+ HN+QvIhyQgviJUNgLk2QF/ToC0mRKaoPGJSZ4ny9leArpo+XVeXjl2OnISwf1T7GzDFDNLdDn
+ 3uKLAaYPj75YH834DjjJUgCpSK2uIA7SV4UPUyrrdzsilzK3JzTR/wOlrK5XRtG5fA7IscdO/
+ zM8ae4SJly1cIpzNTOcf5MoruhhiX0/XOXU9AVHpgbbHzsD2xOIFZIm2fqTntwC72sTqtf+y3
+ 46XxsvvJjA57Rc91XDgUYbWnhZWbdLPGiL7+IQlRgEkqw0+N+YNdcdZncA9gWLZKVtcenTsib
+ uASWBj4SVUA4yjd8OUqZni5VJgLIBhbt4vdhKv0//fwyj2FB6YSs4qd+55xeU5SX9ehY7114t
+ l1i38JgnXdokpdIVuqqdoGWH0VUbCj04bvEllwAE9TI9C7YmcdCaik8TZKaR14AwQT56Nr2Ox
+ CH+T1BvGtG4ykG3+w2ic7pNAqltMVc91PbxJ0yyLCo61pIUF2PveBtDba+Wp97wzlPfmlvJBK
+ P3lytJN6sbvtoSqsivQy1XjxVqz7XwzEYJV+VChA9mDtSuTCSYNTSZkjRLU8qxeX2LcA5tIj6
+ g+abJyvZ4tQhlzok2ylthf7ahVU978/GVQg6K0LLTGMQEQXhlT8yJLKx8Dcm0k5C6blIN+gVp
+ m4E/z59b1yDlfxUOsxjFFsI/WTSI4TrZp1AvGfj8jMcMPDHsNX60H4gUiinfS1/Xn1gS/UzP3
+ GJ5x8FxtBZg9yknzdgkuqFpERs6jdkXguxgKM2Q0bWDhMSqzK6GQQ1TagtsY0al2VdyhkVk0N
+ j7mSdKqkTbCtC1v5hV5io0rNwybEvjw/VyzjL3q1w5UXG0EoqGty/n8KxLy2HK4p2D1+9eWKB
+ doUE5k3s1m7WbYyhjSCLYj+pcLLNjPB95+HmSxglSKRMAY9aa+E1pHlKg97AWevMdsAEANTRb
+ xAZYZS/YcFOA4HdPtdYlywpBwamw+Ud+SbWaIGtixYcilKj1gz5jvqpg/5z3amT4rELuFY+Y0
+ azC3T0VzIHDyaL+ZDPlSMX/+GaKRGSA8TSoNULubI1xsZZnqxafAqp6JcScjcqUAyrmoILnZd
+ nedslp8khoB1ka+Asez9KbOlPnIWOTMWlUY6g7+VI/SxMgl9xBoG+x6yYjzHkLVsSvBmbY0ZM
+ raAxobcbT2NzByNoV
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
-SMPA2 regulator to enable the cpu frequency on IPQ6018.
+On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
 
-Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 96 +++++++++++++++++++++++++++++++++--
- 1 file changed, 93 insertions(+), 3 deletions(-)
+> Hi all,
+>
+> After merging the net-next tree, today's linux-next build (i386 defconfi=
+g)
+> failed like this:
+>
+> x86_64-linux-gnu-ld: net/core/fib_rules.o: in function `fib_rules_lookup=
+':
+> fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
+> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to `=
+fib6_rule_match'
+> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to `=
+fib6_rule_action'
+> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to `=
+fib6_rule_action'
+> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to `=
+fib6_rule_suppress'
+> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to `=
+fib6_rule_suppress'
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 1aa8d8579463..a94dac76bf3f 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
- #include <dt-bindings/reset/qcom,gcc-ipq6018.h>
-+#include <dt-bindings/clock/qcom,apss-ipq.h>
- 
- / {
- 	#address-cells = <2>;
-@@ -38,6 +39,10 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -46,6 +51,10 @@
- 			enable-method = "psci";
- 			reg = <0x1>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -54,6 +63,10 @@
- 			enable-method = "psci";
- 			reg = <0x2>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -62,6 +75,10 @@
- 			enable-method = "psci";
- 			reg = <0x3>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		L2_0: l2-cache {
-@@ -70,6 +87,42 @@
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-864000000 {
-+			opp-hz = /bits/ 64 <864000000>;
-+			opp-microvolt = <725000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-microvolt = <787500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1320000000 {
-+			opp-hz = /bits/ 64 <1320000000>;
-+			opp-microvolt = <862500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1440000000 {
-+			opp-hz = /bits/ 64 <1440000000>;
-+			opp-microvolt = <925000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <987500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1062500>;
-+			clock-latency-ns = <200000>;
-+		};
-+	};
-+
- 	firmware {
- 		scm {
- 			compatible = "qcom,scm";
-@@ -98,6 +151,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		rpm_msg_ram: memory@0x60000 {
-+			reg = <0x0 0x60000 0x0 0x6000>;
-+			no-map;
-+		};
-+
- 		tz: tz@48500000 {
- 			reg = <0x0 0x48500000 0x0 0x00200000>;
- 			no-map;
-@@ -294,12 +352,22 @@
- 		};
- 
- 		apcs_glb: mailbox@b111000 {
--			compatible = "qcom,ipq8074-apcs-apps-global";
--			reg = <0x0b111000 0xc>;
--
-+			compatible = "qcom,ipq6018-apcs-apps-global";
-+			reg = <0x0b111000 0x1000>;
-+			#clock-cells = <1>;
-+			clocks = <&a53pll>, <&xo>;
-+			clock-names = "pll", "xo";
- 			#mbox-cells = <1>;
- 		};
- 
-+		a53pll: clock@b116000 {
-+			compatible = "qcom,ipq6018-a53pll";
-+			reg = <0x0b116000 0x40>;
-+			#clock-cells = <0>;
-+			clocks = <&xo>;
-+			clock-names = "xo";
-+		};
-+
- 		timer {
- 			compatible = "arm,armv8-timer";
- 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -440,4 +508,26 @@
- 			#interrupt-cells = <2>;
- 		};
- 	};
-+
-+	rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+		mboxes = <&apcs_glb 0>;
-+
-+		rpm_requests: glink-channel {
-+			compatible = "qcom,rpm-ipq6018";
-+			qcom,glink-channels = "rpm_requests";
-+
-+			regulators {
-+				compatible = "qcom,rpm-mp5496-regulators";
-+
-+				ipq6018_s2: s2 {
-+					regulator-min-microvolt = <725000>;
-+					regulator-max-microvolt = <1062500>;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+	};
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
+41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
+apparently not sufficient.
 
+,----
+| $ grep IPV6 .config
+| CONFIG_IPV6=3Dm
+| # CONFIG_IPV6_ROUTER_PREF is not set
+| # CONFIG_IPV6_OPTIMISTIC_DAD is not set
+| # CONFIG_IPV6_MIP6 is not set
+| # CONFIG_IPV6_ILA is not set
+| # CONFIG_IPV6_VTI is not set
+| CONFIG_IPV6_SIT=3Dm
+| # CONFIG_IPV6_SIT_6RD is not set
+| CONFIG_IPV6_NDISC_NODETYPE=3Dy
+| CONFIG_IPV6_TUNNEL=3Dm
+| CONFIG_IPV6_MULTIPLE_TABLES=3Dy
+| # CONFIG_IPV6_SUBTREES is not set
+| # CONFIG_IPV6_MROUTE is not set
+| # CONFIG_IPV6_SEG6_LWTUNNEL is not set
+| # CONFIG_IPV6_SEG6_HMAC is not set
+| # CONFIG_IPV6_RPL_LWTUNNEL is not set
+| # CONFIG_NF_SOCKET_IPV6 is not set
+| # CONFIG_NF_TPROXY_IPV6 is not set
+| # CONFIG_NF_DUP_IPV6 is not set
+| # CONFIG_NF_REJECT_IPV6 is not set
+| # CONFIG_NF_LOG_IPV6 is not set
+| CONFIG_NF_DEFRAG_IPV6=3Dm
+`----
+
+> Caused by commit
+>
+>   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_=
+rules_ops")
+>
+> # CONFIG_IPV6_MULTIPLE_TABLES is not set
+>
+> I have reverted that commit for today.
+
+Cheers,
+       Sven
