@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02600C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D132072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DAB206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683050;
-	bh=C7FuPpEvit4W3eOn4nPCY2We+IRa/QZOzXOY9OqqX4s=;
+	s=default; t=1597683067;
+	bh=jvLKgD1cS7A9R2GlVBsCHj8ADBoxKuI7Kyw2Xze/fUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIpNXvZ+4wFi+R16qR3Ijv/t7+TifW+t75Yo+s2rZ/Xgn+hYNeqfH3mDeYLcw8ZW4
-	 m1rxNPMgHJdVICqbec49YDlLUE1DyQ7iTVPERW0YMXzEtlGfCDAiCPe/SnMoG/SuH9
-	 Q3wsYTzAjhoblFis4dHE8j7CL4NSjR8Zht7z4aAI=
+	b=v3RvpvT+Od0nZIn4B7T78MZOeiH1EjqALPQMErXyJ5WOWY5o5myeiVmOyM9LWNaOM
+	 MsXGN9UOZ3gRAfZpuskadvITVu1PXUl3cAYrcu+pwUsQrhIJpmsUV03GZzA/WH9gRu
+	 AcFr4lqS9BR7f/E5xYkMR+oZXh22injZhFZxNGa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389040AbgHQQuu (ORCPT
+        id S2389048AbgHQQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 17 Aug 2020 12:50:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50038 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388200AbgHQQCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:32 -0400
+        id S2388214AbgHQQCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54C8220772;
-        Mon, 17 Aug 2020 16:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC3E20772;
+        Mon, 17 Aug 2020 16:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680151;
-        bh=C7FuPpEvit4W3eOn4nPCY2We+IRa/QZOzXOY9OqqX4s=;
+        s=default; t=1597680161;
+        bh=jvLKgD1cS7A9R2GlVBsCHj8ADBoxKuI7Kyw2Xze/fUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5pwadluYG7nmShli0IUDrBQKAxhULPYna7Mv4ikcpZbAMgydtoy1Chjx9z7ivxoB
-         4Vpu3eLJi/sBu9Nkn3O0Qqgskf3hnjcBUvL4zOl4BTqAnw5TVM5xvzBkWztcsdkpBQ
-         Sm5QyO/LgxsfBg82piOjHPQX+XrR1rLW+TL3SXkU=
+        b=uL3qY1hHGU9gOg1kyfbqcd1DCtH4GsyM8GlYOJLU4Z2Au8Ml1AedtvH8UJOYOcqO+
+         LPNjhYFhmue15X/ucHn6kOqHZa1qRXJRY9mSKRB3UVk7N8btSq6BvlDk4G8NrRuCfz
+         vg/fEVvKj7uOi4tgLZRA+aha87BbHc5EvNV3se40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/270] drm/amd/powerplay: fix compile error with ARCH=arc
-Date:   Mon, 17 Aug 2020 17:14:34 +0200
-Message-Id: <20200817143759.385924055@linuxfoundation.org>
+Subject: [PATCH 5.4 076/270] brcmfmac: To fix Bss Info flag definition Bug
+Date:   Mon, 17 Aug 2020 17:14:37 +0200
+Message-Id: <20200817143759.544789831@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,41 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
 
-[ Upstream commit 9822ba2ead1baa3de4860ad9472f652c4cc78c9c ]
+[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
 
-Fix the compile error below:
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c: In function 'smu_v11_0_init_microcode':
->> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
-      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
-         |  ^~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:176:3: note: in expansion of macro 'BUG'
-     176 |   BUG();
+Bss info flag definition need to be fixed from 0x2 to 0x4
+This flag is for rssi info received on channel.
+All Firmware branches defined as 0x4 and this is bug in brcmfmac.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-index 0922d9cd858a0..c4d8c52c6b9ca 100644
---- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-+++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-@@ -171,7 +171,8 @@ static int smu_v11_0_init_microcode(struct smu_context *smu)
- 		chip_name = "navi12";
- 		break;
- 	default:
--		BUG();
-+		dev_err(adev->dev, "Unsupported ASIC type %d\n", adev->asic_type);
-+		return -EINVAL;
- 	}
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index 37c512036e0e3..ce18433aaefb5 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -19,7 +19,7 @@
+ #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
  
- 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_smc.bin", chip_name);
+ #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
+-#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
++#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
+ 
+ #define BRCMF_STA_BRCM			0x00000001	/* Running a Broadcom driver */
+ #define BRCMF_STA_WME			0x00000002	/* WMM association */
 -- 
 2.25.1
 
