@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED92EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0CA20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFC720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693059;
-	bh=XXgxgxLL3DsbLkgGIEWopEKqRmnqlrUd7mx9F+d+6dU=;
+	s=default; t=1597693068;
+	bh=y++K4L8lsUhHLOP4E6b9FyypC8XKvr/3Uarqcsdcx08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1QlNT05pkcQwi09eKBhsMagdaU0jehIizg3dFA5O+ZR+l4s/kugexa1BK9P2x+C+
-	 aWmV6AXR0EdzbmBUawgX6NOi1EmaH4LVVMU/CKamUYk3Ftwux2z6n9owcIV70qwfHh
-	 P378m7sEC+0nXRJz3rlYrxpyKUrVmLWL/5UOABDo=
+	b=qp9W9Q9hClKXacc43i62FROt3fJ4d9fGxh/8OkDhcGeqbtCxdLfno2kXEczefqtFZ
+	 OtiDjX8mfFUcj9YmBgKomE1uZaVQ52CqaynD9xvBTCoNVI5hrXXLt7l3+PdbUX4ReZ
+	 AoPwNDbE1KH7ddEHDBK4wxux/HKQ2su9teR8gXaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732427AbgHQThg (ORCPT
+        id S1729910AbgHQP1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgHQP1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:46 -0400
+        id S1729456AbgHQPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B3C423A5D;
-        Mon, 17 Aug 2020 15:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ECF02053B;
+        Mon, 17 Aug 2020 15:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678065;
-        bh=XXgxgxLL3DsbLkgGIEWopEKqRmnqlrUd7mx9F+d+6dU=;
+        s=default; t=1597677933;
+        bh=y++K4L8lsUhHLOP4E6b9FyypC8XKvr/3Uarqcsdcx08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzJgmO9Rs+k+nFcbuZXqtM6mXMqByfYexV3uWTRdPBGsxZZv6GnSkwZ7THSxImZl+
-         9qoPRJC03p5yJHh9ShKuWH+Y5+AZwarE2iC/vHdXaGNDlh1TfVwDT9/XRAkwgjClh0
-         q8Yv0jdl0gcFdphbx8DkWDLYnlwnqye2v+UwNxeA=
+        b=iIYvhsl+Glyybt0XvyYB/UhljBb92K8OG7r8OOa/2wFPj8m74PYp7fCAt8GwyIIQx
+         XyCIbR1wtHhKxc3k9kNrzqIjA+F/7VGjkLSl88RL0PM4WV3vuAQOZOaIbayWkdkKXQ
+         hpjuZGjiEioyFgNzkVsF0J+A2HviCE74WAnKmuyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 206/464] media: staging: rkisp1: rsz: supported formats are the isps src formats, not sink formats
-Date:   Mon, 17 Aug 2020 17:12:39 +0200
-Message-Id: <20200817143843.682017915@linuxfoundation.org>
+Subject: [PATCH 5.8 161/464] scsi: ufs: Fix imprecise load calculation in devfreq window
+Date:   Mon, 17 Aug 2020 17:11:54 +0200
+Message-Id: <20200817143841.521215260@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -64,41 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 7b8ce1f2763b9351a4cb04b802835470e76770a5 ]
+[ Upstream commit b1bf66d1d5a8fcb54f0e584db5d196ef015b5172 ]
 
-The rkisp1_resizer's enum callback 'rkisp1_rsz_enum_mbus_code'
-calls the enum callback of the 'rkisp1_isp' on it's video sink pad.
-This is a bug, the resizer should support the same formats
-supported by the 'rkisp1_isp' on the source pad (not the sink pad).
+The UFS load calculation is based on "total_time" and "busy_time" in a
+devfreq window.  However, the source of time is different for both
+parameters: "busy_time" is assigned from "jiffies" thus has different
+accuracy from "total_time" which is assigned from ktime_get().
 
-Fixes: 56e3b29f9f6b "media: staging: rkisp1: add streaming paths"
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In addition, the time of window boundary is not exactly the same as the
+starting busy time in this window if UFS is actually busy in the beginning
+of the window. A similar accuracy error may also happen for the end of busy
+time in current window.
+
+To guarantee the precision of load calculation, we need to
+
+1. Align time accuracy of both devfreq_dev_status.total_time and
+   devfreq_dev_status.busy_time. For example, use "ktime_get()" directly.
+
+2. Align the following timelines:
+   - The beginning time of devfreq windows
+   - The beginning of busy time in a new window
+   - The end of busy time in the current window
+
+Link: https://lore.kernel.org/r/20200611101043.6379-1-stanley.chu@mediatek.com
+Fixes: a3cd5ec55f6c ("scsi: ufs: add load based scaling of UFS gear")
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rkisp1/rkisp1-resizer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 18 ++++++++++--------
+ drivers/scsi/ufs/ufshcd.h |  2 +-
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-index d049374413dcf..d64c064bdb1d2 100644
---- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-@@ -437,8 +437,8 @@ static int rkisp1_rsz_enum_mbus_code(struct v4l2_subdev *sd,
- 	u32 pad = code->pad;
- 	int ret;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index a483c0720a0c1..ec93bec8e78d8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1314,6 +1314,7 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	unsigned long flags;
+ 	struct list_head *clk_list = &hba->clk_list_head;
+ 	struct ufs_clk_info *clki;
++	ktime_t curr_t;
  
--	/* supported mbus codes are the same in isp sink pad */
--	code->pad = RKISP1_ISP_PAD_SINK_VIDEO;
-+	/* supported mbus codes are the same in isp video src pad */
-+	code->pad = RKISP1_ISP_PAD_SOURCE_VIDEO;
- 	ret = v4l2_subdev_call(&rsz->rkisp1->isp.sd, pad, enum_mbus_code,
- 			       &dummy_cfg, code);
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return -EINVAL;
+@@ -1321,6 +1322,7 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	memset(stat, 0, sizeof(*stat));
  
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
++	curr_t = ktime_get();
+ 	if (!scaling->window_start_t)
+ 		goto start_window;
+ 
+@@ -1332,18 +1334,17 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	 */
+ 	stat->current_frequency = clki->curr_freq;
+ 	if (scaling->is_busy_started)
+-		scaling->tot_busy_t += ktime_to_us(ktime_sub(ktime_get(),
+-					scaling->busy_start_t));
++		scaling->tot_busy_t += ktime_us_delta(curr_t,
++				scaling->busy_start_t);
+ 
+-	stat->total_time = jiffies_to_usecs((long)jiffies -
+-				(long)scaling->window_start_t);
++	stat->total_time = ktime_us_delta(curr_t, scaling->window_start_t);
+ 	stat->busy_time = scaling->tot_busy_t;
+ start_window:
+-	scaling->window_start_t = jiffies;
++	scaling->window_start_t = curr_t;
+ 	scaling->tot_busy_t = 0;
+ 
+ 	if (hba->outstanding_reqs) {
+-		scaling->busy_start_t = ktime_get();
++		scaling->busy_start_t = curr_t;
+ 		scaling->is_busy_started = true;
+ 	} else {
+ 		scaling->busy_start_t = 0;
+@@ -1877,6 +1878,7 @@ static void ufshcd_exit_clk_gating(struct ufs_hba *hba)
+ static void ufshcd_clk_scaling_start_busy(struct ufs_hba *hba)
+ {
+ 	bool queue_resume_work = false;
++	ktime_t curr_t = ktime_get();
+ 
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return;
+@@ -1892,13 +1894,13 @@ static void ufshcd_clk_scaling_start_busy(struct ufs_hba *hba)
+ 			   &hba->clk_scaling.resume_work);
+ 
+ 	if (!hba->clk_scaling.window_start_t) {
+-		hba->clk_scaling.window_start_t = jiffies;
++		hba->clk_scaling.window_start_t = curr_t;
+ 		hba->clk_scaling.tot_busy_t = 0;
+ 		hba->clk_scaling.is_busy_started = false;
+ 	}
+ 
+ 	if (!hba->clk_scaling.is_busy_started) {
+-		hba->clk_scaling.busy_start_t = ktime_get();
++		hba->clk_scaling.busy_start_t = curr_t;
+ 		hba->clk_scaling.is_busy_started = true;
+ 	}
+ }
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index bf97d616e597c..16187be98a94c 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -411,7 +411,7 @@ struct ufs_saved_pwr_info {
+ struct ufs_clk_scaling {
+ 	int active_reqs;
+ 	unsigned long tot_busy_t;
+-	unsigned long window_start_t;
++	ktime_t window_start_t;
+ 	ktime_t busy_start_t;
+ 	struct device_attribute enable_attr;
+ 	struct ufs_saved_pwr_info saved_pwr_info;
 -- 
 2.25.1
 
