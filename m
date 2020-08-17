@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D90C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CD320578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33D020578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689593;
-	bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
+	s=default; t=1597689598;
+	bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PafGV58AH6PhXp0k2SxVdiptK2sp7mRB/36YO7LjqlLDHfqwoQYmbPoJtiPS0rtD+
-	 FVSi+CqyhnLO9Rmc5TycOIGwTAqA962kYCMccvaRoy5D2FDrodZiOPOXxMR8ckh8o0
-	 8mrRuWsfqbQjiOe39X0bqA/oo5NguxeLmH7EGrLg=
+	b=y7zQY5OsyR52w6W8nRv3y3awcAQs8k09/7gACGf4h+J7lRdj+j1UVxWJvNhIyVvZG
+	 oS/5QcerUq4REy8J2NfuiRxo/3dzK4bVpM6h0fgmdCg650+b2/PfXgO9ZjQDJeCeAP
+	 kp8pe9amUAtuybwUlP96vODUsaNKn6Dzmk9kHU0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391330AbgHQSjw (ORCPT
+        id S1730969AbgHQSjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:39:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388117AbgHQP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388118AbgHQP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8313520882;
-        Mon, 17 Aug 2020 15:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1317A20888;
+        Mon, 17 Aug 2020 15:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679897;
-        bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
+        s=default; t=1597679899;
+        bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNeT7lgbCetppitiDrA1T1lYCnmOPQ8uV+ZTyBwNlAo+Viemb600b5CzNGK44YCIn
-         ELT79jRwEhiG6hrZhDhkUhcNMnnnIV+CLV85TYYSRu5t7iCxCfk3mMdgnmpmaw/Ik8
-         WFWRPibT/kH+WHuFzynlmZhYa5gUatpttWILiL/A=
+        b=Bs7yZ2U28NGm6Nx9jHF2YWlHu2BDpE1HParDOALaW0Z+TTTu8v0HUKC8U1choCTNY
+         uO7EGrrvIycG5bjdlVE8FoXROfelkp0UuOEKRrUU8pST3lEnq6jG1/iIroUm8qOQi1
+         CDspVfJrCSWn6AP6aNAqZ/XyrglqX9pg280QM7SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.7 354/393] drm/ttm/nouveau: dont call tt destroy callback on alloc failure.
-Date:   Mon, 17 Aug 2020 17:16:44 +0200
-Message-Id: <20200817143836.774634072@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.7 372/393] Revert "parisc: Revert "Release spinlocks using ordered store""
+Date:   Mon, 17 Aug 2020 17:17:02 +0200
+Message-Id: <20200817143837.652263130@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,73 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 5de5b6ecf97a021f29403aa272cb4e03318ef586 upstream.
+commit 157e9afcc4fa25068b0e8743bc254a9b56010e13 upstream.
 
-This is confusing, and from my reading of all the drivers only
-nouveau got this right.
+This reverts commit 86d4d068df573a8c2105554624796c086d6bec3d.
 
-Just make the API act under driver control of it's own allocation
-failing, and don't call destroy, if the page table fails to
-create there is nothing to cleanup here.
-
-(I'm willing to believe I've missed something here, so please
-review deeply).
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200728041736.20689-1-airlied@gmail.com
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org> # v5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/nouveau_sgdma.c |    9 +++------
- drivers/gpu/drm/ttm/ttm_tt.c            |    3 ---
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ arch/parisc/include/asm/spinlock.h |    4 ++--
+ arch/parisc/kernel/syscall.S       |   12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-@@ -96,12 +96,9 @@ nouveau_sgdma_create_ttm(struct ttm_buff
- 	else
- 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
+--- a/arch/parisc/include/asm/spinlock.h
++++ b/arch/parisc/include/asm/spinlock.h
+@@ -37,8 +37,8 @@ static inline void arch_spin_unlock(arch
+ 	volatile unsigned int *a;
  
--	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
--		/*
--		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
--		 * and thus our nouveau_sgdma_destroy() hook, so we don't need
--		 * to free nvbe here.
--		 */
-+	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
-+		kfree(nvbe);
- 		return NULL;
-+	}
- 	return &nvbe->ttm.ttm;
+ 	a = __ldcw_align(x);
+-	mb();
+-	*a = 1;
++	/* Release with ordered store. */
++	__asm__ __volatile__("stw,ma %0,0(%1)" : : "r"(1), "r"(a) : "memory");
  }
---- a/drivers/gpu/drm/ttm/ttm_tt.c
-+++ b/drivers/gpu/drm/ttm/ttm_tt.c
-@@ -242,7 +242,6 @@ int ttm_tt_init(struct ttm_tt *ttm, stru
- 	ttm_tt_init_fields(ttm, bo, page_flags);
  
- 	if (ttm_tt_alloc_page_directory(ttm)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
-@@ -266,7 +265,6 @@ int ttm_dma_tt_init(struct ttm_dma_tt *t
+ static inline int arch_spin_trylock(arch_spinlock_t *x)
+--- a/arch/parisc/kernel/syscall.S
++++ b/arch/parisc/kernel/syscall.S
+@@ -640,8 +640,7 @@ cas_action:
+ 	sub,<>	%r28, %r25, %r0
+ 2:	stw	%r24, 0(%r26)
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ #if ENABLE_LWS_DEBUG
+ 	/* Clear thread register indicator */
+ 	stw	%r0, 4(%sr2,%r20)
+@@ -655,8 +654,7 @@ cas_action:
+ 3:		
+ 	/* Error occurred on load or store */
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ #if ENABLE_LWS_DEBUG
+ 	stw	%r0, 4(%sr2,%r20)
+ #endif
+@@ -857,8 +855,7 @@ cas2_action:
  
- 	INIT_LIST_HEAD(&ttm_dma->pages_list);
- 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
-@@ -288,7 +286,6 @@ int ttm_sg_tt_init(struct ttm_dma_tt *tt
- 	else
- 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
- 	if (ret) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
+ cas2_end:
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ 	/* Enable interrupts */
+ 	ssm	PSW_SM_I, %r0
+ 	/* Return to userspace, set no error */
+@@ -868,8 +865,7 @@ cas2_end:
+ 22:
+ 	/* Error occurred on load or store */
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ 	ssm	PSW_SM_I, %r0
+ 	ldo	1(%r0),%r28
+ 	b	lws_exit
 
 
