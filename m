@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37422C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC292072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18269204EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgHQL5s (ORCPT
+        id S1728063AbgHQL5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:57:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50318 "EHLO huawei.com"
+        Mon, 17 Aug 2020 07:57:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9823 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726151AbgHQL5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:57:46 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2189CAE7D8B1F88B5A92;
-        Mon, 17 Aug 2020 19:57:44 +0800 (CST)
+        id S1726151AbgHQL5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:57:53 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5D0A310D3AFDE9BFBD9D;
+        Mon, 17 Aug 2020 19:57:49 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by DGGEMS407-HUB.china.huawei.com
  (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 17 Aug 2020
- 19:57:38 +0800
+ 19:57:39 +0800
 From:   Yu Kuai <yukuai3@huawei.com>
 To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
         <vkoul@kernel.org>, <dan.j.williams@intel.com>,
@@ -34,9 +34,9 @@ To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <yi.zhang@huawei.com>, <yukuai3@huawei.com>
-Subject: [PATCH 1/3] dmaengine: at_hdmac: check return value of of_find_device_by_node() in at_dma_xlate()
-Date:   Mon, 17 Aug 2020 19:57:26 +0800
-Message-ID: <20200817115728.1706719-2-yukuai3@huawei.com>
+Subject: [PATCH 3/3] dmaengine: at_hdmac: add missing kfree() call in at_dma_xlate()
+Date:   Mon, 17 Aug 2020 19:57:28 +0800
+Message-ID: <20200817115728.1706719-4-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200817115728.1706719-1-yukuai3@huawei.com>
 References: <20200817115728.1706719-1-yukuai3@huawei.com>
@@ -50,29 +50,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reurn value of of_find_device_by_node() is not checked, thus null
-pointer dereference will be triggered if of_find_device_by_node()
-failed.
+If memory allocation for 'atslave' succeed, at_dma_xlate() doesn't have a
+corresponding kfree() in exception handling. Thus add kfree() for this
+function implementation.
 
 Fixes: bbe89c8e3d59 ("at_hdmac: move to generic DMA binding")
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/dma/at_hdmac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/at_hdmac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 45bbcd6146fd..1c941f839c42 100644
+index bf874367097c..a2cf25c6e3b3 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
-@@ -1650,6 +1650,8 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+@@ -1691,6 +1691,7 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+ 	chan = dma_request_channel(mask, at_dma_filter, atslave);
+ 	if (!chan) {
+ 		put_device(&dmac_pdev->dev);
++		kfree(atslave);
  		return NULL;
+ 	}
  
- 	dmac_pdev = of_find_device_by_node(dma_spec->np);
-+	if (!dmac_pdev)
-+		return NULL;
- 
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
 -- 
 2.25.4
 
