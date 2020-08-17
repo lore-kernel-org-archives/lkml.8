@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55109C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8804C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDE02063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925EC20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687116;
-	bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
+	s=default; t=1597687128;
+	bh=uNGWZjCsg64ckoUhe0XxFhNdO/u7Unjei4kpB/FWVdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1tpednMfa0w01zBklPSrXjshj/mDmW5IyEPWvZOjQhLlYRxCciT9d4QL+LXahv/j
-	 ftPYvvJKpMNbWXsWCkwPzMNPGtuOGN6l2Me/AM2mVb2sUSY5Cwe8fTV0M68d44zH2b
-	 SGe79p1mTsDYOfRwS4CBqK4CNIwkI85YrYJ7ARvU=
+	b=hqzheblUos7i0DLFmU/dvANWWboMWgRefh6CjLPhduapkXtZlrOs8opBbmDnNKRVj
+	 ElFpI02R2qzgKx3N9sEM6EKeZNYIfFo8q2wRfrHN/1QFXhqMoG18J2YDz/jPoXp3hm
+	 KDhPP/SzGZpFtlw9v5m7tx64P/Grsgu3eXG5uCFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390190AbgHQR6e (ORCPT
+        id S2390222AbgHQR6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:58:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388541AbgHQQKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388540AbgHQQKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D731A20760;
-        Mon, 17 Aug 2020 16:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6335B20772;
+        Mon, 17 Aug 2020 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680592;
-        bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
+        s=default; t=1597680599;
+        bh=uNGWZjCsg64ckoUhe0XxFhNdO/u7Unjei4kpB/FWVdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7S6sHeludi7srU4D3lEZl6UupwUz40oAinfj7aaFeTuBTu7xSgLkni4N6ll4R9oV
-         KqbiHMmUnOZl6FPsQeVXWJd6Zae0MhToYEXBE3PmZ4Fk9HDpqHMm3/AG+d2+YO4hYg
-         U60bLPPZvd8LhgKaQBN3gDs7fQv2ZL6ZPg1aXwCA=
+        b=jbUSFgS8pm4ROKF+FimIsHZB6mopblhf7iyfVNVWLpc/hK1FBtR3p9cg03wzAW9EA
+         fDUMe2WpNdLKKKnQk4FZjMDH26txL/t3PxgKbgpKXBIEFMKbl0TMl/GM//Cpcht/BF
+         EhgakJzUPguPB8USt2xra3Jz0VZj6tBgw+LfLU4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.4 248/270] Revert "parisc: Revert "Release spinlocks using ordered store""
-Date:   Mon, 17 Aug 2020 17:17:29 +0200
-Message-Id: <20200817143808.169137147@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.4 251/270] parisc: mask out enable and reserved bits from sba imask
+Date:   Mon, 17 Aug 2020 17:17:32 +0200
+Message-Id: <20200817143808.328815013@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -58,75 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Sven Schnelle <svens@stackframe.org>
 
-commit 157e9afcc4fa25068b0e8743bc254a9b56010e13 upstream.
+commit 5b24993c21cbf2de11aff077a48c5cb0505a0450 upstream.
 
-This reverts commit 86d4d068df573a8c2105554624796c086d6bec3d.
+When using kexec the SBA IOMMU IBASE might still have the RE
+bit set. This triggers a WARN_ON when trying to write back the
+IBASE register later, and it also makes some mask calculations fail.
 
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
 Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: <stable@vger.kernel.org> # v5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/spinlock.h |    4 ++--
- arch/parisc/kernel/syscall.S       |   12 ++++--------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ drivers/parisc/sba_iommu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/include/asm/spinlock.h
-+++ b/arch/parisc/include/asm/spinlock.h
-@@ -37,8 +37,8 @@ static inline void arch_spin_unlock(arch
- 	volatile unsigned int *a;
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -1270,7 +1270,7 @@ sba_ioc_init_pluto(struct parisc_device
+ 	** (one that doesn't overlap memory or LMMIO space) in the
+ 	** IBASE and IMASK registers.
+ 	*/
+-	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE);
++	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE) & ~0x1fffffULL;
+ 	iova_space_size = ~(READ_REG(ioc->ioc_hpa + IOC_IMASK) & 0xFFFFFFFFUL) + 1;
  
- 	a = __ldcw_align(x);
--	mb();
--	*a = 1;
-+	/* Release with ordered store. */
-+	__asm__ __volatile__("stw,ma %0,0(%1)" : : "r"(1), "r"(a) : "memory");
- }
- 
- static inline int arch_spin_trylock(arch_spinlock_t *x)
---- a/arch/parisc/kernel/syscall.S
-+++ b/arch/parisc/kernel/syscall.S
-@@ -640,8 +640,7 @@ cas_action:
- 	sub,<>	%r28, %r25, %r0
- 2:	stw	%r24, 0(%r26)
- 	/* Free lock */
--	sync
--	stw	%r20, 0(%sr2,%r20)
-+	stw,ma	%r20, 0(%sr2,%r20)
- #if ENABLE_LWS_DEBUG
- 	/* Clear thread register indicator */
- 	stw	%r0, 4(%sr2,%r20)
-@@ -655,8 +654,7 @@ cas_action:
- 3:		
- 	/* Error occurred on load or store */
- 	/* Free lock */
--	sync
--	stw	%r20, 0(%sr2,%r20)
-+	stw,ma	%r20, 0(%sr2,%r20)
- #if ENABLE_LWS_DEBUG
- 	stw	%r0, 4(%sr2,%r20)
- #endif
-@@ -857,8 +855,7 @@ cas2_action:
- 
- cas2_end:
- 	/* Free lock */
--	sync
--	stw	%r20, 0(%sr2,%r20)
-+	stw,ma	%r20, 0(%sr2,%r20)
- 	/* Enable interrupts */
- 	ssm	PSW_SM_I, %r0
- 	/* Return to userspace, set no error */
-@@ -868,8 +865,7 @@ cas2_end:
- 22:
- 	/* Error occurred on load or store */
- 	/* Free lock */
--	sync
--	stw	%r20, 0(%sr2,%r20)
-+	stw,ma	%r20, 0(%sr2,%r20)
- 	ssm	PSW_SM_I, %r0
- 	ldo	1(%r0),%r28
- 	b	lws_exit
+ 	if ((ioc->ibase < 0xfed00000UL) && ((ioc->ibase + iova_space_size) > 0xfee00000UL)) {
 
 
