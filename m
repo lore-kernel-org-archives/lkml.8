@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7394C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA97C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5CE20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C864520578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689470;
-	bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
+	s=default; t=1597689486;
+	bh=rwh+qVj2F7Wzx/uXe1qYlWUrga3sdBRZ98BEMzg7SzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LKiAtcV4gAAEN5ptM5zQvqtB+7gw6Bm0kUYi4t4Wqzr2cUu+E9Y76x31NOXl+1xh+
-	 V+uylzsia5l2WCrDXIQKuwgAazHg1q1vGdqPbYzllekTW+v2I4562bj/H9f4tvTDha
-	 VrP7tz9/+Ccb/XvOYYHG1278+W/WcOnSnbtQDuOk=
+	b=ycpDIq0ulr73SzufFf4cb0KHaw5F1onfKUtBSl6OThZLB0rFzZxsgbvvkk0dfjfEE
+	 k11JZmmx/S/ObTC+3pAqo+q3ClswykXjlVMkWzaqVEkJBN5Humi5rZ8BE/EEKhB1Ov
+	 /D3+pqsGS4azLcM7d5CYpiQJPK2LNjCxcH/5W/x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbgHQP6u (ORCPT
+        id S2389031AbgHQSiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387546AbgHQPm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:29 -0400
+        id S1730932AbgHQP6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D267F20825;
-        Mon, 17 Aug 2020 15:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65025206FA;
+        Mon, 17 Aug 2020 15:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678948;
-        bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
+        s=default; t=1597679928;
+        bh=rwh+qVj2F7Wzx/uXe1qYlWUrga3sdBRZ98BEMzg7SzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QIhKSzXgCWFnytsTtq1xJagzHL5oC9AhE5z3TR1CXCvuahKrixGKXhK2Ec7YSZcBD
-         p9K7fbUWitij80zFMnXwQwm5UZ3UklCD781Xcc7/do7oA+6wBm3mTS5z5ZnjNhq0P5
-         xTOGcWikrzzuJOgCzJOT0zGXdU5rhkGoJlZmSzo8=
+        b=Hv0VM6IMTZaMPlZgyUD5+gf6iyOkXYqaB6TXfODveRnlpQi2nBvx5tfpYAPFcKUBV
+         6SxpMOeacCjkW3gSS4KuT8qUG+M1M2zHX7DTFSWYVmrK+qXhaByj4e01oS3F/4DQns
+         qiTm45dfrlxmvSHgFmltUUmZ34ysGwQgrXEIGPTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 044/393] regulator: fix memory leak on error path of regulator_register()
-Date:   Mon, 17 Aug 2020 17:11:34 +0200
-Message-Id: <20200817143821.738366081@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Tom=C3=A1=C5=A1=20Chaloupka?= <chalucha@gmail.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 355/393] io_uring: set ctx sq/cq entry count earlier
+Date:   Mon, 17 Aug 2020 17:16:45 +0200
+Message-Id: <20200817143836.814088162@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,116 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
+commit bd74048108c179cea0ff52979506164c80f29da7 upstream.
 
-The change corrects registration and deregistration on error path
-of a regulator, the problem was manifested by a reported memory
-leak on deferred probe:
+If we hit an earlier error path in io_uring_create(), then we will have
+accounted memory, but not set ctx->{sq,cq}_entries yet. Then when the
+ring is torn down in error, we use those values to unaccount the memory.
 
-    as3722-regulator as3722-regulator: regulator 13 register failed -517
+Ensure we set the ctx entries before we're able to hit a potential error
+path.
 
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xecc43740 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
-      hex dump (first 32 bytes):
-        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
-        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-      backtrace:
-        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
-        [<40c0ad48>] kvasprintf+0x64/0xd4
-        [<109abd29>] kvasprintf_const+0x70/0x84
-        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
-        [<62282ea2>] dev_set_name+0x40/0x64
-        [<a39b6757>] regulator_register+0x3a4/0x1344
-        [<16a9543f>] devm_regulator_register+0x4c/0x84
-        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
-        ...
+Cc: stable@vger.kernel.org
+Reported-by: Tomáš Chaloupka <chalucha@gmail.com>
+Tested-by: Tomáš Chaloupka <chalucha@gmail.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The memory leak problem was introduced as a side ef another fix in
-regulator_register() error path, I believe that the proper fix is
-to decouple device_register() function into its two compounds and
-initialize a struct device before assigning any values to its fields
-and then using it before actual registration of a device happens.
-
-This lets to call put_device() safely after initialization, and, since
-now a release callback is called, kfree(rdev->constraints) shall be
-removed to exclude a double free condition.
-
-Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ fs/io_uring.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 7486f6e4e613c..0cb99bb090ef8 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5005,7 +5005,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	struct regulator_dev *rdev;
- 	bool dangling_cfg_gpiod = false;
- 	bool dangling_of_gpiod = false;
--	bool reg_device_fail = false;
- 	struct device *dev;
- 	int ret, i;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7869,6 +7869,10 @@ static int io_allocate_scq_urings(struct
+ 	struct io_rings *rings;
+ 	size_t size, sq_array_offset;
  
-@@ -5134,10 +5133,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	}
++	/* make sure these are sane, as we already accounted them */
++	ctx->sq_entries = p->sq_entries;
++	ctx->cq_entries = p->cq_entries;
++
+ 	size = rings_size(p->sq_entries, p->cq_entries, &sq_array_offset);
+ 	if (size == SIZE_MAX)
+ 		return -EOVERFLOW;
+@@ -7885,8 +7889,6 @@ static int io_allocate_scq_urings(struct
+ 	rings->cq_ring_entries = p->cq_entries;
+ 	ctx->sq_mask = rings->sq_ring_mask;
+ 	ctx->cq_mask = rings->cq_ring_mask;
+-	ctx->sq_entries = rings->sq_ring_entries;
+-	ctx->cq_entries = rings->cq_ring_entries;
  
- 	/* register with sysfs */
-+	device_initialize(&rdev->dev);
- 	rdev->dev.class = &regulator_class;
- 	rdev->dev.parent = dev;
- 	dev_set_name(&rdev->dev, "regulator.%lu",
- 		    (unsigned long) atomic_inc_return(&regulator_no));
-+	dev_set_drvdata(&rdev->dev, rdev);
- 
- 	/* set regulator constraints */
- 	if (init_data)
-@@ -5188,12 +5189,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	    !rdev->desc->fixed_uV)
- 		rdev->is_switch = true;
- 
--	dev_set_drvdata(&rdev->dev, rdev);
--	ret = device_register(&rdev->dev);
--	if (ret != 0) {
--		reg_device_fail = true;
-+	ret = device_add(&rdev->dev);
-+	if (ret != 0)
- 		goto unset_supplies;
--	}
- 
- 	rdev_init_debugfs(rdev);
- 
-@@ -5215,17 +5213,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	mutex_unlock(&regulator_list_mutex);
- wash:
- 	kfree(rdev->coupling_desc.coupled_rdevs);
--	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
-+	put_device(&rdev->dev);
-+	rdev = NULL;
- clean:
- 	if (dangling_of_gpiod)
- 		gpiod_put(config->ena_gpiod);
--	if (reg_device_fail)
--		put_device(&rdev->dev);
--	else
--		kfree(rdev);
-+	kfree(rdev);
- 	kfree(config);
- rinse:
- 	if (dangling_cfg_gpiod)
--- 
-2.25.1
-
+ 	size = array_size(sizeof(struct io_uring_sqe), p->sq_entries);
+ 	if (size == SIZE_MAX) {
 
 
