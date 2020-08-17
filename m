@@ -2,177 +2,98 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F36C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A92EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F5520786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07812086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597668459;
-	bh=F6AeSzf4yODe5VfS/mOvvXXrmYEDiPf8ncHRYGsJH9o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yrzLsfqEhiNwH+9aOXovAH/Ish/1bBMXQbdqyUUkqpI6ScKYiSeL6CKtvQV9z6azc
-	 SdzODf7Fw01j0TiEQbFx07rCh77abInJBFxY7F1bIMKUFL9rLyVsX8nHJnLsKNmhsP
-	 SORGQ4TldlcFdbiiEo90UaKkJrH5BHgbGkiNMNlo=
+	s=default; t=1597668737;
+	bh=LCkDhp0yrQ1H4GBGLsPDHG1MxDxVdl9KXyWjwLTvWPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DzT9MdWO9M3HPOg/yHPZwHV5curmM7pEdv7cZkbOHyvpCAewEMX2VOq57tRtwV642
+	 Lafe1W6aNssy27IG8/ZN7SxYgvFKpa0/wHC7PNdcUvMWSjGU1r1fpD+fQFwCKXBsLi
+	 fsIh4wxQ1NtiO1RPCfZZ2df6XcRAhVQagkiYzi/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgHQMri (ORCPT
+        id S1728449AbgHQMwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 08:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbgHQMrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:47:37 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726265AbgHQMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:52:13 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A2A2078D;
-        Mon, 17 Aug 2020 12:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA53020789;
+        Mon, 17 Aug 2020 12:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597668456;
-        bh=F6AeSzf4yODe5VfS/mOvvXXrmYEDiPf8ncHRYGsJH9o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WLGovId1pF0RtoS/pxVhAbmTDQxL+wlb/YPyjGm4gwU7EG0HpRde71z58372pAGUI
-         Mk7gmvMtdYHyCuhuPVYr4Pyx7oBmnbh5hBitrBnQEaY0aHR0Q7DRVQHu/ZXD3RYk4h
-         ZjAMCDf1SsweOIV20FDlQU218t5SISXQewIF1Xjo=
-Received: by mail-lj1-f179.google.com with SMTP id h19so17298517ljg.13;
-        Mon, 17 Aug 2020 05:47:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532oqzzG5LP9YEUrK2IZP8tpsDMZcUPpohezb42zbSVCSt0TzE4J
-        Yr6UXzWlaMlVjN6FRh5PIq4hUnJAjDtwgDZCwss=
-X-Google-Smtp-Source: ABdhPJw1v8JVnt2oJ6bSCPU4EmN7bm2mGdNOp7Vx6uxxuEJFPNSCeEfTKhQjsXzu5H3BmOMqhHgKjHmNPG6tmd7ZCYE=
-X-Received: by 2002:a2e:9bc1:: with SMTP id w1mr6581503ljj.79.1597668454259;
- Mon, 17 Aug 2020 05:47:34 -0700 (PDT)
+        s=default; t=1597668732;
+        bh=LCkDhp0yrQ1H4GBGLsPDHG1MxDxVdl9KXyWjwLTvWPI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pUHLfV+s8fddXGPPQLHHqlb1z8AbfUZG7NYwsP6qnq5K2IVfcprGJsRrncpdFA9ra
+         0yWmrmbHicohobmmQJY+O/OkOVFL+9FwbcCNn8IymvQarItwreniFbq0rqYpjzwCEx
+         WpS6O+f+OLhmp7XvP9Rx93u16E0rFw/5ea5eTJsA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k7ecV-003ZH0-B9; Mon, 17 Aug 2020 13:52:11 +0100
 MIME-Version: 1.0
-References: <1594683562-68149-4-git-send-email-guoren@kernel.org> <mhng-296dd63e-71de-4d30-acfb-df374d12388d@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-296dd63e-71de-4d30-acfb-df374d12388d@palmerdabbelt-glaptop1>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Mon, 17 Aug 2020 20:47:21 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTz_EFpzMoT3yBgCNTNme9_QbQ9b2dGZB3S0F5+O6Fpyw@mail.gmail.com>
-Message-ID: <CAJF2gTTz_EFpzMoT3yBgCNTNme9_QbQ9b2dGZB3S0F5+O6Fpyw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] riscv: Fixup kprobes handler couldn't change pc
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
-        Bjorn Topel <bjorn.topel@gmail.com>,
-        Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Aug 2020 13:52:11 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Keqian Zhu <zhukeqian1@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steven Price <steven.price@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH 1/2] clocksource: arm_arch_timer: Simplify and fix count
+ reader code logic
+In-Reply-To: <20200817122415.6568-2-zhukeqian1@huawei.com>
+References: <20200817122415.6568-1-zhukeqian1@huawei.com>
+ <20200817122415.6568-2-zhukeqian1@huawei.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <267c5f9151c39fd2dcd0ce0b09d96545@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, steven.price@arm.com, drjones@redhat.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 6:36 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
->
-> On Mon, 13 Jul 2020 16:39:18 PDT (-0700), guoren@kernel.org wrote:
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > The "Changing Execution Path" section in the Documentation/kprobes.txt
-> > said:
-> >
-> > Since kprobes can probe into a running kernel code, it can change the
-> > register set, including instruction pointer.
-> >
-> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Palmer Dabbelt <palmerdabbelt@google.com>
-> > ---
-> >  arch/riscv/kernel/mcount-dyn.S | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-> > index 35a6ed7..4b58b54 100644
-> > --- a/arch/riscv/kernel/mcount-dyn.S
-> > +++ b/arch/riscv/kernel/mcount-dyn.S
-> > @@ -123,6 +123,7 @@ ENDPROC(ftrace_caller)
-> >       sd      ra, (PT_SIZE_ON_STACK+8)(sp)
-> >       addi    s0, sp, (PT_SIZE_ON_STACK+16)
-> >
-> > +     sd ra,  PT_EPC(sp)
-> >       sd x1,  PT_RA(sp)
-> >       sd x2,  PT_SP(sp)
-> >       sd x3,  PT_GP(sp)
->
-> So that's definately not going to be EPC any more.  I'm not sure that field is
-> sanely named, though, as it's really just the PC when it comes to other ptrace
-> stuff.
->
-> > @@ -157,6 +158,7 @@ ENDPROC(ftrace_caller)
-> >       .endm
-> >
-> >       .macro RESTORE_ALL
-> > +     ld ra,  PT_EPC(sp)
-> >       ld x1,  PT_RA(sp)
->
-> x1 is ra, so loading it twice doesn't seem reasonable.
->
-> >       ld x2,  PT_SP(sp)
-> >       ld x3,  PT_GP(sp)
-> > @@ -190,7 +192,6 @@ ENDPROC(ftrace_caller)
-> >       ld x31, PT_T6(sp)
-> >
-> >       ld      s0, (PT_SIZE_ON_STACK)(sp)
-> > -     ld      ra, (PT_SIZE_ON_STACK+8)(sp)
-> >       addi    sp, sp, (PT_SIZE_ON_STACK+16)
-> >       .endm
->
-> If you're dropping the load you should drop the store above as well.  In
-> general this seems kind of mixed up, both before and after this patch.
+On 2020-08-17 13:24, Keqian Zhu wrote:
+> In commit 0ea415390cd3 (clocksource/arm_arch_timer: Use 
+> arch_timer_read_counter
+> to access stable counters), we separate stable and normal count reader. 
+> Actually
+> the stable reader can correctly lead us to normal reader if we has no
+> workaround.
 
-This is a wrong patch, it should be:
+Resulting in an unnecessary overhead on non-broken systems that can run
+without CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND. Not happening.
 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 35a6ed7..d82b8f0 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -120,10 +120,10 @@ ENDPROC(ftrace_caller)
-        .macro SAVE_ALL
-        addi    sp, sp, -(PT_SIZE_ON_STACK+16)
-        sd      s0, (PT_SIZE_ON_STACK)(sp)
--       sd      ra, (PT_SIZE_ON_STACK+8)(sp)
-        addi    s0, sp, (PT_SIZE_ON_STACK+16)
+> Besides, in erratum_set_next_event_tval_generic(), we use normal 
+> reader, it is
+> obviously wrong, so just revert this commit to solve this problem by 
+> the way.
 
--       sd x1,  PT_RA(sp)
-+       sd ra,  PT_EPC(sp)
-+       sd ra,  PT_RA(sp)
-        sd x2,  PT_SP(sp)
-        sd x3,  PT_GP(sp)
-        sd x4,  PT_TP(sp)
-@@ -157,7 +157,7 @@ ENDPROC(ftrace_caller)
-        .endm
+If you want to fix something, post a patch that does exactly that.
 
-        .macro RESTORE_ALL
--       ld x1,  PT_RA(sp)
-+       ld ra,  PT_EPC(sp)
-        ld x2,  PT_SP(sp)
-        ld x3,  PT_GP(sp)
-        ld x4,  PT_TP(sp)
-@@ -190,7 +190,6 @@ ENDPROC(ftrace_caller)
-        ld x31, PT_T6(sp)
-
-        ld      s0, (PT_SIZE_ON_STACK)(sp)
--       ld      ra, (PT_SIZE_ON_STACK+8)(sp)
-        addi    sp, sp, (PT_SIZE_ON_STACK+16)
-        .endm
-
-Now, I'm developing livepatch and they are so mixed features (kprobe,
-livepatch, ftrace, optprobes, STACK_WALK, -fpatchable-function-entry
-'no -pg'). I'll test this patch in the next version of the patchset.
-
-Thx for the review.
-
+         M.
 -- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+Jazz is not dead. It just smells funny...
