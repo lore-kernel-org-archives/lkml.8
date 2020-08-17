@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95986C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7150320729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AAA2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683475;
-	bh=bNnF3Nxe6ZKunnmwlPkm1Ly4NV7ktCyAenwMQmCP6TQ=;
+	s=default; t=1597683522;
+	bh=G2XizUJHfMayOcIy1/wif6i1wmQgrdBDThFngyfozWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vam9nzGWzUXXneAuCvZd47fu3SAnfUTXdk98NSNszywYLz6SaRRvi2t3TBhwtwjJu
-	 Wsr4j5Tc4sufh8TcjFvz7C89sjxqlZN6VWEDXO5sExvzTBFCIRMFe5Y6SdApsckZKF
-	 TMbvYDwklrwkWCO/XqWDOMxXlnSAlN9B4DonIMvg=
+	b=kA+UCqiWYRmNndk2TIr0K9tljQg+2usthXR4vkq5RhCa3/IWHEy4D4uqIu8RjC1Ng
+	 1IO5X63jI5bFbFUTres6AEZhqu+F9SJHwys2efYDIocbCREyLiMlS9pBa17Tt9F2K8
+	 zWbczpcPcAzizvbV29xKxN1f9XLvmVXgkGXeFzmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389246AbgHQQ5q (ORCPT
+        id S2389278AbgHQQ6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:57:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52806 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388351AbgHQQE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:57 -0400
+        id S2387937AbgHQQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF4120772;
-        Mon, 17 Aug 2020 16:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9206020825;
+        Mon, 17 Aug 2020 16:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680297;
-        bh=bNnF3Nxe6ZKunnmwlPkm1Ly4NV7ktCyAenwMQmCP6TQ=;
+        s=default; t=1597680302;
+        bh=G2XizUJHfMayOcIy1/wif6i1wmQgrdBDThFngyfozWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPjp7ymvnP35GdDINA5qELuG5PplCuYpgLiPMka6MkZG+eTECLVwuriPF+ZBcY8Kt
-         +iLjvxEkfIlTfs4Ywh9Wzt4RyhiCSCazMXoGp693SbJU/skagUU23Oc3vXA4SUlL5R
-         +8DNxgCnECs9+Wix6tRQhq8jec5v+Kj3gqRE7cEA=
+        b=wWa7nBLFDx88x0inq4viILFe4Z0dAVRLF7leClgP4DSy0UY27xL1oxrLpicwzTnr4
+         Arlg7OZeoPyr3SJmdCZNIPGnboWDEhRCzfz0HY7ButRYHvX5CZx/O5TKBiUnqWNnuC
+         w8gVlvrWFHHDMciXbkPWDt643Gl6Jj8UhFkRDT/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/270] ath10k: Acquire tx_lock in tx error paths
-Date:   Mon, 17 Aug 2020 17:15:01 +0200
-Message-Id: <20200817143800.757322647@linuxfoundation.org>
+Subject: [PATCH 5.4 092/270] agp/intel: Fix a memory leak on module initialisation failure
+Date:   Mon, 17 Aug 2020 17:14:53 +0200
+Message-Id: <20200817143800.342464585@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit a738e766e3ed92c4ee5ec967777276b5ce11dd2c ]
+[ Upstream commit b975abbd382fe442713a4c233549abb90e57c22b ]
 
-ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
-is held. Acquire the lock in a couple of error paths when calling that
-function to ensure this condition is met.
+In intel_gtt_setup_scratch_page(), pointer "page" is not released if
+pci_dma_mapping_error() return an error, leading to a memory leak on
+module initialisation failure.  Simply fix this issue by freeing "page"
+before return.
 
-Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
-Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64 descriptor")
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid
+Fixes: 0e87d2b06cb46 ("intel-gtt: initialize our own scratch page")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200522083451.7448-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/htt_tx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/char/agp/intel-gtt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt_tx.c b/drivers/net/wireless/ath/ath10k/htt_tx.c
-index 735482877a1f5..c38e1963ebc05 100644
---- a/drivers/net/wireless/ath/ath10k/htt_tx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_tx.c
-@@ -1540,7 +1540,9 @@ static int ath10k_htt_tx_32(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
- }
-@@ -1747,7 +1749,9 @@ static int ath10k_htt_tx_64(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
- }
+diff --git a/drivers/char/agp/intel-gtt.c b/drivers/char/agp/intel-gtt.c
+index b161bdf600004..0941d38b2d32f 100644
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -304,8 +304,10 @@ static int intel_gtt_setup_scratch_page(void)
+ 	if (intel_private.needs_dmar) {
+ 		dma_addr = pci_map_page(intel_private.pcidev, page, 0,
+ 				    PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+-		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr))
++		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr)) {
++			__free_page(page);
+ 			return -EINVAL;
++		}
+ 
+ 		intel_private.scratch_page_dma = dma_addr;
+ 	} else
 -- 
 2.25.1
 
