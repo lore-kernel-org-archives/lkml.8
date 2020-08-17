@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F86EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45AD320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E42A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693126;
-	bh=vgdOslLjnw2DeqL4RFV6A0J6tXKrRXKMdLe0JxpjvX8=;
+	s=default; t=1597693131;
+	bh=h+tYd+bZNAwHmeZmlBWeOiSqa8F/jt2io4cs8+AGino=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UqfJ8gZ/W+KJXMhM9Pqf4D8AjO+GIaA3ziDXNRpEzAYNCPMCmlK0Sy33sL2AfdtHu
-	 n3nQoRj2jnYCCabC1f7HVZ217vnWWb+eTw3mJbfY3/T+cu69FMdStadHebd+/NkyjO
-	 fHCgLhOHfyKgxIQTSPj6uxVNLKTXn2yHntoLv+o4=
+	b=TJdscXu5XPOX2WCnQotSGhkLaIqSKMLH/yDZGiPvxLQYDxDD6NkkcaodKT7diBe2o
+	 nlQuCtfffH+xubRzA7Eqkm4BTTwqmAlyzDSkOJx8Jxoz/RqSIDnYOLRHR+fVL0ZkVo
+	 LEOEmWrHy+AJl/of2BRwF/0Zm3myN9WiXHE7onj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbgHQTio (ORCPT
+        id S1732476AbgHQTiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgHQP1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:01 -0400
+        id S1729835AbgHQP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9979C2078D;
-        Mon, 17 Aug 2020 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EEC2344C;
+        Mon, 17 Aug 2020 15:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678021;
-        bh=vgdOslLjnw2DeqL4RFV6A0J6tXKrRXKMdLe0JxpjvX8=;
+        s=default; t=1597678018;
+        bh=h+tYd+bZNAwHmeZmlBWeOiSqa8F/jt2io4cs8+AGino=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3DTwkWAp+f9hIUUxAArABUS/Fds+ORoMh/pVZPkIpIg1xhx6pZ6twDu3vQJ+rm96
-         vxi6Q6SsEMCIAua/ryF0MU9rktku9aERI4gj3Zo4nuBwbPCMC/Nz2nKUCRLIv/rQwE
-         bL/a7ahcaXLWIIyrkNDaeAJS+Hu/0FzSXVIAN6Gc=
+        b=uG/2SX6SjsMucDnLQtj0947+vOfROfcIWm1dPVktowS6X7AnNDXLSfPIF4ZXwoLny
+         sYjBseSgC1lDyh3W1J0Ejvos6ndtSgIjwhsGFZw7MGyBQBj8pCNDbgwOYAyJVtYXzB
+         w6lMtTkUE0mulfAPsquFr+aLgv1MqhpxSwEkjALI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Miao <eric.miao@marvell.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 151/464] video: pxafb: Fix the function used to balance a dma_alloc_coherent() call
-Date:   Mon, 17 Aug 2020 17:11:44 +0200
-Message-Id: <20200817143841.043265483@linuxfoundation.org>
+Subject: [PATCH 5.8 160/464] iio: amplifiers: ad8366: Change devm_gpiod_get() to optional and add the missed check
+Date:   Mon, 17 Aug 2020 17:11:53 +0200
+Message-Id: <20200817143841.473404871@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -68,46 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 499a2c41b954518c372873202d5e7714e22010c4 ]
+[ Upstream commit 9ca39411f9a9c833727750431da8dfd96ff80005 ]
 
-'dma_alloc_coherent()' must be balanced by a call to 'dma_free_coherent()'
-not 'dma_free_wc()'.
-The correct dma_free_ function is already used in the error handling path
-of the probe function.
+Since if there is no GPIO, nothing happens, replace devm_gpiod_get()
+with devm_gpiod_get_optional().
+Also add IS_ERR() to fix the missing-check warning.
 
-Fixes: 77e196752bdd ("[ARM] pxafb: allow video memory size to be configurable")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Jani Nikula <jani.nikula@intel.com>
-cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Eric Miao <eric.miao@marvell.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429084505.108897-1-christophe.jaillet@wanadoo.fr
+Fixes: cee211f4e5a0 ("iio: amplifiers: ad8366: Add support for the ADA4961 DGA")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/pxafb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/amplifiers/ad8366.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
-index 00b96a78676ef..6f972bed410a9 100644
---- a/drivers/video/fbdev/pxafb.c
-+++ b/drivers/video/fbdev/pxafb.c
-@@ -2417,8 +2417,8 @@ static int pxafb_remove(struct platform_device *dev)
- 
- 	free_pages_exact(fbi->video_mem, fbi->video_mem_size);
- 
--	dma_free_wc(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
--		    fbi->dma_buff_phys);
-+	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
-+			  fbi->dma_buff_phys);
- 
- 	return 0;
- }
+diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
+index 62167b87caea8..8345ba65d41d8 100644
+--- a/drivers/iio/amplifiers/ad8366.c
++++ b/drivers/iio/amplifiers/ad8366.c
+@@ -262,8 +262,11 @@ static int ad8366_probe(struct spi_device *spi)
+ 	case ID_ADA4961:
+ 	case ID_ADL5240:
+ 	case ID_HMC1119:
+-		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
+-			GPIOD_OUT_HIGH);
++		st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset", GPIOD_OUT_HIGH);
++		if (IS_ERR(st->reset_gpio)) {
++			ret = PTR_ERR(st->reset_gpio);
++			goto error_disable_reg;
++		}
+ 		indio_dev->channels = ada4961_channels;
+ 		indio_dev->num_channels = ARRAY_SIZE(ada4961_channels);
+ 		break;
 -- 
 2.25.1
 
