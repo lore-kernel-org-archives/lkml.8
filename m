@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9409CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A37BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7876420738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3818820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688350;
-	bh=4DXY1vXP3gHlxRm6MrXusWr04+KdDQZB2L/sqduC1dQ=;
+	s=default; t=1597688368;
+	bh=2F0P9FV987QZlm7wURu7j5FbEmfRyutvHSuhN2qNUmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vo24oEWSwZ+PPXHDBv1EOpEGAHBi6KesIcTTCz9Sop1+kMwIcQ6QQ9CW9kEQBzn+R
-	 fTEdO4p30bc9RthQXe//rQ0w0zo4Q3D88YXEiA/DPKUhvFFNawHdDzovgLa07Kj+Gd
-	 oopd6qCcYom6GlsvSEvfzmD7faOGdN3ORdUdkNWM=
+	b=L+HRtLJokntfXRz66TmBzRPN09eIsf7Yf2lok/xBouBgJwqWpPEvsOzpyhmZHxJN1
+	 wVqYiClrVxGbQ/lRRB45hOKJm6ZlYZDoB+69eJid9Dr7LLRFkL4RuXvT88uNCLCq4l
+	 +W8scrFNu07jc2Yb5k48lPKZ6GxGfQN4E5hjvMqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390181AbgHQSTI (ORCPT
+        id S2390740AbgHQSTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388368AbgHQQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:35 -0400
+        id S2388359AbgHQQFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FE032063A;
-        Mon, 17 Aug 2020 16:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2383C20885;
+        Mon, 17 Aug 2020 16:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680331;
-        bh=4DXY1vXP3gHlxRm6MrXusWr04+KdDQZB2L/sqduC1dQ=;
+        s=default; t=1597680314;
+        bh=2F0P9FV987QZlm7wURu7j5FbEmfRyutvHSuhN2qNUmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEz5+yrd4yver8zUmMt0BTLX2xQrTERPDxCoOJmHAPGdo2gZ2JOIfAf4d9imBQvki
-         NChdor07T2n/h2kCyeercD1GK+TJdoiwPFV8722S0ydyreLzXFpFBHLCRNxRQF0jRf
-         rZ0KdqhW/xSFa3LlHjadwkU7tdw7rWMaXDxO9fmA=
+        b=QNyO4aM32KRCkW605UWxegbNE/W5NCLwWrb38O93WjNAm0cbixJkoSriAz5ZUKriI
+         LxSsqG74KE1trDpA5H4aldb5Capkdxf60ukTgMDzjPC59mpiJe2IA+UAxwdbw/irH3
+         OWd8eBbjGTSflV7NskMGv3O17OJD/pu++82LQ+jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 127/270] xfs: dont eat an EIO/ENOSPC writeback error when scrubbing data fork
-Date:   Mon, 17 Aug 2020 17:15:28 +0200
-Message-Id: <20200817143802.108023009@linuxfoundation.org>
+Subject: [PATCH 5.4 138/270] scsi: scsi_debug: Add check for sdebug_max_queue during module init
+Date:   Mon, 17 Aug 2020 17:15:39 +0200
+Message-Id: <20200817143802.679392751@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,68 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit eb0efe5063bb10bcb653e4f8e92a74719c03a347 ]
+[ Upstream commit c87bf24cfb60bce27b4d2c7e56ebfd86fb9d16bb ]
 
-The data fork scrubber calls filemap_write_and_wait to flush dirty pages
-and delalloc reservations out to disk prior to checking the data fork's
-extent mappings.  Unfortunately, this means that scrub can consume the
-EIO/ENOSPC errors that would otherwise have stayed around in the address
-space until (we hope) the writer application calls fsync to persist data
-and collect errors.  The end result is that programs that wrote to a
-file might never see the error code and proceed as if nothing were
-wrong.
+sdebug_max_queue should not exceed SDEBUG_CANQUEUE, otherwise crashes like
+this can be triggered by passing an out-of-range value:
 
-xfs_scrub is not in a position to notify file writers about the
-writeback failure, and it's only here to check metadata, not file
-contents.  Therefore, if writeback fails, we should stuff the error code
-back into the address space so that an fsync by the writer application
-can pick that up.
+Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+ pstate: 20400009 (nzCv daif +PAN -UAO BTYPE=--)
+ pc : schedule_resp+0x2a4/0xa70 [scsi_debug]
+ lr : schedule_resp+0x52c/0xa70 [scsi_debug]
+ sp : ffff800022ab36f0
+ x29: ffff800022ab36f0 x28: ffff0023a935a610
+ x27: ffff800008e0a648 x26: 0000000000000003
+ x25: ffff0023e84f3200 x24: 00000000003d0900
+ x23: 0000000000000000 x22: 0000000000000000
+ x21: ffff0023be60a320 x20: ffff0023be60b538
+ x19: ffff800008e13000 x18: 0000000000000000
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000000
+ x13: 0000000000000000 x12: 0000000000000000
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : 0000000000000000
+ x7 : 0000000000000000 x6 : 00000000000000c1
+ x5 : 0000020000200000 x4 : dead0000000000ff
+ x3 : 0000000000000200 x2 : 0000000000000200
+ x1 : ffff800008e13d88 x0 : 0000000000000000
+ Call trace:
+schedule_resp+0x2a4/0xa70 [scsi_debug]
+scsi_debug_queuecommand+0x2c4/0x9e0 [scsi_debug]
+scsi_queue_rq+0x698/0x840
+__blk_mq_try_issue_directly+0x108/0x228
+blk_mq_request_issue_directly+0x58/0x98
+blk_mq_try_issue_list_directly+0x5c/0xf0
+blk_mq_sched_insert_requests+0x18c/0x200
+blk_mq_flush_plug_list+0x11c/0x190
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x38/0x210
+blkdev_direct_IO+0x450/0x4d8
+generic_file_read_iter+0x84/0x180
+blkdev_read_iter+0x3c/0x50
+aio_read+0xc0/0x170
+io_submit_one+0x5c8/0xc98
+__arm64_sys_io_submit+0x1b0/0x258
+el0_svc_common.constprop.3+0x68/0x170
+do_el0_svc+0x24/0x90
+el0_sync_handler+0x13c/0x1a8
+el0_sync+0x158/0x180
+ Code: 528847e0 72a001e0 6b00003f 540018cd (3941c340)
 
-Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+In addition, it should not be less than 1.
+
+So add checks for these, and fail the module init for those cases.
+
+[mkp: changed if condition to match error message]
+
+Link: https://lore.kernel.org/r/1594297400-24756-2-git-send-email-john.garry@huawei.com
+Fixes: c483739430f1 ("scsi_debug: add multiple queue support")
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/scrub/bmap.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_debug.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index fa6ea6407992a..392fb4df5c127 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -45,9 +45,27 @@ xchk_setup_inode_bmap(
- 	 */
- 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
- 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
-+		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
-+
- 		inode_dio_wait(VFS_I(sc->ip));
--		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
--		if (error)
-+
-+		/*
-+		 * Try to flush all incore state to disk before we examine the
-+		 * space mappings for the data fork.  Leave accumulated errors
-+		 * in the mapping for the writer threads to consume.
-+		 *
-+		 * On ENOSPC or EIO writeback errors, we continue into the
-+		 * extent mapping checks because write failures do not
-+		 * necessarily imply anything about the correctness of the file
-+		 * metadata.  The metadata and the file data could be on
-+		 * completely separate devices; a media failure might only
-+		 * affect a subset of the disk, etc.  We can handle delalloc
-+		 * extents in the scrubber, so leaving them in memory is fine.
-+		 */
-+		error = filemap_fdatawrite(mapping);
-+		if (!error)
-+			error = filemap_fdatawait_keep_errors(mapping);
-+		if (error && (error != -ENOSPC && error != -EIO))
- 			goto out;
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 32965ec76965a..44181a2cbf18d 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -5296,6 +5296,12 @@ static int __init scsi_debug_init(void)
+ 		pr_err("submit_queues must be 1 or more\n");
+ 		return -EINVAL;
  	}
- 
++
++	if ((sdebug_max_queue > SDEBUG_CANQUEUE) || (sdebug_max_queue < 1)) {
++		pr_err("max_queue must be in range [1, %d]\n", SDEBUG_CANQUEUE);
++		return -EINVAL;
++	}
++
+ 	sdebug_q_arr = kcalloc(submit_queues, sizeof(struct sdebug_queue),
+ 			       GFP_KERNEL);
+ 	if (sdebug_q_arr == NULL)
 -- 
 2.25.1
 
