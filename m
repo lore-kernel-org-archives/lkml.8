@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28596C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8686C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F71204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C7E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690710;
-	bh=/NfL1I0lyz/OTieWorhDGicPfBDzwIhgoHhl5yOB0lY=;
+	s=default; t=1597690715;
+	bh=AWzTDOSp9902vFeSTzQeewOWoyM76XLWejNu5KwIUE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6LTcUapXqFnmtQodYo1BX/Y77hdT5CvKnEOGFTQqExqO0FFXww7vnpgrAscJMSWw
-	 zXh5juRJ6d0GISftPSCeDOliLpSJWFfwG3afkfyLoa63iinQmZYOgzMzNuNu94gDDC
-	 ZfUf72wHcTCugpZGhT1h6WiBYNHdxO8hLCejWLks=
+	b=dup4RNKk87/HeJzTGgoBXlybW0/aATOMHyog386OHxY/d7TpxBsNeLjabksAS5ftN
+	 B7LQHJE/TxAXMTHypeOGOLTntpKkJDHNvFqfd7nhfJ1jWkXPQwPfXdSuvYc7taC+xk
+	 PDAWsFbUjR1D66L+3qt9/VnQCjba2vOmcQs5kMnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403993AbgHQS6S (ORCPT
+        id S2391807AbgHQS6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34420 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgHQPuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:06 -0400
+        id S2387802AbgHQPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1E422B40;
-        Mon, 17 Aug 2020 15:49:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C47722065D;
+        Mon, 17 Aug 2020 15:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679395;
-        bh=/NfL1I0lyz/OTieWorhDGicPfBDzwIhgoHhl5yOB0lY=;
+        s=default; t=1597679377;
+        bh=AWzTDOSp9902vFeSTzQeewOWoyM76XLWejNu5KwIUE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbbZgFTJa0OiG22t+Ro7+Y/ey+nHqR5H9PLoYhvSEwl+gVz9mQju7frojdA+7Rw8E
-         R4GoPSPHAJ6Zaz/aX150CINWT4FCjWpBc3BjbNzMUhIf5DKOJlA3cd1P+nfZZD+uV9
-         ZdKRouHMCc3theS4rAx5vlW+jIQM1rGVZkLcWOfE=
+        b=AwAfveEVhZsM3IUMQASW/kfVRKuxroG2RJ51kif2rs0Mlv5CCyb+VR9hD7siAs1Zh
+         /uOHqECc2ScP35LJKZZMdB52UcxwWQbEeqmEWlqjbjyMXdUc8OCobCyLREK/J0qjFn
+         6GMsXV7Oi2PROiAkDN7KoPUhjpLbK70ZTgyeJd7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 197/393] mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
-Date:   Mon, 17 Aug 2020 17:14:07 +0200
-Message-Id: <20200817143829.176118153@linuxfoundation.org>
+Subject: [PATCH 5.7 160/393] ASoC: Intel: bxt_rt298: add missing .owner field
+Date:   Mon, 17 Aug 2020 17:13:30 +0200
+Message-Id: <20200817143827.377851665@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,48 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit c99e1d0c91ac8d7db3062ea1af315f21295701d7 ]
+[ Upstream commit 88cee34b776f80d2da04afb990c2a28c36799c43 ]
 
-These functions do not check the return value of devm_clk_register():
-  - sdhci_arasan_register_sdcardclk()
-  - sdhci_arasan_register_sampleclk()
+This field is required for ASoC cards. Not setting it will result in a
+module->name pointer being NULL and generate problems such as
 
-Therefore, add the missed checks to fix them.
+cat /proc/asound/modules
+ 0 (efault)
 
-Fixes: c390f2110adf1 ("mmc: sdhci-of-arasan: Add ability to export card clock")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200608162226.3259186-1-hslester96@gmail.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 76016322ec56 ('ASoC: Intel: Add Broxton-P machine driver')
+Reported-by: Jaroslav Kysela <perex@perex.cz>
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200625191308.3322-5-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/intel/boards/bxt_rt298.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index d4905c106c060..28091d3f704b7 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -1020,6 +1020,8 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
- 	clk_data->sdcardclk_hw.init = &sdcardclk_init;
- 	clk_data->sdcardclk =
- 		devm_clk_register(dev, &clk_data->sdcardclk_hw);
-+	if (IS_ERR(clk_data->sdcardclk))
-+		return PTR_ERR(clk_data->sdcardclk);
- 	clk_data->sdcardclk_hw.init = NULL;
+diff --git a/sound/soc/intel/boards/bxt_rt298.c b/sound/soc/intel/boards/bxt_rt298.c
+index 7a4decf341918..c84c60df17dbc 100644
+--- a/sound/soc/intel/boards/bxt_rt298.c
++++ b/sound/soc/intel/boards/bxt_rt298.c
+@@ -565,6 +565,7 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ /* broxton audio machine driver for SPT + RT298S */
+ static struct snd_soc_card broxton_rt298 = {
+ 	.name = "broxton-rt298",
++	.owner = THIS_MODULE,
+ 	.dai_link = broxton_rt298_dais,
+ 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
+ 	.controls = broxton_controls,
+@@ -580,6 +581,7 @@ static struct snd_soc_card broxton_rt298 = {
  
- 	ret = of_clk_add_provider(np, of_clk_src_simple_get,
-@@ -1072,6 +1074,8 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
- 	clk_data->sampleclk_hw.init = &sampleclk_init;
- 	clk_data->sampleclk =
- 		devm_clk_register(dev, &clk_data->sampleclk_hw);
-+	if (IS_ERR(clk_data->sampleclk))
-+		return PTR_ERR(clk_data->sampleclk);
- 	clk_data->sampleclk_hw.init = NULL;
- 
- 	ret = of_clk_add_provider(np, of_clk_src_simple_get,
+ static struct snd_soc_card geminilake_rt298 = {
+ 	.name = "geminilake-rt298",
++	.owner = THIS_MODULE,
+ 	.dai_link = broxton_rt298_dais,
+ 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
+ 	.controls = broxton_controls,
 -- 
 2.25.1
 
