@@ -2,127 +2,156 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F77DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B14DA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sef5NOnE"
+	by mail.kernel.org (Postfix) with ESMTP id 7BCAC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692361;
+	bh=wDN3etVJB3pHViHml9zghM5nbR6E/xlIJrqYrQXPBLE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u6A3/DfjHEP0r3ElPztmTBQ11NMOG3Fr+0uoJz9UJ2Jd9ZWholYMSi5fhom1QpzdU
+	 11S3SaC6ab5xi1gRbSbu44BrFy7hak7TaGxZcLGSz7grzEwwWhAORgpR9YH7T1R6sF
+	 1jEE9ujLAR2zJwN21345qMkrQi1TihCLVWv1cTUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732093AbgHQTZ5 (ORCPT
+        id S1732067AbgHQTZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:25:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732083AbgHQTZm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:25:42 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3FEC061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id i20so1822920qkk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/kXuaN4AISusMlSkk2TTILtf5athEb7HHTj/BXfUUMU=;
-        b=sef5NOnEMc5nMqLQAehSTQDhfZ46QOtS1oW9CJlK4AXP5+gkrMhCAMBEtPbqvVzKr0
-         yAjODdfU4JSnB5BKF062O+zy171oc4LMeifmp7mPMhAyJc0ylBp3d+TEKBmHRMxQari4
-         szVpFMjye/T+BFept4uUfaYCo+Hmg44nsfyBxrIA8R3yloM0ejE6Q5JtCPSwvJ1b2aLC
-         pKBFRTtOYokNbXXiKPv4yP5068Go4iUiwMTxXTcVmPoSZ5AfIi64/BdoMxmbFqHL3p5g
-         NcX2J40IBF8QKAMIcwzICyWcRYeRQ8TqkrXYO9jpCKWw9Ap5euwpwVptWMJFxzge4ndT
-         bzzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/kXuaN4AISusMlSkk2TTILtf5athEb7HHTj/BXfUUMU=;
-        b=OaKzRw2GHQlSxo4Il7rLxZ+iSHzYUpcX4NAGMjUpSZodjUhqOi7wvICphGkXcHzYvK
-         rRUeFtQoFf68uVJnZRVFX6OhLmN9K2LvPLd0sSs1sT3Wu7eVo9HPviuTqmIcyUDb9OY8
-         OPwAaQQtFYVZBQ9di+b0DYl0vE7P58WWQGOgzrOrC0sUGcAjG3AuKd8pl+MZD00M7PI+
-         MT7vHcW4k5IGlkagDC2EToY18XvgulpTANm2MeTCEyexldPXxOyy6YY/ak4hl/y5Tbf5
-         fPQWQJptGB6pBNOaljrjPX4hhBm//7utHnRhhgmW6U+byMqD7tUMp6uNTL1cicXTeZlA
-         oPtA==
-X-Gm-Message-State: AOAM533b+r33GA1RU/CgqltQWpBBgwHWnibl150GLuzBHz1GZKEs4gxQ
-        5RaXS1j9Dqt67RgjtX/zOOT7vXAQvobP4dbYZjmSnA==
-X-Google-Smtp-Source: ABdhPJx655WoWSZf8sKCtbQuqerBJWhb5d5rkooksrvYXLljTd0tdKuq/bKTr3OTKpoHtxRX1s5CYeo/ddHv+O/tjjo=
-X-Received: by 2002:a37:a495:: with SMTP id n143mr14451570qke.330.1597692341063;
- Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
+        Mon, 17 Aug 2020 15:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730423AbgHQPeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D651922D3E;
+        Mon, 17 Aug 2020 15:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678445;
+        bh=wDN3etVJB3pHViHml9zghM5nbR6E/xlIJrqYrQXPBLE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zUWoea6gddEk9Hedaj7Hdg/NAS6cjiTL+Jmh783NSqauscw+oKldprROuM04MRm1d
+         9XQpDM6Gdv/s+sesgQQvpHOEeltpprtQKIBJKbWgdIGbtIoDU+OqyiKzkeqzfVCz9h
+         KZ9vBbQZh91qXj9xABW9WEAxm2I3ve84LltsPr1s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        WANG Xuerui <git@xen0n.name>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 336/464] MIPS: only register FTLBPar exception handler for supported models
+Date:   Mon, 17 Aug 2020 17:14:49 +0200
+Message-Id: <20200817143849.873631728@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200814030257.135463-1-warthog618@gmail.com> <CAMpxmJUCwXVv6U9sE=8isRMoNd8QvM9XLu4PU2Rr454wt_FTUw@mail.gmail.com>
- <20200817184018.GV1891694@smile.fi.intel.com>
-In-Reply-To: <20200817184018.GV1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 17 Aug 2020 21:25:30 +0200
-Message-ID: <CAMpxmJV6k=mQaYsH_abTHhyXis+hLJkJX+M9jAtciUB=0uoEUA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/20] gpio: cdev: add uAPI v2
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 8:40 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Aug 17, 2020 at 08:24:24PM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Aug 14, 2020 at 5:03 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > This patchset defines and implements adds a new version of the
-> > > GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-> > > support for debounce, event sequence numbers, and allowing for requested
-> > > lines with different configurations.
-> > > It provides some future proofing by adding optional configuration fields
-> > > and padding reserved for future use.
-> > >
-> > > The series can be partitioned into two sets; the first eleven
-> > > contain the v2 uAPI implementation, and the final seven port
-> > > the GPIO tools to the v2 uAPI and extend them to use new uAPI features.
-> > >
-> > > The more complicated patches include their own commentary where
-> > > appropriate.
->
-> > The series looks quite good to me and I think we're on track to get it
-> > in for v5.10. I'd love to have Andy (Cc'd) take a look as well. There
-> > are some nits here and there but as long as we get the ABI right, any
-> > implementation details can be ironed out later.
-> >
-> > I need to think about some details a bit more but I really like the
-> > current state of the patches.
->
-> First of all, I apologize for being silent, I'm quite busy with internal
-> development / work.
->
-> Second, I didn't hear further why we can't fix current ABI as proposed by Arnd
-> and see what we will have afterwards?
->
+From: WANG Xuerui <git@xen0n.name>
 
-Sure we can get back to fixing it but it will only address a single
-bug and still not allow us to add new features and simplifications. Do
-you mind rebasing your old patch on top of v5.9-rc1?
+[ Upstream commit efd1b4ad3d5178a74387bc5ff69a2d4585f586c6 ]
 
-> Third, I'm not satisfied with the approach of wasting some memory for padding
-> and I think the proper solution for the ABI is to have versioning inside the
-> structures.
->
-> What do you think?
->
+Previously ExcCode 16 is unconditionally treated as the FTLB parity
+exception (FTLBPar), but in fact its semantic is implementation-
+dependent. Looking at various manuals it seems the FTLBPar exception is
+only present on some recent MIPS Technologies cores, so only register
+the handler on these.
 
-Wasting a bit of memory is fine with me. As long as we're not copying
-more than a page-worth of memory between the kernel and user-space,
-the overhead is insignificant.
+Fixes: 75b5b5e0a262790f ("MIPS: Add support for FTLBs")
+Reviewed-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+Cc: Paul Burton <paulburton@kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/include/asm/cpu-features.h |  4 ++++
+ arch/mips/include/asm/cpu.h          |  1 +
+ arch/mips/kernel/cpu-probe.c         | 13 +++++++++++++
+ arch/mips/kernel/traps.c             |  3 ++-
+ 4 files changed, 20 insertions(+), 1 deletion(-)
 
-I prefer to make structs extensible over adding new versions in the future.
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index 724dfddcab92d..0b1bc7ed913b2 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -568,6 +568,10 @@
+ # define cpu_has_mac2008_only	__opt(MIPS_CPU_MAC_2008_ONLY)
+ #endif
+ 
++#ifndef cpu_has_ftlbparex
++# define cpu_has_ftlbparex	__opt(MIPS_CPU_FTLBPAREX)
++#endif
++
+ #ifdef CONFIG_SMP
+ /*
+  * Some systems share FTLB RAMs between threads within a core (siblings in
+diff --git a/arch/mips/include/asm/cpu.h b/arch/mips/include/asm/cpu.h
+index 104a509312b30..3a4773714b296 100644
+--- a/arch/mips/include/asm/cpu.h
++++ b/arch/mips/include/asm/cpu.h
+@@ -425,6 +425,7 @@ enum cpu_type_enum {
+ #define MIPS_CPU_MM_SYSAD	BIT_ULL(58)	/* CPU supports write-through SysAD Valid merge */
+ #define MIPS_CPU_MM_FULL	BIT_ULL(59)	/* CPU supports write-through full merge */
+ #define MIPS_CPU_MAC_2008_ONLY	BIT_ULL(60)	/* CPU Only support MAC2008 Fused multiply-add instruction */
++#define MIPS_CPU_FTLBPAREX	BIT_ULL(61)	/* CPU has FTLB parity exception */
+ 
+ /*
+  * CPU ASE encodings
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index def1659fe2621..3404011eb7cff 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -1827,6 +1827,19 @@ static inline void cpu_probe_mips(struct cpuinfo_mips *c, unsigned int cpu)
+ 	default:
+ 		break;
+ 	}
++
++	/* Recent MIPS cores use the implementation-dependent ExcCode 16 for
++	 * cache/FTLB parity exceptions.
++	 */
++	switch (__get_cpu_type(c->cputype)) {
++	case CPU_PROAPTIV:
++	case CPU_P5600:
++	case CPU_P6600:
++	case CPU_I6400:
++	case CPU_I6500:
++		c->options |= MIPS_CPU_FTLBPAREX;
++		break;
++	}
+ }
+ 
+ static inline void cpu_probe_alchemy(struct cpuinfo_mips *c, unsigned int cpu)
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index f655af68176c8..e664d8b43e72b 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -2457,7 +2457,8 @@ void __init trap_init(void)
+ 	if (cpu_has_fpu && !cpu_has_nofpuex)
+ 		set_except_vector(EXCCODE_FPE, handle_fpe);
+ 
+-	set_except_vector(MIPS_EXCCODE_TLBPAR, handle_ftlb);
++	if (cpu_has_ftlbparex)
++		set_except_vector(MIPS_EXCCODE_TLBPAR, handle_ftlb);
+ 
+ 	if (cpu_has_rixiex) {
+ 		set_except_vector(EXCCODE_TLBRI, tlb_do_page_fault_0);
+-- 
+2.25.1
 
-Bart
+
+
