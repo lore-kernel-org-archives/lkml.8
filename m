@@ -2,54 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97751C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D205206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F04A20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683426;
-	bh=hATG7HafjljLdKj1Wt4+pOi/Kd8iH8DCfcjblneNboc=;
+	s=default; t=1597683430;
+	bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlKtH5wMtJO1+Hnw35sygWIxeD52f+d1wZ97+fQMfx0pkVyeIpnKIynFaZvKlqJ/k
-	 zIGfMA2TGGuA7MMyVQlLT+lCUz+FaJ3nDuEjVrHZ6Eockp2Deacqz8BGNIJWiiLZNw
-	 DocIGDad0BHwK+uifUTrXcgPAzeDQCMShaxivM6c=
+	b=wNB0WjwjlyWM2dMDBDHf2p5+YdoOsdautC4unZGa6PUUsbd1SJAjJofWGrJe57u3l
+	 ji89ROrjTB301p8GpRsy/b24ZUHGtzoDehAdOfrhmhdMOS37BuY3iHOxlrC+LzFmA/
+	 8zDdJQWn5+bqZaLluf2Sm4iSyJ0ggpbSe/HyENMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389235AbgHQQ5E (ORCPT
+        id S2389243AbgHQQ5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388337AbgHQQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:42 -0400
+        id S2388344AbgHQQEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62EE72053B;
-        Mon, 17 Aug 2020 16:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3330D2053B;
+        Mon, 17 Aug 2020 16:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680281;
-        bh=hATG7HafjljLdKj1Wt4+pOi/Kd8iH8DCfcjblneNboc=;
+        s=default; t=1597680286;
+        bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSJQuXF5OpmJDBJh135hTn6XZnYw1SZoKFZ3TDwWwVYGb95QUd14X3I55lPufKA8H
-         5cNeK8JRuzdxAD3eQd3K+FCcEbPiop7oUszNCxhNM/LdA+rWcHh3YCjOmbSEDpWKeZ
-         vIP4G4A2ze01I+y+kE+R/7GqpVFeqzn7+fVKbM64=
+        b=GX1UF2+cFvGCXJvFMPDQWzNONSnsADiErQDOcB4/tm4px7pQPQflFRQBit8MqlOSi
+         9NPZuPjxqWknhkW3sr6hSBFKe8hza1vR5UT6NEekPT8wR0qKki30q/s4MkqPuQIcg8
+         wJd8RXbLbcOWpf+y/SBdZk7SwJxwlVnKMgfNItfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YangYuxi <yx.atom1@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 123/270] ipvs: allow connection reuse for unconfirmed conntrack
-Date:   Mon, 17 Aug 2020 17:15:24 +0200
-Message-Id: <20200817143801.896368126@linuxfoundation.org>
+Subject: [PATCH 5.4 096/270] btmrvl: Fix firmware filename for sd8997 chipset
+Date:   Mon, 17 Aug 2020 17:14:57 +0200
+Message-Id: <20200817143800.559669207@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,125 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit f0a5e4d7a594e0fe237d3dfafb069bb82f80f42f ]
+[ Upstream commit 00eb0cb36fad53315047af12e83c643d3a2c2e49 ]
 
-YangYuxi is reporting that connection reuse
-is causing one-second delay when SYN hits
-existing connection in TIME_WAIT state.
-Such delay was added to give time to expire
-both the IPVS connection and the corresponding
-conntrack. This was considered a rare case
-at that time but it is causing problem for
-some environments such as Kubernetes.
+Firmware for sd8997 chipset is distributed by Marvell package and also as
+part of the linux-firmware repository in filename sdsd8997_combo_v4.bin.
 
-As nf_conntrack_tcp_packet() can decide to
-release the conntrack in TIME_WAIT state and
-to replace it with a fresh NEW conntrack, we
-can use this to allow rescheduling just by
-tuning our check: if the conntrack is
-confirmed we can not schedule it to different
-real server and the one-second delay still
-applies but if new conntrack was created,
-we are free to select new real server without
-any delays.
+This patch fixes mwifiex driver to load correct firmware file for sd8997.
 
-YangYuxi lists some of the problem reports:
-
-- One second connection delay in masquerading mode:
-https://marc.info/?t=151683118100004&r=1&w=2
-
-- IPVS low throughput #70747
-https://github.com/kubernetes/kubernetes/issues/70747
-
-- Apache Bench can fill up ipvs service proxy in seconds #544
-https://github.com/cloudnativelabs/kube-router/issues/544
-
-- Additional 1s latency in `host -> service IP -> pod`
-https://github.com/kubernetes/kubernetes/issues/90854
-
-Fixes: f719e3754ee2 ("ipvs: drop first packet to redirect conntrack")
-Co-developed-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Reviewed-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: f0ef67485f591 ("Bluetooth: btmrvl: add sd8997 chipset support")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h             | 10 ++++------
- net/netfilter/ipvs/ip_vs_core.c | 12 +++++++-----
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/bluetooth/btmrvl_sdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 078887c8c586a..7c37e3c3b1c79 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -1624,18 +1624,16 @@ static inline void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
- }
- #endif /* CONFIG_IP_VS_NFCT */
+diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+index 7aa2c94720bc5..4c7978cb1786f 100644
+--- a/drivers/bluetooth/btmrvl_sdio.c
++++ b/drivers/bluetooth/btmrvl_sdio.c
+@@ -346,7 +346,7 @@ static const struct btmrvl_sdio_device btmrvl_sdio_sd8987 = {
  
--/* Really using conntrack? */
--static inline bool ip_vs_conn_uses_conntrack(struct ip_vs_conn *cp,
--					     struct sk_buff *skb)
-+/* Using old conntrack that can not be redirected to another real server? */
-+static inline bool ip_vs_conn_uses_old_conntrack(struct ip_vs_conn *cp,
-+						 struct sk_buff *skb)
- {
- #ifdef CONFIG_IP_VS_NFCT
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_conn *ct;
- 
--	if (!(cp->flags & IP_VS_CONN_F_NFCT))
--		return false;
- 	ct = nf_ct_get(skb, &ctinfo);
--	if (ct)
-+	if (ct && nf_ct_is_confirmed(ct))
- 		return true;
- #endif
- 	return false;
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 8b80ab794a92b..64a05906cc0e6 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2061,14 +2061,14 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 
- 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
- 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
--		bool uses_ct = false, resched = false;
-+		bool old_ct = false, resched = false;
- 
- 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
- 		    unlikely(!atomic_read(&cp->dest->weight))) {
- 			resched = true;
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 		} else if (is_new_conn_expected(cp, conn_reuse_mode)) {
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 			if (!atomic_read(&cp->n_control)) {
- 				resched = true;
- 			} else {
-@@ -2076,15 +2076,17 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 				 * that uses conntrack while it is still
- 				 * referenced by controlled connection(s).
- 				 */
--				resched = !uses_ct;
-+				resched = !old_ct;
- 			}
- 		}
- 
- 		if (resched) {
-+			if (!old_ct)
-+				cp->flags &= ~IP_VS_CONN_F_NFCT;
- 			if (!atomic_read(&cp->n_control))
- 				ip_vs_conn_expire_now(cp);
- 			__ip_vs_conn_put(cp);
--			if (uses_ct)
-+			if (old_ct)
- 				return NF_DROP;
- 			cp = NULL;
- 		}
+ static const struct btmrvl_sdio_device btmrvl_sdio_sd8997 = {
+ 	.helper         = NULL,
+-	.firmware       = "mrvl/sd8997_uapsta.bin",
++	.firmware       = "mrvl/sdsd8997_combo_v4.bin",
+ 	.reg            = &btmrvl_reg_8997,
+ 	.support_pscan_win_report = true,
+ 	.sd_blksz_fw_dl = 256,
+@@ -1833,4 +1833,4 @@ MODULE_FIRMWARE("mrvl/sd8887_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sd8897_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sdsd8977_combo_v2.bin");
+ MODULE_FIRMWARE("mrvl/sd8987_uapsta.bin");
+-MODULE_FIRMWARE("mrvl/sd8997_uapsta.bin");
++MODULE_FIRMWARE("mrvl/sdsd8997_combo_v4.bin");
 -- 
 2.25.1
 
