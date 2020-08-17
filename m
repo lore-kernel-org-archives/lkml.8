@@ -2,52 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C942C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 027FA2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA692072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691610;
-	bh=vEC9tKkBFMg5tLJb8z0dEw8ZyVIYDbVwN7Jf8BAZG7Q=;
+	s=default; t=1597691626;
+	bh=XDC8HlI8Khc6j/B3a5sMWFPpwPWA7scLU1kzMsOnJMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLtJaoFdYy2c6IA4tpP78w8ySWUIyu3Rbfg3FMF8ivqybCGMOIR4oh5egZ2RWh26o
-	 I7Lj4kC5l9eAad9blkYE+bizXG55jH0SqUArENvOPPriRG5vUUflnyURIiciNrWx4n
-	 YFzoAlBCYOGgZAMOngSuOdaVpv5x1mSHka3ivU8c=
+	b=XixqTntklV4QzSxm1r2kynKrK9pdYEaPokQ8s7ZsvBdw8fWGLJkhLje0nXbHuCogj
+	 X28PR6QoYbPbOauXnm4cNFbDmgGfl8B4XFrf89PrwQsaegfnrIdN3KCPN0wQZsTFNS
+	 V+iCvpifd5EyOgWvUk9uABZPQJHxzbNWlf7Bh2PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbgHQTNR (ORCPT
+        id S1730659AbgHQPkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:40:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgHQPkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:24 -0400
+        id S1730007AbgHQPdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:33:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5EA323121;
-        Mon, 17 Aug 2020 15:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EDC0208E4;
+        Mon, 17 Aug 2020 15:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678824;
-        bh=vEC9tKkBFMg5tLJb8z0dEw8ZyVIYDbVwN7Jf8BAZG7Q=;
+        s=default; t=1597678392;
+        bh=XDC8HlI8Khc6j/B3a5sMWFPpwPWA7scLU1kzMsOnJMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2rgrHa+JSqJauHnaq3u6ZDxdb1NlGYYJXxD5PpLh3C3/nr0B7Cgiu+DeTPzjywHL
-         0eU8o1MHJPAXVVAVPTV2+O4FmeX+f5m+kTp5ON9Mi0t2wsHL5M7tovE3y/M3TCUdLn
-         E4Q+nNs4qOWOlIjBgmSAp5jnIXctCCSb1FIwQQME=
+        b=jgnH5jrK60X/wtiAwub8I52cuntFXA3cl/BWK3hTxoeqB2i9PsyuuaGHmGHyFjAKK
+         AgJ2FR7erol9WVHWdjXZ+VZSYCzIbYt/whhjbMw+l94Tm0YJRuE4xoHncpYhoIgqNW
+         C/jye91omHKo+FG/SPSVF1/eUWqhJogCwE+BD9ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.8 453/464] xen/balloon: fix accounting in alloc_xenballooned_pages error path
-Date:   Mon, 17 Aug 2020 17:16:46 +0200
-Message-Id: <20200817143855.473306994@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Tomas Henzl <thenzl@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 288/464] scsi: megaraid_sas: Clear affinity hint
+Date:   Mon, 17 Aug 2020 17:14:01 +0200
+Message-Id: <20200817143847.549222778@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,40 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Tomas Henzl <thenzl@redhat.com>
 
-commit 1951fa33ec259abdf3497bfee7b63e7ddbb1a394 upstream.
+[ Upstream commit 1eb81df5c53b1e785fdef298d533feab991381e4 ]
 
-target_unpopulated is incremented with nr_pages at the start of the
-function, but the call to free_xenballooned_pages will only subtract
-pgno number of pages, and thus the rest need to be subtracted before
-returning or else accounting will be skewed.
+To avoid a warning in free_irq, clear the affinity hint.
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200727091342.52325-2-roger.pau@citrix.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200709133144.8363-1-thenzl@redhat.com
+Fixes: f0b9e7bdc309 ("scsi: megaraid_sas: Set affinity for high IOPS reply queues")
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/balloon.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -630,6 +630,12 @@ int alloc_xenballooned_pages(int nr_page
-  out_undo:
- 	mutex_unlock(&balloon_mutex);
- 	free_xenballooned_pages(pgno, pages);
-+	/*
-+	 * NB: free_xenballooned_pages will only subtract pgno pages, but since
-+	 * target_unpopulated is incremented with nr_pages at the start we need
-+	 * to remove the remaining ones also, or accounting will be screwed.
-+	 */
-+	balloon_stats.target_unpopulated -= nr_pages - pgno;
- 	return ret;
- }
- EXPORT_SYMBOL(alloc_xenballooned_pages);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 00668335c2afc..924ea9f4cdd09 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5602,9 +5602,13 @@ megasas_setup_irqs_msix(struct megasas_instance *instance, u8 is_probe)
+ 			&instance->irq_context[i])) {
+ 			dev_err(&instance->pdev->dev,
+ 				"Failed to register IRQ for vector %d.\n", i);
+-			for (j = 0; j < i; j++)
++			for (j = 0; j < i; j++) {
++				if (j < instance->low_latency_index_start)
++					irq_set_affinity_hint(
++						pci_irq_vector(pdev, j), NULL);
+ 				free_irq(pci_irq_vector(pdev, j),
+ 					 &instance->irq_context[j]);
++			}
+ 			/* Retry irq register for IO_APIC*/
+ 			instance->msix_vectors = 0;
+ 			instance->msix_load_balance = false;
+@@ -5642,6 +5646,9 @@ megasas_destroy_irqs(struct megasas_instance *instance) {
+ 
+ 	if (instance->msix_vectors)
+ 		for (i = 0; i < instance->msix_vectors; i++) {
++			if (i < instance->low_latency_index_start)
++				irq_set_affinity_hint(
++				    pci_irq_vector(instance->pdev, i), NULL);
+ 			free_irq(pci_irq_vector(instance->pdev, i),
+ 				 &instance->irq_context[i]);
+ 		}
+-- 
+2.25.1
+
 
 
