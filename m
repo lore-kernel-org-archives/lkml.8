@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278B720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7293A20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691399;
-	bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
+	s=default; t=1597691403;
+	bh=/u610J051YLC42YLmGhLdhRzg2RFOI1y6QVRsg1ftOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovLXcmOWRjxtgIxkyu9kOCbuDLBBjHPobEeWdFRu8b+GXKUx0gIt2RQ818ANumysY
-	 PP6+AGXT5NZUNprfJpiDk68MFkqNjPOShNGGK9t5s9GCYCVOxKWoqWssSOiPsg+muz
-	 7Osbjfu4A69VReTY9n9klE+L34p1YFXjt33XEBo0=
+	b=WN7HDQpXG+i9nijSlubAyKLDX4+G/9Fxn0QQxHsADFsuFUB8fhSDpFbv1WnWkXURN
+	 XTsN0mI7Z09tyOjWAW2KQJSFcl71uEpdZmhj//pW+20PnN+zzhPjIKYowOA0tRTV6s
+	 SPRWAjDmtQRbinSheVgeBfqcw66sAcY5KoUX9YV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387482AbgHQTJ6 (ORCPT
+        id S1730780AbgHQPlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51992 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387497AbgHQPmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:08 -0400
+        id S1730242AbgHQPe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1275420825;
-        Mon, 17 Aug 2020 15:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E46233FE;
+        Mon, 17 Aug 2020 15:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678927;
-        bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
+        s=default; t=1597678465;
+        bh=/u610J051YLC42YLmGhLdhRzg2RFOI1y6QVRsg1ftOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgJqVUs2ssWPu6VIgXUTMPfGJ8n1/QZwtYOowzX/E7+aTB4z5I+iC4JjxjdIG09M3
-         xAbqrqhKCnnFc7LMKs0XoSQRC+lvbc4H+mYwqO4iENF7g0E2u/GnOnN7py7DsywwAT
-         BiZ9n4Lu4TrszG6HcPbSG+k2iOhJdx1c6gdFecxc=
+        b=Ehh5VuiMyup1E+GTy8H51sj3PGKYyqJPKavhl9PpKEN9PLLdY0YQ6AIkIUkiGz+9K
+         wAGljlChiXLmvpTwe5SfVUv7+82rOaqp3O0z6iWNsnKwroWOs0EhzKjPPf7AV9gWe5
+         PfEIbItkGU/Sej7gaYw7roNZn3OV4WTT01Dh5TTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Surabhi Boob <surabhi.boob@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 038/393] reset: intel: fix a compile warning about REG_OFFSET redefined
-Date:   Mon, 17 Aug 2020 17:11:28 +0200
-Message-Id: <20200817143821.454930538@linuxfoundation.org>
+Subject: [PATCH 5.8 343/464] ice: Graceful error handling in HW table calloc failure
+Date:   Mon, 17 Aug 2020 17:14:56 +0200
+Message-Id: <20200817143850.201190433@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,103 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Surabhi Boob <surabhi.boob@intel.com>
 
-[ Upstream commit 308646785e51976dea7e20d29a1842d14bf0b9bd ]
+[ Upstream commit bcc46cb8a077c6189b44f1555b8659837f748eb2 ]
 
-kernel test robot reports a compile warning about REG_OFFSET redefined
-in the reset-intel-gw.c after merging commit e44ab4e14d6f4 ("regmap:
-Simplify implementation of the regmap_read_poll_timeout() macro"). the
-warning is like that:
+In the ice_init_hw_tbls, if the devm_kcalloc for es->written fails, catch
+that error and bail out gracefully, instead of continuing with a NULL
+pointer.
 
-drivers/reset/reset-intel-gw.c:18:0: warning: "REG_OFFSET" redefined
- #define REG_OFFSET GENMASK(31, 16)
-
-In file included from ./arch/arm/mach-ixp4xx/include/mach/hardware.h:30:0,
-                 from ./arch/arm/mach-ixp4xx/include/mach/io.h:15,
-                 from ./arch/arm/include/asm/io.h:198,
-                 from ./include/linux/io.h:13,
-                 from ./include/linux/iopoll.h:14,
-                 from ./include/linux/regmap.h:20,
-                 from drivers/reset/reset-intel-gw.c:12:
-./arch/arm/mach-ixp4xx/include/mach/platform.h:25:0: note: this is the location of the previous definition
- #define REG_OFFSET 3
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: c9aef213e38cde ("reset: intel: Add system reset controller driver")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 32d63fa1e9f3 ("ice: Initialize DDP package structures")
+Signed-off-by: Surabhi Boob <surabhi.boob@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-intel-gw.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_flex_pipe.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
-index 854238444616b..effc177db80af 100644
---- a/drivers/reset/reset-intel-gw.c
-+++ b/drivers/reset/reset-intel-gw.c
-@@ -15,9 +15,9 @@
- #define RCU_RST_STAT	0x0024
- #define RCU_RST_REQ	0x0048
+diff --git a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+index 6698612048625..504a02b071cee 100644
+--- a/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
++++ b/drivers/net/ethernet/intel/ice/ice_flex_pipe.c
+@@ -3152,10 +3152,12 @@ enum ice_status ice_init_hw_tbls(struct ice_hw *hw)
+ 		es->ref_count = devm_kcalloc(ice_hw_to_dev(hw), es->count,
+ 					     sizeof(*es->ref_count),
+ 					     GFP_KERNEL);
++		if (!es->ref_count)
++			goto err;
  
--#define REG_OFFSET	GENMASK(31, 16)
--#define BIT_OFFSET	GENMASK(15, 8)
--#define STAT_BIT_OFFSET	GENMASK(7, 0)
-+#define REG_OFFSET_MASK	GENMASK(31, 16)
-+#define BIT_OFFSET_MASK	GENMASK(15, 8)
-+#define STAT_BIT_OFFSET_MASK	GENMASK(7, 0)
- 
- #define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
- 
-@@ -51,11 +51,11 @@ static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
- 				     unsigned long id, u32 *rst_req,
- 				     u32 *req_bit, u32 *stat_bit)
- {
--	*rst_req = FIELD_GET(REG_OFFSET, id);
--	*req_bit = FIELD_GET(BIT_OFFSET, id);
-+	*rst_req = FIELD_GET(REG_OFFSET_MASK, id);
-+	*req_bit = FIELD_GET(BIT_OFFSET_MASK, id);
- 
- 	if (data->soc_data->legacy)
--		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
-+		*stat_bit = FIELD_GET(STAT_BIT_OFFSET_MASK, id);
- 	else
- 		*stat_bit = *req_bit;
- 
-@@ -141,14 +141,14 @@ static int intel_reset_xlate(struct reset_controller_dev *rcdev,
- 	if (spec->args[1] > 31)
- 		return -EINVAL;
- 
--	id = FIELD_PREP(REG_OFFSET, spec->args[0]);
--	id |= FIELD_PREP(BIT_OFFSET, spec->args[1]);
-+	id = FIELD_PREP(REG_OFFSET_MASK, spec->args[0]);
-+	id |= FIELD_PREP(BIT_OFFSET_MASK, spec->args[1]);
- 
- 	if (data->soc_data->legacy) {
- 		if (spec->args[2] > 31)
- 			return -EINVAL;
- 
--		id |= FIELD_PREP(STAT_BIT_OFFSET, spec->args[2]);
-+		id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, spec->args[2]);
+ 		es->written = devm_kcalloc(ice_hw_to_dev(hw), es->count,
+ 					   sizeof(*es->written), GFP_KERNEL);
+-		if (!es->ref_count)
++		if (!es->written)
+ 			goto err;
  	}
- 
- 	return id;
-@@ -210,11 +210,11 @@ static int intel_reset_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	data->reboot_id = FIELD_PREP(REG_OFFSET, rb_id[0]);
--	data->reboot_id |= FIELD_PREP(BIT_OFFSET, rb_id[1]);
-+	data->reboot_id = FIELD_PREP(REG_OFFSET_MASK, rb_id[0]);
-+	data->reboot_id |= FIELD_PREP(BIT_OFFSET_MASK, rb_id[1]);
- 
- 	if (data->soc_data->legacy)
--		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET, rb_id[2]);
-+		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, rb_id[2]);
- 
- 	data->restart_nb.notifier_call =	intel_reset_restart_handler;
- 	data->restart_nb.priority =		128;
+ 	return 0;
 -- 
 2.25.1
 
