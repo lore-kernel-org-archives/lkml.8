@@ -2,97 +2,150 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F818C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420BA2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686821;
-	bh=ieYQdzrY3+Von0WGrYWU5T18p5B4q0CSlpJT2dOY+EM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETuM8aVX5hh+KD6DNZ2vP2KtijwWHSLaxre7LzpB3LNcvAFFuz1LnTclML6ozZp1c
-	 gD8yb9XKcFVOK3XQHVKKC2qkevVOIDC3dQBE/KopCrvaaTkFqM269ZFwBp7dYTnKqr
-	 HK/FSH2Wk0DG6A6Ap4PjgjWOCEXV+hPRsbe8Q5pQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7862B2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbgHQRxk (ORCPT
+        id S1731625AbgHQRxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388635AbgHQQLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD68E20829;
-        Mon, 17 Aug 2020 16:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680698;
-        bh=ieYQdzrY3+Von0WGrYWU5T18p5B4q0CSlpJT2dOY+EM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUSUYsJ+kdaOGbnVA8trCXJSJboaMrs4q835NfsEF1Y5JANmBOk5uJHmrBV75gVpr
-         5ZpsoOKvuh65LCn9wXXrs3+dSA2yyoqkNCcFB2Jc+aO0P97mV3IUwau3y307XRs7Ew
-         zPGFF+r/erQvFCGdXtB1Zq9jpQRUVBxWz9PxYhFQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/168] ARM: dts: gose: Fix ports node name for adv7180
-Date:   Mon, 17 Aug 2020 17:15:51 +0200
-Message-Id: <20200817143734.732002368@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 13:53:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34738 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388627AbgHQQLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:38 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 5AC9A1C0BB6; Mon, 17 Aug 2020 18:11:33 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 18:11:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        torvalds@linux-foundation.org
+Subject: 5.9-rc1: graphics regression moved from -next to mainline
+Message-ID: <20200817161132.GA4711@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit d344234abde938ae1062edb6c05852b0bafb4a03 ]
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When adding the adv7180 device node the ports node was misspelled as
-port, fix this.
+Hi!
 
-Fixes: 8cae359049a88b75 ("ARM: dts: gose: add composite video input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200704155856.3037010-2-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+After about half an hour of uptime, screen starts blinking on thinkpad
+x60 and machine becomes unusable.
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 6b2f3a4fd13d6..9235be8f0f007 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -339,7 +339,7 @@ composite-in@20 {
- 			reg = <0x20>;
- 			remote = <&vin1>;
- 
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--- 
-2.25.1
+I already reported this in -next, and now it is in mainline. It is
+32-bit x86 system.
 
 
+								Pavel
 
+
+Aug 17 17:36:04 amd ovpn-castor[2828]: UDPv4 link local (bound):
+[undef]
+Aug 17 17:36:04 amd ovpn-castor[2828]: UDPv4 link remote:
+[AF_INET]87.138.219.28:1194
+Aug 17 17:36:23 amd kernel: BUG: unable to handle page fault for
+address: f8601000
+Aug 17 17:36:23 amd kernel: #PF: supervisor write access in kernel
+mode
+Aug 17 17:36:23 amd kernel: #PF: error_code(0x0002) - not-present page
+Aug 17 17:36:23 amd kernel: *pdpt =3D 00000000318f2001 *pde =3D
+0000000000000000
+Aug 17 17:36:23 amd kernel: Oops: 0002 [#1] PREEMPT SMP PTI
+Aug 17 17:36:23 amd kernel: CPU: 1 PID: 3004 Comm: Xorg Not tainted
+5.9.0-rc1+ #86
+Aug 17 17:36:23 amd kernel: Hardware name: LENOVO 17097HU/17097HU,
+BIOS 7BETD8WW (2.19 ) 03/31
+/2011
+Aug 17 17:36:23 amd kernel: EIP: eb_relocate_vma+0xcf6/0xf20
+Aug 17 17:36:23 amd kernel: Code: e9 ff f7 ff ff c7 85 c0 fd ff ff ed
+ff ff ff c7 85 c4 fd ff
+ff ff ff ff ff 8b 85 c0 fd ff ff e9 a5 f8 ff ff 8b 85 d0 fd ff ff <c7>
+03 01 00 40 10 89 43 04
+ 8b 85 b4 fd ff ff 89 43 08 e9 9f f7 ff
+ Aug 17 17:36:23 amd kernel: EAX: 003c306c EBX: f8601000 ECX: 00847000
+ EDX: 00000000
+ Aug 17 17:36:23 amd kernel: ESI: 00847000 EDI: 00000000 EBP: f1947c68
+ ESP: f19479fc
+ Aug 17 17:36:23 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
+ 0068 EFLAGS: 00210246
+ Aug 17 17:36:23 amd kernel: CR0: 80050033 CR2: f8601000 CR3: 31a1e000
+ CR4: 000006b0
+ Aug 17 17:36:23 amd kernel: Call Trace:
+ Aug 17 17:36:23 amd kernel: ? i915_vma_pin+0xc5/0x8c0
+ Aug 17 17:36:23 amd kernel: ? __mutex_unlock_slowpath+0x2b/0x280
+ Aug 17 17:36:23 amd kernel: ? __active_retire+0x7e/0xd0
+ Aug 17 17:36:23 amd kernel: ? mutex_unlock+0xb/0x10
+ Aug 17 17:36:23 amd kernel: ? i915_vma_pin+0xc5/0x8c0
+ Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
+ Aug 17 17:36:23 amd kernel: ? eb_lookup_vmas+0x1f5/0x9e0
+ Aug 17 17:36:23 amd kernel: i915_gem_do_execbuffer+0xaab/0x2780
+ Aug 17 17:36:23 amd kernel: ? _raw_spin_unlock_irqrestore+0x27/0x40
+ Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
+ Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
+ Aug 17 17:36:23 amd kernel: ? kvmalloc_node+0x69/0x70
+ Aug 17 17:36:23 amd kernel: i915_gem_execbuffer2_ioctl+0xdd/0x360
+ Aug 17 17:36:23 amd kernel: ? i915_gem_execbuffer_ioctl+0x2b0/0x2b0
+ Aug 17 17:36:23 amd kernel: drm_ioctl_kernel+0x87/0xd0
+ Aug 17 17:36:23 amd kernel: drm_ioctl+0x1f4/0x38b
+ Aug 17 17:36:23 amd kernel: ? i915_gem_execbuffer_ioctl+0x2b0/0x2b0
+ Aug 17 17:36:23 amd kernel: ? posix_get_monotonic_timespec+0x1c/0x90
+ Aug 17 17:36:23 amd kernel: ? ktime_get_ts64+0x7a/0x1e0
+ Aug 17 17:36:23 amd kernel: ? drm_ioctl_kernel+0xd0/0xd0
+ Aug 17 17:36:23 amd kernel: __ia32_sys_ioctl+0x1ad/0x799
+ Aug 17 17:36:23 amd kernel: ? debug_smp_processor_id+0x12/0x20
+ Aug 17 17:36:23 amd kernel: ? exit_to_user_mode_prepare+0x4f/0x100
+ Aug 17 17:36:23 amd kernel: do_int80_syscall_32+0x2c/0x40
+ Aug 17 17:36:23 amd kernel: entry_INT80_32+0x111/0x111
+ Aug 17 17:36:23 amd kernel: EIP: 0xb7fbc092
+ Aug 17 17:36:23 amd kernel: Code: 00 00 00 e9 90 ff ff ff ff a3 24 00
+ 00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 e8 ff ff ff 66 90 00 00 00
+ 00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b
+ 1c 24 c3 8d b4 26 00
+ Aug 17 17:36:23 amd kernel: EAX: ffffffda EBX: 0000000a ECX: c0406469
+ EDX: bff0ae3c
+ Aug 17 17:36:23 amd kernel: ESI: b73aa000 EDI: c0406469 EBP: 0000000a
+ ESP: bff0adb4
+ Aug 17 17:36:23 amd kernel: DS: 007b ES: 007b FS: 0000 GS: 0033 SS:
+ 007b EFLAGS: 00200296
+ Aug 17 17:36:23 amd kernel: ? asm_exc_nmi+0xcc/0x2bc
+ Aug 17 17:36:23 amd kernel: Modules linked in:
+ Aug 17 17:36:23 amd kernel: CR2: 00000000f8601000
+ Aug 17 17:36:23 amd kernel: ---[ end trace 2ca9775068bbac06 ]---
+=20
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl86rDQACgkQMOfwapXb+vK26gCgk1vGvPiX4oaOabpqNWKNdxhE
+ipgAn1rhEu+JZ64Qn+ophD0RZA+rFzwX
+=8BiJ
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
