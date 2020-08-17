@@ -2,77 +2,120 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D272C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4815AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE0220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684916;
-	bh=ZveC/QnxD3CYdbZGPgyGMPM23kz51W6BSt6a1YP7hJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oiPYIHTBQLq5gnER7S6sc30GfKUV8PYwE6yomAf+z6e9N0uSRziduC8wOwn/kw/UQ
-	 IL2D00Q/8072W1pmmRPzp+0V6HAGHYZzTTKjmg03iWGqPIAKsNxf6H3+F3LMbB5spL
-	 gzceJUurdEg+6euO3NpFpQqzfPvst2IdLyt1KweY=
+	by mail.kernel.org (Postfix) with ESMTP id 2A0A220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n5O0D14o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbgHQRVv (ORCPT
+        id S2389667AbgHQRV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730794AbgHQQXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:23:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 17 Aug 2020 13:21:56 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38825 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731127AbgHQQY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:24:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597681495; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=gfehkDHwbkMn5YmVHISLwPUHyk48V6qSvEEU/hXpyxo=; b=n5O0D14otMGTXs6CjU0f6eN3DF3FnGC62+kuTiy17m9w31p69PuSYWVbpBLc4OZ4/KdgpsZS
+ IVSo2YvtenV4wtr2Zo43qWsvQa9r2wDCt1QjNFB1aEm9SKuGgiBzToPcD1Wv9Rl6bVb37dCM
+ xFt5PG+GCuCJDpAs533EIikzBAo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f3aaf57d48d4625ca887dca (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:24:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 33446C43391; Mon, 17 Aug 2020 16:24:54 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF2522054F;
-        Mon, 17 Aug 2020 16:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681385;
-        bh=ZveC/QnxD3CYdbZGPgyGMPM23kz51W6BSt6a1YP7hJI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OsZz3o5q5ElgMyt/tcGtwXpCAPtDzpmmm44dvujnqMiFfQZb4V80n1UwumhHyk0cz
-         btqZE7RKZEj4fhPCVNcZESN2VJlffK49LvgNOiK1T3KOx5NzV2aDxukabsyvzJ0N5b
-         PBQsDrlbVBvptderi0TLGBgJd3qSMaHhpJbp+L4Y=
-Date:   Mon, 17 Aug 2020 18:21:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     jan.kiszka@siemens.com, jbeulich@suse.com,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        pedro.principeza@canonical.com
-Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
- spurious entry again
-Message-ID: <20200817162156.GA715236@kroah.com>
-References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07EEEC433C6;
+        Mon, 17 Aug 2020 16:24:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07EEEC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 17 Aug 2020 10:24:49 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [RFC PATCH v1] dma-fence-array: Deal with sub-fences that are
+ signaled late
+Message-ID: <20200817162449.GC3221@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-arm-msm@vger.kernel.org,
+        Gustavo Padovan <gustavo@padovan.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org
+References: <20200812235544.2289895-1-jcrouse@codeaurora.org>
+ <159730136458.14054.18114194663048046416@build.alporthouse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+In-Reply-To: <159730136458.14054.18114194663048046416@build.alporthouse.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:36:25PM -0300, Guilherme G. Piccoli wrote:
-> Hi Greg / Thomas and all involved here. First, apologies for
-> necro-bumping this thread, but I'm working a backport of this patch to
-> kernel 4.15 (Ubuntu) and then I noticed we have it on stable, but only
-> in 4.19+.
+On Thu, Aug 13, 2020 at 07:49:24AM +0100, Chris Wilson wrote:
+> Quoting Jordan Crouse (2020-08-13 00:55:44)
+> > This is an RFC because I'm still trying to grok the correct behavior.
+> > 
+> > Consider a dma_fence_array created two two fence and signal_on_any is true.
+> > A reference to dma_fence_array is taken for each waiting fence.
+> > 
+> > When the client calls dma_fence_wait() only one of the fences is signaled.
+> > The client returns successfully from the wait and puts it's reference to
+> > the array fence but the array fence still remains because of the remaining
+> > un-signaled fence.
+> > 
+> > Now consider that the unsignaled fence is signaled while the timeline is being
+> > destroyed much later. The timeline destroy calls dma_fence_signal_locked(). The
+> > following sequence occurs:
+> > 
+> > 1) dma_fence_array_cb_func is called
+> > 
+> > 2) array->num_pending is 0 (because it was set to 1 due to signal_on_any) so the
+> > callback function calls dma_fence_put() instead of triggering the irq work
+> > 
+> > 3) The array fence is released which in turn puts the lingering fence which is
+> > then released
+> > 
+> > 4) deadlock with the timeline
 > 
-> Since the fixes tag presents an old commit (since ~3.19), I'm curious if
-> we have a special reason to not have it on long-term stables, like 4.9
-> or 4.14. It's a subtle portion of arch code, so I'm afraid I didn't see
-> something that prevents its backport for previous versions.
+> It's the same recursive lock as we previously resolved in sw_sync.c by
+> removing the locking from timeline_fence_release().
 
-What is the git commit id of this patch you are referring to, you didn't
-provide any context here :(
+Ah, yep. I'm working on a not-quite-ready-for-primetime version of a vulkan
+timeline implementation for drm/msm and I was doing something similar to how
+sw_sync used to work in the release function. Getting rid of the recursive lock
+in the timeline seems a better solution than this. Thanks for taking the time
+to respond.
 
-thanks,
+Jordan
 
-greg k-h
+> -Chris
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
