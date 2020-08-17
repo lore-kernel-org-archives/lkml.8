@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72347C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D214C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F84D2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689258;
-	bh=/yMoRiL9K4k2IOgMxROgkfrtKFe7hZ5Taf1cht6du7Y=;
+	s=default; t=1597689266;
+	bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSs55RGGG05Q5gfy8ZKs8SQDU+CUdH764dE0TNXDuFJQLm1t+BV4vVf297jwPjxWL
-	 FVKgp5WNNKH2kUDY9bgU15IrUox3YDj5/zV03IpYNKu+4vuDizLGS1NI77ieOjZRee
-	 Tk8U1W6xeLQNqQNPmGJxcE+AN5lmY9EIenzGds98=
+	b=hDeefOeO1GvWZIW9mVmzfSdeCGCKZsJX0ZbmqQZYaJqEhpE3pp7J7lb8IsdNQlRyQ
+	 /YUzijLOs6u8jJ2YMQX6s8QstPHDsPpw/TY6EN0Ehvpq0G4nQCkdZnTPRAiW7q4dzk
+	 tvhlAhD5wOuLYnHAn0XOix1abE0aclfVCwh9kQ+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbgHQSeR (ORCPT
+        id S2391248AbgHQSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbgHQQAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:00:22 -0400
+        id S1731005AbgHQQAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:00:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F06208B3;
-        Mon, 17 Aug 2020 16:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D31AF20885;
+        Mon, 17 Aug 2020 16:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680016;
-        bh=/yMoRiL9K4k2IOgMxROgkfrtKFe7hZ5Taf1cht6du7Y=;
+        s=default; t=1597680011;
+        bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H94CIwp+OuFyvdYBYuDevmETElb6HWWaQghKtiwO7R3QQdNNVf7vIvx4q5Iir4ONt
-         8quxz0SG2LkNkjaR6i535tptj6dTfvCyIORtk+nglo3IaG96GVaeEMe5v9nNiMtUue
-         GvAlcAUuV4fZKjD0ig6rWg3EUrcQvQJGZWtNe780=
+        b=yrk9iv/U4Mt1OmlX+f3zWIuKcuKi6SUjVbcFPEQG9b2vLMJ2XN/ws6oCbPrvxwOmV
+         tV+3MiNIm6Twa6fMACLZN3ardwPJhA9ZDeRfg2ylVais2+5PoLfV2Wo8BjRiak2RXT
+         +K/HOCoWGumOrW8J0k7fUzA8GTdUQpbQt5nmcT4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/270] sched/uclamp: Fix initialization of struct uclamp_rq
-Date:   Mon, 17 Aug 2020 17:13:41 +0200
-Message-Id: <20200817143756.793600081@linuxfoundation.org>
+Subject: [PATCH 5.4 019/270] arm64: dts: exynos: Fix silent hang after boot on Espresso
+Date:   Mon, 17 Aug 2020 17:13:40 +0200
+Message-Id: <20200817143756.745688466@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,73 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit d81ae8aac85ca2e307d273f6dc7863a721bf054e ]
+[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
 
-struct uclamp_rq was zeroed out entirely in assumption that in the first
-call to uclamp_rq_inc() they'd be initialized correctly in accordance to
-default settings.
+Once regulators are disabled after kernel boot, on Espresso board silent
+hang observed because of LDO7 being disabled.  LDO7 actually provide
+power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
+always-on to fix this hang.
 
-But when next patch introduces a static key to skip
-uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
-will fail to perform any frequency changes because the
-rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
-means all rqs are capped to 0 by default.
-
-Fix it by making sure we do proper initialization at init without
-relying on uclamp_rq_inc() doing it later.
-
-Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-Link: https://lkml.kernel.org/r/20200630112123.12076-2-qais.yousef@arm.com
+Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 38ae3cf9d173e..b34b5c6e25248 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1238,6 +1238,20 @@ static void uclamp_fork(struct task_struct *p)
- 	}
- }
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 080e0f56e108f..61ee7b6a31594 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1150000>;
+ 				regulator-enable-ramp-delay = <125>;
++				regulator-always-on;
+ 			};
  
-+static void __init init_uclamp_rq(struct rq *rq)
-+{
-+	enum uclamp_id clamp_id;
-+	struct uclamp_rq *uc_rq = rq->uclamp;
-+
-+	for_each_clamp_id(clamp_id) {
-+		uc_rq[clamp_id] = (struct uclamp_rq) {
-+			.value = uclamp_none(clamp_id)
-+		};
-+	}
-+
-+	rq->uclamp_flags = 0;
-+}
-+
- static void __init init_uclamp(void)
- {
- 	struct uclamp_se uc_max = {};
-@@ -1246,11 +1260,8 @@ static void __init init_uclamp(void)
- 
- 	mutex_init(&uclamp_mutex);
- 
--	for_each_possible_cpu(cpu) {
--		memset(&cpu_rq(cpu)->uclamp, 0,
--				sizeof(struct uclamp_rq)*UCLAMP_CNT);
--		cpu_rq(cpu)->uclamp_flags = 0;
--	}
-+	for_each_possible_cpu(cpu)
-+		init_uclamp_rq(cpu_rq(cpu));
- 
- 	for_each_clamp_id(clamp_id) {
- 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
+ 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
