@@ -2,49 +2,91 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B585C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7847220772
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7828B20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHQGco (ORCPT
+        id S1726698AbgHQGel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 02:32:44 -0400
-Received: from verein.lst.de ([213.95.11.211]:55205 "EHLO verein.lst.de"
+        Mon, 17 Aug 2020 02:34:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:29037 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgHQGco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 02:32:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3436067357; Mon, 17 Aug 2020 08:32:42 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 08:32:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, hch@lst.de,
-        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 5/5] block: Remove __blk_mq_sched_bio_merge()
- helper
-Message-ID: <20200817063241.GE12248@lst.de>
-References: <cover.1597637287.git.baolin.wang@linux.alibaba.com> <4ad0888df567a8bd75676b618ad87147c634d7b0.1597637287.git.baolin.wang@linux.alibaba.com>
+        id S1726308AbgHQGel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 02:34:41 -0400
+IronPort-SDR: cmlOTB20U6+aGWNrkyt4l331woEcF3rMtLDT5H2e0hElYXUwA+rUsSgxs8FOFAb69rGrdCDCEk
+ ldVm3qiqZnXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="142473070"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="142473070"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 23:34:40 -0700
+IronPort-SDR: gwU+YqHakrxXYPg87yVl7y8zF/uOp9f8rvbAPhtRTj+r4kLAW0Zm9ZLwOiMGl+h83jZ3OvzQZS
+ EDPA8hL5fOkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="400102512"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2020 23:34:39 -0700
+Received: from [10.226.38.21] (unknown [10.226.38.21])
+        by linux.intel.com (Postfix) with ESMTP id 92396580583;
+        Sun, 16 Aug 2020 23:34:35 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Kernel development list <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>, vkoul@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
+References: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200817031249.36795-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAH8TKc8giWkY8oNMKG97PYov0iN8f6TrA+PAsceSV0uwkO+qjQ@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <5b2930b1-469a-93ec-c7ec-7fcc01064e69@linux.intel.com>
+Date:   Mon, 17 Aug 2020 14:34:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ad0888df567a8bd75676b618ad87147c634d7b0.1597637287.git.baolin.wang@linux.alibaba.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAH8TKc8giWkY8oNMKG97PYov0iN8f6TrA+PAsceSV0uwkO+qjQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:09:19PM +0800, Baolin Wang wrote:
-> The blk_mq_sched_bio_merge() just wrap the __blk_mq_sched_bio_merge(), and
-> no other places will use __blk_mq_sched_bio_merge(). Thus we can combine
-> these 2 similar functions into one function.
+Hi Felipe,
 
-I think the idea was to avoid the function call for the nomerges fast
-path.  Not sure if that is really worth it.
+On 17/8/2020 2:08 pm, Felipe Balbi wrote:
+> Hi
+> 
+> On Mon, Aug 17, 2020 at 6:13 AM Ramuthevar,Vadivel MuruganX
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index c27408e4daae..90030ff299eb 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -1,4 +1,4 @@
+>> -# SPDX-License-Identifier: GPL-2.0
+>> +PDX-License-Identifier: GPL-2.0
+> 
+> you didn't try to compile your patch
+Good catch, Thank you so much!!
+after compiled by mistakenly removed 'S'.
+
+Regards
+Vadivel
+> 
