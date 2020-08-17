@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E285C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650F7C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14C223600
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4618C233EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677847;
-	bh=WlMHZGrHsTRRURnOEQgp8HWwE6YoZ6gLYbRbIFTqfN8=;
+	s=default; t=1597677854;
+	bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RUGZQujE8VAw6DTCKJ3S9JRbPNGzoXUmKdKn1UMnCBFhWZpXKct3cE9FnSDH+8qGX
-	 Olora9rqUZno68kT63t+5CW/WNzYulrfiMTJ5QDk3qTMNjG6QtoYfyKJxwSdfHOUql
-	 Y6Y0Lzxo8yvQT4M0VdWtBZB4+lantJwQcmOspwZw=
+	b=Ys2kVYz+Mgc9pBOZp1JGSc8K6qXgynxyBFDPPKeg0pszWC3C3/C0ETNl5k2r33+Yo
+	 u6xB36OUs2pbtu+ez31nRBkTR4SilUdd0/RImPAKUTsBwzZOFAMorCdrQHxjygViv0
+	 w10t8vbytGTgKvFDompoMH01wm6dQMfXYhQqHFcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgHQPYF (ORCPT
+        id S1729627AbgHQPYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729496AbgHQPW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:22:56 -0400
+        id S1729518AbgHQPXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44FC82310F;
-        Mon, 17 Aug 2020 15:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E37922D3E;
+        Mon, 17 Aug 2020 15:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677775;
-        bh=WlMHZGrHsTRRURnOEQgp8HWwE6YoZ6gLYbRbIFTqfN8=;
+        s=default; t=1597677788;
+        bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXiycR/LBzT5AdW70YHmLAaClRB60QkbIpKF8sx7fxUVGoLn34BMi/UCQZT7GD2GK
-         jynPQZc8mma0O1VVVSBWtfdTv4b4cfo8fS9zx4xsJdVTJKqdNRgmImRoPi8yNHZNCO
-         tAsyqzbf6X6svrCxV0hPGjMQFixQUn4Atz4S6Pzs=
+        b=Q3tYdX5WZxZBRGwzP2I/9D3BNQDQG1dSX0JsFckdHtg86mdfvkBZ4BdaG9Wou+SS2
+         kF1trSCn5K4PKZOsjwTE1gmymRlV7/SlInuqPg+mIjuRs3IMMyX/B5ihECpnAplXDj
+         3ZMJtbxkfjskCGXbZ0xrrZe0K4Q6lcnAZHU9+rbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Akhil P Oommen <akhilpo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 104/464] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
-Date:   Mon, 17 Aug 2020 17:10:57 +0200
-Message-Id: <20200817143838.775395515@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 108/464] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
+Date:   Mon, 17 Aug 2020 17:11:01 +0200
+Message-Id: <20200817143838.972680688@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,171 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akhil P Oommen <akhilpo@codeaurora.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 3cbdc8d8b7f39a7af3ea7b8dfa75caaebfda4e56 ]
+[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
 
-Adding an msm_gem_object object to the inactive_list before completing
-its initialization is a bad idea because shrinker may pick it up from the
-inactive_list. Fix this by making sure that the initialization is complete
-before moving the msm_obj object to the inactive list.
+This driver may take a regular spinlock when a raw spinlock
+(irq_desc->lock) is already taken which results in the following
+lockdep splat:
 
-This patch fixes the below error:
-[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
-[10027.573305] Mem abort info:
-[10027.590160]   ESR = 0x96000006
-[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
-[10027.614430]   SET = 0, FnV = 0
-[10027.624427]   EA = 0, S1PTW = 0
-[10027.632722] Data abort info:
-[10027.638039]   ISV = 0, ISS = 0x00000006
-[10027.647459]   CM = 0, WnR = 0
-[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
-[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
-[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
-[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
-[10027.757409] pc : mutex_is_locked+0x14/0x2c
-[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
-[10027.766454] sp : ffffffc011323ad0
-[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
-[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
-[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
-[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
-[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
-[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
-[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
-[10027.808083] x15: 0000000000000000 x14: 0000000000000000
-[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
-[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
-[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
-[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
-[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
-[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
-[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
-[10027.851748] Call trace:
-[10027.854264]  mutex_is_locked+0x14/0x2c
-[10027.858121]  msm_gem_shrinker_count+0x70/0xec
-[10027.862603]  shrink_slab+0xc0/0x4b4
-[10027.866187]  shrink_node+0x4a8/0x818
-[10027.869860]  kswapd+0x624/0x890
-[10027.873097]  kthread+0x11c/0x12c
-[10027.876424]  ret_from_fork+0x10/0x18
-[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
-[10027.886362] ---[ end trace df5849a1a3543251 ]---
-[10027.891518] Kernel panic - not syncing: Fatal exception
+=============================
+[ BUG: Invalid wait context ]
+5.7.0-rc7 #1 Not tainted
+-----------------------------
+swapper/0/0 is trying to lock:
+ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
+other info that might help us debug this:
+context-{5:5}
+2 locks held by swapper/0/0:
+ #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
+ #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
+stack backtrace:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
+Hardware name: Pumpkin MT8516 (DT)
+Call trace:
+ dump_backtrace+0x0/0x180
+ show_stack+0x14/0x20
+ dump_stack+0xd0/0x118
+ __lock_acquire+0x8c8/0x2270
+ lock_acquire+0xf8/0x470
+ _raw_spin_lock_irqsave+0x50/0x78
+ mtk_sysirq_set_type+0x48/0xc0
+ __irq_set_trigger+0x58/0x170
+ __setup_irq+0x420/0x8a0
+ request_threaded_irq+0xd8/0x190
+ timer_of_init+0x1e8/0x2c4
+ mtk_gpt_init+0x5c/0x1dc
+ timer_probe+0x74/0xf4
+ time_init+0x14/0x44
+ start_kernel+0x394/0x4f0
 
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Replace the spinlock_t with raw_spinlock_t to avoid this warning.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 36 ++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 6277fde13df91..f63bb7e452d2a 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -994,10 +994,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+index 73eae5966a403..6ff98b87e5c04 100644
+--- a/drivers/irqchip/irq-mtk-sysirq.c
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -15,7 +15,7 @@
+ #include <linux/spinlock.h>
  
- static int msm_gem_new_impl(struct drm_device *dev,
- 		uint32_t size, uint32_t flags,
--		struct drm_gem_object **obj,
--		bool struct_mutex_locked)
-+		struct drm_gem_object **obj)
- {
--	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
+ struct mtk_sysirq_chip_data {
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ 	u32 nr_intpol_bases;
+ 	void __iomem **intpol_bases;
+ 	u32 *intpol_words;
+@@ -37,7 +37,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 	reg_index = chip_data->which_word[hwirq];
+ 	offset = hwirq & 0x1f;
  
- 	switch (flags & MSM_BO_CACHE_MASK) {
-@@ -1023,15 +1021,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
- 	INIT_LIST_HEAD(&msm_obj->submit_entry);
- 	INIT_LIST_HEAD(&msm_obj->vmas);
+-	spin_lock_irqsave(&chip_data->lock, flags);
++	raw_spin_lock_irqsave(&chip_data->lock, flags);
+ 	value = readl_relaxed(base + reg_index * 4);
+ 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+ 		if (type == IRQ_TYPE_LEVEL_LOW)
+@@ -53,7 +53,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
  
--	if (struct_mutex_locked) {
--		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--	} else {
--		mutex_lock(&dev->struct_mutex);
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--		mutex_unlock(&dev->struct_mutex);
--	}
--
- 	*obj = &msm_obj->base;
+ 	data = data->parent_data;
+ 	ret = data->chip->irq_set_type(data, type);
+-	spin_unlock_irqrestore(&chip_data->lock, flags);
++	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
+ 	return ret;
+ }
+ 
+@@ -212,7 +212,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ 		ret = -ENOMEM;
+ 		goto out_free_which_word;
+ 	}
+-	spin_lock_init(&chip_data->lock);
++	raw_spin_lock_init(&chip_data->lock);
  
  	return 0;
-@@ -1041,6 +1030,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
- {
- 	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj = NULL;
- 	bool use_vram = false;
- 	int ret;
-@@ -1061,14 +1051,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 	if (size == 0)
- 		return ERR_PTR(-EINVAL);
  
--	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
-+	ret = msm_gem_new_impl(dev, size, flags, &obj);
- 	if (ret)
- 		goto fail;
- 
-+	msm_obj = to_msm_bo(obj);
-+
- 	if (use_vram) {
- 		struct msm_gem_vma *vma;
- 		struct page **pages;
--		struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 
- 		mutex_lock(&msm_obj->lock);
- 
-@@ -1103,6 +1094,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
- 	}
- 
-+	if (struct_mutex_locked) {
-+		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	} else {
-+		mutex_lock(&dev->struct_mutex);
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+		mutex_unlock(&dev->struct_mutex);
-+	}
-+
- 	return obj;
- 
- fail:
-@@ -1125,6 +1125,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
- struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 		struct dma_buf *dmabuf, struct sg_table *sgt)
- {
-+	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj;
- 	uint32_t size;
-@@ -1138,7 +1139,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 
- 	size = PAGE_ALIGN(dmabuf->size);
- 
--	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
-+	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
- 	if (ret)
- 		goto fail;
- 
-@@ -1163,6 +1164,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 	}
- 
- 	mutex_unlock(&msm_obj->lock);
-+
-+	mutex_lock(&dev->struct_mutex);
-+	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	mutex_unlock(&dev->struct_mutex);
-+
- 	return obj;
- 
- fail:
 -- 
 2.25.1
 
