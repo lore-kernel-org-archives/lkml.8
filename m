@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF83C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F258320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF8F20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688496;
-	bh=JRzD3Qkl3xbpYf3zqahjxRdru8m8ohZktfu6Su9QVoM=;
+	s=default; t=1597688504;
+	bh=dXcRGZv1/HVg/ovziSEWjfsIO6DWEDv+YO8KxW5bfrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lz/HS74sfdtv6FOTJ9xgpDmn8oUs6cA9EZbtv8Y76X6ky1SNNp1H+WD0boSTCuE+K
-	 QHXj5ewKRuVXjEAKAvROr7eNImpY6AXkIgQWGiZHxVy4OuKFxRncFMlxq8zCjWjEZP
-	 KrXa96hL41uht0s5+8KCMKmPeu1WO5OuRa7uIsss=
+	b=PAS1CyaXAr4ZMybbmqpHSAvUBQaYlKm3Gfantp1IlZdQqxSaf9laX23p6lnJAuSIL
+	 I7FJVvMuLNTkxzydvK0o8yqEFJ1CcjcYqCzW6LRx1RcBQPA50QrK1/E/pIKsdhiPGe
+	 SVF6mjSzqSlFMkWOg3hgPk47hyKY7Pvh/AQFoC18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390866AbgHQSVT (ORCPT
+        id S2390901AbgHQSVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52028 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:21:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388292AbgHQQER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:17 -0400
+        id S2388274AbgHQQD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E027621744;
-        Mon, 17 Aug 2020 16:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B132053B;
+        Mon, 17 Aug 2020 16:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680252;
-        bh=JRzD3Qkl3xbpYf3zqahjxRdru8m8ohZktfu6Su9QVoM=;
+        s=default; t=1597680238;
+        bh=dXcRGZv1/HVg/ovziSEWjfsIO6DWEDv+YO8KxW5bfrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+fHDZ+zAR6qWuopTNHMxsfD+CBxdYJVNVyix3+B3gzQHSy+ZOHQzk+P8+Zwrqrop
-         VHKeOT9DYhuFQiQ0KJYCN1c53wkWf02lxh/LZ6FTVfWr/BI7W4CTx4F8znIROpt05e
-         jsH405GpgIk7G9tLDjZrhx9xqwkPj2nraOiz44ZY=
+        b=O1+QuEv0Ax6sQLAncq/qoF9I+bjI9k2Hilg5KRTBKNucd3DU9kKDAkkxS4u+aPDs/
+         sX4WiTSB16olGK2Q8Ud4Uc+gZnK3aYUpel+80tnNAMWh/xqd47E8kjexeOXkHwuARP
+         HsN5XgweE0goIjhlC25KJ9tsh3WTji5WZMVaYHt8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Mark Chen <Mark-YW.Chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 112/270] ASoC: Intel: bxt_rt298: add missing .owner field
-Date:   Mon, 17 Aug 2020 17:15:13 +0200
-Message-Id: <20200817143801.360721129@linuxfoundation.org>
+Subject: [PATCH 5.4 107/270] Bluetooth: btmtksdio: fix up firmware download sequence
+Date:   Mon, 17 Aug 2020 17:15:08 +0200
+Message-Id: <20200817143801.108532235@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -63,48 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-[ Upstream commit 88cee34b776f80d2da04afb990c2a28c36799c43 ]
+[ Upstream commit 737cd06072a72e8984e41af8e5919338d0c5bf2b ]
 
-This field is required for ASoC cards. Not setting it will result in a
-module->name pointer being NULL and generate problems such as
+Data RAM on the device have to be powered on before starting to download
+the firmware.
 
-cat /proc/asound/modules
- 0 (efault)
-
-Fixes: 76016322ec56 ('ASoC: Intel: Add Broxton-P machine driver')
-Reported-by: Jaroslav Kysela <perex@perex.cz>
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200625191308.3322-5-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9aebfd4a2200 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
+Co-developed-by: Mark Chen <Mark-YW.Chen@mediatek.com>
+Signed-off-by: Mark Chen <Mark-YW.Chen@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bxt_rt298.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/bluetooth/btmtksdio.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/bxt_rt298.c b/sound/soc/intel/boards/bxt_rt298.c
-index adf416a49b483..60fb874950504 100644
---- a/sound/soc/intel/boards/bxt_rt298.c
-+++ b/sound/soc/intel/boards/bxt_rt298.c
-@@ -556,6 +556,7 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
- /* broxton audio machine driver for SPT + RT298S */
- static struct snd_soc_card broxton_rt298 = {
- 	.name = "broxton-rt298",
-+	.owner = THIS_MODULE,
- 	.dai_link = broxton_rt298_dais,
- 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
- 	.controls = broxton_controls,
-@@ -571,6 +572,7 @@ static struct snd_soc_card broxton_rt298 = {
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index 8133382884537..b7de7cb8cca90 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -684,7 +684,7 @@ static int mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
+ 	const u8 *fw_ptr;
+ 	size_t fw_size;
+ 	int err, dlen;
+-	u8 flag;
++	u8 flag, param;
  
- static struct snd_soc_card geminilake_rt298 = {
- 	.name = "geminilake-rt298",
-+	.owner = THIS_MODULE,
- 	.dai_link = broxton_rt298_dais,
- 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
- 	.controls = broxton_controls,
+ 	err = request_firmware(&fw, fwname, &hdev->dev);
+ 	if (err < 0) {
+@@ -692,6 +692,20 @@ static int mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
+ 		return err;
+ 	}
+ 
++	/* Power on data RAM the firmware relies on. */
++	param = 1;
++	wmt_params.op = MTK_WMT_FUNC_CTRL;
++	wmt_params.flag = 3;
++	wmt_params.dlen = sizeof(param);
++	wmt_params.data = &param;
++	wmt_params.status = NULL;
++
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
++	if (err < 0) {
++		bt_dev_err(hdev, "Failed to power on data RAM (%d)", err);
++		return err;
++	}
++
+ 	fw_ptr = fw->data;
+ 	fw_size = fw->size;
+ 
 -- 
 2.25.1
 
