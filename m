@@ -2,140 +2,88 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2EDC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B919DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC39204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E23520758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597689763;
+	bh=WlvDQtskn6xwf+z4ILMfovV5b5YPGWtu3a6oWPARq3I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gX2ROhAo68m+xFHXGoa/B10tljrEC5dEbdIwi7XPi4twlRSrr16Cr/u6KXKCqpIN4
+	 J+5v6UZKDazUZDyNfRONEwNIeNy/qiR43q+LJtEZSHX6akoCzRG+WTJQfalDTaBvTF
+	 a1XeuXJHELsnPyJOMz183cNqkG4Lvj1iyvisEFXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbgHQSme (ORCPT
+        id S1731724AbgHQSml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:42:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:5457 "EHLO mga05.intel.com"
+        Mon, 17 Aug 2020 14:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391029AbgHQSm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:42:29 -0400
-IronPort-SDR: trug3E0GuLUiuYiFVbVJGT5EkJJPsCyDrtDq/nelkRkhq/tB2kKlAp0ofI9qsNS4frvPa7/GfL
- 46bzta7+w5rw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239598593"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="239598593"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:42:28 -0700
-IronPort-SDR: cN77Q3ljGTc6aUVV1f5QieMS4soR0R8SKKcql3u2UTdzm0IpTqLqxbN8GC3Qh+aoTsMsSzG2w1
- OGgqemmETuqQ==
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="319807735"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:42:28 -0700
-Date:   Mon, 17 Aug 2020 11:42:26 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: fix access code passed to gva_to_gpa
-Message-ID: <20200817184226.GJ22407@linux.intel.com>
-References: <20200817180042.32264-1-pbonzini@redhat.com>
+        id S2388105AbgHQP5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C19A206FA;
+        Mon, 17 Aug 2020 15:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679832;
+        bh=WlvDQtskn6xwf+z4ILMfovV5b5YPGWtu3a6oWPARq3I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Txm4JtHTyDoxkxct/nDlYKAxoSncqm5AX8rt1JkA/mwDA+k8DNAYGDSLw1ZMmfT4S
+         OTmJW8nCfsrlo2+aCye7L42ap1tdUe+0I4TkcsP5mFwjfL7j5rOrFqFJcEPqps/hUC
+         IVx3TJtci/JFp46wbppoI+MsX86t7K0QXrLAIE3M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 322/393] net: Set fput_needed iff FDPUT_FPUT is set
+Date:   Mon, 17 Aug 2020 17:16:12 +0200
+Message-Id: <20200817143835.219920420@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817180042.32264-1-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 02:00:42PM -0400, Paolo Bonzini wrote:
-> The PK bit of the error code is computed dynamically in permission_fault
-> and therefore need not be passed to gva_to_gpa: only the access bits
-> (fetch, user, write) need to be passed down.
-> 
-> Not doing so causes a splat in the pku test:
-> 
->    WARNING: CPU: 25 PID: 5465 at arch/x86/kvm/mmu.h:197 paging64_walk_addr_generic+0x594/0x750 [kvm]
->    Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS WLYDCRB1.SYS.0014.D62.2001092233 01/09/2020
->    RIP: 0010:paging64_walk_addr_generic+0x594/0x750 [kvm]
->    Code: <0f> 0b e9 db fe ff ff 44 8b 43 04 4c 89 6c 24 30 8b 13 41 39 d0 89
->    RSP: 0018:ff53778fc623fb60 EFLAGS: 00010202
->    RAX: 0000000000000001 RBX: ff53778fc623fbf0 RCX: 0000000000000007
->    RDX: 0000000000000001 RSI: 0000000000000002 RDI: ff4501efba818000
->    RBP: 0000000000000020 R08: 0000000000000005 R09: 00000000004000e7
->    R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000007
->    R13: ff4501efba818388 R14: 10000000004000e7 R15: 0000000000000000
->    FS:  00007f2dcf31a700(0000) GS:ff4501f1c8040000(0000) knlGS:0000000000000000
->    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->    CR2: 0000000000000000 CR3: 0000001dea475005 CR4: 0000000000763ee0
->    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->    PKRU: 55555554
->    Call Trace:
->     paging64_gva_to_gpa+0x3f/0xb0 [kvm]
->     kvm_fixup_and_inject_pf_error+0x48/0xa0 [kvm]
->     handle_exception_nmi+0x4fc/0x5b0 [kvm_intel]
->     kvm_arch_vcpu_ioctl_run+0x911/0x1c10 [kvm]
->     kvm_vcpu_ioctl+0x23e/0x5d0 [kvm]
->     ksys_ioctl+0x92/0xb0
->     __x64_sys_ioctl+0x16/0x20
->     do_syscall_64+0x3e/0xb0
->     entry_SYSCALL_64_after_hwframe+0x44/0xa9
->    ---[ end trace d17eb998aee991da ]---
-> 
-> Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Fixes: 897861479c064 ("KVM: x86: Add helper functions for illegal GPA checking and page fault injection")
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 2db369a64f29..a6e42ce607ca 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10743,9 +10743,13 @@ EXPORT_SYMBOL_GPL(kvm_spec_ctrl_test_value);
->  void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t gva, u16 error_code)
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Side topic, 'struct x86_exception' really should be using a u32 for the
-error code.  Practically speaking, I expect bits 31:16 will be reserved in
-perpetuity, but it's jarring to see 'u16 error_code', and it leads to
-pointless discrepancies, e.g. 'u32 access' in ->gva_to_gpa().
+[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
 
->  {
->  	struct x86_exception fault;
-> +	const unsigned access_mask =
-> +		PFERR_WRITE_MASK | PFERR_FETCH_MASK | PFERR_USER_MASK;
+We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+accordingly.
 
-Don't suppose you'd be in the mood to kill the bare 'unsigned'?
+Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-
->  
->  	if (!(error_code & PFERR_PRESENT_MASK) ||
-> -	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, error_code, &fault) != UNMAPPED_GVA) {
-> +	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva,
-> +					    error_code & access_mask,
-> +					    &fault) != UNMAPPED_GVA) {
-
-Alternatively, what about capturing the result in a new variable (instead of
-defining the mask) to make the wrap suck less (or just overflow like the
-current code), e.g.:
-
-        u32 access = error_code &
-                     (PFERR_WRITE_MASK | PFERR_FETCH_MASK | PFERR_USER_MASK);
-
-        if (!(error_code & PFERR_PRESENT_MASK) ||
-            vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, access, &fault) != UNMAPPED_GVA) {
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -500,7 +500,7 @@ static struct socket *sockfd_lookup_ligh
+ 	if (f.file) {
+ 		sock = sock_from_file(f.file, err);
+ 		if (likely(sock)) {
+-			*fput_needed = f.flags;
++			*fput_needed = f.flags & FDPUT_FPUT;
+ 			return sock;
+ 		}
+ 		fdput(f);
 
 
->  		/*
->  		 * If vcpu->arch.walk_mmu->gva_to_gpa succeeded, the page
->  		 * tables probably do not match the TLB.  Just proceed
-> -- 
-> 2.26.2
-> 
