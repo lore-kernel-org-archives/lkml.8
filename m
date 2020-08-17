@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF19CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410F82063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF95A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689381;
-	bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
+	s=default; t=1597689383;
+	bh=po7Aa9O9UO8NOGTly4ubZx2QUjPg5goS3alS0iMlVoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDNSiwKQUCAogMctpb3a8vxqrExY20NC81ukCTx7rauivd4X/R2b74nCTog77vB9p
-	 3XOSG5VsUPVOCvyHnEVdnHOf5GwIKcf0cW28BnXOpiBDSwl8dv0+VZmRcC2YalX3sH
-	 AQ1nBLZ9ZrIBv8KsQ7kUSSBHBFuRZ/laRJBV3e3g=
+	b=SEkuqJSA3sLOpWZ/SnawL1+Bt143v/k8Sb/xdCrBWAC5YZuJ1EvJXF/YAfrKDoHA/
+	 Q1m7urWLQmBS/cvnNhQGhztm76qJhpBtZYZkbaBnitryvyMA6yfhdzGJGadN3CNDRd
+	 Dj7Cg5BtHqF5J6UFnURan0h1k+a+dUkTjMfI3DnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391345AbgHQSgS (ORCPT
+        id S2391355AbgHQSgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbgHQP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:24 -0400
+        id S1730962AbgHQP7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACDD207DA;
-        Mon, 17 Aug 2020 15:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F295C20760;
+        Mon, 17 Aug 2020 15:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679964;
-        bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
+        s=default; t=1597679958;
+        bh=po7Aa9O9UO8NOGTly4ubZx2QUjPg5goS3alS0iMlVoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIdxsHEZQA/x/Qdejlr9VcRrSgVfRnyJNUmOICa3oY2I1/znmnVkNx9Ou55wUUzOu
-         mjXGiIU0Sk0pAWA4E2fzB4sDu0boQ/OEL46xNSpa3xP18QRV5d3Yc5qDUH2kmzCgdu
-         xOdqN5AyygH7sWYae5QauW29yEW2Baj4RiG92pTw=
+        b=Fh7PAA0x77e/pfcRbkSctcdcfq3R4xvYzBxGc8O5dulVGTpFJihV8QteXVUtk/RcH
+         tYq2eJzKy5jcyRFwuJD6T7egOA0dNzTO3NHuun8VdSuPy3wVd8yAds2X4+qMZAs2WA
+         aLDVd4vu/tuBSoT/w4NMpqSP+3d4mw1shlSDoabQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH 5.7 387/393] s390/gmap: improve THP splitting
-Date:   Mon, 17 Aug 2020 17:17:17 +0200
-Message-Id: <20200817143838.373242333@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+805f5f6ae37411f15b64@syzkaller.appspotmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        stable <stable@kernel.org>
+Subject: [PATCH 5.7 352/393] driver core: Fix probe_count imbalance in really_probe()
+Date:   Mon, 17 Aug 2020 17:16:42 +0200
+Message-Id: <20200817143836.676896342@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,79 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit ba925fa35057a062ac98c3e8138b013ce4ce351c upstream.
+commit b292b50b0efcc7095d8bf15505fba6909bb35dce upstream.
 
-During s390_enable_sie(), we need to take care of splitting all qemu user
-process THP mappings. This is currently done with follow_page(FOLL_SPLIT),
-by simply iterating over all vma ranges, with PAGE_SIZE increment.
+syzbot is reporting hung task in wait_for_device_probe() [1]. At least,
+we always need to decrement probe_count if we incremented probe_count in
+really_probe().
 
-This logic is sub-optimal and can result in a lot of unnecessary overhead,
-especially when using qemu and ASAN with large shadow map. Ilya reported
-significant system slow-down with one CPU busy for a long time and overall
-unresponsiveness.
+However, since I can't find "Resources present before probing" message in
+the console log, both "this message simply flowed off" and "syzbot is not
+hitting this path" will be possible. Therefore, while we are at it, let's
+also prepare for concurrent wait_for_device_probe() calls by replacing
+wake_up() with wake_up_all().
 
-Fix this by using walk_page_vma() and directly calling split_huge_pmd()
-only for present pmds, which greatly reduces overhead.
+[1] https://syzkaller.appspot.com/bug?id=25c833f1983c9c1d512f4ff860dd0d7f5a2e2c0f
 
-Cc: <stable@vger.kernel.org> # v5.4+
-Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Tested-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Reported-by: syzbot <syzbot+805f5f6ae37411f15b64@syzkaller.appspotmail.com>
+Fixes: 7c35e699c88bd607 ("driver core: Print device when resources present in really_probe()")
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@kernel.org>
+Link: https://lore.kernel.org/r/20200713021254.3444-1-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/s390/mm/gmap.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
 
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2485,23 +2485,36 @@ void gmap_sync_dirty_log_pmd(struct gmap
+---
+ drivers/base/dd.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -276,7 +276,7 @@ static void deferred_probe_timeout_work_
+ 
+ 	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
+ 		dev_info(private->device, "deferred probe pending");
+-	wake_up(&probe_timeout_waitqueue);
++	wake_up_all(&probe_timeout_waitqueue);
  }
- EXPORT_SYMBOL_GPL(gmap_sync_dirty_log_pmd);
+ static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
  
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static int thp_split_walk_pmd_entry(pmd_t *pmd, unsigned long addr,
-+				    unsigned long end, struct mm_walk *walk)
-+{
-+	struct vm_area_struct *vma = walk->vma;
-+
-+	split_huge_pmd(vma, pmd, addr);
-+	return 0;
-+}
-+
-+static const struct mm_walk_ops thp_split_walk_ops = {
-+	.pmd_entry	= thp_split_walk_pmd_entry,
-+};
-+
- static inline void thp_split_mm(struct mm_struct *mm)
- {
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	struct vm_area_struct *vma;
--	unsigned long addr;
- 
- 	for (vma = mm->mmap; vma != NULL; vma = vma->vm_next) {
--		for (addr = vma->vm_start;
--		     addr < vma->vm_end;
--		     addr += PAGE_SIZE)
--			follow_page(vma, addr, FOLL_SPLIT);
- 		vma->vm_flags &= ~VM_HUGEPAGE;
- 		vma->vm_flags |= VM_NOHUGEPAGE;
-+		walk_page_vma(vma, &thp_split_walk_ops, NULL);
+@@ -487,7 +487,8 @@ static int really_probe(struct device *d
+ 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+ 	if (!list_empty(&dev->devres_head)) {
+ 		dev_crit(dev, "Resources present before probing\n");
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto done;
  	}
- 	mm->def_flags |= VM_NOHUGEPAGE;
--#endif
- }
-+#else
-+static inline void thp_split_mm(struct mm_struct *mm)
-+{
-+}
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
  
- /*
-  * Remove all empty zero pages from the mapping for lazy refaulting
+ re_probe:
+@@ -608,7 +609,7 @@ pinctrl_bind_failed:
+ 	ret = 0;
+ done:
+ 	atomic_dec(&probe_count);
+-	wake_up(&probe_waitqueue);
++	wake_up_all(&probe_waitqueue);
+ 	return ret;
+ }
+ 
 
 
