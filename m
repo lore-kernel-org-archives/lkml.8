@@ -2,58 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA919C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBB7320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5FD20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691076;
-	bh=+k++uvc5navQ2uKqFX6t6jOMhAz3QjELVmlOd/6ryvQ=;
+	s=default; t=1597691080;
+	bh=Y7FLL9CrPKnGZCPGfu9yZYBPkWT6HM7M3CvL0nstTao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LmPIUFZxG93YB2DvMJmmiPzzsYF9dnBO3mwmiG6ic/mvcNxEhUvC8Qs1Mm6wyrdww
-	 QUd8ZKQ2O9Xn3nBb3pKiRJwXgSEbhNmvUEbURAM6qSR0e+gc8TAnntnkysLfAba5X3
-	 GiTFv+1DjHya5aXY5khHNYYRobRC65Aa5tZRP2tQ=
+	b=aKqI1bIJEr77EopZkIDa1pRCzDbCFQVksITBrSyn+gOslBZEP0XaRlQuBL+xHEEaZ
+	 Rm+9Y7z5LKyBkmFdkVXitExNpo3OjPUXJgsSkEN3q09jfIyoriUhTLtuhcT9F3beaU
+	 E14mDtQvSDr8PXtpnwcASRFrt9jlvCWLpGlAjfeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404058AbgHQTEf (ORCPT
+        id S2403817AbgHQTEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56992 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbgHQPph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:37 -0400
+        id S1730652AbgHQPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9E0206FA;
-        Mon, 17 Aug 2020 15:45:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5652067C;
+        Mon, 17 Aug 2020 15:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679136;
-        bh=+k++uvc5navQ2uKqFX6t6jOMhAz3QjELVmlOd/6ryvQ=;
+        s=default; t=1597679134;
+        bh=Y7FLL9CrPKnGZCPGfu9yZYBPkWT6HM7M3CvL0nstTao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpdce3zTVhpMaA7R/AXxE1xhEoK7EiejnBGyxexrFfG0C/oaRSQorD236dRCBHuCy
-         Ouu9h+Ih6fkzahjethJVGqx/YY1ItvU28EA6E+LY4P/OSNo1VuZOOwoAOzYyhyOXH2
-         QgVQy02JiRTHMbIEM0oET2HO0PZsAAyQw0ZOrJT0=
+        b=So9uEqT0W47lTwH8jcfcYHgMkz746C/s0Orwm8K3TzKesZSg5mYppZdyCbmYid0QM
+         jFQHvv0+/POpuzBWkMZirCiFSQ07FMrXNba7BgvlYPZEd68AfIO2qGuW0yK2h/ugWQ
+         /p/rxzgTdtGXAPPNt05ZuMlRapN6p9f8P2yvRtck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dmitry Golovin <dima@golovin.in>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Dennis Zhou <dennis@kernel.org>,
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 108/393] x86/uaccess: Make __get_user_size() Clang compliant on 32-bit
-Date:   Mon, 17 Aug 2020 17:12:38 +0200
-Message-Id: <20200817143824.853544986@linuxfoundation.org>
+Subject: [PATCH 5.7 107/393] ionic: update eid test for overflow
+Date:   Mon, 17 Aug 2020 17:12:37 +0200
+Message-Id: <20200817143824.804809171@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -66,113 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit 158807de5822d1079e162a3762956fd743dd483e ]
+[ Upstream commit 3fbc9bb6ca32d12d4d32a7ae32abef67ac95f889 ]
 
-Clang fails to compile __get_user_size() on 32-bit for the following code:
+Fix up our comparison to better handle a potential (but largely
+unlikely) wrap around.
 
-      long long val;
-
-      __get_user(val, usrptr);
-
-with: error: invalid output size for constraint '=q'
-
-GCC compiles the same code without complaints.
-
-The reason is that GCC and Clang are architecturally different, which leads
-to subtle issues for code that's invalid but clearly dead, i.e. with code
-that emulates polymorphism with the preprocessor and sizeof.
-
-GCC will perform semantic analysis after early inlining and dead code
-elimination, so it will not warn on invalid code that's dead. Clang
-strictly performs optimizations after semantic analysis, so it will warn
-for dead code.
-
-Neither Clang nor GCC like this very much with -m32:
-
-long long ret;
-asm ("movb $5, %0" : "=q" (ret));
-
-However, GCC can tolerate this variant:
-
-long long ret;
-switch (sizeof(ret)) {
-case 1:
-        asm ("movb $5, %0" : "=q" (ret));
-        break;
-case 8:;
-}
-
-Clang, on the other hand, won't accept that because it validates the inline
-asm for the '1' case before the optimisation phase where it realises that
-it wouldn't have to emit it anyway.
-
-If LLVM (Clang's "back end") fails such as during instruction selection or
-register allocation, it cannot provide accurate diagnostics (warnings /
-errors) that contain line information, as the AST has been discarded from
-memory at that point.
-
-While there have been early discussions about having C/C++ specific
-language optimizations in Clang via the use of MLIR, which would enable
-such earlier optimizations, such work is not scoped and likely a multi-year
-endeavor.
-
-It was discussed to change the asm output constraint for the one byte case
-from "=q" to "=r". While it works for 64-bit, it fails on 32-bit. With '=r'
-the compiler could fail to chose a register accessible as high/low which is
-required for the byte operation. If that happens the assembly will fail.
-
-Use a local temporary variable of type 'unsigned char' as output for the
-byte copy inline asm and then assign it to the real output variable. This
-prevents Clang from failing the semantic analysis in the above case.
-
-The resulting code for the actual one byte copy is not affected as the
-temporary variable is optimized out.
-
-[ tglx: Amended changelog ]
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Reported-by: David Woodhouse <dwmw2@infradead.org>
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Dennis Zhou <dennis@kernel.org>
-Link: https://bugs.llvm.org/show_bug.cgi?id=33587
-Link: https://github.com/ClangBuiltLinux/linux/issues/3
-Link: https://github.com/ClangBuiltLinux/linux/issues/194
-Link: https://github.com/ClangBuiltLinux/linux/issues/781
-Link: https://lore.kernel.org/lkml/20180209161833.4605-1-dwmw2@infradead.org/
-Link: https://lore.kernel.org/lkml/CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com/
-Link: https://lkml.kernel.org/r/20200720204925.3654302-12-ndesaulniers@google.com
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index d8f283b9a569c..d1323c73cf6d2 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -314,11 +314,14 @@ do {									\
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 337d971ffd92c..29f77faa808bb 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -709,7 +709,7 @@ static bool ionic_notifyq_service(struct ionic_cq *cq,
+ 	eid = le64_to_cpu(comp->event.eid);
  
- #define __get_user_size(x, ptr, size, retval)				\
- do {									\
-+	unsigned char x_u8__;						\
-+									\
- 	retval = 0;							\
- 	__chk_user_ptr(ptr);						\
- 	switch (size) {							\
- 	case 1:								\
--		__get_user_asm(x, ptr, retval, "b", "=q");		\
-+		__get_user_asm(x_u8__, ptr, retval, "b", "=q");		\
-+		(x) = x_u8__;						\
- 		break;							\
- 	case 2:								\
- 		__get_user_asm(x, ptr, retval, "w", "=r");		\
+ 	/* Have we run out of new completions to process? */
+-	if (eid <= lif->last_eid)
++	if ((s64)(eid - lif->last_eid) <= 0)
+ 		return false;
+ 
+ 	lif->last_eid = eid;
 -- 
 2.25.1
 
