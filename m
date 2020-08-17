@@ -2,128 +2,197 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18746C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CB7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CF120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L44vToCN"
+	by mail.kernel.org (Postfix) with ESMTP id 87A7520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389883AbgHQRXI (ORCPT
+        id S2389891AbgHQRXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:23:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:59199 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 13:23:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42596 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389066AbgHQQvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:51:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597683104; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=ZgA/A27N3hQncTooCvm4w49de5DXkpzGeD/gqykWj9E=; b=L44vToCNLhfT1aaclbfWz1DzVYACr3CcZbIo1qBIF9PPxOb02q25b+hB1QcymqZgMERx3YK4
- k8wB/bbDI65AmDTwWDOM42i9VL2QvcyO7Q0srtwJO6JiG28sML8BnJnJiAjRmdfTjMq6Fq4k
- sby3rMDakzyaNnPexDgIPhpfNqA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f3ab5a0247ccc308c04a353 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:51:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 16F65C433AD; Mon, 17 Aug 2020 16:51:42 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90AC7C433CB;
-        Mon, 17 Aug 2020 16:51:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90AC7C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 17 Aug 2020 10:51:37 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sean Paul <sean@poorly.run>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 01/19] drm/msm: remove dangling submitqueue references
-Message-ID: <20200817165137.GG3221@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Sean Paul <sean@poorly.run>, Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-2-robdclark@gmail.com>
+        id S2389113AbgHQQxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:53:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 07A5DAE25;
+        Mon, 17 Aug 2020 16:54:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 86E271E12CB; Mon, 17 Aug 2020 18:53:39 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 18:53:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v2 02/20] dax: Create a range version of
+ dax_layout_busy_page()
+Message-ID: <20200817165339.GA22500@quack2.suse.cz>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
+ <20200807195526.426056-3-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200814024114.1177553-2-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200807195526.426056-3-vgoyal@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 07:40:56PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Fri 07-08-20 15:55:08, Vivek Goyal wrote:
+> virtiofs device has a range of memory which is mapped into file inodes
+> using dax. This memory is mapped in qemu on host and maps different
+> sections of real file on host. Size of this memory is limited
+> (determined by administrator) and depending on filesystem size, we will
+> soon reach a situation where all the memory is in use and we need to
+> reclaim some.
 > 
-> Currently it doesn't matter, since we free the ctx immediately.  But
-> when we start refcnt'ing the ctx, we don't want old dangling list
-> entries to hang around.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> As part of reclaim process, we will need to make sure that there are
+> no active references to pages (taken by get_user_pages()) on the memory
+> range we are trying to reclaim. I am planning to use
+> dax_layout_busy_page() for this. But in current form this is per inode
+> and scans through all the pages of the inode.
 > 
-> diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-> index a1d94be7883a..90c9d84e6155 100644
-> --- a/drivers/gpu/drm/msm/msm_submitqueue.c
-> +++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-> @@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
->  	 * No lock needed in close and there won't
->  	 * be any more user ioctls coming our way
->  	 */
-> -	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
-> +	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
-> +		list_del(&entry->node);
->  		msm_submitqueue_put(entry);
-> +	}
+> We want to reclaim only a portion of memory (say 2MB page). So we want
+> to make sure that only that 2MB range of pages do not have any
+> references  (and don't want to unmap all the pages of inode).
+> 
+> Hence, create a range version of this function named
+> dax_layout_busy_page_range() which can be used to pass a range which
+> needs to be unmapped.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-nvdimm@lists.01.org
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+
+The API looks OK. Some comments WRT the implementation below.
+
+> diff --git a/fs/dax.c b/fs/dax.c
+> index 11b16729b86f..0d51b0fbb489 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -558,27 +558,20 @@ static void *grab_mapping_entry(struct xa_state *xas,
+>  	return xa_mk_internal(VM_FAULT_FALLBACK);
 >  }
 >  
->  int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> -/**
+> - * dax_layout_busy_page - find first pinned page in @mapping
+> - * @mapping: address space to scan for a page with ref count > 1
+> - *
+> - * DAX requires ZONE_DEVICE mapped pages. These pages are never
+> - * 'onlined' to the page allocator so they are considered idle when
+> - * page->count == 1. A filesystem uses this interface to determine if
+> - * any page in the mapping is busy, i.e. for DMA, or other
+> - * get_user_pages() usages.
+> - *
+> - * It is expected that the filesystem is holding locks to block the
+> - * establishment of new mappings in this address_space. I.e. it expects
+> - * to be able to run unmap_mapping_range() and subsequently not race
+> - * mapping_mapped() becoming true.
+> +/*
+> + * Partial pages are included. If end is LLONG_MAX, pages in the range from
+> + * start to end of the file are inluded.
+>   */
 
+I think the big kerneldoc comment should stay with
+dax_layout_busy_page_range() since dax_layout_busy_page() will be just a
+trivial wrapper around it..
+
+> -struct page *dax_layout_busy_page(struct address_space *mapping)
+> +struct page *dax_layout_busy_page_range(struct address_space *mapping,
+> +					loff_t start, loff_t end)
+>  {
+> -	XA_STATE(xas, &mapping->i_pages, 0);
+>  	void *entry;
+>  	unsigned int scanned = 0;
+>  	struct page *page = NULL;
+> +	pgoff_t start_idx = start >> PAGE_SHIFT;
+> +	pgoff_t end_idx = end >> PAGE_SHIFT;
+> +	XA_STATE(xas, &mapping->i_pages, start_idx);
+> +	loff_t len, lstart = round_down(start, PAGE_SIZE);
+>  
+>  	/*
+>  	 * In the 'limited' case get_user_pages() for dax is disabled.
+> @@ -589,6 +582,22 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+>  	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
+>  		return NULL;
+>  
+> +	/* If end == LLONG_MAX, all pages from start to till end of file */
+> +	if (end == LLONG_MAX) {
+> +		end_idx = ULONG_MAX;
+> +		len = 0;
+> +	} else {
+> +		/* length is being calculated from lstart and not start.
+> +		 * This is due to behavior of unmap_mapping_range(). If
+> +		 * start is say 4094 and end is on 4096 then we want to
+> +		 * unamp two pages, idx 0 and 1. But unmap_mapping_range()
+> +		 * will unmap only page at idx 0. If we calculate len
+> +		 * from the rounded down start, this problem should not
+> +		 * happen.
+> +		 */
+> +		len = end - lstart + 1;
+> +	}
+
+Maybe it would be more understandable to use
+	unmap_mapping_pages(mapping, start_idx, end_idx - start_idx + 1);
+below and avoid all this rounding and special-casing.
+
+> +
+>  	/*
+>  	 * If we race get_user_pages_fast() here either we'll see the
+>  	 * elevated page count in the iteration and wait, or
+> @@ -601,10 +610,10 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+>  	 * guaranteed to either see new references or prevent new
+>  	 * references from being established.
+>  	 */
+> -	unmap_mapping_range(mapping, 0, 0, 0);
+> +	unmap_mapping_range(mapping, start, len, 0);
+>  
+>  	xas_lock_irq(&xas);
+> -	xas_for_each(&xas, entry, ULONG_MAX) {
+> +	xas_for_each(&xas, entry, end_idx) {
+>  		if (WARN_ON_ONCE(!xa_is_value(entry)))
+>  			continue;
+>  		if (unlikely(dax_is_locked(entry)))
+> @@ -625,6 +634,27 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+>  	xas_unlock_irq(&xas);
+>  	return page;
+>  }
+> +EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
+> +
+> +/**
+> + * dax_layout_busy_page - find first pinned page in @mapping
+> + * @mapping: address space to scan for a page with ref count > 1
+> + *
+> + * DAX requires ZONE_DEVICE mapped pages. These pages are never
+> + * 'onlined' to the page allocator so they are considered idle when
+> + * page->count == 1. A filesystem uses this interface to determine if
+> + * any page in the mapping is busy, i.e. for DMA, or other
+> + * get_user_pages() usages.
+> + *
+> + * It is expected that the filesystem is holding locks to block the
+> + * establishment of new mappings in this address_space. I.e. it expects
+> + * to be able to run unmap_mapping_range() and subsequently not race
+> + * mapping_mapped() becoming true.
+> + */
+> +struct page *dax_layout_busy_page(struct address_space *mapping)
+> +{
+> +	return dax_layout_busy_page_range(mapping, 0, 0);
+
+Should the 'end' rather be LLONG_MAX?
+
+Otherwise the patch looks good to me.
+
+								Honza
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
