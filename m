@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ABBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007892063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5F22063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686379;
-	bh=7A+++Yw0+TysqxyiH4d3rKi9Zm++2+xI6pxXoC56GEQ=;
+	s=default; t=1597686383;
+	bh=tkvND/LkPE4H6e8Wdv4bgmMxf2rPcUMfVCaN+T2A+5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdl1+jwynWTcOTlm4cGHu/vNSDcajfuCG+Jyk3RhsalftyWfYjuKAPaYRf/GpNtQ8
-	 twU5dXsrVpF3z+gMtSw98e1QRiZCyG+JungygjOXgjB+NZ5S0zfnEFSjPxp/L1DZrA
-	 fJXgb42EuAf5/cONvNC1nz0GeRjTBm/3gT9k2Q5c=
+	b=Gezt2YNmzlWeUwjBdchrfaZYf9bmVK78eBu2BdK6dDCrPJJlGEOuLeg8mG3SkeLWs
+	 Aole3oN9pMwI0D0o+jBwjMaEf0w0OaBU20hpb+YWbWRGswXj2Oye0SiqCz2QsjtjQ7
+	 HktJz08bC/iLRmNwMPSxD60UMt9tL+kJbWBemINo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgHQRqR (ORCPT
+        id S1731426AbgHQRqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49720 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388777AbgHQQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388771AbgHQQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:14:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C4822CA0;
-        Mon, 17 Aug 2020 16:14:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD41920888;
+        Mon, 17 Aug 2020 16:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680845;
-        bh=7A+++Yw0+TysqxyiH4d3rKi9Zm++2+xI6pxXoC56GEQ=;
+        s=default; t=1597680835;
+        bh=tkvND/LkPE4H6e8Wdv4bgmMxf2rPcUMfVCaN+T2A+5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8pd6eVOEcR0KmMFTbrFtrpcGvHM/ZwaYO/BIvKqtT4n0REZJQVtXNX0HccaYAPpP
-         Q5zfuCy1ptCPE/Ojb/ZFxVC6xjhvegS1fKh2vUpglOWnbkhq2reOPFCkvU/bUkbcl8
-         sAmk2eeNgBqUuEWXeGS6eZG2zygzv/vzHDseolS0=
+        b=Z5cb45Hjwb1NwfNpl4H8XftC9nABcU9T8xy6fJnjX6QvUTyB31XKBlHVNpW8ud8Qh
+         STAM9gd7KDMYO1jTsWvGrlV/s28g97uPxa1B2ZYN5+IR823newrISRvYAIC8/Gho2Q
+         lZxURU0pnR33okMt+FBlUzTzie7SPBWnk9nFF1aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 081/168] phy: exynos5-usbdrd: Calibrating makes sense only for USB2.0 PHY
-Date:   Mon, 17 Aug 2020 17:16:52 +0200
-Message-Id: <20200817143737.773044179@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 077/168] RDMA/rxe: Skip dgid check in loopback mode
+Date:   Mon, 17 Aug 2020 17:16:48 +0200
+Message-Id: <20200817143737.557219616@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,38 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-[ Upstream commit dcbabfeb17c3c2fdb6bc92a3031ecd37df1834a8 ]
+[ Upstream commit 5c99274be8864519328aa74bc550ba410095bc1c ]
 
-PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
-calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
+In the loopback tests, the following call trace occurs.
 
-Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200708133800.3336-1-m.szyprowski@samsung.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+ Call Trace:
+  __rxe_do_task+0x1a/0x30 [rdma_rxe]
+  rxe_qp_destroy+0x61/0xa0 [rdma_rxe]
+  rxe_destroy_qp+0x20/0x60 [rdma_rxe]
+  ib_destroy_qp_user+0xcc/0x220 [ib_core]
+  uverbs_free_qp+0x3c/0xc0 [ib_uverbs]
+  destroy_hw_idr_uobject+0x24/0x70 [ib_uverbs]
+  uverbs_destroy_uobject+0x43/0x1b0 [ib_uverbs]
+  uobj_destroy+0x41/0x70 [ib_uverbs]
+  __uobj_get_destroy+0x39/0x70 [ib_uverbs]
+  ib_uverbs_destroy_qp+0x88/0xc0 [ib_uverbs]
+  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb9/0xf0 [ib_uverbs]
+  ib_uverbs_cmd_verbs+0xb16/0xc30 [ib_uverbs]
+
+The root cause is that the actual RDMA connection is not created in the
+loopback tests and the rxe_match_dgid will fail randomly.
+
+To fix this call trace which appear in the loopback tests, skip check of
+the dgid.
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Link: https://lore.kernel.org/r/20200630123605.446959-1-leon@kernel.org
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_recv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index b8b226a200146..1feb1e1bf85e2 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -717,7 +717,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
- 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
- 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
+index 695a607e2d14c..b8f3e65402d1d 100644
+--- a/drivers/infiniband/sw/rxe/rxe_recv.c
++++ b/drivers/infiniband/sw/rxe/rxe_recv.c
+@@ -332,10 +332,14 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
  
--	return exynos5420_usbdrd_phy_calibrate(phy_drd);
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
-+		return exynos5420_usbdrd_phy_calibrate(phy_drd);
-+	return 0;
- }
+ static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
+ {
++	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
+ 	const struct ib_gid_attr *gid_attr;
+ 	union ib_gid dgid;
+ 	union ib_gid *pdgid;
  
- static const struct phy_ops exynos5_usbdrd_phy_ops = {
++	if (pkt->mask & RXE_LOOPBACK_MASK)
++		return 0;
++
+ 	if (skb->protocol == htons(ETH_P_IP)) {
+ 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
+ 				       (struct in6_addr *)&dgid);
+@@ -368,7 +372,7 @@ void rxe_rcv(struct sk_buff *skb)
+ 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
+ 		goto drop;
+ 
+-	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
++	if (rxe_match_dgid(rxe, skb) < 0) {
+ 		pr_warn_ratelimited("failed matching dgid\n");
+ 		goto drop;
+ 	}
 -- 
 2.25.1
 
