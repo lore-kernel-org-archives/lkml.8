@@ -2,154 +2,155 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-25.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B998CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5398C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850ED2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EEC2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqbybyBm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LiE9k63v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgHQWEt (ORCPT
+        id S1729756AbgHQWEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:04:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
+        Mon, 17 Aug 2020 18:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729291AbgHQWCa (ORCPT
+        with ESMTP id S1729278AbgHQWCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:02:30 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F43FC061389;
-        Mon, 17 Aug 2020 15:02:30 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f10so8220415plj.8;
-        Mon, 17 Aug 2020 15:02:30 -0700 (PDT)
+        Mon, 17 Aug 2020 18:02:24 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C85EC061343
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:24 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id a14so19694438ybm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FspYJi5b1hDkayAuxe5bJyODfoD6HOjHOWIvusSE/vI=;
-        b=fqbybyBm7z5qHp16UsUH3SOGLylsTrFEsZzyxPJ14MD4pMo7A7oyruGBH/RYNESpDA
-         zA49RiuTo8tr6pJHCAdVih9UxTi3DW5cuEPgku2ES3eGQM9+EopWW2qEzLilMwVRxICy
-         TsZaF4BKDnSK8sWv9FGM503OLhe6y7vNcuSG3QmOGzR53mxXirF10ITO95xIz1zT1FgE
-         RNQ04aKBj+CF6bVv43LJCV355jCDhJWNKOEF6H06BGY2joiysSb4/1U/4ZoQoSabe7Fs
-         mVT30wpWeQd5eQHVob+YO+vcbDHB2cE9Ubyfmw5GhvVpxYAq6VITYrXX7gqIuumaWq0a
-         xf5w==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=UpYGtC8VuPYbMUYzVChohylhl5f+DwA/jtv3WLbpTdU=;
+        b=LiE9k63vyCkhMTzCYeoaOM75uDKE+XeLSj2h/3vVFNBtsbG28nLNlqtKpTLxlj5faJ
+         AAYS7sxuGNAA16qzVg1TR2Xrv4mJvPmQInmvyq957XguEVvW2RlgPL24OfTHYZyM7jTd
+         aYh3VfLRRQofH8X4nGmNCAahxvnwi+L5GwOV6amHL6jODkxTtu+gCzfcVlnUcpjEhjLv
+         i4zVI2Y07P0ZX3H26HpgtYeiV+DfeXO+PoBd/WycXbEG4u3e1rv9smrAfL1pQ1kMTEaR
+         eD9vQkiLdGUIg/t0Cz5lu6Ku1Wop0JRuKdYyFaNxzSm3dlF/+n1KvP2pYqjs2LUfecLh
+         dzLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FspYJi5b1hDkayAuxe5bJyODfoD6HOjHOWIvusSE/vI=;
-        b=TKMlXWkR9W7XhTjikzMkY8MJBjWLAbRasGpar8awD77ySvY6m3VYGsf65Ej3hy7JDU
-         RD9fFhnhQr2OBICtnUvaU923sdfYxGFlKuZLIQvQGaIyKEpdcS434lGHKZWlfmE7uDvz
-         3SoZwupOD4FcgMXGzEoIGL70OHSbs5JEaL02v+eFzvVxrcTB5k+a9iiF3lXDFvzSpIQn
-         +EKC6zqnNEghepvYAk9mE2+5lGI118OuKZ+duFrR7v7h/cZVJiLT/n6VxHhPn6NAs3Zv
-         aO5OYjUX2BytEbnh/ten+hTLoQxZSn5gMeCo9CUffHVDitNP7TMmY3p1UaXyIHx0bjsS
-         OWtw==
-X-Gm-Message-State: AOAM533hXja6zjI8G4KkEmVcgePMLcN0cMNFBtXDJ0yYmk3SbY+dLcjm
-        LQlbhA/lU1k1f+DZlbvGSX0=
-X-Google-Smtp-Source: ABdhPJzb87wot0OJq3pKRI1lcGXVEJD9eArYIfi7vaTspllxzoTevR0H/Rhizmew9avqzmLEP2cUHg==
-X-Received: by 2002:a17:902:4b:: with SMTP id 69mr13118700pla.245.1597701749719;
-        Mon, 17 Aug 2020 15:02:29 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id r7sm21658693pfl.186.2020.08.17.15.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:02:28 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 05/20] iommu: add private interface for adreno-smmu
-Date:   Mon, 17 Aug 2020 15:01:30 -0700
-Message-Id: <20200817220238.603465-6-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200817220238.603465-1-robdclark@gmail.com>
-References: <20200817220238.603465-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=UpYGtC8VuPYbMUYzVChohylhl5f+DwA/jtv3WLbpTdU=;
+        b=WkwMEkBx8QYzfLRNt+GYFlk9qCgX6rNKIMAay+5geW1cxbkH9UfGhLqhmEjQu/14LU
+         ykztU+J5hw9yyVJ1EByxmlDN7ThTQE0RvCND7cafP5/66Kaf6qc67Z8NgC0GrhJcyu2z
+         NCy6ORzj0PMo7OuSUnDCNW2ZVcFXOA1KqeEyQMYBLmQbV1PijnNSiWvZry81gyZQ20zo
+         mdd+4PmTZjteGLiaHx7KAiwfmeoU0xhZxXoViOIka05uFOX6Ttt9USmdl5rblAGWQeod
+         m78obZOGzPRpqGJ4Cph76MgYxUQ8PyVi3AEtfOpLiQpQzLZySHr9EVc74iGUnBN6zpxS
+         pVHQ==
+X-Gm-Message-State: AOAM532yZiclXBmYp/FUh6hT3NWfme8qjk+Ex0g+YEmKKlb8XFaReYAt
+        EQ5E4ZUf4heJEVdTuVCTohpwPbkI+QOOKd39mmM=
+X-Google-Smtp-Source: ABdhPJxizyp67lNME36xRZPdIHp+ZAc9h1Guk5DKKetBtfDNGZaI3fQVyPo4QkcGpgpnPDnBe+lR31JKDOpF3hrgtgc=
+X-Received: by 2002:a25:4252:: with SMTP id p79mr24577079yba.229.1597701743469;
+ Mon, 17 Aug 2020 15:02:23 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 15:02:09 -0700
+In-Reply-To: <20200817220212.338670-1-ndesaulniers@google.com>
+Message-Id: <20200817220212.338670-2-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "=?UTF-8?q?D=C3=A1vid=20Bolvansk=C3=BD?=" <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+LLVM implemented a recent "libcall optimization" that lowers calls to
+`sprintf(dest, "%s", str)` where the return value is used to
+`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+in parsing format strings. This optimization was introduced into
+clang-12. Because the kernel does not provide an implementation of
+stpcpy, we observe linkage failures for almost all targets when building
+with ToT clang.
 
-This interface will be used for drm/msm to coordinate with the
-qcom_adreno_smmu_impl to enable/disable TTBR0 translation.
+The interface is unsafe as it does not perform any bounds checking.
+Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
 
-Once TTBR0 translation is enabled, the GPU's CP (Command Processor)
-will directly switch TTBR0 pgtables (and do the necessary TLB inv)
-synchronized to the GPU's operation.  But help from the SMMU driver
-is needed to initially bootstrap TTBR0 translation, which cannot be
-done from the GPU.
+Unlike
+commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+which cited failures with `-fno-builtin-*` flags being retained in LLVM
+LTO, that bug seems to have been fixed by
+https://reviews.llvm.org/D71193, so the above sha can now be reverted in
+favor of `-fno-builtin-bcmp`.
 
-Since this is a very special case, a private interface is used to
-avoid adding highly driver specific things to the public iommu
-interface.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Cc: stable@vger.kernel.org # 4.4
+Link: https://bugs.llvm.org/show_bug.cgi?id=3D47162
+Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+Link: https://reviews.llvm.org/D85963
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: D=C3=A1vid Bolvansk=C3=BD <david.bolvansky@gmail.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- include/linux/adreno-smmu-priv.h | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 include/linux/adreno-smmu-priv.h
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/linux/adreno-smmu-priv.h b/include/linux/adreno-smmu-priv.h
-new file mode 100644
-index 000000000000..a889f28afb42
---- /dev/null
-+++ b/include/linux/adreno-smmu-priv.h
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 Google, Inc
-+ */
+diff --git a/Makefile b/Makefile
+index 9cac6fde3479..211a1b6f6478 100644
+--- a/Makefile
++++ b/Makefile
+@@ -959,6 +959,12 @@ ifdef CONFIG_RETPOLINE
+ KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
+ endif
+=20
++# The compiler may "libcall optimize" certain function calls into the belo=
+w
++# functions, for architectures that don't use -ffreestanding. If we don't =
+plan
++# to provide implementations of these routines, then prevent the compiler =
+from
++# emitting calls to what will be undefined symbols.
++KBUILD_CFLAGS	+=3D -fno-builtin-stpcpy
 +
-+#ifndef __ADRENO_SMMU_PRIV_H
-+#define __ADRENO_SMMU_PRIV_H
-+
-+#include <linux/io-pgtable.h>
-+
-+/**
-+ * struct adreno_smmu_priv - private interface between adreno-smmu and GPU
-+ *
-+ * @cookie:        An opque token provided by adreno-smmu and passed
-+ *                 back into the callbacks
-+ * @get_ttbr1_cfg: Get the TTBR1 config for the GPUs context-bank
-+ * @set_ttbr0_cfg: Set the TTBR0 config for the GPUs context bank.  A
-+ *                 NULL config disables TTBR0 translation, otherwise
-+ *                 TTBR0 translation is enabled with the specified cfg
-+ *
-+ * The GPU driver (drm/msm) and adreno-smmu work together for controlling
-+ * the GPU's SMMU instance.  This is by necessity, as the GPU is directly
-+ * updating the SMMU for context switches, while on the other hand we do
-+ * not want to duplicate all of the initial setup logic from arm-smmu.
-+ *
-+ * This private interface is used for the two drivers to coordinate.  The
-+ * cookie and callback functions are populated when the GPU driver attaches
-+ * it's domain.
-+ */
-+struct adreno_smmu_priv {
-+    const void *cookie;
-+    const struct io_pgtable_cfg *(*get_ttbr1_cfg)(const void *cookie);
-+    int (*set_ttbr0_cfg)(const void *cookie, const struct io_pgtable_cfg *cfg);
-+};
-+
-+#endif /* __ADRENO_SMMU_PRIV_H */
-\ No newline at end of file
--- 
-2.26.2
+ # include additional Makefiles when needed
+ include-y			:=3D scripts/Makefile.extrawarn
+ include-$(CONFIG_KASAN)		+=3D scripts/Makefile.kasan
+--=20
+2.28.0.220.ged08abb693-goog
 
