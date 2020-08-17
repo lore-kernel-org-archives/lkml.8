@@ -2,104 +2,85 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B254C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F4620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D87320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693293;
-	bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyHVqIN3LrlkShqtgppTJRIMWkKt+uxu0navxD67bHWMXIsRyvf5+l81z1Ozyro+O
-	 BXs+HVN10/reg4c7bgbAB33/5R/Ek7nca+3YV4e+O1vmUO0fLzKzzdMJRnKn3S//jb
-	 yVADn/5utjVk+Qd9LFeY1smoB3Lc2F/JAixyzOTA=
+	s=default; t=1597693296;
+	bh=X3datrFdG8X7UJG5QjAFvhXeRCHuT0716Ayil9LZ8zc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ynni/q9lb5r8mfXLwsnQIOQL+rg7MlGeriwYMEUoZqOE37bqRRgUdHpSi4IV+VdJu
+	 jMTruA5LpgxK8/mmDO2JqK4uTThK1YYRqDVOZlGu+VTH5ZdzCiapnrtC53fXyodyfp
+	 tVMxZr5lK1EqWBo4mZyF5n2wzKSmIDCYmdA1inNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgHQTlb (ORCPT
+        id S2404296AbgHQTle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbgHQPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DED22D6F;
-        Mon, 17 Aug 2020 15:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677909;
-        bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiq3mhzV9vygI1uMRelv32L51fOfkUa5XcMjFNyjU9UhoyuQn1BpTQ5Yl0JktZa0e
-         6EMP6uXbdvZcarT8qBTs4BXcHW5Cv+Fb3GFN7SFXRt/7ch8wDKaMSqaAd8+2Cy94Uj
-         JBVLATH3MFJCdNTkcWiKGDntZt63nryX1V+aXw7g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
-        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 122/464] iwlegacy: Check the return value of pcie_capability_read_*()
-Date:   Mon, 17 Aug 2020 17:11:15 +0200
-Message-Id: <20200817143839.656558576@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 15:41:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44297 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbgHQTlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:41:14 -0400
+Received: by mail-io1-f65.google.com with SMTP id v6so18739498iow.11;
+        Mon, 17 Aug 2020 12:41:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hLPrmS2NJ7VsWN+XXLJey6iV7KyNLRkPQhyYhJ663W8=;
+        b=ujP2ORDzxqQGOXBfuiVBseYw7S/YFGF3rL5aRdFJrZRvOLMizDyEd+myeLZZdtFtHn
+         HwWByQa+thSgaVhOeS9d3tqieUqe0mvnHoiIYj07kot0xCgbrBdSXnghvUi48PFOMuQw
+         UoFlqk/ZOto5B8dJfg2b7yohwtRSOSzrg8QUKbr1DEI70s0xdCmf72m4FsbF+hiVRx5U
+         squAIRxRYvINfJxk7+5aruJsJVAnI8W+5guj7rL4FT5Kf1LDVnA+oci4l8b0utbcGtba
+         O/zII66A5nxhZocbS4ATIXeDtP8Q4clDNwD2tZzw2/CipIjfxrqJIvDIKCYMlnlCa+rN
+         vbsA==
+X-Gm-Message-State: AOAM532NNoQ9ed7uom+d7Mjgu7HerTQzb4DMuBZ17Vn7AXDhnMINn2Zb
+        3N4D57+uXAt6cPbc3k1P0g==
+X-Google-Smtp-Source: ABdhPJzxM6ImTNHL4gOHTrB9xWUNIUlIDo7NCIfWLAKSs5BAbjVGvpKzl0Df18aazKXVcwjl5na3Ww==
+X-Received: by 2002:a02:770e:: with SMTP id g14mr15532405jac.94.1597693272622;
+        Mon, 17 Aug 2020 12:41:12 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c1sm10322232ilk.28.2020.08.17.12.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:41:11 -0700 (PDT)
+Received: (nullmailer pid 1423992 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:41:09 -0000
+Date:   Mon, 17 Aug 2020 13:41:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jack Lo <jack.lo@gtsys.com.hk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v8 2/2] devicetree: hwmon: shtc1: add sensirion,shtc1.yaml
+Message-ID: <20200817194109.GA1423962@bogus>
+References: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
+ <20200815012227.32538-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815012227.32538-3-chris.ruehl@gtsys.com.hk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Sat, 15 Aug 2020 09:22:27 +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low-precision is used to switch to low precision.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> 
 
-[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
-
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
-
-This bug can be avoided without changing the function's behaviour if the
-return value of pcie_capability_read_dword is checked to confirm success.
-
-Check the return value of pcie_capability_read_dword() to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 348c17ce72f5c..f78e062df572a 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
- 	 *    power savings, even without L1.
- 	 */
- 	if (il->cfg->set_l0s) {
--		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
--		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
-+		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
-+		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
- 			/* L1-ASPM enabled; disable(!) L0S  */
- 			il_set_bit(il, CSR_GIO_REG,
- 				   CSR_GIO_REG_VAL_L0S_ENABLED);
--- 
-2.25.1
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
