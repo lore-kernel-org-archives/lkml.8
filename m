@@ -2,134 +2,396 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C449CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26982072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0113720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WuXgw7h5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8gKFeNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgHQWEW (ORCPT
+        id S1729669AbgHQWEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
+        Mon, 17 Aug 2020 18:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729493AbgHQWEG (ORCPT
+        with ESMTP id S1729448AbgHQWDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:04:06 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1676C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:04:05 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id r13so11470304iln.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:04:05 -0700 (PDT)
+        Mon, 17 Aug 2020 18:03:18 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AF2C061389;
+        Mon, 17 Aug 2020 15:03:18 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mw10so8305018pjb.2;
+        Mon, 17 Aug 2020 15:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rsk5Ufj3tfIrfJ6olRq6fz/kGxDaBkxSgkFEQIO90T0=;
-        b=WuXgw7h5Tk/E8vBdglUWikqi5bOy/Fv7Dz5TpYV61NOH5v0fYibnTBhld7LUAQD9+f
-         V885kObZX10TGAufYJ4zdF6DfQ+Q0bYtM9jKwntIDFC5/1SzDgmpkQDkIYWUDnfY+SmI
-         WfHyMjkDaoJjWt16UnDCUpTHm1vWxfxa6BNV8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cNcI7HrS0AvVaVc1646ajuPmDSYJLUf29QkaS+BoOVY=;
+        b=V8gKFeNW8H892jkYABg5KSf5iemTQ9U6lUmas3wAlm2gjzMz9j5Fue79b0y9ym31Dc
+         weGEc+abkDPtdvSwiCI98uH8pVhDNHh2hjjtBnDg0iaNV+ICe86SUqDtZNntGWH4jRZL
+         Gcd8VsoaKygnscGRBedvrM7INKfE5mmj1O2KuBAM8c6KPnrlAUNYPZKatY7J6EQXzGLw
+         8vihreG8s8DS+SVDLEODupnttM/1rBv50YJPFmB3POMlGRUyWsFQE+VQ9z5Rs7aTTBDU
+         /01zhAvBj4/BqdcdsZ4vqC1xlHZn5qyvSUe9CFTgt4lC8/+HrJ7KuskuKWV6P42ta2/L
+         wBDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rsk5Ufj3tfIrfJ6olRq6fz/kGxDaBkxSgkFEQIO90T0=;
-        b=mai45QXe18RbItU/ngkKz5ds3k9FBw16TMVQGFj/bvJszvv7TOjBDgH7gxa7h04jfy
-         xx0Gpqivum1tlrqxyPChC2oqXKjzSr7x2d8Pt44GKI2BatPwpnS4t8GEXDjcajCaqotZ
-         RYkk7++Y6hAqyNBdx8rtLlTLMHy53erTagzQBBFtlv8RRmyYkWuNMC8flyJ3B+Eq+uXF
-         Pqiad8qU+xnr+rVmIiQqgzwnG9PtuvZdUOa/ooN5qFQvV11o/KCpFz8ZpKo3aFlJ4pg3
-         B2oQRop3bEuWLPRUGHcew58qLggIaOPS3rpLofNZJ1uYtshUKZ3OeVl/eJ0djMCctNVJ
-         UAZA==
-X-Gm-Message-State: AOAM5322iC7S4Vyveoom6xWNAUDeQ33ftZKTUGsF3HWtN9fMYYQgIjYr
-        7uPdk+tjG1/RvOd7vRjpeO65dL2GXCvZvd5M2/VC6w==
-X-Google-Smtp-Source: ABdhPJwVqUdh5f3MtVp+PN/4FBPFUThmsxhqFPPDpKDQbD+YoOrCuEY86js8DzeXsUKLUQLuBrDjvEdRu9nj3su3Vxc=
-X-Received: by 2002:a92:340d:: with SMTP id b13mr16328101ila.78.1597701845210;
- Mon, 17 Aug 2020 15:04:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cNcI7HrS0AvVaVc1646ajuPmDSYJLUf29QkaS+BoOVY=;
+        b=eg+kG8v4AjsSiMnSmpYo+PLabWgKEKBKPSlQcyA18HmUx5w2nAF8fShV8MBAGfVGWM
+         eLSdZAny0Qb4eOLtYetXvvkxDXiKZe/kemxXwZXGgNUzfpF14W9lRc+LXUMPLqYzxIc+
+         Y8tHgxandx4gNuPzXOYR/dxXLntzOFEOvsqY6L7kSio0/mufdsr+iF928tvADAXWZ+j3
+         cSlsdrLPwz6UMY1qRUGSV19pQs7piaFPxum1MoG4lkoCgE9SiNNTm9a7w0nwmHNCLP56
+         XNmivOKCa0nSofKxU92y+Sy3w8WQjCrBWP6xz4DnsmBR9fhLZxyvJgizbW+Jw7Ofz9mO
+         qcVQ==
+X-Gm-Message-State: AOAM533+LKfWYxG6mJod//y+J1DSFe0er6CbOHJf7M5l4mrVtDz+g5M/
+        iFFUwcHbBR3gtbsM3D6NZPU=
+X-Google-Smtp-Source: ABdhPJwJmlZqohA+3aabj20tnCON4L5krUwk0rLPjIgeLyr96ERftFL1FkFhDZJz1WWjf4xSoXl5ww==
+X-Received: by 2002:a17:90a:fa94:: with SMTP id cu20mr14297573pjb.145.1597701798018;
+        Mon, 17 Aug 2020 15:03:18 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id d17sm20045650pjr.40.2020.08.17.15.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 15:03:16 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 14/20] drm/msm: Add support to create a local pagetable
+Date:   Mon, 17 Aug 2020 15:01:39 -0700
+Message-Id: <20200817220238.603465-15-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200817220238.603465-1-robdclark@gmail.com>
+References: <20200817220238.603465-1-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <20200814064557.17365-1-qiang.zhang@windriver.com> <20200814185124.GA2113@pc636>
-In-Reply-To: <20200814185124.GA2113@pc636>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Mon, 17 Aug 2020 18:03:54 -0400
-Message-ID: <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
-Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     qiang.zhang@windriver.com, "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 2:51 PM Uladzislau Rezki <urezki@gmail.com> wrote:
->
-> > From: Zqiang <qiang.zhang@windriver.com>
-> >
-> > Due to cpu hotplug. some cpu may be offline after call "kfree_call_rcu"
-> > func, if the shrinker is triggered at this time, we should drain each
-> > possible cpu "krcp".
-> >
-> > Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-> > ---
-> >  kernel/rcu/tree.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 8ce77d9ac716..619ccbb3fe4b 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3443,7 +3443,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
-> >       unsigned long count = 0;
-> >
-> >       /* Snapshot count of all CPUs */
-> > -     for_each_online_cpu(cpu) {
-> > +     for_each_possible_cpu(cpu) {
-> >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-> >
-> >               count += READ_ONCE(krcp->count);
-> > @@ -3458,7 +3458,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
-> >       int cpu, freed = 0;
-> >       unsigned long flags;
-> >
-> > -     for_each_online_cpu(cpu) {
-> > +     for_each_possible_cpu(cpu) {
-> >               int count;
-> >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-> >
-> > @@ -3491,7 +3491,7 @@ void __init kfree_rcu_scheduler_running(void)
-> >       int cpu;
-> >       unsigned long flags;
-> >
-> > -     for_each_online_cpu(cpu) {
-> > +     for_each_possible_cpu(cpu) {
-> >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-> >
-> >               raw_spin_lock_irqsave(&krcp->lock, flags);
-> >
-> I agree that it can happen.
->
-> Joel, what is your view?
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Yes I also think it is possible. The patch LGTM. Another fix could be
-to drain the caches in the CPU offline path and save the memory. But
-then it will take hit during __get_free_page(). If CPU
-offlining/online is not frequent, then it will save the lost memory.
+Add support to create a io-pgtable for use by targets that support
+per-instance pagetables. In order to support per-instance pagetables the
+GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
+split pagetables enabled.
 
-I wonder how other per-cpu caches in the kernel work in such scenarios.
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c  | 199 ++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
+ 3 files changed, 214 insertions(+), 3 deletions(-)
 
-Thoughts?
+diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+index 310a31b05faa..aab121f4beb7 100644
+--- a/drivers/gpu/drm/msm/msm_gpummu.c
++++ b/drivers/gpu/drm/msm/msm_gpummu.c
+@@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
+ 	}
+ 
+ 	gpummu->gpu = gpu;
+-	msm_mmu_init(&gpummu->base, dev, &funcs);
++	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
+ 
+ 	return &gpummu->base;
+ }
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 1b6635504069..697cc0a059d6 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -4,15 +4,210 @@
+  * Author: Rob Clark <robdclark@gmail.com>
+  */
+ 
++#include <linux/adreno-smmu-priv.h>
++#include <linux/io-pgtable.h>
+ #include "msm_drv.h"
+ #include "msm_mmu.h"
+ 
+ struct msm_iommu {
+ 	struct msm_mmu base;
+ 	struct iommu_domain *domain;
++	atomic_t pagetables;
+ };
++
+ #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+ 
++struct msm_iommu_pagetable {
++	struct msm_mmu base;
++	struct msm_mmu *parent;
++	struct io_pgtable_ops *pgtbl_ops;
++	phys_addr_t ttbr;
++	u32 asid;
++};
++static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
++{
++	return container_of(mmu, struct msm_iommu_pagetable, base);
++}
++
++static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
++		size_t size)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	size_t unmapped = 0;
++
++	/* Unmap the block one page at a time */
++	while (size) {
++		unmapped += ops->unmap(ops, iova, 4096, NULL);
++		iova += 4096;
++		size -= 4096;
++	}
++
++	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
++
++	return (unmapped == size) ? 0 : -EINVAL;
++}
++
++static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
++		struct sg_table *sgt, size_t len, int prot)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	struct scatterlist *sg;
++	size_t mapped = 0;
++	u64 addr = iova;
++	unsigned int i;
++
++	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++		size_t size = sg->length;
++		phys_addr_t phys = sg_phys(sg);
++
++		/* Map the block one page at a time */
++		while (size) {
++			if (ops->map(ops, addr, phys, 4096, prot, GFP_KERNEL)) {
++				msm_iommu_pagetable_unmap(mmu, iova, mapped);
++				return -EINVAL;
++			}
++
++			phys += 4096;
++			addr += 4096;
++			size -= 4096;
++			mapped += 4096;
++		}
++	}
++
++	return 0;
++}
++
++static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct msm_iommu *iommu = to_msm_iommu(pagetable->parent);
++	struct adreno_smmu_priv *adreno_smmu =
++		dev_get_drvdata(pagetable->parent->dev);
++
++	/*
++	 * If this is the last attached pagetable for the parent,
++	 * disable TTBR0 in the arm-smmu driver
++	 */
++	if (atomic_dec_return(&iommu->pagetables) == 0)
++		adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, NULL);
++
++	free_io_pgtable_ops(pagetable->pgtbl_ops);
++	kfree(pagetable);
++}
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu,
++		phys_addr_t *ttbr, int *asid)
++{
++	struct msm_iommu_pagetable *pagetable;
++
++	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
++		return -EINVAL;
++
++	pagetable = to_pagetable(mmu);
++
++	if (ttbr)
++		*ttbr = pagetable->ttbr;
++
++	if (asid)
++		*asid = pagetable->asid;
++
++	return 0;
++}
++
++static const struct msm_mmu_funcs pagetable_funcs = {
++		.map = msm_iommu_pagetable_map,
++		.unmap = msm_iommu_pagetable_unmap,
++		.destroy = msm_iommu_pagetable_destroy,
++};
++
++static void msm_iommu_tlb_flush_all(void *cookie)
++{
++}
++
++static void msm_iommu_tlb_flush_walk(unsigned long iova, size_t size,
++		size_t granule, void *cookie)
++{
++}
++
++static void msm_iommu_tlb_add_page(struct iommu_iotlb_gather *gather,
++		unsigned long iova, size_t granule, void *cookie)
++{
++}
++
++static const struct iommu_flush_ops null_tlb_ops = {
++	.tlb_flush_all = msm_iommu_tlb_flush_all,
++	.tlb_flush_walk = msm_iommu_tlb_flush_walk,
++	.tlb_flush_leaf = msm_iommu_tlb_flush_walk,
++	.tlb_add_page = msm_iommu_tlb_add_page,
++};
++
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
++{
++	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(parent->dev);
++	struct msm_iommu *iommu = to_msm_iommu(parent);
++	struct msm_iommu_pagetable *pagetable;
++	const struct io_pgtable_cfg *ttbr1_cfg = NULL;
++	struct io_pgtable_cfg ttbr0_cfg;
++	int ret;
++
++	/* Get the pagetable configuration from the domain */
++	if (adreno_smmu->cookie)
++		ttbr1_cfg = adreno_smmu->get_ttbr1_cfg(adreno_smmu->cookie);
++	if (!ttbr1_cfg)
++		return ERR_PTR(-ENODEV);
++
++	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
++	if (!pagetable)
++		return ERR_PTR(-ENOMEM);
++
++	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
++		MSM_MMU_IOMMU_PAGETABLE);
++
++	/* Clone the TTBR1 cfg as starting point for TTBR0 cfg: */
++	ttbr0_cfg = *ttbr1_cfg;
++
++	/* The incoming cfg will have the TTBR1 quirk enabled */
++	ttbr0_cfg.quirks &= ~IO_PGTABLE_QUIRK_ARM_TTBR1;
++	ttbr0_cfg.tlb = &null_tlb_ops;
++
++	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
++		&ttbr0_cfg, iommu->domain);
++
++	if (!pagetable->pgtbl_ops) {
++		kfree(pagetable);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	/*
++	 * If this is the first pagetable that we've allocated, send it back to
++	 * the arm-smmu driver as a trigger to set up TTBR0
++	 */
++	if (atomic_inc_return(&iommu->pagetables) == 1) {
++		ret = adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, &ttbr0_cfg);
++		if (ret) {
++			free_io_pgtable_ops(pagetable->pgtbl_ops);
++			kfree(pagetable);
++			return ERR_PTR(ret);
++		}
++	}
++
++	/* Needed later for TLB flush */
++	pagetable->parent = parent;
++	pagetable->ttbr = ttbr0_cfg.arm_lpae_s1_cfg.ttbr;
++
++	/*
++	 * TODO we would like each set of page tables to have a unique ASID
++	 * to optimize TLB invalidation.  But iommu_flush_tlb_all() will
++	 * end up flushing the ASID used for TTBR1 pagetables, which is not
++	 * what we want.  So for now just use the same ASID as TTBR1.
++	 */
++	pagetable->asid = 0;
++
++	return &pagetable->base;
++}
++
+ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+ 		unsigned long iova, int flags, void *arg)
+ {
+@@ -85,9 +280,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	iommu->domain = domain;
+-	msm_mmu_init(&iommu->base, dev, &funcs);
++	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
+ 	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+ 
++	atomic_set(&iommu->pagetables, 0);
++
+ 	ret = iommu_attach_device(iommu->domain, dev);
+ 	if (ret) {
+ 		kfree(iommu);
+diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+index 3a534ee59bf6..61ade89d9e48 100644
+--- a/drivers/gpu/drm/msm/msm_mmu.h
++++ b/drivers/gpu/drm/msm/msm_mmu.h
+@@ -17,18 +17,26 @@ struct msm_mmu_funcs {
+ 	void (*destroy)(struct msm_mmu *mmu);
+ };
+ 
++enum msm_mmu_type {
++	MSM_MMU_GPUMMU,
++	MSM_MMU_IOMMU,
++	MSM_MMU_IOMMU_PAGETABLE,
++};
++
+ struct msm_mmu {
+ 	const struct msm_mmu_funcs *funcs;
+ 	struct device *dev;
+ 	int (*handler)(void *arg, unsigned long iova, int flags);
+ 	void *arg;
++	enum msm_mmu_type type;
+ };
+ 
+ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
+-		const struct msm_mmu_funcs *funcs)
++		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
+ {
+ 	mmu->dev = dev;
+ 	mmu->funcs = funcs;
++	mmu->type = type;
+ }
+ 
+ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+@@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
+ 	mmu->handler = handler;
+ }
+ 
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
++
+ void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
+ 		dma_addr_t *tran_error);
+ 
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
++		int *asid);
++
+ #endif /* __MSM_MMU_H__ */
+-- 
+2.26.2
 
-thanks,
-
- - Joel
