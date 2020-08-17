@@ -2,127 +2,177 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8485EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F36C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 632D52072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F5520786
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597668244;
-	bh=jVzU+QI/ys+RIOWMYaLR4j+zEZXuCKR6ULaqdtkwbiM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zdLLE0VNXIHZfew4VyDW9p51xKT2MKaeBZ7Du0otNDKydVbY1q2b1Y5Wot//zsryH
-	 jm2TrA1/berL5DrPOhkJHJFccREeRKjQy7s2ZmKu6cwrk+dJR9SCGqinxeTQvBQt8j
-	 Ec7kLA7WP9lG4NxUpwCurTvUjuzRs9hnUKOYr6QM=
+	s=default; t=1597668459;
+	bh=F6AeSzf4yODe5VfS/mOvvXXrmYEDiPf8ncHRYGsJH9o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yrzLsfqEhiNwH+9aOXovAH/Ish/1bBMXQbdqyUUkqpI6ScKYiSeL6CKtvQV9z6azc
+	 SdzODf7Fw01j0TiEQbFx07rCh77abInJBFxY7F1bIMKUFL9rLyVsX8nHJnLsKNmhsP
+	 SORGQ4TldlcFdbiiEo90UaKkJrH5BHgbGkiNMNlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgHQMoD (ORCPT
+        id S1728400AbgHQMri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 08:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbgHQMnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:43:49 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726265AbgHQMrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:47:37 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FE342072D;
-        Mon, 17 Aug 2020 12:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A2A2078D;
+        Mon, 17 Aug 2020 12:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597668228;
-        bh=jVzU+QI/ys+RIOWMYaLR4j+zEZXuCKR6ULaqdtkwbiM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NRz/bP0lJDXOQpw3C0MOSAVz/meHd71Q/Bj/trpsWtNq3haGujLAVHpSZWOiroKYE
-         3d/XHZeBjT/9FFL6y6+gMRAof/ypmIDKfv1aKzYZ13yBOlmrDo70HwCa0Y52DRwWmI
-         nMLyA7zFyko0EJlsoSemO/W4+bQtbiXsRD+PrZ7w=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k7eUL-003ZBx-P4; Mon, 17 Aug 2020 13:43:45 +0100
+        s=default; t=1597668456;
+        bh=F6AeSzf4yODe5VfS/mOvvXXrmYEDiPf8ncHRYGsJH9o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WLGovId1pF0RtoS/pxVhAbmTDQxL+wlb/YPyjGm4gwU7EG0HpRde71z58372pAGUI
+         Mk7gmvMtdYHyCuhuPVYr4Pyx7oBmnbh5hBitrBnQEaY0aHR0Q7DRVQHu/ZXD3RYk4h
+         ZjAMCDf1SsweOIV20FDlQU218t5SISXQewIF1Xjo=
+Received: by mail-lj1-f179.google.com with SMTP id h19so17298517ljg.13;
+        Mon, 17 Aug 2020 05:47:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532oqzzG5LP9YEUrK2IZP8tpsDMZcUPpohezb42zbSVCSt0TzE4J
+        Yr6UXzWlaMlVjN6FRh5PIq4hUnJAjDtwgDZCwss=
+X-Google-Smtp-Source: ABdhPJw1v8JVnt2oJ6bSCPU4EmN7bm2mGdNOp7Vx6uxxuEJFPNSCeEfTKhQjsXzu5H3BmOMqhHgKjHmNPG6tmd7ZCYE=
+X-Received: by 2002:a2e:9bc1:: with SMTP id w1mr6581503ljj.79.1597668454259;
+ Mon, 17 Aug 2020 05:47:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 13:43:45 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Hanks Chen <hanks.chen@mediatek.com>,
-        Saravana Kannan <saravanak@google.com>,
-        kernelci-results@groups.io, Jason Cooper <jason@lakedaemon.net>,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: mainline/master bisection: baseline.login on mt8173-elm-hana
-In-Reply-To: <e1e21bc9-75a8-e0f7-7b87-57b147962115@collabora.com>
-References: <5f391c17.1c69fb81.ef475.be70@mx.google.com>
- <e1e21bc9-75a8-e0f7-7b87-57b147962115@collabora.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <d9b04fa244fb2b3e4db64e6b833bcdb6@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: guillaume.tucker@collabora.com, hanks.chen@mediatek.com, saravanak@google.com, kernelci-results@groups.io, jason@lakedaemon.net, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, enric.balletbo@collabora.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <1594683562-68149-4-git-send-email-guoren@kernel.org> <mhng-296dd63e-71de-4d30-acfb-df374d12388d@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-296dd63e-71de-4d30-acfb-df374d12388d@palmerdabbelt-glaptop1>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 17 Aug 2020 20:47:21 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTz_EFpzMoT3yBgCNTNme9_QbQ9b2dGZB3S0F5+O6Fpyw@mail.gmail.com>
+Message-ID: <CAJF2gTTz_EFpzMoT3yBgCNTNme9_QbQ9b2dGZB3S0F5+O6Fpyw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] riscv: Fixup kprobes handler couldn't change pc
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
+        Bjorn Topel <bjorn.topel@gmail.com>,
+        Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 11:20, Guillaume Tucker wrote:
-> Please see the bisection report below about a boot failure.
-> 
-> Reports aren't automatically sent to the public while we're
-> trialing new bisection features on kernelci.org but this one
-> looks valid.
-> 
-> The log doesn't appear to be showing anything from the kernel, so
-> it's likely to be crashing very early.  Please let us know if you
-> need some help with investigating this issue, to try booting with
-> earlyprintk or anything.
-> 
-> Hope this helps.
-> 
-> Thanks,
-> Guillaume
-> 
-> On 16/08/2020 12:44, KernelCI bot wrote:
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> *                                                               *
->> * If you do send a fix, please include this trailer:            *
->> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->> *                                                               *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> 
->> mainline/master bisection: baseline.login on mt8173-elm-hana
->> 
->> Summary:
->>   Start:      a1d21081a60d Merge 
->> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->>   Plain log:  
->> https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-mt8173-elm-hana.txt
->>   HTML log:   
->> https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-mt8173-elm-hana.html
->>   Result:     f97dbf48ca43 irqchip/mtk-sysirq: Convert to a platform 
->> driver
+On Sat, Aug 15, 2020 at 6:36 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
+>
+> On Mon, 13 Jul 2020 16:39:18 PDT (-0700), guoren@kernel.org wrote:
+> > From: Guo Ren <guoren@linux.alibaba.com>
+> >
+> > The "Changing Execution Path" section in the Documentation/kprobes.txt
+> > said:
+> >
+> > Since kprobes can probe into a running kernel code, it can change the
+> > register set, including instruction pointer.
+> >
+> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Palmer Dabbelt <palmerdabbelt@google.com>
+> > ---
+> >  arch/riscv/kernel/mcount-dyn.S | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+> > index 35a6ed7..4b58b54 100644
+> > --- a/arch/riscv/kernel/mcount-dyn.S
+> > +++ b/arch/riscv/kernel/mcount-dyn.S
+> > @@ -123,6 +123,7 @@ ENDPROC(ftrace_caller)
+> >       sd      ra, (PT_SIZE_ON_STACK+8)(sp)
+> >       addi    s0, sp, (PT_SIZE_ON_STACK+16)
+> >
+> > +     sd ra,  PT_EPC(sp)
+> >       sd x1,  PT_RA(sp)
+> >       sd x2,  PT_SP(sp)
+> >       sd x3,  PT_GP(sp)
+>
+> So that's definately not going to be EPC any more.  I'm not sure that field is
+> sanely named, though, as it's really just the PC when it comes to other ptrace
+> stuff.
+>
+> > @@ -157,6 +158,7 @@ ENDPROC(ftrace_caller)
+> >       .endm
+> >
+> >       .macro RESTORE_ALL
+> > +     ld ra,  PT_EPC(sp)
+> >       ld x1,  PT_RA(sp)
+>
+> x1 is ra, so loading it twice doesn't seem reasonable.
+>
+> >       ld x2,  PT_SP(sp)
+> >       ld x3,  PT_GP(sp)
+> > @@ -190,7 +192,6 @@ ENDPROC(ftrace_caller)
+> >       ld x31, PT_T6(sp)
+> >
+> >       ld      s0, (PT_SIZE_ON_STACK)(sp)
+> > -     ld      ra, (PT_SIZE_ON_STACK+8)(sp)
+> >       addi    sp, sp, (PT_SIZE_ON_STACK+16)
+> >       .endm
+>
+> If you're dropping the load you should drop the store above as well.  In
+> general this seems kind of mixed up, both before and after this patch.
 
-Please have a go at this[1] patch, which should solve the issue.
+This is a wrong patch, it should be:
 
-Thanks,
+diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+index 35a6ed7..d82b8f0 100644
+--- a/arch/riscv/kernel/mcount-dyn.S
++++ b/arch/riscv/kernel/mcount-dyn.S
+@@ -120,10 +120,10 @@ ENDPROC(ftrace_caller)
+        .macro SAVE_ALL
+        addi    sp, sp, -(PT_SIZE_ON_STACK+16)
+        sd      s0, (PT_SIZE_ON_STACK)(sp)
+-       sd      ra, (PT_SIZE_ON_STACK+8)(sp)
+        addi    s0, sp, (PT_SIZE_ON_STACK+16)
 
-         M.
+-       sd x1,  PT_RA(sp)
++       sd ra,  PT_EPC(sp)
++       sd ra,  PT_RA(sp)
+        sd x2,  PT_SP(sp)
+        sd x3,  PT_GP(sp)
+        sd x4,  PT_TP(sp)
+@@ -157,7 +157,7 @@ ENDPROC(ftrace_caller)
+        .endm
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/irqchip-next&id=7828a3ef8646fb2e69ed45616c8453a037ca7867
+        .macro RESTORE_ALL
+-       ld x1,  PT_RA(sp)
++       ld ra,  PT_EPC(sp)
+        ld x2,  PT_SP(sp)
+        ld x3,  PT_GP(sp)
+        ld x4,  PT_TP(sp)
+@@ -190,7 +190,6 @@ ENDPROC(ftrace_caller)
+        ld x31, PT_T6(sp)
+
+        ld      s0, (PT_SIZE_ON_STACK)(sp)
+-       ld      ra, (PT_SIZE_ON_STACK+8)(sp)
+        addi    sp, sp, (PT_SIZE_ON_STACK+16)
+        .endm
+
+Now, I'm developing livepatch and they are so mixed features (kprobe,
+livepatch, ftrace, optprobes, STACK_WALK, -fpatchable-function-entry
+'no -pg'). I'll test this patch in the next version of the patchset.
+
+Thx for the review.
+
 -- 
-Jazz is not dead. It just smells funny...
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
