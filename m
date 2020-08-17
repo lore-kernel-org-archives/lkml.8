@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C15C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E46C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0632063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0209C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685833;
-	bh=vm0JTt6+eVIK/yRCTVuNoCfBLIqluknSd5JwM5Juwak=;
+	s=default; t=1597685846;
+	bh=GaKZpibvl55yEfEPD8v9wKz43HpfjTVzXL42KAY9MRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTUT12muo1fg5tME6B9aUuFAiHugPZFhWVDaivb/d5kl2b55GAKe6aRzo1Ak3MMhJ
-	 0bD4IurhaWiGhAsJi2z/eCqJTytfZFAN2I6G+GZhZPPjpbqobN9Zg7xQ2k36nceN13
-	 qSaI7dNqQiJwGUJQ50PLU+x6aalAUrXLy9rZnf7g=
+	b=TUsFqSB/ib91pceH18SkwgRii8+E0I6SgxFKqJkkZ4wEaiA2uMcZGAxCcJZLWkXaj
+	 dvGPmXP70qqdR99ZOpyjbR2pkZ+Zlo0pTO2xaPqkGUIG+iJr8nYMfSUAdr1duqxvXq
+	 WgKizEAaCOVnm7FW45kmZfd/+2ZgCwrxkbLhlxEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbgHQRgf (ORCPT
+        id S2387658AbgHQRhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32874 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730275AbgHQQRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:34 -0400
+        id S1731126AbgHQQR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E11DE22B47;
-        Mon, 17 Aug 2020 16:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 861F122D75;
+        Mon, 17 Aug 2020 16:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681053;
-        bh=vm0JTt6+eVIK/yRCTVuNoCfBLIqluknSd5JwM5Juwak=;
+        s=default; t=1597681046;
+        bh=GaKZpibvl55yEfEPD8v9wKz43HpfjTVzXL42KAY9MRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZVcX2y+LnlewSrRAfpOHqH/+mzeJU/6Cfg4SHbr+2M78XFagLBekBg+GZmumoDH3
-         JWDzfjVrEfyJW7KXMBrfIu2zvxQe0LA6rvrAZ6DdDF1jv/oW62K9ep8AjZ4dsBKFSw
-         eq3cUcjFpiEWDG20dsUORnaTClHO3ljfLQXdErbA=
+        b=eY7uuTe3R7fbIHRlcG64JWKa+JcEn5LICFrdgC7X+GYeP96Op719lMzKrvRDrkdrM
+         nBJ5MZvBj6HigyUW3qiRhI3mzI54cHYnbkSyIN8drhKjgXxL/Nb0ZiPjaIcO0yyay8
+         +MyBbUrvFvDNsTJI3HPu7zs9zn28jjv31zeJrHpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 161/168] mtd: rawnand: qcom: avoid write to unavailable register
-Date:   Mon, 17 Aug 2020 17:18:12 +0200
-Message-Id: <20200817143741.711267229@linuxfoundation.org>
+        stable@vger.kernel.org, Romain Naour <romain.naour@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alan Modra <amodra@gmail.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rich Felker <dalias@libc.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 159/168] include/asm-generic/vmlinux.lds.h: align ro_after_init
+Date:   Mon, 17 Aug 2020 17:18:10 +0200
+Message-Id: <20200817143741.613213351@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,68 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+From: Romain Naour <romain.naour@gmail.com>
 
-commit 443440cc4a901af462239d286cd10721aa1c7dfc upstream.
+commit 7f897acbe5d57995438c831670b7c400e9c0dc00 upstream.
 
-SFLASHC_BURST_CFG is only available on older ipq NAND platforms, this
-register has been removed when the NAND controller got implemented in
-the qpic controller.
+Since the patch [1], building the kernel using a toolchain built with
+binutils 2.33.1 prevents booting a sh4 system under Qemu.  Apply the patch
+provided by Alan Modra [2] that fix alignment of rodata.
 
-Avoid writing this register on devices which are based on qpic NAND
-controller.
+[1] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=ebd2263ba9a9124d93bbc0ece63d7e0fae89b40e
+[2] https://www.sourceware.org/ml/binutils/2019-12/msg00112.html
 
-Fixes: dce84760b09f ("mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1591948696-16015-2-git-send-email-sivaprak@codeaurora.org
+Signed-off-by: Romain Naour <romain.naour@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alan Modra <amodra@gmail.com>
+Cc: Bin Meng <bin.meng@windriver.com>
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: <stable@vger.kernel.org>
+Link: https://marc.info/?l=linux-sh&m=158429470221261
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/qcom_nandc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/asm-generic/vmlinux.lds.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -466,11 +466,13 @@ struct qcom_nand_host {
-  * among different NAND controllers.
-  * @ecc_modes - ecc mode for NAND
-  * @is_bam - whether NAND controller is using BAM
-+ * @is_qpic - whether NAND CTRL is part of qpic IP
-  * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -307,6 +307,7 @@
   */
- struct qcom_nandc_props {
- 	u32 ecc_modes;
- 	bool is_bam;
-+	bool is_qpic;
- 	u32 dev_cmd_reg_start;
- };
- 
-@@ -2766,7 +2768,8 @@ static int qcom_nandc_setup(struct qcom_
- 	u32 nand_ctrl;
- 
- 	/* kill onenand */
--	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-+	if (!nandc->props->is_qpic)
-+		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
- 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
- 		    NAND_DEV_CMD_VLD_VAL);
- 
-@@ -3022,12 +3025,14 @@ static const struct qcom_nandc_props ipq
- static const struct qcom_nandc_props ipq4019_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x0,
- };
- 
- static const struct qcom_nandc_props ipq8074_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x7000,
- };
- 
+ #ifndef RO_AFTER_INIT_DATA
+ #define RO_AFTER_INIT_DATA						\
++	. = ALIGN(8);							\
+ 	__start_ro_after_init = .;					\
+ 	*(.data..ro_after_init)						\
+ 	__end_ro_after_init = .;
 
 
