@@ -2,56 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA05C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E285C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369922313B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14C223600
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677845;
-	bh=Q8dKTcq8NnLbarUzPhG1oTEY1y5XX78ntX7b8mdqYkU=;
+	s=default; t=1597677847;
+	bh=WlMHZGrHsTRRURnOEQgp8HWwE6YoZ6gLYbRbIFTqfN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhrlZk7mKhjiTPOY7+U2Vlpu6EM2K//k3dBdq3JKekeFr07J8bC29jCYZ/x7nQCxj
-	 UTsSbEL/KMgcruVv8bVGqkvTnvsW31PhzVwLlpgI0bAjzGHZsxex0oau/eNw1QhO2a
-	 FrhYgC3Xzij6/RT3hE3JxEpZ2nq6EhCI3EH1vDhQ=
+	b=RUGZQujE8VAw6DTCKJ3S9JRbPNGzoXUmKdKn1UMnCBFhWZpXKct3cE9FnSDH+8qGX
+	 Olora9rqUZno68kT63t+5CW/WNzYulrfiMTJ5QDk3qTMNjG6QtoYfyKJxwSdfHOUql
+	 Y6Y0Lzxo8yvQT4M0VdWtBZB4+lantJwQcmOspwZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgHQPYE (ORCPT
+        id S1729618AbgHQPYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgHQPW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:22:59 -0400
+        id S1729496AbgHQPW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:22:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D18B22B40;
-        Mon, 17 Aug 2020 15:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44FC82310F;
+        Mon, 17 Aug 2020 15:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677778;
-        bh=Q8dKTcq8NnLbarUzPhG1oTEY1y5XX78ntX7b8mdqYkU=;
+        s=default; t=1597677775;
+        bh=WlMHZGrHsTRRURnOEQgp8HWwE6YoZ6gLYbRbIFTqfN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntFytrDcSQyRjUPLRGs/bN6Bv2Fz8zl8GrZ0gJvNeVRsznQU1WxHPCXOftj69585s
-         PFxm2/hWf8/scEDLjyNK8Sf/JfCrQhLQzwh6L7dnwIRdasfc9TwdciacFRaQMRVByR
-         zVNVhWOgz23KjcmchZWsCtsEORQ+R9VYu+YyoGec=
+        b=uXiycR/LBzT5AdW70YHmLAaClRB60QkbIpKF8sx7fxUVGoLn34BMi/UCQZT7GD2GK
+         jynPQZc8mma0O1VVVSBWtfdTv4b4cfo8fS9zx4xsJdVTJKqdNRgmImRoPi8yNHZNCO
+         tAsyqzbf6X6svrCxV0hPGjMQFixQUn4Atz4S6Pzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Craig Topper <craig.topper@intel.com>,
-        Craig Topper <craig.topper@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Akhil P Oommen <akhilpo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 087/464] crypto: aesni - Fix build with LLVM_IAS=1
-Date:   Mon, 17 Aug 2020 17:10:40 +0200
-Message-Id: <20200817143837.955169107@linuxfoundation.org>
+Subject: [PATCH 5.8 104/464] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
+Date:   Mon, 17 Aug 2020 17:10:57 +0200
+Message-Id: <20200817143838.775395515@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -64,107 +60,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sedat Dilek <sedat.dilek@gmail.com>
+From: Akhil P Oommen <akhilpo@codeaurora.org>
 
-[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
+[ Upstream commit 3cbdc8d8b7f39a7af3ea7b8dfa75caaebfda4e56 ]
 
-When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
-from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
-I see the following breakage in Debian/testing AMD64:
+Adding an msm_gem_object object to the inactive_list before completing
+its initialization is a bad idea because shrinker may pick it up from the
+inactive_list. Fix this by making sure that the initialization is complete
+before moving the msm_obj object to the inactive list.
 
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
- arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
- GCM_ENC_DEC dec
- ^
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
-arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
- GCM_ENC_DEC enc
+This patch fixes the below error:
+[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
+[10027.573305] Mem abort info:
+[10027.590160]   ESR = 0x96000006
+[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
+[10027.614430]   SET = 0, FnV = 0
+[10027.624427]   EA = 0, S1PTW = 0
+[10027.632722] Data abort info:
+[10027.638039]   ISV = 0, ISS = 0x00000006
+[10027.647459]   CM = 0, WnR = 0
+[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
+[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
+[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
+[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
+[10027.757409] pc : mutex_is_locked+0x14/0x2c
+[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
+[10027.766454] sp : ffffffc011323ad0
+[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
+[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
+[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
+[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
+[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
+[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
+[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
+[10027.808083] x15: 0000000000000000 x14: 0000000000000000
+[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
+[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
+[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
+[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
+[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
+[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
+[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
+[10027.851748] Call trace:
+[10027.854264]  mutex_is_locked+0x14/0x2c
+[10027.858121]  msm_gem_shrinker_count+0x70/0xec
+[10027.862603]  shrink_slab+0xc0/0x4b4
+[10027.866187]  shrink_node+0x4a8/0x818
+[10027.869860]  kswapd+0x624/0x890
+[10027.873097]  kthread+0x11c/0x12c
+[10027.876424]  ret_from_fork+0x10/0x18
+[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
+[10027.886362] ---[ end trace df5849a1a3543251 ]---
+[10027.891518] Kernel panic - not syncing: Fatal exception
 
-Craig Topper suggested me in ClangBuiltLinux issue #1050:
-
-> I think the "too many positional arguments" is because the parser isn't able
-> to handle the trailing commas.
->
-> The "unknown use of instruction mnemonic" is because the macro was named
-> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
-> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
-> macro instantiation, but llvm doesn't.
-
-First, I removed the trailing comma in the PRECOMPUTE line.
-
-Second, I substituted:
-1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
-2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
-
-With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
-
-I confirmed that this works with Linux-kernel v5.7.5 final.
-
-NOTE: This patch is on top of Linux v5.7 final.
-
-Thanks to Craig and especially Nick for double-checking and his comments.
-
-Suggested-by: Craig Topper <craig.topper@intel.com>
-Suggested-by: Craig Topper <craig.topper@gmail.com>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1050
-Link: https://bugs.llvm.org/show_bug.cgi?id=24494
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aesni-intel_asm.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c | 36 ++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index 54e7d15dbd0d5..7d4298e6d4cbd 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -266,7 +266,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
- 	PSHUFB_XMM %xmm2, %xmm0
- 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 6277fde13df91..f63bb7e452d2a 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -994,10 +994,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
  
--	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-+	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
- 	movdqu HashKey(%arg2), %xmm13
+ static int msm_gem_new_impl(struct drm_device *dev,
+ 		uint32_t size, uint32_t flags,
+-		struct drm_gem_object **obj,
+-		bool struct_mutex_locked)
++		struct drm_gem_object **obj)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_gem_object *msm_obj;
  
- 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
-@@ -978,7 +978,7 @@ _initial_blocks_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 	switch (flags & MSM_BO_CACHE_MASK) {
+@@ -1023,15 +1021,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
+ 	INIT_LIST_HEAD(&msm_obj->submit_entry);
+ 	INIT_LIST_HEAD(&msm_obj->vmas);
  
- 	movdqa	  \XMM1, \XMM5
-@@ -1186,7 +1186,7 @@ aes_loop_par_enc_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+-	if (struct_mutex_locked) {
+-		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
+-		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
+-	} else {
+-		mutex_lock(&dev->struct_mutex);
+-		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
+-		mutex_unlock(&dev->struct_mutex);
+-	}
+-
+ 	*obj = &msm_obj->base;
  
- 	movdqa	  \XMM1, \XMM5
+ 	return 0;
+@@ -1041,6 +1030,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
+ {
+ 	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_gem_object *msm_obj;
+ 	struct drm_gem_object *obj = NULL;
+ 	bool use_vram = false;
+ 	int ret;
+@@ -1061,14 +1051,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 	if (size == 0)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
++	ret = msm_gem_new_impl(dev, size, flags, &obj);
+ 	if (ret)
+ 		goto fail;
+ 
++	msm_obj = to_msm_bo(obj);
++
+ 	if (use_vram) {
+ 		struct msm_gem_vma *vma;
+ 		struct page **pages;
+-		struct msm_gem_object *msm_obj = to_msm_bo(obj);
+ 
+ 		mutex_lock(&msm_obj->lock);
+ 
+@@ -1103,6 +1094,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
+ 	}
+ 
++	if (struct_mutex_locked) {
++		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
++		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++	} else {
++		mutex_lock(&dev->struct_mutex);
++		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++		mutex_unlock(&dev->struct_mutex);
++	}
++
+ 	return obj;
+ 
+ fail:
+@@ -1125,6 +1125,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
+ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 		struct dma_buf *dmabuf, struct sg_table *sgt)
+ {
++	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_gem_object *msm_obj;
+ 	struct drm_gem_object *obj;
+ 	uint32_t size;
+@@ -1138,7 +1139,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 
+ 	size = PAGE_ALIGN(dmabuf->size);
+ 
+-	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
++	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
+ 	if (ret)
+ 		goto fail;
+ 
+@@ -1163,6 +1164,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 	}
+ 
+ 	mutex_unlock(&msm_obj->lock);
++
++	mutex_lock(&dev->struct_mutex);
++	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++	mutex_unlock(&dev->struct_mutex);
++
+ 	return obj;
+ 
+ fail:
 -- 
 2.25.1
 
