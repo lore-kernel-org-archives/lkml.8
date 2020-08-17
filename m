@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59735C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC747C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 204D320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D7020729
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680371;
-	bh=4atO9yVMgJ17YnbD6VFtB6McPjIh2o7LSlKJaMp2yVA=;
+	s=default; t=1597680443;
+	bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9kvYizz+PzF8NCHPIEFhCHoLD38Ni7mhIdKObLZflJ4mB6OmuAiQq0uDIwRzJW34
-	 wNtB4T+9Wg4nn79txkPUgF0IrcEtATXRpPo1JBVxRg8lUffzwdmd7fcj+dFOAYaGKC
-	 f9aujbMcxj8ALyE3bTCeL7I5M8rkVJQlfoZRM9tg=
+	b=C3DmbeBB6OnZRWvoQEC6qezjjsDOhttcFDKa1hP0mx9dWgKDZJ2TxxlD39yBycF/n
+	 gPE9M363pA7xfgnBqyMEVaW3zJTz6Dgs8uqXtOgG66gJDM1ni1y7G1njhdGq8gvm8i
+	 Eql1XvFG0o+4eOYU72pc6/28WHT08ejSw+Zfd89M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbgHQQF6 (ORCPT
+        id S2388398AbgHQQGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730295AbgHQPpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:01 -0400
+        id S1730534AbgHQPo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E0922D00;
-        Mon, 17 Aug 2020 15:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1476C20760;
+        Mon, 17 Aug 2020 15:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679101;
-        bh=4atO9yVMgJ17YnbD6VFtB6McPjIh2o7LSlKJaMp2yVA=;
+        s=default; t=1597679098;
+        bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpuHiD4cmOarA+qjcDZsEiulw7cetCmKpdh+dFp1skvjTGi3iDlk+gI2OFGrRi4Xz
-         vunvRxY26HRTYKaFa1g0/OCoMYy5FPMbdyNl2j7JuWXhtMZjWwaCaGUHhliKcxAYFM
-         BZSoVI+eDKHBe7g++6GtFLJJf9OmfF+jr/okQsQQ=
+        b=tSXLYkeTKvjT79jXfwZ3x31Y3csPYYHwKjTWwYm6oTsnXu0gLbfLXnk7z5cH1dY9P
+         kXFCVnVc+35HkZYqUtD92lc/I3mdvSwhXV8hqNiy+G9fjY2GYul8slbybIjzHB9WHR
+         Wb55h6rpHliYD26Twu/+Q2svsicm8wISfAixp7ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Akhil P Oommen <akhilpo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 097/393] drm/amd/powerplay: fix compile error with ARCH=arc
-Date:   Mon, 17 Aug 2020 17:12:27 +0200
-Message-Id: <20200817143824.322383357@linuxfoundation.org>
+Subject: [PATCH 5.7 088/393] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
+Date:   Mon, 17 Aug 2020 17:12:18 +0200
+Message-Id: <20200817143823.900137772@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,41 +60,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Akhil P Oommen <akhilpo@codeaurora.org>
 
-[ Upstream commit 9822ba2ead1baa3de4860ad9472f652c4cc78c9c ]
+[ Upstream commit 3cbdc8d8b7f39a7af3ea7b8dfa75caaebfda4e56 ]
 
-Fix the compile error below:
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c: In function 'smu_v11_0_init_microcode':
->> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
-      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
-         |  ^~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:176:3: note: in expansion of macro 'BUG'
-     176 |   BUG();
+Adding an msm_gem_object object to the inactive_list before completing
+its initialization is a bad idea because shrinker may pick it up from the
+inactive_list. Fix this by making sure that the initialization is complete
+before moving the msm_obj object to the inactive list.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This patch fixes the below error:
+[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
+[10027.573305] Mem abort info:
+[10027.590160]   ESR = 0x96000006
+[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
+[10027.614430]   SET = 0, FnV = 0
+[10027.624427]   EA = 0, S1PTW = 0
+[10027.632722] Data abort info:
+[10027.638039]   ISV = 0, ISS = 0x00000006
+[10027.647459]   CM = 0, WnR = 0
+[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
+[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
+[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
+[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
+[10027.757409] pc : mutex_is_locked+0x14/0x2c
+[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
+[10027.766454] sp : ffffffc011323ad0
+[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
+[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
+[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
+[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
+[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
+[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
+[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
+[10027.808083] x15: 0000000000000000 x14: 0000000000000000
+[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
+[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
+[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
+[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
+[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
+[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
+[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
+[10027.851748] Call trace:
+[10027.854264]  mutex_is_locked+0x14/0x2c
+[10027.858121]  msm_gem_shrinker_count+0x70/0xec
+[10027.862603]  shrink_slab+0xc0/0x4b4
+[10027.866187]  shrink_node+0x4a8/0x818
+[10027.869860]  kswapd+0x624/0x890
+[10027.873097]  kthread+0x11c/0x12c
+[10027.876424]  ret_from_fork+0x10/0x18
+[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
+[10027.886362] ---[ end trace df5849a1a3543251 ]---
+[10027.891518] Kernel panic - not syncing: Fatal exception
+
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_gem.c | 36 ++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-index 655ba4fb05dcd..48af305d42d54 100644
---- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-+++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-@@ -159,7 +159,8 @@ int smu_v11_0_init_microcode(struct smu_context *smu)
- 		chip_name = "navi12";
- 		break;
- 	default:
--		BUG();
-+		dev_err(adev->dev, "Unsupported ASIC type %d\n", adev->asic_type);
-+		return -EINVAL;
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 5a6a79fbc9d6e..d92a0ffe2a767 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -977,10 +977,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
+ 
+ static int msm_gem_new_impl(struct drm_device *dev,
+ 		uint32_t size, uint32_t flags,
+-		struct drm_gem_object **obj,
+-		bool struct_mutex_locked)
++		struct drm_gem_object **obj)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_gem_object *msm_obj;
+ 
+ 	switch (flags & MSM_BO_CACHE_MASK) {
+@@ -1006,15 +1004,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
+ 	INIT_LIST_HEAD(&msm_obj->submit_entry);
+ 	INIT_LIST_HEAD(&msm_obj->vmas);
+ 
+-	if (struct_mutex_locked) {
+-		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
+-		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
+-	} else {
+-		mutex_lock(&dev->struct_mutex);
+-		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
+-		mutex_unlock(&dev->struct_mutex);
+-	}
+-
+ 	*obj = &msm_obj->base;
+ 
+ 	return 0;
+@@ -1024,6 +1013,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
+ {
+ 	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_gem_object *msm_obj;
+ 	struct drm_gem_object *obj = NULL;
+ 	bool use_vram = false;
+ 	int ret;
+@@ -1044,14 +1034,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 	if (size == 0)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
++	ret = msm_gem_new_impl(dev, size, flags, &obj);
+ 	if (ret)
+ 		goto fail;
+ 
++	msm_obj = to_msm_bo(obj);
++
+ 	if (use_vram) {
+ 		struct msm_gem_vma *vma;
+ 		struct page **pages;
+-		struct msm_gem_object *msm_obj = to_msm_bo(obj);
+ 
+ 		mutex_lock(&msm_obj->lock);
+ 
+@@ -1086,6 +1077,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
+ 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
  	}
  
- 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_smc.bin", chip_name);
++	if (struct_mutex_locked) {
++		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
++		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++	} else {
++		mutex_lock(&dev->struct_mutex);
++		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++		mutex_unlock(&dev->struct_mutex);
++	}
++
+ 	return obj;
+ 
+ fail:
+@@ -1108,6 +1108,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
+ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 		struct dma_buf *dmabuf, struct sg_table *sgt)
+ {
++	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_gem_object *msm_obj;
+ 	struct drm_gem_object *obj;
+ 	uint32_t size;
+@@ -1121,7 +1122,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 
+ 	size = PAGE_ALIGN(dmabuf->size);
+ 
+-	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
++	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
+ 	if (ret)
+ 		goto fail;
+ 
+@@ -1146,6 +1147,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
+ 	}
+ 
+ 	mutex_unlock(&msm_obj->lock);
++
++	mutex_lock(&dev->struct_mutex);
++	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
++	mutex_unlock(&dev->struct_mutex);
++
+ 	return obj;
+ 
+ fail:
 -- 
 2.25.1
 
