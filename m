@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6708FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97AD320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B53920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693805;
-	bh=VMTzMSs96rd2ubqGPcpihfRojvQiew/VEzVXjzbGrYE=;
+	s=default; t=1597693811;
+	bh=hmGUy8w0cLtdEL/msXrPDeDPNv/L7vWmHiRZZOHBCTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FFkWV7F8jbxyJJnCYZKPDf0ILsBVvpxgps4fG6+z5JVhs69Re7IwjC4MU2kQGDHke
-	 78/i43SgZ/VicQGBUEPQ9wqN3T5zjVav/w55bNzayy3u7mLqjw/H3fN4olmrv4qeCq
-	 AY5z6xO79Cy3atZ1j3nsZLndRfdrXK3+0T1oYgRs=
+	b=nTTKi5mwkVZSTR4RfooESpSUzyDQ1CCAFRDYeaP61gNmk6GlTavf7qOoDENpmV/Cz
+	 tSSr6OAYabyhqSjKqsfSejjINwW9hRnpvo9IAxJn9Vte/k2frZOmpp1tBhO0JfA3H5
+	 szuejbd9k85z0JO6j+JLxsUkgFMOzWlB+PkfmJHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732812AbgHQTtz (ORCPT
+        id S2404426AbgHQTuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:49:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41320 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729217AbgHQPTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:19:42 -0400
+        id S1729233AbgHQPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819CB2072E;
-        Mon, 17 Aug 2020 15:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7845220709;
+        Mon, 17 Aug 2020 15:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677582;
-        bh=VMTzMSs96rd2ubqGPcpihfRojvQiew/VEzVXjzbGrYE=;
+        s=default; t=1597677576;
+        bh=hmGUy8w0cLtdEL/msXrPDeDPNv/L7vWmHiRZZOHBCTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVtvT/UDyzrhl0/ZOi1ARDgYZ7u+CmPrxvUDjZOriliSGsTgD6WnXtX9Q/h1AF/CW
-         Eh+CqN8AFSCZtryp/2PbEwM5WnhZ/HUv1xP4rftz2veSn6859HSKsQO076oUhNcdSv
-         /7vwHO66CeAZcMRbo4ERmvWKruSGUSG7GeTOzW2c=
+        b=D63MBAEa1yi+Tk3Yg1hd+WfNtykA5Xyi8g3zDfelTphxNRPAEHZmIimCgHi2MPlyZ
+         aqHNkxS9fXQ+fygjUbxmO2QDKoYEm8sqSHBf0nL/4j0dK8Sl3GfIQgafVcsNQ0d8bO
+         N/3siVHexl+W1uoijeBySSCEBXjZC97ngplj4mSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Lu Wei <luwei32@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 034/464] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
-Date:   Mon, 17 Aug 2020 17:09:47 +0200
-Message-Id: <20200817143835.389868594@linuxfoundation.org>
+Subject: [PATCH 5.8 032/464] m68k: mac: Dont send IOP message until channel is idle
+Date:   Mon, 17 Aug 2020 17:09:45 +0200
+Message-Id: <20200817143835.291235577@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,35 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
+[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
 
-In the function check_acpi_dev(), if it fails to create
-platform device, the return value is ERR_PTR() or NULL.
-Thus it must use IS_ERR_OR_NULL() to check return value.
+In the following sequence of calls, iop_do_send() gets called when the
+"send" channel is not in the IOP_MSG_IDLE state:
 
-Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	iop_ism_irq()
+		iop_handle_send()
+			(msg->handler)()
+				iop_send_message()
+			iop_do_send()
+
+Avoid this by testing the channel state before calling iop_do_send().
+
+When sending, and iop_send_queue is empty, call iop_do_send() because
+the channel is idle. If iop_send_queue is not empty, iop_do_send() will
+get called later by iop_handle_send().
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/m68k/mac/iop.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 9ee79b74311c1..86261970bd8f3 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -571,7 +571,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 		return AE_OK;
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index d3775afb0f076..754f6478c30d0 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -415,7 +415,8 @@ static void iop_handle_send(uint iop_num, uint chan)
+ 	msg->status = IOP_MSGSTATUS_UNUSED;
+ 	msg = msg->next;
+ 	iop_send_queue[iop_num][chan] = msg;
+-	if (msg) iop_do_send(msg);
++	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
++		iop_do_send(msg);
+ }
  
- 	if (acpi_match_device_ids(dev, ids) == 0)
--		if (acpi_create_platform_device(dev, NULL))
-+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
- 			dev_info(&dev->dev,
- 				 "intel-hid: created platform device\n");
+ /*
+@@ -489,16 +490,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
+ 
+ 	if (!(q = iop_send_queue[iop_num][chan])) {
+ 		iop_send_queue[iop_num][chan] = msg;
++		iop_do_send(msg);
+ 	} else {
+ 		while (q->next) q = q->next;
+ 		q->next = msg;
+ 	}
+ 
+-	if (iop_readb(iop_base[iop_num],
+-	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
+-		iop_do_send(msg);
+-	}
+-
+ 	return 0;
+ }
  
 -- 
 2.25.1
