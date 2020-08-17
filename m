@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FADCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B582C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4C0722CF8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BAD22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679038;
-	bh=nW21AHRpNbXFTr0vxcK4B0tYx33N8hK0p9KvN3PsyP8=;
+	s=default; t=1597679078;
+	bh=AUgn2tKQIYQ9H75ylkm6VLGiXyJBQJUmEjbxTcbu/2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+s+wro45Guzm72NwBynHimUaY4uUAkednqFwYhdOh3jrXmBpF0XJ/ziTcWxes7rx
-	 aqUWAojJzGwgQ/aTU09GfHvKqQ5fO4V/QnQX7tYvyYIr+gYEPVYM8RhmOqMlTb2lti
-	 y168v3oNfKwx/JF1lx7dLVDfYrTWBEjL2ACs/ytQ=
+	b=V+5sKIy8NLPOksPwoPxe6WRNJZkoQPPV8Erg3kY3ieegDIJKyZZshZcWEQJpVo/nL
+	 isQZZPVWgyN7/ml9qYECoUK51dSSKtmERHLPGPPxEgy8b56D7EoTfUZJyfi23HQjKf
+	 fq45L/8fCvBaqenkr25U+6pjMt1mKEHU3DBdRKpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387678AbgHQPnx (ORCPT
+        id S1730356AbgHQPoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgHQPhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:34 -0400
+        id S2387412AbgHQPhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5D22C9F;
-        Mon, 17 Aug 2020 15:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FC6208E4;
+        Mon, 17 Aug 2020 15:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678653;
-        bh=nW21AHRpNbXFTr0vxcK4B0tYx33N8hK0p9KvN3PsyP8=;
+        s=default; t=1597678656;
+        bh=AUgn2tKQIYQ9H75ylkm6VLGiXyJBQJUmEjbxTcbu/2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2vi4CbicMVuh4ObbTf8fFLNsJq5yDwEVraSiLnNSL4BuL0m22SEl5HF35dOlpcXL
-         HR8HhIXtmmAm40IjgsZYGLl89vmQvrkVwWXWTUiQ0UcsDxoZebeM9yp0VXijwuIuKh
-         llh/HfxnB1R+hUg3Yl+SZHk9ny1FN4rPf+VXPgsk=
+        b=al9omZ/sGgeBEyO5yie99Jx58Cqu8NkPIiycQxlWchLUDayuG7EHjrg7vlrLeWm0e
+         nMZbuo5/AeaXOTpzyh3JkDUD1IqAk2pofgdGLVeIv8MSuFPEcM1eTFJqsif639He3G
+         ioTjuvu6wijpcbPCbJjqe4aQnwSiwE+BpJZWkqSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.8 408/464] tpm: Unify the mismatching TPM space buffer sizes
-Date:   Mon, 17 Aug 2020 17:16:01 +0200
-Message-Id: <20200817143853.324115626@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.8 409/464] pstore: Fix linking when crypto API disabled
+Date:   Mon, 17 Aug 2020 17:16:02 +0200
+Message-Id: <20200817143853.371582987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,165 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Matteo Croce <mcroce@linux.microsoft.com>
 
-commit 6c4e79d99e6f42b79040f1a33cd4018f5425030b upstream.
+commit fd49e03280e596e54edb93a91bc96170f8e97e4a upstream.
 
-The size of the buffers for storing context's and sessions can vary from
-arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
-enough for most use with three handles (that is how many we allow at the
-moment). Parametrize the buffer size while doing this, so that it is easier
-to revisit this later on if required.
+When building a kernel with CONFIG_PSTORE=y and CONFIG_CRYPTO not set,
+a build error happens:
 
+    ld: fs/pstore/platform.o: in function `pstore_dump':
+    platform.c:(.text+0x3f9): undefined reference to `crypto_comp_compress'
+    ld: fs/pstore/platform.o: in function `pstore_get_backend_records':
+    platform.c:(.text+0x784): undefined reference to `crypto_comp_decompress'
+
+This because some pstore code uses crypto_comp_(de)compress regardless
+of the CONFIG_CRYPTO status. Fix it by wrapping the (de)compress usage
+by IS_ENABLED(CONFIG_PSTORE_COMPRESS)
+
+Signed-off-by: Matteo Croce <mcroce@linux.microsoft.com>
+Link: https://lore.kernel.org/lkml/20200706234045.9516-1-mcroce@linux.microsoft.com
+Fixes: cb3bee0369bc ("pstore: Use crypto compress API")
 Cc: stable@vger.kernel.org
-Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm-chip.c   |    9 ++-------
- drivers/char/tpm/tpm.h        |    5 ++++-
- drivers/char/tpm/tpm2-space.c |   26 ++++++++++++++++----------
- drivers/char/tpm/tpmrm-dev.c  |    2 +-
- include/linux/tpm.h           |    1 +
- 5 files changed, 24 insertions(+), 19 deletions(-)
+ fs/pstore/platform.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -386,13 +386,8 @@ struct tpm_chip *tpm_chip_alloc(struct d
- 	chip->cdev.owner = THIS_MODULE;
- 	chip->cdevs.owner = THIS_MODULE;
- 
--	chip->work_space.context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.context_buf) {
--		rc = -ENOMEM;
--		goto out;
--	}
--	chip->work_space.session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.session_buf) {
-+	rc = tpm2_init_space(&chip->work_space, TPM2_SPACE_BUFFER_SIZE);
-+	if (rc) {
- 		rc = -ENOMEM;
- 		goto out;
- 	}
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -59,6 +59,9 @@ enum tpm_addr {
- 
- #define TPM_TAG_RQU_COMMAND 193
- 
-+/* TPM2 specific constants. */
-+#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-+
- struct	stclear_flags_t {
- 	__be16	tag;
- 	u8	deactivated;
-@@ -228,7 +231,7 @@ unsigned long tpm2_calc_ordinal_duration
- int tpm2_probe(struct tpm_chip *chip);
- int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip);
- int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
--int tpm2_init_space(struct tpm_space *space);
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size);
- void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
- void tpm2_flush_space(struct tpm_chip *chip);
- int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -38,18 +38,21 @@ static void tpm2_flush_sessions(struct t
- 	}
- }
- 
--int tpm2_init_space(struct tpm_space *space)
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size)
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -269,6 +269,9 @@ static int pstore_compress(const void *i
  {
--	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->context_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (!space->context_buf)
- 		return -ENOMEM;
+ 	int ret;
  
--	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->session_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (space->session_buf == NULL) {
- 		kfree(space->context_buf);
-+		/* Prevent caller getting a dangling pointer. */
-+		space->context_buf = NULL;
- 		return -ENOMEM;
- 	}
++	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION))
++		return -EINVAL;
++
+ 	ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
+ 	if (ret) {
+ 		pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
+@@ -668,7 +671,7 @@ static void decompress_record(struct pst
+ 	int unzipped_len;
+ 	char *unzipped, *workspace;
  
-+	space->buf_size = buf_size;
- 	return 0;
- }
+-	if (!record->compressed)
++	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION) || !record->compressed)
+ 		return;
  
-@@ -311,8 +314,10 @@ int tpm2_prepare_space(struct tpm_chip *
- 	       sizeof(space->context_tbl));
- 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
--	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-+	memcpy(chip->work_space.context_buf, space->context_buf,
-+	       space->buf_size);
-+	memcpy(chip->work_space.session_buf, space->session_buf,
-+	       space->buf_size);
- 
- 	rc = tpm2_load_space(chip);
- 	if (rc) {
-@@ -492,7 +497,7 @@ static int tpm2_save_space(struct tpm_ch
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->context_tbl[i],
--				       space->context_buf, PAGE_SIZE,
-+				       space->context_buf, space->buf_size,
- 				       &offset);
- 		if (rc == -ENOENT) {
- 			space->context_tbl[i] = 0;
-@@ -509,9 +514,8 @@ static int tpm2_save_space(struct tpm_ch
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->session_tbl[i],
--				       space->session_buf, PAGE_SIZE,
-+				       space->session_buf, space->buf_size,
- 				       &offset);
--
- 		if (rc == -ENOENT) {
- 			/* handle error saving session, just forget it */
- 			space->session_tbl[i] = 0;
-@@ -557,8 +561,10 @@ int tpm2_commit_space(struct tpm_chip *c
- 	       sizeof(space->context_tbl));
- 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
--	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-+	memcpy(space->context_buf, chip->work_space.context_buf,
-+	       space->buf_size);
-+	memcpy(space->session_buf, chip->work_space.session_buf,
-+	       space->buf_size);
- 
- 	return 0;
- out:
---- a/drivers/char/tpm/tpmrm-dev.c
-+++ b/drivers/char/tpm/tpmrm-dev.c
-@@ -21,7 +21,7 @@ static int tpmrm_open(struct inode *inod
- 	if (priv == NULL)
- 		return -ENOMEM;
- 
--	rc = tpm2_init_space(&priv->space);
-+	rc = tpm2_init_space(&priv->space, TPM2_SPACE_BUFFER_SIZE);
- 	if (rc) {
- 		kfree(priv);
- 		return -ENOMEM;
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -96,6 +96,7 @@ struct tpm_space {
- 	u8 *context_buf;
- 	u32 session_tbl[3];
- 	u8 *session_buf;
-+	u32 buf_size;
- };
- 
- struct tpm_bios_log {
+ 	/* Only PSTORE_TYPE_DMESG support compression. */
 
 
