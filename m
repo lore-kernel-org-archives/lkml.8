@@ -2,117 +2,78 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD956C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60297C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A1C2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLVAyGoW"
+	by mail.kernel.org (Postfix) with ESMTP id 406482075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgHQCPX (ORCPT
+        id S1726778AbgHQCQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 22:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgHQCPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 22:15:21 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B201C061786
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 19:15:21 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id bo3so15885622ejb.11
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 19:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f92aQcnFdOsFoLLk4gmJBbx2VhwC8iwgWSP97DQXYBg=;
-        b=CLVAyGoWnb7Q7BSkYtTG3AOJTgUbOf1lQkbc5COm8iMCxobicPkOd0BcmplpOzgohF
-         Pr/LMcBa5MT11d4qhZHq2RiIqy3gG+Wqz8QkRnqM6WTQ+W4uUpzyngc8DjR9cNf6zAVG
-         Hto5VhmcuQ8djmfNk5615ocJ3rD1aJDfmKwPPY9irh9rqUtZP7RYEw+FazO9kxQ+j89k
-         lUn39TX4W0DNBMQP5dRFtKTS8ppDvDsQ5rKrrS/Pc+p+Yj/YrVabuIckFp9rRNk7v5jk
-         4/vbXcYEFvy8kSbPbnv8Aip/x0rx1db7TXRatERrVPyqI03l7+E8IAcxBr7OGoU71mNG
-         YVTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f92aQcnFdOsFoLLk4gmJBbx2VhwC8iwgWSP97DQXYBg=;
-        b=MCdFdlTOM4oK7AVXUn7Ai6+mOIRlAqPsiooUtfS6Z6eDCknoBQBKSPb0pn6vuMbpG9
-         J/Op3QMGvNegzk7Zh5udcb/x+pwehd4/btGSNP3fJ1UBNi+238nSVvk7adwIC45X8hf2
-         v89o65BoyCa3zGNqYBG1s34XbKQw/LmCV7Ss+dd/bgDfvBNIahMJk+Jz00TQsRWFiyKw
-         wnmhSiuiY1yjPyhf25lBsZsOLZFqOW+Kf5Aq5R4wbsDaU5zGshG89GLgBXMVdCVRAjSU
-         XlqhhyOj+xxXQk89HNi1bKGSAuGKpH/YrCu7ZrjJRYlVWy/dsVrgJIIn/9pj0CFjoYR2
-         /VIg==
-X-Gm-Message-State: AOAM531Dm0fhphFE3kTD6GtNE+eNevrAZL1+YTG5rdrZaNGL0jDUqNB9
-        ORcmk0IQRDDFpeydAG+EYHc2uQSdr6o=
-X-Google-Smtp-Source: ABdhPJwKT9wCu6GwPewakfFt96GIZCY9Luv4I/HA4p4JGJWN8uMN6mDcem1D+IUVZM+EOJ7SkcuU5Q==
-X-Received: by 2002:a17:906:d209:: with SMTP id w9mr12725584ejz.93.1597630520336;
-        Sun, 16 Aug 2020 19:15:20 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:a7fb:e200:9c9f:b37c:49dd:cd66])
-        by smtp.gmail.com with ESMTPSA id j11sm12645315edr.71.2020.08.16.19.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 19:15:19 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 04:15:18 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>
-Subject: Re: Linux 5.9-rc1 (sparse? kernel/time/timekeeping.c)
-Message-ID: <20200817021518.q3petwc277m3uqxz@ltop.local>
-References: <CAHk-=wiwfkKp93C+yLqKWAU0ChBdeBDUhgOk09_=UQ8gOKbV3w@mail.gmail.com>
- <83b35552-d1a2-e4ce-9a41-2b5cf688ccf0@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83b35552-d1a2-e4ce-9a41-2b5cf688ccf0@infradead.org>
+        Sun, 16 Aug 2020 22:16:59 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:51984 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbgHQCQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 22:16:58 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-01 (Coremail) with SMTP id qwCowAB3v0eS6DlfArk_AQ--.43945S2;
+        Mon, 17 Aug 2020 10:16:50 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] bsg-lib: convert comma to semicolon
+Date:   Mon, 17 Aug 2020 02:16:49 +0000
+Message-Id: <20200817021649.9922-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: qwCowAB3v0eS6DlfArk_AQ--.43945S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrGrWfXF15ZF4UWr4DXF4kXrb_yoWxXrg_GF
+        Wjkw4kGFWDA3yIkrnrAFyrt3W2qa45GF4a9FsxWrnxX3Wqqay3JrW7Zr13GFs8XayUur15
+        AayUWry3tr4IkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7
+        v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAF
+        wVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
+        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU8UU
+        UUUUUU=
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCgULA1z4i7r4igAAsg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 06:35:26PM -0700, Randy Dunlap wrote:
-> 
-> on x86_64, allmodconfig:
-> 
-> $ gcc --version
-> gcc (SUSE Linux) 7.5.0
-> 
-> $ sparse --version
-> 0.6.2
-> 
-> 
-> I seem to be having some problems with kernel/time/timekeeping.c,
-> including a segfault.
-> 
-> a. Is it sparse that segfaults?
+Replace a comma between expression statements by a semicolon.
 
-It's most probably the one fixed in:
-  eb6779f6f621 ("generic: fix missing inlining of generic expression")
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ block/bsg-lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On the main tree there is a branch with a few fixes since the last release:
-  git://git.kernel.org/pub/scm/devel/sparse/sparse.git maint-v0.6.2
+diff --git a/block/bsg-lib.c b/block/bsg-lib.c
+index fb7b347f8010..d185396d88bb 100644
+--- a/block/bsg-lib.c
++++ b/block/bsg-lib.c
+@@ -378,7 +378,7 @@ struct request_queue *bsg_setup_queue(struct device *dev, const char *name,
+ 	bset->timeout_fn = timeout;
  
-> b. what prints this message?
-> make[3]: *** Deleting file 'kernel/time/timekeeping.o'
+ 	set = &bset->tag_set;
+-	set->ops = &bsg_mq_ops,
++	set->ops = &bsg_mq_ops;
+ 	set->nr_hw_queues = 1;
+ 	set->queue_depth = 128;
+ 	set->numa_node = NUMA_NO_NODE;
+-- 
+2.17.1
 
-It seems like a typical message from make when a command fails.
- 
-> c. I would prefer to be able to tell the source of warning/error messages,
-> i.e., gcc or sparse. Especially when they are intermixed.
-
-You can use the option -fdiagnostic-prefix[=PREFIX] for this. It will
-just prefix all messages from from sparse with the given PREFIX or
-'sparse: ' if none is given. You can pass this option via 'make CF=...'.
-
-It may be a good idea to directly add it to CHECKFLAGS.
-
-Best regards,
--- Luc
