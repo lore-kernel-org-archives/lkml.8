@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB31C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA5EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0051920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474DC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgHQDWV (ORCPT
+        id S1727063AbgHQD3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:22:21 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:48844 "EHLO cstnet.cn"
+        Sun, 16 Aug 2020 23:29:32 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:42702 "EHLO cstnet.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbgHQDWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:22:21 -0400
+        id S1726235AbgHQD3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 23:29:30 -0400
 Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowACHzEjR8Dlfw6_aAg--.62973S2;
-        Mon, 17 Aug 2020 10:52:01 +0800 (CST)
+        by APP-01 (Coremail) with SMTP id qwCowADHz2+P+TlfauNCAQ--.38977S2;
+        Mon, 17 Aug 2020 11:29:19 +0800 (CST)
 From:   Xu Wang <vulab@iscas.ac.cn>
-To:     jaharkes@cs.cmu.edu, coda@cs.cmu.edu, codalist@coda.cs.cmu.edu
+To:     axboe@kernel.dk, linux-ide@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] upcall: Remove unneeded variable insize
-Date:   Mon, 17 Aug 2020 02:51:45 +0000
-Message-Id: <20200817025145.10009-1-vulab@iscas.ac.cn>
+Subject: [PATCH] ata: ahci: use ata_link_info() instead of ata_link_printk()
+Date:   Mon, 17 Aug 2020 03:29:13 +0000
+Message-Id: <20200817032913.10173-1-vulab@iscas.ac.cn>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowACHzEjR8Dlfw6_aAg--.62973S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
-        Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUk5rcUUUUU=
+X-CM-TRANSID: qwCowADHz2+P+TlfauNCAQ--.38977S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13Gr1fCr18JFWxuw4rKrg_yoWxCFc_uF
+        y8Zw47WrWjyF15Zr17Ja13ZF90k3Wvvw1kXFyIganxury5Ww4fJrW0q3W5X34DXw4IkF98
+        ArWUAFy5CrnIgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
+        6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjoKZJ
+        UUUUU==
 X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAELA18J9krv4wAAsn
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAw4LA13qZTb7pwAAs9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded variable insize in venus_pioctl().
+Using ata_link_info() instead of ata_link_printk().
 
 Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- fs/coda/upcall.c | 3 +--
+ drivers/ata/ahci.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/coda/upcall.c b/fs/coda/upcall.c
-index eb3b1898da46..903bd7a4ee16 100644
---- a/fs/coda/upcall.c
-+++ b/fs/coda/upcall.c
-@@ -477,10 +477,9 @@ int venus_pioctl(struct super_block *sb, struct CodaFid *fid,
- {
-         union inputArgs *inp;
-         union outputArgs *outp;  
--	int insize, outsize, error;
-+	int outsize, error;
- 	int iocsize;
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index 0c0a736eb861..fbd8eaa32d32 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -807,8 +807,7 @@ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
+ 				(sstatus & 0xf) != 1)
+ 			break;
  
--	insize = VC_MAXMSGSIZE;
- 	UPARG(CODA_IOCTL);
+-		ata_link_printk(link, KERN_INFO, "avn bounce port%d\n",
+-				port);
++		ata_link_info(link,  "avn bounce port%d\n", port);
  
-         /* build packet for Venus */
+ 		pci_read_config_word(pdev, 0x92, &val);
+ 		val &= ~(1 << port);
 -- 
 2.17.1
 
