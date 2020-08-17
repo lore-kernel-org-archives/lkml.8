@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92064C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B10C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706A920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681122065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692582;
-	bh=Xji4J+FpRs9JzraOZWkDixn6ptwTmp3//zbyAFyKBIg=;
+	s=default; t=1597692646;
+	bh=Oa7Ez3rHLkW4BGy0tuai6tw2vu2xI3kKAl26GFf0WA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RGUTyCkpq95+SushbPmDzCBl6eM8Ovy0wqkNeYSv6PuFqCWQwlWI/T9rE1c8SMe3N
-	 H8CU5OdVawM1fruuusAHYu8XqzZMpHQZaA9c99YJCaxG47At6jgj4HaU3Fqx+FPFtL
-	 nVYMLu+qMrIUlbGyLzBOt+0dF/EAPUpc/6kJy9Ao=
+	b=Gpgu8okBtTCEcKE0pZHw6i9aoRrHk5qF8AspvAaozHnbqrvkA0zK0ssPWRNk1dm/+
+	 1Y3hivSXEFzGfU7bwJKOd30b8v8TiN9T8TnsKYLkG3/pdK8tV9KWLSs8i1ZElx4HVB
+	 twidqEK2aId7sjMWoLIaHC8qGwcHk7dIGkG2SF/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbgHQT3k (ORCPT
+        id S1732138AbgHQTao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgHQPcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:16 -0400
+        id S1730278AbgHQPcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5968923125;
-        Mon, 17 Aug 2020 15:32:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307B520709;
+        Mon, 17 Aug 2020 15:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678335;
-        bh=Xji4J+FpRs9JzraOZWkDixn6ptwTmp3//zbyAFyKBIg=;
+        s=default; t=1597678321;
+        bh=Oa7Ez3rHLkW4BGy0tuai6tw2vu2xI3kKAl26GFf0WA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHFwHzwjzM7k1wslISzy6Oow1ogXvpr8ARA6+122p2wMdjyL+QYDDhrBfTh6I2X2m
-         aFxKip9bF1At3LluG5qiykv8qJPtT9mBBSg5mHUkYiEUNmCoyaCdBGC9Wi1WY5amd3
-         GmCtqshVadVlzC0/CnR3g4IN0s85HP9wv+fBiYHs=
+        b=ZCmtJ/PBT4dlLH4pwoE+L47YMBUnK9wYAvWM7z4UpuoxrKJhee7EmMwvHWWJ45pzV
+         UE61evSlocEV1D762vfkcw6UmcUNN1+StYt3vTrb7lEmvoZmIn0+lZn2Qw+i/RuSvE
+         vfuDeWEHvqNRv0AvxkoTddahqQlFXv/l1cLPNRAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 299/464] PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
-Date:   Mon, 17 Aug 2020 17:14:12 +0200
-Message-Id: <20200817143848.129941592@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pedro Miraglia Franco de Carvalho <pedromfc@br.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 294/464] powerpc/watchpoint: Fix DAWR exception constraint
+Date:   Mon, 17 Aug 2020 17:14:07 +0200
+Message-Id: <20200817143847.841030507@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,97 +62,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-[ Upstream commit 19abcd790b51b26d775e1170ba2ac086823cceeb ]
+[ Upstream commit f6780ce619f8daa285760302d56e95892087bd1f ]
 
-commit bd22885aa188 ("PCI: cadence: Refactor driver to use as a core
-library") while refactoring the Cadence PCIe driver to be used as
-library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
-and cdns_pcie_host_setup() but missed to remove the corresponding
-pm_runtime_put_sync() in the error path. Fix it here.
+Pedro Miraglia Franco de Carvalho noticed that on p8/p9, DAR value is
+inconsistent with different type of load/store. Like for byte,word
+etc. load/stores, DAR is set to the address of the first byte of
+overlap between watch range and real access. But for quadword load/
+store it's sometime set to the address of the first byte of real
+access whereas sometime set to the address of the first byte of
+overlap. This issue has been fixed in p10. In p10(ISA 3.1), DAR is
+always set to the address of the first byte of overlap. Commit 27985b2a640e
+("powerpc/watchpoint: Don't ignore extraneous exceptions blindly")
+wrongly assumes that DAR is set to the address of the first byte of
+overlap for all load/stores on p8/p9 as well. Fix that. With the fix,
+we now rely on 'ea' provided by analyse_instr(). If analyse_instr()
+fails, generate event unconditionally on p8/p9, and on p10 generate
+event only if DAR is within a DAWR range.
 
-Link: https://lore.kernel.org/r/20200722110317.4744-3-kishon@ti.com
-Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Note: 8xx is not affected.
+
+Fixes: 27985b2a640e ("powerpc/watchpoint: Don't ignore extraneous exceptions blindly")
+Fixes: 74c6881019b7 ("powerpc/watchpoint: Prepare handler to handle more than one watchpoint")
+Reported-by: Pedro Miraglia Franco de Carvalho <pedromfc@br.ibm.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200723090813.303838-3-ravi.bangoria@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/cadence/pcie-cadence-ep.c   | 9 ++-------
- drivers/pci/controller/cadence/pcie-cadence-host.c | 6 +-----
- 2 files changed, 3 insertions(+), 12 deletions(-)
+ arch/powerpc/kernel/hw_breakpoint.c | 72 ++++++++++++++++-------------
+ 1 file changed, 41 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 1c15c8352125e..4a829ccff7d0b 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -8,7 +8,6 @@
- #include <linux/of.h>
- #include <linux/pci-epc.h>
- #include <linux/platform_device.h>
--#include <linux/pm_runtime.h>
- #include <linux/sizes.h>
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index 031e6defc08e6..a971e22aea819 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -498,11 +498,11 @@ static bool dar_in_user_range(unsigned long dar, struct arch_hw_breakpoint *info
+ 	return ((info->address <= dar) && (dar - info->address < info->len));
+ }
  
- #include "pcie-cadence.h"
-@@ -440,8 +439,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 	epc = devm_pci_epc_create(dev, &cdns_pcie_epc_ops);
- 	if (IS_ERR(epc)) {
- 		dev_err(dev, "failed to create epc device\n");
--		ret = PTR_ERR(epc);
--		goto err_init;
-+		return PTR_ERR(epc);
+-static bool dar_user_range_overlaps(unsigned long dar, int size,
+-				    struct arch_hw_breakpoint *info)
++static bool ea_user_range_overlaps(unsigned long ea, int size,
++				   struct arch_hw_breakpoint *info)
+ {
+-	return ((dar < info->address + info->len) &&
+-		(dar + size > info->address));
++	return ((ea < info->address + info->len) &&
++		(ea + size > info->address));
+ }
+ 
+ static bool dar_in_hw_range(unsigned long dar, struct arch_hw_breakpoint *info)
+@@ -515,20 +515,22 @@ static bool dar_in_hw_range(unsigned long dar, struct arch_hw_breakpoint *info)
+ 	return ((hw_start_addr <= dar) && (hw_end_addr > dar));
+ }
+ 
+-static bool dar_hw_range_overlaps(unsigned long dar, int size,
+-				  struct arch_hw_breakpoint *info)
++static bool ea_hw_range_overlaps(unsigned long ea, int size,
++				 struct arch_hw_breakpoint *info)
+ {
+ 	unsigned long hw_start_addr, hw_end_addr;
+ 
+ 	hw_start_addr = ALIGN_DOWN(info->address, HW_BREAKPOINT_SIZE);
+ 	hw_end_addr = ALIGN(info->address + info->len, HW_BREAKPOINT_SIZE);
+ 
+-	return ((dar < hw_end_addr) && (dar + size > hw_start_addr));
++	return ((ea < hw_end_addr) && (ea + size > hw_start_addr));
+ }
+ 
+ /*
+  * If hw has multiple DAWR registers, we also need to check all
+  * dawrx constraint bits to confirm this is _really_ a valid event.
++ * If type is UNKNOWN, but privilege level matches, consider it as
++ * a positive match.
+  */
+ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
+ 				    struct arch_hw_breakpoint *info)
+@@ -553,7 +555,8 @@ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
+  * including extraneous exception. Otherwise return false.
+  */
+ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
+-			      int type, int size, struct arch_hw_breakpoint *info)
++			      unsigned long ea, int type, int size,
++			      struct arch_hw_breakpoint *info)
+ {
+ 	bool in_user_range = dar_in_user_range(regs->dar, info);
+ 	bool dawrx_constraints;
+@@ -569,22 +572,27 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
  	}
  
- 	epc_set_drvdata(epc, ep);
-@@ -453,7 +451,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 			       resource_size(pcie->mem_res), PAGE_SIZE);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to initialize the memory space\n");
--		goto err_init;
-+		return ret;
+ 	if (unlikely(ppc_inst_equal(instr, ppc_inst(0)))) {
+-		if (in_user_range)
+-			return true;
++		if (cpu_has_feature(CPU_FTR_ARCH_31) &&
++		    !dar_in_hw_range(regs->dar, info))
++			return false;
+ 
+-		if (dar_in_hw_range(regs->dar, info)) {
+-			info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
+-			return true;
+-		}
+-		return false;
++		return true;
  	}
  
- 	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
-@@ -472,8 +470,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-  free_epc_mem:
- 	pci_epc_mem_exit(epc);
+ 	dawrx_constraints = check_dawrx_constraints(regs, type, info);
  
-- err_init:
--	pm_runtime_put_sync(dev);
--
- 	return ret;
+-	if (dar_user_range_overlaps(regs->dar, size, info))
++	if (type == UNKNOWN) {
++		if (cpu_has_feature(CPU_FTR_ARCH_31) &&
++		    !dar_in_hw_range(regs->dar, info))
++			return false;
++
+ 		return dawrx_constraints;
++	}
+ 
+-	if (dar_hw_range_overlaps(regs->dar, size, info)) {
++	if (ea_user_range_overlaps(ea, size, info))
++		return dawrx_constraints;
++
++	if (ea_hw_range_overlaps(ea, size, info)) {
+ 		if (dawrx_constraints) {
+ 			info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
+ 			return true;
+@@ -594,7 +602,7 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
  }
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8c2543f28ba05..a1c6bd6f87c51 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -7,7 +7,6 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/platform_device.h>
--#include <linux/pm_runtime.h>
  
- #include "pcie-cadence.h"
+ static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
+-			     int *type, int *size, bool *larx_stcx)
++			     int *type, int *size, unsigned long *ea)
+ {
+ 	struct instruction_op op;
  
-@@ -250,7 +249,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+@@ -602,16 +610,18 @@ static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
+ 		return;
  
- 	ret = cdns_pcie_host_init(dev, &resources, rc);
- 	if (ret)
--		goto err_init;
-+		return ret;
- 
- 	list_splice_init(&resources, &bridge->windows);
- 	bridge->dev.parent = dev;
-@@ -268,8 +267,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-  err_host_probe:
- 	pci_free_resource_list(&resources);
- 
-- err_init:
--	pm_runtime_put_sync(dev);
+ 	analyse_instr(&op, regs, *instr);
 -
- 	return ret;
+-	/*
+-	 * Set size = 8 if analyse_instr() fails. If it's a userspace
+-	 * watchpoint(valid or extraneous), we can notify user about it.
+-	 * If it's a kernel watchpoint, instruction  emulation will fail
+-	 * in stepping_handler() and watchpoint will be disabled.
+-	 */
+ 	*type = GETTYPE(op.type);
+-	*size = !(*type == UNKNOWN) ? GETSIZE(op.type) : 8;
+-	*larx_stcx = (*type == LARX || *type == STCX);
++	*ea = op.ea;
++#ifdef __powerpc64__
++	if (!(regs->msr & MSR_64BIT))
++		*ea &= 0xffffffffUL;
++#endif
++	*size = GETSIZE(op.type);
++}
++
++static bool is_larx_stcx_instr(int type)
++{
++	return type == LARX || type == STCX;
  }
+ 
+ /*
+@@ -678,7 +688,7 @@ int hw_breakpoint_handler(struct die_args *args)
+ 	struct ppc_inst instr = ppc_inst(0);
+ 	int type = 0;
+ 	int size = 0;
+-	bool larx_stcx = false;
++	unsigned long ea;
+ 
+ 	/* Disable breakpoints during exception handling */
+ 	hw_breakpoint_disable();
+@@ -692,7 +702,7 @@ int hw_breakpoint_handler(struct die_args *args)
+ 	rcu_read_lock();
+ 
+ 	if (!IS_ENABLED(CONFIG_PPC_8xx))
+-		get_instr_detail(regs, &instr, &type, &size, &larx_stcx);
++		get_instr_detail(regs, &instr, &type, &size, &ea);
+ 
+ 	for (i = 0; i < nr_wp_slots(); i++) {
+ 		bp[i] = __this_cpu_read(bp_per_reg[i]);
+@@ -702,7 +712,7 @@ int hw_breakpoint_handler(struct die_args *args)
+ 		info[i] = counter_arch_bp(bp[i]);
+ 		info[i]->type &= ~HW_BRK_TYPE_EXTRANEOUS_IRQ;
+ 
+-		if (check_constraints(regs, instr, type, size, info[i])) {
++		if (check_constraints(regs, instr, ea, type, size, info[i])) {
+ 			if (!IS_ENABLED(CONFIG_PPC_8xx) &&
+ 			    ppc_inst_equal(instr, ppc_inst(0))) {
+ 				handler_error(bp[i], info[i]);
+@@ -744,7 +754,7 @@ int hw_breakpoint_handler(struct die_args *args)
+ 	}
+ 
+ 	if (!IS_ENABLED(CONFIG_PPC_8xx)) {
+-		if (larx_stcx) {
++		if (is_larx_stcx_instr(type)) {
+ 			for (i = 0; i < nr_wp_slots(); i++) {
+ 				if (!hit[i])
+ 					continue;
 -- 
 2.25.1
 
