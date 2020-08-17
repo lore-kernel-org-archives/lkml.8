@@ -2,75 +2,87 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A017C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0262072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597670956;
-	bh=BymKps12XsZQl4YKZ1c0eB9rH+lInt76AzC41AOqUvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Czj6hrG7ppQe/jy/hDROgdhm59MNe+rZF88TPO9PGCh5p+7nkp1QeBakdw3XY4WbP
-	 8OCyLT9HVhkdDZRxFhX05BQOZUa73PzEfJbJX6N2Wj1YOkWXxynZG+i1GLIbPD9kKV
-	 fO4PXeUzSMT9d86aQxIoOcu1uN7wXsBfCd5juBjM=
+	by mail.kernel.org (Postfix) with ESMTP id 44C2F2076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgHQN3P (ORCPT
+        id S1728502AbgHQNcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgHQN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:29:14 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F8D2072D;
-        Mon, 17 Aug 2020 13:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597670953;
-        bh=BymKps12XsZQl4YKZ1c0eB9rH+lInt76AzC41AOqUvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wpv5465BkVtFkvEjq8ovwgg4Ym9eooROzit5pFuUECfQjFRTG1KLS8YItLAfTi+ad
-         V9ROkqnVpc3j67L3rgYU7thJeb9JGWCKI/JCqzkZhlRLgMjQRn3WzhRmQs5JuGHa3G
-         r+SwuGpuGeix5DRooPEVYZg8yLmPs8pz7FGFBMcc=
-Date:   Mon, 17 Aug 2020 21:29:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, festevam@gmail.com
-Subject: Re: [PATCH v2] ARM: dts: ZII: Disable HW Ethernet switch reset GPIOs
-Message-ID: <20200817132903.GG16951@dragon>
-References: <20200722203341.578651-1-cphealy@gmail.com>
+        Mon, 17 Aug 2020 09:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728349AbgHQNcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:32:09 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D47C061389;
+        Mon, 17 Aug 2020 06:32:09 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id D1F48297BC1
+Subject: Re: [PATCH 2/2] tty/sysrq: Add configurable handler to execute a
+ compound action
+To:     Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel@collabora.com
+References: <20200804162402.2087-1-andrzej.p@collabora.com>
+ <20200804162402.2087-3-andrzej.p@collabora.com>
+ <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <5fc8d6df-ff33-1afd-5a83-d79d41e0fefc@collabora.com>
+Date:   Mon, 17 Aug 2020 15:32:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722203341.578651-1-cphealy@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 01:33:41PM -0700, Chris Healy wrote:
-> From: Chris Healy <cphealy@gmail.com>
-> 
-> Disable Ethernet switch reset GPIO with ZII platforms that have it
-> enabled.  HW switch reset results in a reset of the copper PHYs
-> inside of the switch.  We want to avoid this reset of the copper PHYs
-> in the switch as this results in unnecessary broader network disruption on
-> a soft reboot of the application processor.
-> 
-> With the HW GPIO removed, the switch driver still performs a soft reset of
-> the switch core which has been shown to sufficiently meet our needs with
-> other ZII platforms that do not have the HW switch reset GPIO defined. 
-> 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+Hi Jiri,
 
-Applied, thanks.
+W dniu 12.08.2020 o 13:45, Jiri Slaby pisze:
+> On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
+>> Userland might want to execute e.g. 'w' (show blocked tasks), followed
+>> by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+>> upon a single magic SysRq. Or one might want to execute the famous "Raising
+>> Elephants Is So Utterly Boring" action. This patch adds a configurable
+>> handler, triggered with 'C', for this exact purpose. The user specifies the
+>> composition of the compound action using syntax similar to getopt, where
+>> each letter corresponds to an individual action and a colon followed by a
+>> number corresponds to a delay of that many milliseconds, e.g.:
+>>
+>> ws:1000c
+>>
+>> or
+>>
+>> r:100eis:1000ub
+> 
+> I think I miss what's that good for, given I can do it one-by-one
+> without setting such strings anywhere (I usually want to do different
+> things on different kinds of crashes)?
+> 
+
+The "REISUB" action is a common way of handling a bad situation, though,
+so having a shortcut for a common way is helpful, yet we are not forcing
+this particular action to happen when the 'C' sysrq is invoked and offer
+configurability instead.
+
+I addressed the comments you had with regard to the code in a v2 series.
+
+Regards,
+
+Andrzej
+
