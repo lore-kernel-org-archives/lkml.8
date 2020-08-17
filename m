@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04E62065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D562065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692805;
-	bh=WtHJlHpN1IoAghHnJrD6JHQcmHdwzjW8VjXo4bId0K4=;
+	s=default; t=1597692809;
+	bh=92vrbsga9B/BbPLc5QxUi8xf1J0xoZclIrgE6YvAtlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcBbp74JZIAXvBhVtfhwO64kD3Ygn8xQQYMm87wElr51HTV+VC3vmP+cNYWE6YxEX
-	 9qOzw0NBchihWKLDFYIJ/OlFdrVDPZN2oJ1Ue5gsLXRhAH2UQqIMxREm+f0qAZUwyQ
-	 qg+XfRu+XnribKa6DQrWJjDSpikT9ET14E5sgVIM=
+	b=tzfmIw6V9N9N0TKDurIHBnPc1tdraQ2Pgq0WZqSgkY+ros0muddcFHEOHjUJwhLjS
+	 SrLDBXb6WcRUhDwZxd3fGSbV8BBHlNEkDuFigvwyPjN1+rQBKi3DwDoebZTNumh76e
+	 MkPQgStkEAhj1TMNyt+p7sO2a04d59YS0jh8b3CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgHQTdX (ORCPT
+        id S1732168AbgHQTd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:33:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:33:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730246AbgHQPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:30:57 -0400
+        id S1730238AbgHQPaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:30:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AFF023440;
-        Mon, 17 Aug 2020 15:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5C1723107;
+        Mon, 17 Aug 2020 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678257;
-        bh=WtHJlHpN1IoAghHnJrD6JHQcmHdwzjW8VjXo4bId0K4=;
+        s=default; t=1597678251;
+        bh=92vrbsga9B/BbPLc5QxUi8xf1J0xoZclIrgE6YvAtlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ab554IHOpmgjA5BR8eExpNISn4gqdmsA8P+NmRnZnz4MRMfjzuG0P5N6BBkq967gQ
-         oDz/4Gu4AXl8OC62mqpoAikEhLPrO+n3b4/oimwglUB1eH66GQliNMTTvDjo9ed8YR
-         fNAaW0q4otWcNzCbPTO5EnOmOhszLftOCCeQaVQo=
+        b=RWD+069oZQbLDk2ltSEp1fBDbmaLLbSUFW4DjN95vAFe4CLd7yOcpq6hqj5K8d1tW
+         55XQy3b6/UV/RRDIBVtRrMpNfKtD2AOzGvCT69+EsIPSd0V57YWadnudjKdo5Vszca
+         MzSefe2sA9BkqhzapvAnYMiDNCtK5hFrbUXl9ctE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 271/464] mt76: mt7915: add missing CONFIG_MAC80211_DEBUGFS
-Date:   Mon, 17 Aug 2020 17:13:44 +0200
-Message-Id: <20200817143846.763111625@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 252/464] powerpc/book3s64/pkeys: Use PVR check instead of cpu feature
+Date:   Mon, 17 Aug 2020 17:13:25 +0200
+Message-Id: <20200817143845.866219754@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,38 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit a6e29d8ecd3d4eea8748d81d7b577083b4a7c441 ]
+[ Upstream commit d79e7a5f26f1d179cbb915a8bf2469b6d7431c29 ]
 
-Add CONFIG_MAC80211_DEBUGFS to fix a reported warning.
+We are wrongly using CPU_FTRS_POWER8 to check for P8 support. Instead, we should
+use PVR value. Now considering we are using CPU_FTRS_POWER8, that
+implies we returned true for P9 with older firmware. Keep the same behavior
+by checking for P9 PVR value.
 
-Fixes: ec9742a8f38e ("mt76: mt7915: add .sta_add_debugfs support")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/mm/book3s64/pkeys.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-index 5278bee812f1c..7e48f56b5b08e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-@@ -384,6 +384,7 @@ int mt7915_init_debugfs(struct mt7915_dev *dev)
- 	return 0;
- }
+diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
+index d174106bab676..82ace6acb0aa9 100644
+--- a/arch/powerpc/mm/book3s64/pkeys.c
++++ b/arch/powerpc/mm/book3s64/pkeys.c
+@@ -83,13 +83,17 @@ static int pkey_initialize(void)
+ 	scan_pkey_feature();
  
-+#ifdef CONFIG_MAC80211_DEBUGFS
- /** per-station debugfs **/
+ 	/*
+-	 * Let's assume 32 pkeys on P8 bare metal, if its not defined by device
+-	 * tree. We make this exception since skiboot forgot to expose this
+-	 * property on power8.
++	 * Let's assume 32 pkeys on P8/P9 bare metal, if its not defined by device
++	 * tree. We make this exception since some version of skiboot forgot to
++	 * expose this property on power8/9.
+ 	 */
+-	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR) &&
+-			cpu_has_feature(CPU_FTRS_POWER8))
+-		pkeys_total = 32;
++	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR)) {
++		unsigned long pvr = mfspr(SPRN_PVR);
++
++		if (PVR_VER(pvr) == PVR_POWER8 || PVR_VER(pvr) == PVR_POWER8E ||
++		    PVR_VER(pvr) == PVR_POWER8NVL || PVR_VER(pvr) == PVR_POWER9)
++			pkeys_total = 32;
++	}
  
- /* usage: <tx mode> <ldpc> <stbc> <bw> <gi> <nss> <mcs> */
-@@ -461,3 +462,4 @@ void mt7915_sta_add_debugfs(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 	debugfs_create_file("fixed_rate", 0600, dir, sta, &fops_fixed_rate);
- 	debugfs_create_file("stats", 0400, dir, sta, &fops_sta_stats);
- }
-+#endif
+ 	/*
+ 	 * Adjust the upper limit, based on the number of bits supported by
 -- 
 2.25.1
 
