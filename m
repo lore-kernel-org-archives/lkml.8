@@ -2,112 +2,146 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ED3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 696682072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2662072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lx8D5Aof"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AdKggnTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHQFFo (ORCPT
+        id S1726365AbgHQFNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
+        Mon, 17 Aug 2020 01:13:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgHQFFn (ORCPT
+        with ESMTP id S1726185AbgHQFM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:05:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C33DC061388
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:05:43 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f193so7635072pfa.12
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:05:42 -0700 (PDT)
+        Mon, 17 Aug 2020 01:12:59 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329C5C061389
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:12:59 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m15so7696649lfp.7
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g8h0LxTHh1VYQ18oyvTbKZV+T1OgJq5ncEakFn9bhww=;
-        b=Lx8D5Aof22eg7lNb06Y7snkOOKoZO1wUAMTd3RBpyFBJcl6QsdoaUPCOFEpDJtCOsx
-         fE6QxUd1usxfTHmq43Te/t0kJfvsWz/zOD59QVZqEuaPcLbmyAdr/Q7lzDhvwy4oQQLC
-         Rs37LGymucVaYTaqBUiVyZ+/GkZmbCss6X5d4aDKBbGpmEm/NEpXiMRQ8QqQWLdeAad6
-         YQ0HsF4HDCVPusFjI/9LNgo6SrGMD8+a4yGLTrvpUhdMBkm8sjXclsaktxw1guFtYlfF
-         qJhIBjSwUK940XEZ93k0BFsLiHUbh3i2kf/OVYxkBAIO9yd3CG7R9yzjFMwRF6ymQojn
-         3O1A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8wbtEbHtU9M4Jod/JrcC7BZqQ8yoT12QXGXyBKx7JXA=;
+        b=AdKggnTL3w6eZGHsRkx/100sgIDTgVVJxjW/eLCKNep4uW4Yl3iMpb4KJ/hcYsaTMx
+         wP8SFf2QchKBG7PVGLeRaaVoNVzX1/pwr8T4EVeDUQhCo14ZxN8K2MYSOWOlZzFkEP5M
+         Ciq0EA/yuDtUAFgNLJJGqxOJZhwMMqQoYlYyHZZb4R7DlqeXWidG15ku96JwrEUYkecI
+         8V6nyYxnw1wRy+xl1yfpgjlbh7n23OlsCIBXBzIFKFF4pVNcWMD2+SmoShkRxWfhxW2U
+         fzykn0JV7r4VvJ1UM79GY/+iTN3SMoxwqLsYQmQmfutFRaxf0iASb0eXZ3RO9itt5p3T
+         S8Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g8h0LxTHh1VYQ18oyvTbKZV+T1OgJq5ncEakFn9bhww=;
-        b=JWR13m4agwgBh9k0EgvLN0J4Uvu5xDldiiKnhniJ22aSvAQVqTzgo5C5YJxaf+okqg
-         pGktcRKDgOpPh1s0GXG6Grd9+eT1HQ1+myDrjo/EQJwWZY3vBu9T91QtuUwtxBc5UrDn
-         9ItmAz0tC9/lcfHKg3pszsRf6mPkFBDqaBjan7ecFaloPS59LJHP0HMy39yu6om1uV0J
-         2FyHpGtbbQ56ypynrNKpHjbqstXVDcZJ2PDm/hrJoM5E9ae5cxv59xHkuhORWJSp7a9N
-         o/m/eUewjZSvQo+ylF1Gr25aQF2uMkBZX3apThlUVdLBkTyuPilSNQCm3mRP44WihiQo
-         CqfA==
-X-Gm-Message-State: AOAM5328uszvkwGlXGBTg2ni8iv5L4i7yOhlQhFkFzj2q7IHZqaFT16N
-        kM+CGJzGiUdjv00DT++cZpc5mw==
-X-Google-Smtp-Source: ABdhPJwd0VaaPyl+i/kmEZW2gPmdcCPDQtV6AdhKtsMs0/M0yIRHIAxpqTiDpLWH3FImxxt4fG2Qdw==
-X-Received: by 2002:a63:1d23:: with SMTP id d35mr8527870pgd.291.1597640742156;
-        Sun, 16 Aug 2020 22:05:42 -0700 (PDT)
-Received: from localhost ([182.77.16.215])
-        by smtp.gmail.com with ESMTPSA id g4sm16273713pjh.32.2020.08.16.22.05.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 16 Aug 2020 22:05:41 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 10:35:28 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, mka@chromium.org,
-        sibis@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] opp: Track device's resources configuration status
-Message-ID: <20200817050434.cisjgwo4lxl652fb@vireshk-mac-ubuntu>
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
- <c6bba235a9a6fd777255bb4f1d16492fdcabc847.1597292833.git.viresh.kumar@linaro.org>
- <453b3897507838e95359d891ef967165bd167a4e.1597292833.git.viresh.kumar@linaro.org>
- <159747859192.33733.13232258434530046392@swboyd.mtv.corp.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8wbtEbHtU9M4Jod/JrcC7BZqQ8yoT12QXGXyBKx7JXA=;
+        b=VyNe8jW5Tkd9KNxwOfD1MMYf9eHi48/+GOLNx5HYjh9EaHSg6NQlqzQjiIeMFz8Kgl
+         ZdVO9R6F2mjAf3yz8Bc6Lp6sLl3oc16jJopLd5dK/0Dq2DzcovHLU6ecvwQCuc8+y/xL
+         y4420ATOR+BplkXaKtHz1yjPQYm+Jhe+FYwZIi9kQZhGko78joWw0CZEY7T/RthyMAXv
+         oIge+T47efVi0jXaW29eM/3EWi75lmK+EmGnP6CQK7jXxUM13Wam8rNHrfptB1AjAzB6
+         PLPMNGrSnx3fGASzWbbPayj+7x+TxVcsuTV7tNQ6jYfNtBhRPIOEXKMJ6l/zVUw7Itlr
+         OIvg==
+X-Gm-Message-State: AOAM530dOkHBNcKothz3Lv1Dt/52nPYbcLNqsRaizuQnLUiBfCgrVicC
+        2/6761/Xw7JuUgEYq5eeQKZeh40ZRgnQhZDFPxH5tw==
+X-Google-Smtp-Source: ABdhPJx5Xf4vEf6FrlCe2817ep57MgRm1K5c+hgJrods56LEUJS2xB8Xl7414M0vSYBeVkIvAAnFai/v6XBsFEsLoD4=
+X-Received: by 2002:a19:8705:: with SMTP id j5mr6468504lfd.122.1597641177454;
+ Sun, 16 Aug 2020 22:12:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159747859192.33733.13232258434530046392@swboyd.mtv.corp.google.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+References: <20200811135801.GA416071@kroah.com> <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
+ <20200811145816.GA424033@kroah.com> <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
+ <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
+ <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
+ <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+ <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
+ <20200813101703.566thqmnc2d7cb3n@holly.lan> <CAFA6WYPd-fcDkYNk1KrjYwD=FH3FBvjDGEoxCBBN9CRidoVXbw@mail.gmail.com>
+ <20200814141822.opahh33nfc5yodkb@holly.lan>
+In-Reply-To: <20200814141822.opahh33nfc5yodkb@holly.lan>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 17 Aug 2020 10:42:43 +0530
+Message-ID: <CAFA6WYO3YmgCftr-hFdiHGHATeox9en_HZvgnAL=zhoa=OEi_w@mail.gmail.com>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-08-20, 01:03, Stephen Boyd wrote:
-> Quoting Viresh Kumar (2020-08-12 21:28:59)
-> > The OPP core needs to track if the resources of devices are enabled or
-> > configured or not, as it disables the resources when target_freq is set
-> > to 0.
-> > 
-> > Handle that with a separate variable to make it easy to maintain.
-> > 
-> > Also note that we will unconditionally call clk_set_rate() in the case
-> > where the resources are getting enabled again. This shouldn't have any
-> > side effects anyway.
-> 
-> Any reason to want to do that?
+On Fri, 14 Aug 2020 at 19:48, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Fri, Aug 14, 2020 at 05:36:36PM +0530, Sumit Garg wrote:
+> > On Thu, 13 Aug 2020 at 15:47, Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > On Thu, Aug 13, 2020 at 02:55:12PM +0530, Sumit Garg wrote:
+> > > > On Thu, 13 Aug 2020 at 05:38, Doug Anderson <dianders@chromium.org> wrote:
+> > > > > On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > > > > One
+> > > > > > last worry is that I assume that most people testing (and even
+> > > > > > automated testing labs) will either always enable NMI or won't enable
+> > > > > > NMI.  That means that everyone will be only testing one codepath or
+> > > > > > the other and (given the complexity) the non-tested codepath will
+> > > > > > break.
+> > > > > >
+> > > >
+> > > > The current patch-set only makes this NMI to work when debugger (kgdb)
+> > > > is enabled which I think is mostly suitable for development
+> > > > environments. So most people testing will involve existing IRQ mode
+> > > > only.
+> > > >
+> > > > However, it's very much possible to make NMI mode as default for a
+> > > > particular serial driver if the underlying irqchip supports it but it
+> > > > depends if we really see any production level usage of NMI debug
+> > > > feature.
+> > >
+> > > The effect of this patch is not to make kgdb work from NMI it is to make
+> > > (some) SysRqs work from NMI. I think that only allowing it to deploy for
+> > > kgdb users is a mistake.
+> > >
+> > > Having it deploy automatically for kgdb users might be OK but it seems
+> > > sensible to make this feature available for other users too.
+> >
+> > I think I wasn't clear enough in my prior reply. Actually I meant to
+> > say that this patch-set enables NMI support for a particular serial
+> > driver via ".poll_init()" interface and the only current user of that
+> > interface is kgdb.
+> >
+> > So if there are other users interested in this feature, they can use
+> > ".poll_init()" interface as well to enable it.
+>
+> Huh?
+>
+> We appear to speaking interchangably about users (people who sit in
+> front of the machine and want a stack trace) and sub-systems ;-).
+>
+> I don't think other SysRq commands have quite such a direct relationship
+> between the sub-system and the sysrq command. For example who are you
+> expecting to call .poll_init() if a user wants to use the SysRq to
+> provoke a stack trace?
+>
 
-To avoid more flags, code paths and simplicity of the code. And this
-should normally happen in a corner case as well, like calling
-set-rate(0) from suspend and then reinitializing things again in
-resume.
+Ah, I see. So you meant to provide a user-space interface to
+dynamically enable/disable NMI debug, correct? It will require IRQ <->
+NMI switching at runtime which should be doable safely.
 
-> We'll have to grab the prepare lock in
-> the clk framework to figure out that there's nothing to do sometimes. If
-> anything, a comment may help to indicate that we call clk_set_rate()
-> again, but don't expect it to matter much.
+-Sumit
 
-Ok.
-
--- 
-viresh
+>
+> Daniel.
