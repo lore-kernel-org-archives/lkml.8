@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC99C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9D4208C7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAC720760
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680894;
-	bh=7CMovI0zAwuBI0lGbchrtjjutgyxnMT1+5oXz6Mpy1Y=;
+	s=default; t=1597680908;
+	bh=vcYNCL5/9mq9ibantMeR/ePQd791tr0m4Mwn7r4lLeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOO0RKTHO4uGXUpCtX4baf5QDwFdDyqm4UDZiLSlB2oTyIX7V7TJirw4lEzcwoTdj
-	 520NooizYAvsEq6QCam+aiEoHOBSQgXbC7S4TkIhhY43MGW+8Mh+x266xG5FxL3ta8
-	 0bZ9Fky0RCZtoFOV0x0Gl8QxaD3TXtilpfMVuywg=
+	b=1Nx0gBkS3T4uLPo/mhrPeVuTDr3QLPFqiZjY0GJF9BchNbZQmu/4A72biwGThg3tM
+	 5mYewYVGKY7mB5LSv9xD2vp8C6mZcfCMwt6h3j8REaJTsVDNrKsT3gyRakOS0+x7Ms
+	 Beoq6YGOwUJI2Nq8FmSDcusUmy4Jij84tH5BP83E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388795AbgHQQOg (ORCPT
+        id S2388254AbgHQQPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59876 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730308AbgHQPrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:49 -0400
+        id S1730667AbgHQPr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA552177B;
-        Mon, 17 Aug 2020 15:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF50F20885;
+        Mon, 17 Aug 2020 15:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679269;
-        bh=7CMovI0zAwuBI0lGbchrtjjutgyxnMT1+5oXz6Mpy1Y=;
+        s=default; t=1597679275;
+        bh=vcYNCL5/9mq9ibantMeR/ePQd791tr0m4Mwn7r4lLeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEQ6p4f18uQTBEua3XI7GHWYJGJk3FCCD20UAzw9zu0g+GWn5R8rcZDruET7oP9oJ
-         cOQDsACyoZoyj0MANyiwiKXwV40eGrzx/ZeM+qwXxvIxBquHLJJQhR+ZiDhPiI154V
-         kCypU1eZzgJ+/+PZ9t0ShkwttuVfa0BQ/6R0n4eE=
+        b=XqySKKxNjeq961sbjwm0Fsg0xdFJastxr80Ve2HPBfVwTZDatxSLZC++7BKyKqHN5
+         X9Or7YCH4mUU/KUVLN9z3MBSD6bxrOYO1jeZh4nEeexMvEoJWfyNYG+/O2Dm4evchP
+         YNcX/Fpsw9xd2y2RQzjJxhH9H8xTj91eN8knjKN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 152/393] media: cxusb-analog: fix V4L2 dependency
-Date:   Mon, 17 Aug 2020 17:13:22 +0200
-Message-Id: <20200817143826.989351277@linuxfoundation.org>
+Subject: [PATCH 5.7 125/393] drm/amdgpu: use the unlocked drm_gem_object_put
+Date:   Mon, 17 Aug 2020 17:12:55 +0200
+Message-Id: <20200817143825.671975039@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,46 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Emil Velikov <emil.velikov@collabora.com>
 
-[ Upstream commit 1a55caf010c46d4f2073f9e92e97ef65358c16bf ]
+[ Upstream commit 1a87f67a66de4ad0c0d79fd86b6c5273143387c3 ]
 
-CONFIG_DVB_USB_CXUSB_ANALOG is a 'bool' symbol with a dependency on the
-tristate CONFIG_VIDEO_V4L2, which means it can be enabled as =y even
-when its dependency is =m. This leads to a link failure:
+The driver does not hold struct_mutex, thus using the locked version of
+the helper is incorrect.
 
-drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_analog_init':
-cxusb-analog.c:(.text+0x92): undefined reference to `v4l2_subdev_call_wrappers'
-drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_register_analog':
-cxusb-analog.c:(.text+0x466): undefined reference to `v4l2_device_register'
-cxusb-analog.c:(.text+0x4c3): undefined reference to `v4l2_i2c_new_subdev'
-cxusb-analog.c:(.text+0x4fb): undefined reference to `v4l2_subdev_call_wrappers'
-...
-
-Change the dependency only disallow the analog portion of the driver
-in that configuration.
-
-Fixes: e478d4054054 ("media: cxusb: add analog mode support for Medion MD95700")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: amd-gfx@lists.freedesktop.org
+Fixes: a39414716ca0 ("drm/amdgpu: add independent DMA-buf import v9")
+Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200515095118.2743122-8-emil.l.velikov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index 1a3e5f965ae40..2d7a5c1c84af6 100644
---- a/drivers/media/usb/dvb-usb/Kconfig
-+++ b/drivers/media/usb/dvb-usb/Kconfig
-@@ -150,6 +150,7 @@ config DVB_USB_CXUSB
- config DVB_USB_CXUSB_ANALOG
- 	bool "Analog support for the Conexant USB2.0 hybrid reference design"
- 	depends on DVB_USB_CXUSB && VIDEO_V4L2
-+	depends on VIDEO_V4L2=y || VIDEO_V4L2=DVB_USB_CXUSB
- 	select VIDEO_CX25840
- 	select VIDEOBUF2_VMALLOC
- 	help
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+index ffeb20f11c07c..728f76cc536ee 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+@@ -552,7 +552,7 @@ struct drm_gem_object *amdgpu_gem_prime_import(struct drm_device *dev,
+ 	attach = dma_buf_dynamic_attach(dma_buf, dev->dev,
+ 					&amdgpu_dma_buf_attach_ops, obj);
+ 	if (IS_ERR(attach)) {
+-		drm_gem_object_put(obj);
++		drm_gem_object_put_unlocked(obj);
+ 		return ERR_CAST(attach);
+ 	}
+ 
 -- 
 2.25.1
 
