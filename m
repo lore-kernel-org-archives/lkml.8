@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A98204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3D5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692554;
-	bh=OjKwuGq6o48gdmVKs5O1o02EftD/J2g4ZV6Yxn+WrJs=;
+	s=default; t=1597692557;
+	bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B5m/+Nfhle3fTyPS0fI2unImkjiZsNYkDCLwE/Hn7c5I+6p9zwX+D+Mrznsa5Xemo
-	 6nY6NASMnDtVLqAeTlY0C8KRqmjcaTP7VkzjqY2Ko0Bx+8fY8GkzZgCmugBdX6E/1E
-	 o6J3YYT8PC/4DpCu0qtpG0J3jgV1/Z0aNdJn4KX0=
+	b=XsNEVMQbPVTxiAnyRrkGhjW0+1h77Ha6lDpBEdLXgW4FVorSePGzT85J8thKLB4Rd
+	 S5muZhnJphbg9/qaDro6RhWXw64jKOfS0sIBKLMriq46+68YVQnWRjXkzbhNOC5hMU
+	 ejgzyDPLxGsHR6JX8bkfMPbiC7c19N9/1S7z9ouI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbgHQT3N (ORCPT
+        id S1732236AbgHQT3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730305AbgHQPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:31 -0400
+        id S1730075AbgHQPcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145AA2389A;
-        Mon, 17 Aug 2020 15:32:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FC4523428;
+        Mon, 17 Aug 2020 15:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678347;
-        bh=OjKwuGq6o48gdmVKs5O1o02EftD/J2g4ZV6Yxn+WrJs=;
+        s=default; t=1597678345;
+        bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqrmX5DT27em/lxInYQ8jWIpeLULzOEig82UgXc7Wy+Qo2cifnGIFaSmUavKzrPlk
-         pDHXQkQSNdZGQesvIfQOkswdn1PDcqpTNBaIThWJHpsTsqHOkiND0KNOSyP4DnwjBJ
-         axIE8LB997So7ziSerBPcvfnAIZ21Wl7TLWzWlYA=
+        b=v4x08qlfrdLtaYxMzUJrd/uf2HysfSPyrWiObOasIHZFVSqFxEvdBXF9YZYsA8Mit
+         HDT8RgjKVo+bJYRl1XkjVpGgEB+UWZ1OrVsBAgnh4/6sx8eKkacxzvTZJucUx4YJah
+         gexCCA3T/3UrTteN5Hn/+nJkkwYxrCdR8BBwG2nE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Robertson <dan@dlrobertson.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 285/464] usb: dwc3: meson-g12a: fix shared reset control use
-Date:   Mon, 17 Aug 2020 17:13:58 +0200
-Message-Id: <20200817143847.406488369@linuxfoundation.org>
+Subject: [PATCH 5.8 302/464] Smack: fix another vsscanf out of bounds
+Date:   Mon, 17 Aug 2020 17:14:15 +0200
+Message-Id: <20200817143848.274981498@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,95 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Robertson <dan@dlrobertson.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7a410953d1fb4dbe91ffcfdee9cbbf889d19b0d7 ]
+[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
 
-The reset is a shared reset line, but reset_control_reset is still used
-and reset_control_deassert is not guaranteed to have been called before
-the first reset_control_assert call. When suspending the following
-warning may be seen:
+This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
+vsscanf") where we added a bounds check on "rule".
 
-WARNING: CPU: 1 PID: 5530 at drivers/reset/core.c:355 reset_control_assert+0x184/0x19c
-Hardware name: Hardkernel ODROID-N2 (DT)
-[..]
-pc : reset_control_assert+0x184/0x19c
-lr : dwc3_meson_g12a_suspend+0x68/0x7c
-[..]
-Call trace:
- reset_control_assert+0x184/0x19c
- dwc3_meson_g12a_suspend+0x68/0x7c
- platform_pm_suspend+0x28/0x54
- __device_suspend+0x590/0xabc
- dpm_suspend+0x104/0x404
- dpm_suspend_start+0x84/0x1bc
- suspend_devices_and_enter+0xc4/0x4fc
- pm_suspend+0x198/0x2d4
-
-Fixes: 6d9fa35a347a87 ("usb: dwc3: meson-g12a: get the reset as shared")
-Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
+Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ security/smack/smackfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index 1f7f4d88ed9d8..88b75b5a039c9 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -737,13 +737,13 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 		goto err_disable_clks;
- 	}
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index 840a192e93370..2bae1fc493d16 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -905,6 +905,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
  
--	ret = reset_control_reset(priv->reset);
-+	ret = reset_control_deassert(priv->reset);
- 	if (ret)
--		goto err_disable_clks;
-+		goto err_assert_reset;
- 
- 	ret = dwc3_meson_g12a_get_phys(priv);
- 	if (ret)
--		goto err_disable_clks;
-+		goto err_assert_reset;
- 
- 	ret = priv->drvdata->setup_regmaps(priv, base);
- 	if (ret)
-@@ -752,7 +752,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 	if (priv->vbus) {
- 		ret = regulator_enable(priv->vbus);
- 		if (ret)
--			goto err_disable_clks;
-+			goto err_assert_reset;
- 	}
- 
- 	/* Get dr_mode */
-@@ -765,13 +765,13 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 
- 	ret = priv->drvdata->usb_init(priv);
- 	if (ret)
--		goto err_disable_clks;
-+		goto err_assert_reset;
- 
- 	/* Init PHYs */
- 	for (i = 0 ; i < PHY_COUNT ; ++i) {
- 		ret = phy_init(priv->phys[i]);
- 		if (ret)
--			goto err_disable_clks;
-+			goto err_assert_reset;
- 	}
- 
- 	/* Set PHY Power */
-@@ -809,6 +809,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 	for (i = 0 ; i < PHY_COUNT ; ++i)
- 		phy_exit(priv->phys[i]);
- 
-+err_assert_reset:
-+	reset_control_assert(priv->reset);
-+
- err_disable_clks:
- 	clk_bulk_disable_unprepare(priv->drvdata->num_clks,
- 				   priv->drvdata->clks);
+ 	for (i = 0; i < catlen; i++) {
+ 		rule += SMK_DIGITLEN;
++		if (rule > data + count) {
++			rc = -EOVERFLOW;
++			goto out;
++		}
+ 		ret = sscanf(rule, "%u", &cat);
+ 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+ 			goto out;
 -- 
 2.25.1
 
