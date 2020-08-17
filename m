@@ -2,54 +2,57 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A815C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E2F2065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1304F2065C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682688;
-	bh=0Lulmu8qY+l8cB5M7Ak1H3xJrMUnSSGPpXUUroF0XiA=;
+	s=default; t=1597682724;
+	bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iu0b5qiy9eJ8YaJ+ZcoaZNtBFGZox8pSyQ4VaPjawzCxFZdNfnrt0DV+3rV1BzrsJ
-	 5ZpQtdBFivR0qYYKgshVMwxrTozIZ05GTIALFTxAGBcbd53IZXI8aAY6YnZdPj9Xjq
-	 wZgAqfLU5a6vEZkI8cTwn6XaddwkkR9sVLeF60BQ=
+	b=wH8Vr6abcSwg1QvMpis7w0jtY7u8W7BN2b4PGlma8FfDJOQrXAzFYyHh3miJVFxku
+	 rpt5Kl5caxZhdg7jOvew+yTiZf/vC6ZLHOUuiS1lHS35r05B2o1DcHz/fslo9QxQJy
+	 zo1BAYMydywqLgjo7yQctZkAyVUJ8FB+hyQvDtN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbgHQQoh (ORCPT
+        id S1731342AbgHQQpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46888 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730975AbgHQP7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:38 -0400
+        id S1730994AbgHQP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD7A20825;
-        Mon, 17 Aug 2020 15:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89698208B3;
+        Mon, 17 Aug 2020 15:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679977;
-        bh=0Lulmu8qY+l8cB5M7Ak1H3xJrMUnSSGPpXUUroF0XiA=;
+        s=default; t=1597679999;
+        bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pp3JDieZsPy8+QXUU2cMZelSY6SCGhaidkAJPjL6cbdFgEmblUHbCUtaos1dkecEa
-         sBDEcC1W401MwcNjGawyUF9BcvaVisHGh05CN5eT8yAmhPqNp7dc2f+k68NRbdoKxK
-         0C2Uz5+/upm5Xd//Se1G42T6NxOI3DIZbiXuQjZo=
+        b=J+VZqkSfENFUCF/JICCc19wy16AesF3nwVGvlGhVE5xlIDAdeveDRAQR8pGByW4qr
+         IAECzTkRoHcx2NUaWmVM383FjI0jjZN7uHuPJaB/FkF0UjYtxCMPiMRuK1MPq67Vkh
+         C4NmbTT78vPe5jiUMG64NyH9Aep6hP/CJoQ+7PZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef <josef.grieb@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 392/393] io_uring: enable lookup of links holding inflight files
-Date:   Mon, 17 Aug 2020 17:17:22 +0200
-Message-Id: <20200817143838.604364210@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 014/270] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Mon, 17 Aug 2020 17:13:35 +0200
+Message-Id: <20200817143756.508256977@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,168 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit f254ac04c8744cf7bfed012717eac34eacc65dfb upstream.
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-When a process exits, we cancel whatever requests it has pending that
-are referencing the file table. However, if a link is holding a
-reference, then we cannot find it by simply looking at the inflight
-list.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Enable checking of the poll and timeout list to find the link, and
-cancel it appropriately.
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
 
-Cc: stable@vger.kernel.org
-Reported-by: Josef <josef.grieb@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Change it to that instead.
 
-
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c |   97 ++++++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 87 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4638,6 +4638,7 @@ static bool io_poll_remove_one(struct io
- 		io_cqring_fill_event(req, -ECANCELED);
- 		io_commit_cqring(req->ctx);
- 		req->flags |= REQ_F_COMP_LOCKED;
-+		req_set_fail_links(req);
- 		io_put_req(req);
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 242aaea688040..1235830ffd0b7 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -508,7 +508,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm_lines_off {
+@@ -537,7 +537,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
-@@ -4820,6 +4821,23 @@ static enum hrtimer_restart io_timeout_f
- 	return HRTIMER_NORESTART;
- }
+@@ -565,7 +565,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
-+static int __io_timeout_cancel(struct io_kiocb *req)
-+{
-+	int ret;
-+
-+	list_del_init(&req->list);
-+
-+	ret = hrtimer_try_to_cancel(&req->io->timeout.timer);
-+	if (ret == -1)
-+		return -EALREADY;
-+
-+	req_set_fail_links(req);
-+	req->flags |= REQ_F_COMP_LOCKED;
-+	io_cqring_fill_event(req, -ECANCELED);
-+	io_put_req(req);
-+	return 0;
-+}
-+
- static int io_timeout_cancel(struct io_ring_ctx *ctx, __u64 user_data)
- {
- 	struct io_kiocb *req;
-@@ -4827,7 +4845,6 @@ static int io_timeout_cancel(struct io_r
- 
- 	list_for_each_entry(req, &ctx->timeout_list, list) {
- 		if (user_data == req->user_data) {
--			list_del_init(&req->list);
- 			ret = 0;
- 			break;
- 		}
-@@ -4836,15 +4853,7 @@ static int io_timeout_cancel(struct io_r
- 	if (ret == -ENOENT)
- 		return ret;
- 
--	ret = hrtimer_try_to_cancel(&req->io->timeout.timer);
--	if (ret == -1)
--		return -EALREADY;
--
--	req_set_fail_links(req);
--	req->flags |= REQ_F_COMP_LOCKED;
--	io_cqring_fill_event(req, -ECANCELED);
--	io_put_req(req);
--	return 0;
-+	return __io_timeout_cancel(req);
- }
- 
- static int io_timeout_remove_prep(struct io_kiocb *req,
-@@ -7579,6 +7588,71 @@ static int io_uring_release(struct inode
- 	return 0;
- }
- 
-+/*
-+ * Returns true if 'preq' is the link parent of 'req'
-+ */
-+static bool io_match_link(struct io_kiocb *preq, struct io_kiocb *req)
-+{
-+	struct io_kiocb *link;
-+
-+	if (!(preq->flags & REQ_F_LINK_HEAD))
-+		return false;
-+
-+	list_for_each_entry(link, &preq->link_list, link_list) {
-+		if (link == req)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * We're looking to cancel 'req' because it's holding on to our files, but
-+ * 'req' could be a link to another request. See if it is, and cancel that
-+ * parent request if so.
-+ */
-+static bool io_poll_remove_link(struct io_ring_ctx *ctx, struct io_kiocb *req)
-+{
-+	struct hlist_node *tmp;
-+	struct io_kiocb *preq;
-+	bool found = false;
-+	int i;
-+
-+	spin_lock_irq(&ctx->completion_lock);
-+	for (i = 0; i < (1U << ctx->cancel_hash_bits); i++) {
-+		struct hlist_head *list;
-+
-+		list = &ctx->cancel_hash[i];
-+		hlist_for_each_entry_safe(preq, tmp, list, hash_node) {
-+			found = io_match_link(preq, req);
-+			if (found) {
-+				io_poll_remove_one(preq);
-+				break;
-+			}
-+		}
-+	}
-+	spin_unlock_irq(&ctx->completion_lock);
-+	return found;
-+}
-+
-+static bool io_timeout_remove_link(struct io_ring_ctx *ctx,
-+				   struct io_kiocb *req)
-+{
-+	struct io_kiocb *preq;
-+	bool found = false;
-+
-+	spin_lock_irq(&ctx->completion_lock);
-+	list_for_each_entry(preq, &ctx->timeout_list, list) {
-+		found = io_match_link(preq, req);
-+		if (found) {
-+			__io_timeout_cancel(preq);
-+			break;
-+		}
-+	}
-+	spin_unlock_irq(&ctx->completion_lock);
-+	return found;
-+}
-+
- static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 				  struct files_struct *files)
- {
-@@ -7629,6 +7703,9 @@ static void io_uring_cancel_files(struct
- 			}
- 		} else {
- 			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
-+			/* could be a link, check and remove if it is */
-+			if (!io_poll_remove_link(ctx, cancel_req))
-+				io_timeout_remove_link(ctx, cancel_req);
- 			io_put_req(cancel_req);
- 		}
- 
+@@ -591,7 +591,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
+@@ -619,7 +619,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
+-- 
+2.25.1
+
 
 
