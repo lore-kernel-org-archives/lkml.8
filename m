@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F87C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3EF2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E48520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686441;
-	bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
+	s=default; t=1597686442;
+	bh=YWc/jbFi07zz+Mf7kE85aUxzk4vmzQnuoEKGhyIPpeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7BYJhD0Mzi+jeJYYqcUIGDdX80hyTYi2aRPFeKIQFm1ADFpxYmY9iNrQ+YZ0kFbk
-	 9pMBhxG2Aoo8sAY0J5K1kYe4kItChYTmWHx+UWHbXNh8LL8Bn75UG+rxwBz+cEmzhO
-	 h3a30dNXU16ZRv+eVzclgVtcseI+KFo/dN6G38Yc=
+	b=WcbRAS2dD3bZmAbpCKBQqOxIv3vtuRqKe6JXuJcLYYPsrsd0Zg3wqP+bFC9e1QlD4
+	 4jCdlWaukG/KEW45DiREeHdWuwpDOFgXh7S7SiMd5rdrRas86V74BtNUfVRxEXN5bu
+	 pSuyQvQX3KHUOU2uYYgYcSgasbKg6Zr61KDPiyFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389671AbgHQRrS (ORCPT
+        id S2390020AbgHQRrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388569AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388742AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9722922D00;
-        Mon, 17 Aug 2020 16:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC897207DE;
+        Mon, 17 Aug 2020 16:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680806;
-        bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
+        s=default; t=1597680811;
+        bh=YWc/jbFi07zz+Mf7kE85aUxzk4vmzQnuoEKGhyIPpeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yl+RsByLDEwqmCMRVgzAKgCwAR7GKUMpoybQ2yVHVlAmhLDgELvGErhRbo7Qte9TW
-         MIWqcv2/oJrJivYB5FGFyKpRZPEebyBKp1/P/iQtl2hTShV0L3PBPHLcVOcjrUWi6w
-         i8YYWz8DgCpFJMrYhbYrB2X2aMlj98OTnvTx5p1s=
+        b=eYGHQ7LfDsqxC8O3JIYgh71mDSElAZ4kM/dXOoXEOl2DU3LHUkVAaR8KEQjYQ9TZN
+         geTM8nZ+tDEi64UijAb+iSukyhdlTRloqZ82xBofy3mTJpoAAuz7hrgAgP9JFAVM6h
+         5VW1QaAIY2OKTxBYZT1L1rpNG/iGRSZypF/aBhuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/168] leds: lm355x: avoid enum conversion warning
-Date:   Mon, 17 Aug 2020 17:16:34 +0200
-Message-Id: <20200817143736.889798804@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/168] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
+Date:   Mon, 17 Aug 2020 17:16:07 +0200
+Message-Id: <20200817143735.575068098@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,58 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+[ Upstream commit c5d5a32ead1e3a61a07a1e59eb52a53e4a6b2a7f ]
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
+and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
-
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index 6cb94f9a2f3f3..b9c60dd2b1327 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -168,18 +168,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index 6a859e077ea02..f17fbe6ff7c74 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -694,7 +694,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0) {
+ 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
+-		return ret;
++		goto pm_put;
+ 	}
  
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
+ 	etnaviv_hw_identify(gpu);
+@@ -808,6 +808,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 	gpu->mmu = NULL;
+ fail:
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -848,7 +849,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto pm_put;
+ 
+ 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
+ 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
+@@ -971,6 +972,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 	ret = 0;
+ 
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -985,7 +987,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 	dev_err(gpu->dev, "recover hung GPU!\n");
+ 
+ 	if (pm_runtime_get_sync(gpu->dev) < 0)
+-		return;
++		goto pm_put;
+ 
+ 	mutex_lock(&gpu->lock);
+ 
+@@ -1005,6 +1007,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 
+ 	mutex_unlock(&gpu->lock);
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ }
+ 
+@@ -1278,8 +1281,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 
+ 	if (!submit->runtime_resumed) {
+ 		ret = pm_runtime_get_sync(gpu->dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_noidle(gpu->dev);
+ 			return NULL;
++		}
+ 		submit->runtime_resumed = true;
+ 	}
+ 
+@@ -1296,6 +1301,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 	ret = event_alloc(gpu, nr_events, event);
+ 	if (ret) {
+ 		DRM_ERROR("no free events\n");
++		pm_runtime_put_noidle(gpu->dev);
+ 		return NULL;
+ 	}
+ 
 -- 
 2.25.1
 
