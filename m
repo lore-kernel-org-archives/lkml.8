@@ -2,52 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D3720578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF2C204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691849;
-	bh=XPZYl87iBLU/pIelDeSdz+Pkk/v/wT9X5KhsNXGFJJ8=;
+	s=default; t=1597691853;
+	bh=gfh42KL7ujKCHV4kDSr4rdAn7B6+6CS7vRDFhoN80vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03IQrpv3E121ha2klKyhdEFuysd/0v6GMBre+oX1SF/NNoIJcCvgzd7bja8eyqQD8
-	 cOJYZjKDsYBHeQvzbVptLPR5hqQnkPjxUu8b/GOmLAkllvD7eFuc90DEc5PMRqW70z
-	 DsKC1bqNXEWlYOAvr+GKfWzTH6uUSSd2Ppcfewzo=
+	b=lC3mKE1q2v2yKVdTHsehZBh4X4RhjuJKE63gxEMrVZgf3nDfaI4N52+RcKDDQ36pQ
+	 B9ekBfb6kFn3SyO5Fn8vROMYCAZz9NZZI7tK9NnlV+qJck1xmGSdRz0KAra2Ww7hNT
+	 JXV9yz08vjNLdC6VyBfW/mYzmuh/05DjdvkJutVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392243AbgHQTR1 (ORCPT
+        id S1730600AbgHQPi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46868 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgHQPin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:43 -0400
+        id S1730300AbgHQPcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D0B622DD6;
-        Mon, 17 Aug 2020 15:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE11120709;
+        Mon, 17 Aug 2020 15:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678722;
-        bh=XPZYl87iBLU/pIelDeSdz+Pkk/v/wT9X5KhsNXGFJJ8=;
+        s=default; t=1597678330;
+        bh=gfh42KL7ujKCHV4kDSr4rdAn7B6+6CS7vRDFhoN80vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUKeyCkrKnhqkqKWnHwKy48M+9Zo7H4qvlx7ULHdyO7bAHwBQbY6AOlq389oC/aXW
-         vI0DUi15G2/p52VqlcxkoPtQl052hLJnBie8G5rfr6ko0QH9yiQCIIyCpoQQTr1YlX
-         nySD3McNPf4vkni0mKCbncLf/GtgErL4EMWRBfvQ=
+        b=uqvHdJmZZGvC0uxWRSpL9q+XqJlHT/xHw9vpRRSR6BDfoaDfPO/625FnF8rxN4Fvk
+         2Y9xiZ7N14HwgoF4cH9wQBMobAEeUgOPDGZ2W+4JYobWjuhOzKrmPSf108fn4F1gfb
+         P/92fMMBhy447P6xk3jDDtR/I8JXgqnXYQcCVe+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.8 432/464] MIPS: VZ: Only include loongson_regs.h for CPU_LOONGSON64
-Date:   Mon, 17 Aug 2020 17:16:25 +0200
-Message-Id: <20200817143854.473210762@linuxfoundation.org>
+        Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 297/464] gpio: regmap: fix type clash
+Date:   Mon, 17 Aug 2020 17:14:10 +0200
+Message-Id: <20200817143848.033752577@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Michael Walle <michael@walle.cc>
 
-commit cf99c505cf7a5b6d3deee91e3571871f20320d31 upstream.
+[ Upstream commit a070bdbbb06d7787ec7844a4f1e059cf8b55205d ]
 
-Only Loongson64 platform has and needs loongson_regs.h, including it
-unconditionally will cause build errors.
+GPIO_REGMAP_ADDR_ZERO() cast to unsigned long but the actual config
+parameters are unsigned int. We use unsigned int here because that is
+the type which is used by the underlying regmap.
 
-Fixes: 7f2a83f1c2a941ebfee5 ("KVM: MIPS: Add CPUCFG emulation for Loongson-3")
-Cc: stable@vger.kernel.org
+Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
 Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1596891052-24052-1-git-send-email-chenhc@lemote.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20200725232337.27581-1-michael@walle.cc
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kvm/vz.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/gpio/regmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/kvm/vz.c
-+++ b/arch/mips/kvm/vz.c
-@@ -29,7 +29,9 @@
- #include <linux/kvm_host.h>
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 4c1e6b34e8249..ad76f3d0a6ba1 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -8,7 +8,7 @@ struct gpio_regmap;
+ struct irq_domain;
+ struct regmap;
  
- #include "interrupt.h"
-+#ifdef CONFIG_CPU_LOONGSON64
- #include "loongson_regs.h"
-+#endif
+-#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
++#define GPIO_REGMAP_ADDR_ZERO ((unsigned int)(-1))
+ #define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
  
- #include "trace.h"
- 
+ /**
+-- 
+2.25.1
+
 
 
