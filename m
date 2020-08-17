@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E287E20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0119320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686296;
-	bh=zVij81NjO9OlNZQfJq475tkpwu9Yi7VSo5asPkcp50U=;
+	s=default; t=1597686301;
+	bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6kQjR+wUZ0sWPTWLSp57tuNiTlrORAZF3Y00gjuF3lxFA3P09a2ndN7gUSrlJ/cf
-	 iPhIHRqlhUi06Kc+exKbKNVzeBGGBgrQLKY7bO066N/+rRx8fK/xi0iI5o/0lGZkmD
-	 DJBAggk6T4LXwmoIMpuDfqLa6zau2peESmdlrWDY=
+	b=W+3MnJeKLYkXUPyrPwFoK2kEKGzm/iEKpJ2g/NPxhntVDUHTDYluzF1M4G5o+pgtM
+	 p1H/BQ0Ka3MHyDDMPEfhutWtBTf9Lllvj5aO0KaHBZifVtL779pj3ebQRCQ3+wzedI
+	 krCDCbeY5PMiYLsfhH0RmSlNXCNz2VOB0QDct1v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389409AbgHQRow (ORCPT
+        id S2389416AbgHQRo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:44:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbgHQQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:43 -0400
+        id S1730812AbgHQQOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C609E20657;
-        Mon, 17 Aug 2020 16:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0E020B1F;
+        Mon, 17 Aug 2020 16:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680882;
-        bh=zVij81NjO9OlNZQfJq475tkpwu9Yi7VSo5asPkcp50U=;
+        s=default; t=1597680877;
+        bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLsm5JXgmZ6Ce01LwralGrlILRGhGR1m16nArrizBvCC1F9kXLtM3SKSgZPUDTgCs
-         /iE7rpaFBZB+XqiL7P/TEfOddYhVLianYzCppOgbXE8uneTwTMEeyM5MMVPe71nmBi
-         fdK+OBImChAc7TWtLfVKhWxtD6WgM6n3BkrFmwXc=
+        b=LCC6vBBDxaxmHZkiT3VJOdiCnHvtLPjBd/UT8B3yeyCI7IJ6aHoW+mJGo1OD/xYOp
+         wm3JJzAqoJhtOLFPWxO6CZXgrFw/OGbmghYQcFgBMmE1RXBtnw6m8bWaLAUz3bVE9i
+         mW9uwEldEO9bzS5vrWaRKfWp6fAXkcVrZEG47E24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
+        stable@vger.kernel.org, Kars Mulder <kerneldev@karsmulder.nl>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/168] cxl: Fix kobject memleak
-Date:   Mon, 17 Aug 2020 17:16:39 +0200
-Message-Id: <20200817143737.123347684@linuxfoundation.org>
+Subject: [PATCH 4.19 093/168] usb: core: fix quirks_param_set() writing to a const pointer
+Date:   Mon, 17 Aug 2020 17:17:04 +0200
+Message-Id: <20200817143738.366787720@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,42 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Kars Mulder <kerneldev@karsmulder.nl>
 
-[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
+[ Upstream commit b1b6bed3b5036509b449b5965285d5057ba42527 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+The function quirks_param_set() takes as argument a const char* pointer
+to the new value of the usbcore.quirks parameter. It then casts this
+pointer to a non-const char* pointer and passes it to the strsep()
+function, which overwrites the value.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+Fix this by creating a copy of the value using kstrdup() and letting
+that copy be written to by strsep().
 
-Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
+Fixes: 027bd6cafd9a ("usb: core: Add "quirks" parameter for usbcore")
+Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
+
+Link: https://lore.kernel.org/r/5ee2-5f048a00-21-618c5c00@230659773
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/cxl/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/quirks.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
-index 629e2e1564124..0baa229d2b7d4 100644
---- a/drivers/misc/cxl/sysfs.c
-+++ b/drivers/misc/cxl/sysfs.c
-@@ -628,7 +628,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
- 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
- 				  &afu->dev.kobj, "cr%i", cr->cr);
- 	if (rc)
--		goto err;
-+		goto err1;
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index e0b77674869ce..c96c50faccf72 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -25,17 +25,23 @@ static unsigned int quirk_count;
  
- 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
- 	if (rc)
+ static char quirks_param[128];
+ 
+-static int quirks_param_set(const char *val, const struct kernel_param *kp)
++static int quirks_param_set(const char *value, const struct kernel_param *kp)
+ {
+-	char *p, *field;
++	char *val, *p, *field;
+ 	u16 vid, pid;
+ 	u32 flags;
+ 	size_t i;
+ 	int err;
+ 
++	val = kstrdup(value, GFP_KERNEL);
++	if (!val)
++		return -ENOMEM;
++
+ 	err = param_set_copystring(val, kp);
+-	if (err)
++	if (err) {
++		kfree(val);
+ 		return err;
++	}
+ 
+ 	mutex_lock(&quirk_mutex);
+ 
+@@ -60,10 +66,11 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 	if (!quirk_list) {
+ 		quirk_count = 0;
+ 		mutex_unlock(&quirk_mutex);
++		kfree(val);
+ 		return -ENOMEM;
+ 	}
+ 
+-	for (i = 0, p = (char *)val; p && *p;) {
++	for (i = 0, p = val; p && *p;) {
+ 		/* Each entry consists of VID:PID:flags */
+ 		field = strsep(&p, ":");
+ 		if (!field)
+@@ -144,6 +151,7 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 
+ unlock:
+ 	mutex_unlock(&quirk_mutex);
++	kfree(val);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
