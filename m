@@ -2,97 +2,101 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B69C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD407C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF252053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981672053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689289;
-	bh=WNHpeCpfU5K5sAyKy2agKzdOZGc3/MNtI9TkMs8nLIM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zXIupp0iLXY4aQa30TsEldNt9pKMkOP/rJ6cpZSsaGqRTAlQSfZehZTdPMtGnn1yx
-	 qiBRkCvKN0I/lMpaZDKfbDRQmRsjcH5MVRtpEtJO45t6tzp2AsoMXafpOGVWEwX+w6
-	 2epv39Pl+jhN7+M4sRXVqHe/5DflW9drYvxgSMdY=
+	s=default; t=1597689300;
+	bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uuEVsiZVALxKmVpq7frr2z+2aThWw6TTxkwSELqzPVI1t0pD32KUFIb6Q8QhVB7Y5
+	 nP/fTOrzLeyDtnMPpvJ8f5mRFmTYCTLn3dVv4IsMoytuBTK//utdRykDByqSih1W9H
+	 zsEZGnnDyM2W4FuV8Pa4AgfJ3lZ12YMUbX+9t9LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391268AbgHQSer (ORCPT
+        id S2388123AbgHQSe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:34:47 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44781 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391240AbgHQSeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:34:25 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l23so13109546edv.11;
-        Mon, 17 Aug 2020 11:34:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UUC1YYZepwSIaUyyVu4p4E8C9yxfTbr1IBllNcE9Kwk=;
-        b=MfTodjseBuS7qqDtmiWPCIgpUvtP/0UwCzMnny0IurDp290oNe8STUEYE7hKiqNHXZ
-         kMDeclKuI+X92y4L1/9Z0LDFUwEdjffxpytT27CiT1XXItmYo5aYLBeUHDk+9agNLexO
-         iTxlZnlRx2tzW8PROX0IQSrnvDbasSLhmt1OwCxgttLJ8WTrJCdkU68DyyyMT6z5fSBK
-         XQgftOCCPuGs5SefZl1Ubo7neu7sXDg9Lq+d7GGtimAqbJEk0awobqBIF2/CFf34y/sh
-         aXJxtui+SaNnnwZiL39zrHf7gWZqvsHmmggWos4CmS5wxmQ7swhUj9MrPOaLrQL7SkGB
-         SI3g==
-X-Gm-Message-State: AOAM530sqIz7whrlSuNrOUviwwV3DxYMB4qmjlP81r5sP9TFZIef9hFt
-        i/TUsTQ358QSwz2bh6x6wWw=
-X-Google-Smtp-Source: ABdhPJyMkkS73tARItUdlMSiGOG9MxnnjtabQxaD28LAXhwot6oVxwb23In6Y3s0rvfq+6XG+6YFUQ==
-X-Received: by 2002:aa7:c50b:: with SMTP id o11mr15637355edq.59.1597689262974;
-        Mon, 17 Aug 2020 11:34:22 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id ss20sm14764697ejb.118.2020.08.17.11.34.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Aug 2020 11:34:22 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 20:34:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 16/29] memory: renesas-rpc-if: Simplify with
- PTR_ERR_OR_ZERO
-Message-ID: <20200817183419.GE3464@kozik-lap>
-References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-17-krzk@kernel.org>
+        Mon, 17 Aug 2020 14:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730991AbgHQP7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D321A206FA;
+        Mon, 17 Aug 2020 15:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679990;
+        bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1+82carvd4elV1M+bo5IgUFLmEA9PtO/UKmuOGTyom9Cbs01NyQP9LwMHYcvm7G3n
+         V0ov5SfxZZwrrldFO9wUJooq2D/6aufaYrFwqA4qIgBqFi5RHpgQpfXW/bisUejsQS
+         VFjIhkCzjjRMsYqwoJzp428Fcz/7HvFDNXWllWXI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 011/270] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
+Date:   Mon, 17 Aug 2020 17:13:32 +0200
+Message-Id: <20200817143756.372058371@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724074038.5597-17-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:40:25AM +0200, Krzysztof Kozlowski wrote:
-> Use PTR_ERR_OR_ZERO to make the code a little bit simpler.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/renesas-rpc-if.c | 4 +---
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Applied.
+[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
 
-Best regards,
-Krzysztof
+The puma gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
+
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
+
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
+
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index fb47e4046f4e4..45b86933c6ea0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -157,7 +157,7 @@ &gmac {
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
+-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+ 	tx_delay = <0x10>;
+-- 
+2.25.1
+
+
 
