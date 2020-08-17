@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F87C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E98102063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3EF2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686422;
-	bh=S9sr35SapIea/QfuCO5/tRlFpqSo9BlddiMPpbSQt7Q=;
+	s=default; t=1597686441;
+	bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWAGKpCYsa4uE7fJRkxsiSP/ZO7vj/7M0gz9k4bu83+ehOSy+Uk/0eNWc4uxkEvub
-	 INaQeCF2e8Nl0qAiA2PqkRjlCFNTUQpXb4DaKQw4fSE7Sqm7f9mhKwPsoptuJMZrnw
-	 tJIiK63YO9VpTfR35eBDY3kY872kGBT6hA1sL/DQ=
+	b=E7BYJhD0Mzi+jeJYYqcUIGDdX80hyTYi2aRPFeKIQFm1ADFpxYmY9iNrQ+YZ0kFbk
+	 9pMBhxG2Aoo8sAY0J5K1kYe4kItChYTmWHx+UWHbXNh8LL8Bn75UG+rxwBz+cEmzhO
+	 h3a30dNXU16ZRv+eVzclgVtcseI+KFo/dN6G38Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390001AbgHQRrA (ORCPT
+        id S2389671AbgHQRrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48414 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388751AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388569AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F061520657;
-        Mon, 17 Aug 2020 16:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9722922D00;
+        Mon, 17 Aug 2020 16:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680808;
-        bh=S9sr35SapIea/QfuCO5/tRlFpqSo9BlddiMPpbSQt7Q=;
+        s=default; t=1597680806;
+        bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cf/gN5y7P+lvaINARS3O1pUUWxKdzQEQ7dSa5wj1YxyTOOmCr0MgaGZVpkvCA71uZ
-         VEKJCAi6T/4+Dkbopi113SXeFiXLS6+LmypPhUBEYzOwxd5HsVErbmV0FWHqHcoWJ0
-         aGnURmtU8/RqbmbndjDZ7W6h7WntOa3lPITYoKi0=
+        b=yl+RsByLDEwqmCMRVgzAKgCwAR7GKUMpoybQ2yVHVlAmhLDgELvGErhRbo7Qte9TW
+         MIWqcv2/oJrJivYB5FGFyKpRZPEebyBKp1/P/iQtl2hTShV0L3PBPHLcVOcjrUWi6w
+         i8YYWz8DgCpFJMrYhbYrB2X2aMlj98OTnvTx5p1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/168] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
-Date:   Mon, 17 Aug 2020 17:16:35 +0200
-Message-Id: <20200817143736.937489136@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 063/168] leds: lm355x: avoid enum conversion warning
+Date:   Mon, 17 Aug 2020 17:16:34 +0200
+Message-Id: <20200817143736.889798804@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,46 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
+[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
 
-preview_init_entities() does not call v4l2_ctrl_handler_free() when
-it fails.
-Add the missed function to fix it.
+clang points out that doing arithmetic between diffent enums is usually
+a mistake:
 
-Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+
+In this driver, it is intentional, so add a cast to hide the false-positive
+warning. It appears to be the only instance of this warning at the moment.
+
+Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/isppreview.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/leds/leds-lm355x.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
-index 591c6de498f89..20857ae42a77f 100644
---- a/drivers/media/platform/omap3isp/isppreview.c
-+++ b/drivers/media/platform/omap3isp/isppreview.c
-@@ -2290,7 +2290,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	me->ops = &preview_media_ops;
- 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
- 	if (ret < 0)
--		return ret;
-+		goto error_handler_free;
+diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+index 6cb94f9a2f3f3..b9c60dd2b1327 100644
+--- a/drivers/leds/leds-lm355x.c
++++ b/drivers/leds/leds-lm355x.c
+@@ -168,18 +168,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+ 	/* input and output pins configuration */
+ 	switch (chip->type) {
+ 	case CHIP_LM3554:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+ 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-		reg_val = pdata->pass_mode;
++		reg_val = (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+ 		break;
  
- 	preview_init_formats(sd, NULL);
- 
-@@ -2323,6 +2323,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	omap3isp_video_cleanup(&prev->video_in);
- error_video_in:
- 	media_entity_cleanup(&prev->subdev.entity);
-+error_handler_free:
-+	v4l2_ctrl_handler_free(&prev->ctrls);
- 	return ret;
- }
- 
+ 	case CHIP_LM3556:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
++		          (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+ 		if (ret < 0)
+ 			goto out;
 -- 
 2.25.1
 
