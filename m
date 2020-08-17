@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4123C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF02D206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D8E206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683735;
-	bh=T5us2k8hg03pCpop1vMg7wZST1JOLVXdB83orq0Yb5s=;
+	s=default; t=1597683756;
+	bh=IfKN3REDauHQZ/PGl9v8EeseMIn6klqyx3/YaMFuU9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vx+xbffbN28LpwvmRNiumIpxflSw1u7HrWGOnPfdFyCJxcEVkSq5tlHFWVuH/+C4R
-	 uZkbNHPZUSI5KEe8jRmRog9qBK8vSwisLXjE7srGwYV/i5wMxOvJ5Wh5EeuOey+F1O
-	 WHGxCsjBFyULyk8G8J4Hg/KidMPeTXdY+mV/N7Es=
+	b=dDHckfCQep8piV2dWxQhdSaw4kfVoYI0FhusFmXg4gkzFW33tZxbwpwLDmulCNy5x
+	 UvgXiq2E+xKDGt3n+b4Fi2O08mzbcusa1Ykuy6F2ckMMKXWS5lFe7YNnvJhMA+HwT0
+	 9XTcc0eSc7/crMl6aIpxd6qzPCXPo4vx5MQGPOBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgHQRCL (ORCPT
+        id S1730975AbgHQRCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57420 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388446AbgHQQIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:18 -0400
+        id S2388451AbgHQQIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5609620658;
-        Mon, 17 Aug 2020 16:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 575492063A;
+        Mon, 17 Aug 2020 16:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680497;
-        bh=T5us2k8hg03pCpop1vMg7wZST1JOLVXdB83orq0Yb5s=;
+        s=default; t=1597680500;
+        bh=IfKN3REDauHQZ/PGl9v8EeseMIn6klqyx3/YaMFuU9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tej8uAPjhrxnVN6n4lny2VVzBhh4n9mxlORGgC7cESeRfe2e1RZso/DacbtHB2uFG
-         84W9SmblO3aLBySZ8Qb7ttx+JLnaXo44f3ZnqBeGrWhTpVEvEe0c1B0KJqvipQK9oT
-         tBI/qzjKBxHSK54kLjlWcMRl6bOD/KhbHig4ilwQ=
+        b=PvMb7Q9MmkpEn5TXV//ZWhWcOH/1TPTm0mQUL5XZ/4aQqwe6TDb8giF/ukHa3yKGn
+         naJdXUTMJaA3xJZSOmVD9YIfPEf2ulbFeSYpJFDAnw48DJSZHTJLMG6WcBPA3osX+N
+         vUtxK6SIWXCtuPEWJNztmcML4vZkv429dcZQnTGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tsang-Shian Lin <thlin@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, "Pavel Machek (CIP)" <pavel@denx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 193/270] rtw88: fix LDPC field for RA info
-Date:   Mon, 17 Aug 2020 17:16:34 +0200
-Message-Id: <20200817143805.405657453@linuxfoundation.org>
+Subject: [PATCH 5.4 211/270] ocfs2: fix unbalanced locking
+Date:   Mon, 17 Aug 2020 17:16:52 +0200
+Message-Id: <20200817143806.292639163@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,37 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tsang-Shian Lin <thlin@realtek.com>
+From: Pavel Machek <pavel@ucw.cz>
 
-[ Upstream commit ae44fa993e8e6c1a1d22e5ca03d9eadd53b2745b ]
+[ Upstream commit 57c720d4144a9c2b88105c3e8f7b0e97e4b5cc93 ]
 
-Convert the type of LDPC field to boolen because
-LDPC field of RA info H2C command to firmware
-is only one bit.
+Based on what fails, function can return with nfs_sync_rwlock either
+locked or unlocked. That can not be right.
 
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Tsang-Shian Lin <thlin@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200717064937.27966-2-yhchuang@realtek.com
+Always return with lock unlocked on error.
+
+Fixes: 4cd9973f9ff6 ("ocfs2: avoid inode removal while nfsd is accessing it")
+Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Link: http://lkml.kernel.org/r/20200724124443.GA28164@duo.ucw.cz
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/dlmglue.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
-index 35dbdb3c4f1e5..8efaee7571f35 100644
---- a/drivers/net/wireless/realtek/rtw88/fw.c
-+++ b/drivers/net/wireless/realtek/rtw88/fw.c
-@@ -340,7 +340,7 @@ void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 	SET_RA_INFO_INIT_RA_LVL(h2c_pkt, si->init_ra_lv);
- 	SET_RA_INFO_SGI_EN(h2c_pkt, si->sgi_enable);
- 	SET_RA_INFO_BW_MODE(h2c_pkt, si->bw_mode);
--	SET_RA_INFO_LDPC(h2c_pkt, si->ldpc_en);
-+	SET_RA_INFO_LDPC(h2c_pkt, !!si->ldpc_en);
- 	SET_RA_INFO_NO_UPDATE(h2c_pkt, no_update);
- 	SET_RA_INFO_VHT_EN(h2c_pkt, si->vht_enable);
- 	SET_RA_INFO_DIS_PT(h2c_pkt, disable_pt);
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index e2c34c704185d..50a863fc17792 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -2871,9 +2871,15 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
+ 
+ 	status = ocfs2_cluster_lock(osb, lockres, ex ? LKM_EXMODE : LKM_PRMODE,
+ 				    0, 0);
+-	if (status < 0)
++	if (status < 0) {
+ 		mlog(ML_ERROR, "lock on nfs sync lock failed %d\n", status);
+ 
++		if (ex)
++			up_write(&osb->nfs_sync_rwlock);
++		else
++			up_read(&osb->nfs_sync_rwlock);
++	}
++
+ 	return status;
+ }
+ 
 -- 
 2.25.1
 
