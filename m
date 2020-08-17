@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1F9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FA42075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAD820760
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678869;
-	bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
+	s=default; t=1597678880;
+	bh=lXVav9E9BQJ2rFz0dDrWD2AusujUD6njRBjQsuo33o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDshhByTExpRh6SmS6+O/vGw9CynFdMvVQKVfVJHndio6w8wa90rSVBzcZSXNSX1G
-	 mOK6vpHZxDPBANH9gRbmH3PqzjTIc+GwfgT/bZzcVuvaVxNifqP5zw9qKWqOfDzeJm
-	 kYn0Hww6iZ4NetIHG+eElnHRVSy4xMSdYFAegxCc=
+	b=HR2RpHv9iCBc/ibdvsMmIRhJyzTHB+D2O/CH6YNgRZq93rPnGAFU0T5ew2sLalU0G
+	 jhxVJwAdEdv5cZmh3wKOxMX8XyINGShueJAu4g/k45+Rg39smv40Yo+5o/YCqNa1vT
+	 Vtvr9FUToYUHfz1rG5mHbnCiwhSqkVnow2TMx9N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgHQPlH (ORCPT
+        id S1730436AbgHQPlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:41:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35976 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgHQPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:33 -0400
+        id S1730389AbgHQPdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:33:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FFF22BEB;
-        Mon, 17 Aug 2020 15:33:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A512310C;
+        Mon, 17 Aug 2020 15:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678412;
-        bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
+        s=default; t=1597678415;
+        bh=lXVav9E9BQJ2rFz0dDrWD2AusujUD6njRBjQsuo33o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0CKjLb86alG0sIRizdo+KNbjlDICd0n3F4/nXjEuLwmd6w2Xon/Mm1p8mboqfPeVm
-         PYPC4TdMBqO+VzOC53fZUb5sNsS1STPZhplJiIEda2+ieg9G0pB3n6+SFU2f46EYgc
-         hgt2uCbo00QLNwx1R50tmilzU52KrgLZugOPENhU=
+        b=ZqrC8dPuLq0HaMLPsgZ7FYvhdWbVnic/6bHOJP+Oq4WRIgjzrlQBhnKY2EBY2Ss9m
+         azX8uu/G5c9etI4H64WRitVR/3I7w/SsOwI41NLpeVuKwl5N4J5x5ECXyL5UzGMo/G
+         XrjnXxuvzxv0C6lN/bvWNdjQmgfn76gV5hqCzCzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Lang Cheng <chenglang@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 326/464] selftests/powerpc: Fix online CPU selection
-Date:   Mon, 17 Aug 2020 17:14:39 +0200
-Message-Id: <20200817143849.408739879@linuxfoundation.org>
+Subject: [PATCH 5.8 327/464] RDMA/hns: Fix error during modify qp RTS2RTS
+Date:   Mon, 17 Aug 2020 17:14:40 +0200
+Message-Id: <20200817143849.454683604@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,93 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Lang Cheng <chenglang@huawei.com>
 
-[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
+[ Upstream commit 4327bd2c41412657ee2c8c0d8d3d1945268b4238 ]
 
-The size of the CPU affinity mask must be large enough for
-systems with a very large number of CPUs. Otherwise, tests
-which try to determine the first online CPU by calling
-sched_getaffinity() will fail. This makes sure that the size
-of the allocated affinity mask is dependent on the number of
-CPUs as reported by get_nprocs_conf().
+One qp state migrations legal configuration was deleted mistakenly.
 
-Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
-Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
+Fixes: 357f34294686 ("RDMA/hns: Simplify the state judgment code of qp")
+Link: https://lore.kernel.org/r/1595932941-40613-7-git-send-email-liweihang@huawei.com
+Signed-off-by: Lang Cheng <chenglang@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
-index 5ee0e98c48967..eb530e73e02c1 100644
---- a/tools/testing/selftests/powerpc/utils.c
-+++ b/tools/testing/selftests/powerpc/utils.c
-@@ -16,6 +16,7 @@
- #include <string.h>
- #include <sys/ioctl.h>
- #include <sys/stat.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
- #include <sys/utsname.h>
- #include <unistd.h>
-@@ -88,28 +89,40 @@ void *get_auxv_entry(int type)
- 
- int pick_online_cpu(void)
- {
--	cpu_set_t mask;
--	int cpu;
-+	int ncpus, cpu = -1;
-+	cpu_set_t *mask;
-+	size_t size;
-+
-+	ncpus = get_nprocs_conf();
-+	size = CPU_ALLOC_SIZE(ncpus);
-+	mask = CPU_ALLOC(ncpus);
-+	if (!mask) {
-+		perror("malloc");
-+		return -1;
-+	}
- 
--	CPU_ZERO(&mask);
-+	CPU_ZERO_S(size, mask);
- 
--	if (sched_getaffinity(0, sizeof(mask), &mask)) {
-+	if (sched_getaffinity(0, size, mask)) {
- 		perror("sched_getaffinity");
--		return -1;
-+		goto done;
- 	}
- 
- 	/* We prefer a primary thread, but skip 0 */
--	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = 8; cpu < ncpus; cpu += 8)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	/* Search for anything, but in reverse */
--	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = ncpus - 1; cpu >= 0; cpu--)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	printf("No cpus in affinity mask?!\n");
--	return -1;
-+
-+done:
-+	CPU_FREE(mask);
-+	return cpu;
- }
- 
- bool is_ppc64le(void)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 0618ced45bf80..9833ce3e21f9e 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4301,7 +4301,9 @@ static bool check_qp_state(enum ib_qp_state cur_state,
+ 		[IB_QPS_RTR] = { [IB_QPS_RESET] = true,
+ 				 [IB_QPS_RTS] = true,
+ 				 [IB_QPS_ERR] = true },
+-		[IB_QPS_RTS] = { [IB_QPS_RESET] = true, [IB_QPS_ERR] = true },
++		[IB_QPS_RTS] = { [IB_QPS_RESET] = true,
++				 [IB_QPS_RTS] = true,
++				 [IB_QPS_ERR] = true },
+ 		[IB_QPS_SQD] = {},
+ 		[IB_QPS_SQE] = {},
+ 		[IB_QPS_ERR] = { [IB_QPS_RESET] = true, [IB_QPS_ERR] = true }
 -- 
 2.25.1
 
