@@ -2,62 +2,61 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC511C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847BA20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4987620729
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xyslXvTe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O72V5sfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgHQOyg (ORCPT
+        id S1729096AbgHQOyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
+        Mon, 17 Aug 2020 10:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729067AbgHQOyT (ORCPT
+        with ESMTP id S1729070AbgHQOyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:54:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A051C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so15315040wrm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:18 -0700 (PDT)
+        Mon, 17 Aug 2020 10:54:20 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0425C061343
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:19 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id g75so14130208wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OwsMjUaTUP52fMtuuAp8fFPopnM8bE8kRelKQymHpk0=;
-        b=xyslXvTeX+mzpY7c0PVaPtPKatqhG6eYBDGmpCmZkPhGNGYlKhbVPgxlrcBn8E56RT
-         2kwm1DUBPQrFqWYtd+gyw2bRXby4AP0/QKPQA29akJsIT3iZGOaf8iu/kaxd2rxJPRhJ
-         UUR3ZN4BAeSj+nRkMDKzTQRK6YRds7PmRkOMGVNYNp3e94XrN/xenAii8D5D2zFNwAOk
-         GutqWLP8CXId6isyhkTtCi2wggzABNocGh7ixuRXbSmYoylUXPOYtBu9GwGa/ruw0VxC
-         LTOnK76thtm+75OlxHkqIRmL5OowiIxOtO+0/ZPv0HLO2Z0Hwy7Hx+XuU7EFCu3Rq28C
-         xeKA==
+        h=from:to:cc:subject:date:message-id;
+        bh=gizyHEuaIQ1r+v83Hy0lDwfDoJAQnzb8+1UA5OWfyfM=;
+        b=O72V5sfk9nnsU7WMzjBDxDJP0yDKq0sVeI8AO90X7vqJ8YXSCusqf6bPKjTFOD6a6z
+         5yngEkFI+Nt1L4JV6MI4QKMK4GYR9QsCJ9BCfqZoBDcFVXOGF4Z36ULGuZq+ydXPS6fD
+         eQSdvSFuwKLxgSKfT4rmvfwEi46F+8Qc50VeEGejcc89B7hts5+/Af5orrhJURwqI31a
+         gA/ceZ95Z/nYafJ3n+dooDdqFaQ8o2qBcWB8ytqtsHmcC/iucxbmjZQ/V9omuWfSY2F8
+         WDXN4eKPcC81R9TRclbehgnLBpGpcD04VdHvRbBvPVhjQcWcyuptpNS3ZnHwfHHAbfJb
+         QN7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OwsMjUaTUP52fMtuuAp8fFPopnM8bE8kRelKQymHpk0=;
-        b=UuI2u1cSWTSmf478wLSfdLVRVRTHcIQMU1k0qpLF16TDLzixAFBrakbaUGkg26r0g2
-         K3tTyYxQQEP5qLBT1GmCM07dLLT8ay10Gf4+ktTsZifvJDro50BnK3zM9nxuIjMpKXo8
-         V9qbiAB/5oyG5axsQaj4EXNiLPGOAfhX1qdLdSTBxe7TUTwpd5/pSYk/XqhksHbi89R6
-         Yfa0+QATeDh//s5XyVYhk3Wfu3uFMMPgOYvGwCzVOrU3JRzdmtiHWqsxH513M12/c3JE
-         aHvvr253UHbrm8x4HmU1LIH3lpT4yTIN+GzHwNwjRrSijDvf2DkFnKheBh47GMEDzUFv
-         z78w==
-X-Gm-Message-State: AOAM530tE3ZQleValIWyonmOCWA/rh3c/XB2XYboiA8c2uJr9KdB1BxN
-        BW/X4gtam+i5EgnMIrEmBy5tUQ==
-X-Google-Smtp-Source: ABdhPJw2nPDri3ipePNc3remvFHrIuo9+ku+1xnsWDEnWqNnW3cmGEJ/chdxUKgd9e7327Vt4qbYMw==
-X-Received: by 2002:a5d:4407:: with SMTP id z7mr15718884wrq.404.1597676056904;
-        Mon, 17 Aug 2020 07:54:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gizyHEuaIQ1r+v83Hy0lDwfDoJAQnzb8+1UA5OWfyfM=;
+        b=acraiTrD+IdoEvKp0H5NEjNxLQ58fGlymhynmSY/AWGhw/gVaSMSedSPQ9fzCkozHx
+         W37fbsG2LD1kXF8w8hhXl178YN0yTViEiqGn3fOPXLvNFhce43Tq6IjYBF+ny8I6Fyel
+         mt0TEOzpM2WoN42ofazLwcKczQYWsWmbN7EkjXIxAzGOUy7LYPbcOaBipbgoNy/pgB7a
+         T9jNIcQnzQHwrGavwmtdPp1QFF5pY59VrqLNfc5HFBuG2zbTEKWtUaJW7qIBaGIP0w7h
+         R9qcT3+Sot1QoF8runFFIy73MKnsHYhFGYgOBGgaYDiUbxBH4qDt7dcB7y8Wg+7MNZrL
+         mWdg==
+X-Gm-Message-State: AOAM531abb6bdJBVUmC4Nl2PNRY1ciYZtjR+5iGeqKb5cqQZASh30MvH
+        7BfWtj7Kv2xuqRRfyV3oGOUpdA==
+X-Google-Smtp-Source: ABdhPJyeJVOtUFHCXoUCYQyMmqUxvEtUEVyO+dmavz3mMHvB2tZ8b8QA6GkYhuU/Xv6jLlaowcX7Cw==
+X-Received: by 2002:a1c:7918:: with SMTP id l24mr14746983wme.158.1597676053045;
+        Mon, 17 Aug 2020 07:54:13 -0700 (PDT)
 Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id r16sm35005678wrr.13.2020.08.17.07.54.15
+        by smtp.gmail.com with ESMTPSA id r16sm35005678wrr.13.2020.08.17.07.54.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 07:54:16 -0700 (PDT)
+        Mon, 17 Aug 2020 07:54:12 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -72,102 +71,69 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mike Leach <mike.leach@linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RESEND v1 03/13] perf arm-spe: Refactor payload length calculation
-Date:   Mon, 17 Aug 2020 15:53:38 +0100
-Message-Id: <20200817145348.14461-4-leo.yan@linaro.org>
+Subject: [PATCH RESEND v1 00/13] perf arm-spe: Refactor decoding & dumping flow
+Date:   Mon, 17 Aug 2020 15:53:35 +0100
+Message-Id: <20200817145348.14461-1-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817145348.14461-1-leo.yan@linaro.org>
-References: <20200817145348.14461-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defines macro for payload length calculation instead of static function.
+The prominent issue for the SPE trace decoding and dumping is the packet
+header and payload values are hard coded with numbers and it's not
+readable and difficult to maintain; and has other minor issues, e.g. the
+packet length (header + payload) calculation is not correct for some
+packet types, and the dumping flow misses to support specific sub
+classes for operation packet, etc.
 
-Currently the event packet's 'index' is assigned as payload length, but
-the flow is not directive: it firstly gets the packet length (includes
-header length and payload length) and then reduces header length from
-packet length, so finally get the payload length; to simplify the code,
-this patch directly assigns payload length to event packet's index.
+So this patch set is to refactor the Arm SPE decoding SPE with:
+- Patches 01, 02 are minor cleans up;
+- Patches 03, 04 are used to fix and polish the packet and payload
+  length calculation;
+- Patches 05 ~ 12 are used to refactor decoding for different types
+  packet one by one (address packet, context packet, counter packet,
+  event packet, operation packet);
+- Patch 13 is coming from Wei Li to add decoding for ARMv8.3
+  extension, in this version it has been improved to use defined
+  macros, also is improved for failure handling and commit log.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- .../arm-spe-decoder/arm-spe-pkt-decoder.c     | 26 ++++++++-----------
- .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  3 +++
- 2 files changed, 14 insertions(+), 15 deletions(-)
+Prerequisite: This patch set is applied on the top of perf/core branch
+with commit 492e4edba6e2 ("perf ftrace: Make option description initials
+all capital letters"), and also it relies on Wei Li's bug fixing patch
+"perf: arm-spe: Fix check error when synthesizing events" [1].
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index 7c7b5eb09fba..5a8696031e16 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -69,22 +69,20 @@ const char *arm_spe_pkt_name(enum arm_spe_pkt_type type)
- 	return arm_spe_packet_name[type];
- }
- 
--/* return ARM SPE payload size from its encoding,
-- * which is in bits 5:4 of the byte.
-- * 00 : byte
-- * 01 : halfword (2)
-- * 10 : word (4)
-- * 11 : doubleword (8)
-+/*
-+ * Return ARM SPE payload size from header bits 5:4
-+ *   00 : byte
-+ *   01 : halfword (2)
-+ *   10 : word (4)
-+ *   11 : doubleword (8)
-  */
--static int payloadlen(unsigned char byte)
--{
--	return 1 << ((byte & 0x30) >> 4);
--}
-+#define PAYLOAD_LEN(val)	\
-+	(1 << (((val) & SPE_HEADER_SZ_MASK) >> SPE_HEADER_SZ_SHIFT))
- 
- static int arm_spe_get_payload(const unsigned char *buf, size_t len,
- 			       struct arm_spe_pkt *packet)
- {
--	size_t payload_len = payloadlen(buf[0]);
-+	size_t payload_len = PAYLOAD_LEN(buf[0]);
- 
- 	if (len < 1 + payload_len)
- 		return ARM_SPE_NEED_MORE_BYTES;
-@@ -136,8 +134,6 @@ static int arm_spe_get_timestamp(const unsigned char *buf, size_t len,
- static int arm_spe_get_events(const unsigned char *buf, size_t len,
- 			      struct arm_spe_pkt *packet)
- {
--	int ret = arm_spe_get_payload(buf, len, packet);
--
- 	packet->type = ARM_SPE_EVENTS;
- 
- 	/* we use index to identify Events with a less number of
-@@ -145,9 +141,9 @@ static int arm_spe_get_events(const unsigned char *buf, size_t len,
- 	 * LLC-REFILL, and REMOTE-ACCESS events are identified if
- 	 * index > 1.
- 	 */
--	packet->index = ret - 1;
-+	packet->index = PAYLOAD_LEN(buf[0]);
- 
--	return ret;
-+	return arm_spe_get_payload(buf, len, packet);
- }
- 
- static int arm_spe_get_data_source(const unsigned char *buf, size_t len,
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index 4c870521b8eb..aca919159cad 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -36,6 +36,9 @@ struct arm_spe_pkt {
- 	uint64_t		payload;
- };
- 
-+#define SPE_HEADER_SZ_SHIFT		(4)
-+#define SPE_HEADER_SZ_MASK		(0x30)
-+
- #define SPE_ADDR_PKT_HDR_INDEX_INS		(0x0)
- #define SPE_ADDR_PKT_HDR_INDEX_BRANCH		(0x1)
- #define SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT	(0x2)
+This patch set has been verified on Hisilicon D06 platform.
+
+[1] https://lkml.org/lkml/2020/7/24/132
+
+Sigh, the patch set failed to send out caused by my networking
+connection, resend it.  Sorry for spamming and inconvinence.
+
+
+Leo Yan (12):
+  perf arm-spe: Include bitops.h for BIT() macro
+  perf arm-spe: Fix a typo in comment
+  perf arm-spe: Refactor payload length calculation
+  perf arm-spe: Fix packet length handling
+  perf arm-spe: Refactor packet header parsing
+  perf arm-spe: Refactor address packet handling
+  perf arm-spe: Refactor context packet handling
+  perf arm-spe: Refactor counter packet handling
+  perf arm-spe: Refactor event type handling
+  perf arm-spe: Detect failure for snprintf()
+  perf arm-spe: Refactor operation packet handling
+  perf arm-spe: Add more sub classes for operation packet
+
+Wei Li (1):
+  perf arm-spe: Add support for ARMv8.3-SPE
+
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |  54 ++-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  17 -
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     | 433 ++++++++++++------
+ .../arm-spe-decoder/arm-spe-pkt-decoder.h     | 117 ++++-
+ 4 files changed, 418 insertions(+), 203 deletions(-)
+
 -- 
 2.17.1
 
