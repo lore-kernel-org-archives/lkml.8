@@ -5,57 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3CF23C43
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C3B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678261;
-	bh=JrYOhwWwwmrReXwB+ZeyDYHuIP3lqKqROWwbKCFhgOs=;
+	s=default; t=1597678267;
+	bh=vfZZHTQNiU1ZzvOzIm1DFC5j1jmMUu8Zo9bzMExZCrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7fDtBLCos9irtmN4nwe3lsXn56YLnhrW9zta1oQzyKDDVmEWf9oI6KttwlWNYXe3
-	 d0N+jWTXO2qMVtJYg2JKTJkgDl4fyFVARDM3t4LLmmjARCLUZRenBPO87zXaZxdXZS
-	 LMPZSQE3J4+iz0ZVoehl04mC5f4i6EgEbUUcchRg=
+	b=tzQqirBKJoxuolz/HB+K9VLftJ4eIx9LCePuouXK0m56IsEBem9V0PshXxwF21jxx
+	 THBZxKF5YHyxADS6wFdmb8jNe35kW0ZyunpfDReu+5z/nUFPHw8IXAE6MQjqd7WLba
+	 +Zr3VzWUvy7QjR/citU6E5kH5WdsXZK4Wy0WAe54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgHQPa5 (ORCPT
+        id S1730257AbgHQPbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730019AbgHQP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:42 -0400
+        id S1729650AbgHQP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CAF233CF;
-        Mon, 17 Aug 2020 15:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF97C23BC3;
+        Mon, 17 Aug 2020 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678121;
-        bh=JrYOhwWwwmrReXwB+ZeyDYHuIP3lqKqROWwbKCFhgOs=;
+        s=default; t=1597678124;
+        bh=vfZZHTQNiU1ZzvOzIm1DFC5j1jmMUu8Zo9bzMExZCrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6G3hS/yzj9jpcf5dQnbsJCcgsOFcPTAKvn9t6vVbOxL9oY8AaZDL2FggLJ+23P40
-         EmKaP7k/Y5gmHdGp8YTxNEC6vovO7qKwptBm4pE5YsLXUZq4egncZxsa3F0T+QPVF8
-         Se4r3NFyr7Wgrqto3OlFxNT8e6kne4KoPcqjBeSs=
+        b=J6yCaAiQR4MPs7wAcc3oTclgLRSawwY/BcrqmXB+Qs8E8nUfubJkrjufROcme60B1
+         zfurAgCKDYGaei52fFCwKW0Qr0pQE9TgJ55UVACFXEtTbE4/deQ5zuo5EGreDajNFF
+         j6uVv2HZI+tdudGsJ+3pRf5wHt9Ei6uDW3rLKSuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 218/464] drm/stm: repair runtime power management
-Date:   Mon, 17 Aug 2020 17:12:51 +0200
-Message-Id: <20200817143844.245721026@linuxfoundation.org>
+Subject: [PATCH 5.8 227/464] scsi: scsi_debug: Add check for sdebug_max_queue during module init
+Date:   Mon, 17 Aug 2020 17:13:00 +0200
+Message-Id: <20200817143844.670561467@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -68,57 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit ebd267b2e3c25d5f93a08528b47c036569eb8744 ]
+[ Upstream commit c87bf24cfb60bce27b4d2c7e56ebfd86fb9d16bb ]
 
-Add missing pm_runtime_get_sync() into ltdc_crtc_atomic_enable() to
-match pm_runtime_put_sync() in ltdc_crtc_atomic_disable(), otherwise
-the LTDC might suspend via runtime PM, disable clock, and then fail
-to resume later on.
+sdebug_max_queue should not exceed SDEBUG_CANQUEUE, otherwise crashes like
+this can be triggered by passing an out-of-range value:
 
-The test which triggers it is roughly -- run qt5 application which
-uses eglfs platform and etnaviv, stop the application, sleep for 15
-minutes, run the application again. This leads to a timeout waiting
-for vsync, because the LTDC has suspended, but did not resume.
+Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+ pstate: 20400009 (nzCv daif +PAN -UAO BTYPE=--)
+ pc : schedule_resp+0x2a4/0xa70 [scsi_debug]
+ lr : schedule_resp+0x52c/0xa70 [scsi_debug]
+ sp : ffff800022ab36f0
+ x29: ffff800022ab36f0 x28: ffff0023a935a610
+ x27: ffff800008e0a648 x26: 0000000000000003
+ x25: ffff0023e84f3200 x24: 00000000003d0900
+ x23: 0000000000000000 x22: 0000000000000000
+ x21: ffff0023be60a320 x20: ffff0023be60b538
+ x19: ffff800008e13000 x18: 0000000000000000
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000000
+ x13: 0000000000000000 x12: 0000000000000000
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : 0000000000000000
+ x7 : 0000000000000000 x6 : 00000000000000c1
+ x5 : 0000020000200000 x4 : dead0000000000ff
+ x3 : 0000000000000200 x2 : 0000000000000200
+ x1 : ffff800008e13d88 x0 : 0000000000000000
+ Call trace:
+schedule_resp+0x2a4/0xa70 [scsi_debug]
+scsi_debug_queuecommand+0x2c4/0x9e0 [scsi_debug]
+scsi_queue_rq+0x698/0x840
+__blk_mq_try_issue_directly+0x108/0x228
+blk_mq_request_issue_directly+0x58/0x98
+blk_mq_try_issue_list_directly+0x5c/0xf0
+blk_mq_sched_insert_requests+0x18c/0x200
+blk_mq_flush_plug_list+0x11c/0x190
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x38/0x210
+blkdev_direct_IO+0x450/0x4d8
+generic_file_read_iter+0x84/0x180
+blkdev_read_iter+0x3c/0x50
+aio_read+0xc0/0x170
+io_submit_one+0x5c8/0xc98
+__arm64_sys_io_submit+0x1b0/0x258
+el0_svc_common.constprop.3+0x68/0x170
+do_el0_svc+0x24/0x90
+el0_sync_handler+0x13c/0x1a8
+el0_sync+0x158/0x180
+ Code: 528847e0 72a001e0 6b00003f 540018cd (3941c340)
 
-Fixes: 35ab6cfbf211 ("drm/stm: support runtime power management")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Yannick Fertré <yannick.fertre@st.com>
-Cc: Philippe Cornu <philippe.cornu@st.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Vincent Abriou <vincent.abriou@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Yannick Fertre <yannick.fertre@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200229221649.90813-1-marex@denx.de
+In addition, it should not be less than 1.
+
+So add checks for these, and fail the module init for those cases.
+
+[mkp: changed if condition to match error message]
+
+Link: https://lore.kernel.org/r/1594297400-24756-2-git-send-email-john.garry@huawei.com
+Fixes: c483739430f1 ("scsi_debug: add multiple queue support")
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/scsi_debug.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index f894968d6e452..3f590d916e916 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -423,9 +423,12 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
- 				    struct drm_crtc_state *old_state)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_device *ddev = crtc->dev;
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
-+	pm_runtime_get_sync(ddev->dev);
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 843cccb38cb76..b0d93bf79978f 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -6610,6 +6610,12 @@ static int __init scsi_debug_init(void)
+ 		pr_err("submit_queues must be 1 or more\n");
+ 		return -EINVAL;
+ 	}
 +
- 	/* Sets the background color value */
- 	reg_write(ldev->regs, LTDC_BCCR, BCCR_BCBLACK);
- 
++	if ((sdebug_max_queue > SDEBUG_CANQUEUE) || (sdebug_max_queue < 1)) {
++		pr_err("max_queue must be in range [1, %d]\n", SDEBUG_CANQUEUE);
++		return -EINVAL;
++	}
++
+ 	sdebug_q_arr = kcalloc(submit_queues, sizeof(struct sdebug_queue),
+ 			       GFP_KERNEL);
+ 	if (sdebug_q_arr == NULL)
 -- 
 2.25.1
 
