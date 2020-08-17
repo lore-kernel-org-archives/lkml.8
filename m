@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60763C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60904C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACF420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F0B207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682973;
-	bh=2wVZT9ZwJSV3mZRLRZbravFmdRZE3d2p1fxTXI7EZ8A=;
+	s=default; t=1597682981;
+	bh=r5rm6ll5WBmlFIdky0kzG2SWcqXv1LKcGX9ms3WduZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhrZSmo3Dvjxf84D71Qxv/5owlXfWFmpk+iy/4plGaibiNC9S6oMLC1vDkqN6tXZd
-	 GBHOvX3kY0ufISMe8bGpWWHof4eGO8RbyV3z0l6lWUzqCa1uf9sTj5ilqorL8J0QzQ
-	 0iImJ6jF2DRq/AXgq3s60MgoyaJBr/9uvOeaMp34=
+	b=sNjiX63xo4TMDGDS7zUafxXJw5CFx/m+L23gs3np3M3h/CwHo9zrkfgid4zoT72qQ
+	 4zv7wGAck5ImPncEdMTn+ytEKWVvGnD37MVC9KXbWSfGH0rB5Xb57PD3k7unZ4+JMI
+	 54myvdFQGLFo8bbQF3kwfZGwe4S5YrN6Cdk/aLsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388990AbgHQQt3 (ORCPT
+        id S2388987AbgHQQtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388183AbgHQQCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:16 -0400
+        id S2388185AbgHQQCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0039820888;
-        Mon, 17 Aug 2020 16:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A1D1206FA;
+        Mon, 17 Aug 2020 16:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680136;
-        bh=2wVZT9ZwJSV3mZRLRZbravFmdRZE3d2p1fxTXI7EZ8A=;
+        s=default; t=1597680138;
+        bh=r5rm6ll5WBmlFIdky0kzG2SWcqXv1LKcGX9ms3WduZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7bDXbZIztT6M9DT+Ogdo5yYqTiBLgogvQ2CWF5q3FytLmW8epPuSrXY+TWdvhunI
-         z+saSLQ2PHStFfbtD6ZliycYOuRAg3fiNMwi+Hi5Mw/TpYN6OMs70+2Pxgejmo215B
-         86rDLTLiqVSRF/tIacN7nTPJCKPU2EG2t4SULYhI=
+        b=z/Y/8jGCH0pebUECGHX7pMQnhxjVAQBivm5VwV5f6ck3Abdmeuw072uFFen0rt5t2
+         x9kKPlcsuwOimGMBXpzKLmimXwKO94KaQ6dECGjJGJ1P5nK36Rcsueyyzlht1xfoEw
+         q3YxDPWHJ81RjwlSD0ZeOjUtG/be9XKN6D/VF3bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/270] ARM: dts: gose: Fix ports node name for adv7180
-Date:   Mon, 17 Aug 2020 17:13:47 +0200
-Message-Id: <20200817143757.083892025@linuxfoundation.org>
+Subject: [PATCH 5.4 060/270] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
+Date:   Mon, 17 Aug 2020 17:14:21 +0200
+Message-Id: <20200817143758.755558350@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,34 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d344234abde938ae1062edb6c05852b0bafb4a03 ]
+[ Upstream commit c5d5a32ead1e3a61a07a1e59eb52a53e4a6b2a7f ]
 
-When adding the adv7180 device node the ports node was misspelled as
-port, fix this.
+in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
+and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Fixes: 8cae359049a88b75 ("ARM: dts: gose: add composite video input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200704155856.3037010-2-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 42f3313e6988a..dc435ac95d23a 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -339,7 +339,7 @@ composite-in@20 {
- 			reg = <0x20>;
- 			remote = <&vin1>;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index d47d1a8e02198..8a26ea2a53348 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -713,7 +713,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0) {
+ 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
+-		return ret;
++		goto pm_put;
+ 	}
  
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+ 	etnaviv_hw_identify(gpu);
+@@ -802,6 +802,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 
+ fail:
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -842,7 +843,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto pm_put;
+ 
+ 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
+ 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
+@@ -965,6 +966,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 	ret = 0;
+ 
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -978,7 +980,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 	dev_err(gpu->dev, "recover hung GPU!\n");
+ 
+ 	if (pm_runtime_get_sync(gpu->dev) < 0)
+-		return;
++		goto pm_put;
+ 
+ 	mutex_lock(&gpu->lock);
+ 
+@@ -997,6 +999,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 
+ 	mutex_unlock(&gpu->lock);
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ }
+ 
+@@ -1269,8 +1272,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 
+ 	if (!submit->runtime_resumed) {
+ 		ret = pm_runtime_get_sync(gpu->dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_noidle(gpu->dev);
+ 			return NULL;
++		}
+ 		submit->runtime_resumed = true;
+ 	}
+ 
+@@ -1287,6 +1292,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 	ret = event_alloc(gpu, nr_events, event);
+ 	if (ret) {
+ 		DRM_ERROR("no free events\n");
++		pm_runtime_put_noidle(gpu->dev);
+ 		return NULL;
+ 	}
  
 -- 
 2.25.1
