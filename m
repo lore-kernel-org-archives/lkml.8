@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108D72078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08C020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597647805;
-	bh=cZA9ZUARN+utcYkCJWoSAM3zaWPeBpxOmpgTjJgh5s8=;
+	s=default; t=1597647807;
+	bh=3bfDu2rrgsQUUDMAmYFHILNOphrIGlyzCv66V1HnZQE=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/xRSnqqqkEhEta8/GP9DWpX230PFCLoTtRWEf8TBMVk0Lvi9OWgn+n0xE+GPw5ID
-	 FS8q6TehzP12pdw9LWKyODxOyCcORiqIcsybPPU8YfMH7PiILCRVf7n5toyxHmsCSU
-	 M3b+ZTuw3KBxEmgpx5Ap/16gkhbaITKyr82sAi1k=
+	b=L020vnUAUnKODbQy0S1QOa3eerQCiIQeWVDJ1m4Itr2wTi86J/n03LLxLl2WbZFmT
+	 3oL4KvI/yccBqXeMhbBi6dml1AiQol7z4OExO3PDl/83Pf0nqLu/sZF0WPMYU6ZL22
+	 Gl4kFzec80P3Kyhfzd+dOrrD1QjSs69VNSRfa3Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgHQHDY (ORCPT
+        id S1726947AbgHQHDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41730 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:03:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbgHQHA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:00:29 -0400
+        id S1726361AbgHQHAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:00:31 -0400
 Received: from localhost.localdomain (unknown [194.230.155.242])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22A2A207FB;
-        Mon, 17 Aug 2020 07:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C54A20758;
+        Mon, 17 Aug 2020 07:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597647628;
-        bh=cZA9ZUARN+utcYkCJWoSAM3zaWPeBpxOmpgTjJgh5s8=;
+        s=default; t=1597647630;
+        bh=3bfDu2rrgsQUUDMAmYFHILNOphrIGlyzCv66V1HnZQE=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tD4Cr2JesNZLkoLInAuT7zRPnlGs2KbpxEfpPfVFYqhs8MJ/zpMI7culDGiYnTT6v
-         XzNbsKqHjbMt39ifPAlL0qdmVqmakqTLQKo9wIHmw2kvf/k1PO/Ikbvf1OYBGb9eyW
-         RIG5syYrs+k6kw+ToWuVQPRr3YuC42EM8Qlpy9X8=
+        b=I63P1FcNXsuQY4aeMwlAuNyXbpcagMDe1fxc3eAmejIj0FDVJWDAsDhq8Hi/H9u2Y
+         j/5F3JYtb+khaO0SLHDXajJhwLYM1nzyyhkMkLPozWgIydDLpEX72o/qoYOTIQX7IZ
+         uw/Ka3IwtG2RQCyoLCY5KeKuJwjlA79yAf9xFnfY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
@@ -46,9 +46,9 @@ To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 05/13] extcon: ptn5150: Use generic "interrupts" property
-Date:   Mon, 17 Aug 2020 09:00:01 +0200
-Message-Id: <20200817070009.4631-6-krzk@kernel.org>
+Subject: [PATCH v2 06/13] extcon: ptn5150: Simplify getting vbus-gpios with flags
+Date:   Mon, 17 Aug 2020 09:00:02 +0200
+Message-Id: <20200817070009.4631-7-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
 References: <20200817070009.4631-1-krzk@kernel.org>
@@ -57,74 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interrupts do not have to be always GPIO based so instead of expecting
-"int-gpios" property and converting the GPIO to an interrupt, just
-accept any interrupt via generic "interrupts" property.
-
-Keep support for old "int-gpios" for backward compatibility.
+Instead of obtaining GPIO as input and configuring it right after to
+output-low, just use proper GPIOD_OUT_LOW flag.  Code is smaller and
+simpler.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/extcon/extcon-ptn5150.c | 33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/extcon/extcon-ptn5150.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 5f5252752644..12e52ddbd77e 100644
+index 12e52ddbd77e..3b99ad41b06e 100644
 --- a/drivers/extcon/extcon-ptn5150.c
 +++ b/drivers/extcon/extcon-ptn5150.c
-@@ -239,11 +239,6 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
+@@ -239,16 +239,11 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
  
  	info->dev = &i2c->dev;
  	info->i2c = i2c;
--	info->int_gpiod = devm_gpiod_get(&i2c->dev, "int", GPIOD_IN);
--	if (IS_ERR(info->int_gpiod)) {
--		dev_err(dev, "failed to get INT GPIO\n");
--		return PTR_ERR(info->int_gpiod);
--	}
- 	info->vbus_gpiod = devm_gpiod_get(&i2c->dev, "vbus", GPIOD_IN);
+-	info->vbus_gpiod = devm_gpiod_get(&i2c->dev, "vbus", GPIOD_IN);
++	info->vbus_gpiod = devm_gpiod_get(&i2c->dev, "vbus", GPIOD_OUT_LOW);
  	if (IS_ERR(info->vbus_gpiod)) {
  		dev_err(dev, "failed to get VBUS GPIO\n");
-@@ -267,22 +262,30 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
- 		return ret;
+ 		return PTR_ERR(info->vbus_gpiod);
  	}
+-	ret = gpiod_direction_output(info->vbus_gpiod, 0);
+-	if (ret) {
+-		dev_err(dev, "failed to set VBUS GPIO direction\n");
+-		return -EINVAL;
+-	}
  
--	if (info->int_gpiod) {
-+	if (i2c->irq > 0) {
-+		info->irq = i2c->irq;
-+	} else {
-+		info->int_gpiod = devm_gpiod_get(&i2c->dev, "int", GPIOD_IN);
-+		if (IS_ERR(info->int_gpiod)) {
-+			dev_err(dev, "failed to get INT GPIO\n");
-+			return PTR_ERR(info->int_gpiod);
-+		}
-+
- 		info->irq = gpiod_to_irq(info->int_gpiod);
- 		if (info->irq < 0) {
- 			dev_err(dev, "failed to get INTB IRQ\n");
- 			return info->irq;
- 		}
-+	}
+ 	mutex_init(&info->mutex);
  
--		ret = devm_request_threaded_irq(dev, info->irq, NULL,
--						ptn5150_irq_handler,
--						IRQF_TRIGGER_FALLING |
--						IRQF_ONESHOT,
--						i2c->name, info);
--		if (ret < 0) {
--			dev_err(dev, "failed to request handler for INTB IRQ\n");
--			return ret;
--		}
-+	ret = devm_request_threaded_irq(dev, info->irq, NULL,
-+					ptn5150_irq_handler,
-+					IRQF_TRIGGER_FALLING |
-+					IRQF_ONESHOT,
-+					i2c->name, info);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request handler for INTB IRQ\n");
-+		return ret;
- 	}
- 
- 	/* Allocate extcon device */
 -- 
 2.17.1
 
