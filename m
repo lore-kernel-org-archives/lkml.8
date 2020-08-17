@@ -2,107 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9946F238E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="C/V/yGu/"
+	by mail.kernel.org (Postfix) with ESMTP id E701E2395A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597678009;
+	bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o3zZjGgA4unCU3/ZLJs31Qx2Ka5BUqmRb5c6DUXV4hpZclPfid67NPlM2jE1YtKlj
+	 yZSqFLNArnzqb+4KvNMIGoDO0yfTr1leeTvVBJX1bEX7OEktIZdnjGIVlcmC0HRrP2
+	 ZaaajXVHntDt4TlDFlt6L8regOSe5f81jUxOgjSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbgHQP0e (ORCPT
+        id S1729834AbgHQP0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgHQPYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:39 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666F4C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:24:39 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id w9so12658287qts.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U4Ljhge3b+epbgJXir/y5ETgZWDFNKeJO8zvcM0T4us=;
-        b=C/V/yGu/4HGw7a6hMLP9ENVYj7zDu12bR05GBt/EgSs8a6JahItGEOI83s5DtjzNsi
-         4B4yy5oUx78hTyZUwHMrh/tJ4KzD3RW1fnpbH1UeMuFB6sKYcv4jFiWLkadC7mq8qpzU
-         YpJxg2NhFWQqLqM47/UhmR+u9Ho3XekXb7wRw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U4Ljhge3b+epbgJXir/y5ETgZWDFNKeJO8zvcM0T4us=;
-        b=m9CICk9WpwxR6YgOEktydJAEp7QvMwTFRLMhed/xiDefxSEfukMGlsCDqJNh6nyxwW
-         NrlPTuvABLsf/fWOFssiy58wlosxxNxeDdf8YnXlNiEWfnjs/DVa08u9VeIC653dJdlR
-         foz066hzHiFMoaxGTUINFRiQPxsw0uG6fB2NhG1VnoE/1ei5QQ3ttmY+oPcqUz04IiM/
-         DbfarsYIrA3kC1gJfxkXBqJXrFKdI6gnCYca8P0fhxyZ/CqsZxS9nPRU4+f81FE4TFlg
-         zOpv68eqhKGhQLfpWKUmoV3adw7gDS7lQ6orx+U+71dPvOikLOvnVgO9E4DfE+qpglaS
-         INuw==
-X-Gm-Message-State: AOAM533WBOswoQZRTHDUi++wp+LScy7dxTgo6fG1MKOeMKsEZgVFK8xN
-        CUgV5Jjt21FWxd6jDcCPMHryN5NFHcwWlvAIy8Y=
-X-Google-Smtp-Source: ABdhPJz5Q/JCWN/QUYuwgiY1Gs+yTS5fb3FSC/aue1dAnIvbCvUr5tP+Ffo/P3UhtLcre9qjYlsHjA==
-X-Received: by 2002:aed:2358:: with SMTP id i24mr14078467qtc.234.1597677878337;
-        Mon, 17 Aug 2020 08:24:38 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:47cc])
-        by smtp.gmail.com with ESMTPSA id i7sm17771201qkb.131.2020.08.17.08.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 08:24:37 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 16:24:36 +0100
-From:   Chris Down <chris@chrisdown.name>
+        Mon, 17 Aug 2020 11:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729420AbgHQPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2A420855;
+        Mon, 17 Aug 2020 15:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677879;
+        bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DWu9pJ7ZNj1b1uJIPsz4FkaviptKTa/mYHmmVdLydXApduRx9P/mCJoxeVPPMmXCz
+         p4UFq/Wajv/sIpL6+NpZPCI5j8nqHfyBwOJx1VlOeaJrFYLiuCTF/8Ce1VJi8m2tPO
+         mULc5/arr6m7FC6rqQrYOP+SfQp/UT8CvMKLKe5w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Jakub Kicinski <kuba@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-        sean.j.christopherson@intel.com, tony.luck@intel.com,
-        torvalds@linux-foundation.org, x86@kernel.org
-Subject: [PATCH 2/2] x86: Make source of unrecognised MSR writes unambiguous
-Message-ID: <df42b70ed20d616d7c2d7f42cd38300115584619.1597677395.git.chris@chrisdown.name>
-References: <cover.1597677395.git.chris@chrisdown.name>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 141/464] drm/bridge: ti-sn65dsi86: Clear old error bits before AUX transfers
+Date:   Mon, 17 Aug 2020 17:11:34 +0200
+Message-Id: <20200817143840.569162397@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1597677395.git.chris@chrisdown.name>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In many cases the comm enough isn't enough to distinguish the offender,
-since for interpreted languages it's likely just going to be "python3"
-or whatever. Add the pid to make it unambiguous.
+From: Douglas Anderson <dianders@chromium.org>
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Jakub Kicinski <kuba@kernel.org>
+[ Upstream commit baef4d56195b6d6e0f681f6eac03d8c6db011d34 ]
+
+The AUX channel transfer error bits in the status register are latched
+and need to be cleared.  Clear them before doing our transfer so we
+don't see old bits and get confused.
+
+Without this patch having a single failure would mean that all future
+transfers would look like they failed.
+
+Fixes: b814ec6d4535 ("drm/bridge: ti-sn65dsi86: Implement AUX channel")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200508163314.1.Idfa69d5d3fc9623083c0ff78572fea87dccb199c@changeid
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/msr.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
-index 3babb0e58b0e..76b6b0011d62 100644
---- a/arch/x86/kernel/msr.c
-+++ b/arch/x86/kernel/msr.c
-@@ -99,8 +99,9 @@ static int filter_write(u32 reg)
- 	if (!__ratelimit(&fw_rs) || reg == MSR_IA32_ENERGY_PERF_BIAS)
- 		return 0;
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6ad688b320aee..d865cc2565bc0 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -827,6 +827,12 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *aux,
+ 				     buf[i]);
+ 	}
  
--	pr_err("Write to unrecognized MSR 0x%x by %s\n"
--	       "Please report to x86@kernel.org\n", reg, current->comm);
-+	pr_err("Write to unrecognized MSR 0x%x by pid %s:%d\n"
-+	       "Please report to x86@kernel.org\n",
-+	       reg, current->comm, current->pid);
++	/* Clear old status bits before start so we don't get confused */
++	regmap_write(pdata->regmap, SN_AUX_CMD_STATUS_REG,
++		     AUX_IRQ_STATUS_NAT_I2C_FAIL |
++		     AUX_IRQ_STATUS_AUX_RPLY_TOUT |
++		     AUX_IRQ_STATUS_AUX_SHORT);
++
+ 	regmap_write(pdata->regmap, SN_AUX_CMD_REG, request_val | AUX_CMD_SEND);
  
- 	return 0;
- }
+ 	ret = regmap_read_poll_timeout(pdata->regmap, SN_AUX_CMD_REG, val,
 -- 
-2.28.0
+2.25.1
+
+
 
