@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F399C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D24C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA19205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27608205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681642;
-	bh=cbANANyU/YMVkf+WiiSd6M9TsPsYv2l6Y4+7w6+2p+Y=;
+	s=default; t=1597681667;
+	bh=aQ1uykngxfyy77fl0AX9x6BTeX7NsTbHVS3LBX3NjRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uemMCWWFfqaPfztJJ6yhekbosZD/GSR1w/DmTg1s+3/+s1hLalS7Icu+H27RgdmBJ
-	 Ug1s+4Q5PlWcIn6F41BK9vfKaZFyzG3VFmQb6S8YFSJ5EfXk7Rwd2yRzBrC1TjbKRv
-	 L4qZwPwJFsPvhNaDWQ5n6Qg02fCpAFEDFx73scZw=
+	b=lWDQhwGYGU7nuyRkR5w2Rilsm3qXuPQGRjXSY07iDjtEC9uBnpaWXshTL2iFGkmWd
+	 pNsbQXOMelHIcQSYxxfwCQsG/yrvWkrNUi8MXgdi63isV5oQMQ5qigpi4SYxhhU2Bi
+	 JBf4OX6hOrjfwt2jPC3iDN4JkLmDDgYMRzPhi37U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388596AbgHQQWt (ORCPT
+        id S1730923AbgHQQ1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35160 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbgHQPum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:42 -0400
+        id S2387846AbgHQPwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AFF2065C;
-        Mon, 17 Aug 2020 15:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4E220657;
+        Mon, 17 Aug 2020 15:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679436;
-        bh=cbANANyU/YMVkf+WiiSd6M9TsPsYv2l6Y4+7w6+2p+Y=;
+        s=default; t=1597679541;
+        bh=aQ1uykngxfyy77fl0AX9x6BTeX7NsTbHVS3LBX3NjRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxaFoEuuB1BPB1YXKxAURngXiwCr+vSG70yLfoYTUHowH0inXZSayUMfBbFsyylSF
-         qaJyklXNWGuKxbzYYg3FgesWxr5BUaUUYqAU7WIdBRaQe8s6fAGH4tbz3yPVDMCuns
-         YU/Hg4dKRRLmGsK7LAFbRK/BU9DenkyK8tj3Pd3E=
+        b=mwqFedwLwSzMa43IarmSWIdaHeTzB2RGkG8zxdLdfCriVR0SCFh5Ws2suhjCyEHYJ
+         +G5sNvfY1ad5aJ61GjAVe207j6YcU8dRv6ehUP1PBKLmc2bL8u648iCR+tmNCeFJyf
+         vMcnfNliS5C6cC1jdaxC8PhN4s52GfDvfBeCz3eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 210/393] ima: Fail rule parsing when buffer hook functions have an invalid action
-Date:   Mon, 17 Aug 2020 17:14:20 +0200
-Message-Id: <20200817143829.811925451@linuxfoundation.org>
+Subject: [PATCH 5.7 248/393] net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
+Date:   Mon, 17 Aug 2020 17:14:58 +0200
+Message-Id: <20200817143831.651057479@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,94 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 712183437ebebc89cd086ef96cf9a521fd97fd09 ]
+[ Upstream commit 0f3c66a3c7b4e8b9f654b3c998e9674376a51b0f ]
 
-Buffer based hook functions, such as KEXEC_CMDLINE and KEY_CHECK, can
-only measure. The process_buffer_measurement() function quietly ignores
-all actions except measure so make this behavior clear at the time of
-policy load.
+The MV88E6097 chip does not support configuring jumbo frames. Prior to
+commit 5f4366660d65 only the 6352, 6351, 6165 and 6320 chips configured
+jumbo mode. The refactor accidentally added the function for the 6097.
+Remove the erroneous function pointer assignment.
 
-The parsing of the keyrings conditional had a check to ensure that it
-was only specified with measure actions but the check should be on the
-hook function and not the keyrings conditional since
-"appraise func=KEY_CHECK" is not a valid rule.
-
-Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
-Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Fixes: 5f4366660d65 ("net: dsa: mv88e6xxx: Refactor setting of jumbo frames")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 40 +++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 18271920d315d..a3d72342408ad 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -973,6 +973,43 @@ static void check_template_modsig(const struct ima_template_desc *template)
- #undef MSG
- }
- 
-+static bool ima_validate_rule(struct ima_rule_entry *entry)
-+{
-+	/* Ensure that the action is set */
-+	if (entry->action == UNKNOWN)
-+		return false;
-+
-+	/*
-+	 * Ensure that the hook function is compatible with the other
-+	 * components of the rule
-+	 */
-+	switch (entry->func) {
-+	case NONE:
-+	case FILE_CHECK:
-+	case MMAP_CHECK:
-+	case BPRM_CHECK:
-+	case CREDS_CHECK:
-+	case POST_SETATTR:
-+	case MODULE_CHECK:
-+	case FIRMWARE_CHECK:
-+	case KEXEC_KERNEL_CHECK:
-+	case KEXEC_INITRAMFS_CHECK:
-+	case POLICY_CHECK:
-+		/* Validation of these hook functions is in ima_parse_rule() */
-+		break;
-+	case KEXEC_CMDLINE:
-+	case KEY_CHECK:
-+		if (entry->action & ~(MEASURE | DONT_MEASURE))
-+			return false;
-+
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- {
- 	struct audit_buffer *ab;
-@@ -1150,7 +1187,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			keyrings_len = strlen(args[0].from) + 1;
- 
- 			if ((entry->keyrings) ||
--			    (entry->action != MEASURE) ||
- 			    (entry->func != KEY_CHECK) ||
- 			    (keyrings_len < 2)) {
- 				result = -EINVAL;
-@@ -1356,7 +1392,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			break;
- 		}
- 	}
--	if (!result && (entry->action == UNKNOWN))
-+	if (!result && !ima_validate_rule(entry))
- 		result = -EINVAL;
- 	else if (entry->action == APPRAISE)
- 		temp_ima_appraise |= ima_appraise_flag(entry->func);
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index e065be419a03d..18c892df0a130 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -3477,7 +3477,6 @@ static const struct mv88e6xxx_ops mv88e6097_ops = {
+ 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
+ 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
+ 	.port_set_ether_type = mv88e6351_port_set_ether_type,
+-	.port_set_jumbo_size = mv88e6165_port_set_jumbo_size,
+ 	.port_egress_rate_limiting = mv88e6095_port_egress_rate_limiting,
+ 	.port_pause_limit = mv88e6097_port_pause_limit,
+ 	.port_disable_learn_limit = mv88e6xxx_port_disable_learn_limit,
 -- 
 2.25.1
 
