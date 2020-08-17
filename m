@@ -2,54 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9047AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14233C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728812053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93492053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689187;
-	bh=cytyOljv7NTOTrVBQRiR1DPgvbeXqME725xfguHR8S8=;
+	s=default; t=1597689202;
+	bh=rDcEdYxjJZyluEuB8xVxbN7YnV4MLWNg35y8ItRCF8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ATLUnmf1534kTxmPTjFGhea2JuYKPR8U34qxUhbLeVBfSDkDISFmpikbLv2tg+Ee3
-	 AHs14zTeM0NIeo8mWYWRVVLApjR4dQOxXYkt+Jm1k5y+SWS2USt2VjN3pHLwuNXBZv
-	 CKickwNyR/NjX7JGxcge950QEaDQFbJ6pFsAvd4k=
+	b=bjFQqOeP6SE3nq+FmvQceYvqsA5Sh9tt45pD21iIwAzX4tG8y378XIkgZgRvpJKK+
+	 w8yOSDtLtP0CxUWnx7qpQwrFqFhB8eZPGMoKFCqcU0c1v2GbS8rYcQDafOQBco1mhL
+	 yE7QR5h9Vlws4xdGrCkTXXnybPJtnmg+7+SqknUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391180AbgHQSdF (ORCPT
+        id S2391190AbgHQSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387560AbgHQQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:00:44 -0400
+        id S1730878AbgHQQAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:00:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3BC320885;
-        Mon, 17 Aug 2020 16:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 626D720825;
+        Mon, 17 Aug 2020 16:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680043;
-        bh=cytyOljv7NTOTrVBQRiR1DPgvbeXqME725xfguHR8S8=;
+        s=default; t=1597680032;
+        bh=rDcEdYxjJZyluEuB8xVxbN7YnV4MLWNg35y8ItRCF8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uvzN39dpuDg1BeBRKMu0VV8twt+AM/Q6s/qXE5EaYSp9whIdEiUmNysM761iwUqju
-         BbHO50eiEb3BICZDpZ4w4hbjgNL5j07+Lrah5bGQdZjowVd9m+WV3GaS/QjbALiKfo
-         sIrjAl/MEPRikfyWidBdJ4/V1u3OlJLbc3rzwrXo=
+        b=fBnwjf6TCE/9wRj3Mwu0V9tJLtpS5Wl/7GfB7NUq5grKGwIgtLLd83ghYfli7sGxA
+         Dt0Tmabxxj3e78sCpq7xQkkVtwRkwkCxJD/Kwcw2CqlZtKH2q5d6ayNokCyU20b9x4
+         szrn0/u6vKNoUYWeVa65i/5M4FzyyUGEs89E8nPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/270] sched/fair: Fix NOHZ next idle balance
-Date:   Mon, 17 Aug 2020 17:13:28 +0200
-Message-Id: <20200817143756.173459004@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Brunberg <ingo_brunberg@web.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Plamen Lyutov <plamen.lyutov@gmail.com>
+Subject: [PATCH 5.4 003/270] nvme: add a Identify Namespace Identification Descriptor list quirk
+Date:   Mon, 17 Aug 2020 17:13:24 +0200
+Message-Id: <20200817143755.983504045@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,86 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
+commit 5bedd3afee8eb01ccd256f0cd2cc0fa6f841417a upstream.
 
-With commit:
-  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
-rebalance_domains of the local cfs_rq happens before others idle cpus have
-updated nohz.next_balance and its value is overwritten.
+Add a quirk for a device that does not support the Identify Namespace
+Identification Descriptor list despite claiming 1.3 compliance.
 
-Move the update of nohz.next_balance for other idles cpus before balancing
-and updating the next_balance of local cfs_rq.
+Fixes: ea43d9709f72 ("nvme: fix identify error status silent ignore")
+Reported-by: Ingo Brunberg <ingo_brunberg@web.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Ingo Brunberg <ingo_brunberg@web.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Cc: Plamen Lyutov <plamen.lyutov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Also, the nohz.next_balance is now updated only if all idle cpus got a
-chance to rebalance their domains and the idle balance has not been aborted
-because of new activities on the CPU. In case of need_resched, the idle
-load balance will be kick the next jiffie in order to address remaining
-ilb.
-
-Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
-Reported-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/nvme/host/core.c |   15 +++------------
+ drivers/nvme/host/nvme.h |    7 +++++++
+ drivers/nvme/host/pci.c  |    2 ++
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 9b16080093be1..20bf1f66733ac 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9385,7 +9385,12 @@ static void kick_ilb(unsigned int flags)
- {
- 	int ilb_cpu;
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1074,6 +1074,9 @@ static int nvme_identify_ns_descs(struct
+ 	int pos;
+ 	int len;
  
--	nohz.next_balance++;
-+	/*
-+	 * Increase nohz.next_balance only when if full ilb is triggered but
-+	 * not if we only update stats.
-+	 */
-+	if (flags & NOHZ_BALANCE_KICK)
-+		nohz.next_balance = jiffies+1;
- 
- 	ilb_cpu = find_new_ilb();
- 
-@@ -9703,6 +9708,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 		}
++	if (ctrl->quirks & NVME_QUIRK_NO_NS_DESC_LIST)
++		return 0;
++
+ 	c.identify.opcode = nvme_admin_identify;
+ 	c.identify.nsid = cpu_to_le32(nsid);
+ 	c.identify.cns = NVME_ID_CNS_NS_DESC_LIST;
+@@ -1087,18 +1090,6 @@ static int nvme_identify_ns_descs(struct
+ 	if (status) {
+ 		dev_warn(ctrl->device,
+ 			"Identify Descriptors failed (%d)\n", status);
+-		 /*
+-		  * Don't treat non-retryable errors as fatal, as we potentially
+-		  * already have a NGUID or EUI-64.  If we failed with DNR set,
+-		  * we want to silently ignore the error as we can still
+-		  * identify the device, but if the status has DNR set, we want
+-		  * to propagate the error back specifically for the disk
+-		  * revalidation flow to make sure we don't abandon the
+-		  * device just because of a temporal retry-able error (such
+-		  * as path of transport errors).
+-		  */
+-		if (status > 0 && (status & NVME_SC_DNR))
+-			status = 0;
+ 		goto free_data;
  	}
  
-+	/*
-+	 * next_balance will be updated only when there is a need.
-+	 * When the CPU is attached to null domain for ex, it will not be
-+	 * updated.
-+	 */
-+	if (likely(update_next_balance))
-+		nohz.next_balance = next_balance;
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -115,6 +115,13 @@ enum nvme_quirks {
+ 	 * Prevent tag overlap between queues
+ 	 */
+ 	NVME_QUIRK_SHARED_TAGS                  = (1 << 13),
 +
- 	/* Newly idle CPU doesn't need an update */
- 	if (idle != CPU_NEWLY_IDLE) {
- 		update_blocked_averages(this_cpu);
-@@ -9723,14 +9736,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 	if (has_blocked_load)
- 		WRITE_ONCE(nohz.has_blocked, 1);
++	/*
++	 * The controller doesn't handle the Identify Namespace
++	 * Identification Descriptor list subcommand despite claiming
++	 * NVMe 1.3 compliance.
++	 */
++	NVME_QUIRK_NO_NS_DESC_LIST		= (1 << 15),
+ };
  
--	/*
--	 * next_balance will be updated only when there is a need.
--	 * When the CPU is attached to null domain for ex, it will not be
--	 * updated.
--	 */
--	if (likely(update_next_balance))
--		nohz.next_balance = next_balance;
--
- 	return ret;
- }
- 
--- 
-2.25.1
-
+ /*
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3117,6 +3117,8 @@ static const struct pci_device_id nvme_i
+ 	{ PCI_VDEVICE(INTEL, 0x5845),	/* Qemu emulated controller */
+ 		.driver_data = NVME_QUIRK_IDENTIFY_CNS |
+ 				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
++	{ PCI_DEVICE(0x126f, 0x2263),	/* Silicon Motion unidentified */
++		.driver_data = NVME_QUIRK_NO_NS_DESC_LIST, },
+ 	{ PCI_DEVICE(0x1bb1, 0x0100),   /* Seagate Nytro Flash Storage */
+ 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
+ 	{ PCI_DEVICE(0x1c58, 0x0003),	/* HGST adapter */
 
 
