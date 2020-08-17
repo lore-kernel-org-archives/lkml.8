@@ -2,175 +2,114 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD3AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF95020716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="OM4mVNdc"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA32206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597684957;
+	bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EZSHonAMPTBirkINdt5fjHYe0fROhuTY8UaLwb+MfXFy6qRIkxCU3tkfxGX7YsOKp
+	 0xSvIjwAUFtJqERscmmGxmcYPP+mHM6ZOcWmXKkb8Uf5cy6Rp2gu3lV5STTOMiDvyJ
+	 lhuHIiGY647hGDDER5RKlPe41Bn+l51OhG9iV+I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389804AbgHQRW3 (ORCPT
+        id S2389814AbgHQRWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388014AbgHQQjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:39:36 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0FE5C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:39:35 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id p14so13778914wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8FMpxQy0XpZh5qIz+hqunbKOx8M3EEAQ3BzT6q0ExMo=;
-        b=OM4mVNdcFimDjL6Aeqf44YgKR1Uf9xpPwIHJfBzxrqNLfV7VrGaKPLwSD/3XY/AtAQ
-         Zxfl0UJ/Qo3svd2FOY9sRJc/15/es/6wZeZQeooEo1bhWi6296CWq9tfqUzSTC40N1Cc
-         WL1Jn5p7zm6UQbUPO8GGQtGp3VN14nSSTizvrhi1tUR0ipTj7X3lHSRLaIQTc6R0ICyQ
-         zxo57e+2hYRyTwpzbshLzCJGUkjWAWcRzZQkoIQ604x6IXvZxCZBfqlzDMj6DPmm/kOF
-         FofURcWy0QNuFCXpWhIs9gQ6q//l+cPiLnqFqP/LAJBD2xsBzS9N3o5WjEIEFfDgN/5a
-         vN0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8FMpxQy0XpZh5qIz+hqunbKOx8M3EEAQ3BzT6q0ExMo=;
-        b=DZ7bYBzilrobIZ58RomK0Zvcutc+irPZerUP5RccehzAxDIFQhM1oBjARQhGRWE1FF
-         iTnDdxziH9J8n9tbflntiYmmhqvWMmV6KcEeGe7DJq3EsFj17rju0XgUKhJjr1e5daF/
-         JKxfFkkz1tWo8aL7H2nRc7oNUPYkJ2erzIwqxkR23nvJchw5y0iHq9gg1RNHoiDM5wP8
-         /MS1s9ZUQODpreGq6xYyBtUR9QQOuZAxg4Drd5jSGzW50eqGD9CCBBfHGZZvCZXtWX8G
-         5ZnokzlbTbfymn//eoJ+sxQTE3pzj2jdwvAGhuj1NBmF47Q8/9C3Kq2P38duw6rlBvFu
-         FMxw==
-X-Gm-Message-State: AOAM531C3dAkER4/Cmf+5Kq3qF4JAQdS4FktqkRxYZ5hjR8YPEF1Cvn6
-        nTjoOy2v8QVwoCRjRho+6X3TLg==
-X-Google-Smtp-Source: ABdhPJzBpVacu/sjEsIXpASeL4pnndDe9A1NIzmgcZKW570+kbWLIt+clVFKzu8eRq0W8iYNgi/1Ig==
-X-Received: by 2002:a7b:cc95:: with SMTP id p21mr14738601wma.167.1597682374676;
-        Mon, 17 Aug 2020 09:39:34 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id x82sm30524182wmb.30.2020.08.17.09.39.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 09:39:34 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 18:39:33 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v2 13/13] devlink: Add
- Documentation/networking/devlink/devlink-reload.rst
-Message-ID: <20200817163933.GB2627@nanopsycho>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
- <1597657072-3130-14-git-send-email-moshe@mellanox.com>
+        Mon, 17 Aug 2020 13:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388898AbgHQQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:39:56 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F75420674;
+        Mon, 17 Aug 2020 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597682395;
+        bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aiQBA39aUMY1Y44AGHoNsvI5heZEdPz3RASAMATyoNPfg904JKx/nEECcThKwh53D
+         iAGQuuobZ6SKApaX7I8nmQJgAhAR++iNLnMiy3//k4p9B/jPqrcdE/93PT0plYeBN+
+         TOHujonKP0VlLhiv7SR0cjSakloX2a506r41NXKg=
+Received: by mail-oi1-f174.google.com with SMTP id a24so15333804oia.6;
+        Mon, 17 Aug 2020 09:39:55 -0700 (PDT)
+X-Gm-Message-State: AOAM5314nPBTEPUp2TvMpqX21ze2p15uSx+El0+UVZeY/wsSoFA8Wchm
+        xtVdBVW5blUknlWj6GkPNT+jx/aF2ifj9XWBdw==
+X-Google-Smtp-Source: ABdhPJxhRWY6PWbqPYwgGjUIxWQR66vhMnMb3Lx3z86cqv3Gg8rVBxYxbVIvfsh9MLzYqkLWtvNEjbqKehRsRJxzIa4=
+X-Received: by 2002:aca:190c:: with SMTP id l12mr10376472oii.147.1597682394749;
+ Mon, 17 Aug 2020 09:39:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597657072-3130-14-git-send-email-moshe@mellanox.com>
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com> <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 17 Aug 2020 10:39:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
+Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
+ get phy
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Aug 17, 2020 at 11:37:52AM CEST, moshe@mellanox.com wrote:
->Add devlink reload rst documentation file.
->Update index file to include it.
+On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
 >
->Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
->---
->- Instead of reload levels driver,fw_reset,fw_live_patch have reload
->  actions driver_reinit,fw_activate,fw_live_patch
->---
-> .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
-> Documentation/networking/devlink/index.rst    |  1 +
-> 2 files changed, 55 insertions(+)
-> create mode 100644 Documentation/networking/devlink/devlink-reload.rst
+> Even if phy driver doesn't probe, the error message can't be distinguished
+> from other errors. This displays error message caused by the phy driver
+> explicitly.
 >
->diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
->new file mode 100644
->index 000000000000..9846ea727f3b
->--- /dev/null
->+++ b/Documentation/networking/devlink/devlink-reload.rst
->@@ -0,0 +1,54 @@
->+.. SPDX-License-Identifier: GPL-2.0
->+
->+==============
->+Devlink Reload
->+==============
->+
->+``devlink-reload`` provides mechanism to either reload driver entities,
->+applying ``devlink-params`` and ``devlink-resources`` new values or firmware
->+activation depends on reload action selected.
->+
->+Reload actions
->+=============
->+
->+User may select a reload action.
->+By default ``driver_reinit`` action is done.
->+
->+.. list-table:: Possible reload actions
->+   :widths: 5 90
->+
->+   * - Name
->+     - Description
->+   * - ``driver-reinit``
->+     - Driver entities re-initialization, including applying
->+       new values to devlink entities which are used during driver
->+       load such as ``devlink-params`` in configuration mode
->+       ``driverinit`` or ``devlink-resources``
->+   * - ``fw_activate``
->+     - Firmware activate. Can be used for firmware reload or firmware
->+       upgrade if new firmware is stored and driver supports such
->+       firmware upgrade.
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 93ef608..7c8721e 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>                 return PTR_ERR(priv->rst);
+>
+>         priv->phy = devm_phy_optional_get(dev, "pcie-phy");
 
-Does this do the same as "driver-reinit" + fw activation? If yes, it
-should be written here. If no, it should be written here as well.
+The point of the optional variant vs. devm_phy_get() is whether or not
+you get an error message. So shouldn't you switch to devm_phy_get
+instead?
 
-
->+   * - ``fw_live_patch``
->+     - Firmware live patch, applies firmware changes without reset.
->+
->+Change namespace
->+================
->+
->+All devlink instances are created in init_net and stay there for a
->+lifetime. Allow user to be able to move devlink instances into
->+namespaces during devlink reload operation. That ensures proper
->+re-instantiation of driver objects, including netdevices.
->+
->+example usage
->+-------------
->+
->+.. code:: shell
->+
->+    $ devlink dev reload help
->+    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
->+
->+    # Run reload command for devlink driver entities re-initialization:
->+    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
->+
->+    # Run reload command to activate firmware:
->+    $ devlink dev reload pci/0000:82:00.0 action fw_activate
->diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
->index 7684ae5c4a4a..d82874760ae2 100644
->--- a/Documentation/networking/devlink/index.rst
->+++ b/Documentation/networking/devlink/index.rst
->@@ -20,6 +20,7 @@ general.
->    devlink-params
->    devlink-region
->    devlink-resource
->+   devlink-reload
->    devlink-trap
-> 
-> Driver-specific documentation
->-- 
->2.17.1
+> -       if (IS_ERR(priv->phy))
+> -               return PTR_ERR(priv->phy);
+> +       if (IS_ERR(priv->phy)) {
+> +               ret = PTR_ERR(priv->phy);
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
+> +               return ret;
+> +       }
+>
+>         platform_set_drvdata(pdev, priv);
+>
+> --
+> 2.7.4
 >
