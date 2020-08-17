@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71118C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5079D20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E698520825
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677838;
-	bh=JqWjv8wRp7OfV56EpWs4WVdnBiJF6+GRBXmrIPRdz20=;
+	s=default; t=1597677840;
+	bh=x9GG5gygsBiraECBSOqumUJcpCscr6B3l3sBiltVbKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vFUMNNgLVftbuVNypL6DK1DJgm+nurF/z70RZLLknb7uldTfyUb0G83l8aXT+bKr
-	 ddhRz58lRmWK5vZY9eVMQgGOIU6AZ0lkY7yIS2rNQBBHBbhM8eTwIWP7ZS/ombGOHU
-	 n4z4Le9Y6LC5Nhb4XDV/313oOzT6yuDjNSbLC5u0=
+	b=uXAPYt/FV1XNw9vxFalObBWLWPwsVWel7mEdqwPjz7ZkmI/ZrKP/oOp1Ac0zyXcJJ
+	 2sWENQKxlwZ+3RQeaBbLOCk+jyTTgU3zotUDWhNIhTrhp/P4Pu6PXKSuTjJi9anZmN
+	 FQK0xl/2YfyOQnjRZ/ejhim9l7ZpbgtRq8nNYJrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgHQPX5 (ORCPT
+        id S1729591AbgHQPX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbgHQPWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:22:41 -0400
+        id S1729483AbgHQPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A58920729;
-        Mon, 17 Aug 2020 15:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B012224D;
+        Mon, 17 Aug 2020 15:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677761;
-        bh=JqWjv8wRp7OfV56EpWs4WVdnBiJF6+GRBXmrIPRdz20=;
+        s=default; t=1597677769;
+        bh=x9GG5gygsBiraECBSOqumUJcpCscr6B3l3sBiltVbKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IiXGgrdiZ6rup8Ap3hym3nIaJyzO+XtDYrDMUKxrkjp5Ss9Us9YI7HHEdgj2VcNeq
-         ksnhZUJJDgKc9NZsLYBQxLt+Gr92J5SyzEb/rAsMKvPDz8tFl6ILKgqxw80XjIu39H
-         YD34DW1YiktS0Jk+Hxo9ycv9nMY1+BnveKcixZLQ=
+        b=PWKRg27jYIYY8rcehvcLobu+lc+TwUrwr/JOT2Cm753n5FIjxsIT9RUNyUEoMZfmO
+         zz15ewu+h8W+1PmuFt994+brv12DzPLP0+Mr/mimgaVc6XEMaKhuhHf8O5EMs4csaF
+         Ai+55X+SvLGwx/C9tFweJBjaMUIOh/QyRVwiiNKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 099/464] drm/nouveau: fix multiple instances of reference count leaks
-Date:   Mon, 17 Aug 2020 17:10:52 +0200
-Message-Id: <20200817143838.533218267@linuxfoundation.org>
+Subject: [PATCH 5.8 102/464] usb: mtu3: clear dual mode of u3port when disable device
+Date:   Mon, 17 Aug 2020 17:10:55 +0200
+Message-Id: <20200817143838.676863754@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,66 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
+[ Upstream commit f1e51e99ed498d4aa9ae5df28e43d558ea627781 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-ref count before returning the error.
+If not clear u3port's dual mode when disable device, the IP
+will fail to enter sleep mode when suspend.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Link: https://lore.kernel.org/r/1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
- drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/usb/mtu3/mtu3_core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index ac93d12201dc0..880d962c1b19a 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1026,8 +1026,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 9dd02160cca97..e3780d4d65149 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -131,8 +131,12 @@ static void mtu3_device_disable(struct mtu3 *mtu)
+ 	mtu3_setbits(ibase, SSUSB_U2_CTRL(0),
+ 		SSUSB_U2_PORT_DIS | SSUSB_U2_PORT_PDN);
  
- 	/* need to bring up power immediately if opening device */
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
+-	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG)
++	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG) {
+ 		mtu3_clrbits(ibase, SSUSB_U2_CTRL(0), SSUSB_U2_PORT_OTG_SEL);
++		if (mtu->is_u3_ip)
++			mtu3_clrbits(ibase, SSUSB_U3_CTRL(0),
++				     SSUSB_U3_PORT_DUAL_MODE);
 +	}
  
- 	get_task_comm(tmpname, current);
- 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
-@@ -1109,8 +1111,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	long ret;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
- 	case DRM_NOUVEAU_NVIF:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-index 4c3f131ad31da..c5ee5b7364a09 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-@@ -45,8 +45,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (WARN_ON(ret < 0 && ret != -EACCES))
-+	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-+		pm_runtime_put_autosuspend(dev);
- 		return;
-+	}
- 
- 	if (gem->import_attach)
- 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
+ 	mtu3_setbits(ibase, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
+ }
 -- 
 2.25.1
 
