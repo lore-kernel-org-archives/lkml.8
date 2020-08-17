@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAF1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7A2206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC652067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684429;
-	bh=Pj1WHtb+BEQmkB26jXecBgqP3ELpmtSuKfICJXH07as=;
+	s=default; t=1597684450;
+	bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JB8oHvVuKhtjW0r7SyOzDuCiHQAsOe6xxnwVxZLbWuSKy19iUF6uli97F3cZtwGvl
-	 zkbL7OPx1GUwQgP7ExbKwxZYQBxGCM/q0hOwwNgsI7QSF3Oe07qJIqMDobxO/Sx4zA
-	 YSQAaQ1RaNea3KoZZEeocEp9RwdkuU9R03B67lJ0=
+	b=t5pB4dz5Ew73tMsmm3fFR/LNcQJfVF/Kvh5kduh5jobeItteWEl5ZSfHkwGYMjYvS
+	 FVmH0SiBYUYLlgSKUoyg+clWQNJWNoIjG2RKYNiQkJPFMwiOLaG04O4So1WBZs9sEL
+	 FnH0NaJmuKCij9X8oOYrme3aKa/j3fNTrnTJ5cIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388665AbgHQRNn (ORCPT
+        id S2388811AbgHQRN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43634 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388679AbgHQQMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:12:17 -0400
+        id S2388674AbgHQQMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5894122D6F;
-        Mon, 17 Aug 2020 16:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E78AB22DBF;
+        Mon, 17 Aug 2020 16:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680736;
-        bh=Pj1WHtb+BEQmkB26jXecBgqP3ELpmtSuKfICJXH07as=;
+        s=default; t=1597680734;
+        bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyqE1Gekoh4QVe1LsNiHijzgI8qmJtseydhq4D2Mr6rLn12v+/T4++VIC2yhO0NaR
-         Jcu9EfNwPSJ9C8FfjSFPeypt/8w94s6oiFPcz0V6UfIvZ2Tbo/+KY4lzUslLSHDet4
-         cXNB8W9kvfe2JcMv/ZBUH6QftVNh7twCyLAFqIQ0=
+        b=aZ4JbVj6OZ1BOIHYy4ImXLLDmbgTjvedu0HRgymq8ceR6TqejuX2Idj5VZOmfUKGs
+         prVe6MWzT3o538xgFx7pjtNg17qiLyt4+GM5dAwwPbT++H3dvrEIazLhDWKHux4Uo1
+         BUu7/h4rLERMNxEBHKrb46JhlQZOoaGxpJlbW9i4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/168] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
-Date:   Mon, 17 Aug 2020 17:15:38 +0200
-Message-Id: <20200817143734.078205081@linuxfoundation.org>
+Subject: [PATCH 4.19 006/168] sched: correct SD_flags returned by tl->sd_flags()
+Date:   Mon, 17 Aug 2020 17:15:37 +0200
+Message-Id: <20200817143734.031941558@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,41 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Peng Liu <iwtbavbm@gmail.com>
 
-[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
+[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
 
-The lion gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+During sched domain init, we check whether non-topological SD_flags are
+returned by tl->sd_flags(), if found, fire a waning and correct the
+violation, but the code failed to correct the violation. Correct this.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
-
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
-
-Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
+Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
+ kernel/sched/topology.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index 1315972412df3..23098c13ad83b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -159,7 +159,7 @@ &gmac {
- 	pinctrl-0 = <&rgmii_pins>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
- 	tx_delay = <0x10>;
- 	rx_delay = <0x10>;
- 	status = "okay";
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 74b694392f2fd..f58efa5cc6474 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1098,7 +1098,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		sd_flags = (*tl->sd_flags)();
+ 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
+ 			"wrong sd_flags in topology description\n"))
+-		sd_flags &= ~TOPOLOGY_SD_FLAGS;
++		sd_flags &= TOPOLOGY_SD_FLAGS;
+ 
+ 	*sd = (struct sched_domain){
+ 		.min_interval		= sd_weight,
 -- 
 2.25.1
 
