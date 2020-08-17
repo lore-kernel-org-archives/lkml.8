@@ -2,121 +2,102 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE9FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E780C2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686732;
-	bh=mnmT2vTfr2AGHT7TnBAtqI1K3Vf6MxmoQGA19qZ7NVQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXQR8mPkx6CbWCcg9XYi24fOhzzH3vkYuGfhRrVWTzxwjTUvsoaS48jC+3pRV6Wol
-	 Pe5zto8FZ/joikht6V7ZX5iFmedFYgmopyRl5JCY01buH03yHeYixnrV5EYyabWi+r
-	 5DvmiEco0VCtH9FIacGZi94UH6f4se8C9OzmGns0=
+	by mail.kernel.org (Postfix) with ESMTP id D02AD2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe3/6KY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388485AbgHQRwI (ORCPT
+        id S2388898AbgHQRwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388643AbgHQQLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E80BC207FB;
-        Mon, 17 Aug 2020 16:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680708;
-        bh=mnmT2vTfr2AGHT7TnBAtqI1K3Vf6MxmoQGA19qZ7NVQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UekJDOnNHL3LRZ74F4fTWyQwOZ4GwuUXldkxo+ek3a07dDfZ9lDVbCvE0glv/JTga
-         cxEhA2JmIFnHQM4yIyPi4lF11oRAt+xgXrP8ULfWEDcqlTME6wD06m7Q8ADrA3RmED
-         +TdOa5+NNOZI9vG+/cHQ9NfdBkbe7QUbrevZSS+U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/168] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Mon, 17 Aug 2020 17:15:55 +0200
-Message-Id: <20200817143734.931200033@linuxfoundation.org>
+        Mon, 17 Aug 2020 13:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731593AbgHQRv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:51:57 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3494DC061342;
+        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 9so13962310wmj.5;
+        Mon, 17 Aug 2020 10:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
+        b=qe3/6KY/1aTKBl1WQFgXFC40bTLgZOhTgB+yybOXo/tGEKIa0WRgScLkwV33tS+ULG
+         oIJ19F5ZwhqTlECblt1iol+TLr9mlxxn9kdL/Wj5WQwuoMJV7zeqx1Jy2Pd38nDkLilr
+         3pAnSSkRXsTvSCiyUhG6pqtpkIYQxiZfa9xPUxELUcfgSy4N3YQgNSl0OMNHuGYjvLDB
+         L8597F33Gu1VWUAywWhF+7O47/jA6pXlYQU4p8U+WUYzVzdaUfMDAPs2HLg9SXtRWCCX
+         lMI8avypezSj448rVviZn/04ab7wDAYaePMGIc0nJzDwD8dfksX/gpebm1ceeCBtSPrv
+         dIMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+34KLd4J1/hgr5QBvPHrlfQB6mFqUcXdhfixALEzp/c=;
+        b=PW+2y40aQrxqPx+yYzIms/0KbpZhEcE7xzfMVPrZRY2qLt3PbsOFSi7N/FvBFQX637
+         /mmloFb4Yk6oSOEWL7yR1mHVdWru7Z04b7BL1aT0uOQ/Uox+r/vl4AhHB3E1bpug6jQK
+         VZ28eE3UmaGL33UapZV3AnyZMfnFSUJRFpFjrdb1VPkpTNFrkp35GFio1DQN/ACfg3uG
+         HtZkVoUw7Fjx2O84NwkE8lbdG2c2d4pc32xFFXowSTXLTujALpV+EuMQeCQH6WjzJCz+
+         FM6GcT4eACdcsL/upmHNDtxRmiu8l2XhAvpDahTYdaRbH7rnZPTk1dRSomR3ALxN0BB6
+         bilA==
+X-Gm-Message-State: AOAM531r6vbHuoT4xZhcpzXuxo9cEuPRt4CfErr4MSQM6Tz3A+o6GlKc
+        THZqKJyNHrVDddRZx/p7ieqYUmDMDiUMp17U
+X-Google-Smtp-Source: ABdhPJzGgoktrcxtenVcIw5km7o778RFF8aKHINYvTEPT0kBbK7+bgi75b8Od5p3vgeaWcJZsQRTVA==
+X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr16412074wme.171.1597686714011;
+        Mon, 17 Aug 2020 10:51:54 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id d14sm32738176wre.44.2020.08.17.10.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 10:51:53 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] nfsd: Fix typo in comment
+Date:   Mon, 17 Aug 2020 18:51:26 +0100
+Message-Id: <20200817175125.6441-1-alex.dewar90@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Missing "is".
 
-[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
-
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
-doesn't have a corresponding put_device(). Thus add a jump target to
-fix the exception handling for this function implementation.
-
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- arch/arm/mach-socfpga/pm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Ahh I see. Is this better?
+---
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index d4866788702cb..b782294ee30bc 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -60,14 +60,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 259d5ad0e3f47..309a6d5f895ae 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4828,7 +4828,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		slen = strlen(sp);
  
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -78,7 +78,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -92,6 +92,8 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
- 
+ 		/*
+-		 * Check if this a user. attribute, skip it if not.
++		 * Check if this is a user. attribute, skip it if not.
+ 		 */
+ 		if (strncmp(sp, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
+ 			goto contloop;
 -- 
-2.25.1
-
-
+2.28.0
 
