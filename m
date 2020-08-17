@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E108AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA692072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9C42072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691626;
-	bh=XDC8HlI8Khc6j/B3a5sMWFPpwPWA7scLU1kzMsOnJMg=;
+	s=default; t=1597691630;
+	bh=T16y4neqUck9t4k3D+k9lbBI/BbD8ANb1+46NGkLFrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XixqTntklV4QzSxm1r2kynKrK9pdYEaPokQ8s7ZsvBdw8fWGLJkhLje0nXbHuCogj
-	 X28PR6QoYbPbOauXnm4cNFbDmgGfl8B4XFrf89PrwQsaegfnrIdN3KCPN0wQZsTFNS
-	 V+iCvpifd5EyOgWvUk9uABZPQJHxzbNWlf7Bh2PI=
+	b=Ebpb1I7h3pwpzdGHDUj4Ifq3SbZiUmK8cxo303PY7KAWzHYJi8cdB+XItW6eyEdVr
+	 INgsxiirX0bnWWyR6QLG2RD3pgZeayKjaxXylKF+ckjd4dzSOGZJQHzWJn5pGZhtM1
+	 jQzqt/uoDpYS5uUEcx16FDr7Gojhy8wdVPh5H3nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbgHQPkU (ORCPT
+        id S1731894AbgHQTNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:40:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbgHQPdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:12 -0400
+        id S1730653AbgHQPkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDC0208E4;
-        Mon, 17 Aug 2020 15:33:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A3623357;
+        Mon, 17 Aug 2020 15:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678392;
-        bh=XDC8HlI8Khc6j/B3a5sMWFPpwPWA7scLU1kzMsOnJMg=;
+        s=default; t=1597678818;
+        bh=T16y4neqUck9t4k3D+k9lbBI/BbD8ANb1+46NGkLFrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jgnH5jrK60X/wtiAwub8I52cuntFXA3cl/BWK3hTxoeqB2i9PsyuuaGHmGHyFjAKK
-         AgJ2FR7erol9WVHWdjXZ+VZSYCzIbYt/whhjbMw+l94Tm0YJRuE4xoHncpYhoIgqNW
-         C/jye91omHKo+FG/SPSVF1/eUWqhJogCwE+BD9ZU=
+        b=OdVQ0w0O3N4LMCzKtHgDgaeD5M1g8D2smrAxmrxGzBGkRlhDtQ8Wj0jtZJsiYejuW
+         qt1+EmgW2YtbVLYXIZpkCLJfSbwN05G6NoBuWkgW1irIkmgbJkipWveOrSPnUcuzsa
+         J4NkkRxD7yBrtoqzmr0LDm8/kHnOnMFXLdLKctFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Tomas Henzl <thenzl@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 288/464] scsi: megaraid_sas: Clear affinity hint
-Date:   Mon, 17 Aug 2020 17:14:01 +0200
-Message-Id: <20200817143847.549222778@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.8 451/464] irqdomain/treewide: Free firmware node after domain removal
+Date:   Mon, 17 Aug 2020 17:16:44 +0200
+Message-Id: <20200817143855.371457192@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,53 +61,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Henzl <thenzl@redhat.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 1eb81df5c53b1e785fdef298d533feab991381e4 ]
+commit ec0160891e387f4771f953b888b1fe951398e5d9 upstream.
 
-To avoid a warning in free_irq, clear the affinity hint.
+Commit 711419e504eb ("irqdomain: Add the missing assignment of
+domain->fwnode for named fwnode") unintentionally caused a dangling pointer
+page fault issue on firmware nodes that were freed after IRQ domain
+allocation. Commit e3beca48a45b fixed that dangling pointer issue by only
+freeing the firmware node after an IRQ domain allocation failure. That fix
+no longer frees the firmware node immediately, but leaves the firmware node
+allocated after the domain is removed.
 
-Link: https://lore.kernel.org/r/20200709133144.8363-1-thenzl@redhat.com
-Fixes: f0b9e7bdc309 ("scsi: megaraid_sas: Set affinity for high IOPS reply queues")
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Tomas Henzl <thenzl@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The firmware node must be kept around through irq_domain_remove, but should be
+freed it afterwards.
+
+Add the missing free operations after domain removal where where appropriate.
+
+Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1595363169-7157-1-git-send-email-jonathan.derrick@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/mips/pci/pci-xtalk-bridge.c    |    3 +++
+ arch/x86/kernel/apic/io_apic.c      |    5 +++++
+ drivers/iommu/intel/irq_remapping.c |    8 ++++++++
+ drivers/mfd/ioc3.c                  |    6 ++++++
+ drivers/pci/controller/vmd.c        |    3 +++
+ 5 files changed, 25 insertions(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 00668335c2afc..924ea9f4cdd09 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5602,9 +5602,13 @@ megasas_setup_irqs_msix(struct megasas_instance *instance, u8 is_probe)
- 			&instance->irq_context[i])) {
- 			dev_err(&instance->pdev->dev,
- 				"Failed to register IRQ for vector %d.\n", i);
--			for (j = 0; j < i; j++)
-+			for (j = 0; j < i; j++) {
-+				if (j < instance->low_latency_index_start)
-+					irq_set_affinity_hint(
-+						pci_irq_vector(pdev, j), NULL);
- 				free_irq(pci_irq_vector(pdev, j),
- 					 &instance->irq_context[j]);
-+			}
- 			/* Retry irq register for IO_APIC*/
- 			instance->msix_vectors = 0;
- 			instance->msix_load_balance = false;
-@@ -5642,6 +5646,9 @@ megasas_destroy_irqs(struct megasas_instance *instance) {
+--- a/arch/mips/pci/pci-xtalk-bridge.c
++++ b/arch/mips/pci/pci-xtalk-bridge.c
+@@ -728,6 +728,7 @@ err_free_resource:
+ 	pci_free_resource_list(&host->windows);
+ err_remove_domain:
+ 	irq_domain_remove(domain);
++	irq_domain_free_fwnode(fn);
+ 	return err;
+ }
  
- 	if (instance->msix_vectors)
- 		for (i = 0; i < instance->msix_vectors; i++) {
-+			if (i < instance->low_latency_index_start)
-+				irq_set_affinity_hint(
-+				    pci_irq_vector(instance->pdev, i), NULL);
- 			free_irq(pci_irq_vector(instance->pdev, i),
- 				 &instance->irq_context[i]);
+@@ -735,8 +736,10 @@ static int bridge_remove(struct platform
+ {
+ 	struct pci_bus *bus = platform_get_drvdata(pdev);
+ 	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
++	struct fwnode_handle *fn = bc->domain->fwnode;
+ 
+ 	irq_domain_remove(bc->domain);
++	irq_domain_free_fwnode(fn);
+ 	pci_lock_rescan_remove();
+ 	pci_stop_root_bus(bus);
+ 	pci_remove_root_bus(bus);
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2335,8 +2335,13 @@ static int mp_irqdomain_create(int ioapi
+ 
+ static void ioapic_destroy_irqdomain(int idx)
+ {
++	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
++	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
++
+ 	if (ioapics[idx].irqdomain) {
+ 		irq_domain_remove(ioapics[idx].irqdomain);
++		if (!cfg->dev)
++			irq_domain_free_fwnode(fn);
+ 		ioapics[idx].irqdomain = NULL;
+ 	}
+ }
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -628,13 +628,21 @@ out_free_table:
+ 
+ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
+ {
++	struct fwnode_handle *fn;
++
+ 	if (iommu && iommu->ir_table) {
+ 		if (iommu->ir_msi_domain) {
++			fn = iommu->ir_msi_domain->fwnode;
++
+ 			irq_domain_remove(iommu->ir_msi_domain);
++			irq_domain_free_fwnode(fn);
+ 			iommu->ir_msi_domain = NULL;
  		}
--- 
-2.25.1
-
+ 		if (iommu->ir_domain) {
++			fn = iommu->ir_domain->fwnode;
++
+ 			irq_domain_remove(iommu->ir_domain);
++			irq_domain_free_fwnode(fn);
+ 			iommu->ir_domain = NULL;
+ 		}
+ 		free_pages((unsigned long)iommu->ir_table->base,
+--- a/drivers/mfd/ioc3.c
++++ b/drivers/mfd/ioc3.c
+@@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev
+ 		/* Remove all already added MFD devices */
+ 		mfd_remove_devices(&ipd->pdev->dev);
+ 		if (ipd->domain) {
++			struct fwnode_handle *fn = ipd->domain->fwnode;
++
+ 			irq_domain_remove(ipd->domain);
++			irq_domain_free_fwnode(fn);
+ 			free_irq(ipd->domain_irq, (void *)ipd);
+ 		}
+ 		pci_iounmap(pdev, regs);
+@@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_d
+ 	/* Release resources */
+ 	mfd_remove_devices(&ipd->pdev->dev);
+ 	if (ipd->domain) {
++		struct fwnode_handle *fn = ipd->domain->fwnode;
++
+ 		irq_domain_remove(ipd->domain);
++		irq_domain_free_fwnode(fn);
+ 		free_irq(ipd->domain_irq, (void *)ipd);
+ 	}
+ 	pci_iounmap(pdev, ipd->regs);
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_
+ 	if (!vmd->bus) {
+ 		pci_free_resource_list(&resources);
+ 		irq_domain_remove(vmd->irq_domain);
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_
+ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
++	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+ 
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+@@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *d
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
++	irq_domain_free_fwnode(fn);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 
 
