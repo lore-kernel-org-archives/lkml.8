@@ -2,240 +2,140 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CDCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A414C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cn0s5KzM"
+	by mail.kernel.org (Postfix) with ESMTP id 7C29F20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390044AbgHQRZe (ORCPT
+        id S2390045AbgHQRZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:25:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23679 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389807AbgHQRWc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:22:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597684950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WKN0994t/hbdJ7u3ukIhrtrsKOYgx7+SHughQ7Y0XYU=;
-        b=cn0s5KzMFeUr0tLKa+SWztopuDL8EUORQTzfLpYIMogOKeOLB9xBOEXrrRew5LrKIlRGtk
-        lPhaP7wso3DO3lfT0K8V0pNPFnIsx35IdaExFzRlWN78zYimg1xV8xmOXl3AxOGEhvue5G
-        lLkNrMjXrgf4whDp4kMm/4hoDVhaPpA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-97ei8BkgNj6e3vRfERYvKg-1; Mon, 17 Aug 2020 13:22:28 -0400
-X-MC-Unique: 97ei8BkgNj6e3vRfERYvKg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D1A5801AAF;
-        Mon, 17 Aug 2020 17:22:27 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-81.rdu2.redhat.com [10.10.115.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 35478756AA;
-        Mon, 17 Aug 2020 17:22:21 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9FA4A222E58; Mon, 17 Aug 2020 13:22:20 -0400 (EDT)
-Date:   Mon, 17 Aug 2020 13:22:20 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v2 02/20] dax: Create a range version of
- dax_layout_busy_page()
-Message-ID: <20200817172220.GB630630@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-3-vgoyal@redhat.com>
- <20200817165339.GA22500@quack2.suse.cz>
+        Mon, 17 Aug 2020 13:25:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61735 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389816AbgHQRWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:22:36 -0400
+IronPort-SDR: TAUe2uTwTVI6nPrDPM+SOMtrutA4JDauDBigh/U55F5qq9w9+97Q7BzZarL1C7Rn3NjAvft8TQ
+ gm2SPDPrU8Rg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134818255"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="134818255"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 10:22:35 -0700
+IronPort-SDR: nEoLZbUtp34BoUYd5WmOxfMcLgAQPMgFE8tvVUJU8KClPVVBi0dLi9d3gco++TBY/fY3P1cqiZ
+ TCzf3cLJNS9Q==
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="292496184"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 10:22:34 -0700
+Date:   Mon, 17 Aug 2020 10:22:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Mohammed Gamal <mgamal@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
+Subject: Re: [PATCH v3 7/9] KVM: VMX: Add guest physical address check in EPT
+ violation and misconfig
+Message-ID: <20200817172233.GF22407@linux.intel.com>
+References: <20200710154811.418214-1-mgamal@redhat.com>
+ <20200710154811.418214-8-mgamal@redhat.com>
+ <20200715230006.GF12349@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817165339.GA22500@quack2.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200715230006.GF12349@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 06:53:39PM +0200, Jan Kara wrote:
-> On Fri 07-08-20 15:55:08, Vivek Goyal wrote:
-> > virtiofs device has a range of memory which is mapped into file inodes
-> > using dax. This memory is mapped in qemu on host and maps different
-> > sections of real file on host. Size of this memory is limited
-> > (determined by administrator) and depending on filesystem size, we will
-> > soon reach a situation where all the memory is in use and we need to
-> > reclaim some.
+On Wed, Jul 15, 2020 at 04:00:08PM -0700, Sean Christopherson wrote:
+> On Fri, Jul 10, 2020 at 05:48:09PM +0200, Mohammed Gamal wrote:
+> > Check guest physical address against it's maximum physical memory. If
+> > the guest's physical address exceeds the maximum (i.e. has reserved bits
+> > set), inject a guest page fault with PFERR_RSVD_MASK set.
 > > 
-> > As part of reclaim process, we will need to make sure that there are
-> > no active references to pages (taken by get_user_pages()) on the memory
-> > range we are trying to reclaim. I am planning to use
-> > dax_layout_busy_page() for this. But in current form this is per inode
-> > and scans through all the pages of the inode.
+> > This has to be done both in the EPT violation and page fault paths, as
+> > there are complications in both cases with respect to the computation
+> > of the correct error code.
 > > 
-> > We want to reclaim only a portion of memory (say 2MB page). So we want
-> > to make sure that only that 2MB range of pages do not have any
-> > references  (and don't want to unmap all the pages of inode).
+> > For EPT violations, unfortunately the only possibility is to emulate,
+> > because the access type in the exit qualification might refer to an
+> > access to a paging structure, rather than to the access performed by
+> > the program.
 > > 
-> > Hence, create a range version of this function named
-> > dax_layout_busy_page_range() which can be used to pass a range which
-> > needs to be unmapped.
+> > Trapping page faults instead is needed in order to correct the error code,
+> > but the access type can be obtained from the original error code and
+> > passed to gva_to_gpa.  The corrections required in the error code are
+> > subtle. For example, imagine that a PTE for a supervisor page has a reserved
+> > bit set.  On a supervisor-mode access, the EPT violation path would trigger.
+> > However, on a user-mode access, the processor will not notice the reserved
+> > bit and not include PFERR_RSVD_MASK in the error code.
 > > 
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: linux-nvdimm@lists.01.org
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> 
-> The API looks OK. Some comments WRT the implementation below.
-> 
-> > diff --git a/fs/dax.c b/fs/dax.c
-> > index 11b16729b86f..0d51b0fbb489 100644
-> > --- a/fs/dax.c
-> > +++ b/fs/dax.c
-> > @@ -558,27 +558,20 @@ static void *grab_mapping_entry(struct xa_state *xas,
-> >  	return xa_mk_internal(VM_FAULT_FALLBACK);
-> >  }
+> > Co-developed-by: Mohammed Gamal <mgamal@redhat.com>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 24 +++++++++++++++++++++---
+> >  arch/x86/kvm/vmx/vmx.h |  3 ++-
+> >  2 files changed, 23 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 770b090969fb..de3f436b2d32 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -4790,9 +4790,15 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
 > >  
-> > -/**
-> > - * dax_layout_busy_page - find first pinned page in @mapping
-> > - * @mapping: address space to scan for a page with ref count > 1
-> > - *
-> > - * DAX requires ZONE_DEVICE mapped pages. These pages are never
-> > - * 'onlined' to the page allocator so they are considered idle when
-> > - * page->count == 1. A filesystem uses this interface to determine if
-> > - * any page in the mapping is busy, i.e. for DMA, or other
-> > - * get_user_pages() usages.
-> > - *
-> > - * It is expected that the filesystem is holding locks to block the
-> > - * establishment of new mappings in this address_space. I.e. it expects
-> > - * to be able to run unmap_mapping_range() and subsequently not race
-> > - * mapping_mapped() becoming true.
-> > +/*
-> > + * Partial pages are included. If end is LLONG_MAX, pages in the range from
-> > + * start to end of the file are inluded.
-> >   */
+> >  	if (is_page_fault(intr_info)) {
+> >  		cr2 = vmx_get_exit_qual(vcpu);
+> > -		/* EPT won't cause page fault directly */
+> > -		WARN_ON_ONCE(!vcpu->arch.apf.host_apf_flags && enable_ept);
+> > -		return kvm_handle_page_fault(vcpu, error_code, cr2, NULL, 0);
+> > +		if (enable_ept && !vcpu->arch.apf.host_apf_flags) {
+> > +			/*
+> > +			 * EPT will cause page fault only if we need to
+> > +			 * detect illegal GPAs.
+> > +			 */
+> > +			kvm_fixup_and_inject_pf_error(vcpu, cr2, error_code);
 > 
-> I think the big kerneldoc comment should stay with
-> dax_layout_busy_page_range() since dax_layout_busy_page() will be just a
-> trivial wrapper around it..
-
-Hi Jan,
-
-Thanks for the review.
-
-Will move kerneldoc comment.
-
-
+> This splats when running the PKU unit test, although the test still passed.
+> I haven't yet spent the brain power to determine if this is a benign warning,
+> i.e. simply unexpected, or if permission_fault() fault truly can't handle PK
+> faults.
 > 
-> > -struct page *dax_layout_busy_page(struct address_space *mapping)
-> > +struct page *dax_layout_busy_page_range(struct address_space *mapping,
-> > +					loff_t start, loff_t end)
-> >  {
-> > -	XA_STATE(xas, &mapping->i_pages, 0);
-> >  	void *entry;
-> >  	unsigned int scanned = 0;
-> >  	struct page *page = NULL;
-> > +	pgoff_t start_idx = start >> PAGE_SHIFT;
-> > +	pgoff_t end_idx = end >> PAGE_SHIFT;
-> > +	XA_STATE(xas, &mapping->i_pages, start_idx);
-> > +	loff_t len, lstart = round_down(start, PAGE_SIZE);
-> >  
-> >  	/*
-> >  	 * In the 'limited' case get_user_pages() for dax is disabled.
-> > @@ -589,6 +582,22 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
-> >  	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
-> >  		return NULL;
-> >  
-> > +	/* If end == LLONG_MAX, all pages from start to till end of file */
-> > +	if (end == LLONG_MAX) {
-> > +		end_idx = ULONG_MAX;
-> > +		len = 0;
-> > +	} else {
-> > +		/* length is being calculated from lstart and not start.
-> > +		 * This is due to behavior of unmap_mapping_range(). If
-> > +		 * start is say 4094 and end is on 4096 then we want to
-> > +		 * unamp two pages, idx 0 and 1. But unmap_mapping_range()
-> > +		 * will unmap only page at idx 0. If we calculate len
-> > +		 * from the rounded down start, this problem should not
-> > +		 * happen.
-> > +		 */
-> > +		len = end - lstart + 1;
-> > +	}
-> 
-> Maybe it would be more understandable to use
-> 	unmap_mapping_pages(mapping, start_idx, end_idx - start_idx + 1);
-> below and avoid all this rounding and special-casing.
+>   WARNING: CPU: 25 PID: 5465 at arch/x86/kvm/mmu.h:197 paging64_walk_addr_generic+0x594/0x750 [kvm]
+>   Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS WLYDCRB1.SYS.0014.D62.2001092233 01/09/2020
+>   RIP: 0010:paging64_walk_addr_generic+0x594/0x750 [kvm]
+>   Code: <0f> 0b e9 db fe ff ff 44 8b 43 04 4c 89 6c 24 30 8b 13 41 39 d0 89
+>   RSP: 0018:ff53778fc623fb60 EFLAGS: 00010202
+>   RAX: 0000000000000001 RBX: ff53778fc623fbf0 RCX: 0000000000000007
+>   RDX: 0000000000000001 RSI: 0000000000000002 RDI: ff4501efba818000
+>   RBP: 0000000000000020 R08: 0000000000000005 R09: 00000000004000e7
+>   R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000007
+>   R13: ff4501efba818388 R14: 10000000004000e7 R15: 0000000000000000
+>   FS:  00007f2dcf31a700(0000) GS:ff4501f1c8040000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000000 CR3: 0000001dea475005 CR4: 0000000000763ee0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   PKRU: 55555554
+>   Call Trace:
+>    paging64_gva_to_gpa+0x3f/0xb0 [kvm]
+>    kvm_fixup_and_inject_pf_error+0x48/0xa0 [kvm]
+>    handle_exception_nmi+0x4fc/0x5b0 [kvm_intel]
+>    kvm_arch_vcpu_ioctl_run+0x911/0x1c10 [kvm]
+>    kvm_vcpu_ioctl+0x23e/0x5d0 [kvm]
+>    ksys_ioctl+0x92/0xb0
+>    __x64_sys_ioctl+0x16/0x20
+>    do_syscall_64+0x3e/0xb0
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>   ---[ end trace d17eb998aee991da ]---
 
-Will do.
-
-> 
-> > +
-> >  	/*
-> >  	 * If we race get_user_pages_fast() here either we'll see the
-> >  	 * elevated page count in the iteration and wait, or
-> > @@ -601,10 +610,10 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
-> >  	 * guaranteed to either see new references or prevent new
-> >  	 * references from being established.
-> >  	 */
-> > -	unmap_mapping_range(mapping, 0, 0, 0);
-> > +	unmap_mapping_range(mapping, start, len, 0);
-> >  
-> >  	xas_lock_irq(&xas);
-> > -	xas_for_each(&xas, entry, ULONG_MAX) {
-> > +	xas_for_each(&xas, entry, end_idx) {
-> >  		if (WARN_ON_ONCE(!xa_is_value(entry)))
-> >  			continue;
-> >  		if (unlikely(dax_is_locked(entry)))
-> > @@ -625,6 +634,27 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
-> >  	xas_unlock_irq(&xas);
-> >  	return page;
-> >  }
-> > +EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
-> > +
-> > +/**
-> > + * dax_layout_busy_page - find first pinned page in @mapping
-> > + * @mapping: address space to scan for a page with ref count > 1
-> > + *
-> > + * DAX requires ZONE_DEVICE mapped pages. These pages are never
-> > + * 'onlined' to the page allocator so they are considered idle when
-> > + * page->count == 1. A filesystem uses this interface to determine if
-> > + * any page in the mapping is busy, i.e. for DMA, or other
-> > + * get_user_pages() usages.
-> > + *
-> > + * It is expected that the filesystem is holding locks to block the
-> > + * establishment of new mappings in this address_space. I.e. it expects
-> > + * to be able to run unmap_mapping_range() and subsequently not race
-> > + * mapping_mapped() becoming true.
-> > + */
-> > +struct page *dax_layout_busy_page(struct address_space *mapping)
-> > +{
-> > +	return dax_layout_busy_page_range(mapping, 0, 0);
-> 
-> Should the 'end' rather be LLONG_MAX?
-
-My bad. I forgot to change this. Previous version of patches had the
-semantic that 'end == 0' signifies till the end of file. Yes, 'end'
-should be LLONG_MAX now. Will fix it.
-
-Thanks
-Vivek
-
-> 
-> Otherwise the patch looks good to me.
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-> 
-
+Looks like this series got pulled for 5.9, has anyone looked into this?
