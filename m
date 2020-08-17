@@ -2,98 +2,88 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07998C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7042063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689495;
-	bh=fMKPC68/uXyegGO1IEJSumlFPYTRRHQb7Pdm6W8QMTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ws2XuAKlbWYIOABdlSwYBsiQRhyq+Ex1zbibH2oTfRPz0vw5jLLGHkY6xuSm5tBfK
-	 FDRurLLLxRHJAOiBuKpZwa9zste9u8yLcyIZQqVareccd1NSwpgrYrUqnA4zQKMhLb
-	 EVkZEfimjTIsiJ/ANJaenLyxk8btLP7ikH0cm0eU=
+	by mail.kernel.org (Postfix) with ESMTP id D4F3920578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fIPhHRoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388979AbgHQSiK (ORCPT
+        id S1731045AbgHQSiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730930AbgHQP6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:58:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABE38207DA;
-        Mon, 17 Aug 2020 15:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679926;
-        bh=fMKPC68/uXyegGO1IEJSumlFPYTRRHQb7Pdm6W8QMTI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TO8UUinOF0EN+kf2SVhSNYpgyjfgUdwSXIfXolCVYZVU5C39JesTRofnmIy6KlbM3
-         IpC6eiWHdPOSlyHTMCeTpWLGJBowPbtW5d60BZI72eV/Il+dkm/vXc6ueVbuy1z3g1
-         0wZaGTPz2eQtHnT9JL14eTk9QNYDUiBi9WC+lyVY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.7 381/393] xen/balloon: fix accounting in alloc_xenballooned_pages error path
-Date:   Mon, 17 Aug 2020 17:17:11 +0200
-Message-Id: <20200817143838.089819229@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730444AbgHQP6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:39 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E30C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:58:38 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id p24so18312914ejf.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nDW9UCeKCT82tfxaSNxr50xbb9G40cITAcAS3tvi8v0=;
+        b=fIPhHRoaOSDBb+ug606oRYS2+MH5nZe6EMkjdBne3K6gkNMRHGFl+IinNJuPE7HtDB
+         0P5yIMQN0vJ+D7KsSmoTREIxQXfgHlgP8SLVIrk3NC4rU/MaKeLXMJGlTIJcN3K0LVcb
+         8YQq4mPE/eHtEhAhLC0BW/HVfeotG0CFsfiPwcULNgc49IIp3BUAWu/j9DmJsEbY5Vix
+         dSa/ahzIk6ZB1COkndigQ1FITezBhbrovkBjR4XKdS84FUjDweagcSiz/Xw4WHOrYy3K
+         3hFGJOt8E4buK1kawUekKbFn9He3DVzGb0mVXYxUGMewA1jIhHXUBA22Uf/Fa9IvReEj
+         ORPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nDW9UCeKCT82tfxaSNxr50xbb9G40cITAcAS3tvi8v0=;
+        b=R4cT6rzfBA9ycYn5rC8ENO1Bp2Dw4WCWPAnkV2Om8GRT1qAd2T2fdSZnl+/AsWmpB1
+         X5FGtvH2UmRCkg3IYiYd2F+Op8ooQKQvGNBll5RPCBSAAlU80Il3Blb8vO40nAwdAJr+
+         E2xZiEs6UjaPk0KDWZA/iNs49onEHzJUMvQXQvKUJuMLKJpY30sqtn3+nbv/I5ocD9Ud
+         NS7hhqm7IgiIpw8MN5yrB4JT9uimB5yAQHt7SPY8DInCrXjOWdB6jE1zGWlMsi7joVsM
+         mUQW+k67n6B5OlvBv3+jOAKHWrC6i45UhSKK6lXSgqDauwYL8cOchzUUH33ENuds5whr
+         fxmQ==
+X-Gm-Message-State: AOAM532WS2oew7UoQasEJ7zt2NcrziIBfLmZEvx7TmdUljpucQrs3tIc
+        4pryxe79Z6AeFVrDb/WFfFxDdfuqvkJ4mMb+/ljueQ==
+X-Google-Smtp-Source: ABdhPJxYeqZjXIthrlvMdVffSVE1rokkXKmYeaKq142LtxPwYHooYBJSF/6fA/EUW56GiEN2+N3Z1Iot+nCiSbSHmCs=
+X-Received: by 2002:a17:906:7f05:: with SMTP id d5mr15464122ejr.122.1597679917222;
+ Mon, 17 Aug 2020 08:58:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200805045955.GB9127@nazgul.tnic> <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+ <20200812210909.GA3283093@google.com> <20200817151357.GK549@zn.tnic>
+In-Reply-To: <20200817151357.GK549@zn.tnic>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 17 Aug 2020 08:58:26 -0700
+Message-ID: <CABCJKuccY-wOEuQm--TQYgJvErOXu5u-jBMgCrM7JYsNqYK=gg@mail.gmail.com>
+Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+On Mon, Aug 17, 2020 at 8:13 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Aug 12, 2020 at 02:09:09PM -0700, Sami Tolvanen wrote:
+> > The type mismatch broke allyesconfig in my test tree and your patch
+> > fixes the issue.
+>
+> How are you building your allyesconfigs? Because allyesconfig works here
+> fine on latest Linus tree.
 
-commit 1951fa33ec259abdf3497bfee7b63e7ddbb1a394 upstream.
+Sorry for not clarifying. This was in a tree with patches for enabling
+Clang's Control-Flow Integrity. However, this type mismatch looks like
+something that should be fixed regardless.
 
-target_unpopulated is incremented with nr_pages at the start of the
-function, but the call to free_xenballooned_pages will only subtract
-pgno number of pages, and thus the rest need to be subtracted before
-returning or else accounting will be skewed.
-
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200727091342.52325-2-roger.pau@citrix.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/xen/balloon.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -631,6 +631,12 @@ int alloc_xenballooned_pages(int nr_page
-  out_undo:
- 	mutex_unlock(&balloon_mutex);
- 	free_xenballooned_pages(pgno, pages);
-+	/*
-+	 * NB: free_xenballooned_pages will only subtract pgno pages, but since
-+	 * target_unpopulated is incremented with nr_pages at the start we need
-+	 * to remove the remaining ones also, or accounting will be screwed.
-+	 */
-+	balloon_stats.target_unpopulated -= nr_pages - pgno;
- 	return ret;
- }
- EXPORT_SYMBOL(alloc_xenballooned_pages);
-
-
+Sami
