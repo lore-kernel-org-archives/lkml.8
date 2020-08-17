@@ -2,123 +2,240 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC66C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F307C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F122072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5B32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eX/IqmDg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nm3IJty4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgHQH5n (ORCPT
+        id S1726560AbgHQH7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48182 "EHLO
+        Mon, 17 Aug 2020 03:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgHQH5k (ORCPT
+        with ESMTP id S1725765AbgHQH7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:57:40 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C673C061388;
-        Mon, 17 Aug 2020 00:57:40 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u128so7838406pfb.6;
-        Mon, 17 Aug 2020 00:57:40 -0700 (PDT)
+        Mon, 17 Aug 2020 03:59:40 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDF6C061388;
+        Mon, 17 Aug 2020 00:59:39 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l23so11518580edv.11;
+        Mon, 17 Aug 2020 00:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sgcMEmFz5a7sMCTpSzKDmtRdo2JPO50vEmzZ5iT3c5k=;
-        b=eX/IqmDgBKGkWhzJxWQru9Re5WUxDkYOOsxDFIY4SDAUKS+qA86iTJZZyjGKHfpDeM
-         Q1gQyQxKZXZq7ZnW/rMG2BbQ5eNZ1LmrifcBbG4wwgdbDTZWPBXO8tjhKF6YDhtR71dr
-         imypRoL2U9ri9esTtELWOWVSh28wV/JYzGam1CcNZHfpI0+DqO3pxOFXTc4uHQcAb0gF
-         69okLt6klykESSxmvVFW1KWlw3ON6FrLXN7xeKT4iaxLIHe5sMiX+P0+HbtrGlczRkQa
-         cwmUqgcMNbHSgwk7v1qCLQebZzoIJTtsoNmtq9r78fvh9imeuwgxR1PJynrU9N1Hf0s6
-         ew6Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1cXbBaafW+50dqCculqXKIrD5iW7sKJPiSxkET4AvNE=;
+        b=Nm3IJty4q+nOfBiYjAgN2NNT/Ch60U3kFDaPe7ksbAtNDXMRFTodjZ4718jIwWG4at
+         NLK4gzt86SR/xlVJyDQRc3XUNMq4tqg/JmJ7lMKJRZFAlaXpECSQE80LNlIaOcdR6V0P
+         3iRcOow9jmzhuUjw6ng67yK/ODaJKsFZYsJ/KpxvF+358PHHT/n1uZgdntQMJWWHIDLJ
+         lonJkbEj9GGn99RNhTQI3sUYQiw4ERGlX6JHuKjcrxy9Lxze4yM+j3ip0go5+m0Vq7kC
+         Fs1S65bJ/vMKUGnv3V1/T9obSPfo9/IE1QMeTkbxrB+QPIX2+mUaGxtR4oZaMk/0NeGi
+         DwtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sgcMEmFz5a7sMCTpSzKDmtRdo2JPO50vEmzZ5iT3c5k=;
-        b=BDDlU2CA3ngfi1MUWUNQ9Z9YpDNOgyLFzOM1COajVhEA3Cxk9qGhxbhZY06ckxHlqH
-         jP92S6LNwmt0xJkJfc8z2/FfAZSvyVziDwrABHPJ+xMxNvrYQgAYc6OjfRDrfN5Zogs9
-         +Kib4tMuZiiNBMqbEQUvTTyRRHBUz0Bl67N6wU+Eq4cdS3RLkW9xaX4pz1Rv4DCIu2ax
-         iYi5RxEGhR7oEYE6bXowKYrrCEnJf8ahM3PPd8nZKlGJyw2aszcSMPz0s6Hrj4Dbf7t3
-         922DOM1fEk0b6l1soh0iC6M6DEuucLGSPVP+O6i7zQl6jLd2QWxIaEfE/esptIIX6Ivm
-         6CEw==
-X-Gm-Message-State: AOAM530p6SjiHVRjwOzMMVgClmyWPKPq6OPehyPCP0TrURralsQoL6FI
-        BcDehcUDzLk/jk13/ktqDhY=
-X-Google-Smtp-Source: ABdhPJxTKNYKpwRNVQy4HgazCr7RIuZmqPyOs2Iv08vRbbmKGVHfnwGU1eMmIpFh7U8yktusCBM3KQ==
-X-Received: by 2002:a63:4b21:: with SMTP id y33mr9312090pga.142.1597651059515;
-        Mon, 17 Aug 2020 00:57:39 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id r186sm19781628pfr.162.2020.08.17.00.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 00:57:38 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 13:25:56 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v3 0/3] block: use generic power management
-Message-ID: <20200817075530.GF5869@gmail.com>
-References: <ea5881cdfd4d612193feed646ce89f253a36db69.camel@wdc.com>
- <20200722083335.50068-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1cXbBaafW+50dqCculqXKIrD5iW7sKJPiSxkET4AvNE=;
+        b=AmQfwLc3ppg4bCM3kawgUkgDollNJblGIg/o0mlVnlhGffwoLovW2FHraz7lpiLtSa
+         8hj6SA9W7251M3/RPGWmiM/Zv5DgMVY6cCWrCWHQQPXZi/+Ic9leL1JpK3sd/gH185vV
+         rToapePpj4A8ZW/pqMtuKKeRliYrTVhJzqP3cpd8JXwP+Ck5yw0MvAaqJQDYOW5PWy5P
+         ukywT2M2l4Ab6ViX3qEgdUj5rC0R47S5kBTcK9HpYv3p0SEpa7N43rTyyCcG3lV7REeh
+         LI9QTK/kOT/YeDV/8alAK+0vAQ/Qg5UCrAB9Z20f4GNPggCFV7+bAJHPv0BajCNmRV7p
+         53fw==
+X-Gm-Message-State: AOAM530uPYmc7XzdYaMAb3Cd3cOxKA9hw4od2TulTnxHvMuJwgnRLmWc
+        DYdGfR7IfXq62cvqPCBsOwQYZL8sxonsL+UENto=
+X-Google-Smtp-Source: ABdhPJzqKXF/U+5Ql0v/Df74UZIr4RCMxKWkg92mOvojgyrs0Tdhf8aOjQd4f8MhONWORxA/VMe2Cp0vp5ky014312M=
+X-Received: by 2002:aa7:d410:: with SMTP id z16mr13495000edq.287.1597651178388;
+ Mon, 17 Aug 2020 00:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200722083335.50068-1-vaibhavgupta40@gmail.com>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-2-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1597406966-13740-2-git-send-email-abel.vesa@nxp.com>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Mon, 17 Aug 2020 15:44:32 +0800
+Message-ID: <CAA+hA=Qd5BURqbQox1MhXtXcG1fRW6h-pyo2LcH6uukOYi0sKg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/17] dt-bindings: clocks: imx8mp: Rename audiomix ids
+ clocks to audio_blk_ctrl
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:03:32PM +0530, Vaibhav Gupta wrote:
-> Linux Kernel Mentee: Remove Legacy Power Management.
-> 
-> The purpose of this patch series is to upgrade power management in block
-> drivers. This has been done by upgrading .suspend() and .resume() callbacks.
-> 
-> The upgrade makes sure that the involvement of PCI Core does not change the
-> order of operations executed in a driver. Thus, does not change its behavior.
-> 
-> In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
-> helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
-> pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
-> their job.
-> 
-> The conversion requires the removal of those function calls, change the
-> callbacks' definition accordingly and make use of dev_pm_ops structure.
-> 
-> All patches are compile-tested only.
-> 
-> Test tools:
->     - Compiler: gcc (GCC) 10.1.0
->     - allmodconfig build: make -j$(nproc) W=1 all
-> 
-> v3: v2 needed some changes in commit messages.
-> 
-> Vaibhav Gupta (3):
->   mtip32xx: use generic power management
->   rsxx: use generic power management
->   skd: use generic power management
-> 
->  drivers/block/mtip32xx/mtip32xx.c | 54 +++++++------------------------
->  drivers/block/rsxx/core.c         |  9 ++++--
->  drivers/block/skd_main.c          | 30 +++++------------
->  3 files changed, 27 insertions(+), 66 deletions(-)
-> 
-> -- 
-> 2.27.0
-> 
+On Fri, Aug 14, 2020 at 8:14 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> In the reference manual the actual name is Audio BLK_CTRL.
+> Lets make it more obvious here by renaming from audiomix to audio_blk_ctrl.
+>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+
+As there's still no users of the old definitions, it's okay for me to
+change it now.
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+Regards
+Aisheng
+
+> ---
+>  include/dt-bindings/clock/imx8mp-clock.h | 120 +++++++++++++++----------------
+>  1 file changed, 60 insertions(+), 60 deletions(-)
+>
+> diff --git a/include/dt-bindings/clock/imx8mp-clock.h b/include/dt-bindings/clock/imx8mp-clock.h
+> index 7a23f28..6008f32 100644
+> --- a/include/dt-bindings/clock/imx8mp-clock.h
+> +++ b/include/dt-bindings/clock/imx8mp-clock.h
+> @@ -324,66 +324,66 @@
+>
+>  #define IMX8MP_CLK_END                         313
+>
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_IPG           0
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1         1
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2         2
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK3         3
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_IPG           4
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1         5
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2         6
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK3         7
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_IPG           8
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1         9
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2         10
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK3         11
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_IPG           12
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1         13
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2         14
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK3         15
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_IPG           16
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1         17
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2         18
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK3         19
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_IPG           20
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1         21
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2         22
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK3         23
+> -#define IMX8MP_CLK_AUDIOMIX_ASRC_IPG           24
+> -#define IMX8MP_CLK_AUDIOMIX_PDM_IPG            25
+> -#define IMX8MP_CLK_AUDIOMIX_SDMA2_ROOT         26
+> -#define IMX8MP_CLK_AUDIOMIX_SDMA3_ROOT         27
+> -#define IMX8MP_CLK_AUDIOMIX_SPBA2_ROOT         28
+> -#define IMX8MP_CLK_AUDIOMIX_DSP_ROOT           29
+> -#define IMX8MP_CLK_AUDIOMIX_DSPDBG_ROOT                30
+> -#define IMX8MP_CLK_AUDIOMIX_EARC_IPG           31
+> -#define IMX8MP_CLK_AUDIOMIX_OCRAMA_IPG         32
+> -#define IMX8MP_CLK_AUDIOMIX_AUD2HTX_IPG                33
+> -#define IMX8MP_CLK_AUDIOMIX_EDMA_ROOT          34
+> -#define IMX8MP_CLK_AUDIOMIX_AUDPLL_ROOT                35
+> -#define IMX8MP_CLK_AUDIOMIX_MU2_ROOT           36
+> -#define IMX8MP_CLK_AUDIOMIX_MU3_ROOT           37
+> -#define IMX8MP_CLK_AUDIOMIX_EARC_PHY           38
+> -#define IMX8MP_CLK_AUDIOMIX_PDM_ROOT           39
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1_SEL     40
+> -#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2_SEL     41
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1_SEL     42
+> -#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2_SEL     43
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1_SEL     44
+> -#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2_SEL     45
+> -#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK1_SEL     46
+> -#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK2_SEL     47
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1_SEL     48
+> -#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2_SEL     49
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1_SEL     50
+> -#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2_SEL     51
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1_SEL     52
+> -#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2_SEL     53
+> -#define IMX8MP_CLK_AUDIOMIX_PDM_SEL            54
+> -#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL    55
+> -#define IMX8MP_CLK_AUDIOMIX_SAI_PLL            56
+> -#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS     57
+> -#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT                58
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_IPG             0
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK1           1
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK2           2
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK3           3
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_IPG             4
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK1           5
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK2           6
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK3           7
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_IPG             8
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK1           9
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK2           10
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK3           11
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_IPG             12
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK1           13
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK2           14
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK3           15
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_IPG             16
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK1           17
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK2           18
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK3           19
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_IPG             20
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK1           21
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK2           22
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK3           23
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_ASRC_IPG             24
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_IPG              25
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SDMA2_ROOT           26
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SDMA3_ROOT           27
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SPBA2_ROOT           28
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_DSP_ROOT             29
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_DSPDBG_ROOT          30
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_EARC_IPG             31
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_OCRAMA_IPG           32
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_AUD2HTX_IPG          33
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_EDMA_ROOT            34
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_AUDPLL_ROOT          35
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_MU2_ROOT             36
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_MU3_ROOT             37
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_EARC_PHY             38
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_ROOT             39
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK1_SEL       40
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK2_SEL       41
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK1_SEL       42
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK2_SEL       43
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK1_SEL       44
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK2_SEL       45
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI4_MCLK1_SEL       46
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI4_MCLK2_SEL       47
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK1_SEL       48
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK2_SEL       49
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK1_SEL       50
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK2_SEL       51
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK1_SEL       52
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK2_SEL       53
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_SEL              54
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_REF_SEL      55
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL              56
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_BYPASS       57
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_OUT          58
+>
+> -#define IMX8MP_CLK_AUDIOMIX_END                        59
+> +#define IMX8MP_CLK_AUDIO_BLK_CTRL_END                  59
+>
+>  #endif
+> --
+> 2.7.4
+>
