@@ -2,49 +2,50 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBAA220758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A5D20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NyO6p6Ux"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Y0Z4W4ZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHQKwl (ORCPT
+        id S1727786AbgHQKxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:52:41 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24036 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgHQKwe (ORCPT
+        Mon, 17 Aug 2020 06:53:48 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:13633 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgHQKwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:52:34 -0400
+        Mon, 17 Aug 2020 06:52:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597661552; x=1629197552;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=THVFyJZdPL8z8wIWjz/cCo/bD49eZBFTiKpBDW2n6Ds=;
-  b=NyO6p6UxddQkPCnz+NKDQBnmEypkro9vWU71WHvmehzJ68/a3eRFVyUz
-   N0jACghfQzHxcAvAFIuyE1rG+cgOrHEC1OKNmd8aqygYyji85WXTeclun
-   n2nc73BwSQjmcMYKqPkdsJOKJgf1/DhKR9+gFG5Hr7xNK0acATSGTA3FA
-   4=;
+  t=1597661568; x=1629197568;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=EyPE9Guy6K8Ykgz/GFVPQxJeVx8vx3JyIj/anqhEN08=;
+  b=Y0Z4W4ZNCXy3kCPCaimFYE9oXY6EMjhMjGDyWBwXdhHXJeErcNbCd6up
+   YMEb6cuxglqdJ7Qi7Zrxke+HX4po4+riLrjF7wq3RPNhO4osaIkxGNRC7
+   L0pRtB1sJ+ybb7Bfy2svT6+bzWKIf/C4suehhClo+s1DsdW37Pjoe8/ie
+   k=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48181808"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Aug 2020 10:52:31 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id DC5D2A1E31;
-        Mon, 17 Aug 2020 10:52:19 +0000 (UTC)
+   d="scan'208";a="67283530"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Aug 2020 10:52:40 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 0357DA18DF;
+        Mon, 17 Aug 2020 10:52:37 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:52:18 +0000
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:52:37 +0000
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.192) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:52:02 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:52:20 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -66,10 +67,12 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v20 00/15] Introduce Data Access MONitor (DAMON)
-Date:   Mon, 17 Aug 2020 12:51:22 +0200
-Message-ID: <20200817105137.19296-1-sjpark@amazon.com>
+Subject: [PATCH v20 01/15] mm: Introduce Data Access MONitor (DAMON)
+Date:   Mon, 17 Aug 2020 12:51:23 +0200
+Message-ID: <20200817105137.19296-2-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817105137.19296-1-sjpark@amazon.com>
+References: <20200817105137.19296-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.43.160.192]
@@ -82,287 +85,323 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Changes from Previous Version
-=============================
+DAMON is a data access monitoring framework subsystem for the Linux
+kernel.  The core mechanisms of DAMON make it
 
-- Place 'CREATE_TRACE_POINTS' after '#include' statements (Steven Rostedt)
-- Support large record file (Alkaid)
-- Place 'put_pid()' of virtual monitoring targets in 'cleanup' callback
-- Avoid conflict between concurrent DAMON users
-- Update evaluation result document
+ - accurate (the monitoring output is useful enough for DRAM level
+   memory management; It might not appropriate for CPU Cache levels,
+   though),
+ - light-weight (the monitoring overhead is low enough to be applied
+   online), and
+ - scalable (the upper-bound of the overhead is in constant range
+   regardless of the size of target workloads).
 
-Introduction
-============
+Using this framework, therefore, the kernel's memory management
+mechanisms can make advanced decisions.  Experimental memory management
+optimization works that incurring high data accesses monitoring overhead
+could implemented again.  In user space, meanwhile, users who have some
+special workloads can write personalized applications for better
+understanding and optimizations of their workloads and systems.
 
-DAMON is a data access monitoring framework subsystem for the Linux kernel.
-The core mechanisms of DAMON called 'region based sampling' and 'adaptive
-regions adjustment' (refer to 'mechanisms.rst' in the 11th patch of this
-patchset for the detail) make it
+This commit is implementing only the stub for the initialization, basic
+data structures, and simple manipulation functions of the structures.
+The core mechanisms of DAMON will be implemented by following commits.
 
- - accurate (The monitored information is useful for DRAM level memory
-   management. It might not appropriate for Cache-level accuracy, though.),
- - light-weight (The monitoring overhead is low enough to be applied online
-   while making no impact on the performance of the target workloads.), and
- - scalable (the upper-bound of the instrumentation overhead is controllable
-   regardless of the size of target workloads.).
-
-Using this framework, therefore, the kernel's core memory management mechanisms
-such as reclamation and THP can be optimized for better memory management.  The
-experimental memory management optimization works that incurring high
-instrumentation overhead will be able to have another try.  In user space,
-meanwhile, users who have some special workloads will be able to write
-personalized tools or applications for deeper understanding and specialized
-optimizations of their systems.
-
-Evaluations
-===========
-
-We evaluated DAMON's overhead, monitoring quality and usefulness using 25
-realistic workloads on my QEMU/KVM based virtual machine running a kernel that
-v20 DAMON patchset is applied.
-
-DAMON is lightweight.  It increases system memory usage by 0.12% and slows
-target workloads down by 1.39%.
-
-DAMON is accurate and useful for memory management optimizations.  An
-experimental DAMON-based operation scheme for THP, 'ethp', removes 88.16% of
-THP memory overheads while preserving 88.73% of THP speedup.  Another
-experimental DAMON-based 'proactive reclamation' implementation, 'prcl',
-reduces 91.34% of residential sets and 25.59% of system memory footprint while
-incurring only 1.58% runtime overhead in the best case (parsec3/freqmine).
-
-NOTE that the experimentail THP optimization and proactive reclamation are not
-for production but just only for proof of concepts.
-
-Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
-a document for DAMON" patch in this patchset for detailed evaluation setup and
-results.
-
-[1] https://damonitor.github.io/doc/html/latest-damon/admin-guide/mm/damon/eval.html
-
-More Information
-================
-
-We prepared a showcase web site[1] that you can get more information.  There
-are
-
-- the official documentations[2],
-- the heatmap format dynamic access pattern of various realistic workloads for
-  heap area[3], mmap()-ed area[4], and stack[5] area,
-- the dynamic working set size distribution[6] and chronological working set
-  size changes[7], and
-- the latest performance test results[8].
-
-[1] https://damonitor.github.io/_index
-[2] https://damonitor.github.io/doc/html/latest-damon
-[3] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.0.png.html
-[4] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html
-[5] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.2.png.html
-[6] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html
-[7] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
-[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
-
-Baseline and Complete Git Trees
-===============================
-
-The patches are based on the v5.8.  You can also clone the complete git
-tree:
-
-    $ git clone git://github.com/sjp38/linux -b damon/patches/v20
-
-The web is also available:
-https://github.com/sjp38/linux/releases/tag/damon/patches/v20
-
-There are a couple of trees for entire DAMON patchset series.  It includes
-future features.  The first one[1] contains the changes for latest release,
-while the other one[2] contains the changes for next release.
-
-[1] https://github.com/sjp38/linux/tree/damon/master
-[2] https://github.com/sjp38/linux/tree/damon/next
-
-Sequence Of Patches
-===================
-
-First four patches implement the target address space independent core logics
-of DAMON and it's programming interface.  The 1st patch introduces DAMON
-subsystem, it's data structures, and the data structure related basic
-manipulation functions.  Following three patches (2nd to 4th) implements the
-core mechanisms of DAMON, namely regions based sampling (patch 2), adaptive
-regions adjustment (patch 3), and dynamic memory mapping change adoption (patch
-4).
-
-Now the essential parts of DAMON is complete but require low level primitives
-to be implemented and configured with DAMON to just work.  The following two
-patches makes it just work for virtual address spaces monitoring.  The 5th
-patch makes 'PG_idle' could be used by DAMON and the 6th patch implements the
-virtual memory address space specific low primitives using page table Accessed
-bits and the 'PG_idle' page flag.
-
-Now DAMON just works for virtual address space monitoring via the kernel space
-api.  Following six patches adds interfaces for the users in the user space.
-The 7th patch implements recording of access patterns in DAMON.  Each of next
-two patches (8th and 9th) respectively adds a tracepoint for other tracepoints
-supporting tracers such as perf, and a debugfs interface for privileged people
-and/or programs in user space.  10th patch makes the debugfs interface further
-support pidfd.  And, the 11th patch implements an user space tool to provide a
-minimal reference to the debugfs interface and for high level use/tests of the
-DAMON.
-
-Three patches for maintainability follows.  The 12th patch adds documentations
-for both the user space and the kernel space.  The 13th patch provides unit
-tests (based on the kunit) while the 14th patch adds user space tests (based on
-the kselftest).
-
-Finally, the last patch (15th) updates the MAINTAINERS file.
-
-Patch History
-=============
-
-Changes from v19
-(https://lore.kernel.org/linux-mm/20200804091416.31039-1-sjpark@amazon.com/)
-- Place 'CREATE_TRACE_POINTS' after '#include' statements (Steven Rostedt)
-- Support large record file (Alkaid)
-- Place 'put_pid()' of virtual monitoring targets in 'cleanup' callback
-- Avoid conflict between concurrent DAMON users
-- Update evaluation result document
-
-Changes from v18
-(https://lore.kernel.org/linux-mm/20200713084144.4430-1-sjpark@amazon.com/)
-- Drop loadable module support (Mike Rapoport)
-- Select PAGE_EXTENSION if !64BIT for 'set_page_young()'
-- Take care of the MMU notification subscribers (Shakeel Butt)
-- Substitute 'struct damon_task' with 'struct damon_target' for better abstract
-- Use 'struct pid' instead of 'pid_t' as the target (Shakeel Butt)
-- Support pidfd from the debugfs interface (Shakeel Butt)
-- Fix typos (Greg Thelen)
-- Properly isolate DAMON from other pmd/pte Accessed bit users (Greg Thelen)
-- Rebase on v5.8
-
-Changes from v17
-(https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/)
-- Reorganize the doc and remove png blobs (Mike Rapoport)
-- Wordsmith mechnisms doc and commit messages
-- tools/wss: Set default working set access frequency threshold
-- Avoid race in damon deamon start
-
-Changes from v16
-(https://lore.kernel.org/linux-mm/20200615161927.12637-1-sjpark@amazon.com/)
- - Wordsmith/cleanup the documentations and the code
- - user space tool: Simplify the code and add wss option for reuse histogram
- - recording: Check disablement condition properly
- - recording: Force minimal recording buffer size (1KB)
-
-Changes from v15
-(https://lore.kernel.org/linux-mm/20200608114047.26589-1-sjpark@amazon.com/)
- - Refine commit messages (David Hildenbrand)
- - Optimizes three vma regions search (Varad Gautam)
- - Support static granularity monitoring (Shakeel Butt)
- - Cleanup code and re-organize the sequence of patches
-
-Changes from v14
-(https://lore.kernel.org/linux-mm/20200602130125.20467-1-sjpark@amazon.com/)
- - Directly pass region and task to tracepoint (Steven Rostedt)
- - Refine comments for better read
- - Add more 'Reviewed-by's (Leonard Foerster, Brendan Higgins)
-
-Changes from v13
-(https://lore.kernel.org/linux-mm/20200525091512.30391-1-sjpark@amazon.com/)
- - Fix a typo (Leonard Foerster)
- - Fix wring condition of three sub ranges split (Leonard Foerster)
- - Rebase on v5.7
-
-Please refer to the v13 patchset to get older history.
-
-SeongJae Park (15):
-  mm: Introduce Data Access MONitor (DAMON)
-  mm/damon: Implement region based sampling
-  mm/damon: Adaptively adjust regions
-  mm/damon: Track dynamic monitoring target regions update
-  mm/idle_page_tracking: Make PG_(idle|young) reusable
-  mm/damon: Implement callbacks for the virtual memory address spaces
-  mm/damon: Implement access pattern recording
-  mm/damon: Add a tracepoint
-  mm/damon: Implement a debugfs interface
-  damon/debugfs: Support pidfd target id
-  tools: Introduce a minimal user-space tool for DAMON
-  Documentation: Add documents for DAMON
-  mm/damon: Add kunit tests
-  mm/damon: Add user space selftests
-  MAINTAINERS: Update for DAMON
-
- Documentation/admin-guide/mm/damon/guide.rst  |  157 ++
- Documentation/admin-guide/mm/damon/index.rst  |   15 +
- Documentation/admin-guide/mm/damon/plans.rst  |   29 +
- Documentation/admin-guide/mm/damon/start.rst  |   96 +
- Documentation/admin-guide/mm/damon/usage.rst  |  302 +++
- Documentation/admin-guide/mm/index.rst        |    1 +
- Documentation/vm/damon/api.rst                |   20 +
- Documentation/vm/damon/design.rst             |  166 ++
- Documentation/vm/damon/eval.rst               |  225 ++
- Documentation/vm/damon/faq.rst                |   58 +
- Documentation/vm/damon/index.rst              |   31 +
- Documentation/vm/index.rst                    |    1 +
- MAINTAINERS                                   |   13 +
- include/linux/damon.h                         |  193 ++
- include/linux/page-flags.h                    |    4 +-
- include/linux/page_ext.h                      |    2 +-
- include/linux/page_idle.h                     |    6 +-
- include/trace/events/damon.h                  |   43 +
- include/trace/events/mmflags.h                |    2 +-
- mm/Kconfig                                    |   33 +
- mm/Makefile                                   |    1 +
- mm/damon-test.h                               |  671 ++++++
- mm/damon.c                                    | 1805 +++++++++++++++++
- mm/page_ext.c                                 |   12 +-
- mm/page_idle.c                                |   10 -
- tools/damon/.gitignore                        |    1 +
- tools/damon/_damon.py                         |  130 ++
- tools/damon/_dist.py                          |   36 +
- tools/damon/_recfile.py                       |   23 +
- tools/damon/bin2txt.py                        |   67 +
- tools/damon/damo                              |   37 +
- tools/damon/heats.py                          |  362 ++++
- tools/damon/nr_regions.py                     |   91 +
- tools/damon/record.py                         |  135 ++
- tools/damon/report.py                         |   45 +
- tools/damon/wss.py                            |  100 +
- tools/testing/selftests/damon/Makefile        |    7 +
- .../selftests/damon/_chk_dependency.sh        |   28 +
- tools/testing/selftests/damon/_chk_record.py  |  109 +
- .../testing/selftests/damon/debugfs_attrs.sh  |  161 ++
- .../testing/selftests/damon/debugfs_record.sh |   50 +
- 41 files changed, 5260 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/admin-guide/mm/damon/guide.rst
- create mode 100644 Documentation/admin-guide/mm/damon/index.rst
- create mode 100644 Documentation/admin-guide/mm/damon/plans.rst
- create mode 100644 Documentation/admin-guide/mm/damon/start.rst
- create mode 100644 Documentation/admin-guide/mm/damon/usage.rst
- create mode 100644 Documentation/vm/damon/api.rst
- create mode 100644 Documentation/vm/damon/design.rst
- create mode 100644 Documentation/vm/damon/eval.rst
- create mode 100644 Documentation/vm/damon/faq.rst
- create mode 100644 Documentation/vm/damon/index.rst
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+Reviewed-by: Varad Gautam <vrd@amazon.de>
+---
+ include/linux/damon.h |  66 ++++++++++++++++
+ mm/Kconfig            |  11 +++
+ mm/Makefile           |   1 +
+ mm/damon.c            | 176 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 254 insertions(+)
  create mode 100644 include/linux/damon.h
- create mode 100644 include/trace/events/damon.h
- create mode 100644 mm/damon-test.h
  create mode 100644 mm/damon.c
- create mode 100644 tools/damon/.gitignore
- create mode 100644 tools/damon/_damon.py
- create mode 100644 tools/damon/_dist.py
- create mode 100644 tools/damon/_recfile.py
- create mode 100644 tools/damon/bin2txt.py
- create mode 100755 tools/damon/damo
- create mode 100644 tools/damon/heats.py
- create mode 100644 tools/damon/nr_regions.py
- create mode 100644 tools/damon/record.py
- create mode 100644 tools/damon/report.py
- create mode 100644 tools/damon/wss.py
- create mode 100644 tools/testing/selftests/damon/Makefile
- create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
- create mode 100644 tools/testing/selftests/damon/_chk_record.py
- create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
- create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
 
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+new file mode 100644
+index 000000000000..a6e839a236f4
+--- /dev/null
++++ b/include/linux/damon.h
+@@ -0,0 +1,66 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * DAMON api
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifndef _DAMON_H_
++#define _DAMON_H_
++
++#include <linux/random.h>
++#include <linux/types.h>
++
++/**
++ * struct damon_addr_range - Represents an address region of [@start, @end).
++ * @start:	Start address of the region (inclusive).
++ * @end:	End address of the region (exclusive).
++ */
++struct damon_addr_range {
++	unsigned long start;
++	unsigned long end;
++};
++
++/**
++ * struct damon_region - Represents a monitoring target region.
++ * @ar:			The address range of the region.
++ * @sampling_addr:	Address of the sample for the next access check.
++ * @nr_accesses:	Access frequency of this region.
++ * @list:		List head for siblings.
++ */
++struct damon_region {
++	struct damon_addr_range ar;
++	unsigned long sampling_addr;
++	unsigned int nr_accesses;
++	struct list_head list;
++};
++
++/**
++ * struct damon_target - Represents a monitoring target.
++ * @id:			Unique identifier for this target.
++ * @regions_list:	Head of the monitoring target regions of this target.
++ * @list:		List head for siblings.
++ *
++ * Each monitoring context could have multiple targets.  For example, a context
++ * for virtual memory address spaces could have multiple target processes.  The
++ * @id of each target should be unique among the targets of the context.  For
++ * example, in the virtual address monitoring context, it could be a pidfd or
++ * an address of an mm_struct.
++ */
++struct damon_target {
++	unsigned long id;
++	struct list_head regions_list;
++	struct list_head list;
++};
++
++/**
++ * struct damon_ctx - Represents a context for each monitoring.
++ * @targets_list:	Head of monitoring targets (&damon_target) list.
++ */
++struct damon_ctx {
++	struct list_head targets_list;	/* 'damon_target' objects */
++};
++
++#endif
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f2104cc0d35c..a99d755d67d3 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -872,4 +872,15 @@ config ARCH_HAS_HUGEPD
+ config MAPPING_DIRTY_HELPERS
+         bool
+ 
++config DAMON
++	bool "Data Access Monitor"
++	help
++	  This feature allows to monitor access frequency of each memory
++	  region. The information can be useful for performance-centric DRAM
++	  level memory management.
++
++	  See https://damonitor.github.io/doc/html/latest-damon/index.html for
++	  more information.
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index 6e9d46b2efc9..30c5dba52fb2 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -121,3 +121,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+ obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
+ obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+ obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
++obj-$(CONFIG_DAMON) += damon.o
+diff --git a/mm/damon.c b/mm/damon.c
+new file mode 100644
+index 000000000000..d446ba4bfb0a
+--- /dev/null
++++ b/mm/damon.c
+@@ -0,0 +1,176 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Data Access Monitor
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ *
++ * This file is constructed in below parts.
++ *
++ * - Functions and macros for DAMON data structures
++ * - Functions for the initialization
++ *
++ * The core parts are not implemented yet.
++ */
++
++#define pr_fmt(fmt) "damon: " fmt
++
++#include <linux/damon.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++/*
++ * Functions and macros for DAMON data structures
++ */
++
++#define damon_next_region(r) \
++	(container_of(r->list.next, struct damon_region, list))
++
++#define damon_prev_region(r) \
++	(container_of(r->list.prev, struct damon_region, list))
++
++#define damon_for_each_region(r, t) \
++	list_for_each_entry(r, &t->regions_list, list)
++
++#define damon_for_each_region_safe(r, next, t) \
++	list_for_each_entry_safe(r, next, &t->regions_list, list)
++
++#define damon_for_each_target(t, ctx) \
++	list_for_each_entry(t, &(ctx)->targets_list, list)
++
++#define damon_for_each_target_safe(t, next, ctx) \
++	list_for_each_entry_safe(t, next, &(ctx)->targets_list, list)
++
++/* Get a random number in [l, r) */
++#define damon_rand(l, r) (l + prandom_u32() % (r - l))
++
++/*
++ * Construct a damon_region struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_region *damon_new_region(unsigned long start,
++					     unsigned long end)
++{
++	struct damon_region *region;
++
++	region = kmalloc(sizeof(*region), GFP_KERNEL);
++	if (!region)
++		return NULL;
++
++	region->ar.start = start;
++	region->ar.end = end;
++	region->nr_accesses = 0;
++	INIT_LIST_HEAD(&region->list);
++
++	return region;
++}
++
++/*
++ * Add a region between two other regions
++ */
++static inline void damon_insert_region(struct damon_region *r,
++		struct damon_region *prev, struct damon_region *next)
++{
++	__list_add(&r->list, &prev->list, &next->list);
++}
++
++static void damon_add_region(struct damon_region *r, struct damon_target *t)
++{
++	list_add_tail(&r->list, &t->regions_list);
++}
++
++static void damon_del_region(struct damon_region *r)
++{
++	list_del(&r->list);
++}
++
++static void damon_free_region(struct damon_region *r)
++{
++	kfree(r);
++}
++
++static void damon_destroy_region(struct damon_region *r)
++{
++	damon_del_region(r);
++	damon_free_region(r);
++}
++
++/*
++ * Construct a damon_target struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_target *damon_new_target(unsigned long id)
++{
++	struct damon_target *t;
++
++	t = kmalloc(sizeof(*t), GFP_KERNEL);
++	if (!t)
++		return NULL;
++
++	t->id = id;
++	INIT_LIST_HEAD(&t->regions_list);
++
++	return t;
++}
++
++static void damon_add_target(struct damon_ctx *ctx, struct damon_target *t)
++{
++	list_add_tail(&t->list, &ctx->targets_list);
++}
++
++static void damon_del_target(struct damon_target *t)
++{
++	list_del(&t->list);
++}
++
++static void damon_free_target(struct damon_target *t)
++{
++	struct damon_region *r, *next;
++
++	damon_for_each_region_safe(r, next, t)
++		damon_free_region(r);
++	kfree(t);
++}
++
++static void damon_destroy_target(struct damon_target *t)
++{
++	damon_del_target(t);
++	damon_free_target(t);
++}
++
++static unsigned int nr_damon_targets(struct damon_ctx *ctx)
++{
++	struct damon_target *t;
++	unsigned int nr_targets = 0;
++
++	damon_for_each_target(t, ctx)
++		nr_targets++;
++
++	return nr_targets;
++}
++
++static unsigned int nr_damon_regions(struct damon_target *t)
++{
++	struct damon_region *r;
++	unsigned int nr_regions = 0;
++
++	damon_for_each_region(r, t)
++		nr_regions++;
++
++	return nr_regions;
++}
++
++/*
++ * Functions for the initialization
++ */
++
++static int __init damon_init(void)
++{
++	return 0;
++}
++
++module_init(damon_init);
 -- 
 2.17.1
 
