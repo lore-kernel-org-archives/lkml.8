@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD29520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA912072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693012;
-	bh=LQsR3dnBfeULtjAcQHnXV69le54pY/011/AqbEmrMsw=;
+	s=default; t=1597693017;
+	bh=Hxk7UHen0BwilFAy+VLDUeF9jJ/l/efGTHNGUWn3nYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZsmFWMDklhYFWfF01qNKbyiF8XSONUhgtnHB6xBsgMjQbG0DXcnEXnEYH1qgI392B
-	 MMXGvxHCINwOG2E884PmzOnr5M4R+x90xiEdUtODPizxZOoigPh5KvvWO5f/r9US0Z
-	 hl0FkT16OBUut6AWltVZ1Fggok9jnz43MulrowII=
+	b=0tpB9M4s64mU/liNcFqFwW/vpSEUTFVVRjRQLlImK4Xg/+lp5WtL3j3kQuwkVd6hs
+	 DWtVHt+G7ksXJdMGeHDeL/v34qWo9RQOwuv8diksXWCMEDOWwfBf105E7pbylX9jLU
+	 /Is7JIO39uBfzcCvpS7wcKlRCyX7lUC1Dq7Efxog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732388AbgHQTgv (ORCPT
+        id S1732397AbgHQTgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42484 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgHQP2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:18 -0400
+        id S1730011AbgHQP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46F9923B5F;
-        Mon, 17 Aug 2020 15:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791C423A32;
+        Mon, 17 Aug 2020 15:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678097;
-        bh=LQsR3dnBfeULtjAcQHnXV69le54pY/011/AqbEmrMsw=;
+        s=default; t=1597678092;
+        bh=Hxk7UHen0BwilFAy+VLDUeF9jJ/l/efGTHNGUWn3nYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXb9ARegsIFaFE+3QRKD56+U7y9SyTIlGczd/rlQYtR6J1HdNGu+auomTkpLySho3
-         FJUV5jv0/GDGUSsZ2Wg8n17jbh4gyKdN4uawSwWnXTnKU1zvThJfo+rGUcuncrzjvf
-         NEUCuN0GNUg2QPNAaogzHWxOXosAcIgxDVpVevS8=
+        b=SenPNbw+mxoN8HFoIjd0QgzI5nlNp7+4Z+vunA+URdYkDFf/MKAA3olhPBzWPWung
+         tMCOtE8tpdsaxTb374Qoe9O4seG954E52X/4CkSI4P0GWPaGkbPySM6+eWvm/9oNwf
+         NY6Uc5GLKvq7z/CW46pBZFMh+v56tjhKiX5J6w10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Xiang Zheng <zhengxiang9@huawei.com>,
-        Heyi Guo <guoheyi@huawei.com>,
-        Biaoxiang Ye <yebiaoxiang@huawei.com>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 216/464] PCI: Fix pci_cfg_wait queue locking problem
-Date:   Mon, 17 Aug 2020 17:12:49 +0200
-Message-Id: <20200817143844.155715857@linuxfoundation.org>
+Subject: [PATCH 5.8 214/464] iomap: Make sure iomap_end is called after iomap_begin
+Date:   Mon, 17 Aug 2020 17:12:47 +0200
+Message-Id: <20200817143844.062314049@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,70 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 2a7e32d0547f41c5ce244f84cf5d6ca7fccee7eb ]
+[ Upstream commit 856473cd5d17dbbf3055710857c67a4af6d9fcc0 ]
 
-The pci_cfg_wait queue is used to prevent user-space config accesses to
-devices while they are recovering from reset.
+Make sure iomap_end is always called when iomap_begin succeeds.
 
-Previously we used these operations on pci_cfg_wait:
+Without this fix, iomap_end won't be called when a filesystem's
+iomap_begin operation returns an invalid mapping, bypassing any
+unlocking done in iomap_end.  With this fix, the unlocking will still
+happen.
 
-  __add_wait_queue(&pci_cfg_wait, ...)
-  __remove_wait_queue(&pci_cfg_wait, ...)
-  wake_up_all(&pci_cfg_wait)
+This bug was found by Bob Peterson during code review.  It's unlikely
+that such iomap_begin bugs will survive to affect users, so backporting
+this fix seems unnecessary.
 
-The wake_up acquires the wait queue lock, but the add and remove do not.
-
-Originally these were all protected by the pci_lock, but cdcb33f98244
-("PCI: Avoid possible deadlock on pci_lock and p->pi_lock"), moved
-wake_up_all() outside pci_lock, so it could race with add/remove
-operations, which caused occasional kernel panics, e.g., during vfio-pci
-hotplug/unplug testing:
-
-  Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-
-Resolve this by using wait_event() instead of __add_wait_queue() and
-__remove_wait_queue().  The wait queue lock is held by both wait_event()
-and wake_up_all(), so it provides mutual exclusion.
-
-Fixes: cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and p->pi_lock")
-Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/T/#u
-Based-on: https://lore.kernel.org/linux-pci/20191210031527.40136-1-zhengxiang9@huawei.com/
-Based-on-patch-by: Xiang Zheng <zhengxiang9@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+Fixes: ae259a9c8593 ("fs: introduce iomap infrastructure")
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/access.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ fs/iomap/apply.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 79c4a2ef269a7..9793f17fa1843 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -204,17 +204,13 @@ EXPORT_SYMBOL(pci_bus_set_ops);
- static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
+diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
+index 76925b40b5fd2..26ab6563181fc 100644
+--- a/fs/iomap/apply.c
++++ b/fs/iomap/apply.c
+@@ -46,10 +46,14 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+ 	ret = ops->iomap_begin(inode, pos, length, flags, &iomap, &srcmap);
+ 	if (ret)
+ 		return ret;
+-	if (WARN_ON(iomap.offset > pos))
+-		return -EIO;
+-	if (WARN_ON(iomap.length == 0))
+-		return -EIO;
++	if (WARN_ON(iomap.offset > pos)) {
++		written = -EIO;
++		goto out;
++	}
++	if (WARN_ON(iomap.length == 0)) {
++		written = -EIO;
++		goto out;
++	}
  
- static noinline void pci_wait_cfg(struct pci_dev *dev)
-+	__must_hold(&pci_lock)
- {
--	DECLARE_WAITQUEUE(wait, current);
--
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
--		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
--		schedule();
-+		wait_event(pci_cfg_wait, !dev->block_cfg_access);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
- }
+ 	trace_iomap_apply_dstmap(inode, &iomap);
+ 	if (srcmap.type != IOMAP_HOLE)
+@@ -80,6 +84,7 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+ 	written = actor(inode, pos, length, data, &iomap,
+ 			srcmap.type != IOMAP_HOLE ? &srcmap : &iomap);
  
- /* Returns 0 on success, negative values indicate error. */
++out:
+ 	/*
+ 	 * Now the data has been copied, commit the range we've copied.  This
+ 	 * should not fail unless the filesystem has had a fatal error.
 -- 
 2.25.1
 
