@@ -2,106 +2,138 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBB920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bzgnsWX6"
+	by mail.kernel.org (Postfix) with ESMTP id 3C4F42065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692783;
+	bh=5g143PedhAMhKBn4Ao3RmJSWsNaby5hpi/DdzB/TTXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wcxSL+/7iM7rgx44W1+dbgbCSU7K+YVHWoLo2PUVGzSzLmQStCoeBEOKk3nykNO61
+	 1XRMxjvjhjKPQOJ7RUWqzYQKsBNZmK28UnNgjYfgrTjKB4n36AjwbaAn7vpfD3BJNu
+	 05f1B/NlSu+Qjo64WPlQmiw/gvdoXWhbBfDys1R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404190AbgHQTcj (ORCPT
+        id S2404219AbgHQTdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732288AbgHQTb6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:31:58 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9DEC061343
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:31:57 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so8301690pjd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yLDTTqMkKvyQoGCAd2tBT6ow8BC5kwAIMSYl/rsC3Ig=;
-        b=bzgnsWX6JN7NV6RKPm3/XJjM04WPFUgcs1wtGhs1vDTOxeZhtDj7fuyAu2vXQLBDwf
-         NunOGlqU6ZO3tUOM6cYIKz91z1a0JFYpj3NUNbRaX/q3jIer+Wkvt/KvKPaONP97Crry
-         jsU4TA572eaUbNcIoBNzEbO/z39hgO2qIc6nk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yLDTTqMkKvyQoGCAd2tBT6ow8BC5kwAIMSYl/rsC3Ig=;
-        b=R2AITEwNhZ5s0sj9x9ehWPQgGiPhDSiAvnTaG65c3Dw0w35IdVK3QRiFcHurx4djdd
-         9shrbQ1x8bJ1iNS1eqZJiuyAKfbaFnbcDnwWc6gqpZFtI3pWl7x+9fBxMmJidWzNRNkj
-         h/D9fQAic1REMExhsEz3egPhz6BTc36whL42gaVQEnSRWmzcuwwqiBcXgOqExd4V7rYw
-         ZxBAsWdqbeY28Dz1x6s3iaqNBrHFmE7vxte2SZVIrg9qAisezEdVH3Nv84/bAoJRxqbM
-         Ee2kJabwmFDafEPscdb1j4b5TAOE7mplHdf3MHDD+eVWdZvXqq2Asgw0AnViRQ88l5jb
-         lsnA==
-X-Gm-Message-State: AOAM533XePmdmrQtBFugvXz0ujwWXnXVhUU2DB2FZamCHCWkhmpC0jW4
-        OOvoxRvHdPBEhsDIWfnN5D+/3Q==
-X-Google-Smtp-Source: ABdhPJzCi15gvOenOB0TavTHTfEnkEdWPrPF4SLQpHGX34K4lsCi5WBzkUNgqv4diadl5ikP7WbgjA==
-X-Received: by 2002:a17:90b:4b0c:: with SMTP id lx12mr14431013pjb.117.1597692717183;
-        Mon, 17 Aug 2020 12:31:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id hi13sm18644138pjb.26.2020.08.17.12.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:31:56 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 12:31:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Allen Pais <allen.lkml@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Bruce Chang <brucechang@via.com.tw>,
-        Harald Welte <HaraldWelte@viatech.com>,
-        inux-mmc@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
-Subject: Re: [PATCH 00/10] mmc: convert tasklets to use new tasklet_setup()
-Message-ID: <202008171230.D576430C56@keescook>
-References: <20200817083508.22657-1-allen.lkml@gmail.com>
- <CAK7LNAQ=t-6aA80FW+7PKfb36yuhMKBW9_kCdTrmkWiWi9k-9Q@mail.gmail.com>
+        Mon, 17 Aug 2020 15:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730281AbgHQPb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265A922BEA;
+        Mon, 17 Aug 2020 15:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678286;
+        bh=5g143PedhAMhKBn4Ao3RmJSWsNaby5hpi/DdzB/TTXc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TGb1Vo3ccD5zRLfPlJ2BOKfy1uD2OiGKyXA1DUIGCenlsq0YFqhdM9yatok7Bs9uX
+         VL8i5SVNrseLFs/MVUNXPjZd+5rP5ddpSHB3ZSIGnAmSVJF+GDzLjWQdc4c2irKOdc
+         upOZes3km7VVl1hJA9HG8+7IlRjO7GiM8JXhj50A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 280/464] ASoC: hdac_hda: fix deadlock after PCM open error
+Date:   Mon, 17 Aug 2020 17:13:53 +0200
+Message-Id: <20200817143847.170180769@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQ=t-6aA80FW+7PKfb36yuhMKBW9_kCdTrmkWiWi9k-9Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:53:13PM +0900, Masahiro Yamada wrote:
-> On Mon, Aug 17, 2020 at 5:35 PM Allen Pais <allen.lkml@gmail.com> wrote:
-> >
-> > Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
-> > introduced a new tasklet initialization API. This series converts
-> > all the mmc drivers to use the new tasklet_setup() API
-> 
-> 
-> I did not know this was the direction to invest efforts
-> because I thought the threaded-irq was supposed to replace
-> the tasklet.
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-Both can happen. It seemed to me that mechanical conversions from
-tasklet to threaded-irq was not possible, though, so best to convert the
-old API away from being a exploit target (saved arguments on the
-heap) while conversions to threaded-irq can happen on a case-by-case
-basis.
+[ Upstream commit 06f07e2365378d51eddd0b5bf23506e1237662b0 ]
 
+Commit 5bd70440cb0a ("ASoC: soc-dai: revert all changes to DAI
+startup/shutdown sequence"), introduced a slight change of semantics
+to DAI startup/shutdown. If startup() returns an error, shutdown()
+is now called for the DAI.
+
+This causes a deadlock in hdac_hda which issues a call to
+snd_hda_codec_pcm_put() in case open fails. Upon error, soc_pcm_open()
+will call shutdown(), and pcm_put() ends up getting called twice. Result
+is a deadlock on pcm->open_mutex, as snd_device_free() gets called from
+within snd_pcm_open(). Typical task backtrace looks like this:
+
+[  334.244627]  snd_pcm_dev_disconnect+0x49/0x340 [snd_pcm]
+[  334.244634]  __snd_device_disconnect.part.0+0x2c/0x50 [snd]
+[  334.244640]  __snd_device_free+0x7f/0xc0 [snd]
+[  334.244650]  snd_hda_codec_pcm_put+0x87/0x120 [snd_hda_codec]
+[  334.244660]  soc_pcm_open+0x6a0/0xbe0 [snd_soc_core]
+[  334.244676]  ? dpcm_add_paths.isra.0+0x491/0x590 [snd_soc_core]
+[  334.244679]  ? kfree+0x9a/0x230
+[  334.244686]  dpcm_be_dai_startup+0x255/0x300 [snd_soc_core]
+[  334.244695]  dpcm_fe_dai_open+0x20e/0xf30 [snd_soc_core]
+[  334.244701]  ? snd_pcm_hw_rule_muldivk+0x110/0x110 [snd_pcm]
+[  334.244709]  ? dpcm_be_dai_startup+0x300/0x300 [snd_soc_core]
+[  334.244714]  ? snd_pcm_attach_substream+0x3c4/0x540 [snd_pcm]
+[  334.244719]  snd_pcm_open_substream+0x69a/0xb60 [snd_pcm]
+[  334.244729]  ? snd_pcm_release_substream+0x30/0x30 [snd_pcm]
+[  334.244732]  ? __mutex_lock_slowpath+0x10/0x10
+[  334.244736]  snd_pcm_open+0x1b3/0x3c0 [snd_pcm]
+
+Fixes: 5bd70440cb0a ("ASoC: soc-dai: revert all changes to DAI startup/shutdown sequence")
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+BugLink: https://github.com/thesofproject/linux/issues/2159
+Link: https://lore.kernel.org/r/20200717101950.3885187-3-kai.vehmanen@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/hdac_hda.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/sound/soc/codecs/hdac_hda.c b/sound/soc/codecs/hdac_hda.c
+index 473efe9ef998a..b0370bb10c142 100644
+--- a/sound/soc/codecs/hdac_hda.c
++++ b/sound/soc/codecs/hdac_hda.c
+@@ -289,7 +289,6 @@ static int hdac_hda_dai_open(struct snd_pcm_substream *substream,
+ 	struct hdac_hda_priv *hda_pvt;
+ 	struct hda_pcm_stream *hda_stream;
+ 	struct hda_pcm *pcm;
+-	int ret;
+ 
+ 	hda_pvt = snd_soc_component_get_drvdata(component);
+ 	pcm = snd_soc_find_pcm_from_dai(hda_pvt, dai);
+@@ -300,11 +299,7 @@ static int hdac_hda_dai_open(struct snd_pcm_substream *substream,
+ 
+ 	hda_stream = &pcm->stream[substream->stream];
+ 
+-	ret = hda_stream->ops.open(hda_stream, &hda_pvt->codec, substream);
+-	if (ret < 0)
+-		snd_hda_codec_pcm_put(pcm);
+-
+-	return ret;
++	return hda_stream->ops.open(hda_stream, &hda_pvt->codec, substream);
+ }
+ 
+ static void hdac_hda_dai_close(struct snd_pcm_substream *substream,
 -- 
-Kees Cook
+2.25.1
+
+
+
