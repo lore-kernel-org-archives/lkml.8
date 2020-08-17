@@ -2,132 +2,88 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9558C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E472065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6902072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692656;
-	bh=GkcRN+bMz+7K9z0kn8bWe7OlGo50pYckHJVciOJpBO4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bsf9ff0Okndhlnmffl6pir3+YiDv2qwu0WC6gGDume6ipil9jKHYLCbuLgtILqUJZ
-	 2H0t+CFETUZUNJyhl2LeRXhCc5QGQxmy4Ugw+V05KwwsBSlx74+xoeArMu2eF8nDl1
-	 9TM7n3EYYMyDhggaUheQf0dk/GQ3z3uXGmLAso3k=
+	s=default; t=1597692666;
+	bh=Oz/DFH5N9UvK1IYYi4kdlUf92XejE+NPQ5Vm+cuCslM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kOKkr4bW8fSR1OeiiQhNxeXyBk8MP9l3vMiDeoVvk/5EmAtnP6m7DO46cTJeCMOT7
+	 +zwq31G8nIocwofJ76HbLiGsNwdxCSheF659+0eyoRILRv9Pn+Ffk5rn4HBudk5HFl
+	 RP8N9QVkQElUJV+4yMYp5NmUoXXU6EqFa3KC9bZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390445AbgHQTaW (ORCPT
+        id S1732150AbgHQTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbgHQPcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC8F22CBE;
-        Mon, 17 Aug 2020 15:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678324;
-        bh=GkcRN+bMz+7K9z0kn8bWe7OlGo50pYckHJVciOJpBO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5ZkLk7+S85OaDD/jUiUdzKnuP58cSEzscd2gM8v9JLOpA8H5tkJHnALPGFPGAF1k
-         h99TAHQwnQntLb5QPaRBDR0PBXfTGE7rUOMLWwnjNAn1s/IZvmndEMmzP7gzZVGe7/
-         Mwah7ApN6Y7pdfuRYIfw9NZFBkDtAuNPIpNksRe4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 295/464] powerpc/watchpoint: Fix DAWR exception for CACHEOP
-Date:   Mon, 17 Aug 2020 17:14:08 +0200
-Message-Id: <20200817143847.889929337@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 15:31:04 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33962 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390230AbgHQT37 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:29:59 -0400
+Received: by mail-il1-f194.google.com with SMTP id t4so15561006iln.1;
+        Mon, 17 Aug 2020 12:29:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FpFm0NgNiDqAexVigqjuzKZAAaZLotZJRuJ9L95Do60=;
+        b=Mq8aUrmmKaxT4+Dp9BmArVFRl3sTisvL4Lglivp4UB9VEtQhG6lzna62bH5eGfLR/N
+         3T0m5bt0J+6ftk7mdpjx8zXAFsr3vqv9V1iYXjTCasRg4tZvh9dGQAd3kqNZ90D2Ab06
+         e+0JFuM5SGVtOoFvuD7JBnFLdeTKEzN8J80qJP2Vh17PYRwzc5uVvPxwnXadXokbqj+k
+         tDrfqQqip+1p9CWjjBRIDbssjJ8ZKTl5eIaWA3H/cxOPxohyaNZOyzFn4amYOTj76iFO
+         lc2O8ka01Y4fqjNIGkg0FdJwN9BOyQuJgqQU9HKBRkY/Xd6m9BwR5KUgMqH2tA5Bp9LE
+         DK3w==
+X-Gm-Message-State: AOAM5321Ll5DnKvajP50b9rVInjhTnVuMVPdUW1NlMMtzdVlkaCR2p6q
+        Okp0Q7JX7qfbBA0oSWqyS5gvqbtNcg==
+X-Google-Smtp-Source: ABdhPJygpJYJZbSJFFFLfwam8k8Pk1UNtIiJG/OEfigzlhmKdRcuLTTYGPFlws8J9FXaf6XfuPRdCQ==
+X-Received: by 2002:a92:d4cf:: with SMTP id o15mr15611895ilm.25.1597692598797;
+        Mon, 17 Aug 2020 12:29:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id n9sm9556901iox.43.2020.08.17.12.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:29:58 -0700 (PDT)
+Received: (nullmailer pid 1405345 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:29:57 -0000
+Date:   Mon, 17 Aug 2020 13:29:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thomas Preston <thomas.preston@codethink.co.uk>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] pinctrl: mcp23s08: Fixups for mcp23x17
+Message-ID: <20200817192957.GA1401599@bogus>
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+ <26d33248-c07b-db2c-2989-3ca14aea7896@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26d33248-c07b-db2c-2989-3ca14aea7896@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+On Fri, Aug 14, 2020 at 02:56:54PM +0100, Thomas Preston wrote:
+> On 14/08/2020 11:03, Thomas Preston wrote:
+> > I'm in the process of adding a device tree overlay for the PiFace
+> > Digital Raspberry Pi daughter board [0]. It's an mcp23s17 SPI GPIO port
+> > expander. In doing so, I noticed some errors with the mcp23s08 driver.
+> [snip]
+> > They're quite trivial and backwards compatible, although I might be
+> > wrong about "interrupt-controller". Can someone please confirm?
+> [snip]
+> > [0] https://github.com/raspberrypi/linux/pull/3794
+> 
+> Actually I think I'm wrong about the interrupt-controller changes in patches
+> 0002 and 0003.
 
-[ Upstream commit f3c832f1350bcf1e6906113ee3168066f4235dbe ]
+You are. Looking at the datasheet, the GPIOs have interrupt capability. 
+GPIO controllers are typically both an interrupt client and provider.
 
-'ea' returned by analyse_instr() needs to be aligned down to cache
-block size for CACHEOP instructions. analyse_instr() does not set
-size for CACHEOP, thus size also needs to be calculated manually.
-
-Fixes: 27985b2a640e ("powerpc/watchpoint: Don't ignore extraneous exceptions blindly")
-Fixes: 74c6881019b7 ("powerpc/watchpoint: Prepare handler to handle more than one watchpoint")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200723090813.303838-4-ravi.bangoria@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/kernel/hw_breakpoint.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index a971e22aea819..c55e67bab2710 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -538,7 +538,12 @@ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
- 	if (OP_IS_LOAD(type) && !(info->type & HW_BRK_TYPE_READ))
- 		return false;
- 
--	if (OP_IS_STORE(type) && !(info->type & HW_BRK_TYPE_WRITE))
-+	/*
-+	 * The Cache Management instructions other than dcbz never
-+	 * cause a match. i.e. if type is CACHEOP, the instruction
-+	 * is dcbz, and dcbz is treated as Store.
-+	 */
-+	if ((OP_IS_STORE(type) || type == CACHEOP) && !(info->type & HW_BRK_TYPE_WRITE))
- 		return false;
- 
- 	if (is_kernel_addr(regs->nip) && !(info->type & HW_BRK_TYPE_KERNEL))
-@@ -601,6 +606,15 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
- 	return false;
- }
- 
-+static int cache_op_size(void)
-+{
-+#ifdef __powerpc64__
-+	return ppc64_caches.l1d.block_size;
-+#else
-+	return L1_CACHE_BYTES;
-+#endif
-+}
-+
- static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
- 			     int *type, int *size, unsigned long *ea)
- {
-@@ -616,7 +630,12 @@ static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
- 	if (!(regs->msr & MSR_64BIT))
- 		*ea &= 0xffffffffUL;
- #endif
-+
- 	*size = GETSIZE(op.type);
-+	if (*type == CACHEOP) {
-+		*size = cache_op_size();
-+		*ea &= ~(*size - 1);
-+	}
- }
- 
- static bool is_larx_stcx_instr(int type)
--- 
-2.25.1
-
-
-
+Rob
