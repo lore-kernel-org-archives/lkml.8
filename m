@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A15C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2964EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1AB12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41872075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KxIvHqgS"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dcXJeEcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgHQNMe (ORCPT
+        id S1728611AbgHQNL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:12:34 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:48044 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgHQNMJ (ORCPT
+        Mon, 17 Aug 2020 09:11:27 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:2951 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbgHQNLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:12:09 -0400
+        Mon, 17 Aug 2020 09:11:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597669929; x=1629205929;
+  t=1597669865; x=1629205865;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WyN8BYSjt+HHdm91R48sm0GzxhzbHKzXomzErRAU/lw=;
-  b=KxIvHqgSX5KkQ18TXUVlVq6xoAjj8hX+F5vN3LmLLug7gaCuufSZX7UQ
-   ntLX1uSmBXw3oiIZlxhEPh9mycDEtTRhrtwYtOk3PTI3NDZqwMWOY0EC8
-   GM8BofcZKw8RsO41xkmtnfAdy2avShB85l8iLiN+3xE6wjz0Tw5bJzZ1l
-   o=;
+  bh=SSjoEx4aq3Y+wGoy2lmYb2bQTRfjpqw19Jhz5UE5Mww=;
+  b=dcXJeEcD0pMvtCR6t7wOrdHKmWkk+tj69vfOTgKPub9p2A9IZBqIaR91
+   3nawEzgTW9k1H2CbTKsgOvCwC1WKQ9yIbZFMdQj5xiD0atAK4BpVowV54
+   bJuLWoU2KUqj2tIBEsphdAGudV+OrwsTdPwzksocCnb3lRIeBV/os8Myu
+   g=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="67311342"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Aug 2020 13:12:06 +0000
+   d="scan'208";a="48302409"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 17 Aug 2020 13:11:03 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id E1AFEA22B4;
-        Mon, 17 Aug 2020 13:12:04 +0000 (UTC)
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 2DD38A1856;
+        Mon, 17 Aug 2020 13:11:01 +0000 (UTC)
 Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
  EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:12:04 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.228) by
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:11:00 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
  EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:11:54 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:10:51 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -70,15 +70,15 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v7 10/18] nitro_enclaves: Add logic for getting the enclave image load info
-Date:   Mon, 17 Aug 2020 16:09:55 +0300
-Message-ID: <20200817131003.56650-11-andraprs@amazon.com>
+Subject: [PATCH v7 04/18] nitro_enclaves: Init PCI device driver
+Date:   Mon, 17 Aug 2020 16:09:49 +0300
+Message-ID: <20200817131003.56650-5-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200817131003.56650-1-andraprs@amazon.com>
 References: <20200817131003.56650-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.162.228]
-X-ClientProxiedBy: EX13D34UWC004.ant.amazon.com (10.43.162.155) To
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D16UWC003.ant.amazon.com (10.43.162.15) To
  EX13D16EUB001.ant.amazon.com (10.43.166.28)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -87,14 +87,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before setting the memory regions for the enclave, the enclave image
-needs to be placed in memory. After the memory regions are set, this
-memory cannot be used anymore by the VM, being carved out.
+The Nitro Enclaves PCI device is used by the kernel driver as a means of
+communication with the hypervisor on the host where the primary VM and
+the enclaves run. It handles requests with regard to enclave lifetime.
 
-Add ioctl command logic to get the offset in enclave memory where to
-place the enclave image. Then the user space tooling copies the enclave
-image in the memory using the given memory offset.
+Setup the PCI device driver and add support for MSI-X interrupts.
 
+Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
@@ -106,71 +106,319 @@ v6 -> v7
 
 v5 -> v6
 
-* Check for invalid enclave image load flags.
+* Update documentation to kernel-doc format.
 
 v4 -> v5
 
-* Check for the enclave not being started when invoking this ioctl call.
-* Remove log on copy_from_user() / copy_to_user() failure.
+* Remove sanity checks for situations that shouldn't happen, only if
+  buggy system or broken logic at all.
 
 v3 -> v4
 
 * Use dev_err instead of custom NE log pattern.
-* Set enclave image load offset based on flags.
-* Update the naming for the ioctl command from metadata to info.
+* Update NE PCI driver name to "nitro_enclaves".
 
 v2 -> v3
 
-* No changes.
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
+* Remove the WARN_ON calls.
+* Remove linux/bug include that is not needed.
+* Update static calls sanity checks.
+* Remove "ratelimited" from the logs that are not in the ioctl call
+  paths.
+* Update kzfree() calls to kfree().
 
 v1 -> v2
 
-* New in v2.
+* Add log pattern for NE.
+* Update PCI device setup functions to receive PCI device data structure and
+  then get private data from it inside the functions logic.
+* Remove the BUG_ON calls.
+* Add teardown function for MSI-X setup.
+* Update goto labels to match their purpose.
+* Implement TODO for NE PCI device disable state check.
+* Update function name for NE PCI device probe / remove.
 ---
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/virt/nitro_enclaves/ne_pci_dev.c | 269 +++++++++++++++++++++++
+ 1 file changed, 269 insertions(+)
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
 
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 104c9646ec87..810c4bba424f 100644
---- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -788,6 +788,36 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
- 	}
- 
-+	case NE_GET_IMAGE_LOAD_INFO: {
-+		struct ne_image_load_info image_load_info = {};
+diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+new file mode 100644
+index 000000000000..31650dcd592e
+--- /dev/null
++++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+@@ -0,0 +1,269 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
 +
-+		if (copy_from_user(&image_load_info, (void __user *)arg, sizeof(image_load_info)))
-+			return -EFAULT;
++/**
++ * DOC: Nitro Enclaves (NE) PCI device driver.
++ */
 +
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/nitro_enclaves.h>
++#include <linux/pci.h>
++#include <linux/types.h>
++#include <linux/wait.h>
 +
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
++#include "ne_misc_dev.h"
++#include "ne_pci_dev.h"
 +
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
++/**
++ * NE_DEFAULT_TIMEOUT_MSECS - Default timeout to wait for a reply from
++ *			      the NE PCI device.
++ */
++#define NE_DEFAULT_TIMEOUT_MSECS	(120000) /* 120 sec */
 +
-+			return -NE_ERR_NOT_IN_INIT_STATE;
-+		}
++static const struct pci_device_id ne_pci_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMAZON, PCI_DEVICE_ID_NE) },
++	{ 0, }
++};
 +
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
++MODULE_DEVICE_TABLE(pci, ne_pci_ids);
 +
-+		if (image_load_info.flags == NE_EIF_IMAGE)
-+			image_load_info.memory_offset = NE_EIF_LOAD_OFFSET;
-+		else
-+			return -EINVAL;
++/**
++ * ne_setup_msix() - Setup MSI-X vectors for the PCI device.
++ * @pdev:	PCI device to setup the MSI-X for.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_setup_msix(struct pci_dev *pdev)
++{
++	int nr_vecs = 0;
++	int rc = -EINVAL;
 +
-+		if (copy_to_user((void __user *)arg, &image_load_info, sizeof(image_load_info)))
-+			return -EFAULT;
++	nr_vecs = pci_msix_vec_count(pdev);
++	if (nr_vecs < 0) {
++		rc = nr_vecs;
 +
-+		return 0;
++		dev_err(&pdev->dev, "Error in getting vec count [rc=%d]\n", rc);
++
++		return rc;
 +	}
 +
- 	default:
- 		return -ENOTTY;
- 	}
++	rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in alloc MSI-X vecs [rc=%d]\n", rc);
++
++		return rc;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_teardown_msix() - Teardown MSI-X vectors for the PCI device.
++ * @pdev:	PCI device to teardown the MSI-X for.
++ *
++ * Context: Process context.
++ */
++static void ne_teardown_msix(struct pci_dev *pdev)
++{
++	pci_free_irq_vectors(pdev);
++}
++
++/**
++ * ne_pci_dev_enable() - Select the PCI device version and enable it.
++ * @pdev:	PCI device to select version for and then enable.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_pci_dev_enable(struct pci_dev *pdev)
++{
++	u8 dev_enable_reply = 0;
++	u16 dev_version_reply = 0;
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++
++	iowrite16(NE_VERSION_MAX, ne_pci_dev->iomem_base + NE_VERSION);
++
++	dev_version_reply = ioread16(ne_pci_dev->iomem_base + NE_VERSION);
++	if (dev_version_reply != NE_VERSION_MAX) {
++		dev_err(&pdev->dev, "Error in pci dev version cmd\n");
++
++		return -EIO;
++	}
++
++	iowrite8(NE_ENABLE_ON, ne_pci_dev->iomem_base + NE_ENABLE);
++
++	dev_enable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++	if (dev_enable_reply != NE_ENABLE_ON) {
++		dev_err(&pdev->dev, "Error in pci dev enable cmd\n");
++
++		return -EIO;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_pci_dev_disable() - Disable the PCI device.
++ * @pdev:	PCI device to disable.
++ *
++ * Context: Process context.
++ */
++static void ne_pci_dev_disable(struct pci_dev *pdev)
++{
++	u8 dev_disable_reply = 0;
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++	const unsigned int sleep_time = 10; /* 10 ms */
++	unsigned int sleep_time_count = 0;
++
++	iowrite8(NE_ENABLE_OFF, ne_pci_dev->iomem_base + NE_ENABLE);
++
++	/*
++	 * Check for NE_ENABLE_OFF in a loop, to handle cases when the device
++	 * state is not immediately set to disabled and going through a
++	 * transitory state of disabling.
++	 */
++	while (sleep_time_count < NE_DEFAULT_TIMEOUT_MSECS) {
++		dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++		if (dev_disable_reply == NE_ENABLE_OFF)
++			return;
++
++		msleep_interruptible(sleep_time);
++		sleep_time_count += sleep_time;
++	}
++
++	dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++	if (dev_disable_reply != NE_ENABLE_OFF)
++		dev_err(&pdev->dev, "Error in pci dev disable cmd\n");
++}
++
++/**
++ * ne_pci_probe() - Probe function for the NE PCI device.
++ * @pdev:	PCI device to match with the NE PCI driver.
++ * @id :	PCI device id table associated with the NE PCI driver.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	struct ne_pci_dev *ne_pci_dev = NULL;
++	int rc = -EINVAL;
++
++	ne_pci_dev = kzalloc(sizeof(*ne_pci_dev), GFP_KERNEL);
++	if (!ne_pci_dev)
++		return -ENOMEM;
++
++	rc = pci_enable_device(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci dev enable [rc=%d]\n", rc);
++
++		goto free_ne_pci_dev;
++	}
++
++	rc = pci_request_regions_exclusive(pdev, "nitro_enclaves");
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci request regions [rc=%d]\n", rc);
++
++		goto disable_pci_dev;
++	}
++
++	ne_pci_dev->iomem_base = pci_iomap(pdev, PCI_BAR_NE, 0);
++	if (!ne_pci_dev->iomem_base) {
++		rc = -ENOMEM;
++
++		dev_err(&pdev->dev, "Error in pci iomap [rc=%d]\n", rc);
++
++		goto release_pci_regions;
++	}
++
++	pci_set_drvdata(pdev, ne_pci_dev);
++
++	rc = ne_setup_msix(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci dev msix setup [rc=%d]\n", rc);
++
++		goto iounmap_pci_bar;
++	}
++
++	ne_pci_dev_disable(pdev);
++
++	rc = ne_pci_dev_enable(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in ne_pci_dev enable [rc=%d]\n", rc);
++
++		goto teardown_msix;
++	}
++
++	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
++	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
++	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
++	mutex_init(&ne_pci_dev->enclaves_list_mutex);
++	mutex_init(&ne_pci_dev->pci_dev_mutex);
++	ne_pci_dev->pdev = pdev;
++
++	return 0;
++
++teardown_msix:
++	ne_teardown_msix(pdev);
++iounmap_pci_bar:
++	pci_set_drvdata(pdev, NULL);
++	pci_iounmap(pdev, ne_pci_dev->iomem_base);
++release_pci_regions:
++	pci_release_regions(pdev);
++disable_pci_dev:
++	pci_disable_device(pdev);
++free_ne_pci_dev:
++	kfree(ne_pci_dev);
++
++	return rc;
++}
++
++/**
++ * ne_pci_remove() - Remove function for the NE PCI device.
++ * @pdev:	PCI device associated with the NE PCI driver.
++ *
++ * Context: Process context.
++ */
++static void ne_pci_remove(struct pci_dev *pdev)
++{
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++
++	ne_pci_dev_disable(pdev);
++
++	ne_teardown_msix(pdev);
++
++	pci_set_drvdata(pdev, NULL);
++
++	pci_iounmap(pdev, ne_pci_dev->iomem_base);
++
++	pci_release_regions(pdev);
++
++	pci_disable_device(pdev);
++
++	kfree(ne_pci_dev);
++}
++
++/*
++ * TODO: Add suspend / resume functions for power management w/ CONFIG_PM, if
++ * needed.
++ */
++/* NE PCI device driver. */
++struct pci_driver ne_pci_driver = {
++	.name		= "nitro_enclaves",
++	.id_table	= ne_pci_ids,
++	.probe		= ne_pci_probe,
++	.remove		= ne_pci_remove,
++};
 -- 
 2.20.1 (Apple Git-117)
 
