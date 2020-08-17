@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2509C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF83C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95EDE20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F258320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688494;
-	bh=uM7G/tatLBFS14JlVFv7iSDjzgprG2fc6lGpjvEMtXk=;
+	s=default; t=1597688496;
+	bh=JRzD3Qkl3xbpYf3zqahjxRdru8m8ohZktfu6Su9QVoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4yT6tIDFuGVCfbNPlhl1EzZsknFD3QIbVbXXXyq1uGQ3stOKOdMg48N3twix1kPT
-	 q9KN/G9yfANnteJIvhMR3+lJBVJ5TLb5olHyWyeRjs6fl1kQ2dcO99cQLbFc6yYdiu
-	 xiXXfBmiekj1Ta+wUuH1dadnxHwJhS8ffOUawCzc=
+	b=lz/HS74sfdtv6FOTJ9xgpDmn8oUs6cA9EZbtv8Y76X6ky1SNNp1H+WD0boSTCuE+K
+	 QHXj5ewKRuVXjEAKAvROr7eNImpY6AXkIgQWGiZHxVy4OuKFxRncFMlxq8zCjWjEZP
+	 KrXa96hL41uht0s5+8KCMKmPeu1WO5OuRa7uIsss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390881AbgHQSVY (ORCPT
+        id S2390866AbgHQSVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388289AbgHQQEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:15 -0400
+        id S2388292AbgHQQER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7AEE207FB;
-        Mon, 17 Aug 2020 16:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E027621744;
+        Mon, 17 Aug 2020 16:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680245;
-        bh=uM7G/tatLBFS14JlVFv7iSDjzgprG2fc6lGpjvEMtXk=;
+        s=default; t=1597680252;
+        bh=JRzD3Qkl3xbpYf3zqahjxRdru8m8ohZktfu6Su9QVoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZjMvXQOzGBUCGTjc3txN9olFBYY5Y106tiXO58JQn7dS7YjMkoqTOopuJNp41MsW
-         WU5W7WJkG3TCR4H8SZzsrtkSuT8+LYEWwzoYZQLxexM+AdZZ9TKrOyh9hU0x4SKnfT
-         ZOck1Ifw4oeWVjcj5+2OuFTlAVUnFLqDAUK1ReIQ=
+        b=R+fHDZ+zAR6qWuopTNHMxsfD+CBxdYJVNVyix3+B3gzQHSy+ZOHQzk+P8+Zwrqrop
+         VHKeOT9DYhuFQiQ0KJYCN1c53wkWf02lxh/LZ6FTVfWr/BI7W4CTx4F8znIROpt05e
+         jsH405GpgIk7G9tLDjZrhx9xqwkPj2nraOiz44ZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 110/270] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
-Date:   Mon, 17 Aug 2020 17:15:11 +0200
-Message-Id: <20200817143801.264264134@linuxfoundation.org>
+Subject: [PATCH 5.4 112/270] ASoC: Intel: bxt_rt298: add missing .owner field
+Date:   Mon, 17 Aug 2020 17:15:13 +0200
+Message-Id: <20200817143801.360721129@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,46 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
+[ Upstream commit 88cee34b776f80d2da04afb990c2a28c36799c43 ]
 
-preview_init_entities() does not call v4l2_ctrl_handler_free() when
-it fails.
-Add the missed function to fix it.
+This field is required for ASoC cards. Not setting it will result in a
+module->name pointer being NULL and generate problems such as
 
-Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+cat /proc/asound/modules
+ 0 (efault)
+
+Fixes: 76016322ec56 ('ASoC: Intel: Add Broxton-P machine driver')
+Reported-by: Jaroslav Kysela <perex@perex.cz>
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200625191308.3322-5-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/isppreview.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/intel/boards/bxt_rt298.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
-index 97d660606d984..b8c2b8bba826e 100644
---- a/drivers/media/platform/omap3isp/isppreview.c
-+++ b/drivers/media/platform/omap3isp/isppreview.c
-@@ -2287,7 +2287,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	me->ops = &preview_media_ops;
- 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
- 	if (ret < 0)
--		return ret;
-+		goto error_handler_free;
+diff --git a/sound/soc/intel/boards/bxt_rt298.c b/sound/soc/intel/boards/bxt_rt298.c
+index adf416a49b483..60fb874950504 100644
+--- a/sound/soc/intel/boards/bxt_rt298.c
++++ b/sound/soc/intel/boards/bxt_rt298.c
+@@ -556,6 +556,7 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ /* broxton audio machine driver for SPT + RT298S */
+ static struct snd_soc_card broxton_rt298 = {
+ 	.name = "broxton-rt298",
++	.owner = THIS_MODULE,
+ 	.dai_link = broxton_rt298_dais,
+ 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
+ 	.controls = broxton_controls,
+@@ -571,6 +572,7 @@ static struct snd_soc_card broxton_rt298 = {
  
- 	preview_init_formats(sd, NULL);
- 
-@@ -2320,6 +2320,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	omap3isp_video_cleanup(&prev->video_in);
- error_video_in:
- 	media_entity_cleanup(&prev->subdev.entity);
-+error_handler_free:
-+	v4l2_ctrl_handler_free(&prev->ctrls);
- 	return ret;
- }
- 
+ static struct snd_soc_card geminilake_rt298 = {
+ 	.name = "geminilake-rt298",
++	.owner = THIS_MODULE,
+ 	.dai_link = broxton_rt298_dais,
+ 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
+ 	.controls = broxton_controls,
 -- 
 2.25.1
 
