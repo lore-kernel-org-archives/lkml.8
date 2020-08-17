@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA64BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B268206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C696E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678251;
-	bh=Ayp/4nbw5HvV5c5EArbyB4xMrIEgilEBRcS1f8aK9F0=;
+	s=default; t=1597678255;
+	bh=xdoyQXyF72FtUFPSXhWHvSJWOV8YBtDyng3jIj+DsCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+AVJ/lUo9ERBRQ6FBIAEXcJgsbaE0EDOAjRT+0PFSKDB9GhH/sp00+p+yhqRVvUB
-	 8LROpIImPABB0YxQgzOI7Q7sJm8sXcuwg0A1cpDGG/mTm+rHvacJkGaAbJcq5K3oi3
-	 IFmPOc+xx5mwfplFgyMVNqLyXTtSyHtodkBUzaO8=
+	b=V695W2z6kKbXiI2RxtUFzhPLVhGuYXEmwi2Hypc7RQbpA5a1C4gBPZxpxDaGTT2nC
+	 DNGMQMElzEH7dZrEfmCpEwnl4OrhIGkwhfGs98+rz8g41/CNANQZNZ8ckG+8P1UDkV
+	 D5C2HhYLBSySTD7rZuzy/cQKJHruOAYRwmd3tviw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgHQPau (ORCPT
+        id S1729912AbgHQPax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbgHQP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:32 -0400
+        id S1729542AbgHQP2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E425F23B40;
-        Mon, 17 Aug 2020 15:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B32923AFE;
+        Mon, 17 Aug 2020 15:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678106;
-        bh=Ayp/4nbw5HvV5c5EArbyB4xMrIEgilEBRcS1f8aK9F0=;
+        s=default; t=1597678115;
+        bh=xdoyQXyF72FtUFPSXhWHvSJWOV8YBtDyng3jIj+DsCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMpqWL8F8r1jNfqu5d3AOF1UdbeBxLpZHRQOU5AySE2QP9AQpZKgAQQdlGCzyt23U
-         uFfh2cYGhWMlaeFQg65xBYOpdR39iraqyapq+bzdL10bEhtn8X0AbD40K40lBRHo/U
-         f7yMu1xttpovC7i+i7RjJJ1itDjK1FczHbqLaBy8=
+        b=YIMe0Kz1HhRzwaYzk2e6AaCc4IRMiy1rVHLhJRu3oTSgievMvAb91DO9TiN2RzDG+
+         U7zXg3xoS+n+16YAzo3Ut963rs/SfIGzC6pbClKnY1yxhaAynvvSpCRhaNpYel8k68
+         n/UxmmAhzVc9nKTTenBo1ceqphFF+WEP7y3OJzm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chen Tao <chentao107@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 190/464] net: ethernet: ti: am65-cpsw-nuss: restore vlan configuration while down/up
-Date:   Mon, 17 Aug 2020 17:12:23 +0200
-Message-Id: <20200817143842.923412596@linuxfoundation.org>
+Subject: [PATCH 5.8 193/464] drm/amdgpu/debugfs: fix memory leak when amdgpu_virt_enable_access_debugfs failed
+Date:   Mon, 17 Aug 2020 17:12:26 +0200
+Message-Id: <20200817143843.068083865@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,78 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Chen Tao <chentao107@huawei.com>
 
-[ Upstream commit 7bcffde02152dd3cb180f6f3aef27e8586b2a905 ]
+[ Upstream commit 888e32d71115e26b57bdcbc717c68e9c5026bac3 ]
 
-The vlan configuration is not restored after interface down/up sequence.
+Fix memory leak in amdgpu_debugfs_gpr_read not freeing data when
+amdgpu_virt_enable_access_debugfs failed.
 
-Steps to check:
- # ip link add link eth0 name eth0.100 type vlan id 100
- # ifconfig eth0 down
- # ifconfig eth0 up
-
-This patch fixes it, restoring vlan ALE entries on .ndo_open().
-
-Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 95a2f917387a2 ("drm/amdgpu: restrict debugfs register access under SR-IOV")
+Signed-off-by: Chen Tao <chentao107@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 6d778bc3d012f..88832277edd5a 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -223,6 +223,9 @@ static int am65_cpsw_nuss_ndo_slave_add_vid(struct net_device *ndev,
- 	u32 port_mask, unreg_mcast = 0;
- 	int ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index 386b979e08522..f87b225437fc3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -977,7 +977,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
  
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
-+
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -246,6 +249,9 @@ static int am65_cpsw_nuss_ndo_slave_kill_vid(struct net_device *ndev,
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
- 	int ret;
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+ 	if (r < 0)
+-		return r;
++		goto err;
  
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
-+
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -571,6 +577,16 @@ static int am65_cpsw_nuss_ndo_slave_stop(struct net_device *ndev)
- 	return 0;
- }
- 
-+static int cpsw_restore_vlans(struct net_device *vdev, int vid, void *arg)
-+{
-+	struct am65_cpsw_port *port = arg;
-+
-+	if (!vdev)
-+		return 0;
-+
-+	return am65_cpsw_nuss_ndo_slave_add_vid(port->ndev, 0, vid);
-+}
-+
- static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
- {
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-@@ -644,6 +660,9 @@ static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
- 		}
- 	}
- 
-+	/* restore vlan configurations */
-+	vlan_for_each(ndev, cpsw_restore_vlans, port);
-+
- 	phy_attached_info(port->slave.phy);
- 	phy_start(port->slave.phy);
- 
+ 	/* switch to the specific se/sh/cu */
+ 	mutex_lock(&adev->grbm_idx_mutex);
 -- 
 2.25.1
 
