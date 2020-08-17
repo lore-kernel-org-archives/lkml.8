@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86715C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A990C23A76
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411BD23718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678054;
-	bh=tUwrDxtVL/bbLaD1/XzbswHRTKnAjV1eEqHFMCjxayk=;
+	s=default; t=1597678060;
+	bh=Bkk7uSPyPlKR0GzH9CuZpxOaO+KfwSErAJhcc2HJeWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GySk2aH+c3OyLjk6pIdcjBYz3QJYxp2scZQtN2k6wKIuBFYIeQ3lsyDca+sM6Dnlv
-	 S6FQ35kTvw3VkBlmKLAHEaDEdNKIrTYB4JsRKf2pkqrgZLnohQJp1RY0I7O6sOqrDv
-	 4AT8t5WGlAdm2RqbfzJYRWoY2/6sUam9mHHg939g=
+	b=0SokumkV069vAdzGMvZfsygNSapfYRbLaOBVGuLdA9LbGbBnFg73V+yn/IzD+lCqB
+	 rdOm6WDuViHtmPwsyqh9mDVP0H1+dGJkHHh7BITsHEoyr5oXpA+4ga4VUtJY+J+HL0
+	 dQOxWTnKzkRo9lOfoaucbKElJ0gS20zqUwD6qVb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgHQP1d (ORCPT
+        id S1729933AbgHQP1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgHQPZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:27 -0400
+        id S1729735AbgHQPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ADB523A62;
-        Mon, 17 Aug 2020 15:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 891D22395A;
+        Mon, 17 Aug 2020 15:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677927;
-        bh=tUwrDxtVL/bbLaD1/XzbswHRTKnAjV1eEqHFMCjxayk=;
+        s=default; t=1597677924;
+        bh=Bkk7uSPyPlKR0GzH9CuZpxOaO+KfwSErAJhcc2HJeWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIID9OA8iXMgKKQ8zjBk81htwWf7MpFN6DsA9vEpziZ8OCI+61pkJ6PtJIQ8yLna3
-         4+Io+giOKmPqWq1kY0iClpTCzjTGV/MSXBwRbse/9zcQovHewTIrNqgYEmXq4xkImz
-         VBEgEPI44zU56SBUNCeLThEIQtWtJKGuztLoPcuA=
+        b=ghx8xo6eH1XAVpKQV0tW2NaiaPXVRoa7ZWEmZwP3kE5mNIchlZX+kR0PMiu19i23R
+         dawKTN6CZm1OF7RIhyhfMSfDbM5BRiGCVYdTdduHtincjjjCRkoGzqJ3rRArkJHmTW
+         jpw4QDZgfeWuiKymG4+4G0LhvaY1qHxCSQk1N990=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wright Feng <wright.feng@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Shirley Her <shirley.her@bayhubtech.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 118/464] brcmfmac: keep SDIO watchdog running when console_interval is non-zero
-Date:   Mon, 17 Aug 2020 17:11:11 +0200
-Message-Id: <20200817143839.464301090@linuxfoundation.org>
+Subject: [PATCH 5.8 127/464] mmc: sdhci-pci-o2micro: Bug fix for O2 host controller Seabird1
+Date:   Mon, 17 Aug 2020 17:11:20 +0200
+Message-Id: <20200817143839.894195097@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: shirley her <shirley.her@bayhubtech.com>
 
-[ Upstream commit eccbf46b15bb3e35d004148f7c3a8fa8e9b26c1e ]
+[ Upstream commit cdd2b769789ae1a030e1a26f6c37c5833cabcb34 ]
 
-brcmfmac host driver makes SDIO bus sleep and stops SDIO watchdog if no
-pending event or data. As a result, host driver does not poll firmware
-console buffer before buffer overflow, which leads to missing firmware
-logs. We should not stop SDIO watchdog if console_interval is non-zero
-in debug build.
+To fix support for the O2 host controller Seabird1, set the quirk
+SDHCI_QUIRK2_PRESET_VALUE_BROKEN and the capability bit MMC_CAP2_NO_SDIO.
+Moreover, assign the ->get_cd() callback.
 
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-4-wright.feng@cypress.com
+Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+Link: https://lore.kernel.org/r/20200721011733.8416-1-shirley.her@bayhubtech.com
+[Ulf: Updated the commit message]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-pci-o2micro.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 310d8075f5d71..bc02168ebb536 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -3699,7 +3699,11 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
- 			if (bus->idlecount > bus->idletime) {
- 				brcmf_dbg(SDIO, "idle\n");
- 				sdio_claim_host(bus->sdiodev->func1);
--				brcmf_sdio_wd_timer(bus, false);
-+#ifdef DEBUG
-+				if (!BRCMF_FWCON_ON() ||
-+				    bus->console_interval == 0)
-+#endif
-+					brcmf_sdio_wd_timer(bus, false);
- 				bus->idlecount = 0;
- 				brcmf_sdio_bus_sleep(bus, true, false);
- 				sdio_release_host(bus->sdiodev->func1);
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+index e2a846885902f..ed3c605fcf0c4 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -561,6 +561,12 @@ static int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+ 			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
+ 		}
+ 
++		if (chip->pdev->device == PCI_DEVICE_ID_O2_SEABIRD1) {
++			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
++			host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
++			host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
++		}
++
+ 		host->mmc_host_ops.execute_tuning = sdhci_o2_execute_tuning;
+ 
+ 		if (chip->pdev->device != PCI_DEVICE_ID_O2_FUJIN2)
 -- 
 2.25.1
 
