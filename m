@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B052072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BE520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693219;
-	bh=9tU5YFD76bVfGvbZRgLUI4JCisB5S13EcVehNhmKP9w=;
+	s=default; t=1597693229;
+	bh=79hPRqgXWFr+ObCSA7EIGI00pw8gXvjZdWf2oaJ+dAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLf8P6FzVaVJdGjuBq95cXyXDr+96l9MAprEzM60oz+w4xAmcF06OaHIDfeT/UTot
-	 u7oEIVoqRxQH8cvRtpZaERoVC4082RSwGE9N9DtdJyOBT6yQUb5hYnhfsjYmPH+QjU
-	 Ufnd1mNYTIQVy5ddzoRdWTMcNR9FqBWV7nuXGzFQ=
+	b=G+jbqxmU6fNNfX1y9XYINq0FyXywLOUX1vttJsYFElF/oekbAI6avZP7krs1kvXwU
+	 8CRF9Pth8z131BDDzWxnOLEVgxfoTM/Dxj0Ba59VtIxAthAGXzXkI0R2izblA5zNBY
+	 HZrFAXdF1vzB3ppqdDkg0f5D4A8RVMajlzorGLk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbgHQTkS (ORCPT
+        id S1732557AbgHQTk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32968 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729768AbgHQPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:53 -0400
+        id S1729747AbgHQPZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81AC1205CB;
-        Mon, 17 Aug 2020 15:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00EF32053B;
+        Mon, 17 Aug 2020 15:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677953;
-        bh=9tU5YFD76bVfGvbZRgLUI4JCisB5S13EcVehNhmKP9w=;
+        s=default; t=1597677941;
+        bh=79hPRqgXWFr+ObCSA7EIGI00pw8gXvjZdWf2oaJ+dAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXjYdXHo9CeXKExJ4jGhwcg0LNR0hUniPMmVAMGaBUEhjsvzMg9OlfuDOeZR33L+U
-         O3SCpxPbMSQG1D8AYlsLtXEBjd98yXXxEbsVk1hUJJrtyOjlIUZY49tFRBUBiA1lR+
-         ecNs6l9f72JSq72/WgFy/yNUP+5Ntv//p4ttNdLE=
+        b=OiY6fsTDllpyfSKMurLLvJWjyJNFegc1bKYzva/3rLkzsO3UlLaeo9wK5tCia/xc4
+         C8ho2BT0TsE4o7FzgtxEIxJEMfJnxjmQbuuPy6pywMEXbVyCiBoMTnBM30qSp5nGof
+         3sPNnAErCDh3Gx7qJMq2qrwRudBjRPzcdRxJK7Uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 168/464] leds: lm355x: avoid enum conversion warning
-Date:   Mon, 17 Aug 2020 17:12:01 +0200
-Message-Id: <20200817143841.865037175@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 164/464] drm/arm: fix unintentional integer overflow on left shift
+Date:   Mon, 17 Aug 2020 17:11:57 +0200
+Message-Id: <20200817143841.668176885@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,58 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+[ Upstream commit 5f368ddea6fec519bdb93b5368f6a844b6ea27a6 ]
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+Shifting the integer value 1 is evaluated using 32-bit arithmetic
+and then used in an expression that expects a long value leads to
+a potential integer overflow. Fix this by using the BIT macro to
+perform the shift to avoid the overflow.
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
-
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processors")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200618100400.11464-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/arm/malidp_planes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index 11ce052497514..b2eb2e1e9c04b 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -164,18 +164,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
- 
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
+diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
+index 37715cc6064e6..ab45ac445045a 100644
+--- a/drivers/gpu/drm/arm/malidp_planes.c
++++ b/drivers/gpu/drm/arm/malidp_planes.c
+@@ -928,7 +928,7 @@ int malidp_de_planes_init(struct drm_device *drm)
+ 	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
+ 	struct malidp_plane *plane = NULL;
+ 	enum drm_plane_type plane_type;
+-	unsigned long crtcs = 1 << drm->mode_config.num_crtc;
++	unsigned long crtcs = BIT(drm->mode_config.num_crtc);
+ 	unsigned long flags = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | DRM_MODE_ROTATE_180 |
+ 			      DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y;
+ 	unsigned int blend_caps = BIT(DRM_MODE_BLEND_PIXEL_NONE) |
 -- 
 2.25.1
 
