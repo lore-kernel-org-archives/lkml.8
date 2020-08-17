@@ -1,107 +1,146 @@
-Return-Path: <SRS0=yO2T=B2=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2963BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0459C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 00:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15F82078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Aug 2020 23:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1D020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 00:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZTmL/jg0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fbp/7SbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgHPX5k (ORCPT
+        id S1726538AbgHQACK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 19:57:40 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47189 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgHPX5k (ORCPT
+        Sun, 16 Aug 2020 20:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgHQACJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 19:57:40 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D25F806B6;
-        Mon, 17 Aug 2020 11:57:34 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1597622254;
-        bh=JhXIFBqKeT7URz6eflkuIZsdIt3uBksb0ispn1x1xTk=;
-        h=From:To:Cc:Subject:Date;
-        b=ZTmL/jg0TgMZmwa2D+p6g4e6h/9m7a7rOGt0jct1upuAZyQURrFJgRiPyyo1+gkR2
-         swwr67p3h6sPYiKKxzdYccDtFw6QRWxe6scq2YDg0gfHvqMEo4QKvK8mCJ0+FzPMpM
-         r4Xl5CgQtIr83Hu2/4eHLTBtZzO29/dfm3sPKRzWHqcbE0QBh7bD18GuW88O+kZVqO
-         pajI+oy0cJvjkbBAW/8CyNBV3ctIKAKqHa0jO8c3AssVwuR03f3PhaMnrQCGXZKqfI
-         IUgndDi7x0goUm8ybo6tbmeL0D6D3+zMYTLV/j4OYU90UmPt9DHubeQfyVTM1wgBDN
-         1SDBODP89HZ6Q==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f39c7ee0000>; Mon, 17 Aug 2020 11:57:34 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 6959113ED33;
-        Mon, 17 Aug 2020 11:57:33 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id F365A28005D; Mon, 17 Aug 2020 11:57:33 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] rtc: ds1307: Ensure oscillator is enabled for DS1388
-Date:   Mon, 17 Aug 2020 11:57:31 +1200
-Message-Id: <20200816235731.21071-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
+        Sun, 16 Aug 2020 20:02:09 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A702C061786
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 17:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=1TEuoPnjJ2oJE5dtaNlo66wPYcdn+UVcaaznXX1DJpw=; b=fbp/7SbFkglboMd4GTB4E9Q9LT
+        bhPYAqv5UYSnXShIzxKXU3K2mlnSjaf2GHbm/w8czk7SUZZKMSLSbk60UrZ7H0My7NnDtLcl5sy6B
+        CE94WGD3TV1BXOauHUG9Bl6vJvPEH4zsvhYn0hgDIQRr8tdO4rNCO4z/+9a5rzHFOqUgSE7/6qch+
+        Y1jXBjWWOcgWJJDkOCVwkthcPgtsW7CvWHiNKsoCFybfZGNax5J3kqWzMHQbFyfteY43mITgCDHWh
+        PyG49ZfnR9DsyCT0TriZVfOpxKo6DNpCkAcRw3n7SaBloHygvc+3HhV3VBKEd/sK42sCrdJ6xAEwl
+        S0vGmL1Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7SbF-0008EY-8N; Mon, 17 Aug 2020 00:02:05 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] seqlock: <linux/seqlock.h>: fix multiple kernel-doc warnings
+Date:   Sun, 16 Aug 2020 17:02:00 -0700
+Message-Id: <20200817000200.20993-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to the other variants the DS1388 has a bit to stop the
-oscillator to reduce the power consumption from VBAT. Ensure that the
-oscillator is enabled when the system is up.
+Fix kernel-doc warnings in <linux/seqlock.h>.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+../include/linux/seqlock.h:152: warning: Incorrect use of kernel-doc format:  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
+../include/linux/seqlock.h:164: warning: Incorrect use of kernel-doc format:  * SEQCOUNT_LOCKTYPE() - Instantiate seqcount_LOCKNAME_t and helpers
+../include/linux/seqlock.h:229: warning: Function parameter or member 'seq_name' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
+../include/linux/seqlock.h:229: warning: Function parameter or member 'assoc_lock' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
+../include/linux/seqlock.h:229: warning: Excess function parameter 'name' description in 'SEQCOUNT_LOCKTYPE_ZERO'
+../include/linux/seqlock.h:229: warning: Excess function parameter 'lock' description in 'SEQCOUNT_LOCKTYPE_ZERO'
+../include/linux/seqlock.h:695: warning: duplicate section name 'NOTE'
+
+Demote kernel-doc notation for the macros "seqcount_LOCKNAME_init()" and
+"SEQCOUNT_LOCKTYPE()"; scripts/kernel-doc does not handle them correctly.
+
+Rename function parameters in SEQCNT_LOCKNAME_ZERO() documentation
+to match the macro's argument names. Change the macro name in the
+documentation to SEQCOUNT_LOCKTYPE_ZERO() to match the macro's name.
+
+For raw_write_seqcount_latch(), rename the second NOTE: to NOTE2:
+to prevent a kernel-doc warning. However, the generated output is not
+quite as nice as it could be for this.
+
+Fix a typo: s/LOCKTYPR/LOCKTYPE/
+
+Fixes: 0efc94c5d15c ("seqcount: Compress SEQCNT_LOCKNAME_ZERO()")
+Fixes: e4e9ab3f9f91 ("seqlock: Fold seqcount_LOCKNAME_init() definition")
+Fixes: a8772dccb2ec ("seqlock: Fold seqcount_LOCKNAME_t definition")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Reported-by: kernel test robot <lkp@intel.com>
 ---
- drivers/rtc/rtc-ds1307.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+v2: do not move the definition of seqcount_LOCKNAME_init().
+Fix build errors reported by kernel test robot.
+Actually build a kernel with these changes.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 54c85cdd019d..2182f4e97c0a 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -153,6 +153,7 @@ enum ds_type {
- #define DS1388_REG_CONTROL		0x0c
- #	define DS1388_BIT_RST		BIT(0)
- #	define DS1388_BIT_WDE		BIT(1)
-+#	define DS1388_BIT_nEOSC		BIT(7)
-=20
- /* negative offset step is -2.034ppm */
- #define M41TXX_NEG_OFFSET_STEP_PPB	2034
-@@ -1881,6 +1882,19 @@ static int ds1307_probe(struct i2c_client *client,
- 				     DS1307_REG_HOUR << 4 | 0x08, hour);
- 		}
- 		break;
-+	case ds_1388:
-+		err =3D regmap_read(ds1307->regmap, DS1388_REG_CONTROL, &tmp);
-+		if (err) {
-+			dev_dbg(ds1307->dev, "read error %d\n", err);
-+			goto exit;
-+		}
-+
-+		/* oscillator off?  turn it on, so clock can tick. */
-+		if (tmp & DS1388_BIT_nEOSC) {
-+			tmp &=3D ~DS1388_BIT_nEOSC;
-+			regmap_write(ds1307->regmap, DS1388_REG_CONTROL, tmp);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
---=20
-2.28.0
+ include/linux/seqlock.h |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
+--- lnx-59-rc1.orig/include/linux/seqlock.h
++++ lnx-59-rc1/include/linux/seqlock.h
+@@ -138,7 +138,7 @@ static inline void seqcount_lockdep_read
+ #endif
+ 
+ /**
+- * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPR associated
++ * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPE associated
+  * @seqcount:	The real sequence counter
+  * @lock:	Pointer to the associated spinlock
+  *
+@@ -148,7 +148,7 @@ static inline void seqcount_lockdep_read
+  * that the write side critical section is properly serialized.
+  */
+ 
+-/**
++/*
+  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
+  * @s:		Pointer to the seqcount_LOCKNAME_t instance
+  * @lock:	Pointer to the associated LOCKTYPE
+@@ -173,7 +173,6 @@ seqcount_##lockname##_init(seqcount_##lo
+ 	seqcount_init(&s->seqcount);					\
+ 	__SEQ_LOCK(s->lock = lock);					\
+ }									\
+-									\
+ static __always_inline seqcount_t *					\
+ __seqcount_##lockname##_ptr(seqcount_##lockname##_t *s)			\
+ {									\
+@@ -218,9 +217,9 @@ SEQCOUNT_LOCKTYPE(struct mutex,		mutex,
+ SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
+ 
+ /**
+- * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
+- * @name:	Name of the seqcount_LOCKNAME_t instance
+- * @lock:	Pointer to the associated LOCKTYPE
++ * SEQCOUNT_LOCKTYPE_ZERO - static initializer for seqcount_LOCKNAME_t
++ * @seq_name:	Name of the seqcount_LOCKNAME_t instance
++ * @assoc_lock:	Pointer to the associated LOCKTYPE
+  */
+ 
+ #define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
+@@ -688,7 +687,7 @@ static inline int raw_read_seqcount_t_la
+  *	to miss an entire modification sequence, once it resumes it might
+  *	observe the new entry.
+  *
+- * NOTE:
++ * NOTE2:
+  *
+  *	When data is a dynamic data structure; one should use regular RCU
+  *	patterns to manage the lifetimes of the objects within.
