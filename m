@@ -2,590 +2,249 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60200C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5702067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B883206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:12:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="QajY32uw";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="t8hMimx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHQKLY (ORCPT
+        id S1727791AbgHQKMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:11:24 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42470 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHQKLW (ORCPT
+        Mon, 17 Aug 2020 06:12:00 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:2302 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726151AbgHQKL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:11:22 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9D0D3296FC7
-Subject: Re: mainline/master bisection: baseline.bootrr.rockchip-pcie-probed
- on rk3399-gru-kevin
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     kernelci-results@groups.io, gtucker@collabora.com,
-        linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        kernel@collabora.com, Marc Zyngier <maz@kernel.org>
-References: <5f394e3f.1c69fb81.4accc.4cf0@mx.google.com>
- <0070b9d1-9108-3d26-cb91-bfeb7cb97e9a@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <cc089ea6-2484-7d7c-29a2-cd45daa47817@collabora.com>
-Date:   Mon, 17 Aug 2020 12:11:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <0070b9d1-9108-3d26-cb91-bfeb7cb97e9a@collabora.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 17 Aug 2020 06:11:58 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07HA8hQC000456;
+        Mon, 17 Aug 2020 03:11:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=4+PjhVGf5k1O8hK/zmokdV/jSPgL3SESrDR/KjkbqTI=;
+ b=QajY32uwsf9G+f4IOpYDB1qZlVfndH5gfcdQRE2tnGk3qPRin7H8SvclWXhaoDOO8HGZ
+ 3o5DP17L1f1q9nbSkjllsEWs6RYg/o3F1ySKkNUHTOxoILM1FqR0BnkBABFzXZiD7q8s
+ 3T4mTdIZrOEqRjfnqU/wHJiXVzULkyWllT+LhEumBB+3tD8fTYO1C7sAi2C4W6EJ862a
+ BjVtUP3zlXGq7mqID3OhFcn4I1O+7qmvi1j3ayTJHmieHAl9L2MhG6pxfSWA602i6CVI
+ Nxsf1eXC5dh3FMexVr/slh4adxFtleaVPpssO3c+doh8bgK6V/Kl2XTZMhPnxdST1gfN Pg== 
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2040.outbound.protection.outlook.com [104.47.51.40])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 32xba0dxgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 03:11:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ezelrYhxn3cC+vWJls9pZOy6xt56iSACTTv1YoTO6Go15/FHl0o3F1iWjqBlhUBKgHGxshL5acxIn3XlP33jdA4bbpk/1IMgXp5FfvcvsKGzjqwNmsuvGBV/7OWwROmWI2CovRYlGzXwGMmE/XF08EadXTsdpmvHQdT5jteEwt7m7MPcdvnQDsUUpVlATAfyl2mCtrivblBZ03uyafS6VDRB00o5xnGo5Re12Q+ZzTIcB+CX8q5UKQO7kwHsbh1G/VkEzORLPwbzx21m6jJUtRlSPq9irSMVvVTnN23vkVPVaxYu+YA8o0HHrfPJa2sMVsbmP2FJXEUOsSreRG8OvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4+PjhVGf5k1O8hK/zmokdV/jSPgL3SESrDR/KjkbqTI=;
+ b=WybigJpvXqgh/wKnn0Dbo4Xt3i+ATN3qGaRmlyNk8UEr4sB/C+HrtMdEYl5t70MFBq8Lbv50LTCqApEgUtrVxDMeemXygUvVKAoVBNd1Fj++rvDClSYCg6hpRI9yeMBNjmjvng1qKXSrVFVnmMyCOUf5u7FWz2vdIDoD/Qkn8mRYlR6Cha+sAxSylx70aEF5NzqUGfEfQx3qe7IGTg1AYxZilA6/bg7EKNOPyJaWHOHAm9W8QJ6OXl5AxT/DMHXRYtxICO4MEgP9ucPUPgjes5ndb4db5vrPx44wN1NYaxoTC7vjAjvsx25fbEQ/d6KYlQ3RvuA27OJlTVhoqtXNuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4+PjhVGf5k1O8hK/zmokdV/jSPgL3SESrDR/KjkbqTI=;
+ b=t8hMimx4pvBClKPJgyC6jbaXKQ1va/H/cusNxNwofUJd0p1VnUqFy96/HAAlE3SRMlQPfPBM9RZ+9H36RHQ3dbdX9sysMU40zvHTvBc25BL+KXrec5LbW4Xmo3a+u57NJkS+BqVJsjYJ+BWucWEGfWd/9aNUVnUf2mRHrXh1u9Y=
+Received: from DM6PR07MB6154.namprd07.prod.outlook.com (2603:10b6:5:17e::20)
+ by DM6PR07MB7132.namprd07.prod.outlook.com (2603:10b6:5:1e6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Mon, 17 Aug
+ 2020 10:11:50 +0000
+Received: from DM6PR07MB6154.namprd07.prod.outlook.com
+ ([fe80::c0af:c085:c7a8:4bb6]) by DM6PR07MB6154.namprd07.prod.outlook.com
+ ([fe80::c0af:c085:c7a8:4bb6%5]) with mapi id 15.20.3283.028; Mon, 17 Aug 2020
+ 10:11:50 +0000
+From:   Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Milind Parab <mparab@cadence.com>,
+        Yuti Suresh Amonkar <yamonkar@cadence.com>,
+        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
+        "jsarha@ti.com" <jsarha@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>
+Subject: RE: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+Thread-Topic: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+Thread-Index: AQHWbKNgb4eLlJb0pE6AuVCE/4rv2ak0SICAgAfYVSA=
+Date:   Mon, 17 Aug 2020 10:11:50 +0000
+Message-ID: <DM6PR07MB6154F2D1F939B03A58E14108C55F0@DM6PR07MB6154.namprd07.prod.outlook.com>
+References: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
+ <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
+ <d7cfd890-2540-7d9e-72a9-8f2011b7b0ff@ti.com>
+In-Reply-To: <d7cfd890-2540-7d9e-72a9-8f2011b7b0ff@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0wZGUyN2QxYy1lMDcyLTExZWEtODUyNi1jOGY3NTA0NDIyZDhcYW1lLXRlc3RcMGRlMjdkMWQtZTA3Mi0xMWVhLTg1MjYtYzhmNzUwNDQyMmQ4Ym9keS50eHQiIHN6PSI2NzU2IiB0PSIxMzI0MjEzMjcwNjI4NTM5NTUiIGg9InY2MkVOUVVXMHJITlk5THhXRldXeVM2UVgyZz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [59.145.174.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ba28b32-d342-4c5b-5888-08d84295f561
+x-ms-traffictypediagnostic: DM6PR07MB7132:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR07MB71327E8A255C88D724A68263C55F0@DM6PR07MB7132.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uucVbuPWhknytJlNJTf7m0byBCaf68fZBszPuU4YXAbzLbArmsXHfwDoyYmPA4l/lwO+HmuEN2M+Vz2qy14JmSD9+xF8MgmVics2dRUb2Acp1uBhrviiBaBKuDguJindtxHBW53RU4CVraDQlT/nKoTOnuHHV2i/d8kTiZx+40PdKEChhZw0+IPt2b54yWw1y1AY+dlj9dtn9Xc7Bke8bVWTHA/Hhr8geGV+gbuKU87TVTFbPOgBSD6H3T/hEKfWIBQqbDQTQXdiZ5HwgEBqxukiPqrwEaEDcC6kyKcNKFccLLNop+kCu3K7YfMKGqZHgi7fqm4p9on2NQTxm25jNzDClckf5FXtMJwwTXuDsGClWRhHoWtrF9/Q40D1lg/oQOyiNOZ70qQUQEA5wJD2TftvXJ+jHO8nMgJrgKThy2fRVuQTP09DM7B5q3L+3ZE9/wBO3d3Vg5IXU1eLg8ul5mPp0bbxTrqAH3251m0wX0w=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB6154.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(136003)(346002)(396003)(376002)(36092001)(5660300002)(83380400001)(76116006)(52536014)(6506007)(186003)(53546011)(2906002)(66946007)(66446008)(64756008)(66556008)(66476007)(9686003)(4326008)(55016002)(86362001)(8936002)(7696005)(478600001)(110136005)(316002)(33656002)(26005)(54906003)(71200400001)(8676002)(15650500001)(41533002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 05W9rBZ0H7VSglxB6kwtuCt5GwGCQ0hV50Tdn/qYhqtLF2rqKV0YZFnrv2TptS0fr4Ro3fzytWigPX1gpUAYXMIMsLf0dq8oti+dfdJrj7RLBFc7w/SrsX/Y9L8XEMTSrlTmRIHoa8C/nBFFkP8iQ8qEcwEHRcRW/2YhTeWRQBYxmzE0K5n4xs6tOk8z6KuOHzrEnEL3ri8+67QsaoUALZZT0Qk/p0pL3cNPkBAu+oPHv3RL1hJJD0mFshvhxrjUWtBDMj9xul5Yo3Y8UEfqjRCryLpGvVGLYZAU6VbIFuKBfRth5urbEK1+Lc3Uo7DSdRQfE8Vjss1IZwIj/NiETc9uaG7huyvMp8ubi5YIJzcVwxC4Z3czab8/LM8/w1OzG9duK5EVxP0dsACoqF69aHP55tgoP7zdMnw6AW/WYwMYM3YDT5cOVDn4zE8g8Glo2vM3WulNH2YEM6/JeFO7tCivNuH+CEbMDpp8AVopkKgT9rcRrJrSqW9KNZbrrg81iplDnta+yek3CEiSJ6VU21JwxZa+fe+A0Djj3Qjz0zJF1YZRBP2ZfqwoXACBKe/zpXvmTB59nD+sQFhDTB56zzIORxEoXbbFT4PB6zYdjg4Tg1BmF561gnEvQblHq1/W9+T70Fz5GuS95vv5wtaoOw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB6154.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ba28b32-d342-4c5b-5888-08d84295f561
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 10:11:50.5294
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5QrfzOL+XmXe8o6HPYYbdnb9UNrtjbUrbzDcsvbaabk59htXtVTN/g7Xxi9ZOpTjafrEQBr5wNsf+A9xrqWqe+7A8Ujcmi5Em6SeGeVeTIY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB7132
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_02:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0 mlxscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008170076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume et all,
-
-On 17/8/20 12:02, Guillaume Tucker wrote:
-> Hi,
-> 
-> Please see the bisection report below about a driver probe
-> regression with rockchip-pcie.
-> 
-> Reports aren't automatically sent to the public while we're
-> trialing new bisection features on kernelci.org but this one
-> looks valid.
-> 
-
-Thank you for make it public. It's nice to see kernelCI catching these things.
-
-> It seems to be due to this error:
-> 
->   <6>[   16.842128] rockchip-pcie f8000000.pcie: no vpcie12v regulator found
-> 
-
-I just noticed some patches in the ML that might help to fix the issue. It is
-not related to the above message though.
-
-I suspect the following series sent by Marc (cc'ied in this email) will fix the
-issue [1]. I'd expect the patches to land as a fix for this release.
-
-Thanks,
-  Enric
-
-[1] https://lkml.org/lkml/2020/8/15/220
-
-> Full log:
-> 
->   https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
-> 
-> The issue was not there in v5.8 when the driver was probing fine:
-> 
->   https://storage.kernelci.org/mainline/master/v5.8/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
-> 
-> Hope this helps.
-> 
-> Thanks,
-> Guillaume
-> 
-> On 16/08/2020 16:18, KernelCI bot wrote:
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> *                                                               *
->> * If you do send a fix, please include this trailer:            *
->> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->> *                                                               *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>
->> mainline/master bisection: baseline.bootrr.rockchip-pcie-probed on rk3399-gru-kevin
->>
->> Summary:
->>   Start:      a1d21081a60d Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->>   Plain log:  https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.txt
->>   HTML log:   https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
->>   Result:     2f96593ecc37 of_address: Add bus type match for pci ranges parser
->>
->> Checks:
->>   revert:     PASS
->>   verify:     PASS
->>
->> Parameters:
->>   Tree:       mainline
->>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>   Branch:     master
->>   Target:     rk3399-gru-kevin
->>   CPU arch:   arm64
->>   Lab:        lab-collabora
->>   Compiler:   gcc-8
->>   Config:     defconfig
->>   Test case:  baseline.bootrr.rockchip-pcie-probed
->>
->> Breaking commit found:
->>
->> -------------------------------------------------------------------------------
->> commit 2f96593ecc37e98bf99525f0629128080533867f
->> Author: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> Date:   Tue Jul 28 23:36:55 2020 +0800
->>
->>     of_address: Add bus type match for pci ranges parser
->>     
->>     So the parser can be used to parse range property of ISA bus.
->>     
->>     As they're all using PCI-like method of range property, there is no need
->>     start a new parser.
->>     
->>     Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>     Reviewed-by: Rob Herring <robh@kernel.org>
->>     Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->>
->> diff --git a/drivers/of/address.c b/drivers/of/address.c
->> index 8eea3f6e29a4..813936d419ad 100644
->> --- a/drivers/of/address.c
->> +++ b/drivers/of/address.c
->> @@ -49,6 +49,7 @@ struct of_bus {
->>  	u64		(*map)(__be32 *addr, const __be32 *range,
->>  				int na, int ns, int pna);
->>  	int		(*translate)(__be32 *addr, u64 offset, int na);
->> +	bool	has_flags;
->>  	unsigned int	(*get_flags)(const __be32 *addr);
->>  };
->>  
->> @@ -364,6 +365,7 @@ static struct of_bus of_busses[] = {
->>  		.count_cells = of_bus_pci_count_cells,
->>  		.map = of_bus_pci_map,
->>  		.translate = of_bus_pci_translate,
->> +		.has_flags = true,
->>  		.get_flags = of_bus_pci_get_flags,
->>  	},
->>  #endif /* CONFIG_PCI */
->> @@ -375,6 +377,7 @@ static struct of_bus of_busses[] = {
->>  		.count_cells = of_bus_isa_count_cells,
->>  		.map = of_bus_isa_map,
->>  		.translate = of_bus_isa_translate,
->> +		.has_flags = true,
->>  		.get_flags = of_bus_isa_get_flags,
->>  	},
->>  	/* Default */
->> @@ -698,9 +701,10 @@ static int parser_init(struct of_pci_range_parser *parser,
->>  
->>  	parser->node = node;
->>  	parser->pna = of_n_addr_cells(node);
->> -	parser->na = of_bus_n_addr_cells(node);
->> -	parser->ns = of_bus_n_size_cells(node);
->>  	parser->dma = !strcmp(name, "dma-ranges");
->> +	parser->bus = of_match_bus(node);
->> +
->> +	parser->bus->count_cells(parser->node, &parser->na, &parser->ns);
->>  
->>  	parser->range = of_get_property(node, name, &rlen);
->>  	if (parser->range == NULL)
->> @@ -732,6 +736,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->>  	int na = parser->na;
->>  	int ns = parser->ns;
->>  	int np = parser->pna + na + ns;
->> +	int busflag_na = 0;
->>  
->>  	if (!range)
->>  		return NULL;
->> @@ -739,12 +744,13 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->>  	if (!parser->range || parser->range + np > parser->end)
->>  		return NULL;
->>  
->> -	if (parser->na == 3)
->> -		range->flags = of_bus_pci_get_flags(parser->range);
->> -	else
->> -		range->flags = 0;
->> +	range->flags = parser->bus->get_flags(parser->range);
->> +
->> +	/* A extra cell for resource flags */
->> +	if (parser->bus->has_flags)
->> +		busflag_na = 1;
->>  
->> -	range->pci_addr = of_read_number(parser->range, na);
->> +	range->bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->>  
->>  	if (parser->dma)
->>  		range->cpu_addr = of_translate_dma_address(parser->node,
->> @@ -759,11 +765,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->>  	/* Now consume following elements while they are contiguous */
->>  	while (parser->range + np <= parser->end) {
->>  		u32 flags = 0;
->> -		u64 pci_addr, cpu_addr, size;
->> +		u64 bus_addr, cpu_addr, size;
->>  
->> -		if (parser->na == 3)
->> -			flags = of_bus_pci_get_flags(parser->range);
->> -		pci_addr = of_read_number(parser->range, na);
->> +		flags = parser->bus->get_flags(parser->range);
->> +		bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->>  		if (parser->dma)
->>  			cpu_addr = of_translate_dma_address(parser->node,
->>  					parser->range + na);
->> @@ -774,7 +779,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->>  
->>  		if (flags != range->flags)
->>  			break;
->> -		if (pci_addr != range->pci_addr + range->size ||
->> +		if (bus_addr != range->bus_addr + range->size ||
->>  		    cpu_addr != range->cpu_addr + range->size)
->>  			break;
->>  
->> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
->> index 763022ed3456..88bc943405cd 100644
->> --- a/include/linux/of_address.h
->> +++ b/include/linux/of_address.h
->> @@ -6,8 +6,11 @@
->>  #include <linux/of.h>
->>  #include <linux/io.h>
->>  
->> +struct of_bus;
->> +
->>  struct of_pci_range_parser {
->>  	struct device_node *node;
->> +	struct of_bus *bus;
->>  	const __be32 *range;
->>  	const __be32 *end;
->>  	int na;
->> @@ -119,6 +122,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
->>  	return NULL;
->>  }
->>  #endif
->> +#define of_range_parser_init of_pci_range_parser_init
->>  
->>  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
->>  extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
->> -------------------------------------------------------------------------------
->>
->>
->> Git bisection log:
->>
->> -------------------------------------------------------------------------------
->> git bisect start
->> # good: [e4cbce4d131753eca271d9d67f58c6377f27ad21] Merge tag 'sched-core-2020-08-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->> git bisect good e4cbce4d131753eca271d9d67f58c6377f27ad21
->> # bad: [a1d21081a60dfb7fddf4a38b66d9cef603b317a9] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->> git bisect bad a1d21081a60dfb7fddf4a38b66d9cef603b317a9
->> # skip: [47ec5303d73ea344e84f46660fff693c57641386] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->> git bisect skip 47ec5303d73ea344e84f46660fff693c57641386
->> # good: [99f0975d760b6320dd5490bd0bc3a31900284757] dt-bindings: i2c: renesas,iic: Document r8a774e1 support
->> git bisect good 99f0975d760b6320dd5490bd0bc3a31900284757
->> # good: [641ca08547f83bd265477150a66cf2378bc98ed7] nfp: convert to new udp_tunnel_nic infra
->> git bisect good 641ca08547f83bd265477150a66cf2378bc98ed7
->> # good: [38c392cef19019457ddcfb197ff3d9c5267698e6] powerpc/pseries: remove dlpar_cpu_readd()
->> git bisect good 38c392cef19019457ddcfb197ff3d9c5267698e6
->> # skip: [cc3365bbd07c26aa2e4c7435068292e03116d4e7] perf tools: Add clockid_name function
->> git bisect skip cc3365bbd07c26aa2e4c7435068292e03116d4e7
->> # good: [1ea528b0963040273471dc904bf8b0a243741d9f] drm/komeda: Use GEM CMA object functions
->> git bisect good 1ea528b0963040273471dc904bf8b0a243741d9f
->> # good: [afae47af0cb73e36d61b61c8d93cb9d755853050] drm: msm_drm.h: delete duplicated words in comments
->> git bisect good afae47af0cb73e36d61b61c8d93cb9d755853050
->> # good: [e752ec8e9216fd72bc2528297b7606071fb60d29] Merge series "spi: bcm2835/bcm2835aux: support effective_speed_hz" from Marc Kleine-Budde <mkl@pengutronix.de>:
->> git bisect good e752ec8e9216fd72bc2528297b7606071fb60d29
->> # good: [90fc73928fec2f62bbee1476781754c7392a7b61] x86/ioperm: Initialize pointer bitmap with NULL rather than 0
->> git bisect good 90fc73928fec2f62bbee1476781754c7392a7b61
->> # good: [e0eb34810113dbbf1ace57440cf48d514312a373] media: venus: fix multiple encoder crash
->> git bisect good e0eb34810113dbbf1ace57440cf48d514312a373
->> # good: [02772fbfcba8597eef9d5c5f7f94087132d0c1d4] f2fs: compress: fix to avoid memory leak on cc->cpages
->> git bisect good 02772fbfcba8597eef9d5c5f7f94087132d0c1d4
->> # good: [f65e1311e9c6c69bb886bd3333577f85d9eeddbc] tools/power/x86/intel-speed-select: Update version for v5.9
->> git bisect good f65e1311e9c6c69bb886bd3333577f85d9eeddbc
->> # good: [bf8fba45983b0a44db0d5d208d2faab4164cc3bf] memory: mvebu-devbus: Add missing braces to all arms of if statement
->> git bisect good bf8fba45983b0a44db0d5d208d2faab4164cc3bf
->> # good: [07e571ea59eef518730f983f4203651ea413f2cf] powerpc/64e: Drop dead BOOK3E_MMU_TLB_STATS code
->> git bisect good 07e571ea59eef518730f983f4203651ea413f2cf
->> # good: [2bb3c32c5c5fe98b7407a0befc32f16c959a0a92] RDMA/bnxt_re: Change wr posting logic to accommodate variable wqes
->> git bisect good 2bb3c32c5c5fe98b7407a0befc32f16c959a0a92
->> # good: [817ef1a456da7ffbc680763180f23af1fc05815f] ARM: dts: aspeed: rainier: System has one SPI NOR
->> git bisect good 817ef1a456da7ffbc680763180f23af1fc05815f
->> # good: [2cde6410c13d63cc306f395d9fa4b72605468061] staging: dpaa2-ethsw: ignore state interrupts when the interface is not running
->> git bisect good 2cde6410c13d63cc306f395d9fa4b72605468061
->> # bad: [086ba2ec163b638abd2a90ef3e8bab0238d02e56] Merge tag 'f2fs-for-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
->> git bisect bad 086ba2ec163b638abd2a90ef3e8bab0238d02e56
->> # skip: [8186749621ed6b8fc42644c399e8c755a2b6f630] Merge tag 'drm-next-2020-08-06' of git://anongit.freedesktop.org/drm/drm
->> git bisect skip 8186749621ed6b8fc42644c399e8c755a2b6f630
->> # skip: [4a93025cbe4a0b19d1a25a2d763a3d2018bad0d9] mm/shuffle: don't move pages between zones and don't read garbage memmaps
->> git bisect skip 4a93025cbe4a0b19d1a25a2d763a3d2018bad0d9
->> # good: [f2db5efefa8979fa891597c6abd42191f3cb6939] scsi: fcoe: Correct some kernel-doc issues
->> git bisect good f2db5efefa8979fa891597c6abd42191f3cb6939
->> # good: [b90a1269184a3ff374562d243419ad2fa9d3b1aa] Merge branch 'net-openvswitch-masks-cache-enhancements'
->> git bisect good b90a1269184a3ff374562d243419ad2fa9d3b1aa
->> # good: [0f69dae4d1069963fdcc16e63655927d83281006] trace : Have tracing buffer info use kvzalloc instead of kzalloc
->> git bisect good 0f69dae4d1069963fdcc16e63655927d83281006
->> # good: [f4e9654a79ca015f041cb8b3848d6557309a9ba1] media: dt-bindings: media: renesas,fdp1: Make power-domains mandatory
->> git bisect good f4e9654a79ca015f041cb8b3848d6557309a9ba1
->> # good: [aa639e4437046a2519779932d8aa8842b517e20f] pinctrl: aspeed: Improve debug output
->> git bisect good aa639e4437046a2519779932d8aa8842b517e20f
->> # skip: [49e917deeb81e263bcdb4b20e61ca18111995ffe] Merge tag 'selinux-pr-20200803' of git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux
->> git bisect skip 49e917deeb81e263bcdb4b20e61ca18111995ffe
->> # good: [7f07c35fe63bc9563237436cb07bcc28f82a45b7] drm/vblank: Use spin_(un)lock_irq() in drm_queue_vblank_event()
->> git bisect good 7f07c35fe63bc9563237436cb07bcc28f82a45b7
->> # good: [bab9693a9a8c6dd19f670408ec1e78e12a320682] net: thunderx: use spin_lock_bh in nicvf_set_rx_mode_task()
->> git bisect good bab9693a9a8c6dd19f670408ec1e78e12a320682
->> # skip: [e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d] Merge tag 'leds-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds
->> git bisect skip e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d
->> # skip: [0b93d59e90d4403dd7c6bccaf27bd5bc91396866] mm/debug: print head flags in dump_page
->> git bisect skip 0b93d59e90d4403dd7c6bccaf27bd5bc91396866
->> # good: [176cf704425f3d22603d379ffa4a1033a24a779d] regulator: cros-ec-regulator: Fix double free of desc->name.
->> git bisect good 176cf704425f3d22603d379ffa4a1033a24a779d
->> # good: [62a30a292a8283b3022b602964ff7484d5824841] iio: buffer: fix attach/detach pollfunc order
->> git bisect good 62a30a292a8283b3022b602964ff7484d5824841
->> # good: [6c06333073acf8b5cac4b11ecc7170ee98e9b8e7] drm/amdgpu/gfx10: add support for sienna_cichlid firmware
->> git bisect good 6c06333073acf8b5cac4b11ecc7170ee98e9b8e7
->> # good: [1b0443b11530c1fac9d8d2a71032291d05e91be4] drm/amdgpu: fix coding error of mmhub pg enablement
->> git bisect good 1b0443b11530c1fac9d8d2a71032291d05e91be4
->> # good: [f30ef3e8376380c5be9de121517c713527cf0813] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
->> git bisect good f30ef3e8376380c5be9de121517c713527cf0813
->> # good: [fd01cc590357df1da6e3ec8c9947ee15a83a40ec] virt: vbox: Rename guest_caps struct members to set_guest_caps
->> git bisect good fd01cc590357df1da6e3ec8c9947ee15a83a40ec
->> # good: [e6873087cce622bf5af5b519bdf781d086f6b2f4] ARM: dts: aspeed: wedge40: Enable pwm_tacho device
->> git bisect good e6873087cce622bf5af5b519bdf781d086f6b2f4
->> # skip: [e3243e2a273d79c69d821e27cd246089638c472a] Merge branch 'for-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux
->> git bisect skip e3243e2a273d79c69d821e27cd246089638c472a
->> # good: [135961e0a7d555fc8f1d7c89ad44a94dffa5dcd8] x86/kvm/svm: Move guest enter/exit into .noinstr.text
->> git bisect good 135961e0a7d555fc8f1d7c89ad44a94dffa5dcd8
->> # good: [37ae231554f401104bf21847f9093d647a47faa4] USB: serial: only set sysrq timestamp for consoles
->> git bisect good 37ae231554f401104bf21847f9093d647a47faa4
->> # skip: [79e3ea5aab48c83de9410e43b52895406847eca7] tools/: replace HTTP links with HTTPS ones
->> git bisect skip 79e3ea5aab48c83de9410e43b52895406847eca7
->> # good: [3499f9ad5d78375856f692ae86e9f5fc50a08993] ASoC: amd: Removing unnecessary instance initialization
->> git bisect good 3499f9ad5d78375856f692ae86e9f5fc50a08993
->> # good: [0ed9498f9ecfde50c93f3f3dd64b4cd5414d9944] USB: Simplify USB ID table match
->> git bisect good 0ed9498f9ecfde50c93f3f3dd64b4cd5414d9944
->> # good: [a52c809769d3b4d5c94c96e9b49d898ce17128f0] misc: Replace HTTP links with HTTPS ones
->> git bisect good a52c809769d3b4d5c94c96e9b49d898ce17128f0
->> # good: [950a3a7951cdeb908798a49d57e5303ad7afd05a] arm64: dts: renesas: r8a774e1: Add I2C and IIC-DVFS support
->> git bisect good 950a3a7951cdeb908798a49d57e5303ad7afd05a
->> # skip: [dabc3e291d56e3125113101bc6d53d1a1738294d] mm/slab: add naive detection of double free
->> git bisect skip dabc3e291d56e3125113101bc6d53d1a1738294d
->> # good: [033555f6eb60787bd40e34d7abeacaebdcd4c54e] MIPS: KVM: Fix build error caused by 'kvm_run' cleanup
->> git bisect good 033555f6eb60787bd40e34d7abeacaebdcd4c54e
->> # good: [c5b6c914d2f3755426b9c68ed6ddd8f917d9be9e] drm/amdgpu: enable cp_fw_write_wait for navy_flounder
->> git bisect good c5b6c914d2f3755426b9c68ed6ddd8f917d9be9e
->> # good: [56643d9ad2b4933d55f872f61195c1650f9958e9] clk: bcm: rpi: Remove the quirks for the CPU clock
->> git bisect good 56643d9ad2b4933d55f872f61195c1650f9958e9
->> # good: [d777960e8f7268f82806451065f84ea3b05a3ea3] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
->> git bisect good d777960e8f7268f82806451065f84ea3b05a3ea3
->> # good: [f639fb66d17e2e25049503b7c2c568457a9b5c6f] dt-bindings: power: renesas,rcar-sysc: Document r8a774e1 SYSC binding
->> git bisect good f639fb66d17e2e25049503b7c2c568457a9b5c6f
->> # good: [84520c02026174f2db61d40d461b3b0e4a890ea8] Documentation: PCI: pci-error-recovery: drop doubled words
->> git bisect good 84520c02026174f2db61d40d461b3b0e4a890ea8
->> # good: [c569e805c7bcebdd069e5c97ce5f8543f6d02433] thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH support
->> git bisect good c569e805c7bcebdd069e5c97ce5f8543f6d02433
->> # good: [d33cfc2e591a90f540cd696240ff953b8aaba17d] dt-bindings: pinctrl: sh-pfc: Document r8a774e1 PFC support
->> git bisect good d33cfc2e591a90f540cd696240ff953b8aaba17d
->> # good: [0c56c862e712001e4d86bc4f43d74f2425c010c2] drm/amd/powerplay: fix a crash when overclocking Vega M
->> git bisect good 0c56c862e712001e4d86bc4f43d74f2425c010c2
->> # good: [a535aa677521f63acbca3804ae42e062a912add0] drm/nouveau/fbcon: convert copyarea() to new push macros
->> git bisect good a535aa677521f63acbca3804ae42e062a912add0
->> # skip: [40ddad19131999161c39564815b8df2faff0fc7c] Merge tag 'for-linus' of git://git.armlinux.org.uk/~rmk/linux-arm
->> git bisect skip 40ddad19131999161c39564815b8df2faff0fc7c
->> # good: [5759ff1131cd420aad7eae639719a473154b2e37] scsi: hpsa: Correct ctrl queue depth
->> git bisect good 5759ff1131cd420aad7eae639719a473154b2e37
->> # good: [29ace860ecdf716164d9059545bbaae14cced901] drm/nouveau/kms/nv50-: use NVIDIA's headers for core head_procamp()
->> git bisect good 29ace860ecdf716164d9059545bbaae14cced901
->> # skip: [9ab9bc5115c9a1a57ed83a143c601c31488eadd9] Merge tag 'hyperv-next-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux
->> git bisect skip 9ab9bc5115c9a1a57ed83a143c601c31488eadd9
->> # good: [e6827bc3faa4da29ddbf48f48d04e87ca7c1c3c7] gpio: max77620: Initialize hardware state of interrupts
->> git bisect good e6827bc3faa4da29ddbf48f48d04e87ca7c1c3c7
->> # skip: [bbcf9cd1576752ebe8d618ad8c6500b7e262ffac] Merge tag 'xtensa-20200805' of git://github.com/jcmvbkbc/linux-xtensa
->> git bisect skip bbcf9cd1576752ebe8d618ad8c6500b7e262ffac
->> # skip: [7b4ea9456dd3f73238408126ab00f1d906963d81] Revert "x86/mm/64: Do not sync vmalloc/ioremap mappings"
->> git bisect skip 7b4ea9456dd3f73238408126ab00f1d906963d81
->> # good: [ba2def29285282f535f41acf9aac849553b71f25] ALSA: firewire: fix kernel-doc
->> git bisect good ba2def29285282f535f41acf9aac849553b71f25
->> # good: [8a473c39ae54c27e694a131c34a739d0f8aa5300] ASoC: Intel: Boards: cml_rt1011_rt5682: use statically define codec config
->> git bisect good 8a473c39ae54c27e694a131c34a739d0f8aa5300
->> # good: [bf6af17065079d29b9bd4e59de27cc2965e6fabf] bcache: handle cache set verify_ondisk properly for bucket size > 8MB
->> git bisect good bf6af17065079d29b9bd4e59de27cc2965e6fabf
->> # good: [eaad981291ee36efee15a5e515d4598ae94ace07] x86/entry/64: Introduce the FIND_PERCPU_BASE macro
->> git bisect good eaad981291ee36efee15a5e515d4598ae94ace07
->> # good: [dd4eddc4ba31fbf4554fc5fa12d3a553b50e1469] media: mtk-mdp: Fix a refcounting bug on error in init
->> git bisect good dd4eddc4ba31fbf4554fc5fa12d3a553b50e1469
->> # good: [95b1469e5cbaad02bc48043d4e159c6562b556b4] drm/nouveau/fbcon/nv50-: use NVIDIA's headers for copyarea()
->> git bisect good 95b1469e5cbaad02bc48043d4e159c6562b556b4
->> # good: [418370ff2231b7db5abf59b8faec911e6fc44d96] of: reserved_mem: Fix typo in the too-many-regions message
->> git bisect good 418370ff2231b7db5abf59b8faec911e6fc44d96
->> # good: [3b8bee2a96ce7a5e47239f3a0cb39caffa8358a4] dmaengine: ti: k3-udma: Do not use ring_get_occ in udma_pop_from_ring
->> git bisect good 3b8bee2a96ce7a5e47239f3a0cb39caffa8358a4
->> # good: [be3afa120c5f8131ff835a270247b0a9cca0138a] ASoC: Intel: sdw_max98373: add card_late_probe support
->> git bisect good be3afa120c5f8131ff835a270247b0a9cca0138a
->> # good: [bdcd178ada90d2413bcc9df4211dcdd511a47586] x86/entry: Use generic interrupt entry/exit code
->> git bisect good bdcd178ada90d2413bcc9df4211dcdd511a47586
->> # good: [ee4bf86c69d1e86ee0505f4824b95a74704d433f] erofs: fold in used-once helper erofs_workgroup_unfreeze_final()
->> git bisect good ee4bf86c69d1e86ee0505f4824b95a74704d433f
->> # good: [f959b5d037e71a4d69b5bf71faffa065d9269b4a] xfs: fix inode quota reservation checks
->> git bisect good f959b5d037e71a4d69b5bf71faffa065d9269b4a
->> # skip: [7a3767f83f173f9df9af9eb04959abe2966d4cc8] kasan: improve and simplify Kconfig.kasan
->> git bisect skip 7a3767f83f173f9df9af9eb04959abe2966d4cc8
->> # good: [169efc3bf4dde79a8e15d71f45f1150bec46b663] pinctrl: merrifield: Add I²S bus 2 pins to groups and functions
->> git bisect good 169efc3bf4dde79a8e15d71f45f1150bec46b663
->> # good: [1bc734759f284eb531dd474c72ce59874649a254] drm/amdgpu/navi1x: add SMU i2c support (v2)
->> git bisect good 1bc734759f284eb531dd474c72ce59874649a254
->> # good: [8c37ad2f523396e15cf002b29f8f796447c71932] cpufreq: ap806: fix cpufreq driver needs ap cpu clk
->> git bisect good 8c37ad2f523396e15cf002b29f8f796447c71932
->> # skip: [27ec4878df7bdffa4667f41d3830520597679a74] mm: swap: fix kerneldoc of swap_vma_readahead()
->> git bisect skip 27ec4878df7bdffa4667f41d3830520597679a74
->> # good: [f8951902b9daa65ba240ce8a054c727748df2147] MTD: mtd-abi.h: drop a duplicated word
->> git bisect good f8951902b9daa65ba240ce8a054c727748df2147
->> # good: [d1e2a97b36131607d33ac3d02e569b494900f1bd] Merge series "ASoC: add asoc_substream_to_rtd() macro" from Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>:
->> git bisect good d1e2a97b36131607d33ac3d02e569b494900f1bd
->> # good: [cea0f76a483d1270ac6f6513964e3e75193dda48] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
->> git bisect good cea0f76a483d1270ac6f6513964e3e75193dda48
->> # good: [86b224beea5faf6b18204e5e324bcde472488096] ARM: tegra: Use numeric unit-addresses
->> git bisect good 86b224beea5faf6b18204e5e324bcde472488096
->> # bad: [71fa1a4489ff93ac4acd7e6c5b00098ba53a4485] thunderbolt: merge fix for kunix_resource changes
->> git bisect bad 71fa1a4489ff93ac4acd7e6c5b00098ba53a4485
->> # skip: [9aebd3254c184fb6c731548b8347193bf882b6f7] Merge tag 'hwmon-for-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
->> git bisect skip 9aebd3254c184fb6c731548b8347193bf882b6f7
->> # good: [c8f3446c66d810e21af61cf889e7b0e3bc921b9d] inotify: report both events on parent and child with single callback
->> git bisect good c8f3446c66d810e21af61cf889e7b0e3bc921b9d
->> # good: [d0c72c7759d463e31b4ef8937af1df61b513fc2c] arm64: dts: ti: k3-j721e-main: rename smmu node to iommu
->> git bisect good d0c72c7759d463e31b4ef8937af1df61b513fc2c
->> # skip: [1d9cfee7535c213038a615f112c900c2d0ba8f54] mm/sparsemem: enable vmem_altmap support in vmemmap_populate_basepages()
->> git bisect skip 1d9cfee7535c213038a615f112c900c2d0ba8f54
->> # good: [f1e51e99ed498d4aa9ae5df28e43d558ea627781] usb: mtu3: clear dual mode of u3port when disable device
->> git bisect good f1e51e99ed498d4aa9ae5df28e43d558ea627781
->> # good: [0f63ef1dd581de1655075e2dbdf2ef302514a983] RDMA/core: Align abort/commit object scheme for write() and ioctl() paths
->> git bisect good 0f63ef1dd581de1655075e2dbdf2ef302514a983
->> # good: [ce79097a8f8391fdec835d1deaa112fba4b18362] selftests: Remove unneeded selftest API headers
->> git bisect good ce79097a8f8391fdec835d1deaa112fba4b18362
->> # good: [341a8f866e7252e7c0410fdd53fe513a9c12f3d2] Staging: rtl8712: Fixed a coding sytle issue
->> git bisect good 341a8f866e7252e7c0410fdd53fe513a9c12f3d2
->> # skip: [1d8ce0e09301920454234a4096dee96a670a8e32] Merge tag 'gpio-v5.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
->> git bisect skip 1d8ce0e09301920454234a4096dee96a670a8e32
->> # good: [c9fadf212afd4f924a3502e3904917ee280854c0] Merge remote-tracking branch 'regmap/for-5.9' into regmap-next
->> git bisect good c9fadf212afd4f924a3502e3904917ee280854c0
->> # skip: [eda330e57b26df8fabce184736ae3d11e7a104bd] mm: kmem: switch to static_branch_likely() in memcg_kmem_enabled()
->> git bisect skip eda330e57b26df8fabce184736ae3d11e7a104bd
->> # good: [393a403ed87ee43d23fe1b075ff52826c6e74a53] arm64: tegra: Remove simple clocks bus
->> git bisect good 393a403ed87ee43d23fe1b075ff52826c6e74a53
->> # skip: [441977979a78bffe51b13932d353919b1fb20c14] Merge tag 'devicetree-for-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
->> git bisect skip 441977979a78bffe51b13932d353919b1fb20c14
->> # good: [e0f1a30cf184821499eeb67daedd7a3f21bbcb0b] firmware: arm_scmi: Fix SCMI genpd domain probing
->> git bisect good e0f1a30cf184821499eeb67daedd7a3f21bbcb0b
->> # good: [6760a29c8817769bfc754bf76899a153451433dc] Merge tag 'renesas-dt-bindings-for-v5.9-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel into arm/dt
->> git bisect good 6760a29c8817769bfc754bf76899a153451433dc
->> # good: [3d702d06cb3c06b34a58f01471e094d8156181ad] drm/i915/tgl: Implement WAs 18011464164 and 22010931296
->> git bisect good 3d702d06cb3c06b34a58f01471e094d8156181ad
->> # skip: [6dc5ea16c86f753951f53085aa04df49cf17cb50] mm, dump_page: do not crash with bad compound_mapcount()
->> git bisect skip 6dc5ea16c86f753951f53085aa04df49cf17cb50
->> # good: [72f70c159b53e1363191953875e0223ed959e143] selftests: rtnetlink: make kci_test_encap() return sub-test result
->> git bisect good 72f70c159b53e1363191953875e0223ed959e143
->> # good: [0b8f96be9bd41521b6379b403cfce78934f8274c] dyndbg: fix pr_err with empty string
->> git bisect good 0b8f96be9bd41521b6379b403cfce78934f8274c
->> # good: [bf9b82b7fe4d3c7d4d432ef80b4299c9b6b4a1f8] kobject: remove unused KOBJ_MAX action
->> git bisect good bf9b82b7fe4d3c7d4d432ef80b4299c9b6b4a1f8
->> # good: [93ca8ac2e8fcea6feb02a40edd2334144b62fc6e] arm64: dts: rockchip: Add PCIe for RockPI N10
->> git bisect good 93ca8ac2e8fcea6feb02a40edd2334144b62fc6e
->> # good: [24194a7e03f46f08579e3094417e448a92aff2b4] ACPI: tables: Remove the duplicated checks for acpi_parse_entries_array()
->> git bisect good 24194a7e03f46f08579e3094417e448a92aff2b4
->> # good: [8807e15597492331992a0d749a90a291afa1ed7b] EDAC, {skx,i10nm}: Use CPU stepping macro to pass configurations
->> git bisect good 8807e15597492331992a0d749a90a291afa1ed7b
->> # good: [5b6570bbb26f1dfad5663d99351820865e8c5c7e] irqchip/imx-intmux: Fix irqdata regs save in imx_intmux_runtime_suspend()
->> git bisect good 5b6570bbb26f1dfad5663d99351820865e8c5c7e
->> # good: [be577b8125f89af549111a648ed66d63b29c666d] arm64: dts: qcom: msm8992: Add a SCM node
->> git bisect good be577b8125f89af549111a648ed66d63b29c666d
->> # skip: [8f7be6291529011a58856bf178f52ed5751c68ac] Merge tag 'mmc-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
->> git bisect skip 8f7be6291529011a58856bf178f52ed5751c68ac
->> # good: [4ff8a356daafaafbf90141ee7a3b8fdc18e560a8] ia64: switch to ->regset_get()
->> git bisect good 4ff8a356daafaafbf90141ee7a3b8fdc18e560a8
->> # good: [79560b8aeb01a715f75060e40085e641248bee51] ASoC: SOF: Intel: disable traces when switching to S0Ix D0I3
->> git bisect good 79560b8aeb01a715f75060e40085e641248bee51
->> # good: [d7a1a4f47d804b32b3ca7a98b03425cf90cb9098] soc: ux500: Use custom soc attribute group instead of device_create_file
->> git bisect good d7a1a4f47d804b32b3ca7a98b03425cf90cb9098
->> # good: [80dcf024929788f155aaff3d2cffb4975ce1e3fd] ARM: sunxi: configs: Enable the Mailbox driver
->> git bisect good 80dcf024929788f155aaff3d2cffb4975ce1e3fd
->> # skip: [605cad8343721c4a53e80f87d5b1161baf1a7d2b] mm: filemap: add missing FGP_ flags in kerneldoc comment for pagecache_get_page
->> git bisect skip 605cad8343721c4a53e80f87d5b1161baf1a7d2b
->> # good: [c211ab5f5e6e304aee43bb5ef6919fbe4e41ef64] MIPS: ingenic: Add support for the JZ4725B SoC
->> git bisect good c211ab5f5e6e304aee43bb5ef6919fbe4e41ef64
->> # good: [69094c20323c5efff462a2e02d0bb7b6608779ad] Merge tag 'x86-microcode-2020-08-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->> git bisect good 69094c20323c5efff462a2e02d0bb7b6608779ad
->> # good: [39e5993d0d452b9ef612f2fcf7ca77ff319438f4] ima: Shallow copy the args_p member of ima_rule_entry.lsm elements
->> git bisect good 39e5993d0d452b9ef612f2fcf7ca77ff319438f4
->> # good: [49dc2fb0e04679422369f54ff3ed720616ee7eb3] hwmon: (ina2xx) Replace HTTP links with HTTPS ones
->> git bisect good 49dc2fb0e04679422369f54ff3ed720616ee7eb3
->> # skip: [fffe3ae0ee84e25d2befe2ae59bc32aa2b6bc77b] Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
->> git bisect skip fffe3ae0ee84e25d2befe2ae59bc32aa2b6bc77b
->> # good: [6878ba91ce84f7a07887a0615af70f969508839f] ASoC: meson: axg-tdm-interface: fix link fmt setup
->> git bisect good 6878ba91ce84f7a07887a0615af70f969508839f
->> # skip: [2c547f9da0539ad1f7ef7f08c8c82036d61b011a] efi: provide empty efi_enter_virtual_mode implementation
->> git bisect skip 2c547f9da0539ad1f7ef7f08c8c82036d61b011a
->> # good: [54ae1055e55049dc799d02cfc06d2ae7ef2beffc] arm64: defconfig: enable CONFIG_FSL_ENETC_QOS
->> git bisect good 54ae1055e55049dc799d02cfc06d2ae7ef2beffc
->> # good: [c365ee561ee343b587df9f5ba191c1a090d4f43e] power: supply: test_power: Fix battery_current initial value
->> git bisect good c365ee561ee343b587df9f5ba191c1a090d4f43e
->> # good: [8902c6f96364d1117236948d6c7b9178f428529c] powerpc/ppc-opcode: Add divde and divdeu opcodes
->> git bisect good 8902c6f96364d1117236948d6c7b9178f428529c
->> # good: [f62fc08fdc51d18292eb13bd345dfb159f024746] dyndbg: use gcc ?: to reduce word count
->> git bisect good f62fc08fdc51d18292eb13bd345dfb159f024746
->> # good: [860e73b49cd933c708e3e1e1e07cdea81b6acd1c] Merge tag 'misc-habanalabs-next-2020-07-24' of git://people.freedesktop.org/~gabbayo/linux into char-misc-next
->> git bisect good 860e73b49cd933c708e3e1e1e07cdea81b6acd1c
->> # good: [786d33c887e15061ff95942db68fe5c6ca98e5fc] mmc: sdhci-pci-gli: Set SDR104's clock to 205MHz and enable SSC for GL975x
->> git bisect good 786d33c887e15061ff95942db68fe5c6ca98e5fc
->> # good: [7c2b325020be7d5ec375501c2aead46fc0496c17] ARM: dts: imx6ul: Add ASRC device node
->> git bisect good 7c2b325020be7d5ec375501c2aead46fc0496c17
->> # skip: [1fa2c0a0c814fbae0eb3e79a510765225570d043] Merge tag 'seccomp-v5.9-rc1-fix1' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux
->> git bisect skip 1fa2c0a0c814fbae0eb3e79a510765225570d043
->> # good: [5128063739d293b9faf8ffaa9a5dfd622bc954f5] fanotify: report events with parent dir fid to sb/mount/non-dir marks
->> git bisect good 5128063739d293b9faf8ffaa9a5dfd622bc954f5
->> # skip: [4510a5a98aff2d395e67890c480c0665f953ea00] ocfs2: replace HTTP links with HTTPS ones
->> git bisect skip 4510a5a98aff2d395e67890c480c0665f953ea00
->> # good: [9c3df2b1993da9ab1110702d7b2815d5cd8c02f3] clk: qcom: gcc: Make disp gpll0 branch aon for sc7180/sdm845
->> git bisect good 9c3df2b1993da9ab1110702d7b2815d5cd8c02f3
->> # good: [694dd304cc294b69db7191cec1d83e5a29c6a4b0] drm/msm/dsi: Add phy configuration for SDM630/636/660
->> git bisect good 694dd304cc294b69db7191cec1d83e5a29c6a4b0
->> # good: [5ad79c20b6d28467db643ac107bbdaa01aa93a23] leds: trigger: gpio: Avoid warning on update of inverted
->> git bisect good 5ad79c20b6d28467db643ac107bbdaa01aa93a23
->> # good: [c322fa0b3fa948010a278794e60c45ec860e4a1e] PCI: mvebu: Use struct pci_host_bridge.windows list directly
->> git bisect good c322fa0b3fa948010a278794e60c45ec860e4a1e
->> # good: [206c01d1ec14b5e238132ce7c8891ba02c3328c8] ARM: dts: ux500: Supply nodes for the other 2 AB8500 PWM devices
->> git bisect good 206c01d1ec14b5e238132ce7c8891ba02c3328c8
->> # good: [7ecd4a8175104b55de120dd8847e0bfabf7d75aa] PCI: Replace http:// links with https://
->> git bisect good 7ecd4a8175104b55de120dd8847e0bfabf7d75aa
->> # good: [f69f15a3c3f0f9ad049c5e0ef3f3bfd6c791df06] dt-bindings: mtd: Convert imx nand to json-schema
->> git bisect good f69f15a3c3f0f9ad049c5e0ef3f3bfd6c791df06
->> # good: [6c17e9dd5cdd352276180f47c0a8b24a1d4661af] ASoC: hda/tegra: Set buffer alignment to 128 bytes
->> git bisect good 6c17e9dd5cdd352276180f47c0a8b24a1d4661af
->> # good: [0d776e5bede6d375c617a03262eee9d2a8a58b75] mmc: via-sdmmc: use generic power management
->> git bisect good 0d776e5bede6d375c617a03262eee9d2a8a58b75
->> # bad: [37e5c69ffd4195c35aeb24978701f40ac82af7b1] MIPS: head.S: Init fw_passed_dtb to builtin DTB
->> git bisect bad 37e5c69ffd4195c35aeb24978701f40ac82af7b1
->> # good: [0d10d17bac3d5d4e97d6f008aa3c329a83d3b283] MIPS: X2000: Add X2000 system type.
->> git bisect good 0d10d17bac3d5d4e97d6f008aa3c329a83d3b283
->> # good: [64aa9fd01459bbdc51a7400552ba4741df37089d] MIPS: ath79: Remove unused include <asm/mips_machine.h>
->> git bisect good 64aa9fd01459bbdc51a7400552ba4741df37089d
->> # bad: [21a379a8cf917e4c45a3c50d8203859ea318c450] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
->> git bisect bad 21a379a8cf917e4c45a3c50d8203859ea318c450
->> # good: [6bc9c1619de3a8a03b412c925404440566568a64] MIPS: ingenic: Enable JZ4780_NEMC manually
->> git bisect good 6bc9c1619de3a8a03b412c925404440566568a64
->> # bad: [2f96593ecc37e98bf99525f0629128080533867f] of_address: Add bus type match for pci ranges parser
->> git bisect bad 2f96593ecc37e98bf99525f0629128080533867f
->> # good: [aa35a5eee58cce7863b7c0d5e94e3e2e6de59d08] memory: jz4780-nemc: Do not build by default
->> git bisect good aa35a5eee58cce7863b7c0d5e94e3e2e6de59d08
->> # first bad commit: [2f96593ecc37e98bf99525f0629128080533867f] of_address: Add bus type match for pci ranges parser
->> -------------------------------------------------------------------------------
->>
->> -=-=-=-=-=-=-=-=-=-=-=-
->> Groups.io Links: You receive all messages sent to this group.
->>
->> View/Reply Online (#591): https://groups.io/g/kernelci-results/message/591
->> Mute This Topic: https://groups.io/mt/76225213/924702
->> Group Owner: kernelci-results+owner@groups.io
->> Unsubscribe: https://groups.io/g/kernelci-results/unsub  [guillaume.tucker@collabora.com]
->> -=-=-=-=-=-=-=-=-=-=-=-
->>
-> 
+SGkgS2lzaG9uLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEtpc2hv
+biBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVn
+dXN0IDEyLCAyMDIwIDM6NDEgUE0NCj4gVG86IFN3YXBuaWwgS2FzaGluYXRoIEpha2hhZGUgPHNq
+YWtoYWRlQGNhZGVuY2UuY29tPjsNCj4gdmtvdWxAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZw0KPiBDYzogTWlsaW5kIFBhcmFiIDxtcGFyYWJAY2FkZW5jZS5jb20+OyBZdXRpIFN1
+cmVzaCBBbW9ua2FyDQo+IDx5YW1vbmthckBjYWRlbmNlLmNvbT47IHRvbWkudmFsa2VpbmVuQHRp
+LmNvbTsganNhcmhhQHRpLmNvbTsNCj4gbnNla2hhckB0aS5jb20NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2MSA3LzddIGR0LWJpbmRpbmdzOiBwaHk6IGNhZGVuY2UtdG9ycmVudDogVXBkYXRlDQo+
+IFRvcnJlbnQgUEhZIGJpbmRpbmdzIGZvciBnZW5lcmljIHVzZQ0KPiANCj4gRVhURVJOQUwgTUFJ
+TA0KPiANCj4gDQo+IEhpIFN3YXBuaWwsDQo+IA0KPiBPbiA4LzcvMjAyMCAzOjQyIFBNLCBTd2Fw
+bmlsIEpha2hhZGUgd3JvdGU6DQo+ID4gVG9ycmVudCBQSFkgY2FuIGJlIHVzZWQgaW4gZGlmZmVy
+ZW50IG11bHRpLWxpbmsgbXVsdGktcHJvdG9jb2wNCj4gPiBjb25maWd1cmF0aW9ucyBpbmNsdWRp
+bmcgcHJvdG9jb2xzIG90aGVyIHRoYW4gRGlzcGxheVBvcnQgYWxzbywgc3VjaA0KPiA+IGFzIFBD
+SWUsIFVTQiwgU0dNSUksIFFTR01JSSBldGMuIFVwZGF0ZSB0aGUgYmluZGluZ3MgdG8gaGF2ZSBz
+dXBwb3J0DQo+ID4gZm9yIHRoZXNlIGNvbmZpZ3VyYXRpb25zLg0KPiA+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogU3dhcG5pbCBKYWtoYWRlIDxzamFraGFkZUBjYWRlbmNlLmNvbT4NCj4gPiAtLS0NCj4g
+PiAgLi4uL2JpbmRpbmdzL3BoeS9waHktY2FkZW5jZS10b3JyZW50LnlhbWwgICAgIHwgNzYgKysr
+KysrKysrKysrKystLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygrKSwg
+MTggZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1jYWRlbmNlLXRvcnJlbnQueWFtbA0KPiA+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktY2FkZW5jZS10b3JyZW50
+LnlhbWwNCj4gPiBpbmRleCBhN2VlMTlkMjdjMTkuLmIyMjc1NzEyMzYzZCAxMDA2NDQNCj4gPiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1jYWRlbmNlLXRv
+cnJlbnQueWFtbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+aHkvcGh5LWNhZGVuY2UtdG9ycmVudC55YW1sDQo+ID4gQEAgLTQsMTEgKzQsMTMgQEANCj4gPiAg
+JGlkOg0KPiAiaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9y
+Zy9zY2hlbWFzL3BoeS9waHktDQo+IGNhZGVuY2UtDQo+IHRvcnJlbnQueWFtbCpfXztJdyEhRUhz
+Y21TMXlnaVUxbEEhV3E1emFxM0lZOHNkdU9taUpycGlXT0RuMkpZUE5FQg0KPiByNGNUbk1YNzRE
+eHo1T0JXR3BheUZqSTFPUURZRlA4ZyQgIg0KPiA+ICAkc2NoZW1hOiAiaHR0cHM6Ly91cmxkZWZl
+bnNlLmNvbS92My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLQ0KPiBzY2hlbWFzL2NvcmUu
+eWFtbCpfXztJdyEhRUhzY21TMXlnaVUxbEEhV3E1emFxM0lZOHNkdU9taUpycGlXT0RuMg0KPiBK
+WVBORUJyNGNUbk1YNzREeHo1T0JXR3BheUZqSTFPMTRHLUdKdyQgIg0KPiA+DQo+ID4gLXRpdGxl
+OiBDYWRlbmNlIFRvcnJlbnQgU0QwODAxIFBIWSBiaW5kaW5nIGZvciBEaXNwbGF5UG9ydA0KPiA+
+ICt0aXRsZTogQ2FkZW5jZSBUb3JyZW50IFNEMDgwMSBQSFkgYmluZGluZw0KPiA+DQo+ID4gIGRl
+c2NyaXB0aW9uOg0KPiA+ICAgIFRoaXMgYmluZGluZyBkZXNjcmliZXMgdGhlIENhZGVuY2UgU0Qw
+ODAxIFBIWSAoYWxzbyBrbm93biBhcw0KPiA+IFRvcnJlbnQgUEhZKQ0KPiA+IC0gIGhhcmR3YXJl
+IGluY2x1ZGVkIHdpdGggdGhlIENhZGVuY2UgTUhEUCBEaXNwbGF5UG9ydCBjb250cm9sbGVyLg0K
+PiA+ICsgIGhhcmR3YXJlIGluY2x1ZGVkIHdpdGggdGhlIENhZGVuY2UgTUhEUCBEaXNwbGF5UG9y
+dCBjb250cm9sbGVyLg0KPiA+ICsgVG9ycmVudCAgUEhZIGFsc28gc3VwcG9ydHMgbXVsdGlsaW5r
+IG11bHRpcHJvdG9jb2wgY29tYmluYXRpb25zDQo+ID4gKyBpbmNsdWRpbmcgcHJvdG9jb2xzICBz
+dWNoIGFzIFBDSWUsIFVTQiwgU0dNSUksIFFTR01JSSBldGMuDQo+ID4NCj4gPiAgbWFpbnRhaW5l
+cnM6DQo+ID4gICAgLSBTd2FwbmlsIEpha2hhZGUgPHNqYWtoYWRlQGNhZGVuY2UuY29tPiBAQCAt
+NDksMTMgKzUxLDE0IEBADQo+ID4gcHJvcGVydGllczoNCj4gPiAgICAgICAgLSBjb25zdDogZHB0
+eF9waHkNCj4gPg0KPiA+ICAgIHJlc2V0czoNCj4gPiAtICAgIG1heEl0ZW1zOiAxDQo+ID4gLSAg
+ICBkZXNjcmlwdGlvbjoNCj4gPiAtICAgICAgVG9ycmVudCBQSFkgcmVzZXQuDQo+ID4gLSAgICAg
+IFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvcmVzZXQudHh0DQo+
+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDINCj4gPiArICAgIGl0ZW1z
+Og0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBUb3JyZW50IFBIWSByZXNldC4NCj4gPiArICAg
+ICAgLSBkZXNjcmlwdGlvbjogVG9ycmVudCBBUEIgcmVzZXQuIFRoaXMgaXMgb3B0aW9uYWwuDQo+
+ID4NCj4gPiAgcGF0dGVyblByb3BlcnRpZXM6DQo+ID4gLSAgJ15waHlAWzAtN10rJCc6DQo+ID4g
+KyAgJ15saW5rQFswLTddKyQnOg0KPiANCj4gV291bGRuJ3QgdGhpcyBicmVhayBvbGRlciBkZXZp
+Y2UgdHJlZSBiaW5kaW5nPyBPciBhcmUgdGhlcmUgbm8gdXBzdHJlYW0gRFQNCj4gbm9kZXMgd2l0
+aCBwaHkgc3ViLW5vZGU/DQoNClRvcnJlbnQgUEhZIGRyaXZlciBoYXMgbmV2ZXIgYmVlbiBmdW5j
+dGlvbmFsLCBhbmQgdGhlcmVmb3JlIGRvIG5vdCBleGlzdCBpbiBhbnkNCmFjdGl2ZSB1c2UgY2Fz
+ZSwgc28gdGhpcyBzaG91bGQgbm90IGJyZWFrIHRoZSBiaW5kaW5nIGFzIHRoZXJlIGFyZSBubyBE
+VCBub2Rlcw0KaW4gdXBzdHJlYW0gdXNpbmcgdGhlIHRvcnJlbnQgUEhZLg0KDQpUaGFua3MsDQpT
+d2FwbmlsDQoNCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCj4gDQo+ID4gICAgICB0eXBlOiBvYmpl
+Y3QNCj4gPiAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ICAgICAgICBFYWNoIGdyb3VwIG9mIFBIWSBs
+YW5lcyB3aXRoIGEgc2luZ2xlIG1hc3RlciBsYW5lIHNob3VsZCBiZQ0KPiByZXByZXNlbnRlZCBh
+cyBhIHN1Yi1ub2RlLg0KPiA+IEBAIC03OCwxMyArODEsMTMgQEAgcGF0dGVyblByb3BlcnRpZXM6
+DQo+ID4gICAgICAgICAgICBTcGVjaWZpZXMgdGhlIHR5cGUgb2YgUEhZIGZvciB3aGljaCB0aGUg
+Z3JvdXAgb2YgUEhZIGxhbmVzIGlzIHVzZWQuDQo+ID4gICAgICAgICAgICBSZWZlciBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3BoeS9waHkuaC4gQ29uc3RhbnRzIGZyb20gdGhlIGhlYWRlcg0KPiBzaG91
+bGQgYmUgdXNlZC4NCj4gPiAgICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZp
+bml0aW9ucy91aW50MzINCj4gPiAtICAgICAgICBlbnVtOiBbMSwgMiwgMywgNCwgNSwgNl0NCj4g
+PiArICAgICAgICBlbnVtOiBbMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOV0NCj4gPg0KPiA+ICAg
+ICAgICBjZG5zLG51bS1sYW5lczoNCj4gPiAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gPiAtICAg
+ICAgICAgIE51bWJlciBvZiBEaXNwbGF5UG9ydCBsYW5lcy4NCj4gPiArICAgICAgICAgIE51bWJl
+ciBvZiBsYW5lcy4NCj4gPiAgICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZp
+bml0aW9ucy91aW50MzINCj4gPiAtICAgICAgICBlbnVtOiBbMSwgMiwgNF0NCj4gPiArICAgICAg
+ICBlbnVtOiBbMSwgMiwgMywgNF0NCj4gPiAgICAgICAgICBkZWZhdWx0OiA0DQo+ID4NCj4gPiAg
+ICAgICAgY2Rucyxzc2MtbW9kZToNCj4gPiBAQCAtMTA4LDYgKzExMSw3IEBAIHBhdHRlcm5Qcm9w
+ZXJ0aWVzOg0KPiA+ICAgICAgICAtIHJlc2V0cw0KPiA+ICAgICAgICAtICIjcGh5LWNlbGxzIg0K
+PiA+ICAgICAgICAtIGNkbnMscGh5LXR5cGUNCj4gPiArICAgICAgLSBjZG5zLG51bS1sYW5lcw0K
+PiA+DQo+ID4gICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPg0KPiA+IEBAIC0x
+NDEsMTUgKzE0NSw1MSBAQCBleGFtcGxlczoNCj4gPiAgICAgICAgICAgICAgY2xvY2stbmFtZXMg
+PSAicmVmY2xrIjsNCj4gPiAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4g
+ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiA+IC0gICAgICAgICAgICBwaHlAMCB7
+DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47DQo+ID4gLSAgICAgICAgICAg
+ICAgICAgICAgICByZXNldHMgPSA8JnBoeXJzdCAxPiwgPCZwaHlyc3QgMj4sDQo+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA8JnBoeXJzdCAzPiwgPCZwaHlyc3QgND47DQo+ID4g
+LSAgICAgICAgICAgICAgICAgICAgICAjcGh5LWNlbGxzID0gPDA+Ow0KPiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgY2RucyxwaHktdHlwZSA9IDxQSFlfVFlQRV9EUD47DQo+ID4gLSAgICAgICAg
+ICAgICAgICAgICAgICBjZG5zLG51bS1sYW5lcyA9IDw0PjsNCj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgIGNkbnMsbWF4LWJpdC1yYXRlID0gPDgxMDA+Ow0KPiA+ICsgICAgICAgICAgICBsaW5r
+QDAgew0KPiA+ICsgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAg
+ICAgcmVzZXRzID0gPCZwaHlyc3QgMT4sIDwmcGh5cnN0IDI+LA0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgPCZwaHlyc3QgMz4sIDwmcGh5cnN0IDQ+Ow0KPiA+ICsgICAgICAgICAgICAg
+ICAgI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArICAgICAgICAgICAgICAgIGNkbnMscGh5LXR5cGUg
+PSA8UEhZX1RZUEVfRFA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgY2RucyxudW0tbGFuZXMgPSA8
+ND47DQo+ID4gKyAgICAgICAgICAgICAgICBjZG5zLG1heC1iaXQtcmF0ZSA9IDw4MTAwPjsNCj4g
+PiArICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsgICAgfTsNCj4gPiArICAt
+IHwNCj4gPiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9waHkvcGh5Lmg+DQo+ID4gKyAgICAj
+aW5jbHVkZSA8ZHQtYmluZGluZ3MvcGh5L3BoeS1jYWRlbmNlLXRvcnJlbnQuaD4NCj4gPiArDQo+
+ID4gKyAgICBidXMgew0KPiA+ICsgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KPiA+ICsg
+ICAgICAgICNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsNCj4gPiArICAgICAgICB0b3JyZW50LXBo
+eUBmMGZiNTAwMDAwIHsNCj4gPiArICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJjZG5zLHRvcnJl
+bnQtcGh5IjsNCj4gPiArICAgICAgICAgICAgcmVnID0gPDB4ZjAgMHhmYjUwMDAwMCAweDAgMHgw
+MDEwMDAwMD47DQo+ID4gKyAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJ0b3JyZW50X3BoeSI7DQo+
+ID4gKyAgICAgICAgICAgIHJlc2V0cyA9IDwmcGh5cnN0IDA+LCA8JnBoeXJzdCAxPjsNCj4gPiAr
+ICAgICAgICAgICAgY2xvY2tzID0gPCZyZWZfY2xrPjsNCj4gPiArICAgICAgICAgICAgY2xvY2st
+bmFtZXMgPSAicmVmY2xrIjsNCj4gPiArICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ID4gKyAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICBs
+aW5rQDAgew0KPiA+ICsgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+ICsgICAgICAgICAg
+ICAgICAgcmVzZXRzID0gPCZwaHlyc3QgMj4sIDwmcGh5cnN0IDM+Ow0KPiA+ICsgICAgICAgICAg
+ICAgICAgI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArICAgICAgICAgICAgICAgIGNkbnMscGh5LXR5
+cGUgPSA8UEhZX1RZUEVfUENJRT47DQo+ID4gKyAgICAgICAgICAgICAgICBjZG5zLG51bS1sYW5l
+cyA9IDwyPjsNCj4gPiArICAgICAgICAgICAgICAgIGNkbnMsc3NjLW1vZGUgPSA8VE9SUkVOVF9T
+RVJERVNfTk9fU1NDPjsNCj4gPiAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAg
+ICAgIGxpbmtAMiB7DQo+ID4gKyAgICAgICAgICAgICAgICByZWcgPSA8Mj47DQo+ID4gKyAgICAg
+ICAgICAgICAgICByZXNldHMgPSA8JnBoeXJzdCA0PjsNCj4gPiArICAgICAgICAgICAgICAgICNw
+aHktY2VsbHMgPSA8MD47DQo+ID4gKyAgICAgICAgICAgICAgICBjZG5zLHBoeS10eXBlID0gPFBI
+WV9UWVBFX1NHTUlJPjsNCj4gPiArICAgICAgICAgICAgICAgIGNkbnMsbnVtLWxhbmVzID0gPDE+
+Ow0KPiA+ICsgICAgICAgICAgICAgICAgY2Rucyxzc2MtbW9kZSA9IDxUT1JSRU5UX1NFUkRFU19O
+T19TU0M+Ow0KPiA+ICsgICAgICAgICAgIH07DQo+ID4gICAgICAgICAgfTsNCj4gPiAgICAgIH07
+DQo+ID4gIC4uLg0KPiA+DQo=
