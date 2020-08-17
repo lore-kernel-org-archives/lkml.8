@@ -2,101 +2,110 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8384C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2FE2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684849;
-	bh=adhBHVJy2xHltP0rEAb5LWwcSj9nXk0sTpa4G7JeJGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGVbmGb9m4zG+yxfROuGMa1bOL5XWLJ8phKGHyRYi4yCr5zYVUY1C0rfg7OzZMH1y
-	 B9ierc5xKp3Yti0GRdxCPtQwIUQnJ1D0hEDEuAYH0qhUsQhk/ImGmU3fdxXfYwEdog
-	 LGPYS+yjMKrvcUZ0BE57W+3M7pj2TGDm9sVyEgoc=
+	by mail.kernel.org (Postfix) with ESMTP id 70890206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbABWtb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgHQRUn (ORCPT
+        id S2389632AbgHQRUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731054AbgHQQSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:18:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72F0D22DA9;
-        Mon, 17 Aug 2020 16:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681084;
-        bh=adhBHVJy2xHltP0rEAb5LWwcSj9nXk0sTpa4G7JeJGI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pc5pWbEE838ilkzBBRMA8Xy5vVfCqnnrsp4ZB8AmMkLJ/qqpJZfZY84EfgHdB9JTU
-         3Yp0jynKACfG4mAHEUEw2zxkncCBzbFQPoVBXqdxXV+9aDCLatUSe+5NbJCI6yEVZr
-         wL86MHj1cWK2ZqFGUxaj1dB0DmOrSNfiQdHo+/ac=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.19 168/168] xen/gntdev: Fix dmabuf import with non-zero sgt offset
-Date:   Mon, 17 Aug 2020 17:18:19 +0200
-Message-Id: <20200817143742.058067666@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 13:20:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387696AbgHQQWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:22:17 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CAEC061389;
+        Mon, 17 Aug 2020 09:22:17 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u10so7767822plr.7;
+        Mon, 17 Aug 2020 09:22:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LMklsHHTMxijqDeAVwRgPfCmNnVtewqnmZOiIx8IoQs=;
+        b=RbABWtb8XXpDsj3fj6OykBcPLZ5s6mzXo5+8O5lLzibS4H/7sSSbJxgK232d3ZHNl1
+         b9OzjD8Evbx+rgydLEzlQePAE9vfUy5L6WAd/HPRFwk/FX68hop3CG7mzh3ZM81mv6Sx
+         syKtTcwlb9dGPXkYfbADlIa/5LOrPQHNFDoPCojDFrab605RRle/eZNq65gZHtMmMWrU
+         V0k8w/Htzxgdw5ge65ajA54zbKU9mqntHLqH2bMvqPu/STQuBK6D5VB8TdOgcvrSTl2F
+         ssnNqEgnzGyi/N+mbujL5peAmlxByvmEpZg6BnM7T5YM+fbbsqtTUqQQ8HBqO++dG3Np
+         sTNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LMklsHHTMxijqDeAVwRgPfCmNnVtewqnmZOiIx8IoQs=;
+        b=RKF7co9JYCShv/xVHQ6LNjbpkgHxdilaA6b5RtU0LGdRbARfmv5c2NIxd+mbskhIaA
+         /volxc3MsSAOJufVPXTiND1jaaiwhbkeKL7gdb8KXXopacthtC6RuSTe9Qrf90nT7sm/
+         WKsyqLTZFyfj+fQrrHBkytIpOwZJN7X7iv6TBlNYc2QDJVDGuoUjbCb9OZABoO0CxjsF
+         SjU2uXSn6Dc9+zGWTRe95Eaappb+ymR2ne2+7Aam8NlQ9KVp5+pCy43Bs5NvAQHAnoOA
+         uEZRxeE50sWxYjSU1kNwoWc4VGqJZS+m1VGgWTzoGkQCwP8Q6PJbLLxhocdMe3zjOCwA
+         yhpw==
+X-Gm-Message-State: AOAM532LqqqiQ6gGX89k91T9f3z+8hXl1wfZcV1z+FPsMMP/ajSPy8EL
+        tWfrR6q+2gfsGPHfLxcMjKo=
+X-Google-Smtp-Source: ABdhPJxZqVKsxln0UatgdMDzqUQzs7RKNdYGMqEbSpKXAB2AkdX/2A4LN0FQkPSE/xgeFXUS77iQIw==
+X-Received: by 2002:a17:902:7616:: with SMTP id k22mr12281766pll.25.1597681336661;
+        Mon, 17 Aug 2020 09:22:16 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id w16sm20513732pfq.13.2020.08.17.09.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 09:22:15 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/gpu: make ringbuffer readonly
+Date:   Mon, 17 Aug 2020 09:23:09 -0700
+Message-Id: <20200817162309.362032-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+From: Rob Clark <robdclark@chromium.org>
 
-commit 5fa4e6f1c2d8c9a4e47e1931b42893172d388f2b upstream.
+The GPU has no business writing into the ringbuffer, let's make it
+readonly to the GPU.
 
-It is possible that the scatter-gather table during dmabuf import has
-non-zero offset of the data, but user-space doesn't expect that.
-Fix this by failing the import, so user-space doesn't access wrong data.
-
-Fixes: bf8dc55b1358 ("xen/gntdev: Implement dma-buf import functionality")
-
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Acked-by: Juergen Gross <jgross@suse.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200813062113.11030-2-andr2000@gmail.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7198e6b03155 ("drm/msm: add a3xx gpu support")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/xen/gntdev-dmabuf.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/msm/msm_ringbuffer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -641,6 +641,14 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_
- 		goto fail_detach;
- 	}
+diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.c b/drivers/gpu/drm/msm/msm_ringbuffer.c
+index e397c44cc011..39ecb5a18431 100644
+--- a/drivers/gpu/drm/msm/msm_ringbuffer.c
++++ b/drivers/gpu/drm/msm/msm_ringbuffer.c
+@@ -27,7 +27,8 @@ struct msm_ringbuffer *msm_ringbuffer_new(struct msm_gpu *gpu, int id,
+ 	ring->id = id;
  
-+	/* Check that we have zero offset. */
-+	if (sgt->sgl->offset) {
-+		ret = ERR_PTR(-EINVAL);
-+		pr_debug("DMA buffer has %d bytes offset, user-space expects 0\n",
-+			 sgt->sgl->offset);
-+		goto fail_unmap;
-+	}
-+
- 	/* Check number of pages that imported buffer has. */
- 	if (attach->dmabuf->size != gntdev_dmabuf->nr_pages << PAGE_SHIFT) {
- 		ret = ERR_PTR(-EINVAL);
-
+ 	ring->start = msm_gem_kernel_new(gpu->dev, MSM_GPU_RINGBUFFER_SZ,
+-		MSM_BO_WC, gpu->aspace, &ring->bo, &ring->iova);
++		MSM_BO_WC | MSM_BO_GPU_READONLY, gpu->aspace, &ring->bo,
++		&ring->iova);
+ 
+ 	if (IS_ERR(ring->start)) {
+ 		ret = PTR_ERR(ring->start);
+-- 
+2.26.2
 
