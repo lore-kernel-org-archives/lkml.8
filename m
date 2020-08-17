@@ -2,53 +2,51 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78A0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4FD20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414E020578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689606;
-	bh=8JV+rmwC4TMJFgVYMg7/BZTrgWw4TMd4Hsvprj762is=;
+	s=default; t=1597689611;
+	bh=8a1rTYBeA0M5LsvywqB+Aj7jHIdH0DCuMUGry8MXuHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5PcjYprEu1nx3KsTUqhuCk7YF8xFRGZmAMNsM+KPM4lvsX4LTWi9xDgkf2A7/YQo
-	 lsL9wRzJW/XQTgDIrX0uZ/NHcUdm45MzOk3i65hLx9WrcseMmezkoBykJPjmh3AICL
-	 0Da7wMh89+9EmuLl18kgAI19zuex1K7rEkg6bixU=
+	b=zzkLCWFkeOvXpRgl7dEgJQhBqfB9V1SQM6Q5n24xywKII0zkFiRipKmt50BpscgXO
+	 rcE8G/eCz1NNCd5wcTn+efkkpvDTFR1ff4bCVRYDEzPPbN0dUVpF7FlqB1ZE6o3Up7
+	 9RI9hueYRnlBe1HcE3h880unZfobykBUmFUOKEHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbgHQP6D (ORCPT
+        id S1731414AbgHQSkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387498AbgHQPmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:17 -0400
+        id S2388111AbgHQP6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F7020825;
-        Mon, 17 Aug 2020 15:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14722072E;
+        Mon, 17 Aug 2020 15:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678936;
-        bh=8JV+rmwC4TMJFgVYMg7/BZTrgWw4TMd4Hsvprj762is=;
+        s=default; t=1597679885;
+        bh=8a1rTYBeA0M5LsvywqB+Aj7jHIdH0DCuMUGry8MXuHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjqlLSvaHskA9fG8zSPhU0VUAqskSuWDAIgIY8tYihWiooIgeEc7UI1udEsNUg+f3
-         8zWyyZQ4S6dLSOSHOJFi6DCekoVrlOdE509TTm2TJ1CM9OMq4VugStntftSS8gvYTI
-         745/umgMEEvO59Z6hPxx8pJ7Mhy/a9Ob9gAEeEk0=
+        b=ccm/55NcirF3nDWaiQ6xwS2ySniXT1xezFwumX+uj8alu2W03rcy6o2FjUdP+quIc
+         qXKF1jpGK04QnZN5MKP2N9ZPyTyzgVTfrvrOcs306nx3FQN7ec7bTf0WqpZBJrfoE3
+         idoA+mUtvktB31vfJI0X0QnftJmlKlpqH+mYe3YI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 023/393] firmware: arm_scmi: Fix SCMI genpd domain probing
-Date:   Mon, 17 Aug 2020 17:11:13 +0200
-Message-Id: <20200817143820.725680164@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [PATCH 5.7 368/393] erofs: fix extended inode could cross boundary
+Date:   Mon, 17 Aug 2020 17:16:58 +0200
+Message-Id: <20200817143837.454113818@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,101 +59,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Marussi <cristian.marussi@arm.com>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-[ Upstream commit e0f1a30cf184821499eeb67daedd7a3f21bbcb0b ]
+commit 0dcd3c94e02438f4a571690e26f4ee997524102a upstream.
 
-When, at probe time, an SCMI communication failure inhibits the capacity
-to query power domains states, such domains should be skipped.
+Each ondisk inode should be aligned with inode slot boundary
+(32-byte alignment) because of nid calculation formula, so all
+compact inodes (32 byte) cannot across page boundary. However,
+extended inode is now 64-byte form, which can across page boundary
+in principle if the location is specified on purpose, although
+it's hard to be generated by mkfs due to the allocation policy
+and rarely used by Android use case now mainly for > 4GiB files.
 
-Registering partially initialized SCMI power domains with genpd will
-causes kernel panic.
+For now, only two fields `i_ctime_nsec` and `i_nlink' couldn't
+be read from disk properly and cause out-of-bound memory read
+with random value.
 
- arm-scmi timed out in resp(caller: scmi_power_state_get+0xa4/0xd0)
- scmi-power-domain scmi_dev.2: failed to get state for domain 9
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
- Mem abort info:
-   ESR = 0x96000006
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000006
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=00000009f3691000
- [0000000000000000] pgd=00000009f1ca0003, p4d=00000009f1ca0003, pud=00000009f35ea003, pmd=0000000000000000
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- CPU: 2 PID: 381 Comm: bash Not tainted 5.8.0-rc1-00011-gebd118c2cca8 #2
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan  3 2020
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
- pc : of_genpd_add_provider_onecell+0x98/0x1f8
- lr : of_genpd_add_provider_onecell+0x48/0x1f8
- Call trace:
-  of_genpd_add_provider_onecell+0x98/0x1f8
-  scmi_pm_domain_probe+0x174/0x1e8
-  scmi_dev_probe+0x90/0xe0
-  really_probe+0xe4/0x448
-  driver_probe_device+0xfc/0x168
-  device_driver_attach+0x7c/0x88
-  bind_store+0xe8/0x128
-  drv_attr_store+0x2c/0x40
-  sysfs_kf_write+0x4c/0x60
-  kernfs_fop_write+0x114/0x230
-  __vfs_write+0x24/0x50
-  vfs_write+0xbc/0x1e0
-  ksys_write+0x70/0xf8
-  __arm64_sys_write+0x24/0x30
-  el0_svc_common.constprop.3+0x94/0x160
-  do_el0_svc+0x2c/0x98
-  el0_sync_handler+0x148/0x1a8
-  el0_sync+0x158/0x180
+Let's fix now.
 
-Do not register any power domain that failed to be queried with genpd.
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Link: https://lore.kernel.org/r/20200729175801.GA23973@xiangao.remote.csb
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 898216c97ed2 ("firmware: arm_scmi: add device power domain support using genpd")
-Link: https://lore.kernel.org/r/20200619220330.12217-1-cristian.marussi@arm.com
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/scmi_pm_domain.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/erofs/inode.c |  121 +++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 79 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-index bafbfe358f97d..9e44479f02842 100644
---- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
-+++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-@@ -85,7 +85,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 	for (i = 0; i < num_domains; i++, scmi_pd++) {
- 		u32 state;
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -8,31 +8,80 @@
  
--		domains[i] = &scmi_pd->genpd;
-+		if (handle->power_ops->state_get(handle, i, &state)) {
-+			dev_warn(dev, "failed to get state for domain %d\n", i);
-+			continue;
-+		}
+ #include <trace/events/erofs.h>
  
- 		scmi_pd->domain = i;
- 		scmi_pd->handle = handle;
-@@ -94,13 +97,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 		scmi_pd->genpd.power_off = scmi_pd_power_off;
- 		scmi_pd->genpd.power_on = scmi_pd_power_on;
+-/* no locking */
+-static int erofs_read_inode(struct inode *inode, void *data)
++/*
++ * if inode is successfully read, return its inode page (or sometimes
++ * the inode payload page if it's an extended inode) in order to fill
++ * inline data if possible.
++ */
++static struct page *erofs_read_inode(struct inode *inode,
++				     unsigned int *ofs)
+ {
++	struct super_block *sb = inode->i_sb;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	struct erofs_inode *vi = EROFS_I(inode);
+-	struct erofs_inode_compact *dic = data;
+-	struct erofs_inode_extended *die;
++	const erofs_off_t inode_loc = iloc(sbi, vi->nid);
  
--		if (handle->power_ops->state_get(handle, i, &state)) {
--			dev_warn(dev, "failed to get state for domain %d\n", i);
--			continue;
--		}
--
- 		pm_genpd_init(&scmi_pd->genpd, NULL,
- 			      state == SCMI_POWER_STATE_GENERIC_OFF);
+-	const unsigned int ifmt = le16_to_cpu(dic->i_format);
+-	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+-	erofs_blk_t nblks = 0;
++	erofs_blk_t blkaddr, nblks = 0;
++	struct page *page;
++	struct erofs_inode_compact *dic;
++	struct erofs_inode_extended *die, *copied = NULL;
++	unsigned int ifmt;
++	int err;
+ 
+-	vi->datalayout = erofs_inode_datalayout(ifmt);
++	blkaddr = erofs_blknr(inode_loc);
++	*ofs = erofs_blkoff(inode_loc);
+ 
++	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
++		  __func__, vi->nid, *ofs, blkaddr);
 +
-+		domains[i] = &scmi_pd->genpd;
++	page = erofs_get_meta_page(sb, blkaddr);
++	if (IS_ERR(page)) {
++		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
++			  vi->nid, PTR_ERR(page));
++		return page;
++	}
++
++	dic = page_address(page) + *ofs;
++	ifmt = le16_to_cpu(dic->i_format);
++
++	vi->datalayout = erofs_inode_datalayout(ifmt);
+ 	if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
+ 		erofs_err(inode->i_sb, "unsupported datalayout %u of nid %llu",
+ 			  vi->datalayout, vi->nid);
+-		DBG_BUGON(1);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto err_out;
  	}
  
- 	scmi_pd_data->domains = domains;
--- 
-2.25.1
-
+ 	switch (erofs_inode_version(ifmt)) {
+ 	case EROFS_INODE_LAYOUT_EXTENDED:
+-		die = data;
+-
+ 		vi->inode_isize = sizeof(struct erofs_inode_extended);
++		/* check if the inode acrosses page boundary */
++		if (*ofs + vi->inode_isize <= PAGE_SIZE) {
++			*ofs += vi->inode_isize;
++			die = (struct erofs_inode_extended *)dic;
++		} else {
++			const unsigned int gotten = PAGE_SIZE - *ofs;
++
++			copied = kmalloc(vi->inode_isize, GFP_NOFS);
++			if (!copied) {
++				err = -ENOMEM;
++				goto err_out;
++			}
++			memcpy(copied, dic, gotten);
++			unlock_page(page);
++			put_page(page);
++
++			page = erofs_get_meta_page(sb, blkaddr + 1);
++			if (IS_ERR(page)) {
++				erofs_err(sb, "failed to get inode payload page (nid: %llu), err %ld",
++					  vi->nid, PTR_ERR(page));
++				kfree(copied);
++				return page;
++			}
++			*ofs = vi->inode_isize - gotten;
++			memcpy((u8 *)copied + gotten, page_address(page), *ofs);
++			die = copied;
++		}
+ 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(die->i_mode);
+@@ -69,9 +118,12 @@ static int erofs_read_inode(struct inode
+ 		/* total blocks for compressed files */
+ 		if (erofs_inode_is_data_compressed(vi->datalayout))
+ 			nblks = le32_to_cpu(die->i_u.compressed_blocks);
++
++		kfree(copied);
+ 		break;
+ 	case EROFS_INODE_LAYOUT_COMPACT:
+ 		vi->inode_isize = sizeof(struct erofs_inode_compact);
++		*ofs += vi->inode_isize;
+ 		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(dic->i_mode);
+@@ -111,8 +163,8 @@ static int erofs_read_inode(struct inode
+ 		erofs_err(inode->i_sb,
+ 			  "unsupported on-disk inode version %u of nid %llu",
+ 			  erofs_inode_version(ifmt), vi->nid);
+-		DBG_BUGON(1);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto err_out;
+ 	}
+ 
+ 	if (!nblks)
+@@ -120,13 +172,18 @@ static int erofs_read_inode(struct inode
+ 		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
+ 	else
+ 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+-	return 0;
++	return page;
+ 
+ bogusimode:
+ 	erofs_err(inode->i_sb, "bogus i_mode (%o) @ nid %llu",
+ 		  inode->i_mode, vi->nid);
++	err = -EFSCORRUPTED;
++err_out:
+ 	DBG_BUGON(1);
+-	return -EFSCORRUPTED;
++	kfree(copied);
++	unlock_page(page);
++	put_page(page);
++	return ERR_PTR(err);
+ }
+ 
+ static int erofs_fill_symlink(struct inode *inode, void *data,
+@@ -146,7 +203,7 @@ static int erofs_fill_symlink(struct ino
+ 	if (!lnk)
+ 		return -ENOMEM;
+ 
+-	m_pofs += vi->inode_isize + vi->xattr_isize;
++	m_pofs += vi->xattr_isize;
+ 	/* inline symlink data shouldn't cross page boundary as well */
+ 	if (m_pofs + inode->i_size > PAGE_SIZE) {
+ 		kfree(lnk);
+@@ -167,37 +224,17 @@ static int erofs_fill_symlink(struct ino
+ 
+ static int erofs_fill_inode(struct inode *inode, int isdir)
+ {
+-	struct super_block *sb = inode->i_sb;
+ 	struct erofs_inode *vi = EROFS_I(inode);
+ 	struct page *page;
+-	void *data;
+-	int err;
+-	erofs_blk_t blkaddr;
+ 	unsigned int ofs;
+-	erofs_off_t inode_loc;
++	int err = 0;
+ 
+ 	trace_erofs_fill_inode(inode, isdir);
+-	inode_loc = iloc(EROFS_SB(sb), vi->nid);
+-	blkaddr = erofs_blknr(inode_loc);
+-	ofs = erofs_blkoff(inode_loc);
+-
+-	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
+-		  __func__, vi->nid, ofs, blkaddr);
+ 
+-	page = erofs_get_meta_page(sb, blkaddr);
+-
+-	if (IS_ERR(page)) {
+-		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+-			  vi->nid, PTR_ERR(page));
++	/* read inode base data from disk */
++	page = erofs_read_inode(inode, &ofs);
++	if (IS_ERR(page))
+ 		return PTR_ERR(page);
+-	}
+-
+-	DBG_BUGON(!PageUptodate(page));
+-	data = page_address(page);
+-
+-	err = erofs_read_inode(inode, data + ofs);
+-	if (err)
+-		goto out_unlock;
+ 
+ 	/* setup the new inode */
+ 	switch (inode->i_mode & S_IFMT) {
+@@ -210,7 +247,7 @@ static int erofs_fill_inode(struct inode
+ 		inode->i_fop = &erofs_dir_fops;
+ 		break;
+ 	case S_IFLNK:
+-		err = erofs_fill_symlink(inode, data, ofs);
++		err = erofs_fill_symlink(inode, page_address(page), ofs);
+ 		if (err)
+ 			goto out_unlock;
+ 		inode_nohighmem(inode);
 
 
