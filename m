@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A995C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C1AC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD6620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ABC020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692957;
-	bh=sCWwWWUVOqcvE+OPfFNQArOmoRTzDJBr21kMFMHQVAM=;
+	s=default; t=1597692958;
+	bh=J3j1CAeF/HlRbP998WeR/N6nIfOh7ODeCHCssqEivms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2zrS/0/T5CSachcOQgmAqybGnDsBx4maG8fA6u+udpFicqMiSv4EyTIrK1auJp9C
-	 QYMHrtIJ0fkCOEQgNWF8O8KCnDdvJ1nIlZjX5GWZuLsyWjgDvWzVplB17Gna/zXxpK
-	 PQkMl+ZoAkfZ8gksFgk7NgYOF/Xvxp4AOMBU6Eyg=
+	b=1JMaETYo/NfRCdAtKL83AaTCJZ4vN5GCV/I7yFO2kNoDaOe4Y7SmfNV/Go25RXzPp
+	 66nQGeb8Lquxt6TyDNE4p8EX3T1GU/gLokBBWj1EM0v+Vw/VgsaA2qkpp03IA1bQHD
+	 KxWshsMq4pDvzmcTg4XE7vRj+mWMf8oCn7VOpgFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgHQP27 (ORCPT
+        id S2392368AbgHQTf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729793AbgHQP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:46 -0400
+        id S1730066AbgHQP3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB92023A1D;
-        Mon, 17 Aug 2020 15:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B79B23C30;
+        Mon, 17 Aug 2020 15:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678006;
-        bh=sCWwWWUVOqcvE+OPfFNQArOmoRTzDJBr21kMFMHQVAM=;
+        s=default; t=1597678148;
+        bh=J3j1CAeF/HlRbP998WeR/N6nIfOh7ODeCHCssqEivms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPQ54youknZpqA2mlgJzpk1MGAsyP/3LrsNJ9A3IKIA9C3Vc4rr6ALn3gRXXiNt7O
-         VxG+PtVlh96gWs59eVHzbDbGjNM/0a8l2Uv1YabFQlTLIbaH9RIW13M7/AI7tXVEoz
-         xlxTxfixj+mBQyEQNzgg8neOHP8uWsV9LCWd0mzA=
+        b=MVPTntcJ6jzQEPhAVp955DUn0663oZEWqsxZE8OXXIJoxqV5q2LuTNIKWfH+Ykizw
+         MqM8a+iOg1/D/Y13BvDkOLd4LAgQa1LtOxS5rj6XBQNARYGouXnEd9b0aTz5XTNPqG
+         hUDbbfrc2K3AhMkLchoWpjLakpXyIE8Q+r7q/U9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Michal Kalderon <mkalderon@marvell.com>,
+        Yuval Basson <ybason@marvell.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 156/464] ath10k: Acquire tx_lock in tx error paths
-Date:   Mon, 17 Aug 2020 17:11:49 +0200
-Message-Id: <20200817143841.280799598@linuxfoundation.org>
+Subject: [PATCH 5.8 235/464] RDMA/qedr: SRQs bug fixes
+Date:   Mon, 17 Aug 2020 17:13:08 +0200
+Message-Id: <20200817143845.055654406@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,47 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Yuval Basson <ybason@marvell.com>
 
-[ Upstream commit a738e766e3ed92c4ee5ec967777276b5ce11dd2c ]
+[ Upstream commit acca72e2b031b9fbb4184511072bd246a0abcebc ]
 
-ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
-is held. Acquire the lock in a couple of error paths when calling that
-function to ensure this condition is met.
+QP's with the same SRQ, working on different CQs and running in parallel
+on different CPUs could lead to a race when maintaining the SRQ consumer
+count, and leads to FW running out of SRQs. Update the consumer
+atomically.  Make sure the wqe_prod is updated after the sge_prod due to
+FW requirements.
 
-Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
-Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64 descriptor")
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid
+Fixes: 3491c9e799fb ("qedr: Add support for kernel mode SRQ's")
+Link: https://lore.kernel.org/r/20200708195526.31040-1-ybason@marvell.com
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Yuval Basson <ybason@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/htt_tx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/qedr/qedr.h  |  4 ++--
+ drivers/infiniband/hw/qedr/verbs.c | 22 ++++++++++------------
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt_tx.c b/drivers/net/wireless/ath/ath10k/htt_tx.c
-index 4fd10ac3a9417..bbe869575855a 100644
---- a/drivers/net/wireless/ath/ath10k/htt_tx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_tx.c
-@@ -1591,7 +1591,9 @@ static int ath10k_htt_tx_32(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
+diff --git a/drivers/infiniband/hw/qedr/qedr.h b/drivers/infiniband/hw/qedr/qedr.h
+index fdf90ecb26990..aa332027da868 100644
+--- a/drivers/infiniband/hw/qedr/qedr.h
++++ b/drivers/infiniband/hw/qedr/qedr.h
+@@ -344,10 +344,10 @@ struct qedr_srq_hwq_info {
+ 	u32 wqe_prod;
+ 	u32 sge_prod;
+ 	u32 wr_prod_cnt;
+-	u32 wr_cons_cnt;
++	atomic_t wr_cons_cnt;
+ 	u32 num_elems;
+ 
+-	u32 *virt_prod_pair_addr;
++	struct rdma_srq_producers *virt_prod_pair_addr;
+ 	dma_addr_t phy_prod_pair_addr;
+ };
+ 
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 9b9e802663674..c6355e369a3a3 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -3686,7 +3686,7 @@ static u32 qedr_srq_elem_left(struct qedr_srq_hwq_info *hw_srq)
+ 	 * count and consumer count and subtract it from max
+ 	 * work request supported so that we get elements left.
+ 	 */
+-	used = hw_srq->wr_prod_cnt - hw_srq->wr_cons_cnt;
++	used = hw_srq->wr_prod_cnt - (u32)atomic_read(&hw_srq->wr_cons_cnt);
+ 
+ 	return hw_srq->max_wr - used;
  }
-@@ -1798,7 +1800,9 @@ static int ath10k_htt_tx_64(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
+@@ -3701,7 +3701,6 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 	unsigned long flags;
+ 	int status = 0;
+ 	u32 num_sge;
+-	u32 offset;
+ 
+ 	spin_lock_irqsave(&srq->lock, flags);
+ 
+@@ -3714,7 +3713,8 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 		if (!qedr_srq_elem_left(hw_srq) ||
+ 		    wr->num_sge > srq->hw_srq.max_sges) {
+ 			DP_ERR(dev, "Can't post WR  (%d,%d) || (%d > %d)\n",
+-			       hw_srq->wr_prod_cnt, hw_srq->wr_cons_cnt,
++			       hw_srq->wr_prod_cnt,
++			       atomic_read(&hw_srq->wr_cons_cnt),
+ 			       wr->num_sge, srq->hw_srq.max_sges);
+ 			status = -ENOMEM;
+ 			*bad_wr = wr;
+@@ -3748,22 +3748,20 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 			hw_srq->sge_prod++;
+ 		}
+ 
+-		/* Flush WQE and SGE information before
++		/* Update WQE and SGE information before
+ 		 * updating producer.
+ 		 */
+-		wmb();
++		dma_wmb();
+ 
+ 		/* SRQ producer is 8 bytes. Need to update SGE producer index
+ 		 * in first 4 bytes and need to update WQE producer in
+ 		 * next 4 bytes.
+ 		 */
+-		*srq->hw_srq.virt_prod_pair_addr = hw_srq->sge_prod;
+-		offset = offsetof(struct rdma_srq_producers, wqe_prod);
+-		*((u8 *)srq->hw_srq.virt_prod_pair_addr + offset) =
+-			hw_srq->wqe_prod;
++		srq->hw_srq.virt_prod_pair_addr->sge_prod = hw_srq->sge_prod;
++		/* Make sure sge producer is updated first */
++		dma_wmb();
++		srq->hw_srq.virt_prod_pair_addr->wqe_prod = hw_srq->wqe_prod;
+ 
+-		/* Flush producer after updating it. */
+-		wmb();
+ 		wr = wr->next;
+ 	}
+ 
+@@ -4182,7 +4180,7 @@ static int process_resp_one_srq(struct qedr_dev *dev, struct qedr_qp *qp,
+ 	} else {
+ 		__process_resp_one(dev, qp, cq, wc, resp, wr_id);
+ 	}
+-	srq->hw_srq.wr_cons_cnt++;
++	atomic_inc(&srq->hw_srq.wr_cons_cnt);
+ 
+ 	return 1;
  }
 -- 
 2.25.1
