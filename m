@@ -2,399 +2,122 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44904C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093A6205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597695139;
-	bh=WC5r/Ku+g4bH2/+S4JkLkrTngEYkkod0poPejwNlszc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nJ3yPqC849ZUDrmJaQagjfpmJz1RhkhMckpKdXYlHarQvSQhpGQsNSkOtujdEupDI
-	 PySmVstWVz+qzBorGuLgkLazgmzhCvNkgiFqr7AsPqmX4whcPiJOiSpqqACmHHN5bz
-	 tzsPfW5U3PPJpScz2nth4dkK8g/KFqOxGVpKigm8=
+	by mail.kernel.org (Postfix) with ESMTP id 26338205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESZ2E0xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgHQUMP (ORCPT
+        id S1727078AbgHQUNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:12:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42006 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgHQUMO (ORCPT
+        Mon, 17 Aug 2020 16:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgHQUNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:12:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id g13so4647057ioo.9;
-        Mon, 17 Aug 2020 13:12:13 -0700 (PDT)
+        Mon, 17 Aug 2020 16:13:32 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D21C061389;
+        Mon, 17 Aug 2020 13:13:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id s16so13436843qtn.7;
+        Mon, 17 Aug 2020 13:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zt/7bcE3rheAEIDkdYnD+DA7k8FVJTMGh0E4kEj1Ywo=;
+        b=ESZ2E0xmMQv1mWWmfIDLDh8ElbMLOrMjACpT1NtfcDZAkPcK1cx7Tqq5wJCtNEoGkv
+         sNw5WzTK45vDd7RivwzHNzmA+PcKiL/XxM9Ood/DKjXdOeiydUXFP/EEfZeqmRP4bw8Z
+         +io4TpeIColjCVGs36mDk0I6bxguWRgcFAL3veyxZTAvhvNBDMSmG8R8h2Kt/8bndqtQ
+         jQ0MZZFuMLhLKGH0ysqarbbMykNQs6XMViTx/MXWvSd6io25Qj/YSKqPwbQh0bjRTaUF
+         ZsgdSXj/DbEAmcXu8+jNw9Mig59+a3k37b+Fy3vvGyZcKxqxNeP7dIRR3NMpTm1jtFcB
+         ljKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0KN9pnWSWPN3TNn63mBYUI7eFmYWB5gm6o/HN1LD/Z4=;
-        b=aptLIwgGh7Qi0aqAHD2FZhNtx1Wap6lq015zU8v+Z929Bin482mSNXu78A3zwBq/Da
-         vjqcugv7dJJELhCaGgEY71kMbLYGSswflapFSnVtAko02VnFoAvGMMUMioaP4Q0LCak4
-         sW5LCkp9k2wqPVXUCxs2KKxDpsy+hkbbY8P0nZM4izMPPy0IGKlV+zuogcmtKhvA7xCc
-         YKNDLQIypFiX6KeaGuhYQX21jRTvrEvfF1YPd6+fNykuixXYd8qc0pxCgNze2X0xV7Ow
-         o0w7wwSyWMxxbAzajg3NoVQrxm14+DdSkd8YWgJtCXMneXLn7Iv+p3p8kWq7z0UekscC
-         /+pQ==
-X-Gm-Message-State: AOAM5304Igjr4v7DnJzTUgrY9r2EcgsrXijpVHTSm3CHE4Rod5/DEzPY
-        mPiBEWeVNsQH7he0EvpOsw==
-X-Google-Smtp-Source: ABdhPJx6sxqFMzHTHNd2YmNJMJukFU9VZh8132ZWtZuuKqLG9Le5cnZdc/YVhE8Fqul4icjSphmHXw==
-X-Received: by 2002:a6b:7e41:: with SMTP id k1mr13614393ioq.130.1597695132782;
-        Mon, 17 Aug 2020 13:12:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id d3sm9924704ils.25.2020.08.17.13.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 13:12:12 -0700 (PDT)
-Received: (nullmailer pid 1472732 invoked by uid 1000);
-        Mon, 17 Aug 2020 20:12:11 -0000
-Date:   Mon, 17 Aug 2020 14:12:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200817201211.GA1437827@bogus>
-References: <cover.1597647359.git.mchehab+huawei@kernel.org>
- <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zt/7bcE3rheAEIDkdYnD+DA7k8FVJTMGh0E4kEj1Ywo=;
+        b=FXY5ligulFCgMjVmI5NSv7VXHK1fLdcnAuFFvLejxLhph7Jp7U4jEcoywk6QHNs3OH
+         u7w5Wg2SeuLtLyaSPWNfqXmrv59COhq7gduPYpyCOK4zJMQpOJPaPUlllK5VXVgIL2n0
+         vRx1CA9WLkGKo/VhR6fNwueOBKe4skuSWeEFTcJka0SaOSZgaSZyX1ztjEYgQYmoonUW
+         Wj+9FolUDjELZcT5ATXpImEJ3cn6TeU4SV9hnYm84EC0NyKegEjVdc3j63neHf/KDOR1
+         W+fPunQ/oO2go3B4IqLcHn3rgEmfzCy9Lj/me2zP9UMppc8Igz1JUBVBGDxHe4M8Ye78
+         ehHw==
+X-Gm-Message-State: AOAM531yeubrws6Nbf1d7YIeCcO6j9s2DvmCxWKEEJYymwOkLJnP5XNw
+        zN9R2tCFVedMLfbHo/GKu7uBfjKNihU=
+X-Google-Smtp-Source: ABdhPJx9e+AdRduaomcbQkwct21cWv/QPycXamX0237ajy9InAmdTZJ1sTza9+t49kGyOuGVwikz1w==
+X-Received: by 2002:ac8:2ab9:: with SMTP id b54mr14845227qta.323.1597695211196;
+        Mon, 17 Aug 2020 13:13:31 -0700 (PDT)
+Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
+        by smtp.gmail.com with ESMTPSA id 95sm19509597qtc.29.2020.08.17.13.13.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 13:13:30 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        selinux@vger.kernel.org
+References: <20200817170729.2605279-1-tweek@google.com>
+ <20200817170729.2605279-4-tweek@google.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com>
+Date:   Mon, 17 Aug 2020 16:13:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200817170729.2605279-4-tweek@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:11:02AM +0200, Mauro Carvalho Chehab wrote:
-> Add documentation for the properties needed by the HiSilicon
-> 6421v600 driver, and by the SPMI controller used to access
-> the chipset.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On 8/17/20 1:07 PM, Thiébaud Weksteen wrote:
+
+> From: Peter Enderborg <peter.enderborg@sony.com>
+>
+> In the print out add permissions, it will look like:
+>      <...>-1042  [007] ....   201.965142: selinux_audited:
+>      requested=0x4000000 denied=0x4000000 audited=0x4000000
+>      result=-13
+>      scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
+>      tcontext=system_u:object_r:bin_t:s0
+>      tclass=file permissions={ !entrypoint }
+>
+> This patch is adding the "permissions={ !entrypoint }".
+> The permissions preceded by "!" have been denied and the permissions
+> without have been accepted.
+>
+> Note that permission filtering is done on the audited, denied or
+> requested attributes.
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Reviewed-by: Thiébaud Weksteen <tweek@google.com>
+> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
 > ---
->  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
->  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
->  2 files changed, 236 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-> new file mode 100644
-> index 000000000000..95494114554d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-> @@ -0,0 +1,182 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HiSilicon 6421v600 SPMI PMIC
-> +
-> +maintainers:
-> +  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> +
-> +description: |
-> +  HiSilicon 6421v600 uses a MIPI System Power Management (SPMI) bus in order
-> +  to provide interrupts and power supply.
-> +
-> +  The GPIO and interrupt settings are represented as part of the top-level PMIC
-> +  node.
-> +
-> +  The SPMI controller part is provided by
-> +  Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "pmic@[0-9a-f]"
-> +
-> +  compatible:
-> +    const: hisilicon,hi6421-spmi-pmic
 
--spmi-pmic is redundant. Can the hi6421 be anything else?
+Does this require a corresponding patch to userspace?  Otherwise, I get 
+the following:
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spmi-channel:
-> +    description: number of the SPMI channel where the PMIC is connected
+libtraceevent: No such file or directory
+   [avc:selinux_audited] function avc_trace_perm_to_name not defined
 
-This looks like a common (to SPMI), but it's not something defined in 
-spmi.txt (which should ideally be converted to schema first). Minimally, 
-it needs a better explanation and determination if it should be common 
-or is HiSilicon specific.
-
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupt-controller:
-> +    description:
-> +      Identify that the PMIC is capable of behaving as an interrupt controller.
-
-No need to redefine common properties if nothing specific to this device 
-to say. Just:
-
-interrupt-controller: true
-
-> +
-> +  gpios:
-> +    maxItems: 1
-> +
-> +  irq-num:
-> +    description: Interrupt request number
-> +
-> +  'irq-array':
-> +    description: Interrupt request array
-> +
-> +  'irq-mask-addr':
-> +    description: Address for the interrupt request mask
-> +
-> +  'irq-addr':
-> +    description: Address for the interrupt request
-
-What's all these non-standard interrupt properties?
-
-> +
-> +  regulators:
-> +    type: object
-
-additionalProperties: false
-
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      '^ldo@[0-9]+$':
-
-Unit-addresses are hex.
-
-Also, doesn't match the example.
-
-> +        type: object
-> +
-> +        $ref: "/schemas/regulator/regulator.yaml#"
-> +
-> +        properties:
-> +          reg:
-> +            description: Enable register.
-> +
-
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-
-No child nodes, you don't need these.
-
-> +
-> +          vsel-reg:
-> +            description: Voltage selector register.
-
-'reg' can have multiple entries if you want.
-
-> +
-> +          enable-mask:
-> +            description: Bitmask used to enable the regulator.
-
-But if there's a shared enable reg, then you shouldn't have duplicate 
-addresses (same 'reg' value in multiple nodes).
-
-These perhaps should be driver data rather than in DT as it's all fixed 
-for this chip. We don't try to parameterize everything in DT.
-
-> +
-> +          voltage-table:
-> +            description: Table with the selector items for the voltage regulator.
-> +            minItems: 2
-> +            maxItems: 16
-
-Needs a type $ref.
-
-> +
-> +          off-on-delay-us:
-> +            description: Time required for changing state to enabled in microseconds.
-> +
-> +          startup-delay-us:
-> +            description: Startup time in microseconds.
-> +
-> +          idle-mode-mask:
-> +            description: Bitmask used to put the regulator on idle mode.
-> +
-> +          eco-microamp:
-> +            description: Maximum current while on idle mode.
-> +
-> +        required:
-> +          - reg
-> +          - vsel-reg
-> +          - enable-mask
-> +          - voltage-table
-> +          - off-on-delay-us
-> +          - startup-delay-us
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - regulators
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    /* pmic properties */
-> +
-> +    pmic: pmic@0 {
-> +      compatible = "hisilicon,hi6421-spmi-pmic";
-> +      slave_id = <0>;
-
-Not documented. I believe this is part of 'reg'.
-
-> +      reg = <0 0>;
-> +
-> +      #interrupt-cells = <2>;
-> +      interrupt-controller;
-> +      gpios = <&gpio28 0 0>;
-> +      irq-num = <16>;
-> +      irq-array = <2>;
-> +      irq-mask-addr = <0x202 2>;
-> +      irq-addr = <0x212 2>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      regulators {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +        ldo3: ldo3@16 {
-> +          reg = <0x16>;
-> +          vsel-reg = <0x51>;
-> +
-> +          regulator-name = "ldo3";
-> +          regulator-min-microvolt = <1500000>;
-> +          regulator-max-microvolt = <2000000>;
-> +          regulator-boot-on;
-> +
-> +          enable-mask = <0x01>;
-> +
-> +          voltage-table = <1500000>, <1550000>, <1600000>, <1650000>,
-> +                          <1700000>, <1725000>, <1750000>, <1775000>,
-> +                          <1800000>, <1825000>, <1850000>, <1875000>,
-> +                          <1900000>, <1925000>, <1950000>, <2000000>;
-> +          off-on-delay-us = <20000>;
-> +          startup-delay-us = <120>;
-> +        };
-> +
-> +        ldo4: ldo4@17 { /* 40 PIN */
-> +          reg = <0x17>;
-> +          vsel-reg = <0x52>;
-> +
-> +          regulator-name = "ldo4";
-> +          regulator-min-microvolt = <1725000>;
-> +          regulator-max-microvolt = <1900000>;
-> +          regulator-boot-on;
-> +
-> +          enable-mask = <0x01>;
-> +          idle-mode-mask = <0x10>;
-> +          eco-microamp = <10000>;
-> +
-> +          hi6421-vsel = <0x52 0x07>;
-
-Not documented.
-
-> +          voltage-table = <1725000>, <1750000>, <1775000>, <1800000>,
-> +                          <1825000>, <1850000>, <1875000>, <1900000>;
-> +          off-on-delay-us = <20000>;
-> +          startup-delay-us = <120>;
-> +        };
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> new file mode 100644
-> index 000000000000..5aeb2ae12024
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spmi/hisilicon,hisi-spmi-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HiSilicon SPMI controller
-> +
-> +maintainers:
-> +  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> +
-> +description: |
-> +  The HiSilicon SPMI controller is found on some Kirin-based designs.
-> +  It is a MIPI System Power Management (SPMI) controller.
-> +
-> +  The PMIC part is provided by
-> +  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "spmi@[0-9a-f]"
-> +
-> +  compatible:
-> +    const: hisilicon,spmi-controller
-
-Needs an SoC specific compatible.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  spmi-channel:
-> +    description: number of the SPMI channel where the PMIC is connected
-> +
-> +patternProperties:
-> +  "^pmic@[0-9a-f]$":
-> +    $ref: "/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#"
-> +
-> +examples:
-> +  - |
-> +    spmi: spmi@fff24000 {
-> +      compatible = "hisilicon,spmi-controller";
-> +      #address-cells = <2>;
-> +      #size-cells = <0>;
-> +      status = "ok";
-> +      reg = <0x0 0xfff24000 0x0 0x1000>;
-> +      spmi-channel = <2>;
-
-Does this go in the SPMI controller or child (pmic)?
-
-> +
-> +      /* pmic properties */
-> +
-> +    };
-> -- 
-> 2.26.2
-> 
