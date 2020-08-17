@@ -5,72 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42096C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2083420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE2A20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXcISvaz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPJJgyv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgHQIq6 (ORCPT
+        id S1728412AbgHQIrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55994 "EHLO
+        Mon, 17 Aug 2020 04:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgHQIql (ORCPT
+        with ESMTP id S1728360AbgHQIqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:46:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC4CC061388;
-        Mon, 17 Aug 2020 01:46:41 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m34so7780539pgl.11;
-        Mon, 17 Aug 2020 01:46:41 -0700 (PDT)
+        Mon, 17 Aug 2020 04:46:55 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88970C061389;
+        Mon, 17 Aug 2020 01:46:55 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g7so6026091plq.1;
+        Mon, 17 Aug 2020 01:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JsoJWF3qfQafSSNV5K67N8ZQJjFS6LyMxgQTIoIwZ4E=;
-        b=sXcISvazjIO8ysa6wN18Wo42/doFu1SWVrQIRBDsICBHprjam5Q7LSkx2t6FPfTYdA
-         JCk1QifejB5MbeZ1oa2Qp1wnrNTVZRV6PpQ8ArwmvyPI2+zR3yPjKxV8KS6RX1+ILNoe
-         +D8SLjteJo4+YgF9fj7Wm8KEDfAdRv32m2y+zC4/jZU6pF+fyFsHAaz6bwxBqubZ+OzG
-         gCCovtVpk4aL1X93xNPh96R6dMeh/TEFQrO5SNOrySeSAkJnHpYfxUl6XeQPuFDN8VOy
-         SGFjN5XVMtRO7LnGNuzYNWtZs+Ah7mqUkKH7xcT1ASqwkYlUFb2ZGLS6hhwzRtbW2qM+
-         Z2qw==
+        bh=Uavx1EOmJ7bSLeVLJ6XOgqseCssvPSFdNEvIC2Bysbw=;
+        b=LPJJgyv3/lpXbkuhi7Kjvn9mnA+OOxbjWuXsLs5FFc9v2qhqmkyKataTtaef0mNZ8w
+         PudCWR1MMRmUIRpmDWHr3Z02PxKnmCODhbQW7JN241sYryKi9oJgjN38TADW5CGPRBfd
+         QJHawRn1PCIw5GxiC5ufMuejMLjJ9WTT8G6KVWHriDUg81PpiQTF29r0xLm5KXj0jQ3Y
+         2EkHtYPtJZJ6+6MRyRy/LHqXc3cgxDMumDN8VFqt5Eu2qcZ6KbrLRjBbFBInnnNbK48r
+         gZCgLDq5Zf0rYofg21pe+ZI6aYbWRFVqCT4kBpw5XmsGvcD4fce+QmZaWYYouco6vScv
+         CMwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JsoJWF3qfQafSSNV5K67N8ZQJjFS6LyMxgQTIoIwZ4E=;
-        b=ehNdY03S/d8XPZDGXdDrzJR5K4POBEBc+3NyLuOt5mDELeKLEDL3h11OXe2pIqtez8
-         P2IrTysaiLBTKveKZx/IKwzDgQIPGqtIM4NL1EDQOnHYOhKFQYfHu0zub/WBs0e3Ga9e
-         JvE2TY87uB46alIvRM17NKdvqS2UJNHlb2upTWHhBLinuGP2M3Ufauk32IkquOwLuHzQ
-         RdqJKWAowuWU5DQLKCX7wA6cjStcIO9ou9eEP87YVP54NVIbUtmn9wBsILqZzmiTycCX
-         EZUsqbj0v5/iqMeaJE/Sd+X6gHmS8CsiKjHv4X9Ynk66kgczGPxhfQf+Cgj4VEB8vRB9
-         Supw==
-X-Gm-Message-State: AOAM533W7asCJGzdt+3t1eTvu8HvSF2Ek3F2J7xis2GhMR7LBW/RgOTm
-        f3g9UsXR7enEfD9UPeL2PPQ=
-X-Google-Smtp-Source: ABdhPJy0MvpSNtO+I2gcioLWEGSx0tcxCwFQB4BUoUp21BIAH7ttx+k10WJWbsMrhWUXmwiFNe72HQ==
-X-Received: by 2002:a62:144b:: with SMTP id 72mr10485247pfu.111.1597654001358;
-        Mon, 17 Aug 2020 01:46:41 -0700 (PDT)
+        bh=Uavx1EOmJ7bSLeVLJ6XOgqseCssvPSFdNEvIC2Bysbw=;
+        b=sT7oxkt4E/G44J8YK8HF8uoHYxcxuIGRmwpjg9DXnvwsPC/3QkYxpM6Zq5oY+MTEXf
+         yMPXtA1NE0gmw9K+1AorbKxAK8/NCD9w8NlIOg1yn+kwxr7L+QrVeh92mzuRGNZ32srf
+         EbyPU/OWO0Sfxz/E0rt9K20QHSOT2aAcpamBtqrNVtJ175K8CbuolQ4A7GadaS5d0prF
+         Zcgul7gLX77erU3P8lNrsuEoxnK8lCBIekZlEFO7CrLl4nfY91bbE87tEt7wCOAledDf
+         H0l7QPM0okqxCnd9falpafSrD2dJSAQV9W+omE+56hzqV5a11tde8tTSJt8MCbMmD1mV
+         iWWw==
+X-Gm-Message-State: AOAM532KrhuYsy2NAECB0IMeQAlHRTpLORsIX1Mh7BOJmBfRoj1quLze
+        8Debx8yLLf9f4kmN6y+P83o=
+X-Google-Smtp-Source: ABdhPJww6G5UjSHakF95RK6lWfDJt0TSnLD/Lmaq3pCsiIthUPmi94Kb2THrMEF3W0jGfBwSAhy2AQ==
+X-Received: by 2002:a17:902:a585:: with SMTP id az5mr10412116plb.172.1597654015098;
+        Mon, 17 Aug 2020 01:46:55 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id ml18sm16418443pjb.43.2020.08.17.01.46.35
+        by smtp.gmail.com with ESMTPSA id ml18sm16418443pjb.43.2020.08.17.01.46.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:46:40 -0700 (PDT)
+        Mon, 17 Aug 2020 01:46:54 -0700 (PDT)
 From:   Allen Pais <allen.cryptic@gmail.com>
 To:     m.grzeschik@pengutronix.de, davem@davemloft.net, paulus@samba.org,
         oliver@neukum.org, woojung.huh@microchip.com, petkan@nucleusys.com
 Cc:     keescook@chromium.org, netdev@vger.kernel.org,
         linux-ppp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Romain Perier <romain.perier@viveris.fr>,
-        Romain Perier <romain.perier@gmail.com>,
-        Allen Pais <allen.lkml@gmail.com>
-Subject: [PATCH] net: mvpp2: Prepare to use the new tasklet API
-Date:   Mon, 17 Aug 2020 14:16:05 +0530
-Message-Id: <20200817084614.24263-4-allen.cryptic@gmail.com>
+        linux-usb@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 3/9] net: cdc_ncm: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:16:08 +0530
+Message-Id: <20200817084614.24263-7-allen.cryptic@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817084614.24263-1-allen.cryptic@gmail.com>
 References: <20200817084614.24263-1-allen.cryptic@gmail.com>
@@ -79,46 +77,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Romain Perier <romain.perier@viveris.fr>
+From: Allen Pais <allen.lkml@gmail.com>
 
-The future tasklet API will no longer allow to pass an arbitrary
-"unsigned long" data parameter. The tasklet data structure will need to
-be embedded into a data structure that will be retrieved from the tasklet
-handler. Currently, there are no ways to retrieve the "struct mvpp2_port
-*" from a given "struct mvpp2_port_pcpu *". This commit adds a new field
-to get the address of the main port for each pcpu context.
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h      | 1 +
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/usb/cdc_ncm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 32753cc771bf..198860a4527d 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -861,6 +861,7 @@ struct mvpp2_port_pcpu {
- 	struct hrtimer tx_done_timer;
- 	struct net_device *dev;
- 	bool timer_scheduled;
-+	struct mvpp2_port *port;
- };
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index e04f588538cc..57a95ef90385 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -61,7 +61,7 @@ static bool prefer_mbim;
+ module_param(prefer_mbim, bool, 0644);
+ MODULE_PARM_DESC(prefer_mbim, "Prefer MBIM setting on dual NCM/MBIM functions");
  
- struct mvpp2_queue_vector {
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 2a8a5842eaef..fb45f86dcb12 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -6025,6 +6025,7 @@ static int mvpp2_port_probe(struct platform_device *pdev,
- 		err = -ENOMEM;
- 		goto err_free_txq_pcpu;
- 	}
-+	port->pcpu->port = port;
+-static void cdc_ncm_txpath_bh(unsigned long param);
++static void cdc_ncm_txpath_bh(struct tasklet_struct *t);
+ static void cdc_ncm_tx_timeout_start(struct cdc_ncm_ctx *ctx);
+ static enum hrtimer_restart cdc_ncm_tx_timer_cb(struct hrtimer *hr_timer);
+ static struct usb_driver cdc_ncm_driver;
+@@ -815,7 +815,7 @@ int cdc_ncm_bind_common(struct usbnet *dev, struct usb_interface *intf, u8 data_
  
- 	if (!port->has_tx_irqs) {
- 		for (thread = 0; thread < priv->nthreads; thread++) {
+ 	hrtimer_init(&ctx->tx_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ctx->tx_timer.function = &cdc_ncm_tx_timer_cb;
+-	tasklet_init(&ctx->bh, cdc_ncm_txpath_bh, (unsigned long)dev);
++	tasklet_setup(&ctx->bh, cdc_ncm_txpath_bh);
+ 	atomic_set(&ctx->stop, 0);
+ 	spin_lock_init(&ctx->mtx);
+ 
+@@ -1468,9 +1468,9 @@ static enum hrtimer_restart cdc_ncm_tx_timer_cb(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
+-static void cdc_ncm_txpath_bh(unsigned long param)
++static void cdc_ncm_txpath_bh(struct tasklet_struct *t)
+ {
+-	struct usbnet *dev = (struct usbnet *)param;
++	struct usbnet *dev = from_tasklet(dev, t, bh);
+ 	struct cdc_ncm_ctx *ctx = (struct cdc_ncm_ctx *)dev->data[0];
+ 
+ 	spin_lock_bh(&ctx->mtx);
 -- 
 2.17.1
 
