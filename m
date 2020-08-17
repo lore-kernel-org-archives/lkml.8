@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4380C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73752204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DF2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690145;
-	bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
+	s=default; t=1597690154;
+	bh=sC52q1jskN1a4GCM1vdNvSZEDdBVrHK3PIW89cOAIoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJBdEI012IxOd46/47kvl2OYXIEyLCVaC8q/7XukbMlsNNaitikCF93iVAJKnBPvl
-	 90A02aGPd/1/aCrhTQw17GIVWCyteAOHv+THHcpa3IJ9/286pjWHWfp7PKApnh2wlV
-	 bgPWqO6Yy2/UXVMA+IhWUw+3gNojQFAMngw/Reek=
+	b=XM/aR20QRVSdRlnzNqUfFJI090gmz6b4QE7CqUhKGbEel07MkLo5SXotJwl/0d2qV
+	 EvetukfzmhTUsgWI4N8H7XZXo5H1R/6CwuSaVZ5Qa7itLiBkUg6zqW9FUYpzFbT75R
+	 wSNrMghrUrWsIdgne/5lypGUbCE/TyzPWUHo4Z7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391661AbgHQStD (ORCPT
+        id S2403792AbgHQStN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:49:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42320 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388002AbgHQPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388003AbgHQPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:54:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BC5320657;
-        Mon, 17 Aug 2020 15:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC3820888;
+        Mon, 17 Aug 2020 15:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679678;
-        bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
+        s=default; t=1597679683;
+        bh=sC52q1jskN1a4GCM1vdNvSZEDdBVrHK3PIW89cOAIoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jruYTLusaVXWdbWsGH/pntRCt+2nIe6hvZN3/LFvzCGMX5e0e0GPEa7NIHHcZ9cYl
-         zWodsqrCDRmzLdGTrP/Ish9ZTjmCPTPUxJnsNqWQvu959Zsx6JLM4APVVviBEpp8MU
-         LXkePC7dmepsygXt2KSZrO7SDm39G+kqQLpj9FcM=
+        b=TOYZOOt1i/msLn3u1PKw4Pl4B9AQD0lyvRh4qK6EJSHeAoadFnJOw5efDp923DEdS
+         zQjE+nLUGv4ln1DrxaWpu9PZiSjuKfg/cUhg0L8+xPbpjoj1H+zD/23i5djiasSaNv
+         9FP3KN/O9mmEGvREP7ehrbjcIvqSP1Dt4Y1FJDp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rick Farrington <ricardo.farrington@cavium.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 297/393] liquidio: Fix wrong return value in cn23xx_get_pf_num()
-Date:   Mon, 17 Aug 2020 17:15:47 +0200
-Message-Id: <20200817143834.023942814@linuxfoundation.org>
+Subject: [PATCH 5.7 299/393] net: spider_net: Fix the size used in a dma_free_coherent() call
+Date:   Mon, 17 Aug 2020 17:15:49 +0200
+Message-Id: <20200817143834.120303583@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,35 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit aa027850a292ea65524b8fab83eb91a124ad362c ]
+[ Upstream commit 36f28f7687a9ce665479cce5d64ce7afaa9e77ae ]
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()', in
+'spider_net_init_chain()'.
 
-Fixes: 0c45d7fe12c7e ("liquidio: fix use of pf in pass-through mode in a virtual machine")
-Cc: Rick Farrington <ricardo.farrington@cavium.com>
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Fixes: d4ed8f8d1fb7 ("Spidernet DMA coalescing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/toshiba/spider_net.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-index 43d11c38b38a9..4cddd628d41b2 100644
---- a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-+++ b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-@@ -1167,7 +1167,7 @@ static int cn23xx_get_pf_num(struct octeon_device *oct)
- 		oct->pf_num = ((fdl_bit >> CN23XX_PCIE_SRIOV_FDL_BIT_POS) &
- 			       CN23XX_PCIE_SRIOV_FDL_MASK);
- 	} else {
--		ret = EINVAL;
-+		ret = -EINVAL;
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index 6576271642c14..ce8b123cdbcc1 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -283,8 +283,8 @@ spider_net_free_chain(struct spider_net_card *card,
+ 		descr = descr->next;
+ 	} while (descr != chain->ring);
  
- 		/* Under some virtual environments, extended PCI regs are
- 		 * inaccessible, in which case the above read will have failed.
+-	dma_free_coherent(&card->pdev->dev, chain->num_desc,
+-	    chain->hwring, chain->dma_addr);
++	dma_free_coherent(&card->pdev->dev, chain->num_desc * sizeof(struct spider_net_hw_descr),
++			  chain->hwring, chain->dma_addr);
+ }
+ 
+ /**
 -- 
 2.25.1
 
