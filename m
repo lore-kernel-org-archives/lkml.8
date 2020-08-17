@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4910AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5AEB2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B682072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688028;
-	bh=msfHZB/aPIGZpyysxEQ7LircdRonn/9EUe4wJFtCK4s=;
+	s=default; t=1597688033;
+	bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6pmYhkpNPI6oaNVPS2jeqBbDXGxI4nMMfh7P0I55spkruDLuO/PCCnWCrzCO3uS7
-	 Xu4HWkRjoK4pUnDIx1qwkBO66H9+kYijz2rrCZWFEC3iXH7nOrnSCJ6Fl0qS9tZ6dA
-	 ucCc24DKRfyw6QLnWYTjereJGCHR3tMLHsOBBLuk=
+	b=gZelIcI7hHotfNR+d21EXcoipFHWi0q/tiRRiPxG1ZYUy/+7lzkLbJivYKnMIj8f2
+	 YpwnFcYipXk/iGzB0wSPUW4uWIPO7zFdXY5F0wR/Sm8MPtXLbwupVueU0aLsTh0O/2
+	 oWJBG9bnh26wpveYM08cOgoT2mIJRHPHCl/DlRG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390410AbgHQSNq (ORCPT
+        id S2390540AbgHQSNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53824 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbgHQQGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:06:52 -0400
+        id S1731057AbgHQQGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CCD020885;
-        Mon, 17 Aug 2020 16:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35CD0208C7;
+        Mon, 17 Aug 2020 16:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680401;
-        bh=msfHZB/aPIGZpyysxEQ7LircdRonn/9EUe4wJFtCK4s=;
+        s=default; t=1597680396;
+        bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RV89GmXM++iSvirQH3TXPcHle3BYBcLuEARcZVVpYilZk8hCuprYGkN1IjiaxamhY
-         lonrdCuxGmLedmMWISNWbmta09ZQNZxvS4LtK8QEHruX/A9qrw1PxVIsZeS98YTw2s
-         lVpuzmnKz2q17kBxpy/bpCSt/6ek8R8mXYLNXcJk=
+        b=U6m1HglAbbjNNDW8sukIeJ4kR39vASH0YR2peic9pCeymqzTWSz9GxEhRxD9O1P1G
+         ZgXsTgc2tyXBwaNlId2VmQUDagmlVC8LEfNN3PI2ypmXcwEVMqJK3CUFgwv3pUDdDb
+         dkO2I/u4Ifn6HRYN3eltBpnr+iAxirDYlplF+Tz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 173/270] power: supply: check if calc_soc succeeded in pm860x_init_battery
-Date:   Mon, 17 Aug 2020 17:16:14 +0200
-Message-Id: <20200817143804.435845993@linuxfoundation.org>
+Subject: [PATCH 5.4 171/270] Smack: fix another vsscanf out of bounds
+Date:   Mon, 17 Aug 2020 17:16:12 +0200
+Message-Id: <20200817143804.347106048@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,56 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ccf193dee1f0fff55b556928591f7818bac1b3b1 ]
+[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
 
-clang static analysis flags this error
+This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
+vsscanf") where we added a bounds check on "rule".
 
-88pm860x_battery.c:522:19: warning: Assigned value is
-  garbage or undefined [core.uninitialized.Assign]
-                info->start_soc = soc;
-                                ^ ~~~
-soc is set by calling calc_soc.
-But calc_soc can return without setting soc.
-
-So check the return status and bail similarly to other
-checks in pm860x_init_battery and initialize soc to
-silence the warning.
-
-Fixes: a830d28b48bf ("power_supply: Enable battery-charger for 88pm860x")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
+Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/88pm860x_battery.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ security/smack/smackfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/power/supply/88pm860x_battery.c b/drivers/power/supply/88pm860x_battery.c
-index 5ca047b3f58fb..23e7d6447ae9d 100644
---- a/drivers/power/supply/88pm860x_battery.c
-+++ b/drivers/power/supply/88pm860x_battery.c
-@@ -433,7 +433,7 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
- 	int ret;
- 	int data;
- 	int bat_remove;
--	int soc;
-+	int soc = 0;
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index 840a192e93370..2bae1fc493d16 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -905,6 +905,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
  
- 	/* measure enable on GPADC1 */
- 	data = MEAS1_GP1;
-@@ -496,7 +496,9 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
- 	}
- 	mutex_unlock(&info->lock);
- 
--	calc_soc(info, OCV_MODE_ACTIVE, &soc);
-+	ret = calc_soc(info, OCV_MODE_ACTIVE, &soc);
-+	if (ret < 0)
-+		goto out;
- 
- 	data = pm860x_reg_read(info->i2c, PM8607_POWER_UP_LOG);
- 	bat_remove = data & BAT_WU_LOG;
+ 	for (i = 0; i < catlen; i++) {
+ 		rule += SMK_DIGITLEN;
++		if (rule > data + count) {
++			rc = -EOVERFLOW;
++			goto out;
++		}
+ 		ret = sscanf(rule, "%u", &cat);
+ 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+ 			goto out;
 -- 
 2.25.1
 
