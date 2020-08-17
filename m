@@ -2,176 +2,103 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE513C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03AA12063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oG2E2fsP"
+	by mail.kernel.org (Postfix) with ESMTP id 63F172063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685658;
+	bh=JlMazASo7t7j+lxiY0wrEYqEoBjyCQ5tvz9EhUeBBqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W9l+aO2NVWYULVazHu+tZBGIbU+uk4aNhzlGBw6pF52WSuZHsdfIFKiCO8RSis7Iy
+	 F1pw9YNoefdeAvVsfu1xt/mbWFUpEBu3CRs1e28ZRzAezU38b4zZxfHL8265ahYlv2
+	 nZZJQkP9iCRJlwq2coUdAT4pK31A4CMQw+B1QpY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgHQRdx (ORCPT
+        id S1730241AbgHQReQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:33:53 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:42671 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389020AbgHQQuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:50:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597683021; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GhyGcHtsJNSaWRlw4MXPmZ9Q7h5P+6kgTtX8VYoSKpY=;
- b=oG2E2fsPlOwWTfzzRyTRsU3HoA04Fk1ZdbyUSouafeqrGdiWxZphQ0Pu5GT39oUnC+LnwFzl
- BkJYXD/6Wqs+frqWc8morJVqkhTPUXkQ2QO2VQpOkgbiJ4z6ETz6iixXRqgdnmldRzxoMWNk
- V1yJ9yAYMYrt5ZPnWUmkAckQ3hU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f3ab512f2b697637a950740 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:49:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9E919C433AF; Mon, 17 Aug 2020 16:49:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 17 Aug 2020 13:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388973AbgHQQtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:49:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A69FC43391;
-        Mon, 17 Aug 2020 16:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7515720674;
+        Mon, 17 Aug 2020 16:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597682946;
+        bh=JlMazASo7t7j+lxiY0wrEYqEoBjyCQ5tvz9EhUeBBqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W6ooD0DRmdvqTgXKYpVJV6wDmkDHrOPWIkDevMC0CC9xZdc6kVJn+LyRL13dc9Swm
+         NJSYX+iFMkCvpmyuII6JN5/ePhPHLlrhgBLmft8I/dP9uQ5rHyuVxDVTuwr2XETXLI
+         IWZd/YApfXK9CX9HRA7AEms0jry9G+CPrJLICSPQ=
+Date:   Mon, 17 Aug 2020 18:49:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     jan.kiszka@siemens.com, jbeulich@suse.com,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        pedro.principeza@canonical.com
+Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
+ spurious entry again
+Message-ID: <20200817164924.GA721399@kroah.com>
+References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+ <20200817162156.GA715236@kroah.com>
+ <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 22:19:20 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Gross <agross@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-kernel-owner@vger.kernel.org,
-        Kevin Hilman <khilman@kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
-In-Reply-To: <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
-References: <20200811190252.10559-1-sibis@codeaurora.org>
- <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
- <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org>
- <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
- <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
- <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
-Message-ID: <33169e221707a2456397e478b275cfa9@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 14:14, Ulf Hansson wrote:
-> On Thu, 13 Aug 2020 at 19:26, Sibi Sankar <sibis@codeaurora.org> wrote:
->> 
->> On 2020-08-13 18:04, Ulf Hansson wrote:
->> > On Wed, 12 Aug 2020 at 19:03, Sibi Sankar <sibis@codeaurora.org> wrote:
->> >>
->> >> Uffe,
->> >> Thanks for taking time to review the
->> >> series!
->> >>
->> >> On 2020-08-12 15:15, Ulf Hansson wrote:
->> >> > On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
->> >> >>
->> >> >> This is for power domains which needs to stay powered on for suspend
->> >> >> but can be powered on/off as part of runtime PM. This flag is aimed at
->> >> >> power domains coupled to remote processors which enter suspend states
->> >> >> independent to that of the application processor. Such power domains
->> >> >> are turned off only on remote processor crash/shutdown.
->> >> >
->> >> > As Kevin also requested, please elaborate more on the use case.
->> >> >
->> >> > Why exactly must the PM domain stay powered on during system suspend?
->> >> > Is there a wakeup configured that needs to be managed - or is there a
->> >> > co-processor/FW behaviour that needs to be obeyed to?
->> >>
->> >> Yes this is a co-processor behavior that
->> >> needs to be obeyed. Specifically application
->> >> processor notifies the Always on Subsystem
->> >> (AOSS) that a particular co-processor is up
->> >> using the power domains exposed by AOSS QMP
->> >> driver. AOSS uses this information to wait
->> >> for the co-processors to suspend before
->> >> starting its sleep sequence. The application
->> >> processor powers off these power domains only
->> >> if the co-processor has crashed or powered
->> >> off.
->> >
->> > Thanks for clarifying!
->> >
->> > Although, can you please elaborate a bit more on the actual use case?
->> > What are the typical co-processor and what drivers are involved in
->> > managing it?
->> 
->> The co-processors using the power domains
->> exposed by qcom_aoss driver are modem,
->> audio dsp, compute dsp managed using
->> qcom_q6v5_mss and qcom_q6v5_pas driver.
->> 
->> >
->> > As you may know, runtime PM becomes disabled during system suspend of
->> > a device. Which means, if the driver tries to power off the
->> > coprocessor (via calling pm_runtime_put() for example), somewhere in
->> > the system suspend phase of the corresponding device, its attached PM
->> > domain stays powered on when managed by genpd.
->> 
->> The drivers aren't really expected
->> do anything during suspend/resume
->> pretty much because the co-processors
->> enter low-power modes independent to
->> that of the application processor. On
->> co-processor crash the remoteproc core
->> does a pm_stay_awake followed by a
->> pm_relax after crash recovery.
+On Mon, Aug 17, 2020 at 01:43:14PM -0300, Guilherme G. Piccoli wrote:
+> On 17/08/2020 13:21, Greg KH wrote:
+> > On Mon, Aug 17, 2020 at 12:36:25PM -0300, Guilherme G. Piccoli wrote:
+> >> Hi Greg / Thomas and all involved here. First, apologies for
+> >> necro-bumping this thread, but I'm working a backport of this patch to
+> >> kernel 4.15 (Ubuntu) and then I noticed we have it on stable, but only
+> >> in 4.19+.
+> >>
+> >> Since the fixes tag presents an old commit (since ~3.19), I'm curious if
+> >> we have a special reason to not have it on long-term stables, like 4.9
+> >> or 4.14. It's a subtle portion of arch code, so I'm afraid I didn't see
+> >> something that prevents its backport for previous versions.
+> > 
+> > What is the git commit id of this patch you are referring to, you didn't
+> > provide any context here :(
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Okay, thanks again for clarifying. You have convinced me about the
-> need for a new flag to cope with these use cases.
-> 
-> Would you mind updating the commit message with some of the
-> information you just provided?
-> 
-> Additionally, to make it clear that the flag should be used to keep
-> the PM domain powered on during system suspend, but only if it's
-> already powered on - please rename the flag to GENPD_FLAG_NO_SUSPEND,
-> and update the corresponding description of it in the header file.
+> I'm sorry, I hoped the subject + thread would suffice heh
 
-Thanks, naming it ^^ makes more sense :)
+There is no thread here :(
 
-https://lore.kernel.org/lkml/340a7aafcf0301ff3158a4e211992041@codeaurora.org/
+> So, the mainline commit is: f8a8fe61fec8 ("x86/irq: Seperate unused
+> system vectors from spurious entry again") [0]. The backport to 4.19
+> stable tree has the following id: fc6975ee932b .
 
-Also we wouldn't want to power on
-runtime suspended power domains with
-the NO_SUSPEND flag set, on resume as
-explained ^^. Do you agree with that
-as well?
+Wow, over 1 1/2 years old, can you remember individual patches that long
+ago?
 
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
+Anyway, did you try to backport the patch to older kernels to see if it
+was possible and could work?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+If so, great, please feel free to submit it to the
+stable@vger.kernel.org list and I will be glad to pick it up.
+
+thanks,
+
+greg k-h
