@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59839C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93569C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B7120716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648EC20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686175;
-	bh=7nvE3dkhdEe7sJvLakuPkpz8dtwTtFlRFnVNQXuA5ho=;
+	s=default; t=1597686184;
+	bh=lCX+33kBjmYRuJfN436MhKq8NdcKgsXc1fbu2fP+NFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uFVvhKa9dhj5oiLQKDLGC+cp6+8atHXlEF0px2G0t20nsWW+J1UDxpU0jhZYQRiWE
-	 Qoiizp/xf0Gt5vaFwKTN84orYeqCzbz1Y2JGIC3ZjaDqtZ8XTw6SrS8xevKL/NSZ1x
-	 8acEYvsQDUzYd1xl/J3gNvhZwkkTf6esSlFuEQiI=
+	b=x+B/xkgWM1EPFgxfYsW8um5cEAV0D6/XAjl5EOwsvOjXbnnHVnYPlKmyLSX9M2qhU
+	 FHIkgyvPcfESFHR4wTnNCUL9v2IRankHwc+DoMegUtsgldzKk78p866IUPB9+rz/F/
+	 /FNCk0bvilT1UTR4G31Ov4Zi/lI//klRUqJApk/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbgHQRmx (ORCPT
+        id S1731579AbgHQRnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731102AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D71022BEA;
-        Mon, 17 Aug 2020 16:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 218C722D6E;
+        Mon, 17 Aug 2020 16:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680976;
-        bh=7nvE3dkhdEe7sJvLakuPkpz8dtwTtFlRFnVNQXuA5ho=;
+        s=default; t=1597680983;
+        bh=lCX+33kBjmYRuJfN436MhKq8NdcKgsXc1fbu2fP+NFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8yoQhMRQkZIAT+TsyGCqzEaGr9JY2OxqTwKIm+XBYlm3yo3SYU5ayb6t1p+fEIPV
-         6H2RjFHo1NFvpXSSe7AhHXdY9OFk6HXjI5/MUCTepBvpdnfbd+mfcekCooG0G0Kn70
-         8/1uE3RGOh45ohMPB2IGEqHK69HdYrNaIksCg6oQ=
+        b=giRLJthvjGxinZ9M5OrE8Lz1MJ+BfLEY517KuZP6e6DsQPbW+x9mBm9AqlWeZyMLP
+         42y70cM9OJeoPPh/2e0mQuEHHSfPWUVJsHgWsxNvIYROdjRyM+2gT1AmlRWNfQxIx0
+         3zaBH//9hdHBDVGf7ctoTnBD8HiP5FJNpZ5jmlKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/168] Smack: prevent underflow in smk_set_cipso()
-Date:   Mon, 17 Aug 2020 17:17:14 +0200
-Message-Id: <20200817143738.859256032@linuxfoundation.org>
+Subject: [PATCH 4.19 106/168] Bluetooth: hci_serdev: Only unregister device if it was registered
+Date:   Mon, 17 Aug 2020 17:17:17 +0200
+Message-Id: <20200817143738.991499151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 42a2df3e829f3c5562090391b33714b2e2e5ad4a ]
+[ Upstream commit 202798db9570104728dce8bb57dfeed47ce764bc ]
 
-We have an upper bound on "maplevel" but forgot to check for negative
-values.
+We should not call hci_unregister_dev if the device was not
+successfully registered.
 
-Fixes: e114e473771c ("Smack: Simplified Mandatory Access Control Kernel")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/hci_serdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 981f582539acf..accd3846f1e3e 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -912,7 +912,7 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 	}
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 46e20444ba19b..d3fb0d657fa52 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -369,7 +369,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
  
- 	ret = sscanf(rule, "%d", &maplevel);
--	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
-+	if (ret != 1 || maplevel < 0 || maplevel > SMACK_CIPSO_MAXLEVEL)
- 		goto out;
+ 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-	hci_unregister_dev(hdev);
++	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
++		hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
  
- 	rule += SMK_DIGITLEN;
+ 	cancel_work_sync(&hu->write_work);
 -- 
 2.25.1
 
