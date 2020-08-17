@@ -2,144 +2,154 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A00C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6719620772
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF512078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BwB6onwT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wlg/dqCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgHQHVR (ORCPT
+        id S1726402AbgHQH0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:21:17 -0400
-Received: from mout.gmx.net ([212.227.17.20]:32923 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgHQHVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597648863;
-        bh=LDcWdHJDKvbRXTcscXlY+66WEBzsgmri1TA1vVDn7MY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=BwB6onwTkfOx2BrJAfJ5l0uRVFpjF/4OPw1ONlxAn3nW9juC5b3AjZh69iMNRcO63
-         ormbok+vsD9Ekv5eATRZ7b1sg5ZXbQKtDeMgTel0nRBZ5DNjsV/xdHtsTDuylWB1AF
-         HWJJYn7elivEGatvPI+7IKtTqVRN3fNon4DxxS1o=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.223.54.124]) by mail.gmx.com
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MtfNf-1kxBKa32Br-00vB7g; Mon, 17 Aug 2020 09:21:03 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 75DC5800D9; Mon, 17 Aug 2020 09:20:59 +0200 (CEST)
-From:   Sven Joachim <svenjoac@gmx.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Vazquez <brianvv@google.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-References: <20200729212721.1ee4eef8@canb.auug.org.au>
-Date:   Mon, 17 Aug 2020 09:20:59 +0200
-In-Reply-To: <20200729212721.1ee4eef8@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 29 Jul 2020 21:27:21 +1000")
-Message-ID: <87ft8lwxes.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:+gMeo5T9ZZBMhvY3gxLb824G7oBZvNHYbIZviNetkD4ThGjJTtb
- d16OaFHdenKQ3Ufx87ia4cqNIM+INUVK+3Ni4KrHLyo+QjVc+YJxBVSmjv0tXSoBVd88LWT
- zyf/vb6aEygqglWm27aB4K12eRMUYQSpHHFAN0reOamIFJdldkPL9JP5LpcBrAvskeWulxm
- ioGyfEwKpOLEql6D/ukLA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LJiQNcqpV6I=:ZE2E42FsBcKDzna8tFNlkj
- O5fjb3yF8RDFlWt+ed6CufAHrYWdazHkSIL+ir2Fwtzwc6HT3IS18WP65K3Uqn7Mtg4DPbJ2u
- HN+QvIhyQgviJUNgLk2QF/ToC0mRKaoPGJSZ4ny9leArpo+XVeXjl2OnISwf1T7GzDFDNLdDn
- 3uKLAaYPj75YH834DjjJUgCpSK2uIA7SV4UPUyrrdzsilzK3JzTR/wOlrK5XRtG5fA7IscdO/
- zM8ae4SJly1cIpzNTOcf5MoruhhiX0/XOXU9AVHpgbbHzsD2xOIFZIm2fqTntwC72sTqtf+y3
- 46XxsvvJjA57Rc91XDgUYbWnhZWbdLPGiL7+IQlRgEkqw0+N+YNdcdZncA9gWLZKVtcenTsib
- uASWBj4SVUA4yjd8OUqZni5VJgLIBhbt4vdhKv0//fwyj2FB6YSs4qd+55xeU5SX9ehY7114t
- l1i38JgnXdokpdIVuqqdoGWH0VUbCj04bvEllwAE9TI9C7YmcdCaik8TZKaR14AwQT56Nr2Ox
- CH+T1BvGtG4ykG3+w2ic7pNAqltMVc91PbxJ0yyLCo61pIUF2PveBtDba+Wp97wzlPfmlvJBK
- P3lytJN6sbvtoSqsivQy1XjxVqz7XwzEYJV+VChA9mDtSuTCSYNTSZkjRLU8qxeX2LcA5tIj6
- g+abJyvZ4tQhlzok2ylthf7ahVU978/GVQg6K0LLTGMQEQXhlT8yJLKx8Dcm0k5C6blIN+gVp
- m4E/z59b1yDlfxUOsxjFFsI/WTSI4TrZp1AvGfj8jMcMPDHsNX60H4gUiinfS1/Xn1gS/UzP3
- GJ5x8FxtBZg9yknzdgkuqFpERs6jdkXguxgKM2Q0bWDhMSqzK6GQQ1TagtsY0al2VdyhkVk0N
- j7mSdKqkTbCtC1v5hV5io0rNwybEvjw/VyzjL3q1w5UXG0EoqGty/n8KxLy2HK4p2D1+9eWKB
- doUE5k3s1m7WbYyhjSCLYj+pcLLNjPB95+HmSxglSKRMAY9aa+E1pHlKg97AWevMdsAEANTRb
- xAZYZS/YcFOA4HdPtdYlywpBwamw+Ud+SbWaIGtixYcilKj1gz5jvqpg/5z3amT4rELuFY+Y0
- azC3T0VzIHDyaL+ZDPlSMX/+GaKRGSA8TSoNULubI1xsZZnqxafAqp6JcScjcqUAyrmoILnZd
- nedslp8khoB1ka+Asez9KbOlPnIWOTMWlUY6g7+VI/SxMgl9xBoG+x6yYjzHkLVsSvBmbY0ZM
- raAxobcbT2NzByNoV
+        Mon, 17 Aug 2020 03:26:53 -0400
+Received: from mail-eopbgr20068.outbound.protection.outlook.com ([40.107.2.68]:33046
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725765AbgHQH0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:26:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FYExHsaJRmWXlfghFtSjstthJCNs+aWe54tFu9KasWL3USRMX5xs986epd+pWMVAB5NzCu3v+dM13nsEo3aK2XB3kaLwiqF78oOKjj/1k6QDabo50jhAp65aGlh/R9bXVHohu4j3lX4obNg1IMEiHEr+nbTeL8OV0O2xVCNMMIXQYiDF2GgvuLOL84ihi4ltSLKMWJ38HdRkKKhSZWM1LUTwf8DYLLTLCm9SiN56/pabrVFiqyqKFGDt6TmPX0YCkYnJKkSeksbqrIhZoYhTvs6d2suutLYwTeFz8zwgPitqzBfw4JOy8StgzVcG5RTAC39O/hvJsgxulZ33YpfqDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Eo30cFCQGu0R+YOYTvedSn19zuwocmAoDQ4hp9JVY3w=;
+ b=UU3lGAEdTczCqwuLNHgiWVY+t+gyNXTAaTdfRLgxf5nwXrQA30AjF2PI+zB6wbmS1hhhhkrD3UtZli9tTXpAozg07B5ohI25EB8l6eN26DQ7c4GiZDlgcbAxUxlNqry9A2SQrIIwDG8r4FJfRX0Fa9Nth2y0IWpCwnfHrhGWORZZ5d8Cj07qjrpO9ljZ8J9eCw9Mxrs/l3WHglh2KdnucQRfGdTW0IiEXH5q25hy7qXbS4dL1mIfq9nErtfCZ0rxiqJiwNtQjxz5HrUReh6+OBAbjR0J9t/7yC2drpPVltVRuWcTgw20SRQ+mMgPBx4IF+x+RKqxeZWoWap9I8jVGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Eo30cFCQGu0R+YOYTvedSn19zuwocmAoDQ4hp9JVY3w=;
+ b=Wlg/dqClbubFm45aIRhzhIq/mrswSUEawLz3SQ7Yn6doZTZSMdVPpYUe52d99zbHuTeSxkSEDHkjiFfxSFQkQT3eLe+skX0drBPzZBuzhgGfl3jjZ4lHcDWqtojb2KIEGqEL2BfBeOyDXWxJHP9REAO2UhlIvcke/BJgV2CEK3M=
+Received: from AM8PR04MB7315.eurprd04.prod.outlook.com (2603:10a6:20b:1d4::7)
+ by AM0PR04MB5858.eurprd04.prod.outlook.com (2603:10a6:208:132::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Mon, 17 Aug
+ 2020 07:26:42 +0000
+Received: from AM8PR04MB7315.eurprd04.prod.outlook.com
+ ([fe80::c10b:eaf9:da9a:966e]) by AM8PR04MB7315.eurprd04.prod.outlook.com
+ ([fe80::c10b:eaf9:da9a:966e%7]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
+ 07:26:42 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sven Van Asbroeck <thesven73@gmail.com>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v1 0/5] imx6qp QuadPlus: support improved enet
+ clocking
+Thread-Topic: [EXT] Re: [PATCH v1 0/5] imx6qp QuadPlus: support improved enet
+ clocking
+Thread-Index: AQHWdGaEHGWKlL1NRkSmOlcnqonx+qk75gRA
+Date:   Mon, 17 Aug 2020 07:26:42 +0000
+Message-ID: <AM8PR04MB7315BD29E65F11A6DF693224FF5F0@AM8PR04MB7315.eurprd04.prod.outlook.com>
+References: <20200713002512.28742-1-TheSven73@gmail.com>
+ <20200817071726.GA16951@dragon>
+In-Reply-To: <20200817071726.GA16951@dragon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e69c08ef-fc9e-4211-0ea5-08d8427ee382
+x-ms-traffictypediagnostic: AM0PR04MB5858:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5858B2F5243772817FB77088FF5F0@AM0PR04MB5858.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qc5MMKH5yqDUeCe/2Fk9O/GN1dEQChNMIS9gZVEzS+lijHsGBRAOVHcvPepul/QEK4aVTgAJMjCHYj03RYBocZXHtFzp0ksW/dzSgXfqbApVAZiy62Do+xtccde6QiLGTaTCUUbM5jHUL3k10r3sZcAOP6bxhkrjtLioTb2LzQ9RsS+H7RmvC/1+Cm46apS0Ay+ECzERDSaNb4T0D/oV6eVMmEyEb9Rju9rGMO6tLoHUxiLXYcWZqYubzthWMIVcebfrYGO++3aHvCtA2GBBl7S6J04MOLPJRbILXy5Rd8nt3DFHz76m657JT5yH62ez/asowhxaasM+dTuTiwIDPabRENSEFv9Suj1/fAutQsgAywMbd26Kw3yAEfvxNMKJ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7315.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(366004)(136003)(376002)(39860400002)(86362001)(5660300002)(4326008)(110136005)(8936002)(66946007)(64756008)(66446008)(66476007)(76116006)(2906002)(52536014)(66556008)(26005)(9686003)(83380400001)(186003)(55016002)(71200400001)(7696005)(6506007)(478600001)(54906003)(316002)(33656002)(8676002)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: KDVM51Js5x3vEHG6C4vFaq/H9LUycw8EUZFkKQSSJtwo9ZSg9gB/wW1cjxYBnAz3wqQNTLn5owE7wZVW5THM/WQGLyuZVWBmywu3KfBX0SvgLUSl0sv2pxoJeo2yl13drwu4xhE8g1PiaCsCeXs79Bbp/vvdYn5hT6vDQZtWo+v7oNUWN8zzEk+/D/aF5STBoPqydqfLhPL6ylFvJn2C+AhLt8eRgoiGTqBIx4A8X4u11zi+VXjV1TBS/uQpUQpkXO8/xzIGLR8cpBMLwg1zoJiyA+PTzyAyBn98Sj3Gq8jYFGrafzsx3opUnd9PIRVDRiGvCGMMpbW74TDrDY0Qwuv2Mw8JIKSdCV+9xMxgFPstOw7TGhVzsVZULI8mXTuXSoV7rpeb0QVAbwaAh78ZY/wCMJesQu4Cxw/ycobgSz+KgGtFkeUF/a8KIovtpb2jivHz+d14mimaLVoVtB791pa2SLdRccjz8n6Wj//f0lCfe7Ozvwz2o2c4NoApbr8J6xjZbGx3EDYdJoCDetOgC+XFMUDIw9qThHWpl6yh4jvwpN/yCXzkp0PrwM0HjDzhieW2hmwiC2CrnTZdL935+SrXunYv9kRhp5BhQBWPu9tubOQtsaeRhlEMUt4r3aLjFBNPQKblxYn/9XMH2jkzgw==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7315.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e69c08ef-fc9e-4211-0ea5-08d8427ee382
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 07:26:42.2551
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OrLWmIBEcqgphDYzrpH72pO+qigK1AKv9jom+g8vjKZtq/rrU7lkHEGcwyG3SYSp7S30qU5hAxBO7NYqLSA1Rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5858
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
+From: Shawn Guo <shawnguo@kernel.org> Sent: Monday, August 17, 2020 3:17 PM
+> On Sun, Jul 12, 2020 at 08:25:07PM -0400, Sven Van Asbroeck wrote:
+> > On the imx6qp QuadPlus, the h/w designers have improved enet clocking.
+> >
+> > This patchset extends the clock tree to reflect the situation on QuadPl=
+us.
+> >
+> > This allows board designers to choose the enet clocking method by
+> > making simple clocktree changes in the devicetree.
+> >
+> > Default setting: external routing of enet_ref from pad to pad.
+> >
+> > Example, change the default to enet_ref @ 125MHz clock routed internall=
+y:
+> >
+> > &fec {
+> >       assigned-clocks =3D <&clks IMX6QDL_CLK_ENET_PTP>,
+> >                         <&clks IMX6QDL_CLK_ENET_REF>;
+> >       assigned-clock-parents =3D <&clks IMX6QDL_CLK_ENET_REF>;
+> >       assigned-clock-rates =3D <0>, <125000000>; };
+> >
+> > To: Shawn Guo <shawnguo@kernel.org>
+> > To: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: NXP Linux Team <linux-imx@nxp.com>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-clk@vger.kernel.org
+> >
+> > Sven Van Asbroeck (5):
+> >   ARM: mach-imx6q: do not select enet PTP clock source on QuadPlus
+> >   clk: imx: add simple regmap-backed clock mux
+> >   dt-bindings: imx6qdl-clock: add QuadPlus enet clocks
+> >   clk: imx6q: support improved enet clocking on QuadPlus
+> >   ARM: dts: imx6qp: support improved enet clocking on QuadPlus
+>=20
+> Hi Fugang,
+>=20
+> Can you take a look at the series?
+>=20
+> Shawn
 
-> Hi all,
->
-> After merging the net-next tree, today's linux-next build (i386 defconfi=
-g)
-> failed like this:
->
-> x86_64-linux-gnu-ld: net/core/fib_rules.o: in function `fib_rules_lookup=
-':
-> fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
-> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to `=
-fib6_rule_match'
-> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to `=
-fib6_rule_action'
-> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to `=
-fib6_rule_action'
-> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to `=
-fib6_rule_suppress'
-> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to `=
-fib6_rule_suppress'
+In fact, Sven already sent the patch list to me in private for review
+due to miss cc to me. We discussed the series for long time and suppose
+Sven will send v2 patch set.
 
-FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
-41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
-apparently not sufficient.
-
-,----
-| $ grep IPV6 .config
-| CONFIG_IPV6=3Dm
-| # CONFIG_IPV6_ROUTER_PREF is not set
-| # CONFIG_IPV6_OPTIMISTIC_DAD is not set
-| # CONFIG_IPV6_MIP6 is not set
-| # CONFIG_IPV6_ILA is not set
-| # CONFIG_IPV6_VTI is not set
-| CONFIG_IPV6_SIT=3Dm
-| # CONFIG_IPV6_SIT_6RD is not set
-| CONFIG_IPV6_NDISC_NODETYPE=3Dy
-| CONFIG_IPV6_TUNNEL=3Dm
-| CONFIG_IPV6_MULTIPLE_TABLES=3Dy
-| # CONFIG_IPV6_SUBTREES is not set
-| # CONFIG_IPV6_MROUTE is not set
-| # CONFIG_IPV6_SEG6_LWTUNNEL is not set
-| # CONFIG_IPV6_SEG6_HMAC is not set
-| # CONFIG_IPV6_RPL_LWTUNNEL is not set
-| # CONFIG_NF_SOCKET_IPV6 is not set
-| # CONFIG_NF_TPROXY_IPV6 is not set
-| # CONFIG_NF_DUP_IPV6 is not set
-| # CONFIG_NF_REJECT_IPV6 is not set
-| # CONFIG_NF_LOG_IPV6 is not set
-| CONFIG_NF_DEFRAG_IPV6=3Dm
-`----
-
-> Caused by commit
->
->   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_=
-rules_ops")
->
-> # CONFIG_IPV6_MULTIPLE_TABLES is not set
->
-> I have reverted that commit for today.
-
-Cheers,
-       Sven
+Regards,
+Fugang
