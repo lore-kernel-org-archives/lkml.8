@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F47C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA856C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30206204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB57204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691830;
-	bh=j9meu59QtJZfpbeCevjf8a7s2tMKlBJtUzDL50SHWjI=;
+	s=default; t=1597691833;
+	bh=qvwbes1AHvccrhOI+t66UJQh65PbZFktxOl3LhPNjg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoXqILszxut/zOgwAaIjJ3obnL+yf+x2m1yoYhvd1u2NR9EoiKyrHuh5vNUCwl6+K
-	 0mRR1Y1VvwI+lu1K3aeBmCVap+av+OCdNl1Yr/WRrXJPn+O7b3OebwleJJvvTpBhxg
-	 DsksfwKt3AZfTgEKiU4ctahAJDbTd01rETkvOiaQ=
+	b=Cx8c6Fx8vw4dQqE+xNL/Ndx073aQ9/MXitqDGo5tEZWv+g02IMnfuv+bUW8I6f/Rw
+	 rptE6bvVv6O6N/eSNG1Gfr3oCaeoT+NGefjAr7sICeQ/aJrKiEbqRkuZ5oI0BR+m3R
+	 LmO4MrCZHDgso4Dp5Dk6SwiY2BL5aOVDjKHLTGfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404140AbgHQTRJ (ORCPT
+        id S2387430AbgHQPi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387439AbgHQPjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:39:03 -0400
+        id S1730329AbgHQPcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E8D22CB3;
-        Mon, 17 Aug 2020 15:39:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC622343B;
+        Mon, 17 Aug 2020 15:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678742;
-        bh=j9meu59QtJZfpbeCevjf8a7s2tMKlBJtUzDL50SHWjI=;
+        s=default; t=1597678364;
+        bh=qvwbes1AHvccrhOI+t66UJQh65PbZFktxOl3LhPNjg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqFeKL3x/nJiR8VNx+3K6mDsOEdpx39HLtOhHUNT6wt/WS2iwut77kdmWlUILLBSS
-         J9zEvflK4OcFLpsJAmaCKCslc5FD0KsUnl2nBpso9ko1jyA7h77msVF38YIr4pyxMR
-         pWXE/CHT9u1c6velLoF2KgSWvGbuUOJyZWkiwFmU=
+        b=g07J6lM42bqbdnduvitpf+zRSyf24E3FUvY/U+MlXMlcf9H3fn1zlYA7H5T6aJDG0
+         WAHxofxL6X7Jm4kJEexWCzo+Ie4UJncEgMA5PKJ+8lKFTrPKpvN8bgGFHihxpyWuX6
+         q/DAJI57If1r3RB99/CSxSkt30bxT0Pg8/2tjwI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 5.8 438/464] mtd: spi-nor: intel-spi: Simulate WRDI command
-Date:   Mon, 17 Aug 2020 17:16:31 +0200
-Message-Id: <20200817143854.755252885@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 308/464] bpf: Fix bpf_ringbuf_output() signature to return long
+Date:   Mon, 17 Aug 2020 17:14:21 +0200
+Message-Id: <20200817143848.552776166@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 44a80df4bfce02f5d51fe5040bdbdf10d0d78f4e upstream.
+[ Upstream commit e1613b5714ee6c186c9628e9958edf65e9d9cddd ]
 
-After spi_nor_write_disable() return code checks were introduced in the
-spi-nor front end intel-spi backend stopped to work because WRDI was never
-supported and always failed.
+Due to bpf tree fix merge, bpf_ringbuf_output() signature ended up with int as
+a return type, while all other helpers got converted to returning long. So fix
+it in bpf-next now.
 
-Just pretend it was sucessful and ignore the command itself. HW sequencer
-shall do the right thing automatically, while with SW sequencer we cannot
-do it anyway, because the only tool we had was preopcode and it makes no
-sense for WRDI.
-
-Fixes: bce679e5ae3a ("mtd: spi-nor: Check for errors after each Register Operation")
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/282e1305-fd08-e446-1a22-eb4dff78cfb4@nokia.com
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b0659d8a950d ("bpf: Fix definition of bpf_ringbuf_output() helper in UAPI comments")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200727224715.652037-1-andriin@fb.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/spi-nor/controllers/intel-spi.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/uapi/linux/bpf.h       | 2 +-
+ tools/include/uapi/linux/bpf.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/spi-nor/controllers/intel-spi.c
-+++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
-@@ -612,6 +612,15 @@ static int intel_spi_write_reg(struct sp
- 		return 0;
- 	}
- 
-+	/*
-+	 * We hope that HW sequencer will do the right thing automatically and
-+	 * with the SW sequencer we cannot use preopcode anyway, so just ignore
-+	 * the Write Disable operation and pretend it was completed
-+	 * successfully.
-+	 */
-+	if (opcode == SPINOR_OP_WRDI)
-+		return 0;
-+
- 	writel(0, ispi->base + FADDR);
- 
- 	/* Write the value beforehand */
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 8bd33050b7bbb..a3fd55194e0b1 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -3168,7 +3168,7 @@ union bpf_attr {
+  *	Return
+  *		The id is returned or 0 in case the id could not be retrieved.
+  *
+- * int bpf_ringbuf_output(void *ringbuf, void *data, u64 size, u64 flags)
++ * long bpf_ringbuf_output(void *ringbuf, void *data, u64 size, u64 flags)
+  * 	Description
+  * 		Copy *size* bytes from *data* into a ring buffer *ringbuf*.
+  * 		If **BPF_RB_NO_WAKEUP** is specified in *flags*, no notification
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 8bd33050b7bbb..a3fd55194e0b1 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -3168,7 +3168,7 @@ union bpf_attr {
+  *	Return
+  *		The id is returned or 0 in case the id could not be retrieved.
+  *
+- * int bpf_ringbuf_output(void *ringbuf, void *data, u64 size, u64 flags)
++ * long bpf_ringbuf_output(void *ringbuf, void *data, u64 size, u64 flags)
+  * 	Description
+  * 		Copy *size* bytes from *data* into a ring buffer *ringbuf*.
+  * 		If **BPF_RB_NO_WAKEUP** is specified in *flags*, no notification
+-- 
+2.25.1
+
 
 
