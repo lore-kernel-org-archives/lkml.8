@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FB3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2337F20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284CB20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690424;
-	bh=3TuEBXFDwH81f9PdjR3rOS4cyy+Ae7JpUowXQ+CxFCw=;
+	s=default; t=1597690429;
+	bh=GcF9Oe8I5nbSA24PxJyVGNRfg6ycr/7DGFIS9wrAiJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMlqBlQ+Ek7h0HxnnxEUfdovcNo6TbAfkPlgCbUJMzYwCShFY0Lid9VOVq5Yn4gIy
-	 VHet0U2pY6bgaHEcxCuY9Mp+7Tts8o31oDIg2Bn4Zky3znavU/DkDEOhmq7arTdUXB
-	 6QCovTNVzBFL5D7OSnB1+2c5cKnl/mNs4mPODXAs=
+	b=iL6TnH7Z1R1a7y4I1zIELnCruk+be7oGRlR9nhsdfJNJLZualMekryVrXQiSuJFOg
+	 mMgsRJsludEfWmgD3JHmoagypuJAbsgyxRKjyUfsmhKUwpipa8yjR/MdrroHGFYKbl
+	 017JVNzdEQtYidn3RKI8pv9zrz8gATFDAnOgCNf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391796AbgHQSxe (ORCPT
+        id S1730829AbgHQSxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387820AbgHQPvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:49 -0400
+        id S2387810AbgHQPvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5150920729;
-        Mon, 17 Aug 2020 15:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D1F2063A;
+        Mon, 17 Aug 2020 15:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679508;
-        bh=3TuEBXFDwH81f9PdjR3rOS4cyy+Ae7JpUowXQ+CxFCw=;
+        s=default; t=1597679503;
+        bh=GcF9Oe8I5nbSA24PxJyVGNRfg6ycr/7DGFIS9wrAiJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvRNuO9W9UK6krdbgITm5IRXDWyIDcKC3cutWLebK3/IXKK3e92LkyczECtLlbZoq
-         A4M7zW/VmXN2rsM/jLsZonDHHt3c7lf+bCjbY+UT6uze3Aco42nZ0W5NwdI1dNbCYJ
-         cbmOqmj7PDnxZDEUbbhKhyruP6nsphsnHGBHREQQ=
+        b=g2BqbETUNUbVV2azZJLUSzP93ifqC9MC0F3x6KF4fWwBL+g3lUiQi6gUILYEzuPx+
+         S2iy34r6/ILqZLLcbxApOnmSm53ZOtKGd2tq5KXtAYgR4u7N+/ez+uwHSPF+AXPfeD
+         UAia/Tn1pzN5oODyTApSjGyim+pupVfNoIV6XaGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 237/393] s390/bpf: Use brcl for jumping to exit_ip if necessary
-Date:   Mon, 17 Aug 2020 17:14:47 +0200
-Message-Id: <20200817143831.115758811@linuxfoundation.org>
+Subject: [PATCH 5.7 235/393] phy: armada-38x: fix NETA lockup when repeatedly switching speeds
+Date:   Mon, 17 Aug 2020 17:14:45 +0200
+Message-Id: <20200817143831.019725909@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,45 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 5fa6974471c5518a50bdd814067508dbcb477251 ]
+[ Upstream commit 1dea06cd643da38931382ebdc151efced201ffad ]
 
-"BPF_MAXINSNS: Maximum possible literals" test causes panic with
-bpf_jit_harden = 2. The reason is that BPF_JMP | BPF_EXIT is always
-emitted as brc, however, after removal of JITed image size
-limitations, brcl might be required.
+The mvneta hardware appears to lock up in various random ways when
+repeatedly switching speeds between 1G and 2.5G, which involves
+reprogramming the COMPHY.  It is not entirely clear why this happens,
+but best guess is that reprogramming the COMPHY glitches mvneta clocks
+causing the hardware to fail.  It seems that rebooting resolves the
+failure, but not down/up cycling the interface alone.
 
-Fix by using brcl when necessary.
+Various other approaches have been tried, such as trying to cleanly
+power down the COMPHY and then take it back through the power up
+initialisation, but this does not seem to help.
 
-Fixes: 4e9b4a6883dd ("s390/bpf: Use relative long branches")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200717165326.6786-4-iii@linux.ibm.com
+It was finally noticed that u-boot's last step when configuring a
+COMPHY for "SGMII" mode was to poke at a register described as
+"GBE_CONFIGURATION_REG", which is undocumented in any external
+documentation.  All that we have is the fact that u-boot sets a bit
+corresponding to the "SGMII" lane at the end of COMPHY initialisation.
+
+Experimentation shows that if we clear this bit prior to changing the
+speed, and then set it afterwards, mvneta does not suffer this problem
+on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
+
+This problem was found while script-testing phylink.
+
+This fix also requires the corresponding change to DT to be effective.
+See "ARM: dts: armada-38x: fix NETA lockup when repeatedly switching
+speeds".
+
+Fixes: 14dc100b4411 ("phy: armada38x: add common phy support")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Link: https://lore.kernel.org/r/E1jxtRj-0003Tz-CG@rmk-PC.armlinux.org.uk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/phy/marvell/phy-armada38x-comphy.c | 45 ++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index ac227ea13cbe7..650b89eb693e6 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -1267,8 +1267,12 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
- 		last = (i == fp->len - 1) ? 1 : 0;
- 		if (last)
- 			break;
--		/* j <exit> */
--		EMIT4_PCREL(0xa7f40000, jit->exit_ip - jit->prg);
-+		if (!is_first_pass(jit) && can_use_rel(jit, jit->exit_ip))
-+			/* brc 0xf, <exit> */
-+			EMIT4_PCREL_RIC(0xa7040000, 0xf, jit->exit_ip);
+diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
+index 6960dfd8ad8c9..0fe4089643342 100644
+--- a/drivers/phy/marvell/phy-armada38x-comphy.c
++++ b/drivers/phy/marvell/phy-armada38x-comphy.c
+@@ -41,6 +41,7 @@ struct a38x_comphy_lane {
+ 
+ struct a38x_comphy {
+ 	void __iomem *base;
++	void __iomem *conf;
+ 	struct device *dev;
+ 	struct a38x_comphy_lane lane[MAX_A38X_COMPHY];
+ };
+@@ -54,6 +55,21 @@ static const u8 gbe_mux[MAX_A38X_COMPHY][MAX_A38X_PORTS] = {
+ 	{ 0, 0, 3 },
+ };
+ 
++static void a38x_set_conf(struct a38x_comphy_lane *lane, bool enable)
++{
++	struct a38x_comphy *priv = lane->priv;
++	u32 conf;
++
++	if (priv->conf) {
++		conf = readl_relaxed(priv->conf);
++		if (enable)
++			conf |= BIT(lane->port);
 +		else
-+			/* brcl 0xf, <exit> */
-+			EMIT6_PCREL_RILC(0xc0040000, 0xf, jit->exit_ip);
- 		break;
- 	/*
- 	 * Branch relative (number of skipped instructions) to offset on
++			conf &= ~BIT(lane->port);
++		writel(conf, priv->conf);
++	}
++}
++
+ static void a38x_comphy_set_reg(struct a38x_comphy_lane *lane,
+ 				unsigned int offset, u32 mask, u32 value)
+ {
+@@ -97,6 +113,7 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
+ {
+ 	struct a38x_comphy_lane *lane = phy_get_drvdata(phy);
+ 	unsigned int gen;
++	int ret;
+ 
+ 	if (mode != PHY_MODE_ETHERNET)
+ 		return -EINVAL;
+@@ -115,13 +132,20 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
+ 		return -EINVAL;
+ 	}
+ 
++	a38x_set_conf(lane, false);
++
+ 	a38x_comphy_set_speed(lane, gen, gen);
+ 
+-	return a38x_comphy_poll(lane, COMPHY_STAT1,
+-				COMPHY_STAT1_PLL_RDY_TX |
+-				COMPHY_STAT1_PLL_RDY_RX,
+-				COMPHY_STAT1_PLL_RDY_TX |
+-				COMPHY_STAT1_PLL_RDY_RX);
++	ret = a38x_comphy_poll(lane, COMPHY_STAT1,
++			       COMPHY_STAT1_PLL_RDY_TX |
++			       COMPHY_STAT1_PLL_RDY_RX,
++			       COMPHY_STAT1_PLL_RDY_TX |
++			       COMPHY_STAT1_PLL_RDY_RX);
++
++	if (ret == 0)
++		a38x_set_conf(lane, true);
++
++	return ret;
+ }
+ 
+ static const struct phy_ops a38x_comphy_ops = {
+@@ -174,14 +198,21 @@ static int a38x_comphy_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+ 	priv->dev = &pdev->dev;
+ 	priv->base = base;
+ 
++	/* Optional */
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
++	if (res) {
++		priv->conf = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(priv->conf))
++			return PTR_ERR(priv->conf);
++	}
++
+ 	for_each_available_child_of_node(pdev->dev.of_node, child) {
+ 		struct phy *phy;
+ 		int ret;
 -- 
 2.25.1
 
