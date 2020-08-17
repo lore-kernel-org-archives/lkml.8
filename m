@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B827CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0179DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD7320758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57B120758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685912;
-	bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+	s=default; t=1597685920;
+	bh=uJITJNKX/Xsrl60nntsf/Tz4btf1aqR+2Nu4tLw7UWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKEkT37k5QJVXZgqWBvIxAY1tSBtinjkQz7RW1+yozfltZRz2w/3HNu7m+i7+QnWL
-	 AqWFFywKkZ3Nto5GHvfwXH0OJMNfbX320bqOnvQLLmv4CMc//7xkWbpdSIr4DTs9rf
-	 rbiTHNwYl04BgijoGMak+zgbggxu8HZW4KU6JO9Y=
+	b=WS9eonJ1sGF/GPIDPI04UReCQRt3EiPS8eLcAnmTe2CND51MFAAiqA/R1qEbtd5oO
+	 p+7oWmsaRcE8/ii+76gDi1nmIUXHqduv36dajBLUdB+y+eN8I4uuotXQdqNWcle8lH
+	 FsqcapjOdzwFRm1nydGYhDzyx4WARWrUK84tCOUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388601AbgHQRi3 (ORCPT
+        id S1730929AbgHQRii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56220 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731136AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731132AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8951722B40;
-        Mon, 17 Aug 2020 16:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015E722D03;
+        Mon, 17 Aug 2020 16:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681023;
-        bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+        s=default; t=1597681013;
+        bh=uJITJNKX/Xsrl60nntsf/Tz4btf1aqR+2Nu4tLw7UWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpnbngcSv52esDEA3E5xdoJs2Ayz1T0fdNZ10PCZfyXki149w4c3t/WlKqVtELuM9
-         /2bqJyoyDBCnC+sLnP4hz+EIh39HnlVbZ2Y9rgylLHqT8GfgSkdgZt9BhxdDD5ct3I
-         Vlxv46wN7OOkxfg4xyRhL99JvwFw4Gv9YAi0OH/o=
+        b=gDW8U6DfxeWBOHCqHqTs+AvB4S2+/sKIAk7aqLZRP9epu9w72u0YV87KssjHjEGLJ
+         CkBAir560Sif9+9uEpDLb+4TsQUIZ7QSNEU8u5ada+cHTRBUG/ipT4R7jvDQv0K2Uu
+         U6omVUSYpcqSnBVqr7Vu7aQiJpW1UBtEfCyHcqzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
-        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
-        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 152/168] fs/minix: reject too-large maximum file size
-Date:   Mon, 17 Aug 2020 17:18:03 +0200
-Message-Id: <20200817143741.260033045@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH 4.19 149/168] bitfield.h: dont compile-time validate _val in FIELD_FIT
+Date:   Mon, 17 Aug 2020 17:18:00 +0200
+Message-Id: <20200817143741.108649329@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -66,76 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
+commit 444da3f52407d74c9aa12187ac6b01f76ee47d62 upstream.
 
-If the minix filesystem tries to map a very large logical block number to
-its on-disk location, block_to_path() can return offsets that are too
-large, causing out-of-bounds memory accesses when accessing indirect index
-blocks.  This should be prevented by the check against the maximum file
-size, but this doesn't work because the maximum file size is read directly
-from the on-disk superblock and isn't validated itself.
+When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+compiler to deduce a case where _val can only have the value of -1 at
+compile time. Specifically,
 
-Fix this by validating the maximum file size at mount time.
+/* struct bpf_insn: _s32 imm */
+u64 imm = insn->imm; /* sign extend */
+if (imm >> 32) { /* non-zero only if insn->imm is negative */
+  /* inlined from ur_load_imm_any */
+  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+  if (__builtin_constant_p(__imm) && __imm > 255)
+    compiletime_assert_XXX()
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
-Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
-Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+checks that a given value is representable in one byte (interpreted as
+unsigned).
+
+FIELD_FIT() should return true or false at runtime for whether a value
+can fit for not. Don't break the build over a value that's too large for
+the mask. We'd prefer to keep the inlining and compiler optimizations
+though we know this case will always return false.
+
+Cc: stable@vger.kernel.org
+Fixes: 1697599ee301a ("bitfield.h: add FIELD_FIT() helper")
+Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/inode.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ include/linux/bitfield.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -155,6 +155,23 @@ static int minix_remount (struct super_b
- 	return 0;
- }
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -72,7 +72,7 @@
+  */
+ #define FIELD_FIT(_mask, _val)						\
+ 	({								\
+-		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
++		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
+ 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+ 	})
  
-+static bool minix_check_superblock(struct minix_sb_info *sbi)
-+{
-+	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
-+		return false;
-+
-+	/*
-+	 * s_max_size must not exceed the block mapping limitation.  This check
-+	 * is only needed for V1 filesystems, since V2/V3 support an extra level
-+	 * of indirect blocks which places the limit well above U32_MAX.
-+	 */
-+	if (sbi->s_version == MINIX_V1 &&
-+	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
-+		return false;
-+
-+	return true;
-+}
-+
- static int minix_fill_super(struct super_block *s, void *data, int silent)
- {
- 	struct buffer_head *bh;
-@@ -233,11 +250,12 @@ static int minix_fill_super(struct super
- 	} else
- 		goto out_no_fs;
- 
-+	if (!minix_check_superblock(sbi))
-+		goto out_illegal_sb;
-+
- 	/*
- 	 * Allocate the buffer map to keep the superblock small.
- 	 */
--	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
--		goto out_illegal_sb;
- 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
- 	map = kzalloc(i, GFP_KERNEL);
- 	if (!map)
 
 
