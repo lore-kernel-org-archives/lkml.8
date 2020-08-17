@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65434C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DADC2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462FF2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687983;
-	bh=u2l8rYnpqO1GxowdoZloj+Y5TmSk8RmfO86+JjBpaeA=;
+	s=default; t=1597687991;
+	bh=WWNC+Mxdw/AtG09yKiZXNty4nIwcaKcO/uQE8UhtNRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxUuGQZ+IWyAlKqo5Jk/sF3K3vpw9rrTri7phOy5EVra9iGsXsh1qKCtzRg5NUU+L
-	 WQhRAD/0h0VD0RY+qYEJpTYfPbD0aYLkit/XuTyFP87TPgWuGFr38OvEwPh9TjY49B
-	 4zyhP33PBADDVbEp515C0L+1CYfOv6gQ/TB5bxtY=
+	b=w68mSabaH0LlBcGCRS2ZIlAfgbxauu4+BPMSi2FHmRx5exFW8P9fiMPGxvIgrAY5o
+	 6ZC6W+KVlFF4wxwMO5f/RZW8SSKv3H59Ui2BlsCO1NRD3sdmzYqTu8a4L2NdFdIK5F
+	 +OPXBJmI/RAwDQrTS51GLeQC1Eb7/OK6SVY1EKlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390549AbgHQSNC (ORCPT
+        id S2390561AbgHQSNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54112 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbgHQQHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:07:25 -0400
+        id S1731063AbgHQQGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DEB720657;
-        Mon, 17 Aug 2020 16:06:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D0532245C;
+        Mon, 17 Aug 2020 16:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680419;
-        bh=u2l8rYnpqO1GxowdoZloj+Y5TmSk8RmfO86+JjBpaeA=;
+        s=default; t=1597680406;
+        bh=WWNC+Mxdw/AtG09yKiZXNty4nIwcaKcO/uQE8UhtNRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vf1AlNK74UTneIhxgIRXftmbr5Es5M9f4iUFyJ3a1/bzc+3YgGpDKzRqliWR8gCdV
-         iOoPO7msDr3A60Di3IuBzxi29FckXKjQwIsqV7rda2YgSXcEUbiuuPImIYEWTWZ6TY
-         ZAJPB4uMo9I0o5IWWv22t26ff2DFSVcaHDeFtscs=
+        b=i4dSj3pvUbZOKlHUTvnu2NeoAe7TJ1GqRfYX0rJlJkXBpC0oo3uDUeZbFkHkvG8dv
+         jUFwSURoUnvM5mctyWWhpDRkZ9yOxOR+n4LR6fqyDNlCdaGvh+1/t+Y5M8H9Ula1Jb
+         8n96fs1DG+nbqLjfOZ5yCX3R+dAL3cBsMbj5mf8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 179/270] selftests/powerpc: Squash spurious errors due to device removal
-Date:   Mon, 17 Aug 2020 17:16:20 +0200
-Message-Id: <20200817143804.722146803@linuxfoundation.org>
+Subject: [PATCH 5.4 175/270] Bluetooth: hci_serdev: Only unregister device if it was registered
+Date:   Mon, 17 Aug 2020 17:16:16 +0200
+Message-Id: <20200817143804.535366869@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,66 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 5f8cf6475828b600ff6d000e580c961ac839cc61 ]
+[ Upstream commit 202798db9570104728dce8bb57dfeed47ce764bc ]
 
-For drivers that don't have the error handling callbacks we implement
-recovery by removing the device and re-probing it. This causes the sysfs
-directory for the PCI device to be removed which causes the following
-spurious error to be printed when checking the PE state:
+We should not call hci_unregister_dev if the device was not
+successfully registered.
 
-Breaking 0005:03:00.0...
-./eeh-basic.sh: line 13: can't open /sys/bus/pci/devices/0005:03:00.0/eeh_pe_state: no such file
-0005:03:00.0, waited 0/60
-0005:03:00.0, waited 1/60
-0005:03:00.0, waited 2/60
-0005:03:00.0, waited 3/60
-0005:03:00.0, waited 4/60
-0005:03:00.0, waited 5/60
-0005:03:00.0, waited 6/60
-0005:03:00.0, waited 7/60
-0005:03:00.0, Recovered after 8 seconds
-
-We currently try to avoid this by checking if the PE state file exists
-before reading from it. This is however inherently racy so re-work the
-state checking so that we only read from the file once, and we squash any
-errors that occur while reading.
-
-Fixes: 85d86c8aa52e ("selftests/powerpc: Add basic EEH selftest")
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200727010127.23698-1-oohall@gmail.com
+Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/eeh/eeh-functions.sh | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_serdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-index f52ed92b53e74..00dc32c0ed75c 100755
---- a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-+++ b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-@@ -5,12 +5,17 @@ pe_ok() {
- 	local dev="$1"
- 	local path="/sys/bus/pci/devices/$dev/eeh_pe_state"
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 4652896d49908..ad2f26cb2622e 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -357,7 +357,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
  
--	if ! [ -e "$path" ] ; then
-+	# if a driver doesn't support the error handling callbacks then the
-+	# device is recovered by removing and re-probing it. This causes the
-+	# sysfs directory to disappear so read the PE state once and squash
-+	# any potential error messages
-+	local eeh_state="$(cat $path 2>/dev/null)"
-+	if [ -z "$eeh_state" ]; then
- 		return 1;
- 	fi
+ 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-	hci_unregister_dev(hdev);
++	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
++		hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
  
--	local fw_state="$(cut -d' ' -f1 < $path)"
--	local sw_state="$(cut -d' ' -f2 < $path)"
-+	local fw_state="$(echo $eeh_state | cut -d' ' -f1)"
-+	local sw_state="$(echo $eeh_state | cut -d' ' -f2)"
- 
- 	# If EEH_PE_ISOLATED or EEH_PE_RECOVERING are set then the PE is in an
- 	# error state or being recovered. Either way, not ok.
+ 	cancel_work_sync(&hu->write_work);
 -- 
 2.25.1
 
