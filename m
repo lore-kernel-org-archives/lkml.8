@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88511C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1FAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668A0238A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D99E238A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677873;
-	bh=F31uPowNJjNMfFMctdd2MXIKeA3ecNKO28u5QHm02Fg=;
+	s=default; t=1597677876;
+	bh=6GjrX3vgGRkDhD7NBWNBJhQdyA9DGy1SvAWjflW4pFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWvkjPXmDgSm4vdnSHx2mZ1GsbjRcM1ilvXdLOM/WnIT+EboRrutEmfm7kL7k+Uj2
-	 xpAlekZnO9oaMj3SLGb+tnckYRkokS/UrqcIhvjwDc/147/TWxsrgC7ImoIvcmS0Dz
-	 aH960I1ElLt8Ceoa+htqBV2avpFSWuQTAb/Njn9I=
+	b=NQAmHRZVEjAbAes0DjjyudsdUr7r+DTyzFDBtGoU6E7wAtqStgCbFls5JAYqiXHzb
+	 bqabVsX8rptd71KNvL4NPDZuXLACwMk7tt21mun7APdR+bZ+lnncW8Xh2iAMBDldY2
+	 tjMpUDqZx2JB71NRgXMA9copPWerU79HsUjWxRCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgHQPYb (ORCPT
+        id S1729664AbgHQPYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbgHQPXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:08 -0400
+        id S1729525AbgHQPXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8BAB22BEA;
-        Mon, 17 Aug 2020 15:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18EBA22E00;
+        Mon, 17 Aug 2020 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677786;
-        bh=F31uPowNJjNMfFMctdd2MXIKeA3ecNKO28u5QHm02Fg=;
+        s=default; t=1597677797;
+        bh=6GjrX3vgGRkDhD7NBWNBJhQdyA9DGy1SvAWjflW4pFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0zH/8mCSBLbLBey/6Kjkdt5nEF3INkygIgJA4u3PjgCgynQBOleL1BF14zDBIHK5A
-         T2aaqd8gLO4kUFghObV+KkkVZI6I5wQmB7IH/zMyt52IFOZx2Yc7WvpAVWmD8xARok
-         q47A/tNeUiE9k8ZNwx7aAQ54Ny+hWFTScOqTzEPA=
+        b=f1qB2BQMrL4OdBx7AAO5dHGkvMBoLg+Nm3dHRTQj9Xo+1S+UanUPYAw2vjP+XYzg0
+         QWpvY5pbXr/QuOXzxGXgXGcfiHY2uaYJfk8AV2n+nGSokuiYgor0QBTYgKO6IQgBb5
+         5SqjyC+JArtgeZf3GNtRB1xxI9dNFwdE/oHx3aEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 107/464] net: phy: mscc: restore the base page in vsc8514/8584_config_init
-Date:   Mon, 17 Aug 2020 17:11:00 +0200
-Message-Id: <20200817143838.922996158@linuxfoundation.org>
+Subject: [PATCH 5.8 111/464] drm/amdgpu/debugfs: fix ref count leak when pm_runtime_get_sync fails
+Date:   Mon, 17 Aug 2020 17:11:04 +0200
+Message-Id: <20200817143839.121606604@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,54 +61,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 6119dda34e5d0821959e37641b287576826b6378 ]
+[ Upstream commit 9eee152aab56d374edb9ad21b3db05f5cdda2fe6 ]
 
-In the vsc8584_config_init and vsc8514_config_init, the base page is set
-to 'GPIO', configuration is done, and the page is never explicitly
-restored to the standard page. No bug was triggered as it turns out
-helpers called in those config_init functions do modify the base page,
-and set it back to standard. But that is dangerous and any modification
-to those functions would introduce bugs. This patch fixes this, to
-improve maintenance, by restoring the base page to 'standard' once
-'GPIO' accesses are completed.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mscc/mscc_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 95 +++++++++++++++------
+ 1 file changed, 70 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 5ddc44f87eaf0..8f5f2586e7849 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1379,6 +1379,11 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	if (ret)
- 		goto err;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index a414da22a359c..386b979e08522 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -223,12 +223,16 @@ static int  amdgpu_debugfs_process_reg_op(bool read, struct file *f,
+ 	*pos &= (1UL << 22) - 1;
  
-+	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			     MSCC_PHY_PAGE_STANDARD);
-+	if (ret)
-+		goto err;
-+
- 	if (!phy_interface_is_rgmii(phydev)) {
- 		val = PROC_CMD_MCB_ACCESS_MAC_CONF | PROC_CMD_RST_CONF_PORT |
- 			PROC_CMD_READ_MOD_WRITE_PORT;
-@@ -1751,7 +1756,11 @@ static int vsc8514_config_init(struct phy_device *phydev)
- 	val &= ~MAC_CFG_MASK;
- 	val |= MAC_CFG_QSGMII;
- 	ret = phy_base_write(phydev, MSCC_PHY_MAC_CFG_FASTLINK, val);
-+	if (ret)
-+		goto err;
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
  
-+	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			     MSCC_PHY_PAGE_STANDARD);
- 	if (ret)
- 		goto err;
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
  
+ 	if (use_bank) {
+ 		if ((sh_bank != 0xFFFFFFFF && sh_bank >= adev->gfx.config.max_sh_per_se) ||
+@@ -332,12 +336,16 @@ static ssize_t amdgpu_debugfs_regs_pcie_read(struct file *f, char __user *buf,
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -387,12 +395,16 @@ static ssize_t amdgpu_debugfs_regs_pcie_write(struct file *f, const char __user
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -443,12 +455,16 @@ static ssize_t amdgpu_debugfs_regs_didt_read(struct file *f, char __user *buf,
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -498,12 +514,16 @@ static ssize_t amdgpu_debugfs_regs_didt_write(struct file *f, const char __user
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -554,12 +574,16 @@ static ssize_t amdgpu_debugfs_regs_smc_read(struct file *f, char __user *buf,
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -609,12 +633,16 @@ static ssize_t amdgpu_debugfs_regs_smc_write(struct file *f, const char __user *
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -764,12 +792,16 @@ static ssize_t amdgpu_debugfs_sensor_read(struct file *f, char __user *buf,
+ 	valuesize = sizeof(values);
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_dpm_read_sensor(adev, idx, &values[0], &valuesize);
+ 
+@@ -842,12 +874,16 @@ static ssize_t amdgpu_debugfs_wave_read(struct file *f, char __user *buf,
+ 	simd = (*pos & GENMASK_ULL(44, 37)) >> 37;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_virt_enable_access_debugfs(adev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	/* switch to the specific se/sh/cu */
+ 	mutex_lock(&adev->grbm_idx_mutex);
+@@ -977,6 +1013,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
+ 	}
+ 
+ err:
++	pm_runtime_put_autosuspend(adev->ddev->dev);
+ 	kfree(data);
+ 	amdgpu_virt_disable_access_debugfs(adev);
+ 	return result;
+@@ -1003,8 +1040,10 @@ static ssize_t amdgpu_debugfs_gfxoff_write(struct file *f, const char __user *bu
+ 		return -EINVAL;
+ 
+ 	r = pm_runtime_get_sync(adev->ddev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	while (size) {
+ 		uint32_t value;
+@@ -1140,8 +1179,10 @@ static int amdgpu_debugfs_test_ib(struct seq_file *m, void *data)
+ 	int r = 0, i;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	/* Avoid accidently unparking the sched thread during GPU reset */
+ 	mutex_lock(&adev->lock_reset);
+@@ -1197,8 +1238,10 @@ static int amdgpu_debugfs_evict_vram(struct seq_file *m, void *data)
+ 	int r;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	seq_printf(m, "(%d)\n", amdgpu_bo_evict_vram(adev));
+ 
+@@ -1216,8 +1259,10 @@ static int amdgpu_debugfs_evict_gtt(struct seq_file *m, void *data)
+ 	int r;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return r;
++	}
+ 
+ 	seq_printf(m, "(%d)\n", ttm_bo_evict_mm(&adev->mman.bdev, TTM_PL_TT));
+ 
+@@ -1417,16 +1462,16 @@ static int amdgpu_debugfs_sclk_set(void *data, u64 val)
+ 		return -EINVAL;
+ 
+ 	ret = pm_runtime_get_sync(adev->ddev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(adev->ddev->dev);
+ 		return ret;
++	}
+ 
+ 	if (is_support_sw_smu(adev)) {
+ 		ret = smu_get_dpm_freq_range(&adev->smu, SMU_SCLK, &min_freq, &max_freq, true);
+ 		if (ret || val > max_freq || val < min_freq)
+ 			return -EINVAL;
+ 		ret = smu_set_soft_freq_range(&adev->smu, SMU_SCLK, (uint32_t)val, (uint32_t)val, true);
+-	} else {
+-		return 0;
+ 	}
+ 
+ 	pm_runtime_mark_last_busy(adev->ddev->dev);
 -- 
 2.25.1
 
