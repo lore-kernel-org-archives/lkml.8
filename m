@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15C8E22C9F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4109523121
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678733;
-	bh=g3QlPt+fYoFXfI9NUC9KnWXkq1N1N9qW6yj5j+Y6zoo=;
+	s=default; t=1597678752;
+	bh=LM7aT/HeJjMPJLV5ht+dLlW1UMqg43OuEWJp+4254ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aO0FeyqQFPmnTGE275Dcuz0rwMSGlOdeRHYybmtuNm4H+blSxHHWDxz+OMbGiIPiV
-	 1r9oHUH100xntVWzom7wVLqzH2C5cNJRAhN9nF9Wnek0rO8wuDybXq8llUuHaK59Sm
-	 TR0bxV4rIHGDkh1dfn9PWv3RqIG+yQio+FJ0eHz0=
+	b=2a3xJ8UGR8JXyt9r2ioDN3tg8C8AbaX8r1mAPJgNTuQx7zEqr8AcGZRUcAOwLDFtx
+	 Qp2U+mEc8Ir9eqx3e9VkKjHLNcozk92I1KE+D5xmU8QrMDB1SdrCKK+TrvmzLrxBvz
+	 IVpuMA7mL3lvNDCJ87n9hffmdyXYoqi4JQXEFX9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgHQPit (ORCPT
+        id S2387446AbgHQPjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60722 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730325AbgHQPcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:42 -0400
+        id S1730332AbgHQPcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCDC5208B3;
-        Mon, 17 Aug 2020 15:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CECB123977;
+        Mon, 17 Aug 2020 15:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678362;
-        bh=g3QlPt+fYoFXfI9NUC9KnWXkq1N1N9qW6yj5j+Y6zoo=;
+        s=default; t=1597678367;
+        bh=LM7aT/HeJjMPJLV5ht+dLlW1UMqg43OuEWJp+4254ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNJb+zCPHqtkf0ZHlQuGZ1lCZJhKTbg/Q0Izd2KpsyMmbupX6bWQJ1wU3Pwd8o9vd
-         +uwLwS4+Y3asL+NcSMcI7PNV2yFYpGzyGO/AGqWLfcT/5HGMVQsDYzK5I1gCd2skPZ
-         KeAvRqcsGbSWu2vQByN3reWlIbChm+m3gzn9m1ug=
+        b=2GAjVDSY0nPGbH0pL2BGESLcRTGaOrfiyauRnXNLjXyGsfLl8U0ULQ15DGO0dUlhX
+         fKg4PY9jCk8CwpQedCDqAkkI9MrwlRMGVwgxWm58iLaPPhcouRx/QpHQguPnCn+h65
+         ZGKd1LQi4AlC4Vu8zFyHfyi8a+sugIwlWRcsZbk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        stable@vger.kernel.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
         Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 307/464] Bluetooth: hci_serdev: Only unregister device if it was registered
-Date:   Mon, 17 Aug 2020 17:14:20 +0200
-Message-Id: <20200817143848.505306095@linuxfoundation.org>
+Subject: [PATCH 5.8 309/464] Bluetooth: Fix suspend notifier race
+Date:   Mon, 17 Aug 2020 17:14:22 +0200
+Message-Id: <20200817143848.600261395@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,35 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-[ Upstream commit 202798db9570104728dce8bb57dfeed47ce764bc ]
+[ Upstream commit 4e8c36c3b0d73d46aa27cfd4308aaa445a1067df ]
 
-We should not call hci_unregister_dev if the device was not
-successfully registered.
+Unregister from suspend notifications and cancel suspend preparations
+before running hci_dev_do_close. Otherwise, the suspend notifier may
+race with unregister and cause cmd_timeout even after hdev has been
+freed.
 
-Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Below is the trace from when this panic was seen:
+
+[  832.578518] Bluetooth: hci_core.c:hci_cmd_timeout() hci0: command 0x0c05 tx timeout
+[  832.586200] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[  832.586203] #PF: supervisor read access in kernel mode
+[  832.586205] #PF: error_code(0x0000) - not-present page
+[  832.586206] PGD 0 P4D 0
+[  832.586210] PM: suspend exit
+[  832.608870] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[  832.613232] CPU: 3 PID: 10755 Comm: kworker/3:7 Not tainted 5.4.44-04894-g1e9dbb96a161 #1
+[  832.630036] Workqueue: events hci_cmd_timeout [bluetooth]
+[  832.630046] RIP: 0010:__queue_work+0xf0/0x374
+[  832.630051] RSP: 0018:ffff9b5285f1fdf8 EFLAGS: 00010046
+[  832.674033] RAX: ffff8a97681bac00 RBX: 0000000000000000 RCX: ffff8a976a000600
+[  832.681162] RDX: 0000000000000000 RSI: 0000000000000009 RDI: ffff8a976a000748
+[  832.688289] RBP: ffff9b5285f1fe38 R08: 0000000000000000 R09: ffff8a97681bac00
+[  832.695418] R10: 0000000000000002 R11: ffff8a976a0006d8 R12: ffff8a9745107600
+[  832.698045] usb 1-6: new full-speed USB device number 119 using xhci_hcd
+[  832.702547] R13: ffff8a9673658850 R14: 0000000000000040 R15: 000000000000001e
+[  832.702549] FS:  0000000000000000(0000) GS:ffff8a976af80000(0000) knlGS:0000000000000000
+[  832.702550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  832.702550] CR2: 0000000000000000 CR3: 000000010415a000 CR4: 00000000003406e0
+[  832.702551] Call Trace:
+[  832.702558]  queue_work_on+0x3f/0x68
+[  832.702562]  process_one_work+0x1db/0x396
+[  832.747397]  worker_thread+0x216/0x375
+[  832.751147]  kthread+0x138/0x140
+[  832.754377]  ? pr_cont_work+0x58/0x58
+[  832.758037]  ? kthread_blkcg+0x2e/0x2e
+[  832.761787]  ret_from_fork+0x22/0x40
+[  832.846191] ---[ end trace fa93f466da517212 ]---
+
+Fixes: 9952d90ea2885 ("Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND")
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Miao-chen Chou <mcchou@chromium.org>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_serdev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index 599855e4c57c1..7b233312e723f 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -355,7 +355,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
- 	struct hci_dev *hdev = hu->hdev;
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 2a0968be22bff..41fba93d857a6 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3608,9 +3608,10 @@ void hci_unregister_dev(struct hci_dev *hdev)
  
- 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--	hci_unregister_dev(hdev);
-+	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
-+		hci_unregister_dev(hdev);
- 	hci_free_dev(hdev);
+ 	cancel_work_sync(&hdev->power_on);
  
- 	cancel_work_sync(&hu->write_work);
+-	hci_dev_do_close(hdev);
+-
+ 	unregister_pm_notifier(&hdev->suspend_notifier);
++	cancel_work_sync(&hdev->suspend_prepare);
++
++	hci_dev_do_close(hdev);
+ 
+ 	if (!test_bit(HCI_INIT, &hdev->flags) &&
+ 	    !hci_dev_test_flag(hdev, HCI_SETUP) &&
 -- 
 2.25.1
 
