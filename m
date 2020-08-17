@@ -2,179 +2,220 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54019C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93F1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25CEB20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8ED20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NXzN4f82"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="O/E0mH0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbgHQWGg (ORCPT
+        id S1729810AbgHQWG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729767AbgHQWGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:06:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A259C061343
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:06:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f9so8299888pju.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:06:35 -0700 (PDT)
+        Mon, 17 Aug 2020 18:06:58 -0400
+Received: from mail-bn8nam12on2053.outbound.protection.outlook.com ([40.107.237.53]:39554
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729767AbgHQWGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:06:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xqr3RCA0oxv1aoHQhvkXMKqz5M+NECFcAmhmpBBibguIf1y7vaZI+Tx4WGiOzUMwksEIsCiqdJsKhl2v/7qcAz2Iy+dQ0/zKwtiAv76BEhvGJafqp0gu2joBO7wopg+4eIrKyCUJ0AOaY9jWKuh0MCHhhH6xW2mACX3RwebMMWfhdngLAPBS1GIzNzn2TlrGjrxIlVss8JegOeHJuHZkA4hzLA47sWa6yhZfUdMZTGNqLc8UkEvRX0fDJ56tN1dQrIfzhwnv+UmZcbN8DJcj3DkcX9tFq3SKElYtP20+UF5anLrS8Bk1OTIe3mevYYEzE52lQ2z/+l8ADw+FXNA3pQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PmO/aI1NWmHz2oh0VbSJLKm8lAQ4etfNF+EodHjWwwg=;
+ b=NdXl66XDUzEr/9c5qgtYtnEoSO2TCw0D/L18+ulVVh/G1Mlk4g8KMwx0qay+Q90QzhjV7umxw1D7scVfIi7OIM0ivBvxrbuB1PdylSa/MVLZIk2FiU4AEyX1ieX5ZO30/yiO5Tr17dUlu1mVJRGAJjNM7byFQbFpCEGX2LBNmhIFbFblX7+UrXkfxFY5NoGrHy4efPZO/gw3QajTkZHmcdQHQG3AFVGTWygw+4kjqOaZQ+8qMYdqWZA+lCUmUq6r7je2QmDHZCLbshzyNsYuyuaW1u9jsmk3ZxU6ww0INV2fWp1t8VXMGAKepP2Zj0m1i4/HYhrIQ5ISZJcpVJBVOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cWCid31trlwRX7XdfsbfwsYP5/XIk2QJn77x1TORX4M=;
-        b=NXzN4f82HnWfQkiCcF+SX5NXOiO4v+KrUeo/LrrpOV+3MGTS+4cyvz3PWtiz+gB6vr
-         QL0TK1sDFtGUtdMqdj8BplSJ+vL9el6/RVpkjy03Npgh44KcgW+WykjkSKy3c3yi7ve5
-         uZsoIrNDJcDgFuj7T3th5Mh3X9k5tHK5ZzPdGdH72PjjkYd8YGJrA2wHlgHoO6DtH3xJ
-         M9oNHiXVM/91ZencrMHLzl34yY6uSdOKyh3sRihaaxspFIRXrkkQQQiMDnG9cyZ2KvwO
-         EbA/uWWkwxeUvPGqI1GzFSzcml5KspjAgCsntz81TrfELRcidw7/keX+nZo0Z7ph9z7o
-         vnZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cWCid31trlwRX7XdfsbfwsYP5/XIk2QJn77x1TORX4M=;
-        b=GALW36X0UPjdeUHty9RfYki5gVee/jVBmk4kSg3gurNqHMH3cHuZ9dr4DOryGHOmCl
-         Fy3gFlQlQj8WeDWERmH4EsgdBjhrbodafZoqMS3ilqkr6gtW0fegb5dpOHkPlEK8yNDy
-         SK2nGakryR0QVQQ7PZDUlw7q5xnz2SX5B90coBd9+j7VAJF1C19+PLfOZI3rvMiVA4cE
-         R/dXLXFCjnCGyJcsdT0iKk4r8THAWgY2X0HYyai3uWpc+fOnlmNXBTTsKSANe9voajum
-         28Kg72CbXfm+P9R/6OiKGtF0NuXDrlPqNfnlXD6pHeRpzgvh7W9e3ghMd5cIBj7RKr/d
-         Xnow==
-X-Gm-Message-State: AOAM531nx/EWepDqcHm+Nm0JAKkFDFvBrfLNUA2WmfUu2d6m059p3AkT
-        3U2wJQjCebPzk5GFkDvdbbWu7w==
-X-Google-Smtp-Source: ABdhPJyX2YqsEKBUUEhjY7AqW5QScCarLEIXr9eJDcVCFNHsKfKduPE6VRJ2uTT7E90j6XOcZsqfXA==
-X-Received: by 2002:a17:902:8210:: with SMTP id x16mr13374143pln.166.1597701993230;
-        Mon, 17 Aug 2020 15:06:33 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
-        by smtp.gmail.com with ESMTPSA id j142sm21983520pfd.100.2020.08.17.15.06.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:06:32 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 15:06:29 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PmO/aI1NWmHz2oh0VbSJLKm8lAQ4etfNF+EodHjWwwg=;
+ b=O/E0mH0z/jAQB4cFVK+xxMCwAPZGn2z8zEj141nKLG1ODUhXaqqqZg8c8qBLC3JIP7YLrULw80JHU8uNJ1Vmh29CrQsVeABrXaUMppZt6uDdKRpsM+moFIs5lpAT7f+UB0Qloo4QkznflKm0QIzAIilNEWtxzQZnsfWAkHNyXao=
+Authentication-Results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
+ by BN8PR12MB3220.namprd12.prod.outlook.com (2603:10b6:408:9e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Mon, 17 Aug
+ 2020 22:06:38 +0000
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0]) by BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0%5]) with mapi id 15.20.3283.024; Mon, 17 Aug 2020
+ 22:06:38 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Kim Phillips <kim.phillips@amd.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 23/36] arm/build: Explicitly keep .ARM.attributes
- sections
-Message-ID: <20200817220629.3pkabegeedomsaaz@google.com>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-24-keescook@chromium.org>
- <CAKwvOdn11z+iFQZC54JvQHC=NFX1FsoRMw2a-2P=5sQ6FKwbnw@mail.gmail.com>
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH 1/7 RESEND] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+Date:   Mon, 17 Aug 2020 17:06:22 -0500
+Message-Id: <20200817220628.7604-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.27.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0701CA0019.namprd07.prod.outlook.com
+ (2603:10b6:803:28::29) To BN8PR12MB2946.namprd12.prod.outlook.com
+ (2603:10b6:408:9d::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn11z+iFQZC54JvQHC=NFX1FsoRMw2a-2P=5sQ6FKwbnw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (70.114.200.6) by SN4PR0701CA0019.namprd07.prod.outlook.com (2603:10b6:803:28::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Mon, 17 Aug 2020 22:06:37 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [70.114.200.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 27195c5c-cc53-4eec-8ed5-08d842f9d06c
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3220:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB32202BA59D8237404B0083BF875F0@BN8PR12MB3220.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CrWxjsRfOR4FzUkoC77gXrV1UuvMgkY8GdrufxaPNzFH6rhzZjL2XsXYqFvFgQqyLVv6nu2CgPqLnJbZZuqELNUw43I7ZF2jsHTD0vxcC2BGRuBteZyZTIRDYBDmoGGcbHxFZYZnEgOZ8qg8esjvgxbJcXqKgG5Id4GuPuCsjNclnIdapdG6eiahRbJ1sH5uABdzO71qNvQErKMMsCWmVlBg6/HkIfjpY4VvajGWXo22yf6hwZ8b8PyIoBliZMSYUgO0bRBLaYOxaxQHZioZNbRi33Bk6pGGgR4MfXQVns2+XWnyZx4arzRvM40HzpCZW9iDJ6Bz34e2e+TVi5WDgfk/lMQEnSzlqtsCI9LckxQejWjQLjB7dvM/mG27GR9iTKlHcQ9UWNlPZxM5B2cFuJLmHZwkLkHqP1eRaaj0H6Pw8i+S/jLHI1/1mWBVPGXHVOFtvASd+DKNOcnDOZEe8w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(36756003)(5660300002)(7049001)(2906002)(6506007)(83380400001)(44832011)(956004)(186003)(52116002)(69590400007)(478600001)(2616005)(16526019)(7416002)(6486002)(4326008)(966005)(6512007)(8676002)(66946007)(1076003)(6666004)(86362001)(26005)(316002)(66556008)(110136005)(8936002)(54906003)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ZntcP/8HoCDwC8NfJt6yOmu3k2yN4d5ZLja6EJg1pGZCJCgqOgtk+ib0ognkO3IWB/ziowsYfSVExoSQgVOqJHZRMcQIIkUDOx+cgZIbs0pIxd6lJO+D083JjAHkIrYljyPgVZFcmy8ZY6g6rvM97LfBAghMvSLsV1yKkvKawq1B99Sn7wFfUdPOYV3QJ6BlCpLIZ1B1mgF36Myesi29qGFT8V3YpgssO2UU3r7UU+UI9K+YZhEBXfXzCd2d81hX7kdfbM57M4kWwy+3ZvJZUcCcxgA6U2DSW/nLGcttEjGRxDjHY8fCUdlH4D1vmVIYWtNC/Tt8HOqO8TitbR6BHuOC4HIjqNH9qt2u4ujRShPJ+ncmThcTeX2NJh1eHOz071iNiWW/M/tHLI9OdbkmzyOrlam61VCV/ZrMZap39lSygMYIrzzd//wtTDgAEs0dtlRdcnDKfoXkvTyqOEcYTCOkY8Hx2J9mcLasZ7DjfOgKW5fXMews8Thka8xbiE4D+ilo7y2z6xaroHQahua9UJHs1qq4lSV5k83D/vLnMVka/lROCSM5oi++jGaf+4UTL/+zrH3p0AxnR+CcbqLqTWhXzumTWQiZoz+f7OPoe3Bb4wXOHIMKaY9pBaofzoz41mF/KDvA85I2G+ZSRNTz0Q==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27195c5c-cc53-4eec-8ed5-08d842f9d06c
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2020 22:06:38.6479
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 50NtEo0Is1NvEm/8LrHJeQKGyLuJuZMC4Tlm/7IRquA9qI8vgaRiGHhAYxEvYeQxhSixjGLFSvl5c+1UhdQBwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-03, 'Nick Desaulniers' via Clang Built Linux wrote:
->On Fri, Jul 31, 2020 at 4:18 PM Kees Cook <keescook@chromium.org> wrote:
->>
->> In preparation for adding --orphan-handling=warn, explicitly keep the
->> .ARM.attributes section by expanding the existing ELF_DETAILS macro into
->> ARM_DETAILS.
->>
->> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
->> Link: https://lore.kernel.org/lkml/CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com/
->> Signed-off-by: Kees Cook <keescook@chromium.org>
->> ---
->>  arch/arm/include/asm/vmlinux.lds.h | 4 ++++
->>  arch/arm/kernel/vmlinux-xip.lds.S  | 2 +-
->>  arch/arm/kernel/vmlinux.lds.S      | 2 +-
->>  3 files changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
->> index a08f4301b718..c4af5182ab48 100644
->> --- a/arch/arm/include/asm/vmlinux.lds.h
->> +++ b/arch/arm/include/asm/vmlinux.lds.h
->> @@ -52,6 +52,10 @@
->>                 ARM_MMU_DISCARD(*(__ex_table))                          \
->>                 COMMON_DISCARDS
->>
->> +#define ARM_DETAILS                                                    \
->> +               ELF_DETAILS                                             \
->> +               .ARM.attributes 0 : { *(.ARM.attributes) }
->
->I had to look up what the `0` meant:
->https://sourceware.org/binutils/docs/ld/Output-Section-Attributes.html#Output-Section-Attributes
->mentions it's an "address" and
->https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC21
->mentions it as "start" (an address).
->Unless we need those, can we drop them? (Sorry for the resulting churn
->that would cause).  I think the NO_LOAD stuff makes more sense, but
->I'm curious if the kernel checks for that.
+Commit 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for
+F17h L3 PMCs") inadvertently changed the uncore driver's behaviour
+wrt perf tool invocations with or without a CPU list, specified with
+-C / --cpu=.
 
-NOLOAD means SHT_NOBITS (usually SHF_ALLOC). .ARM.attributes is a
-non-SHF_ALLOC section.
+Change the behaviour of the driver to assume the former all-cpu (-a)
+case, which is the more commonly desired default.  This fixes
+'-a -A' invocations without explicit cpu lists (-C) to not count
+L3 events only on behalf of the first thread of the first core
+in the L3 domain.
 
-An explicit 0 (output section address) is good - GNU ld's internal
-linker scripts (ld --verbose output) use 0 for such non-SHF_ALLOC sections.
-Without the 0, the section may get a non-zero address, which is not
-wrong - but probably does not look well. See https://reviews.llvm.org/D85867 for details.
+BEFORE:
 
+Activity performed by the first thread of the last core (CPU#43) in
+CPU#40's L3 domain is not reported by CPU#40:
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                 21,835      l3_request_g1.caching_l3_cache_accesses
+CPU40                 87,066      l3_request_g1.caching_l3_cache_accesses
+CPU44                 17,360      l3_request_g1.caching_l3_cache_accesses
+...
 
->> +
->>  #define ARM_STUBS_TEXT                                                 \
->>                 *(.gnu.warning)                                         \
->>                 *(.glue_7)                                              \
->> diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
->> index 904c31fa20ed..57fcbf55f913 100644
->> --- a/arch/arm/kernel/vmlinux-xip.lds.S
->> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
->> @@ -150,7 +150,7 @@ SECTIONS
->>         _end = .;
->>
->>         STABS_DEBUG
->> -       ELF_DETAILS
->> +       ARM_DETAILS
->>  }
->>
->>  /*
->> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
->> index bb950c896a67..1d3d3b599635 100644
->> --- a/arch/arm/kernel/vmlinux.lds.S
->> +++ b/arch/arm/kernel/vmlinux.lds.S
->> @@ -149,7 +149,7 @@ SECTIONS
->>         _end = .;
->>
->>         STABS_DEBUG
->> -       ELF_DETAILS
->> +       ARM_DETAILS
->>  }
->>
->>  #ifdef CONFIG_STRICT_KERNEL_RWX
->> --
->> 2.25.1
->>
+AFTER:
+
+The L3 domain activity is now reported by CPU#40:
+
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                354,891      l3_request_g1.caching_l3_cache_accesses
+CPU40              1,780,870      l3_request_g1.caching_l3_cache_accesses
+CPU44                315,062      l3_request_g1.caching_l3_cache_accesses
+...
+
+Reported-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Fixes: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs")
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: x86 <x86@kernel.org>
+Cc: stable@vger.kernel.org
+---
+Original submission:
+
+https://lore.kernel.org/lkml/20200323233159.19601-1-kim.phillips@amd.com/
+
+ arch/x86/events/amd/uncore.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 76400c052b0e..e7e61c8b56bd 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -181,28 +181,16 @@ static void amd_uncore_del(struct perf_event *event, int flags)
+ }
+ 
+ /*
+- * Convert logical CPU number to L3 PMC Config ThreadMask format
++ * Return a full thread and slice mask until per-CPU is
++ * properly supported.
+  */
+-static u64 l3_thread_slice_mask(int cpu)
++static u64 l3_thread_slice_mask(void)
+ {
+-	u64 thread_mask, core = topology_core_id(cpu);
+-	unsigned int shift, thread = 0;
++	if (boot_cpu_data.x86 <= 0x18)
++		return AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK;
+ 
+-	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
+-		thread = 1;
+-
+-	if (boot_cpu_data.x86 <= 0x18) {
+-		shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
+-		thread_mask = BIT_ULL(shift);
+-
+-		return AMD64_L3_SLICE_MASK | thread_mask;
+-	}
+-
+-	core = (core << AMD64_L3_COREID_SHIFT) & AMD64_L3_COREID_MASK;
+-	shift = AMD64_L3_THREAD_SHIFT + thread;
+-	thread_mask = BIT_ULL(shift);
+-
+-	return AMD64_L3_EN_ALL_SLICES | core | thread_mask;
++	return AMD64_L3_EN_ALL_SLICES | AMD64_L3_EN_ALL_CORES |
++	       AMD64_L3_F19H_THREAD_MASK;
+ }
+ 
+ static int amd_uncore_event_init(struct perf_event *event)
+@@ -232,7 +220,7 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 	 * For other events, the two fields do not affect the count.
+ 	 */
+ 	if (l3_mask && is_llc_event(event))
+-		hwc->config |= l3_thread_slice_mask(event->cpu);
++		hwc->config |= l3_thread_slice_mask();
+ 
+ 	uncore = event_to_amd_uncore(event);
+ 	if (!uncore)
+-- 
+2.27.0
+
