@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF08C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70280C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54D22067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401622067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NGTENIgd"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="agWterXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgHQKzp (ORCPT
+        id S1728210AbgHQKzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:55:45 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:49184 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbgHQKzJ (ORCPT
+        Mon, 17 Aug 2020 06:55:36 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:14015 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgHQKy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:55:09 -0400
+        Mon, 17 Aug 2020 06:54:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597661707; x=1629197707;
+  t=1597661665; x=1629197665;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=k6WU8X8uUioiTj7c3Ke/KLWkbXXGCVDmB5Ldj54XnIY=;
-  b=NGTENIgdquIQBTZlcgbLwhGXyKSa7UPBLvT2xVd42HZRWmj0SHtkMCQg
-   a4JvkW6hNS7EnkibW4fbyREhY2OVz7laCSqDsm5MnphWpjLoa+5RoAJuR
-   otefM4a9kgJKOr/ZLYRdYoQZgdJPv59MxI/lfB6zshJiYt7qcvmeVMxvt
-   U=;
+  bh=7xwibYs3UTgv+ydCDCzKAP/73v9ORCmfR0/3U8RJ7hA=;
+  b=agWterXDQpiMfYNVSjZmS2tuJ/7rKs75YcKbTAbLmIkl8Narn1h7pcCA
+   URz3WJlTzbSeaj3/wF7ZeLK/9RfamCqDCSepDhqOkVko1R56MbGjFM+tT
+   X4x8+tk2vjr3N7FXtXnkAbrIKqztSEAQvHG+yFOcSE8UhAzy+UHCeW4+w
+   I=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48282142"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 17 Aug 2020 10:55:06 +0000
+   d="scan'208";a="67283877"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Aug 2020 10:54:22 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id C9FDAA1BCE;
-        Mon, 17 Aug 2020 10:54:54 +0000 (UTC)
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 9713FA2215;
+        Mon, 17 Aug 2020 10:54:10 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:54:53 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:54:09 +0000
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.192) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:54:37 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:53:53 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v20 07/15] mm/damon: Implement access pattern recording
-Date:   Mon, 17 Aug 2020 12:51:29 +0200
-Message-ID: <20200817105137.19296-8-sjpark@amazon.com>
+Subject: [PATCH v20 05/15] mm/idle_page_tracking: Make PG_(idle|young) reusable
+Date:   Mon, 17 Aug 2020 12:51:27 +0200
+Message-ID: <20200817105137.19296-6-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817105137.19296-1-sjpark@amazon.com>
 References: <20200817105137.19296-1-sjpark@amazon.com>
@@ -85,255 +85,189 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit implements the recording feature of DAMON.  If this feature
-is enabled, DAMON writes the monitored access patterns in its binary
-format into a file which specified by the user.  This is already able to
-be implemented by each user using the callbacks.  However, as the
-recording is expected to be widely used, this commit implements the
-feature in the DAMON, for more convenience.
+PG_idle and PG_young allows the two PTE Accessed bit users,
+IDLE_PAGE_TRACKING and the reclaim logic concurrently work while don't
+interfere each other.  That is, when they need to clear the Accessed
+bit, they set PG_young and PG_idle to represent the previous state of
+the bit, respectively.  And when they need to read the bit, if the bit
+is cleared, they further read the PG_young and PG_idle, respectively, to
+know whether the other has cleared the bit meanwhile or not.
+
+We could add another page flag and extend the mechanism to use the flag
+if we need to add another concurrent PTE Accessed bit user subsystem.
+However, it would be only waste the space.  Instead, if the new
+subsystem is mutually exclusive with IDLE_PAGE_TRACKING, it could simply
+reuse the PG_idle flag.  However, it's impossible because the flags are
+dependent on IDLE_PAGE_TRACKING.
+
+To allow such reuse of the flags, this commit separates the PG_young and
+PG_idle flag logic from IDLE_PAGE_TRACKING and introduces new kernel
+config, 'PAGE_IDLE_FLAG'.  Hence, if !IDLE_PAGE_TRACKING and
+IDLE_PAGE_FLAG, a new subsystem would be able to reuse PG_idle.
+
+In the next commit, DAMON's reference implementation of the virtual
+memory address space monitoring primitives will use it.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
 ---
- include/linux/damon.h |  15 +++++
- mm/damon.c            | 142 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 154 insertions(+), 3 deletions(-)
+ include/linux/page-flags.h     |  4 ++--
+ include/linux/page_ext.h       |  2 +-
+ include/linux/page_idle.h      |  6 +++---
+ include/trace/events/mmflags.h |  2 +-
+ mm/Kconfig                     |  8 ++++++++
+ mm/page_ext.c                  | 12 +++++++++++-
+ mm/page_idle.c                 | 10 ----------
+ 7 files changed, 26 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 945eb9259acf..54cdc1366f59 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -75,6 +75,14 @@ struct damon_target {
-  * in case of virtual memory monitoring) and applies the changes for each
-  * @regions_update_interval.  All time intervals are in micro-seconds.
-  *
-+ * @rbuf: In-memory buffer for monitoring result recording.
-+ * @rbuf_len: The length of @rbuf.
-+ * @rbuf_offset: The offset for next write to @rbuf.
-+ * @rfile_path: Record file path.
-+ *
-+ * If @rbuf, @rbuf_len, and @rfile_path are set, the monitored results are
-+ * automatically stored in @rfile_path file.
-+ *
-  * @kdamond:		Kernel thread who does the monitoring.
-  * @kdamond_stop:	Notifies whether kdamond should stop.
-  * @kdamond_lock:	Mutex for the synchronizations with @kdamond.
-@@ -142,6 +150,11 @@ struct damon_ctx {
- 	struct timespec64 last_aggregation;
- 	struct timespec64 last_regions_update;
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 6be1aa559b1e..7736d290bb61 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -132,7 +132,7 @@ enum pageflags {
+ #ifdef CONFIG_MEMORY_FAILURE
+ 	PG_hwpoison,		/* hardware poisoned page. Don't touch */
+ #endif
+-#if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+ 	PG_young,
+ 	PG_idle,
+ #endif
+@@ -432,7 +432,7 @@ static inline bool set_hwpoison_free_buddy_page(struct page *page)
+ #define __PG_HWPOISON 0
+ #endif
  
-+	unsigned char *rbuf;
-+	unsigned int rbuf_len;
-+	unsigned int rbuf_offset;
-+	char *rfile_path;
-+
- 	struct task_struct *kdamond;
- 	bool kdamond_stop;
- 	struct mutex kdamond_lock;
-@@ -172,6 +185,8 @@ int damon_set_targets(struct damon_ctx *ctx,
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctxs, int nr_ctxs);
- int damon_stop(struct damon_ctx *ctxs, int nr_ctxs);
+-#if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+ TESTPAGEFLAG(Young, young, PF_ANY)
+ SETPAGEFLAG(Young, young, PF_ANY)
+ TESTCLEARFLAG(Young, young, PF_ANY)
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index cfce186f0c4e..c9cbc9756011 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -19,7 +19,7 @@ struct page_ext_operations {
+ enum page_ext_flags {
+ 	PAGE_EXT_OWNER,
+ 	PAGE_EXT_OWNER_ALLOCATED,
+-#if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && !defined(CONFIG_64BIT)
+ 	PAGE_EXT_YOUNG,
+ 	PAGE_EXT_IDLE,
+ #endif
+diff --git a/include/linux/page_idle.h b/include/linux/page_idle.h
+index 1e894d34bdce..d8a6aecf99cb 100644
+--- a/include/linux/page_idle.h
++++ b/include/linux/page_idle.h
+@@ -6,7 +6,7 @@
+ #include <linux/page-flags.h>
+ #include <linux/page_ext.h>
  
-diff --git a/mm/damon.c b/mm/damon.c
-index cec151d60755..fed35f7b3879 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -57,6 +57,10 @@
- #define damon_for_each_target_safe(t, next, ctx) \
- 	list_for_each_entry_safe(t, next, &(ctx)->targets_list, list)
+-#ifdef CONFIG_IDLE_PAGE_TRACKING
++#ifdef CONFIG_PAGE_IDLE_FLAG
  
-+#define MIN_RECORD_BUFFER_LEN	1024
-+#define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
-+#define MAX_RFILE_PATH_LEN	256
-+
- /* Get a random number in [l, r) */
- #define damon_rand(l, r) (l + prandom_u32() % (r - l))
- 
-@@ -785,16 +789,89 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
+ #ifdef CONFIG_64BIT
+ static inline bool page_is_young(struct page *page)
+@@ -106,7 +106,7 @@ static inline void clear_page_idle(struct page *page)
  }
+ #endif /* CONFIG_64BIT */
  
- /*
-- * Reset the aggregated monitoring results
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(struct damon_ctx *ctx)
-+{
-+	ssize_t sz;
-+	loff_t pos = 0;
-+	struct file *rfile;
-+
-+	if (!ctx->rbuf_offset)
-+		return;
-+
-+	rfile = filp_open(ctx->rfile_path,
-+			O_CREAT | O_RDWR | O_APPEND | O_LARGEFILE, 0644);
-+	if (IS_ERR(rfile)) {
-+		pr_err("Cannot open the result file %s\n",
-+				ctx->rfile_path);
-+		return;
-+	}
-+
-+	while (ctx->rbuf_offset) {
-+		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
-+		if (sz < 0)
-+			break;
-+		ctx->rbuf_offset -= sz;
-+	}
-+	filp_close(rfile, NULL);
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
-+{
-+	if (!ctx->rbuf_len || !ctx->rbuf || !ctx->rfile_path)
-+		return;
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len)
-+		damon_flush_rbuffer(ctx);
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len) {
-+		pr_warn("%s: flush failed, or wrong size given(%u, %zu)\n",
-+				__func__, ctx->rbuf_offset, size);
-+		return;
-+	}
-+
-+	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
-+	ctx->rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each region.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of targets> <array of target infos>
-+ *
-+ *   target info: <id> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-  */
- static void kdamond_reset_aggregated(struct damon_ctx *c)
+-#else /* !CONFIG_IDLE_PAGE_TRACKING */
++#else /* !CONFIG_PAGE_IDLE_FLAG */
+ 
+ static inline bool page_is_young(struct page *page)
  {
- 	struct damon_target *t;
--	struct damon_region *r;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(c, &now, sizeof(now));
-+	nr = nr_damon_targets(c);
-+	damon_write_rbuf(c, &nr, sizeof(nr));
- 
- 	damon_for_each_target(t, c) {
--		damon_for_each_region(r, t)
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(c, &t->id, sizeof(t->id));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(c, &nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(c, &r->ar.start, sizeof(r->ar.start));
-+			damon_write_rbuf(c, &r->ar.end, sizeof(r->ar.end));
-+			damon_write_rbuf(c, &r->nr_accesses,
-+					sizeof(r->nr_accesses));
- 			r->nr_accesses = 0;
-+		}
- 	}
+@@ -135,6 +135,6 @@ static inline void clear_page_idle(struct page *page)
+ {
  }
  
-@@ -978,6 +1055,14 @@ static bool kdamond_need_stop(struct damon_ctx *ctx)
- 	return true;
- }
+-#endif /* CONFIG_IDLE_PAGE_TRACKING */
++#endif /* CONFIG_PAGE_IDLE_FLAG */
  
-+static void kdamond_write_record_header(struct damon_ctx *ctx)
-+{
-+	int recfmt_ver = 2;
+ #endif /* _LINUX_MM_PAGE_IDLE_H */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 5fb752034386..4d182c32071b 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -73,7 +73,7 @@
+ #define IF_HAVE_PG_HWPOISON(flag,string)
+ #endif
+ 
+-#if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+ #define IF_HAVE_PG_IDLE(flag,string) ,{1UL << flag, string}
+ #else
+ #define IF_HAVE_PG_IDLE(flag,string)
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a99d755d67d3..8b1dacc60a8e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -765,10 +765,18 @@ config DEFERRED_STRUCT_PAGE_INIT
+ 	  lifetime of the system until these kthreads finish the
+ 	  initialisation.
+ 
++config PAGE_IDLE_FLAG
++	bool "Add PG_idle and PG_young flags"
++	help
++	  This feature adds PG_idle and PG_young flags in 'struct page'.  PTE
++	  Accessed bit writers can set the state of the bit in the flags to let
++	  other PTE Accessed bit readers don't disturbed.
 +
-+	damon_write_rbuf(ctx, "damon_recfmt_ver", 16);
-+	damon_write_rbuf(ctx, &recfmt_ver, sizeof(recfmt_ver));
-+}
-+
- /*
-  * The monitoring daemon that runs as a kernel thread
+ config IDLE_PAGE_TRACKING
+ 	bool "Enable idle page tracking"
+ 	depends on SYSFS && MMU
+ 	select PAGE_EXTENSION if !64BIT
++	select PAGE_IDLE_FLAG
+ 	help
+ 	  This feature allows to estimate the amount of user pages that have
+ 	  not been touched during a given period of time. This information can
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index a3616f7a0e9e..f9a6ff65ac0a 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -58,11 +58,21 @@
+  * can utilize this callback to initialize the state of it correctly.
   */
-@@ -994,6 +1079,8 @@ static int kdamond_fn(void *data)
- 		ctx->init_target_regions(ctx);
- 	sz_limit = damon_region_sz_limit(ctx);
  
-+	kdamond_write_record_header(ctx);
-+
- 	while (!kdamond_need_stop(ctx)) {
- 		if (ctx->prepare_access_checks)
- 			ctx->prepare_access_checks(ctx);
-@@ -1020,6 +1107,7 @@ static int kdamond_fn(void *data)
- 			sz_limit = damon_region_sz_limit(ctx);
- 		}
- 	}
-+	damon_flush_rbuffer(ctx);
- 	damon_for_each_target(t, ctx) {
- 		damon_for_each_region_safe(r, next, t)
- 			damon_destroy_region(r);
-@@ -1189,6 +1277,54 @@ int damon_set_targets(struct damon_ctx *ctx,
- 	return 0;
- }
- 
-+/**
-+ * damon_set_recording() - Set attributes for the recording.
-+ * @ctx:	target kdamond context
-+ * @rbuf_len:	length of the result buffer
-+ * @rfile_path:	path to the monitor result files
-+ *
-+ * Setting 'rbuf_len' 0 disables recording.
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_recording(struct damon_ctx *ctx,
-+			unsigned int rbuf_len, char *rfile_path)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && !defined(CONFIG_64BIT)
++static bool need_page_idle(void)
 +{
-+	size_t rfile_path_len;
-+
-+	if (rbuf_len && (rbuf_len > MAX_RECORD_BUFFER_LEN ||
-+			rbuf_len < MIN_RECORD_BUFFER_LEN)) {
-+		pr_err("result buffer size (%u) is out of [%d,%d]\n",
-+				rbuf_len, MIN_RECORD_BUFFER_LEN,
-+				MAX_RECORD_BUFFER_LEN);
-+		return -EINVAL;
-+	}
-+	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
-+	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				MAX_RFILE_PATH_LEN, rfile_path);
-+		return -EINVAL;
-+	}
-+	ctx->rbuf_len = rbuf_len;
-+	kfree(ctx->rbuf);
-+	ctx->rbuf = NULL;
-+	kfree(ctx->rfile_path);
-+	ctx->rfile_path = NULL;
-+
-+	if (rbuf_len) {
-+		ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
-+		if (!ctx->rbuf)
-+			return -ENOMEM;
-+	}
-+	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
-+	if (!ctx->rfile_path)
-+		return -ENOMEM;
-+	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
-+	return 0;
++	return true;
 +}
++struct page_ext_operations page_idle_ops = {
++	.need = need_page_idle,
++};
++#endif
 +
- /**
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
+ static struct page_ext_operations *page_ext_ops[] = {
+ #ifdef CONFIG_PAGE_OWNER
+ 	&page_owner_ops,
+ #endif
+-#if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
++#if defined(CONFIG_PAGE_IDLE_FLAG) && !defined(CONFIG_64BIT)
+ 	&page_idle_ops,
+ #endif
+ };
+diff --git a/mm/page_idle.c b/mm/page_idle.c
+index 057c61df12db..144fb4ed961d 100644
+--- a/mm/page_idle.c
++++ b/mm/page_idle.c
+@@ -211,16 +211,6 @@ static const struct attribute_group page_idle_attr_group = {
+ 	.name = "page_idle",
+ };
+ 
+-#ifndef CONFIG_64BIT
+-static bool need_page_idle(void)
+-{
+-	return true;
+-}
+-struct page_ext_operations page_idle_ops = {
+-	.need = need_page_idle,
+-};
+-#endif
+-
+ static int __init page_idle_init(void)
+ {
+ 	int err;
 -- 
 2.17.1
 
