@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A273C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A320CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E637920578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE9E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691801;
-	bh=adrKwjKBYwAGO2tCI25+wx390wp6p3FolWXMxPZgFos=;
+	s=default; t=1597691822;
+	bh=6yYRTnNR6djOLWx2A2eTDjEiDgP+loFwD6B73wRHmec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCJ95CaJ8jLN7IVQyzlLCmlyixvzaUQDd6+lPQyV/PgncIxPXkr6068lSd2rteiXK
-	 ovj7dIOI2OwD4WdY7//x2QadeBAfq/+GfdH2AQ0MVhRJ46XaMbq8JiXXupO9S9iIog
-	 2/V+XHPcJAlWXciZB9p/t4O2MNbl558nNYhgYvEk=
+	b=s1XC/S4oBMSghHeDQLOwHRQy13TKpxLOB0aaj3FAjclOGrovsEwgbao0+YMwj7dF4
+	 LACfDU39k+wBHtCl5SFqYdfQFTtod95ByOxelzqgOhV5S3TUWzQ2pD43hO7DZuePTI
+	 +SLGEFN4jDdIybK9lMcPT65A1K61zdfUAJ0LBDYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392207AbgHQTQh (ORCPT
+        id S2392222AbgHQTQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730474AbgHQPjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:39:12 -0400
+        id S1730429AbgHQPjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:39:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9AF8208E4;
-        Mon, 17 Aug 2020 15:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C9C422DD6;
+        Mon, 17 Aug 2020 15:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678751;
-        bh=adrKwjKBYwAGO2tCI25+wx390wp6p3FolWXMxPZgFos=;
+        s=default; t=1597678748;
+        bh=6yYRTnNR6djOLWx2A2eTDjEiDgP+loFwD6B73wRHmec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrYHAoDS8R29Wu2s+EQejofZvZJ5gX2XrfBCBv/cvcReKuKW7NcPNAjE2lv3dQzys
-         ZcDeuO6AubJDTmPSFlJH2MPiQRhbPV3JGpIyY2YtqYEgpXIoBrPc48QBdaWE095wv2
-         iMsLbNtVZFSGN445XyQBqK2MajlqroCuDC5ja/0o=
+        b=xE3Cq/iXv185zCJ5SRXcb6qmucQ7xdkByNySq/gzhzOavQ1viaGNsEBtA7x7swJrJ
+         9GsLSOjRY5RWLgVsKAo2HdeWkjbrN9K5c+uUTjZN5E5f+k0cl/XzlZXWl1zLVcLL0F
+         UX2rU7SdhPxU7d4YGDY33HKqic2zFFsCIQMIlHi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.8 441/464] Revert "parisc: Improve interrupt handling in arch_spin_lock_flags()"
-Date:   Mon, 17 Aug 2020 17:16:34 +0200
-Message-Id: <20200817143854.900561251@linuxfoundation.org>
+        stable@vger.kernel.org, Sonny Rao <sonnyrao@chromium.org>,
+        Baoquan He <bhe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 440/464] Revert "mm/vmstat.c: do not show lowmem reserve protection information of empty zone"
+Date:   Mon, 17 Aug 2020 17:16:33 +0200
+Message-Id: <20200817143854.851550056@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -58,65 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Baoquan He <bhe@redhat.com>
 
-commit 3d05b8aebc5f10ee3ab129b61100196855dd7249 upstream.
+commit a8a4b7aeaf841311cb13ff0f6c4710c7a00e68d4 upstream.
 
-This reverts commit 2772f0efd5bbd5413db3d22e363b779ca0fa5310.
-It turns out that we want to implement the spinlock code differently.
+This reverts commit 26e7deadaae175.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: <stable@vger.kernel.org> # v5.7+
+Sonny reported that one of their tests started failing on the latest
+kernel on their Chrome OS platform.  The root cause is that the above
+commit removed the protection line of empty zone, while the parser used in
+the test relies on the protection line to mark the end of each zone.
+
+Let's revert it to avoid breaking userspace testing or applications.
+
+Fixes: 26e7deadaae175 ("mm/vmstat.c: do not show lowmem reserve protection information of empty zone)"
+Reported-by: Sonny Rao <sonnyrao@chromium.org>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: <stable@vger.kernel.org>	[5.8.x]
+Link: http://lkml.kernel.org/r/20200811075412.12872-1-bhe@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/spinlock.h |   25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+ mm/vmstat.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/parisc/include/asm/spinlock.h
-+++ b/arch/parisc/include/asm/spinlock.h
-@@ -10,34 +10,25 @@
- static inline int arch_spin_is_locked(arch_spinlock_t *x)
- {
- 	volatile unsigned int *a = __ldcw_align(x);
--	smp_mb();
- 	return *a == 0;
- }
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1596,12 +1596,6 @@ static void zoneinfo_show_print(struct s
+ 		   zone->present_pages,
+ 		   zone_managed_pages(zone));
  
--static inline void arch_spin_lock(arch_spinlock_t *x)
--{
--	volatile unsigned int *a;
--
--	a = __ldcw_align(x);
--	while (__ldcw(a) == 0)
--		while (*a == 0)
--			cpu_relax();
--}
-+#define arch_spin_lock(lock) arch_spin_lock_flags(lock, 0)
- 
- static inline void arch_spin_lock_flags(arch_spinlock_t *x,
- 					 unsigned long flags)
- {
- 	volatile unsigned int *a;
--	unsigned long flags_dis;
- 
- 	a = __ldcw_align(x);
--	while (__ldcw(a) == 0) {
--		local_save_flags(flags_dis);
--		local_irq_restore(flags);
-+	while (__ldcw(a) == 0)
- 		while (*a == 0)
--			cpu_relax();
--		local_irq_restore(flags_dis);
+-	/* If unpopulated, no other information is useful */
+-	if (!populated_zone(zone)) {
+-		seq_putc(m, '\n');
+-		return;
 -	}
-+			if (flags & PSW_SM_I) {
-+				local_irq_enable();
-+				cpu_relax();
-+				local_irq_disable();
-+			} else
-+				cpu_relax();
- }
- #define arch_spin_lock_flags arch_spin_lock_flags
+-
+ 	seq_printf(m,
+ 		   "\n        protection: (%ld",
+ 		   zone->lowmem_reserve[0]);
+@@ -1609,6 +1603,12 @@ static void zoneinfo_show_print(struct s
+ 		seq_printf(m, ", %ld", zone->lowmem_reserve[i]);
+ 	seq_putc(m, ')');
  
++	/* If unpopulated, no other information is useful */
++	if (!populated_zone(zone)) {
++		seq_putc(m, '\n');
++		return;
++	}
++
+ 	for (i = 0; i < NR_VM_ZONE_STAT_ITEMS; i++)
+ 		seq_printf(m, "\n      %-12s %lu", zone_stat_name(i),
+ 			   zone_page_state(zone, i));
 
 
