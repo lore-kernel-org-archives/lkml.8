@@ -2,141 +2,197 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E094DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C306B2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688739;
-	bh=9i6H2Tin48+twAxQyorX2vTSljyFWWgJukO4sM8Zwzs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGaTo90vCTr17srzlcGZEOfHnY2xxlECxg77mHD2PoJe64RuUIKDAKKHGNOghG0xn
-	 jkHOB37TuW7MwcUP5iIgm3biwR8oBZetxUifWq0LOS3vq4MG9Vcoa04A8L01XaiT3o
-	 dGhZx8TDSZApSKrKtnnbyBs4WPdxL+aIs6SJbOhg=
+	by mail.kernel.org (Postfix) with ESMTP id 2A11D2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390485AbgHQSZi (ORCPT
+        id S2390831AbgHQSZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387616AbgHQQCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E9120772;
-        Mon, 17 Aug 2020 16:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680163;
-        bh=9i6H2Tin48+twAxQyorX2vTSljyFWWgJukO4sM8Zwzs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRYIWvKGpQ/gBSZvBtkcgmiJ1Tsu/XZ2ciNIAJ8SNPwgHJTBOKQyGyDWKgAU5XphZ
-         3wAcr9tMzP7MsNThqIMyjaUbZhHU2kc9uVmYMr5IDi7jIOq0t3XvWevNn5B3/c/5kg
-         vkEApmM2o01GqkSM8NlTgQ7A9P9Vc3Up5Wh4fleE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/270] brcmfmac: set state of hanger slot to FREE when flushing PSQ
-Date:   Mon, 17 Aug 2020 17:14:38 +0200
-Message-Id: <20200817143759.596496877@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:25:45 -0400
+Received: from pbmsgap01.intersil.com ([192.157.179.201]:49106 "EHLO
+        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388208AbgHQQCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:41 -0400
+X-Greylist: delayed 1493 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 12:02:40 EDT
+Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
+        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 07HFWv40003023;
+        Mon, 17 Aug 2020 11:37:45 -0400
+Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
+        by pbmsgap01.intersil.com with ESMTP id 32xb7y925u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 11:37:45 -0400
+Received: from pbmxdp02.intersil.corp (132.158.200.223) by
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1979.3; Mon, 17 Aug 2020 11:37:43 -0400
+Received: from localhost (132.158.202.109) by pbmxdp02.intersil.corp
+ (132.158.200.223) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Mon, 17 Aug 2020 11:37:43 -0400
+From:   <min.li.xe@renesas.com>
+To:     <richardcochran@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net] ptp: ptp_clockmatrix: use i2c_master_send for i2c write
+Date:   Mon, 17 Aug 2020 11:37:35 -0400
+Message-ID: <1597678655-842-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_10:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=834
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2006250000 definitions=main-2008170118
+X-Proofpoint-Spam-Reason: mlx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: Min Li <min.li.xe@renesas.com>
 
-[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
+The old code for i2c write would break on some controllers, which fails
+at handling Repeated Start Condition. So we will just use i2c_master_send
+to handle write in one transanction.
 
-When USB or SDIO device got abnormal bus disconnection, host driver
-tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
-slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
-to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
-In brcmf_fws_bus_txq_cleanup it already sets
-BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
-same thing in brcmf_fws_psq_flush to avoid following warning message.
-
-   [ 1580.012880] ------------   [ cut here ]------------
-   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
-drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
-brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
-   [ 1580.184017] Call Trace:
-   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
-   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
-   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
-   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
-   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
-   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
-   [ 1580.217557]  usb_unbind_interface+0x72/0x260
-   [ 1580.221857]  device_release_driver_internal+0x141/0x200
-   [ 1580.227152]  device_release_driver+0x12/0x20
-   [ 1580.231460]  bus_remove_device+0xfd/0x170
-   [ 1580.235504]  device_del+0x1d9/0x300
-   [ 1580.239041]  usb_disable_device+0x9e/0x270
-   [ 1580.243160]  usb_disconnect+0x94/0x270
-   [ 1580.246980]  hub_event+0x76d/0x13b0
-   [ 1580.250499]  process_one_work+0x144/0x360
-   [ 1580.254564]  worker_thread+0x4d/0x3c0
-   [ 1580.258247]  kthread+0x109/0x140
-   [ 1580.261515]  ? rescuer_thread+0x340/0x340
-   [ 1580.265543]  ? kthread_park+0x60/0x60
-   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
-   [ 1580.273118]  ret_from_fork+0x25/0x30
-   [ 1580.300446] ------------   [ cut here ]------------
-
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Min Li <min.li.xe@renesas.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/ptp/ptp_clockmatrix.c | 56 +++++++++++++++++++++++++++++++++----------
+ drivers/ptp/ptp_clockmatrix.h |  4 +++-
+ 2 files changed, 46 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 2bd892df83cc5..eadc64454839d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -643,6 +643,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
- static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 				int ifidx)
+diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+index 73aaae5..e020faf 100644
+--- a/drivers/ptp/ptp_clockmatrix.c
++++ b/drivers/ptp/ptp_clockmatrix.c
+@@ -142,16 +142,15 @@ static int idtcm_strverscmp(const char *ver1, const char *ver2)
+ 	return result;
+ }
+ 
+-static int idtcm_xfer(struct idtcm *idtcm,
+-		      u8 regaddr,
+-		      u8 *buf,
+-		      u16 count,
+-		      bool write)
++static int idtcm_xfer_read(struct idtcm *idtcm,
++			   u8 regaddr,
++			   u8 *buf,
++			   u16 count)
  {
-+	struct brcmf_fws_hanger_item *hi;
- 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
- 	struct sk_buff *skb;
- 	int prec;
-@@ -654,6 +655,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
- 		while (skb) {
- 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
-+			hi = &fws->hanger.items[hslot];
-+			WARN_ON(skb != hi->pkt);
-+			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
- 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
- 						true);
- 			brcmu_pkt_buf_free_skb(skb);
+ 	struct i2c_client *client = idtcm->client;
+ 	struct i2c_msg msg[2];
+ 	int cnt;
+-	char *fmt = "i2c_transfer failed at %d in %s for %s, at addr: %04X!\n";
++	char *fmt = "i2c_transfer failed at %d in %s, at addr: %04X!\n";
+ 
+ 	msg[0].addr = client->addr;
+ 	msg[0].flags = 0;
+@@ -159,7 +158,7 @@ static int idtcm_xfer(struct idtcm *idtcm,
+ 	msg[0].buf = &regaddr;
+ 
+ 	msg[1].addr = client->addr;
+-	msg[1].flags = write ? 0 : I2C_M_RD;
++	msg[1].flags = I2C_M_RD;
+ 	msg[1].len = count;
+ 	msg[1].buf = buf;
+ 
+@@ -170,7 +169,6 @@ static int idtcm_xfer(struct idtcm *idtcm,
+ 			fmt,
+ 			__LINE__,
+ 			__func__,
+-			write ? "write" : "read",
+ 			regaddr);
+ 		return cnt;
+ 	} else if (cnt != 2) {
+@@ -182,6 +180,37 @@ static int idtcm_xfer(struct idtcm *idtcm,
+ 	return 0;
+ }
+ 
++static int idtcm_xfer_write(struct idtcm *idtcm,
++			    u8 regaddr,
++			    u8 *buf,
++			    u16 count)
++{
++	struct i2c_client *client = idtcm->client;
++	/* we add 1 byte for device register */
++	u8 msg[IDTCM_MAX_WRITE_COUNT + 1];
++	int cnt;
++	char *fmt = "i2c_master_send failed at %d in %s, at addr: %04X!\n";
++
++	if (count > IDTCM_MAX_WRITE_COUNT)
++		return -EINVAL;
++
++	msg[0] = regaddr;
++	memcpy(&msg[1], buf, count);
++
++	cnt = i2c_master_send(client, msg, count + 1);
++
++	if (cnt < 0) {
++		dev_err(&client->dev,
++			fmt,
++			__LINE__,
++			__func__,
++			regaddr);
++		return cnt;
++	}
++
++	return 0;
++}
++
+ static int idtcm_page_offset(struct idtcm *idtcm, u8 val)
+ {
+ 	u8 buf[4];
+@@ -195,7 +224,7 @@ static int idtcm_page_offset(struct idtcm *idtcm, u8 val)
+ 	buf[2] = 0x10;
+ 	buf[3] = 0x20;
+ 
+-	err = idtcm_xfer(idtcm, PAGE_ADDR, buf, sizeof(buf), 1);
++	err = idtcm_xfer_write(idtcm, PAGE_ADDR, buf, sizeof(buf));
+ 
+ 	if (err) {
+ 		idtcm->page_offset = 0xff;
+@@ -223,11 +252,12 @@ static int _idtcm_rdwr(struct idtcm *idtcm,
+ 	err = idtcm_page_offset(idtcm, hi);
+ 
+ 	if (err)
+-		goto out;
++		return err;
+ 
+-	err = idtcm_xfer(idtcm, lo, buf, count, write);
+-out:
+-	return err;
++	if (write)
++		return idtcm_xfer_write(idtcm, lo, buf, count);
++
++	return idtcm_xfer_read(idtcm, lo, buf, count);
+ }
+ 
+ static int idtcm_read(struct idtcm *idtcm,
+diff --git a/drivers/ptp/ptp_clockmatrix.h b/drivers/ptp/ptp_clockmatrix.h
+index ffae56c..344aa04 100644
+--- a/drivers/ptp/ptp_clockmatrix.h
++++ b/drivers/ptp/ptp_clockmatrix.h
+@@ -53,7 +53,9 @@
+ 
+ #define OUTPUT_MODULE_FROM_INDEX(index)	(OUTPUT_0 + (index) * 0x10)
+ 
+-#define PEROUT_ENABLE_OUTPUT_MASK		(0xdeadbeef)
++#define PEROUT_ENABLE_OUTPUT_MASK	(0xdeadbeef)
++
++#define IDTCM_MAX_WRITE_COUNT		(512)
+ 
+ /* Values of DPLL_N.DPLL_MODE.PLL_MODE */
+ enum pll_mode {
 -- 
-2.25.1
-
-
+2.7.4
 
