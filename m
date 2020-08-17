@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28588C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC8B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B7E205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682266;
-	bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
+	s=default; t=1597682302;
+	bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VOvS0BmNQl5ecFEcF4Wlu3qw6pmZu6WO5268ZXc+RUpM6z7CzE+tUOgiEAiAqS/u
-	 dmqjBKGnLjpSUOc6DBCVWe0S9KaIyBvGGl+/G5zt50bljuJz9Q6bICv1+LgdccxVF2
-	 tqd3CrCPiUNMM1VWUnygzv/OAU/xYKGCE124IZFk=
+	b=QVIx0y5QaRoPGlj4a4WhDX5U4GUZsahzeCC5ltufFb9ECh7uHMgm/0xEwpd/ESH80
+	 UPnbGrOtTpIBAcpjCx1fEzh4MH5ct8Rler3T0ebR5TzmjzP4KyHlCCFdZPUSyFR/yZ
+	 ttQNAGWsOkK6cEpErB7zVH1XIdfwONa2IdhSsSPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbgHQQhg (ORCPT
+        id S2388839AbgHQQh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387578AbgHQP4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:17 -0400
+        id S2388091AbgHQP44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964DB214F1;
-        Mon, 17 Aug 2020 15:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D06420760;
+        Mon, 17 Aug 2020 15:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679777;
-        bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
+        s=default; t=1597679816;
+        bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4mE/JoFX6tey03BInvUA7OdZjP6Wg1h1KFr5uvegBeSR2/ddrr+jBoWO+auIBeGg
-         uHSKgLhBR3b4lSB8T1VpnCj+qCl/JjLTslpu9J1SJaikqUmMxtMQ9wOt9XxzZ/F0FB
-         yU0vVJzBmvSdO9R56XQWLSUAVWwG61pP6efZS1Y8=
+        b=ew5b0IY/IbrgDlwjfPD0yzookOIkliL5AOd37I+21EJ11i+H4ylQYxHjhNiMEJcT/
+         jrkNp4Xb7gXKmp8wbJmx4o4cuDb66SEXrH1WWSJLQ/z7tI4sQioVSP7inRCg7Got7c
+         2G2hMiru88uU9Iv3fkIIJ2hWHHvSDrC5QzS4nRUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
-        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 331/393] USB: serial: cp210x: enable usb generic throttle/unthrottle
-Date:   Mon, 17 Aug 2020 17:16:21 +0200
-Message-Id: <20200817143835.652817219@linuxfoundation.org>
+        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 343/393] crypto: ccp - Fix use of merged scatterlists
+Date:   Mon, 17 Aug 2020 17:16:33 +0200
+Message-Id: <20200817143836.236065550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,38 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brant Merryman <brant.merryman@silabs.com>
+From: John Allen <john.allen@amd.com>
 
-commit 4387b3dbb079d482d3c2b43a703ceed4dd27ed28 upstream.
+commit 8a302808c60d441d9884cb00ea7f2b534f2e3ca5 upstream.
 
-Assign the .throttle and .unthrottle functions to be generic function
-in the driver structure to prevent data loss that can otherwise occur
-if the host does not enable USB throttling.
+Running the crypto manager self tests with
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
+when using the ccp-crypto driver:
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-Co-developed-by: Phu Luu <phu.luu@silabs.com>
-Signed-off-by: Phu Luu <phu.luu@silabs.com>
-Link: https://lore.kernel.org/r/57401AF3-9961-461F-95E1-F8AFC2105F5E@silabs.com
-[ johan: fix up tags ]
-Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
-Cc: stable <stable@vger.kernel.org>     # 2.6.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
+alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
+
+alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
+
+alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
+
+These errors are the result of improper processing of scatterlists mapped
+for DMA.
+
+Given a scatterlist in which entries are merged as part of mapping the
+scatterlist for DMA, the DMA length of a merged entry will reflect the
+combined length of the entries that were merged. The subsequent
+scatterlist entry will contain DMA information for the scatterlist entry
+after the last merged entry, but the non-DMA information will be that of
+the first merged entry.
+
+The ccp driver does not take this scatterlist merging into account. To
+address this, add a second scatterlist pointer to track the current
+position in the DMA mapped representation of the scatterlist. Both the DMA
+representation and the original representation of the scatterlist must be
+tracked as while most of the driver can use just the DMA representation,
+scatterlist_map_and_copy() must use the original representation and
+expects the scatterlist pointer to be accurate to the original
+representation.
+
+In order to properly walk the original scatterlist, the scatterlist must
+be walked until the combined lengths of the entries seen is equal to the
+DMA length of the current entry being processed in the DMA mapped
+representation.
+
+Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
+Signed-off-by: John Allen <john.allen@amd.com>
+Cc: stable@vger.kernel.org
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/ccp/ccp-dev.h |    1 +
+ drivers/crypto/ccp/ccp-ops.c |   37 ++++++++++++++++++++++++++-----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_d
- 	.break_ctl		= cp210x_break_ctl,
- 	.set_termios		= cp210x_set_termios,
- 	.tx_empty		= cp210x_tx_empty,
-+	.throttle		= usb_serial_generic_throttle,
-+	.unthrottle		= usb_serial_generic_unthrottle,
- 	.tiocmget		= cp210x_tiocmget,
- 	.tiocmset		= cp210x_tiocmset,
- 	.attach			= cp210x_attach,
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -469,6 +469,7 @@ struct ccp_sg_workarea {
+ 	unsigned int sg_used;
+ 
+ 	struct scatterlist *dma_sg;
++	struct scatterlist *dma_sg_head;
+ 	struct device *dma_dev;
+ 	unsigned int dma_count;
+ 	enum dma_data_direction dma_dir;
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -63,7 +63,7 @@ static u32 ccp_gen_jobid(struct ccp_devi
+ static void ccp_sg_free(struct ccp_sg_workarea *wa)
+ {
+ 	if (wa->dma_count)
+-		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
++		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
+ 
+ 	wa->dma_count = 0;
+ }
+@@ -92,6 +92,7 @@ static int ccp_init_sg_workarea(struct c
+ 		return 0;
+ 
+ 	wa->dma_sg = sg;
++	wa->dma_sg_head = sg;
+ 	wa->dma_dev = dev;
+ 	wa->dma_dir = dma_dir;
+ 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
+@@ -104,14 +105,28 @@ static int ccp_init_sg_workarea(struct c
+ static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
+ {
+ 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
++	unsigned int sg_combined_len = 0;
+ 
+ 	if (!wa->sg)
+ 		return;
+ 
+ 	wa->sg_used += nbytes;
+ 	wa->bytes_left -= nbytes;
+-	if (wa->sg_used == wa->sg->length) {
+-		wa->sg = sg_next(wa->sg);
++	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
++		/* Advance to the next DMA scatterlist entry */
++		wa->dma_sg = sg_next(wa->dma_sg);
++
++		/* In the case that the DMA mapped scatterlist has entries
++		 * that have been merged, the non-DMA mapped scatterlist
++		 * must be advanced multiple times for each merged entry.
++		 * This ensures that the current non-DMA mapped entry
++		 * corresponds to the current DMA mapped entry.
++		 */
++		do {
++			sg_combined_len += wa->sg->length;
++			wa->sg = sg_next(wa->sg);
++		} while (wa->sg_used > sg_combined_len);
++
+ 		wa->sg_used = 0;
+ 	}
+ }
+@@ -299,7 +314,7 @@ static unsigned int ccp_queue_buf(struct
+ 	/* Update the structures and generate the count */
+ 	buf_count = 0;
+ 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
+-		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
++		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
+ 			     dm_wa->length - buf_count);
+ 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
+ 
+@@ -331,11 +346,11 @@ static void ccp_prepare_data(struct ccp_
+ 	 * and destination. The resulting len values will always be <= UINT_MAX
+ 	 * because the dma length is an unsigned int.
+ 	 */
+-	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
++	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
+ 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
+ 
+ 	if (dst) {
+-		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
++		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
+ 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
+ 		op_len = min(sg_src_len, sg_dst_len);
+ 	} else {
+@@ -365,7 +380,7 @@ static void ccp_prepare_data(struct ccp_
+ 		/* Enough data in the sg element, but we need to
+ 		 * adjust for any previously copied data
+ 		 */
+-		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
++		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
+ 		op->src.u.dma.offset = src->sg_wa.sg_used;
+ 		op->src.u.dma.length = op_len & ~(block_size - 1);
+ 
+@@ -386,7 +401,7 @@ static void ccp_prepare_data(struct ccp_
+ 			/* Enough room in the sg element, but we need to
+ 			 * adjust for any previously used area
+ 			 */
+-			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
++			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
+ 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
+ 			op->dst.u.dma.length = op->src.u.dma.length;
+ 		}
+@@ -2028,7 +2043,7 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 	dst.sg_wa.sg_used = 0;
+ 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
+ 		if (!dst.sg_wa.sg ||
+-		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
++		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
+ 			ret = -EINVAL;
+ 			goto e_dst;
+ 		}
+@@ -2054,8 +2069,8 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 			goto e_dst;
+ 		}
+ 
+-		dst.sg_wa.sg_used += src.sg_wa.sg->length;
+-		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
++		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
++		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
+ 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
+ 			dst.sg_wa.sg_used = 0;
+ 		}
 
 
