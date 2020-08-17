@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A13CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4258C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735AC2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AC920758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgHQJjr (ORCPT
+        id S1727048AbgHQJjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:39:47 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55832 "EHLO
+        Mon, 17 Aug 2020 05:39:46 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55863 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728417AbgHQJiS (ORCPT
+        with ESMTP id S1728412AbgHQJiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 05:38:18 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 17 Aug 2020 12:38:12 +0300
+        with SMTP; 17 Aug 2020 12:38:14 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07H9cCtd011406;
-        Mon, 17 Aug 2020 12:38:12 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07H9cEeu011441;
+        Mon, 17 Aug 2020 12:38:14 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07H9cB3B003231;
-        Mon, 17 Aug 2020 12:38:12 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07H9cEQ4003256;
+        Mon, 17 Aug 2020 12:38:14 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07H9cBUV003230;
-        Mon, 17 Aug 2020 12:38:11 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07H9cEGf003251;
+        Mon, 17 Aug 2020 12:38:14 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Jiri Pirko <jiri@mellanox.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v2 03/13] net/mlx5: Add functions to set/query MFRL register
-Date:   Mon, 17 Aug 2020 12:37:42 +0300
-Message-Id: <1597657072-3130-4-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC v2 13/13] devlink: Add Documentation/networking/devlink/devlink-reload.rst
+Date:   Mon, 17 Aug 2020 12:37:52 +0300
+Message-Id: <1597657072-3130-14-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
 References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
@@ -49,102 +49,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions to query and set the MFRL reset options supported by
-firmware.
+Add devlink reload rst documentation file.
+Update index file to include it.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- .../net/ethernet/mellanox/mlx5/core/Makefile  |  2 +-
- .../ethernet/mellanox/mlx5/core/fw_reset.c    | 46 +++++++++++++++++++
- .../ethernet/mellanox/mlx5/core/fw_reset.h    | 13 ++++++
- 3 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+- Instead of reload levels driver,fw_reset,fw_live_patch have reload
+  actions driver_reinit,fw_activate,fw_live_patch
+---
+ .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
+ Documentation/networking/devlink/index.rst    |  1 +
+ 2 files changed, 55 insertions(+)
+ create mode 100644 Documentation/networking/devlink/devlink-reload.rst
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-index 10e6886c96ba..4d45a2f6fed6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -16,7 +16,7 @@ mlx5_core-y :=	main.o cmd.o debugfs.o fw.o eq.o uar.o pagealloc.o \
- 		transobj.o vport.o sriov.o fs_cmd.o fs_core.o pci_irq.o \
- 		fs_counters.o rl.o lag.o dev.o events.o wq.o lib/gid.o \
- 		lib/devcom.o lib/pci_vsc.o lib/dm.o diag/fs_tracepoint.o \
--		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o
-+		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o fw_reset.o
+diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
+new file mode 100644
+index 000000000000..9846ea727f3b
+--- /dev/null
++++ b/Documentation/networking/devlink/devlink-reload.rst
+@@ -0,0 +1,54 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============
++Devlink Reload
++==============
++
++``devlink-reload`` provides mechanism to either reload driver entities,
++applying ``devlink-params`` and ``devlink-resources`` new values or firmware
++activation depends on reload action selected.
++
++Reload actions
++=============
++
++User may select a reload action.
++By default ``driver_reinit`` action is done.
++
++.. list-table:: Possible reload actions
++   :widths: 5 90
++
++   * - Name
++     - Description
++   * - ``driver-reinit``
++     - Driver entities re-initialization, including applying
++       new values to devlink entities which are used during driver
++       load such as ``devlink-params`` in configuration mode
++       ``driverinit`` or ``devlink-resources``
++   * - ``fw_activate``
++     - Firmware activate. Can be used for firmware reload or firmware
++       upgrade if new firmware is stored and driver supports such
++       firmware upgrade.
++   * - ``fw_live_patch``
++     - Firmware live patch, applies firmware changes without reset.
++
++Change namespace
++================
++
++All devlink instances are created in init_net and stay there for a
++lifetime. Allow user to be able to move devlink instances into
++namespaces during devlink reload operation. That ensures proper
++re-instantiation of driver objects, including netdevices.
++
++example usage
++-------------
++
++.. code:: shell
++
++    $ devlink dev reload help
++    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
++
++    # Run reload command for devlink driver entities re-initialization:
++    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
++
++    # Run reload command to activate firmware:
++    $ devlink dev reload pci/0000:82:00.0 action fw_activate
+diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
+index 7684ae5c4a4a..d82874760ae2 100644
+--- a/Documentation/networking/devlink/index.rst
++++ b/Documentation/networking/devlink/index.rst
+@@ -20,6 +20,7 @@ general.
+    devlink-params
+    devlink-region
+    devlink-resource
++   devlink-reload
+    devlink-trap
  
- #
- # Netdev basic
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-new file mode 100644
-index 000000000000..76d2cece29ac
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-+/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
-+
-+#include "fw_reset.h"
-+
-+static int mlx5_reg_mfrl_set(struct mlx5_core_dev *dev, u8 reset_level,
-+			     u8 reset_type_sel, u8 sync_resp, bool sync_start)
-+{
-+	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+
-+	MLX5_SET(mfrl_reg, in, reset_level, reset_level);
-+	MLX5_SET(mfrl_reg, in, rst_type_sel, reset_type_sel);
-+	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_resp, sync_resp);
-+	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_start, sync_start);
-+
-+	return mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 1);
-+}
-+
-+int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type)
-+{
-+	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	int err;
-+
-+	err = mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 0);
-+	if (err)
-+		return err;
-+
-+	if (reset_level)
-+		*reset_level = MLX5_GET(mfrl_reg, out, reset_level);
-+	if (reset_type)
-+		*reset_type = MLX5_GET(mfrl_reg, out, reset_type);
-+
-+	return 0;
-+}
-+
-+int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel)
-+{
-+	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL3, reset_type_sel, 0, true);
-+}
-+
-+int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev)
-+{
-+	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL0, 0, 0, false);
-+}
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
-new file mode 100644
-index 000000000000..1bbd95182ca6
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-+/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
-+
-+#ifndef __MLX5_FW_RESET_H
-+#define __MLX5_FW_RESET_H
-+
-+#include "mlx5_core.h"
-+
-+int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type);
-+int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel);
-+int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev);
-+
-+#endif
+ Driver-specific documentation
 -- 
 2.17.1
 
