@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B157FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3C920578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AB6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691941;
-	bh=w/2g3aLvQltOZyeGMCGkAoO5Cozq7K1AwA0txE6qThI=;
+	s=default; t=1597691945;
+	bh=3N8MtWemgelhVh//K1SS5aIJzLRX7vaaoNR0NvUqAYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyTtNWDIMQxuL2ViiDanYFFjBTfl4ecAwj2laneJEey/u254DhsjdSAQqIZYV5I8Z
-	 QkWF6KXiKdWcdC7hgY9H6JUZhDpJBxlnc/qK88CGbN6kp9pS6Gvedq2XAV2/vDID/n
-	 NmEt8ks2fMcNeEume2ILHvIb0yePZeEptRKbWnBI=
+	b=M7fYgm0e+HMza2mjTarT5OhKGZ9ZmZMMJ7J1F+uwyfCGn63zUfxamyj23j9GLwwhH
+	 MFnz+cMOEmNIHQ2p6a1cL/tzckJW2mbbeBUerGgXbPZqelrjVtO75MIUHQF1/FVd4x
+	 HN+c9O2NzJO3VXnFh5EGUV23I8Hjuv77DpQgJoE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392283AbgHQTS6 (ORCPT
+        id S2392127AbgHQTS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbgHQPh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:59 -0400
+        id S1730415AbgHQPh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7A223120;
-        Mon, 17 Aug 2020 15:37:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DC7322CB3;
+        Mon, 17 Aug 2020 15:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678677;
-        bh=w/2g3aLvQltOZyeGMCGkAoO5Cozq7K1AwA0txE6qThI=;
+        s=default; t=1597678668;
+        bh=3N8MtWemgelhVh//K1SS5aIJzLRX7vaaoNR0NvUqAYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Yxai9FRdD79CP/X/SAewOIHIJDZysFH9Mfp654rW2AVyklTP2rlGhcttcTPLdRzf
-         7qwMaMZlWBh/gumNW1WpCTDGbz37HgKrpoK5Z19+hvrNK1Z6Btyma9BP04hquuhYao
-         PMOQivPBuK/vZU5sH2X4jNSpHFAMYBUMdIZnNTlw=
+        b=nHAFdoFX0EcfV+yKz+IbbfTV+hdK1Z1Ob6rlyYrurPdKk7JBS2j1gXzFpfDlsIKes
+         SDNZFA+vgJE3iba4C49o5uej38BB+jCJdceNKaKiOimjZDOdZAk4sGXl1TWlnYvWWE
+         J45Q+2futghbtKl2znH8ahBQRw5L4vczn1EbGjS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH 5.8 415/464] bitfield.h: dont compile-time validate _val in FIELD_FIT
-Date:   Mon, 17 Aug 2020 17:16:08 +0200
-Message-Id: <20200817143853.658940008@linuxfoundation.org>
+        stable@vger.kernel.org, Qingyu Li <ieatmuttonchuan@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 386/464] net/nfc/rawsock.c: add CAP_NET_RAW check.
+Date:   Mon, 17 Aug 2020 17:15:39 +0200
+Message-Id: <20200817143852.269851637@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,55 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Qingyu Li <ieatmuttonchuan@gmail.com>
 
-commit 444da3f52407d74c9aa12187ac6b01f76ee47d62 upstream.
+[ Upstream commit 26896f01467a28651f7a536143fe5ac8449d4041 ]
 
-When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
-compiler to deduce a case where _val can only have the value of -1 at
-compile time. Specifically,
+When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked first.
 
-/* struct bpf_insn: _s32 imm */
-u64 imm = insn->imm; /* sign extend */
-if (imm >> 32) { /* non-zero only if insn->imm is negative */
-  /* inlined from ur_load_imm_any */
-  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
-  if (__builtin_constant_p(__imm) && __imm > 255)
-    compiletime_assert_XXX()
-
-This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
-checks that a given value is representable in one byte (interpreted as
-unsigned).
-
-FIELD_FIT() should return true or false at runtime for whether a value
-can fit for not. Don't break the build over a value that's too large for
-the mask. We'd prefer to keep the inlining and compiler optimizations
-though we know this case will always return false.
-
-Cc: stable@vger.kernel.org
-Fixes: 1697599ee301a ("bitfield.h: add FIELD_FIT() helper")
-Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
-Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/bitfield.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/nfc/rawsock.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -77,7 +77,7 @@
-  */
- #define FIELD_FIT(_mask, _val)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
-+		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
- 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
- 	})
+--- a/net/nfc/rawsock.c
++++ b/net/nfc/rawsock.c
+@@ -332,10 +332,13 @@ static int rawsock_create(struct net *ne
+ 	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
+ 		return -ESOCKTNOSUPPORT;
  
+-	if (sock->type == SOCK_RAW)
++	if (sock->type == SOCK_RAW) {
++		if (!capable(CAP_NET_RAW))
++			return -EPERM;
+ 		sock->ops = &rawsock_raw_ops;
+-	else
++	} else {
+ 		sock->ops = &rawsock_ops;
++	}
+ 
+ 	sk = sk_alloc(net, PF_NFC, GFP_ATOMIC, nfc_proto->proto, kern);
+ 	if (!sk)
 
 
