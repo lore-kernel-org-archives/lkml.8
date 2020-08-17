@@ -2,108 +2,175 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14C9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C64C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B48B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8456A20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693546;
-	bh=AFRY6qmw8k/Fvb4oECFHqM2opKMoQZO1D/wIYL5UJEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cgm7W5bqIDINXe4jRcD4F/WUu30U+7ZQamvVUC6Y4PVLYJJytr72J2tyoXioND0m1
-	 UykrVhlE3cK5/yj8ldMMJQrbtyAz6g9pigHlruiN400sikvpAovIJ0mlfH+kYrUUnZ
-	 rETgp3DgtF1N99qvgBW6LJLfFlEa9Jl5EAW5nASo=
+	s=default; t=1597693551;
+	bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c+9UhEDFJ31Hi2xMD1ltOPkyhxkGJ40aVWYAIlJVSqKYS0SZTNDgG2M/EN6UAXiai
+	 x0HGFWOHoknQA1zyf7jSouLck8Q5IK0s4KvSqeGuuidFlWkI99ODC1HI+ns/zDYU0p
+	 IAz7yKOxoa41m2BS+5irBTVSiMOdxTQBAksGJCz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404380AbgHQTpp (ORCPT
+        id S2404388AbgHQTpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:45:45 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41421 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404369AbgHQTpl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:45:41 -0400
-Received: by mail-io1-f65.google.com with SMTP id g19so18833500ioh.8;
-        Mon, 17 Aug 2020 12:45:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9167b1zAfSDWY5dpby+m+hSASEzloHe7rPOI9rnQvoI=;
-        b=iDp1FWAT2kCePFOeuPKe/VOs1RYNiZbsPeCm4Ny83PCcKvx3Y1sdmf3M0MMGrMLPvm
-         vKxk9zACd6R+ZxJ8Di9PXyHiQc+feEJ1ay2Mbe4fa6+86joPUzezdNoCG/m899aqkisL
-         9AlKoE1nV/tcnfc28yLerb6IET6TILWcDQtGVyIONBtPgdQ5PvcHT7rTHlyhphgt3Ola
-         fk2Vxv0XndjRur6/JuZwvlxb2bCb/QhMAwSpC6jiORR+deSz311+QtqpitlEGc2sWD3M
-         ZptV78BRRpkqVJJiPueVuUamSRKzD3U7qcykNESCe0K9iPt1S4/MclHpyUiv+IIJ9usk
-         O7OQ==
-X-Gm-Message-State: AOAM533G9HSKgAa3VHZcZrz6v3FTwQCJCPJk2zxZ53k2JP0pJMZwivPZ
-        a2NMyBkpWStrZ1LRD4YCgoTOEelSeg==
-X-Google-Smtp-Source: ABdhPJy/Kg9h4YQFjm3/QHraZGHGwQWqnX/EVeFFvEUcAqfRDNDEvMiIk7cblt87y9uIOl6p98xH8Q==
-X-Received: by 2002:a5e:d514:: with SMTP id e20mr13493344iom.183.1597693540798;
-        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id w13sm10186284ilj.70.2020.08.17.12.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
-Received: (nullmailer pid 1431277 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:45:39 -0000
-Date:   Mon, 17 Aug 2020 13:45:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     cy_huang <u0084500@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, cy_huang@richtek.com,
-        gene_chen@richtek.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] regulator: rt4801: Fix the dt-binding document for
- dtc check.
-Message-ID: <20200817194539.GA1429240@bogus>
-References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
- <1597461262-25878-3-git-send-email-u0084500@gmail.com>
+        Mon, 17 Aug 2020 15:45:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729392AbgHQPVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4B7820716;
+        Mon, 17 Aug 2020 15:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677708;
+        bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yPCxnQ//gy4y67TqFr+t1yWdHDbCKgFCt3mk/TNVoaMxykmU0zej4+XVCZNVbQYWT
+         /P0FXtfI10Ucg/mOtEW+P+ZCgBlCkH447isQgX6lwgSwE1glyDH6ENjaeqKM5IlCPb
+         L0f9s2GpAY4adi8IECccXnisDmV3Lg8bCrN+ZtTc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 079/464] net: mscc: ocelot: fix encoding destination ports into multicast IPv4 address
+Date:   Mon, 17 Aug 2020 17:10:32 +0200
+Message-Id: <20200817143837.564359473@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597461262-25878-3-git-send-email-u0084500@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 11:14:22AM +0800, cy_huang wrote:
-> From: ChiYuan Huang <cy_huang@richtek.com>
-> 
-> Fix the dt-binding document for dtc check.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This should be squashed into the prior patch.
+[ Upstream commit 0897ecf7532577bda3dbcb043ce046a96948889d ]
 
-> 
-> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> ---
->  .../devicetree/bindings/regulator/richtek,rt4801-regulator.yaml        | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-> index 28d30e2..fa075c6 100644
-> --- a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-> +++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-> @@ -49,9 +49,6 @@ required:
->    - compatible
->    - reg
->  
-> -additionalProperties:
-> -  - enable-gpios
-> -
+The ocelot hardware designers have made some hacks to support multicast
+IPv4 and IPv6 addresses. Normally, the MAC table matches on MAC
+addresses and the destination ports are selected through the DEST_IDX
+field of the respective MAC table entry. The DEST_IDX points to a Port
+Group ID (PGID) which contains the bit mask of ports that frames should
+be forwarded to. But there aren't a lot of PGIDs (only 80 or so) and
+there are clearly many more IP multicast addresses than that, so it
+doesn't scale to use this PGID mechanism, so something else was done.
+Since the first portion of the MAC address is known, the hack they did
+was to use a single PGID for _flooding_ unknown IPv4 multicast
+(PGID_MCIPV4 == 62), but for known IP multicast, embed the destination
+ports into the first 3 bytes of the MAC address recorded in the MAC
+table.
 
-This should be:
+The VSC7514 datasheet explains it like this:
 
-additionalProperties: false
+    3.9.1.5 IPv4 Multicast Entries
 
->  examples:
->    - |
->      i2c {
-> -- 
-> 2.7.4
-> 
+    MAC table entries with the ENTRY_TYPE = 2 settings are interpreted
+    as IPv4 multicast entries.
+    IPv4 multicasts entries match IPv4 frames, which are classified to
+    the specified VID, and which have DMAC = 0x01005Exxxxxx, where
+    xxxxxx is the lower 24 bits of the MAC address in the entry.
+    Instead of a lookup in the destination mask table (PGID), the
+    destination set is programmed as part of the entry MAC address. This
+    is shown in the following table.
+
+    Table 78: IPv4 Multicast Destination Mask
+
+        Destination Ports            Record Bit Field
+        ---------------------------------------------
+        Ports 10-0                   MAC[34-24]
+
+    Example: All IPv4 multicast frames in VLAN 12 with MAC 01005E112233 are
+    to be forwarded to ports 3, 8, and 9. This is done by inserting the
+    following entry in the MAC table entry:
+    VALID = 1
+    VID = 12
+    MAC = 0x000308112233
+    ENTRY_TYPE = 2
+    DEST_IDX = 0
+
+But this procedure is not at all what's going on in the driver. In fact,
+the code that embeds the ports into the MAC address looks like it hasn't
+actually been tested. This patch applies the procedure described in the
+datasheet.
+
+Since there are many other fixes to be made around multicast forwarding
+until it works properly, there is no real reason for this patch to be
+backported to stable trees, or considered a real fix of something that
+should have worked.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mscc/ocelot.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index f17da67a4622e..d0b79cca51840 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -1605,14 +1605,14 @@ static int ocelot_port_obj_add_mdb(struct net_device *dev,
+ 	addr[0] = 0;
+ 
+ 	if (!new) {
+-		addr[2] = mc->ports << 0;
+-		addr[1] = mc->ports << 8;
++		addr[1] = mc->ports >> 8;
++		addr[2] = mc->ports & 0xff;
+ 		ocelot_mact_forget(ocelot, addr, vid);
+ 	}
+ 
+ 	mc->ports |= BIT(port);
+-	addr[2] = mc->ports << 0;
+-	addr[1] = mc->ports << 8;
++	addr[1] = mc->ports >> 8;
++	addr[2] = mc->ports & 0xff;
+ 
+ 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
+ }
+@@ -1636,9 +1636,9 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
+ 		return -ENOENT;
+ 
+ 	memcpy(addr, mc->addr, ETH_ALEN);
+-	addr[2] = mc->ports << 0;
+-	addr[1] = mc->ports << 8;
+ 	addr[0] = 0;
++	addr[1] = mc->ports >> 8;
++	addr[2] = mc->ports & 0xff;
+ 	ocelot_mact_forget(ocelot, addr, vid);
+ 
+ 	mc->ports &= ~BIT(port);
+@@ -1648,8 +1648,8 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
+ 		return 0;
+ 	}
+ 
+-	addr[2] = mc->ports << 0;
+-	addr[1] = mc->ports << 8;
++	addr[1] = mc->ports >> 8;
++	addr[2] = mc->ports & 0xff;
+ 
+ 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
+ }
+-- 
+2.25.1
+
+
+
