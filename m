@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEDFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29336C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA20D20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C422067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684105;
-	bh=eLivimOm56pMwF4gQgsZcnUOz4mOosZfB22sIXPRjfQ=;
+	s=default; t=1597684117;
+	bh=CAZDTOlSXeiXvjXUcKkxqT5P8FHgyvW4xuTDWxyLWxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWi+0aFZh4/xTrUc1+2x7cJsfgc458HAX7JNbVQcrJkHkfTedFlRK1p+peFr0uAz3
-	 lLVPL0f6PkMwBU5ESVas6t6367F50mTpNgmO9BMkRH5J6CJxJVRjdCAQkKf3e0BdNG
-	 ZeyO2IFTsxUPAx1M8K+fiTYc+/r82ADd2r80DTy0=
+	b=cJ9k2xDCmUOxj55H0f8YV5UAngaYRGmroC/+jFOEdVUHv0WNIJouRTU5S81zZu5o5
+	 CxL3VQmOE+5zzlaelNtpfDgdBRkq1l4UI2U93YCTOJGITlPNdsKOjth5iWiMcb8J5U
+	 ApFBn9f1iRD637fIcPSS60eiAE++IR1yq6OmbcBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389336AbgHQRIX (ORCPT
+        id S2389306AbgHQRIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388553AbgHQQKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:10:37 -0400
+        id S2388575AbgHQQKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E9120578;
-        Mon, 17 Aug 2020 16:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DB320729;
+        Mon, 17 Aug 2020 16:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680630;
-        bh=eLivimOm56pMwF4gQgsZcnUOz4mOosZfB22sIXPRjfQ=;
+        s=default; t=1597680652;
+        bh=CAZDTOlSXeiXvjXUcKkxqT5P8FHgyvW4xuTDWxyLWxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bpthls62uMb3MDy+7/l0lX7Z+arxTAioRB1O7Jorzjo772UzoPsoiHVvToYnW21Xy
-         4PkW6FqoTlkTAsm1juywdgXFWkspHRQuxZpp2vAtx4Ea3i4s0alW2hxnb64l7aPirP
-         20oXvWQXwHtuB/urRN3F5iu3JQU1LlOgn/hm4YVc=
+        b=ibXO9k88otT/QRZi3JSXk1VJhWCNwGBZsiRozy2I+KKMAsGKV4YQ0o2e95PJPTuoY
+         G3yMMsCtDjuN2I5WxZrBtc3YDPbdXPuXf45JvYh7+V7ILoFwjTVquzIxL6g1NJPdCn
+         kNtkUNASdUv8XLHci2M8VvXAvjorndDICamLUMVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 233/270] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
-Date:   Mon, 17 Aug 2020 17:17:14 +0200
-Message-Id: <20200817143807.401358620@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH 5.4 261/270] bitfield.h: dont compile-time validate _val in FIELD_FIT
+Date:   Mon, 17 Aug 2020 17:17:42 +0200
+Message-Id: <20200817143808.820042758@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,80 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
+commit 444da3f52407d74c9aa12187ac6b01f76ee47d62 upstream.
 
-Further investigation of the L-R swap problem on the MS2109 reveals that
-the problem isn't that the channels are swapped, but rather that they
-are swapped and also out of phase by one sample. In other words, the
-issue is actually that the very first frame that comes from the hardware
-is a half-frame containing only the right channel, and after that
-everything becomes offset.
+When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+compiler to deduce a case where _val can only have the value of -1 at
+compile time. Specifically,
 
-So introduce a new quirk field to drop the very first 2 bytes that come
-in after the format is configured and a capture stream starts. This puts
-the channels in phase and in the correct order.
+/* struct bpf_insn: _s32 imm */
+u64 imm = insn->imm; /* sign extend */
+if (imm >> 32) { /* non-zero only if insn->imm is negative */
+  /* inlined from ur_load_imm_any */
+  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+  if (__builtin_constant_p(__imm) && __imm > 255)
+    compiletime_assert_XXX()
+
+This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+checks that a given value is representable in one byte (interpreted as
+unsigned).
+
+FIELD_FIT() should return true or false at runtime for whether a value
+can fit for not. Don't break the build over a value that's too large for
+the mask. We'd prefer to keep the inlining and compiler optimizations
+though we know this case will always return false.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 1697599ee301a ("bitfield.h: add FIELD_FIT() helper")
+Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/card.h   |    1 +
- sound/usb/pcm.c    |    6 ++++++
- sound/usb/quirks.c |    3 +++
- sound/usb/stream.c |    1 +
- 4 files changed, 11 insertions(+)
+ include/linux/bitfield.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -133,6 +133,7 @@ struct snd_usb_substream {
- 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
- 	unsigned int fmt_type;		/* USB audio format type (1-3) */
- 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-+	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
- 
- 	unsigned int running: 1;	/* running status */
- 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1417,6 +1417,12 @@ static void retire_capture_urb(struct sn
- 			// continue;
- 		}
- 		bytes = urb->iso_frame_desc[i].actual_length;
-+		if (subs->stream_offset_adj > 0) {
-+			unsigned int adj = min(subs->stream_offset_adj, bytes);
-+			cp += adj;
-+			bytes -= adj;
-+			subs->stream_offset_adj -= adj;
-+		}
- 		frames = bytes / stride;
- 		if (!subs->txfr_quirk)
- 			bytes = frames * stride;
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1432,6 +1432,9 @@ void snd_usb_set_format_quirk(struct snd
- 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
- 		set_format_emu_quirk(subs, fmt);
- 		break;
-+	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
-+		subs->stream_offset_adj = 2;
-+		break;
- 	}
- }
- 
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -94,6 +94,7 @@ static void snd_usb_init_substream(struc
- 	subs->tx_length_quirk = as->chip->tx_length_quirk;
- 	subs->speed = snd_usb_get_speed(subs->dev);
- 	subs->pkt_offset_adj = 0;
-+	subs->stream_offset_adj = 0;
- 
- 	snd_usb_set_pcm_ops(as->pcm, stream);
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -64,7 +64,7 @@
+  */
+ #define FIELD_FIT(_mask, _val)						\
+ 	({								\
+-		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
++		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
+ 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+ 	})
  
 
 
