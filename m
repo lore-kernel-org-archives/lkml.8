@@ -2,53 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88262C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B3620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D6C20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684668;
-	bh=aMXRQbGt+myTEvXRk+LaenodkxkzD/fx6yGyb7R01sw=;
+	s=default; t=1597684685;
+	bh=78p4yXCY0ZWOIXpb4AgnJQqfIXIBNezYfu8ZhL5i8G0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MsaZ3Jn5TQ9FDdCBT4yJ0P2gtyYlzR82TRY8gace25NAGK3GYNXSCEKxhDtaQYEf2
-	 jEEiajTtCO1lMsILnb0ASslfmunVImkrNbLrAXy00U8zTf3S07hym3EVpNNFkklPex
-	 SR1FkQsiDCVr+eIJ33zOGWVrXomgnhc1Y3H61KVo=
+	b=U72J7+h77mDDVTu63cq/VxazS9hA82ck1PtzZ+JtLrJZOpjsnPNxLA3RD7Vb0NSXe
+	 /8ZHZ3lSrJdN+UE2QnhnjU8Zij4rEREIjyZ+ZM9eOrrDddqlU3MvhWaUH8fNNyiT7A
+	 zlB0sa7TkDmwEqoXCGIvrLUSQKYHfBeRa6d1G7kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389621AbgHQRRq (ORCPT
+        id S2389655AbgHQRSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbgHQQPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:03 -0400
+        id S1730936AbgHQQPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:15:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33DBB20658;
-        Mon, 17 Aug 2020 16:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FC320578;
+        Mon, 17 Aug 2020 16:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680902;
-        bh=aMXRQbGt+myTEvXRk+LaenodkxkzD/fx6yGyb7R01sw=;
+        s=default; t=1597680900;
+        bh=78p4yXCY0ZWOIXpb4AgnJQqfIXIBNezYfu8ZhL5i8G0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzt+NtfKqI71imvAA86hTHG2HLp2qdFfACuTTa0ilalsKw2cU7c5OhUrvJtOabS6P
-         5zaohCETPOJfvnVahKbx/1JUCB4Cm79PoGxY37x+OyZe3Eua2DoHCeVRBem5yiBuC/
-         73tZNcf8EecnCGmgEB+b1R7m5KFIIp5eQjXa4tHs=
+        b=i6ZuLPYly/wcX/UtIal+3wgwnhDMvPdp+tN354GDbt7xGjcGedPkycwf94ILY7cxB
+         /IZLpswW+/uP/atBPQZ346XEkDB7qrYsaI3lj1h2CIiNBnNU/+f74+hVGT3pIK3E4g
+         wGdBUx3qIjJIjfIpB6uaoqoYtFxM+c42e+uMmWkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, YangYuxi <yx.atom1@gmail.com>,
+        Julian Anastasov <ja@ssi.bg>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/168] media: firewire: Using uninitialized values in node_probe()
-Date:   Mon, 17 Aug 2020 17:16:44 +0200
-Message-Id: <20200817143737.355562192@linuxfoundation.org>
+Subject: [PATCH 4.19 072/168] ipvs: allow connection reuse for unconfirmed conntrack
+Date:   Mon, 17 Aug 2020 17:16:43 +0200
+Message-Id: <20200817143737.310228173@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,38 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Julian Anastasov <ja@ssi.bg>
 
-[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
+[ Upstream commit f0a5e4d7a594e0fe237d3dfafb069bb82f80f42f ]
 
-If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
-then the "strlen(model_names[i]) <= name_len" is true because strlen()
-is unsigned and -ENOENT is type promoted to a very high positive value.
-Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
-data because "name" is uninitialized.
+YangYuxi is reporting that connection reuse
+is causing one-second delay when SYN hits
+existing connection in TIME_WAIT state.
+Such delay was added to give time to expire
+both the IPVS connection and the corresponding
+conntrack. This was considered a rare case
+at that time but it is causing problem for
+some environments such as Kubernetes.
 
-Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+As nf_conntrack_tcp_packet() can decide to
+release the conntrack in TIME_WAIT state and
+to replace it with a fresh NEW conntrack, we
+can use this to allow rescheduling just by
+tuning our check: if the conntrack is
+confirmed we can not schedule it to different
+real server and the one-second delay still
+applies but if new conntrack was created,
+we are free to select new real server without
+any delays.
+
+YangYuxi lists some of the problem reports:
+
+- One second connection delay in masquerading mode:
+https://marc.info/?t=151683118100004&r=1&w=2
+
+- IPVS low throughput #70747
+https://github.com/kubernetes/kubernetes/issues/70747
+
+- Apache Bench can fill up ipvs service proxy in seconds #544
+https://github.com/cloudnativelabs/kube-router/issues/544
+
+- Additional 1s latency in `host -> service IP -> pod`
+https://github.com/kubernetes/kubernetes/issues/90854
+
+Fixes: f719e3754ee2 ("ipvs: drop first packet to redirect conntrack")
+Co-developed-by: YangYuxi <yx.atom1@gmail.com>
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+Signed-off-by: Julian Anastasov <ja@ssi.bg>
+Reviewed-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/firewire/firedtv-fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/ip_vs.h             | 10 ++++------
+ net/netfilter/ipvs/ip_vs_core.c | 12 +++++++-----
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
-index 92f4112d2e377..eaf94b817dbc0 100644
---- a/drivers/media/firewire/firedtv-fw.c
-+++ b/drivers/media/firewire/firedtv-fw.c
-@@ -271,6 +271,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index af0ede9ad4d0b..c31e54a41b5c4 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -1614,18 +1614,16 @@ static inline void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
+ }
+ #endif /* CONFIG_IP_VS_NFCT */
  
- 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
- 				 name, sizeof(name));
-+	if (name_len < 0)
-+		return name_len;
- 	for (i = ARRAY_SIZE(model_names); --i; )
- 		if (strlen(model_names[i]) <= name_len &&
- 		    strncmp(name, model_names[i], name_len) == 0)
+-/* Really using conntrack? */
+-static inline bool ip_vs_conn_uses_conntrack(struct ip_vs_conn *cp,
+-					     struct sk_buff *skb)
++/* Using old conntrack that can not be redirected to another real server? */
++static inline bool ip_vs_conn_uses_old_conntrack(struct ip_vs_conn *cp,
++						 struct sk_buff *skb)
+ {
+ #ifdef CONFIG_IP_VS_NFCT
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_conn *ct;
+ 
+-	if (!(cp->flags & IP_VS_CONN_F_NFCT))
+-		return false;
+ 	ct = nf_ct_get(skb, &ctinfo);
+-	if (ct)
++	if (ct && nf_ct_is_confirmed(ct))
+ 		return true;
+ #endif
+ 	return false;
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index a71f777d1353a..d5e4329579e28 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -1928,14 +1928,14 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 
+ 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
+ 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
+-		bool uses_ct = false, resched = false;
++		bool old_ct = false, resched = false;
+ 
+ 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
+ 		    unlikely(!atomic_read(&cp->dest->weight))) {
+ 			resched = true;
+-			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
++			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
+ 		} else if (is_new_conn_expected(cp, conn_reuse_mode)) {
+-			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
++			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
+ 			if (!atomic_read(&cp->n_control)) {
+ 				resched = true;
+ 			} else {
+@@ -1943,15 +1943,17 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 				 * that uses conntrack while it is still
+ 				 * referenced by controlled connection(s).
+ 				 */
+-				resched = !uses_ct;
++				resched = !old_ct;
+ 			}
+ 		}
+ 
+ 		if (resched) {
++			if (!old_ct)
++				cp->flags &= ~IP_VS_CONN_F_NFCT;
+ 			if (!atomic_read(&cp->n_control))
+ 				ip_vs_conn_expire_now(cp);
+ 			__ip_vs_conn_put(cp);
+-			if (uses_ct)
++			if (old_ct)
+ 				return NF_DROP;
+ 			cp = NULL;
+ 		}
 -- 
 2.25.1
 
