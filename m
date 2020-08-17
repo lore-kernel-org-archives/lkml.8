@@ -2,114 +2,104 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2046C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482792072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB952063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="LP63tE3J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NideZf0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgHQLi1 (ORCPT
+        id S1726575AbgHQLlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:38:27 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:5503 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgHQLiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:38:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597664295; x=1629200295;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=qAiSySTl/y8QrdoOwS73hqC2vZPrIK22GvC7HIEK8Sw=;
-  b=LP63tE3J/JW2ErnnxJAehAh0T7+LeTm3GauBDpY8jJWSpOmTCkiomLNt
-   xSxIHMFnQNyovd0/2aHVfx4HJGyc+QedBfLCAgswXz7VzO6mMQRdTtGs3
-   CHLHba95AO6BrIzEjGI1BwSgMTq11LnJi6zHCBbG3HVs33XolXG1MvgaG
-   xNSPMxFp6O40rhqzgCJQtyxBBLCjqqnmMOH7w8prsfRyVSRGufSbKxP5c
-   KB9HFM5hBOdG2S1GdZzsnitaBtSVzHif/HodY3OHO4mCuGzxLdaJnNiir
-   NeKNBwCD4J4GYVz/0+uC3Z4yV9pgJ3k7Ov7SICIYFuVuJItxfJ3bhDllP
-   Q==;
-IronPort-SDR: r14hO/kLklIsGQ2dnpEN7qM09P2f2aF1EjhAlxzmSMcuqfvXFBRe+N2g2GbNAQy6RBnH6mvub4
- G9CzTCq5/0Xu34vgrQoODE4XvobffdAgUcNAoI/Wd3UL6Jq51FS5mK4HdyazyQntye83cu6C1d
- Utxs08P5rh1ovPmRJnbqt32sNVRq/vBpgr26ga+RPc5pxsLbfheQqpxpsN6+Av0kB6MiwftAt7
- /fB6w62Tw9zJn1oFUf2wPuRXpstyhH7KMAs9dQhCYg8DlQFi2903uhUeTmOramaYOuZ2OpH0lA
- PAs=
-X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="2642801"
-From:   Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
-Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Index: AQHWcWQZKYOChL0mPkuCFeZyDJy6mKk3KiiAgABS1/CABG6hAIAARo2Q
-Date:   Mon, 17 Aug 2020 11:38:10 +0000
-Message-ID: <a64ae27d9f1348ecae6adc74969cc88c@skidata.com>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
- <VE1PR04MB6638AC2A3AE852C3047E7B97895F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB6638AC2A3AE852C3047E7B97895F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Accept-Language: en-US, de-AT
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.111.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Mon, 17 Aug 2020 07:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgHQLlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:41:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB37C061389;
+        Mon, 17 Aug 2020 04:41:18 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w25so17051984ljo.12;
+        Mon, 17 Aug 2020 04:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:date:from:to:cc:message-id:in-reply-to:references;
+        bh=DSSLi1nehUTQX9TtZXEIyfRv/D0dGZ+iJs4E1Ou7Qcg=;
+        b=NideZf0rdtwhnk/2DLL2h/tN4nIJigxAXTwVunWJ/2iZlkC6iYjtZFlYqAiFOkVK3M
+         IOjCAjTf+tJ1b7GJxOon5Op8gz1jelr/6ynZs61yhv+0IR1HbPSb9KTCMwretc+uF+rs
+         BIlIrb1L3CJYzVoTo+X8HcH9qLJuIVPdG2Rm5Vm4bVZ59oiHYvovRc/vlInvxPMdfbuK
+         Z1+JqRY20CrPGwE/R+3FSGfXd26zqbEQAZUf7RCthAbqf5Id+D6sHmJkx3A0JvJFQGHB
+         hDI7056ESRegVF0RvZoibRoLBW8FNjrmJnqM3cZfVxlhqGe/wj01RKzBooicgnnwHcwR
+         OBhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
+         :references;
+        bh=DSSLi1nehUTQX9TtZXEIyfRv/D0dGZ+iJs4E1Ou7Qcg=;
+        b=lIpv32OtSMZ0nlw152khVh901OWp1KbVa4e5tbQBcN2KBFXZnvbEMfZ3pSOD/QEoSZ
+         tkRZQZ/043rhj8WX4jY/Vw3Dlx4SrIpXDQILYUcSAvshyKgexTgjD4ObGBsrFJPVgxna
+         wkrTeHKMGDNGsUfTxolgViS7Zyj/2FWoyCul1hr/EVlD4+sVRQl4iMj8GqGv4ri9RVt1
+         /Pm9WRGrqYjCd9O9X7xJfoE1p7EOMda/G3MKz/yp/2w2ItZhSclV3H2+1LniATXumdBp
+         8rE7XzzGlUcJoNBTYiddp+fBoscWQrfYmBQRS6Ik2uWggF7Nvul6IdW1Pg82AqVSesF0
+         w5BQ==
+X-Gm-Message-State: AOAM533DNBNyjkW146zeFTnaQSMIWIT80ks/OZHkw9hC3OrE2/6U8gqo
+        8n9LFNYUb7gXF/rvUqx4iHE=
+X-Google-Smtp-Source: ABdhPJwp39koeVrx4TtarDgGWDwWaUuSXr8IRhxum7G4BJWH5Zlqanfj105FthIkqYB0dqD6MPnmTg==
+X-Received: by 2002:a2e:71a:: with SMTP id 26mr3343239ljh.198.1597664476777;
+        Mon, 17 Aug 2020 04:41:16 -0700 (PDT)
+Received: from gmail.com ([217.170.206.146])
+        by smtp.gmail.com with ESMTPSA id u5sm5456598lfr.3.2020.08.17.04.41.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 04:41:16 -0700 (PDT)
+Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
+Date:   Mon, 17 Aug 2020 11:40:00 -0000
+From:   Michael Witten <mfwitten@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Message-ID: <04721d8183af49b793952d2d63c72add@gmail.com>
+In-Reply-To: <7d0be10602e31e334ff41299c06f537880c55bd0.camel@perches.com>
+References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
+  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
+  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
+  <7d0be10602e31e334ff41299c06f537880c55bd0.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Robin Gong <yibin.gong@nxp.com>
-> Sent: Montag, 17. August 2020 11:23
-> busy_wait is not good I think, would you please have a try with the attac=
-hed patch
-> which is based on https://lkml.org/lkml/2020/8/11/111? The basic idea is
-> to keep the freed descriptor into another list for freeing in later termi=
-nate_worker
-> instead of freeing directly all in terminate_worker by vchan_get_all_desc=
-riptors
-> which may break next descriptor coming soon
+Joe Perches (Sun, 16 Aug 2020 10:56:53 -0700):
 
-The idea sounds good, but with this attempt we are still not sure that the =
-1ms
-(the ultimate reason why this is a problem) is awaited between DMA disablin=
-g and
-re-enabling.
+> On Mon, 2020-08-17 at 03:37 +0000, Michael Witten wrote:
+>> Matters  of style  should  probably not  be enforced  by
+>> the  build infrastructure;  style  is a  matter for  the
+>> maintainer to enforce:
+>
+> I rather doubt style advice  should be taken from someone
+> who right justifies fixed pitch block text.
+>
+> cheers, Joe
 
-If we are allowed to leave the atomic PCM context on each trigger, synchron=
-ize the DMA and then
-enter it back again, everything is fine.
-This might be the most performant and elegant solution.
-However, since we are in an atomic context for a reason, it might not be wa=
-nted by the PCM system
-that the DMA termination completion of the previous context happens within =
-the next call,
-but we are not sure about that.
-In this case, a busy wait is not a good solution, but a necessary one,
-or at least the only valid solution we are aware of.
+Clearly, I never offered style advice.
 
-Anyhow, based on my understanding, either the start or the stop trigger has=
- to wait the 1ms
-(or whats left of it).
+Indeed, the very first sentence I wrote in this thread was:
 
+  > This is not just a matter of style; this is a matter of
+  > semantics[.]
+
+Sincerely,
+Michael Witten
+
+As an  aside, the  venerable 'man' program  justifies fixed
+pitch text, at least by default.
