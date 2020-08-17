@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A79C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E36D920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B0F20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688468;
-	bh=87Fl949AzeQxELVjL2JDgPA6BXffnHKt0pB+nQTHT88=;
+	s=default; t=1597688481;
+	bh=rPICp0WoBucKCukQoih/+t/Stt8ibUqmWeMuQjHzkWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dvLvmBLwkaP1p4a0DMQbJmds6VB0K1jXLLkbz/PruZB76xB97A3elepyfF8CQjIF
-	 uQGVRX+LNsUyVdKmWjalBWfSZ+5jSICVdQZUekJMr7YfS64rAbUpldjSVUR94fYaYq
-	 zI5TyeKo/wKYiJVV0plc+8GVM00RMz3eHbp4srgk=
+	b=CViD1OSwCoS3MqaX84pULdU0IxJLyAR6vaW6nw2n4AbINlZfA2AQj1RKQH5REDYj+
+	 CNDQsMUC1rVSWjRQO8KQzhRiR6QJGj9JAskjoKxg9Ivv9X3e1JFjWVcBu63YPU3CrD
+	 4mzl8IVMizEIaEsEw5SAg2XzJ+aZ1dODxJwpleEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390854AbgHQSVB (ORCPT
+        id S2390874AbgHQSVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:21:01 -0400
+        Mon, 17 Aug 2020 14:21:20 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387981AbgHQQEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:22 -0400
+        id S2388288AbgHQQEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF87208B3;
-        Mon, 17 Aug 2020 16:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5019F20825;
+        Mon, 17 Aug 2020 16:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680255;
-        bh=87Fl949AzeQxELVjL2JDgPA6BXffnHKt0pB+nQTHT88=;
+        s=default; t=1597680247;
+        bh=rPICp0WoBucKCukQoih/+t/Stt8ibUqmWeMuQjHzkWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GgbpB2N+/gh1meo3oFt7taLBUcUC2Jyuii9DbdhzpsSXVKImXFlJrOdGvyXHuoR/j
-         IJaPELIsmnbllSvm0Ca2yQb+PHTN7MmRs1sd139125ckgJ2pBXjvYkx/YbvRUu8ep4
-         /OAM5dOZO9f3ztGCNCcSsHfn9YgCWr9bnrQsYbpA=
+        b=WLorjC/LN8Q2jieHMfUHyUKxIoEajO+YjeYmon3lTX5d8KWbT1BdX2yLV4CajFpWf
+         cp/Exun62vNSpy9to/B073pj0CMOhbezZ5dS4ScJSXIj4DmSnlFij0h90Sc0dcpRp3
+         ZY9+Dtdbk68v9uAlxn4GiS8xwhA1XJRBpONMpPSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 113/270] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
-Date:   Mon, 17 Aug 2020 17:15:14 +0200
-Message-Id: <20200817143801.402891222@linuxfoundation.org>
+Subject: [PATCH 5.4 111/270] ASoC: SOF: nocodec: add missing .owner field
+Date:   Mon, 17 Aug 2020 17:15:12 +0200
+Message-Id: <20200817143801.312750987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,36 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
+[ Upstream commit 8753889e2720c1ef7ebf03370e384f5bf5ff4fab ]
 
-The dev_id used in request_irq() and free_irq() should match.  Use 'info'
-in both cases.
+This field is required for ASoC cards. Not setting it will result in a
+module->name pointer being NULL and generate problems such as
 
-Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+cat /proc/asound/modules
+ 0 (efault)
+
+Fixes: 8017b8fd37bf ('ASoC: SOF: Add Nocodec machine driver support')
+Reported-by: Jaroslav Kysela <perex@perex.cz>
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200625191308.3322-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/cumana_2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/nocodec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
-index a1f3e9ee4e639..14e1d001253c4 100644
---- a/drivers/scsi/arm/cumana_2.c
-+++ b/drivers/scsi/arm/cumana_2.c
-@@ -450,7 +450,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index ea0fe9a09f3f5..71410116add1a 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -14,6 +14,7 @@
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
+ static struct snd_soc_card sof_nocodec_card = {
+ 	.name = "nocodec", /* the sof- prefix is added by the core */
++	.owner = THIS_MODULE
+ };
  
-  out_release:
- 	fas216_release(host);
+ static int sof_nocodec_bes_setup(struct device *dev,
 -- 
 2.25.1
 
