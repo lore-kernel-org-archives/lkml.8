@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E108AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF94FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9C42072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7CF2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691630;
-	bh=T16y4neqUck9t4k3D+k9lbBI/BbD8ANb1+46NGkLFrA=;
+	s=default; t=1597691647;
+	bh=oeZukHJ1uVbdjeDAUHbggpHwUyzY9oscTAd+zf3f9gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ebpb1I7h3pwpzdGHDUj4Ifq3SbZiUmK8cxo303PY7KAWzHYJi8cdB+XItW6eyEdVr
-	 INgsxiirX0bnWWyR6QLG2RD3pgZeayKjaxXylKF+ckjd4dzSOGZJQHzWJn5pGZhtM1
-	 jQzqt/uoDpYS5uUEcx16FDr7Gojhy8wdVPh5H3nw=
+	b=B6FrlwJg5oQUoEDdZEzqxQZuwL7avbw4slJ2Cs2GTgA/Q2rqqKuVCvizj0xml57am
+	 WVfZiq18ZJ0ilx3oIobE5ZVR9Jicq7avL/3Nxcc9Wh2zwzAvAtJ8f9mFHLq25HjGLj
+	 +zkRMLthe4eo+VPBLkwdmfjsigtpgAUPOXCKdZc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbgHQTNt (ORCPT
+        id S1730887AbgHQTOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbgHQPkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:19 -0400
+        id S2387477AbgHQPkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A3623357;
-        Mon, 17 Aug 2020 15:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CDAD22DD6;
+        Mon, 17 Aug 2020 15:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678818;
-        bh=T16y4neqUck9t4k3D+k9lbBI/BbD8ANb1+46NGkLFrA=;
+        s=default; t=1597678803;
+        bh=oeZukHJ1uVbdjeDAUHbggpHwUyzY9oscTAd+zf3f9gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdVQ0w0O3N4LMCzKtHgDgaeD5M1g8D2smrAxmrxGzBGkRlhDtQ8Wj0jtZJsiYejuW
-         qt1+EmgW2YtbVLYXIZpkCLJfSbwN05G6NoBuWkgW1irIkmgbJkipWveOrSPnUcuzsa
-         J4NkkRxD7yBrtoqzmr0LDm8/kHnOnMFXLdLKctFI=
+        b=MKxSaFsfS9A6UMhVgv7xmileDrnNizHZzdtcy8yKvSb+r39a5jqb2ABfjdfzD5B6E
+         yXXtnnUAhZV9I1XDWexRAUgQSjlC8AH8zU/r4pfF8bY7b+8mqwKyKTG87IqRL8FveL
+         4OM0Y6SON2w+0cabp5GNKmJew9Pw9cvxGyHvKye4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.8 451/464] irqdomain/treewide: Free firmware node after domain removal
-Date:   Mon, 17 Aug 2020 17:16:44 +0200
-Message-Id: <20200817143855.371457192@linuxfoundation.org>
+        stable@vger.kernel.org, Guoyu Huang <hgy5945@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 460/464] io_uring: Fix NULL pointer dereference in loop_rw_iter()
+Date:   Mon, 17 Aug 2020 17:16:53 +0200
+Message-Id: <20200817143855.812599953@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,150 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Guoyu Huang <hgy5945@gmail.com>
 
-commit ec0160891e387f4771f953b888b1fe951398e5d9 upstream.
+commit 2dd2111d0d383df104b144e0d1f6b5a00cb7cd88 upstream.
 
-Commit 711419e504eb ("irqdomain: Add the missing assignment of
-domain->fwnode for named fwnode") unintentionally caused a dangling pointer
-page fault issue on firmware nodes that were freed after IRQ domain
-allocation. Commit e3beca48a45b fixed that dangling pointer issue by only
-freeing the firmware node after an IRQ domain allocation failure. That fix
-no longer frees the firmware node immediately, but leaves the firmware node
-allocated after the domain is removed.
+loop_rw_iter() does not check whether the file has a read or
+write function. This can lead to NULL pointer dereference
+when the user passes in a file descriptor that does not have
+read or write function.
 
-The firmware node must be kept around through irq_domain_remove, but should be
-freed it afterwards.
+The crash log looks like this:
 
-Add the missing free operations after domain removal where where appropriate.
+[   99.834071] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   99.835364] #PF: supervisor instruction fetch in kernel mode
+[   99.836522] #PF: error_code(0x0010) - not-present page
+[   99.837771] PGD 8000000079d62067 P4D 8000000079d62067 PUD 79d8c067 PMD 0
+[   99.839649] Oops: 0010 [#2] SMP PTI
+[   99.840591] CPU: 1 PID: 333 Comm: io_wqe_worker-0 Tainted: G      D           5.8.0 #2
+[   99.842622] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
+[   99.845140] RIP: 0010:0x0
+[   99.845840] Code: Bad RIP value.
+[   99.846672] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+[   99.848018] RAX: 0000000000000000 RBX: ffff92363bd67300 RCX: ffff92363d461208
+[   99.849854] RDX: 0000000000000010 RSI: 00007ffdbf696bb0 RDI: ffff92363bd67300
+[   99.851743] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+[   99.853394] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+[   99.855148] R13: 0000000000000000 R14: ffff92363d461208 R15: ffffa1c7c01ebc68
+[   99.856914] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+[   99.858651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   99.860032] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
+[   99.861979] Call Trace:
+[   99.862617]  loop_rw_iter.part.0+0xad/0x110
+[   99.863838]  io_write+0x2ae/0x380
+[   99.864644]  ? kvm_sched_clock_read+0x11/0x20
+[   99.865595]  ? sched_clock+0x9/0x10
+[   99.866453]  ? sched_clock_cpu+0x11/0xb0
+[   99.867326]  ? newidle_balance+0x1d4/0x3c0
+[   99.868283]  io_issue_sqe+0xd8f/0x1340
+[   99.869216]  ? __switch_to+0x7f/0x450
+[   99.870280]  ? __switch_to_asm+0x42/0x70
+[   99.871254]  ? __switch_to_asm+0x36/0x70
+[   99.872133]  ? lock_timer_base+0x72/0xa0
+[   99.873155]  ? switch_mm_irqs_off+0x1bf/0x420
+[   99.874152]  io_wq_submit_work+0x64/0x180
+[   99.875192]  ? kthread_use_mm+0x71/0x100
+[   99.876132]  io_worker_handle_work+0x267/0x440
+[   99.877233]  io_wqe_worker+0x297/0x350
+[   99.878145]  kthread+0x112/0x150
+[   99.878849]  ? __io_worker_unuse+0x100/0x100
+[   99.879935]  ? kthread_park+0x90/0x90
+[   99.880874]  ret_from_fork+0x22/0x30
+[   99.881679] Modules linked in:
+[   99.882493] CR2: 0000000000000000
+[   99.883324] ---[ end trace 4453745f4673190b ]---
+[   99.884289] RIP: 0010:0x0
+[   99.884837] Code: Bad RIP value.
+[   99.885492] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+[   99.886851] RAX: 0000000000000000 RBX: ffff92363acd7f00 RCX: ffff92363d461608
+[   99.888561] RDX: 0000000000000010 RSI: 00007ffe040d9e10 RDI: ffff92363acd7f00
+[   99.890203] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+[   99.891907] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+[   99.894106] R13: 0000000000000000 R14: ffff92363d461608 R15: ffffa1c7c01ebc68
+[   99.896079] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+[   99.898017] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   99.899197] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
 
-Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+Fixes: 32960613b7c3 ("io_uring: correctly handle non ->{read,write}_iter() file_operations")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1595363169-7157-1-git-send-email-jonathan.derrick@intel.com
+Signed-off-by: Guoyu Huang <hgy5945@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/mips/pci/pci-xtalk-bridge.c    |    3 +++
- arch/x86/kernel/apic/io_apic.c      |    5 +++++
- drivers/iommu/intel/irq_remapping.c |    8 ++++++++
- drivers/mfd/ioc3.c                  |    6 ++++++
- drivers/pci/controller/vmd.c        |    3 +++
- 5 files changed, 25 insertions(+)
 
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -728,6 +728,7 @@ err_free_resource:
- 	pci_free_resource_list(&host->windows);
- err_remove_domain:
- 	irq_domain_remove(domain);
-+	irq_domain_free_fwnode(fn);
- 	return err;
- }
+---
+ fs/io_uring.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2673,8 +2673,10 @@ static int io_read(struct io_kiocb *req,
  
-@@ -735,8 +736,10 @@ static int bridge_remove(struct platform
- {
- 	struct pci_bus *bus = platform_get_drvdata(pdev);
- 	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
-+	struct fwnode_handle *fn = bc->domain->fwnode;
+ 		if (req->file->f_op->read_iter)
+ 			ret2 = call_read_iter(req->file, kiocb, &iter);
+-		else
++		else if (req->file->f_op->read)
+ 			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
++		else
++			ret2 = -EINVAL;
  
- 	irq_domain_remove(bc->domain);
-+	irq_domain_free_fwnode(fn);
- 	pci_lock_rescan_remove();
- 	pci_stop_root_bus(bus);
- 	pci_remove_root_bus(bus);
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2335,8 +2335,13 @@ static int mp_irqdomain_create(int ioapi
+ 		/* Catch -EAGAIN return for forced non-blocking submission */
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+@@ -2788,8 +2790,10 @@ static int io_write(struct io_kiocb *req
  
- static void ioapic_destroy_irqdomain(int idx)
- {
-+	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
-+	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
-+
- 	if (ioapics[idx].irqdomain) {
- 		irq_domain_remove(ioapics[idx].irqdomain);
-+		if (!cfg->dev)
-+			irq_domain_free_fwnode(fn);
- 		ioapics[idx].irqdomain = NULL;
- 	}
- }
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -628,13 +628,21 @@ out_free_table:
+ 		if (req->file->f_op->write_iter)
+ 			ret2 = call_write_iter(req->file, kiocb, &iter);
+-		else
++		else if (req->file->f_op->write)
+ 			ret2 = loop_rw_iter(WRITE, req->file, kiocb, &iter);
++		else
++			ret2 = -EINVAL;
  
- static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
- {
-+	struct fwnode_handle *fn;
-+
- 	if (iommu && iommu->ir_table) {
- 		if (iommu->ir_msi_domain) {
-+			fn = iommu->ir_msi_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_msi_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_msi_domain = NULL;
- 		}
- 		if (iommu->ir_domain) {
-+			fn = iommu->ir_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_domain = NULL;
- 		}
- 		free_pages((unsigned long)iommu->ir_table->base,
---- a/drivers/mfd/ioc3.c
-+++ b/drivers/mfd/ioc3.c
-@@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev
- 		/* Remove all already added MFD devices */
- 		mfd_remove_devices(&ipd->pdev->dev);
- 		if (ipd->domain) {
-+			struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 			irq_domain_remove(ipd->domain);
-+			irq_domain_free_fwnode(fn);
- 			free_irq(ipd->domain_irq, (void *)ipd);
- 		}
- 		pci_iounmap(pdev, regs);
-@@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_d
- 	/* Release resources */
- 	mfd_remove_devices(&ipd->pdev->dev);
- 	if (ipd->domain) {
-+		struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 		irq_domain_remove(ipd->domain);
-+		irq_domain_free_fwnode(fn);
- 		free_irq(ipd->domain_irq, (void *)ipd);
- 	}
- 	pci_iounmap(pdev, ipd->regs);
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_
- 	if (!vmd->bus) {
- 		pci_free_resource_list(&resources);
- 		irq_domain_remove(vmd->irq_domain);
-+		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
- 	}
- 
-@@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_
- static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
-+	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
- 
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
-@@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *d
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
-+	irq_domain_free_fwnode(fn);
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 		if (!force_nonblock)
+ 			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
 
 
