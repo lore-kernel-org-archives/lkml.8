@@ -2,128 +2,114 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E978205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651822072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqbjGe9U"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tu3HPHWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgHQUOD (ORCPT
+        id S1727833AbgHQUPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
+        Mon, 17 Aug 2020 16:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgHQUNz (ORCPT
+        with ESMTP id S1726228AbgHQUPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:13:55 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30092C061389;
-        Mon, 17 Aug 2020 13:13:55 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 77so16189286qkm.5;
-        Mon, 17 Aug 2020 13:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2iB7Xz00n5+0Lgu+wndRSafBvCLWjlpZRZyNPVeU2aE=;
-        b=FqbjGe9U5+KoOmxxjyJUB/RZzrdUONjZiYMyDKoUkuh/2yHKnD6zT2Uj7I8UbYuYAG
-         QKES7m4drXles2frxuunVXJFU1vO1nTqmKZtt9pWAP++iA9oQf2C6rcqPgkgJq3LFSBX
-         lcHri0k4ctEipOVQzk2ZLIF4Zno7KvX8T8mxizBKLaRryyosyhgMbAVe5l5ZNGawNZcB
-         JMeGxi8/ZTYXacW+5uXhoZSwXrvm3+V8etyM/j7swCB+x8Eyz25aPf+13K1O9qptwy0f
-         Wu+weqYJRxwBupy6n1sgAadO/uIXEAL/BHeBAw1uDn6HckGZAQ45nlUhdDG2KSNvUAI9
-         41fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=2iB7Xz00n5+0Lgu+wndRSafBvCLWjlpZRZyNPVeU2aE=;
-        b=j5D2bvwczN7VvQMNm3359TiFjXDcaMiTr8oqJe5WD8PyFtrsgbWEhjJqjzzNmgD8qR
-         f8UoPWozBwCBPKN+B3W18ef8pzDqBCE9kVC1AWEtwzaBgj0+QEVWOC5TXAVybQSjrnU3
-         gifrBKID06Q+qAMgw9Q+6lz4NknA6OdeqK5h07VauyDfocviKACmCPNalLjfNjEFsl5a
-         uTEiGJRRhsjvaol1qjW7KmjsxzKKFmGSJyxRvobkwoiyEFgjbyLT8ES+wcaskfnzwz2M
-         u9vMt3VcPiMudOTDY9EObXk5qw950Za9813RRqBiK72VixtKILm+cGDMOsrCyWzuPLyu
-         YXaA==
-X-Gm-Message-State: AOAM530fHNLLhO/nFMbue+akz0cvC97BKHT4kS5r82Tlo2oA/jkvhBov
-        EAem/LSZ+uY3XeHUxLNvVzg=
-X-Google-Smtp-Source: ABdhPJwcD83COjwoesiJj86XB2SqJAdVYnEaAF0ceFWHGp52ZZZ3SM1gxfEjep5vmUDLeI3v8fGScw==
-X-Received: by 2002:a37:6cc1:: with SMTP id h184mr14674031qkc.101.1597695234334;
-        Mon, 17 Aug 2020 13:13:54 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id k5sm18742660qke.18.2020.08.17.13.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 13:13:53 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 17 Aug 2020 16:13:51 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-Message-ID: <20200817201351.GA2246446@rani.riverdale.lan>
-References: <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
- <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
- <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
- <20200816001917.4krsnrik7hxxfqfm@google.com>
- <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
- <20200816150217.GA1306483@rani.riverdale.lan>
- <CABCJKucsXufD6rmv7qQZ=9kLC7XrngCJkKA_WzGOAn-KfcObeA@mail.gmail.com>
- <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com>
+        Mon, 17 Aug 2020 16:15:38 -0400
+X-Greylist: delayed 934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Aug 2020 13:15:37 PDT
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F23C061389;
+        Mon, 17 Aug 2020 13:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=MQxwrtyOSC0pqe1VevhdSFunt/8xuDEPA6IOemddH4o=; b=Tu3HPHWaEXY96Wq4yxc3gzDq4d
+        m39dWE3VGFrwZ+xgRjkiplje1pfUG92mS0Nf9FEQq9/mCI6ldmIMUC+djq/pu/7CAIgVwOGLihIbc
+        Bs/8i/xz7FtV6zZTn9ZWhOZZJurqYSPdirLVVF14700DDi6oKYlNpZuiqrM9GuMrmQSM=;
+Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k7lXa-000549-1W; Mon, 17 Aug 2020 22:15:34 +0200
+Date:   Mon, 17 Aug 2020 22:15:32 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200817221532.5d150648@aktux>
+In-Reply-To: <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+References: <20200817133931.11785-1-aford173@gmail.com>
+        <20200817215953.59607c11@aktux>
+        <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:36:49AM -0700, Nick Desaulniers wrote:
-> > > Though I don't understand the original issue, with -ffreestanding,
-> > > sprintf shouldn't have been turned into strcpy in the first place.
+On Mon, 17 Aug 2020 15:02:27 -0500
+Adam Ford <aford173@gmail.com> wrote:
+
+> On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
+> >
+> > On Mon, 17 Aug 2020 08:39:31 -0500
+> > Adam Ford <aford173@gmail.com> wrote:
+> >  
+> > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> > > depending on commercial or industrial temperature ratings.
+> > >
+> > > This patch expands the thermal information to include the limits of 90
+> > > and 105C for alert and critical.  It sets the coolings-cells for the
+> > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
+> > >
+> > > For boards who never use industrial temperatures, these can be
+> > > changed on their respective device trees with something like:
+> > >
+> > > &cpu_alert0 {
+> > >       temperature = <85000>; /* millicelsius */
+> > > };
+> > >
+> > > &cpu_crit {
+> > >       temperature = <90000>; /* millicelsius */
+> > > };
+> > >
+> > > OMAP3_THERMAL will need to be enabled.  It is off by default.
+> > >  
+> > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+> > got stuck somewhere. It still seems not to work. Shouldn't that patch
+> > be applied first?  
 > 
-> Huh? The original issue for this thread is because `-ffreestanding`
-> *isn't* being used for most targets (oh boy, actually mixed usage by
-> ARCH. Looks like MIPS, m68k, superH, xtensa, and 32b x86 use it?); and
-> I'm not suggesting it be used.
+> I rebased the idle stuff, and now I get errors, so I haven't pushed it
+> yet.  I put a note that OMAP3_THERMAL is off by default, but this
+> patch would at least get the framing in there.  I know at least two of
+> us that use 1GHZ processors which are not supposed to run at that
+> speed above 90MHz, so the idea was to tolerate the higher current for
+> now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
+> default.
 > 
+yes, makes sense, so with this patch we have the choice to either
+optimize for low speeds and currents (by disabling OMAP3_THERMAL and
+1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
 
-Sorry, I meant the issue mentioned in the commit that removed
--ffreestanding, not the stpcpy one you're solving now. It says that
-sprintf got converted into strcpy, which caused failures because back
-then, strcpy was #define'd to __builtin_strcpy, and the default
-implementation was actually of a function called __builtin_strcpy o_O,
-not strcpy.
-
-Anyway, that's water under the bridge now.
-
-6edfba1b33c7 ("x86_64: Don't define string functions to builtin")
-  gcc should handle this anyways, and it causes problems when
-  sprintf is turned into strcpy by gcc behind our backs and
-  the C fallback version of strcpy is actually defining __builtin_strcpy
+Regards,
+Andreas
