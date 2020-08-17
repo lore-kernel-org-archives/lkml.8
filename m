@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0179DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53970C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D57B120758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DC020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685920;
-	bh=uJITJNKX/Xsrl60nntsf/Tz4btf1aqR+2Nu4tLw7UWg=;
+	s=default; t=1597685926;
+	bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WS9eonJ1sGF/GPIDPI04UReCQRt3EiPS8eLcAnmTe2CND51MFAAiqA/R1qEbtd5oO
-	 p+7oWmsaRcE8/ii+76gDi1nmIUXHqduv36dajBLUdB+y+eN8I4uuotXQdqNWcle8lH
-	 FsqcapjOdzwFRm1nydGYhDzyx4WARWrUK84tCOUo=
+	b=NUL3u83a25FnlpCDlZZdLu/cPKLOFAYd5OXtPtXMpErxRZFE0bTl3sn7zc8OMj/4Y
+	 +6c3bpqUyfXknjpe+o4KiiYrnPomTSeCCoU4D9V6gEv0HFi+hQmv6elAKONK3q78Da
+	 fUHpwVQexGYaA8GBunLyqZxaM1AOG3Fo9i5CueSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgHQRii (ORCPT
+        id S1731131AbgHQRio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731132AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729528AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015E722D03;
-        Mon, 17 Aug 2020 16:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B782220B1F;
+        Mon, 17 Aug 2020 16:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681013;
-        bh=uJITJNKX/Xsrl60nntsf/Tz4btf1aqR+2Nu4tLw7UWg=;
+        s=default; t=1597681006;
+        bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDW8U6DfxeWBOHCqHqTs+AvB4S2+/sKIAk7aqLZRP9epu9w72u0YV87KssjHjEGLJ
-         CkBAir560Sif9+9uEpDLb+4TsQUIZ7QSNEU8u5ada+cHTRBUG/ipT4R7jvDQv0K2Uu
-         U6omVUSYpcqSnBVqr7Vu7aQiJpW1UBtEfCyHcqzk=
+        b=nVNFDye3YISeREUYlej9yyPcuEte32hAnyxHqcGykjBW9VHE1GdAMQyhPrKvW3awn
+         ZLmUQ0EUHz35XA3Dy/Drq3ifq03YrtumUtSfajrlsAt6ry8UCMdDyw26T000qJEUwx
+         8KG9z7rvv92BbjEwn4FoXQ5o7Dxl8CR0UKoSJzRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH 4.19 149/168] bitfield.h: dont compile-time validate _val in FIELD_FIT
-Date:   Mon, 17 Aug 2020 17:18:00 +0200
-Message-Id: <20200817143741.108649329@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 146/168] crypto: qat - fix double free in qat_uclo_create_batch_init_list
+Date:   Mon, 17 Aug 2020 17:17:57 +0200
+Message-Id: <20200817143740.956049346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,55 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Tom Rix <trix@redhat.com>
 
-commit 444da3f52407d74c9aa12187ac6b01f76ee47d62 upstream.
+commit c06c76602e03bde24ee69a2022a829127e504202 upstream.
 
-When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
-compiler to deduce a case where _val can only have the value of -1 at
-compile time. Specifically,
+clang static analysis flags this error
 
-/* struct bpf_insn: _s32 imm */
-u64 imm = insn->imm; /* sign extend */
-if (imm >> 32) { /* non-zero only if insn->imm is negative */
-  /* inlined from ur_load_imm_any */
-  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
-  if (__builtin_constant_p(__imm) && __imm > 255)
-    compiletime_assert_XXX()
+qat_uclo.c:297:3: warning: Attempt to free released memory
+  [unix.Malloc]
+                kfree(*init_tab_base);
+                ^~~~~~~~~~~~~~~~~~~~~
 
-This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
-checks that a given value is representable in one byte (interpreted as
-unsigned).
+When input *init_tab_base is null, the function allocates memory for
+the head of the list.  When there is problem allocating other list
+elements the list is unwound and freed.  Then a check is made if the
+list head was allocated and is also freed.
 
-FIELD_FIT() should return true or false at runtime for whether a value
-can fit for not. Don't break the build over a value that's too large for
-the mask. We'd prefer to keep the inlining and compiler optimizations
-though we know this case will always return false.
+Keeping track of the what may need to be freed is the variable 'tail_old'.
+The unwinding/freeing block is
 
-Cc: stable@vger.kernel.org
-Fixes: 1697599ee301a ("bitfield.h: add FIELD_FIT() helper")
-Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
-Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	while (tail_old) {
+		mem_init = tail_old->next;
+		kfree(tail_old);
+		tail_old = mem_init;
+	}
+
+The problem is that the first element of tail_old is also what was
+allocated for the list head
+
+		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
+		...
+		*init_tab_base = init_header;
+		flag = 1;
+	}
+	tail_old = init_header;
+
+So *init_tab_base/init_header are freed twice.
+
+There is another problem.
+When the input *init_tab_base is non null the tail_old is calculated by
+traveling down the list to first non null entry.
+
+	tail_old = init_header;
+	while (tail_old->next)
+		tail_old = tail_old->next;
+
+When the unwinding free happens, the last entry of the input list will
+be freed.
+
+So the freeing needs a general changed.
+If locally allocated the first element of tail_old is freed, else it
+is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
+as null.
+
+Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitfield.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/qat/qat_common/qat_uclo.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -72,7 +72,7 @@
-  */
- #define FIELD_FIT(_mask, _val)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
-+		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
- 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
- 	})
+--- a/drivers/crypto/qat/qat_common/qat_uclo.c
++++ b/drivers/crypto/qat/qat_common/qat_uclo.c
+@@ -332,13 +332,18 @@ static int qat_uclo_create_batch_init_li
+ 	}
+ 	return 0;
+ out_err:
++	/* Do not free the list head unless we allocated it. */
++	tail_old = tail_old->next;
++	if (flag) {
++		kfree(*init_tab_base);
++		*init_tab_base = NULL;
++	}
++
+ 	while (tail_old) {
+ 		mem_init = tail_old->next;
+ 		kfree(tail_old);
+ 		tail_old = mem_init;
+ 	}
+-	if (flag)
+-		kfree(*init_tab_base);
+ 	return -ENOMEM;
+ }
  
 
 
