@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF537C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9347BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968682067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631D4206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684040;
-	bh=sMSJ1v+AsU2GCfmY+AV8iZ7kghNonY2Bav41QQVLTrc=;
+	s=default; t=1597684063;
+	bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sE2HoELDiwj/7anIFce9k2T+pu/0F3A3g7MAk/n+OmYRLjD4cMxRSYu4u1k0gM1vk
-	 LXawkoyp5LCz4PVcztI6MhuWo9sRMYeuIM1v4Qni1zF24QSqT8YOCAzKzj4mP4201b
-	 Gb2O/w+2OphsLHyU73ytKPys7GaObso3P7GpJSyU=
+	b=ofJwk1vD9jr98kVstBhRJLRw9f6FHyuNBpp2sGMSBQplWDQCTSiSRYSfPYR6udfOU
+	 2QSopaT/EqMLu9rFcJbDwvDpeKtNx9nF5PNVAqUkXGTeTq+hArwhhYKF4WH5jvcNXg
+	 8+5lPnBf17/0LBSPxKH1m+zACxqJmty3ievdYdX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389249AbgHQRHS (ORCPT
+        id S2389294AbgHQRHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59836 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388461AbgHQQJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:09:26 -0400
+        id S2388543AbgHQQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E3822CBB;
-        Mon, 17 Aug 2020 16:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FCE722D06;
+        Mon, 17 Aug 2020 16:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680565;
-        bh=sMSJ1v+AsU2GCfmY+AV8iZ7kghNonY2Bav41QQVLTrc=;
+        s=default; t=1597680617;
+        bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LY9opn0VQEnCw1zUSU8JFqfHI4dOHA5mRI8ZYXjHc/aCbGYYqhUHrjQZhD+dHolKn
-         BrTxuvnFQZ/UBrZUo5OuUV9npICiORMvWGsQrCEhwIbAJu0uyIJlRhSSURd+2Lc+Pa
-         FZ8T5DZk+bFmcuHZk7lzRk/aU/GJAtooVKv3Ad6Y=
+        b=I1MQRcMmVH5GwIO+Ay987DLlAiQX6OHd3KeyCCthlVa89e8O4krkvw3Ezd2LneYEG
+         DPQkJ+uTSh6h0hWcUSVdrW9WicPkrdGnxSOiossRsIBerw4+1DWWQwhibesK9Q9sif
+         WgTgJ39HJjp8w517It/H1890EoNoms8bUk0OzsjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 238/270] NFS: Dont move layouts to plh_return_segs list while in use
-Date:   Mon, 17 Aug 2020 17:17:19 +0200
-Message-Id: <20200817143807.649098096@linuxfoundation.org>
+        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
+        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 228/270] USB: serial: cp210x: re-enable auto-RTS on open
+Date:   Mon, 17 Aug 2020 17:17:09 +0200
+Message-Id: <20200817143807.141561591@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,50 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Brant Merryman <brant.merryman@silabs.com>
 
-commit ff041727e9e029845857cac41aae118ead5e261b upstream.
+commit c7614ff9b73a1e6fb2b1b51396da132ed22fecdb upstream.
 
-If the layout segment is still in use for a read or a write, we should
-not move it to the layout plh_return_segs list. If we do, we can end
-up returning the layout while I/O is still in progress.
+CP210x hardware disables auto-RTS but leaves auto-CTS when in hardware
+flow control mode and UART on cp210x hardware is disabled. When
+re-opening the port, if auto-CTS is enabled on the cp210x, then auto-RTS
+must be re-enabled in the driver.
 
-Fixes: e0b7d420f72a ("pNFS: Don't discard layout segments that are marked for return")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+Co-developed-by: Phu Luu <phu.luu@silabs.com>
+Signed-off-by: Phu Luu <phu.luu@silabs.com>
+Link: https://lore.kernel.org/r/ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com
+[ johan: fix up tags and problem description ]
+Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
+Cc: stable <stable@vger.kernel.org>     # 2.6.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |   12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/usb/serial/cp210x.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2362,16 +2362,6 @@ out_forget:
- 	return ERR_PTR(-EAGAIN);
- }
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -915,6 +915,7 @@ static void cp210x_get_termios_port(stru
+ 	u32 baud;
+ 	u16 bits;
+ 	u32 ctl_hs;
++	u32 flow_repl;
  
--static int
--mark_lseg_invalid_or_return(struct pnfs_layout_segment *lseg,
--		struct list_head *tmp_list)
--{
--	if (!mark_lseg_invalid(lseg, tmp_list))
--		return 0;
--	pnfs_cache_lseg_for_layoutreturn(lseg->pls_layout, lseg);
--	return 1;
--}
--
- /**
-  * pnfs_mark_matching_lsegs_return - Free or return matching layout segments
-  * @lo: pointer to layout header
-@@ -2408,7 +2398,7 @@ pnfs_mark_matching_lsegs_return(struct p
- 				lseg, lseg->pls_range.iomode,
- 				lseg->pls_range.offset,
- 				lseg->pls_range.length);
--			if (mark_lseg_invalid_or_return(lseg, tmp_list))
-+			if (mark_lseg_invalid(lseg, tmp_list))
- 				continue;
- 			remaining++;
- 			set_bit(NFS_LSEG_LAYOUTRETURN, &lseg->pls_flags);
+ 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+ 
+@@ -1015,6 +1016,22 @@ static void cp210x_get_termios_port(stru
+ 	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+ 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+ 		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
++		/*
++		 * When the port is closed, the CP210x hardware disables
++		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
++		 * in hardware flow control mode. When re-opening the port, if
++		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
++		 * re-enabled in the driver.
++		 */
++		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
++		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
++		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
++		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
++		cp210x_write_reg_block(port,
++				CP210X_SET_FLOW,
++				&flow_ctl,
++				sizeof(flow_ctl));
++
+ 		cflag |= CRTSCTS;
+ 	} else {
+ 		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
 
 
