@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D06C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594C823442
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818D923383
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677958;
-	bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
+	s=default; t=1597677976;
+	bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLUCm2s4F4pk+fh5ICgJ54HftiHAaf3GoJmkg5s6AE3cwwyuJM1eXBjX6N6yGldp+
-	 zmsJt1kkwE4RzfkJYayYiAWs5xmDg7PJjtq3Kr+vxE1wvvr3/3Iq3httKcenA+1/6x
-	 oeeG5kHaX6g3UR9UXLDGcRNNGODbwhiyjfL6sXw4=
+	b=X92W1DjSHRr8ilcYWvy8V4Uh5W+/P0jguoi2F7rTMBmpKPY1oTuEWDOuiazN0AvET
+	 +UVC0YV5g3ZPqTwn6qC7f1zCuyecoaAT0OhhW/xX7MO/wb8dio6i4UYM67TUDDbrqA
+	 CwpPDRTsEn+Ufomt9jtiJ7FxWm3HpwtssiHAy7bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgHQPZz (ORCPT
+        id S1729767AbgHQP0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54452 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729520AbgHQPYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:19 -0400
+        id S1729652AbgHQPYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354472312E;
-        Mon, 17 Aug 2020 15:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 046FE20729;
+        Mon, 17 Aug 2020 15:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677858;
-        bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
+        s=default; t=1597677871;
+        bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhhyQ7dxEpsCBFSiTDB9ZHf9+ZjG7ziDFKCUG1PJTGEf5mflGqPPTarxayKaXF8vb
-         FAB3YPYqd+k2n0inMexC1LU2sjpEsH2W0CXr6KRAQSBlzwUA9HleAf+VvvnZ1Vy6EX
-         lZ84vEM2LcfuC5gpdZLC6kSglZvxLjyxSdAe+nGE=
+        b=DNOkeVbfE7zS/RfMHyQpKfMAMZFHg64HsPI45AjP5tgMLGKD3tXCjjwuAi0HcyFk8
+         pO+lkPV8lvB3Mir5hF2k9lGjCDKqX6nSStltRUU3M0YtLbz8gDOjU/lp7m9n2YYUuQ
+         YVIq+z2nD7096yhk8a7lsnscAv2xlpfMNJ4DRmJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 134/464] btrfs: qgroup: free per-trans reserved space when a subvolume gets dropped
-Date:   Mon, 17 Aug 2020 17:11:27 +0200
-Message-Id: <20200817143840.232957576@linuxfoundation.org>
+Subject: [PATCH 5.8 138/464] crypto: caam - silence .setkey in case of bad key length
+Date:   Mon, 17 Aug 2020 17:11:31 +0200
+Message-Id: <20200817143840.426266943@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,79 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-[ Upstream commit a3cf0e4342b6af9e6b34a4b913c630fbd03a82ea ]
+[ Upstream commit da6a66853a381864f4b040832cf11f0dbba0a097 ]
 
-[BUG]
-Sometime fsstress could lead to qgroup warning for case like
-generic/013:
+In case of bad key length, driver emits "key size mismatch" messages,
+but only for xts(aes) algorithms.
 
-  BTRFS warning (device dm-3): qgroup 0/259 has unreleased space, type 1 rsv 81920
-  ------------[ cut here ]------------
-  WARNING: CPU: 9 PID: 24535 at fs/btrfs/disk-io.c:4142 close_ctree+0x1dc/0x323 [btrfs]
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:close_ctree+0x1dc/0x323 [btrfs]
-  Call Trace:
-   btrfs_put_super+0x15/0x17 [btrfs]
-   generic_shutdown_super+0x72/0x110
-   kill_anon_super+0x18/0x30
-   btrfs_kill_super+0x17/0x30 [btrfs]
-   deactivate_locked_super+0x3b/0xa0
-   deactivate_super+0x40/0x50
-   cleanup_mnt+0x135/0x190
-   __cleanup_mnt+0x12/0x20
-   task_work_run+0x64/0xb0
-   __prepare_exit_to_usermode+0x1bc/0x1c0
-   __syscall_return_slowpath+0x47/0x230
-   do_syscall_64+0x64/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ---[ end trace 6c341cdf9b6cc3c1 ]---
-  BTRFS error (device dm-3): qgroup reserved space leaked
+Reduce verbosity by making them visible only when debugging.
+This way crypto fuzz testing log cleans up a bit.
 
-While that subvolume 259 is no longer in that filesystem.
-
-[CAUSE]
-Normally per-trans qgroup reserved space is freed when a transaction is
-committed, in commit_fs_roots().
-
-However for completely dropped subvolume, that subvolume is completely
-gone, thus is no longer in the fs_roots_radix, and its per-trans
-reserved qgroup will never be freed.
-
-Since the subvolume is already gone, leaked per-trans space won't cause
-any trouble for end users.
-
-[FIX]
-Just call btrfs_qgroup_free_meta_all_pertrans() before a subvolume is
-completely dropped.
-
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/crypto/caam/caamalg.c     | 2 +-
+ drivers/crypto/caam/caamalg_qi.c  | 2 +-
+ drivers/crypto/caam/caamalg_qi2.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index c0bc35f932bf7..96223813b6186 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -5466,6 +5466,14 @@ int btrfs_drop_snapshot(struct btrfs_root *root, int update_ref, int for_reloc)
- 		}
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index b2f9882bc010f..bf90a4fcabd1f 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -838,7 +838,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
  	}
  
-+	/*
-+	 * This subvolume is going to be completely dropped, and won't be
-+	 * recorded as dirty roots, thus pertrans meta rsv will not be freed at
-+	 * commit transaction time.  So free it here manually.
-+	 */
-+	btrfs_qgroup_convert_reserved_meta(root, INT_MAX);
-+	btrfs_qgroup_free_meta_all_pertrans(root);
-+
- 	if (test_bit(BTRFS_ROOT_IN_RADIX, &root->state))
- 		btrfs_add_dropped_root(trans, root);
- 	else
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index 27e36bdf6163b..315d53499ce85 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -728,7 +728,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	int ret = 0;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 28669cbecf77c..e1b6bc6ef091b 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -1058,7 +1058,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(dev, "key size mismatch\n");
++		dev_dbg(dev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.25.1
 
