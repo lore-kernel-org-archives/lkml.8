@@ -2,95 +2,121 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB3CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDA9206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684935;
-	bh=RY+bUR6q62ndFq4NTc+Ra1HAuUXfTe8JDs9v63RZvMs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mStH48Q4/ilYXmg8/HlbZesVHZCE2qs6gOHyny8pEgtVrnzioXHkEB7PRVugm+AqP
-	 syjjjLxjtcmRzHzEbLm1yPizo9dMTzCkGa8wUjVS9plDTBTMcPjp005ath4390Bot/
-	 wZ3A+URsMzASKgv9/3/kLlGJFydLpq+UVemm+9VU=
+	by mail.kernel.org (Postfix) with ESMTP id B3F1C206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389685AbgHQRWN (ORCPT
+        id S2389781AbgHQRWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55792 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:22:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10701 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbgHQQSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:18:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E0B20760;
-        Mon, 17 Aug 2020 16:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681070;
-        bh=RY+bUR6q62ndFq4NTc+Ra1HAuUXfTe8JDs9v63RZvMs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vV43Gsx0cEPKLpnRWhFnIOhg1rnh4U+3LdB19mR4qyw00KT0DCbWrj8vkq6vwq6KY
-         gzEC1l+0cuUPLy0rNaT5IdcqLP6obH9on+YgD/GHyFjZyve3ewKIqfmVJXBgWUjAfK
-         rzqTKhdupPAjSKQB7qTQgnpGSJ40EaCF2NAJy6sA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
-        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 139/168] USB: serial: cp210x: enable usb generic throttle/unthrottle
-Date:   Mon, 17 Aug 2020 17:17:50 +0200
-Message-Id: <20200817143740.639648018@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731243AbgHQQcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:32:09 -0400
+IronPort-SDR: OgIy0tFYSB8VRyYiBcpQMHC9GDDfYcELHRgBZhGW0HcidjHM+hJ0MZQGuk208kf2oX4zN908ie
+ ou2w8V/yiuNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154720042"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="154720042"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 09:32:08 -0700
+IronPort-SDR: gNGa53ARN2B7I6Gdco4Cf5OlcSb1BwI/csVdhVxHYKUn7DGgGs7yaKNfcMPwlAdWh87KZIXCG+
+ eiiPc4lUjVHA==
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="440920616"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 09:32:08 -0700
+Date:   Mon, 17 Aug 2020 09:32:07 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
+Message-ID: <20200817163207.GC22407@linux.intel.com>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
+ <20200807141232.402895-3-vkuznets@redhat.com>
+ <20200814023139.GB4845@linux.intel.com>
+ <20200814102850-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814102850-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brant Merryman <brant.merryman@silabs.com>
+On Fri, Aug 14, 2020 at 10:30:14AM -0400, Michael S. Tsirkin wrote:
+> On Thu, Aug 13, 2020 at 07:31:39PM -0700, Sean Christopherson wrote:
+> > > @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+> > >  	int r;
+> > >  	unsigned long addr;
+> > >  
+> > > +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
+> > > +		memset(data, 0xff, len);
+> > > +		return 0;
+> > > +	}
+> > 
+> > This feels wrong, shouldn't we be treating PCI_HOLE as MMIO?  Given that
+> > this is performance oriented, I would think we'd want to leverage the
+> > GPA from the VMCS instead of doing a full translation.
+> > 
+> > That brings up a potential alternative to adding a memslot flag.  What if
+> > we instead add a KVM_MMIO_BUS device similar to coalesced MMIO?  I think
+> > it'd be about the same amount of KVM code, and it would provide userspace
+> > with more flexibility, e.g. I assume it would allow handling even writes
+> > wholly within the kernel for certain ranges and/or use cases, and it'd
+> > allow stuffing a value other than 0xff (though I have no idea if there is
+> > a use case for this).
+> 
+> I still think down the road the way to go is to map
+> valid RO page full of 0xff to avoid exit on read.
+> I don't think a KVM_MMIO_BUS device will allow this, will it?
 
-commit 4387b3dbb079d482d3c2b43a703ceed4dd27ed28 upstream.
+No, it would not, but adding KVM_MEM_PCI_HOLE doesn't get us any closer to
+solving that problem either.
 
-Assign the .throttle and .unthrottle functions to be generic function
-in the driver structure to prevent data loss that can otherwise occur
-if the host does not enable USB throttling.
+What if we add a flag to allow routing all GFNs in a memslot to a single
+HVA?  At a glance, it doesn't seem to heinous.  It would have several of the
+same touchpoints as this series, e.g. __kvm_set_memory_region() and
+kvm_alloc_memslot_metadata().
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-Co-developed-by: Phu Luu <phu.luu@silabs.com>
-Signed-off-by: Phu Luu <phu.luu@silabs.com>
-Link: https://lore.kernel.org/r/57401AF3-9961-461F-95E1-F8AFC2105F5E@silabs.com
-[ johan: fix up tags ]
-Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
-Cc: stable <stable@vger.kernel.org>     # 2.6.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The functional changes (for x86) would be a few lines in
+__gfn_to_hva_memslot() and some new logic in kvm_handle_hva_range().  The
+biggest concern is probably the fragility of such an implementation, as KVM
+has a habit of open coding operations on memslots.
 
----
- drivers/usb/serial/cp210x.c |    2 ++
- 1 file changed, 2 insertions(+)
+The new flags could then be paired with KVM_MEM_READONLY to yield the desired
+behavior of reading out 0xff for an arbitrary range without requiring copious
+memslots and/or host pages.
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -271,6 +271,8 @@ static struct usb_serial_driver cp210x_d
- 	.break_ctl		= cp210x_break_ctl,
- 	.set_termios		= cp210x_set_termios,
- 	.tx_empty		= cp210x_tx_empty,
-+	.throttle		= usb_serial_generic_throttle,
-+	.unthrottle		= usb_serial_generic_unthrottle,
- 	.tiocmget		= cp210x_tiocmget,
- 	.tiocmset		= cp210x_tiocmset,
- 	.attach			= cp210x_attach,
-
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 852fc8274bdd..875243a0ab36 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1103,6 +1103,9 @@ __gfn_to_memslot(struct kvm_memslots *slots, gfn_t gfn)
+ static inline unsigned long
+ __gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
+ {
++       if (unlikely(slot->flags & KVM_MEM_SINGLE_HVA))
++               return slot->userspace_addr;
++
+        return slot->userspace_addr + (gfn - slot->base_gfn) * PAGE_SIZE;
+ }
 
