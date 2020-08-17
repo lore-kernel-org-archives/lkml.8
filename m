@@ -2,173 +2,84 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98009C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39386C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D5120772
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="snSaim4M"
+	by mail.kernel.org (Postfix) with ESMTP id 1F3DB2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHQFpy (ORCPT
+        id S1726727AbgHQFqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:45:54 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:13573 "EHLO mail1.skidata.com"
+        Mon, 17 Aug 2020 01:46:44 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:15037 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgHQFpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597643148; x=1629179148;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nC3QtiPkc2ash+7NhCkNY1Q6+j1FJN1xDaKIPykDIQE=;
-  b=snSaim4MyjjKLZX3jWEe33Gahv/MJHf1llcgkhiDZqhoX+FP0fEXSaMU
-   dOcTrj3pqWJGcrdoWj2QpqMaFFWRx9athoJQs8XaijFCv9ZkGoxeE9yX4
-   X5i4ra6JFa5HUeOlWTX48+cIvSzcBk4AMYsytEG5MJi3b2dBuGD72DnLU
-   y586m8PnqBCWThnVN4ZPWmDeRil3gxLSdvngA4ipcv2QgRg5Mq/MCvPzu
-   8foGPropu2Nu+dV/7vU6EqcqImmI0CKXL86Re7mspL4ylEUjba0uZUme1
-   gyM4X8hTGytmtGDJTJNvLZAc2lchxCww1dUTll9TiU90VqjCM1n4AnT2U
-   A==;
-IronPort-SDR: Cyb4DgRj+rCeSt/lc6ca/UWAxILZY3BwglmUQTpWJKQHBZEMAjDzPsI/XWGEqNlWzWLVt2G5t0
- ftCvLYazD3V9kXiumE7Dl9j53lr16eEt+XMB1S73ckdJQOEgch5Laa9QH2iMy1OOOEVG94MmRg
- eI1QfaSCRzXL/yYa0rMlnC+FXRsAypoOJKqbBx9YX3zNK5O6JBvu19RU57ttVdjfR64ruRgtyz
- DC2rVUWr89IXhyUIsDZjAO5qfLdU7CDpruLk5D66jwnhCxXbO6t/cAHKtunyJaZMyvRnOESEV4
- fkA=
-X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="26161395"
-Date:   Mon, 17 Aug 2020 07:38:36 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <timur@kernel.org>,
-        <nicoleotsuka@gmail.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, dl-linux-imx <linux-imx@nxp.com>,
-        <shawnguo@kernel.org>, <kernel@pengutronix.de>,
-        Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
-Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
-Message-ID: <20200817053836.GC551027@pcleri>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <7f98cd6d30404e4d9d621f57f45ae441@skidata.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7f98cd6d30404e4d9d621f57f45ae441@skidata.com>
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+        id S1726314AbgHQFqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:46:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BVNMc45Qvz9tydn;
+        Mon, 17 Aug 2020 07:46:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 5TgBxdVF7ca0; Mon, 17 Aug 2020 07:46:36 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVNMc37DLz9tytl;
+        Mon, 17 Aug 2020 07:46:36 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5383F8B772;
+        Mon, 17 Aug 2020 07:46:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JHF2S-j_s4A9; Mon, 17 Aug 2020 07:46:41 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 176C18B75B;
+        Mon, 17 Aug 2020 07:46:41 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 13D6F65CDD; Mon, 17 Aug 2020 05:46:41 +0000 (UTC)
+Message-Id: <ac8da0e3baa91dda805e1e492fd65aecd90c1fb5.1597643156.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v1] powerpc/process: Replace an #ifdef CONFIG_PPC_47x by
+ IS_ENABLED()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 17 Aug 2020 05:46:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 11:18:10AM +0200, Robin Gong wrote:
-> 
-> On 2020/08/13 19:23: Richard Leitner <richard.leitner@skidata.com> wrote:
-> > Hi,
-> > we've found a race condition with the PCM on the i.MX6 which results 
-> > in an -EIO for the SNDRV_PCM_IOCTL_READI_FRAMES ioctl after an -EPIPE (XRUN).
-> > 
-> > A possible reproduction may look like the following reduced call graph 
-> > during a PCM capture:
-> > 
-> > us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES)
-> >       - wait_for_avail()
-> >         - schedule_timeout()
-> >    -> snd_pcm_update_hw_ptr0()
-> >       - snd_pcm_update_state: EPIPE (XRUN)
-> >       - sdma_disable_channel_async() # get's scheduled away due to sleep us
-> > <- ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns -EPIPE
-> > us -> ioctl(SNDRV_PCM_IOCTL_PREPARE) # as reaction to the EPIPE (XRUN)
-> > us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) # next try to capture frames
-> >       - sdma_prep_dma_cyclic()
-> >         - sdma_load_context() # not loaded as context_loaded is 1
-> >       - wait_for_avail()
-> >         - schedule_timeout()
-> > # now the sdma_channel_terminate_work() comes back and sets # 
-> > context_loaded = false and frees in vchan_dma_desc_free_list().
-> > us <- ioctl returns -EIO (capture write error (DMA or IRQ trouble?))
->
-> Seems the write error caused by context_loaded not set to false before
-> next transfer start? If yes, please have a try with the 03/04 of the below
-> patch set, anyway, could you post your failure log?
-> https://lkml.org/lkml/2020/8/11/111
+isync() is always defined, no need for an #ifdef.
 
-Thanks for the pointer to those patches. I've tested them on top of the
-v5.8 tag during the weekend. It seems those patches are mitigiating
-the described EIO issue.
+Replace it by IS_ENABLED(CONFIG_PPC_47x).
 
-Nonetheless IMHO this patches are not fixing the root cause of the
-problem (unsynchronized sdma_disable_channel_async / sdma_prep_dma_cyclic).
-Do you (or somebody else) have any suggestions/comments/objections on that?
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/process.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-regards;rl
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index e86e28c28259..fd3e11663613 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -777,9 +777,8 @@ static void switch_hw_breakpoint(struct task_struct *new)
+ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+ {
+ 	mtspr(SPRN_DAC1, dabr);
+-#ifdef CONFIG_PPC_47x
+-	isync();
+-#endif
++	if (IS_ENABLED(CONFIG_PPC_47x))
++		isync();
+ 	return 0;
+ }
+ #elif defined(CONFIG_PPC_BOOK3S)
+-- 
+2.25.0
 
-> 
-> > 
-> > 
-> > What we have found out, based on our understanding:
-> > The dmaengine docu states that a dmaengine_terminate_async() must be 
-> > followed by a dmaengine_synchronize().
-> > However, in the pcm_dmaengine.c, only dmaengine_terminate_async() is 
-> > called (for performance reasons and because it might be called from an 
-> > interrupt handler).
-> > 
-> > In our tests, we saw that the user-space immediately calls
-> > ioctl(SNDRV_PCM_IOCTL_PREPARE) as a handler for the happened xrun 
-> > (previous ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns with -EPIPE). In 
-> > our case (imx-sdma.c), the terminate really happens asynchronously 
-> > with a worker thread which is not awaited/synchronized by the
-> > ioctl(SNDRV_PCM_IOCTL_PREPARE) call.
-> > 
-> > Since the syscall immediately enters an atomic context 
-> > (snd_pcm_stream_lock_irq()), we are not able to flush the work of the 
-> > termination worker from within the DMA context. This leads to an 
-> > unterminated DMA getting re-initialized and then terminated.
-> > 
-> > On the i.MX6 platform the problem is (if I got it correctly) that the
-> > sdma_channel_terminate_work() called after the -EPIPE gets scheduled 
-> > away (for the 1-2ms sleep [1]). During that time the userspace already 
-> > sends in the
-> > ioctl(SNDRV_PCM_IOCTL_PREPARE) and
-> > ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
-> > As none of them are anyhow synchronized to the terminate_worker the
-> > vchan_dma_desc_free_list() [2] and "sdmac->context_loaded = false;" 
-> > [3] are executed during the wait_for_avail() [4] of the 
-> > ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
-> > 
-> > To make sure we identified the problem correctly we've tested to add a 
-> > "dmaengine_synchronize()" before the snd_pcm_prepare() in [5]. This 
-> > fixed the race condition in all our tests. (Before we were able to 
-> > reproduce it in 100% of the test runs).
-> > 
-> > Based on our understanding, there are two different points to ensure 
-> > the
-> > termination:
-> > Either ensure that the termination is finished within the previous 
-> > SNDRV_PCM_IOCTL_READI_FRAMES call (inside the DMA context) or 
-> > finishing it in the SNDRV_PCM_IOCTL_PREPARE call (and all other 
-> > applicable ioclts) before entering the atomic context (from the PCM context).
-> > 
-> > We initially thought about implementing the first approach, basically 
-> > splitting up the dma_device terminate_all operation into a sync
-> > (busy-wait) and a async one. This would align the operations with the 
-> > DMAengine interface and would enable a sync termination variant from 
-> > atomic contexts.
-> > However, we saw that the dma_free_attrs() function has a WARN_ON on 
-> > irqs disabled, which would be the case for the sync variant.
-> > Side note: We found this issue on the current v5.4.y LTS branch, but 
-> > it also affects v5.8.y.
-> > 
-> > Any feedback or pointers how we may fix the problem are warmly welcome!
-> > If anything is unclear please just ask :-)
-> > 
-> > regards;
-> > Richard Leitner
-> > Benjamin Bara
