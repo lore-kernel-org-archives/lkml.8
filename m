@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC55CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFA620578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D1B20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690217;
-	bh=bBnBdwc8fgDqOQIX/VuGZYQBTY3MkI6HpQsAxL6o+vc=;
+	s=default; t=1597690219;
+	bh=kO1Y19OI4AfooucGLBEOzmQUbrn5X6bISJvX0cbpDWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oMIj4XOSmkPjJw25cId5QM7/Ig5GTDmPVl/U+Xb/VP7NeyFZHAMgpe6tGizwFkNmg
-	 tctcB0ZHws9uqYNmXzOZPv+9nAN82037AHG80cWEberUIhiLw9RCy1Kabo3GR1C5L8
-	 wI06Z6qrErH5EwtqaGmS45xYtOHuPTlVJHoIRnVE=
+	b=ZGEFu9SrZhJy/cvocP2ScOKQHQG3qlMM0LYTYo64AtQ/5mZGGu/e61Lw9vqojFcRH
+	 nItny5zNEih+CJwmEdg5WsaidDJ4BkYYWa0s6HzssVD64Ww1fDgDuPTCiAAe00xsQ8
+	 69ZicodnNYShF1Fn4/7A8tE+eWaJz2HBZ9tfQySs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391626AbgHQSuQ (ORCPT
+        id S2403897AbgHQSuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41072 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387954AbgHQPxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:53:54 -0400
+        id S2387572AbgHQPxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:53:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E19720882;
-        Mon, 17 Aug 2020 15:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D20220729;
+        Mon, 17 Aug 2020 15:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679633;
-        bh=bBnBdwc8fgDqOQIX/VuGZYQBTY3MkI6HpQsAxL6o+vc=;
+        s=default; t=1597679624;
+        bh=kO1Y19OI4AfooucGLBEOzmQUbrn5X6bISJvX0cbpDWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YA2hTCxVE8VjAPyCZDVemzY2f8QuSc9YLWh6Xemo9SjVVrT1eZfeARJRU10trAOTj
-         dINTjC5Aftea8mo9mRZlnWguCzUQU+HT5y1wUhRDyfp6Nw4hvj4FMqediofIM6OT3V
-         NdElxhJiJrK0RoUsdgDxbftyqpbuwiFDD14zrC3s=
+        b=ZT7+VhfoeEkwJvqfeHxjp1H8oQUHQT2Heo5RYMUbnDZyXpia2FBRqboYcIvEUCzGj
+         sYc6NDhg6RVrD+kGmgQDyo7s4MVupd0a9Cnajbz33iO+02Uc1Xad/WE/Yc/AXMo5by
+         OdrgyJGYtEB8kLMHM7paAL4rRVPXKmjPrrfw0WnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 281/393] s390/qeth: tolerate pre-filled RX buffer
-Date:   Mon, 17 Aug 2020 17:15:31 +0200
-Message-Id: <20200817143833.250363826@linuxfoundation.org>
+Subject: [PATCH 5.7 278/393] ASoC: soc-core: Fix regression causing sysfs entries to disappear
+Date:   Mon, 17 Aug 2020 17:15:28 +0200
+Message-Id: <20200817143833.104581277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,91 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit eff73e16ee116f6eafa2be48fab42659a27cb453 ]
+[ Upstream commit 5c74c9d34aec1ac756de6979dd5580096aba8643 ]
 
-When preparing a buffer for RX refill, tolerate that it already has a
-pool_entry attached. Otherwise we could easily leak such a pool_entry
-when re-driving the RX refill after an error (from eg. do_qdio()).
+The allocation order of things in soc_new_pcm_runtime was changed to
+move the device_register before the allocation of the rtd structure.
+This was to allow the rtd allocation to be managed by devm. However
+currently the sysfs entries are added by device_register and their
+visibility depends on variables within the rtd structure, this causes
+the pmdown_time and dapm_widgets sysfs entries to be missing for all
+rtds.
 
-This needs some minor adjustment in the code that drains RX buffer(s)
-prior to RX refill and during teardown, so that ->pool_entry is NULLed
-accordingly.
+Correct this issue by manually calling device_add_groups after the
+appropriate information is available.
 
-Fixes: 4a71df50047f ("qeth: new qeth device driver")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d918a37610b1 ("ASoC: soc-core: tidyup soc_new_pcm_runtime() alloc order")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200730120715.637-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ sound/soc/soc-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 60d675fefac7d..40ddd17864304 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -202,12 +202,17 @@ EXPORT_SYMBOL_GPL(qeth_threads_running);
- void qeth_clear_working_pool_list(struct qeth_card *card)
- {
- 	struct qeth_buffer_pool_entry *pool_entry, *tmp;
-+	struct qeth_qdio_q *queue = card->qdio.in_q;
-+	unsigned int i;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index e5433e8fcf19e..b5c4473f1e499 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -443,7 +443,6 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runtime(
  
- 	QETH_CARD_TEXT(card, 5, "clwrklst");
- 	list_for_each_entry_safe(pool_entry, tmp,
- 			    &card->qdio.in_buf_pool.entry_list, list){
- 			list_del(&pool_entry->list);
- 	}
+ 	dev->parent	= card->dev;
+ 	dev->release	= soc_release_rtd_dev;
+-	dev->groups	= soc_dev_attr_groups;
+ 
+ 	dev_set_name(dev, "%s", dai_link->name);
+ 
+@@ -502,6 +501,10 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runtime(
+ 	rtd->num = card->num_rtd;
+ 	card->num_rtd++;
+ 
++	ret = device_add_groups(dev, soc_dev_attr_groups);
++	if (ret < 0)
++		goto free_rtd;
 +
-+	for (i = 0; i < ARRAY_SIZE(queue->bufs); i++)
-+		queue->bufs[i].pool_entry = NULL;
- }
- EXPORT_SYMBOL_GPL(qeth_clear_working_pool_list);
+ 	return rtd;
  
-@@ -2671,7 +2676,7 @@ static struct qeth_buffer_pool_entry *qeth_find_free_buffer_pool_entry(
- static int qeth_init_input_buffer(struct qeth_card *card,
- 		struct qeth_qdio_buffer *buf)
- {
--	struct qeth_buffer_pool_entry *pool_entry;
-+	struct qeth_buffer_pool_entry *pool_entry = buf->pool_entry;
- 	int i;
- 
- 	if ((card->options.cq == QETH_CQ_ENABLED) && (!buf->rx_skb)) {
-@@ -2682,9 +2687,13 @@ static int qeth_init_input_buffer(struct qeth_card *card,
- 			return -ENOMEM;
- 	}
- 
--	pool_entry = qeth_find_free_buffer_pool_entry(card);
--	if (!pool_entry)
--		return -ENOBUFS;
-+	if (!pool_entry) {
-+		pool_entry = qeth_find_free_buffer_pool_entry(card);
-+		if (!pool_entry)
-+			return -ENOBUFS;
-+
-+		buf->pool_entry = pool_entry;
-+	}
- 
- 	/*
- 	 * since the buffer is accessed only from the input_tasklet
-@@ -2692,8 +2701,6 @@ static int qeth_init_input_buffer(struct qeth_card *card,
- 	 * the QETH_IN_BUF_REQUEUE_THRESHOLD we should never run  out off
- 	 * buffers
- 	 */
--
--	buf->pool_entry = pool_entry;
- 	for (i = 0; i < QETH_MAX_BUFFER_ELEMENTS(card); ++i) {
- 		buf->buffer->element[i].length = PAGE_SIZE;
- 		buf->buffer->element[i].addr =
-@@ -5521,6 +5528,7 @@ static unsigned int qeth_rx_poll(struct qeth_card *card, int budget)
- 		if (done) {
- 			QETH_CARD_STAT_INC(card, rx_bufs);
- 			qeth_put_buffer_pool_entry(card, buffer->pool_entry);
-+			buffer->pool_entry = NULL;
- 			qeth_queue_input_buffer(card, card->rx.b_index);
- 			card->rx.b_count--;
- 
+ free_rtd:
 -- 
 2.25.1
 
