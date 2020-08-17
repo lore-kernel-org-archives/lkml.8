@@ -7,49 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB6FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F2120758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E125C20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686059;
-	bh=3uGyPKpUG2CcoX4bW+WaQM1xcyC7Bitx/A8vr+uogCM=;
+	s=default; t=1597686083;
+	bh=BEc0yCCyldpjBfhDbUAoA9Vsg0ZZbASLus2klVTa9Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQOR9t005Tl2tva2pebSxgrSX+QTv8zD0G0SvIk67rhrLTdFtXmInEyDIoLupNQQ4
-	 8Xm7/Rwy1MITkSiL7sCVUbXXvpqPpoF/sqkI2EuT49auAGoUvVn0WBjkFPZLofk+bJ
-	 MLgFbCuxI2+3T9KF4k01Cq/ekrPhY9g6F5ioLAQo=
+	b=d/QKKQa7nadPEBADFSeOQFcW9yq2fJv/a63EQPZuiN4L4AWYCpiucFBUpvBA0eMpE
+	 v3j1sJ+1XDhxkSRRUXMtOyI4p/AjhOtox72dB59wCMJ/mJIq8ivmvBLvw2OK/G2kkr
+	 AGKtLdIybMmIZpQ0nFuIC7588Gl4TvugfvyRgcFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbgHQRky (ORCPT
+        id S1731491AbgHQRlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731113AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731107AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AD2622CF7;
-        Mon, 17 Aug 2020 16:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63AE920760;
+        Mon, 17 Aug 2020 16:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680973;
-        bh=3uGyPKpUG2CcoX4bW+WaQM1xcyC7Bitx/A8vr+uogCM=;
+        s=default; t=1597680968;
+        bh=BEc0yCCyldpjBfhDbUAoA9Vsg0ZZbASLus2klVTa9Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HP+jr71v+KLVSXyXN84TopjFOwv5STvAZO/cDUOme4Kls2UgcMEs7ouoMBhLsr3bK
-         Bin4THG06Xv3qb6WhoujlmtmE8pFHOIuNdK3sdqsrt0GAA/8TPGf57m/g5WP7uejIm
-         BDHjsOBak/N533QGpHf3HzzTBV53MAuf3c/7SPn0=
+        b=pjXOOw2/WJHJTa3UrBiRNANLnYQHkpTi/uNQ6XCjgZBxo2CPO8y6YacXHOabfhFKh
+         mYWtkfJGaM0MIF5JqubhdNsgJD7Bbhn2yk5CmqIB0Ki3DH412mgmKVMH3HGb6y+mg6
+         GCaz+R63Gg+/gNxkorn+uVznQ5AcrAzYrob2tanI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/168] Smack: fix another vsscanf out of bounds
-Date:   Mon, 17 Aug 2020 17:17:13 +0200
-Message-Id: <20200817143738.807496446@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Markus T Metzger <markus.t.metzger@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Shankar <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>
+Subject: [PATCH 4.19 129/168] x86/fsgsbase/64: Fix NULL deref in 86_fsgsbase_read_task
+Date:   Mon, 17 Aug 2020 17:17:40 +0200
+Message-Id: <20200817143740.129135730@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,37 +75,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
+[ Upstream commit 8ab49526b53d3172d1d8dd03a75c7d1f5bd21239 ]
 
-This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
-vsscanf") where we added a bounds check on "rule".
+syzbot found its way in 86_fsgsbase_read_task() and triggered this oops:
 
-Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
-Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+   KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+   CPU: 0 PID: 6866 Comm: syz-executor262 Not tainted 5.8.0-syzkaller #0
+   RIP: 0010:x86_fsgsbase_read_task+0x16d/0x310 arch/x86/kernel/process_64.c:393
+   Call Trace:
+     putreg32+0x3ab/0x530 arch/x86/kernel/ptrace.c:876
+     genregs32_set arch/x86/kernel/ptrace.c:1026 [inline]
+     genregs32_set+0xa4/0x100 arch/x86/kernel/ptrace.c:1006
+     copy_regset_from_user include/linux/regset.h:326 [inline]
+     ia32_arch_ptrace arch/x86/kernel/ptrace.c:1061 [inline]
+     compat_arch_ptrace+0x36c/0xd90 arch/x86/kernel/ptrace.c:1198
+     __do_compat_sys_ptrace kernel/ptrace.c:1420 [inline]
+     __se_compat_sys_ptrace kernel/ptrace.c:1389 [inline]
+     __ia32_compat_sys_ptrace+0x220/0x2f0 kernel/ptrace.c:1389
+     do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+     __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+     do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+     entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+
+This can happen if ptrace() or sigreturn() pokes an LDT selector into FS
+or GS for a task with no LDT and something tries to read the base before
+a return to usermode notices the bad selector and fixes it.
+
+The fix is to make sure ldt pointer is not NULL.
+
+Fixes: 07e1d88adaae ("x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately")
+Co-developed-by: Jann Horn <jannh@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Markus T Metzger <markus.t.metzger@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/ptrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 10ee51d044926..981f582539acf 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -933,6 +933,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 
- 	for (i = 0; i < catlen; i++) {
- 		rule += SMK_DIGITLEN;
-+		if (rule > data + count) {
-+			rc = -EOVERFLOW;
-+			goto out;
-+		}
- 		ret = sscanf(rule, "%u", &cat);
- 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
- 			goto out;
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 8d4d506453106..1401f86e40070 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -374,7 +374,7 @@ static unsigned long task_seg_base(struct task_struct *task,
+ 		 */
+ 		mutex_lock(&task->mm->context.lock);
+ 		ldt = task->mm->context.ldt;
+-		if (unlikely(idx >= ldt->nr_entries))
++		if (unlikely(!ldt || idx >= ldt->nr_entries))
+ 			base = 0;
+ 		else
+ 			base = get_desc_base(ldt->entries + idx);
 -- 
 2.25.1
 
