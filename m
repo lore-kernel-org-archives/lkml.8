@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3778C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 440DD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64E6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691969;
-	bh=qqQlDeNP9ll3TBVFHzlpclXEDbLIy2T5o7RyM+U8G1s=;
+	s=default; t=1597691975;
+	bh=bYZSsDbdKIVHwZyGePACRao7ZG9/BLMU1o3jf/HNoGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qRUKSoN4EFeJvqQ1XwP/arskYipukJuMVD+6wIPb0GeN1q/zgoLDKo6DYExxYLs6i
-	 7/YQMzkcjxAc15Zv5gz6d21RfsRH28ku32GE4iI6WXt78fcsmLqOL6gZhiGx7FhuXS
-	 hsTvOqz4RIpbxkwzFtKmLi9QD+x76roQq0zSm/4w=
+	b=v1m2uV5oToT0A/GNy047Xh6uf0HaY+qWlodeGbhO/XSjtrSyTn/dk4eazYnpSggk4
+	 cTIOV57Q7WIWGe4YQ5w2c2yb13teMIeCPrw2UHjZXPxIfFzBMMCwy7J2cMseJvrtmX
+	 UBq64u55oADL7LDf3bNDILUP5a7XZVtMUSJo8Tc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404197AbgHQTT2 (ORCPT
+        id S2404207AbgHQTTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgHQPha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:30 -0400
+        id S2387404AbgHQPhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBCBE208E4;
-        Mon, 17 Aug 2020 15:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BEA622DD6;
+        Mon, 17 Aug 2020 15:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678650;
-        bh=qqQlDeNP9ll3TBVFHzlpclXEDbLIy2T5o7RyM+U8G1s=;
+        s=default; t=1597678636;
+        bh=bYZSsDbdKIVHwZyGePACRao7ZG9/BLMU1o3jf/HNoGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KwK0EVh3sls/fGnvNuTIsWR4OUC1YW+D4Cth26atggdFSILJevuqJpeZmJ7QfHaNO
-         rdj5Gamr+F8dDzmnG/XL90tH+BxanRqdXKfH9t1PGkidteTaBwBUillhQTlFsRkQMW
-         NHI+KI/TDJpHDhPRkGy4lI9WouP4aY+ceT42ns+Q=
+        b=AETwqkhBo7CGpTDXZl89UgX3LXXXlsUu+ZXnUoAz+rdOoFuB67ewn6xleqajkPFhY
+         CeSyNBeUNTKx/m7X17dryjbSw0FZfZZh4LpxkhB/ZNU/b9vmWacE+BltOIuHvJxh2K
+         ihRhaRGHtZHl0v+P+NbjyEyMK+6qw1TwY4GbkV2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 407/464] ALSA: usb-audio: add quirk for Pioneer DDJ-RB
-Date:   Mon, 17 Aug 2020 17:16:00 +0200
-Message-Id: <20200817143853.276111725@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 385/464] net: Fix potential memory leak in proto_register()
+Date:   Mon, 17 Aug 2020 17:15:38 +0200
+Message-Id: <20200817143852.221924572@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,87 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 6e8596172ee1cd46ec0bfd5adcf4ff86371478b6 upstream.
+[ Upstream commit 0f5907af39137f8183ed536aaa00f322d7365130 ]
 
-This is just another Pioneer device with fixed endpoints. Input is dummy
-but used as feedback (it always returns silence).
+If we failed to assign proto idx, we free the twsk_slab_name but forget to
+free the twsk_slab. Add a helper function tw_prot_cleanup() to free these
+together and also use this helper function in proto_unregister().
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082502.225979-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b45ce32135d1 ("sock: fix potential memory leak in proto_register()")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/quirks-table.h |   56 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ net/core/sock.c |   25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3541,6 +3541,62 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3443,6 +3443,16 @@ static void sock_inuse_add(struct net *n
+ }
+ #endif
+ 
++static void tw_prot_cleanup(struct timewait_sock_ops *twsk_prot)
++{
++	if (!twsk_prot)
++		return;
++	kfree(twsk_prot->twsk_slab_name);
++	twsk_prot->twsk_slab_name = NULL;
++	kmem_cache_destroy(twsk_prot->twsk_slab);
++	twsk_prot->twsk_slab = NULL;
++}
++
+ static void req_prot_cleanup(struct request_sock_ops *rsk_prot)
+ {
+ 	if (!rsk_prot)
+@@ -3513,7 +3523,7 @@ int proto_register(struct proto *prot, i
+ 						  prot->slab_flags,
+ 						  NULL);
+ 			if (prot->twsk_prot->twsk_slab == NULL)
+-				goto out_free_timewait_sock_slab_name;
++				goto out_free_timewait_sock_slab;
  		}
  	}
- },
-+{
-+	/*
-+	 * PIONEER DJ DDJ-RB
-+	 * PCM is 4 channels out, 2 dummy channels in @ 44.1 fixed
-+	 * The feedback for the output is the dummy input.
-+	 */
-+	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x000e),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = (const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 4,
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x01,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						   USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_44100,
-+					.rate_min = 44100,
-+					.rate_max = 44100,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 44100 }
-+				}
-+			},
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 2,
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x82,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						 USB_ENDPOINT_SYNC_ASYNC|
-+						 USB_ENDPOINT_USAGE_IMPLICIT_FB,
-+					.rates = SNDRV_PCM_RATE_44100,
-+					.rate_min = 44100,
-+					.rate_max = 44100,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 44100 }
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
  
- #define ALC1220_VB_DESKTOP(vend, prod) { \
- 	USB_DEVICE(vend, prod),	\
+@@ -3521,15 +3531,15 @@ int proto_register(struct proto *prot, i
+ 	ret = assign_proto_idx(prot);
+ 	if (ret) {
+ 		mutex_unlock(&proto_list_mutex);
+-		goto out_free_timewait_sock_slab_name;
++		goto out_free_timewait_sock_slab;
+ 	}
+ 	list_add(&prot->node, &proto_list);
+ 	mutex_unlock(&proto_list_mutex);
+ 	return ret;
+ 
+-out_free_timewait_sock_slab_name:
++out_free_timewait_sock_slab:
+ 	if (alloc_slab && prot->twsk_prot)
+-		kfree(prot->twsk_prot->twsk_slab_name);
++		tw_prot_cleanup(prot->twsk_prot);
+ out_free_request_sock_slab:
+ 	if (alloc_slab) {
+ 		req_prot_cleanup(prot->rsk_prot);
+@@ -3553,12 +3563,7 @@ void proto_unregister(struct proto *prot
+ 	prot->slab = NULL;
+ 
+ 	req_prot_cleanup(prot->rsk_prot);
+-
+-	if (prot->twsk_prot != NULL && prot->twsk_prot->twsk_slab != NULL) {
+-		kmem_cache_destroy(prot->twsk_prot->twsk_slab);
+-		kfree(prot->twsk_prot->twsk_slab_name);
+-		prot->twsk_prot->twsk_slab = NULL;
+-	}
++	tw_prot_cleanup(prot->twsk_prot);
+ }
+ EXPORT_SYMBOL(proto_unregister);
+ 
 
 
