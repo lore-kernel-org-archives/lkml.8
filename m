@@ -2,222 +2,140 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB10EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8232065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6D120789
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597679335;
+	bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yBPyyu1TwtqrciM74ex7HTAI2EFfX4AuWgN23hRx0wIuTMA+QztPVB9lBroiORX8e
+	 aFlSFS0om942p5UuptSaDkaLGOfW2T2xNWhoLQL60gva8UIvKXGYZ8KEyT9O4ZK3X0
+	 QCvVdRV42yniyV0KcY9wkSuUyj5hjv7CaFeR9zmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgHQPsl (ORCPT
+        id S2387640AbgHQPsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:48:41 -0400
-Received: from mx-ginzinger.sigmacloud.services ([185.154.235.147]:37488 "EHLO
-        mx-ginzinger.sigmacloud.services" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730624AbgHQPiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:55 -0400
-Received: from [31.193.165.228] (port=42692 helo=mx-ginzinger.sigmacloud.services)
-        by mx-ginzinger.sigmacloud.services with esmtps (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.82_1-5b7a7c0-XX)
-        (envelope-from <Henri.Roosen@ginzinger.com>)
-        id 1k7hDb-00079R-0z; Mon, 17 Aug 2020 17:38:39 +0200
-Received: from exc1.buero.ginzinger.com (10.1.1.204) by
- exc1.buero.ginzinger.com (10.1.1.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1466.3; Mon, 17 Aug 2020 17:38:39 +0200
-Received: from exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4]) by
- exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4%3]) with mapi id
- 15.01.1466.012; Mon, 17 Aug 2020 17:38:39 +0200
-X-CTCH-RefID: str=0001.0A090210.5F3AA47F.0050,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-From:   Roosen Henri <Henri.Roosen@ginzinger.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "y2038@lists.linaro.org" <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>
-Subject: Re: y2038 backport to v5.4
-Thread-Topic: y2038 backport to v5.4
-Thread-Index: AQHWdKknmHfXMHrcVUuQvz56lm2a4Kk8ThoA
-Date:   Mon, 17 Aug 2020 15:38:38 +0000
-Message-ID: <2adcc8291ba7b2533e2e48cd794ed15a4570c795.camel@ginzinger.com>
-References: <d159c66c6e67480ab48ac44716443358@ginzinger.com>
-         <CAK8P3a2icd72R+4Z5dLPvGuofsq3VOBYBdCnC4806V5znqrytg@mail.gmail.com>
-         <6c77e2a615ca01e753735e21752fe5e1b3fb636f.camel@ginzinger.com>
-         <20200817143513.GA539521@kroah.com>
-         <372cbefff43c2a96379f00de5880bc9d54df6acd.camel@ginzinger.com>
-         <20200817151500.GA659819@kroah.com>
-In-Reply-To: <20200817151500.GA659819@kroah.com>
-Accept-Language: en-US, de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.2.1.65]
-x-exclaimer-md-original-subject: [NOSIG][NODISC]Re: y2038 backport to v5.4
-x-exclaimer-md-config: 9dd172f7-de2e-4231-b886-ec11f46e03b3
+        Mon, 17 Aug 2020 11:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730625AbgHQPiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C6A22CB3;
+        Mon, 17 Aug 2020 15:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678733;
+        bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PNargjWKRDxC3jcF53bKLzKC1dc2ARmqR0CDC/uFvbXknBJcT1ysDJv1CYq3+uLx8
+         PD9+oIxh0kV6Lx6sazAle7I/ebXjor8+CVJHqNkTxPs/gXOAY3Gt5hFM7xPKpsgKfN
+         bDR5geeqWR8E5TnR6X9BBQuIKMK6VQrTYmj06gRw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
+        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
+        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 418/464] fs/minix: reject too-large maximum file size
+Date:   Mon, 17 Aug 2020 17:16:11 +0200
+Message-Id: <20200817143853.801921489@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----2799F02CA61A1B6D0D463196D127CBF1"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an S/MIME signed message
+From: Eric Biggers <ebiggers@google.com>
 
-------2799F02CA61A1B6D0D463196D127CBF1
-Content-Language: de-DE
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D1D0B1B8DA0055458C749FDE366954A8@ginzinger.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
 
-T24gTW9uLCAyMDIwLTA4LTE3IGF0IDE3OjE1ICswMjAwLCBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZyB3cm90ZToNCj4gT24gTW9uLCBBdWcgMTcsIDIwMjAgYXQgMDM6MDA6MjRQTSArMDAwMCwg
-Um9vc2VuIEhlbnJpIHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMC0wOC0xNyBhdCAxNjozNSArMDIw
-MCwgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmcNCj4gPiB3cm90ZToNCj4gPiA+IE9uIE1vbiwg
-QXVnIDE3LCAyMDIwIGF0IDAyOjE1OjE2UE0gKzAwMDAsIFJvb3NlbiBIZW5yaSB3cm90ZToNCj4g
-PiA+ID4gT24gVHVlLCAyMDIwLTA2LTA5IGF0IDE2OjE4ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdy
-b3RlOg0KPiA+ID4gPiA+IE9uIFR1ZSwgSnVuIDksIDIwMjAgYXQgMjozNiBQTSBSb29zZW4gSGVu
-cmkgPA0KPiA+ID4gPiA+IEhlbnJpLlJvb3NlbkBnaW56aW5nZXIuY29tPiB3cm90ZToNCj4gPiA+
-ID4gPiA+IEhpIEFybmQsDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEkgaG9wZSB5b3UgYXJl
-IHdlbGwgYW5kIGNvdWxkIGFuc3dlciBtZSBhIHF1aWNrIHF1ZXN0aW9uLg0KPiA+ID4gPiA+ID4g
-DQo+ID4gPiA+ID4gPiBJJ3ZlIHJlYWQgb24gdGhlIGtlcm5lbCBtYWlsaW5nLWxpc3QgdGhhdCBp
-bml0aWFsbHkgdGhlcmUNCj4gPiA+ID4gPiA+IHdhcw0KPiA+ID4gPiA+ID4gYW4NCj4gPiA+ID4g
-PiA+IGludGVudGlvbiB0byBiYWNrcG9ydCB0aGUgZmluYWwgeTIwMzggcGF0Y2hlcyB0byB2NS40
-Lg0KPiA+ID4gPiA+ID4gV2UncmUNCj4gPiA+ID4gPiA+IGN1cnJlbnRseSB0YXJnZXRpbmcgdG8g
-dXNlIHRoZSB2NS40IExUUyBrZXJuZWwgZm9yIGENCj4gPiA+ID4gPiA+IHByb2plY3QNCj4gPiA+
-ID4gPiA+IHdoaWNoDQo+ID4gPiA+ID4gPiBzaG91bGQgYmUgeTIwMzggY29tcGxpYW50Lg0KPiA+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBJIGNvdWxkbid0IGZpbmQgYWxsIG9mIHRoZSB5MjAzOC1l
-bmRnYW1lIHBhdGNoZXMgaW4gdGhlDQo+ID4gPiA+ID4gPiBjdXJyZW50DQo+ID4gPiA+ID4gPiB2
-NS40LXN0YWJsZSBicmFuY2guIEFyZSB0aGVyZSBhbnkgcGF0Y2hlcyBzdGlsbCByZXF1aXJlZCB0
-bw0KPiA+ID4gPiA+ID4gYmUNCj4gPiA+ID4gPiA+IGJhY2twb3J0ZWQgaW4gb3JkZXIgZm9yIHY1
-LjQgdG8gYmUgeTIwMzggY29tcGxpYW50LCBvciBjYW4NCj4gPiA+ID4gPiA+IHRoZQ0KPiA+ID4g
-PiA+ID4gcmVtYWluaW5nIHBhdGNoZXMgYmUgaWdub3JlZCAoYmVjYXVzZSBvZiBvbmx5IGNsZWFu
-dXA/KT8NCj4gPiA+ID4gPiA+IEVsc2UsDQo+ID4gPiA+ID4gPiBpcw0KPiA+ID4gPiA+ID4gdGhl
-cmUgc3RpbGwgYW4gaW50ZW50aW9uIHRvIGdldCB0aGUgdjUuNCBMVFMga2VybmVsIHkyMDM4DQo+
-ID4gPiA+ID4gPiBjb21wbGlhbnQ/DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSSBkb24ndCB0aGlu
-ayB0aGVyZSBhcmUgY3VycmVudGx5IGFueSBwbGFucyB0byBtZXJnZSBteQ0KPiA+ID4gPiA+IHky
-MDM4LQ0KPiA+ID4gPiA+IGVuZGdhbWUgDQo+ID4gPiA+ID4gYnJhbmNoDQo+ID4gPiA+ID4gaW50
-byB0aGUgb2ZmaWNpYWwgbGludXgtNS40IGx0cyBrZXJuZWwsIGJ1dCB5b3Ugc2hvdWxkIGJlDQo+
-ID4gPiA+ID4gYWJsZSB0bw0KPiA+ID4gPiA+IGp1c3QgcHVsbCBmcm9tDQo+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
-YXJuZC9wbGF5Z3JvdW5kLmdpdC9sb2cvP2g9eTIwMzgtZW5kZ2FtZQ0KPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+IGFuZCBnZXQgdGhlIHNhbWUgcmVzdWx0cy4gSWYgeW91IHNlZSBhbnkgcHJvYmxlbXMg
-d2l0aCB0aGF0LA0KPiA+ID4gPiA+IHBsZWFzZQ0KPiA+ID4gPiA+IHJlcG9ydA0KPiA+ID4gPiA+
-IHRoYXQgdG8gbWUgd2l0aCBDYyB0byB0aGUgbWFpbGluZyBsaXN0IGFuZCBwZXJoYXBzIGdyZWdr
-aCwgc28NCj4gPiA+ID4gPiBJDQo+ID4gPiA+ID4gY2FuDQo+ID4gPiA+ID4gc2VlIGlmDQo+ID4g
-PiA+ID4gSSBjYW4gcmVzb2x2ZSBpdCBieSByZWJhc2luZyBteSBwYXRjaGVzLCBvciBpZiBoZSB3
-b3VsZCBsaWtlDQo+ID4gPiA+ID4gdG8NCj4gPiA+ID4gPiBtZXJnZQ0KPiA+ID4gPiA+IHRoZQ0K
-PiA+ID4gPiA+IHBhdGNoZXMuDQo+ID4gPiA+IA0KPiA+ID4gPiBQdWxsaW5nIHRoZSB5MjAzOC1l
-bmRnYW1lIGJyYW5jaCBkb2VzIGxlYWQgdG8gc29tZSBjb25mbGljdHMsDQo+ID4gPiA+IHdoaWNo
-DQo+ID4gPiA+IGFyZQ0KPiA+ID4gPiBjdXJyZW50bHkgc3RpbGwga2luZGEgc3RhaWdodGZvcndh
-cmQgdG8gc29sdmUuDQo+ID4gPiA+IA0KPiA+ID4gPiBIb3dldmVyIEknZCBiZSB2ZXJ5IGludGVy
-ZXN0ZWQgaW4gZ2V0dGluZyB0aGlzIGJyYW5jaCBtZXJnZWQgdG8NCj4gPiA+ID4gdjUuNCwNCj4g
-PiA+ID4gc28gd2UgZG9uJ3QgcnVuIGludG8gbW9yZSBkaWZmaWN1bHQgbWVyZ2UgY29uZmxpY3Rz
-IHRoZSBjb21pbmcNCj4gPiA+ID4geWVhcnMNCj4gPiA+ID4gd2hlcmUgdGhlIHY1LjQtTFRTIHN0
-aWxsIGdldHMgc3RhYmxlIHVwZGF0ZXMgKERlYywgMjAyNSkgYW5kDQo+ID4gPiA+IHBvc3NpYmx5
-DQo+ID4gPiA+IHRvIGdldCBhbnkgcmVsYXRlZCBmaXhlcyBmcm9tIHVwc3RyZWFtLg0KPiA+ID4g
-PiANCj4gPiA+ID4gQEdyZWc6IGFueSBjaGFuY2UgdG8gZ2V0IHRoZSB5MjAzOC1lbmRnYW1lIG1l
-cmdlZCBpbnRvIHY1LjQueT8NCj4gPiA+IA0KPiA+ID4gSSBoYXZlIG5vIGlkZWEgd2hhdCB0aGlz
-IHJlYWxseSBtZWFucywgYW5kIHdoYXQgaXQgZW50YWlscywgYnV0DQo+ID4gPiBvZGRzDQo+ID4g
-PiBhcmUsIG5vIDopDQo+ID4gDQo+ID4gSSBmdWxseSB1bmRlcnN0YW5kLCB0aGFua3MgZm9yIHlv
-dXIgc3RhdGVtZW50IG9uIHRoaXMuDQo+ID4gDQo+ID4gPiBXaHkgbm90IGp1c3QgdXNlIGEgbmV3
-ZXIga2VybmVsPyAgV2h5IGFyZSB5b3Ugc3R1Y2sgdXNpbmcgYSA1LjQNCj4gPiA+IGtlcm5lbA0K
-PiA+ID4gZm9yIGEgZGV2aWNlIHRoYXQgaGFzIHRvIGxpdmUgaW4gMjAzOD8gIFRoYXQgZmVlbHMg
-dmVyeSBmb29saXNoDQo+ID4gPiB0bw0KPiA+ID4gbWUuLi4NCj4gPiANCj4gPiBPaCBJIGFncmVl
-IG9uIHRoYXQgOikgSXQncyBqdXN0IHRoYXQgdGhlc2UgYXJlIGN1cnJlbnRseSBjdXN0b21lcg0K
-PiA+IHJlcXVpcmVtZW50cy4NCj4gDQo+IEFyZSB5b3Ugc3VyZSB0aGF0IGN1c3RvbWVycyByZWFs
-bHkgdW5kZXJzdGFuZCB3aGF0IHRoZXkgd2FudD8NCj4gDQo+IFVzdWFsbHkgdGhleSB3YW50IGEg
-d2VsbC1zdXBwb3J0ZWQsIHN0YWJsZSwgc3lzdGVtLiAgV2h5IGRvIHRoZXkgY2FyZQ0KPiBhYm91
-dCBhIHNwZWNpZmljIGtlcm5lbCB2ZXJzaW9uPyAgVGhhdCBmZWVscyBvZGQuDQoNCkkgdGhpbmsg
-dGhlIGluZHVzdHJ5IGlzIGxlYXJuaW5nIHRoYXQgYWxtb3N0IG5vIHN5c3RlbXMgY2FuIGJlIGxl
-ZnQNCnVudG91Y2hlZCBhbmQgYSB3ZWxsLXN1cHBvcnRlZCwgdXBncmFkZWFibGUgc3lzdGVtIGlz
-IG5lZWRlZC4gVGhhdCBoYXMNCmFsd2F5cyBiZWVuIG91ciB2aXNpb24gYW5kIHdlJ3JlIHByb3Zp
-ZGluZyB0aGF0IGZvciB0aGVtLg0KDQpUaGFua3MsDQpIZW5yaQ0KDQo+IA0KPiBHb29kIGx1Y2sh
-DQo+IA0KPiBncmVnIGstaA0K
+If the minix filesystem tries to map a very large logical block number to
+its on-disk location, block_to_path() can return offsets that are too
+large, causing out-of-bounds memory accesses when accessing indirect index
+blocks.  This should be prevented by the check against the maximum file
+size, but this doesn't work because the maximum file size is read directly
+from the on-disk superblock and isn't validated itself.
 
-------2799F02CA61A1B6D0D463196D127CBF1
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Fix this by validating the maximum file size at mount time.
 
-MIIOFAYJKoZIhvcNAQcCoIIOBTCCDgECAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggsYMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
-hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
-Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
-bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
-UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
-fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
-KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
-03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
-k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
-AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
-HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
-oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
-b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
-cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
-AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
-GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
-ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
-WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
-NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
-2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
-BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
-fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
-cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
-2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
-csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUqMIIEEqAD
-AgECAhEAgK6FAFOiNDdgM5+lyjA8gTANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
-TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0Ew
-HhcNMTgwNzE4MDAwMDAwWhcNMjEwNzE3MjM1OTU5WjArMSkwJwYJKoZIhvcNAQkB
-FhpoZW5yaS5yb29zZW5AZ2luemluZ2VyLmNvbTCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMmwBmquEWhoUH5WNJe7bQRLBAccBq0ZBVQbLAbJQwN5bg9i
-wSsPG7mveXqXYWpuHhbb7lbs3zFTS4H511nWurRqcvVceVOs5vtsbVMHjfuNmHo8
-WrMCJPFBw64uBUoGdsiwuAvA0CeFpPyA/CsAuvIbmvEF+GxMjaeQhqQ9d5K4z4I6
-w6R3wFtNJiSUMUSdgtnNPDYnUIKILR3mfbSCHWA7Pepe1dh+S9JFWhcoNv1h6D/R
-SAKVdUtC2GS0vt3nk4cEg8Z0s4/OvVDRm2jluvPK+fEeUfGahwHFrk68nYTq3v2P
-dMxHg93+Li+jYAX6R3XXGbdcjZJ3UM5MGEKq+u0CAwEAAaOCAdowggHWMB8GA1Ud
-IwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBQ9s9JCcV1JOI2I
-/oXSyF8VIj2VhTAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUE
-FjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIB
-AwUwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMw
-WgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RP
-UlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYI
-KwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNv
-bS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0Eu
-Y3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wJQYDVR0R
-BB4wHIEaaGVucmkucm9vc2VuQGdpbnppbmdlci5jb20wDQYJKoZIhvcNAQELBQAD
-ggEBAKdv6bSTLlu63Ckq7aibIwJCE0hhs83Z6Jr5G2wWrwVdFB9Dkb6l2NmdGRoq
-qbSz3Remg5qamURXec3XdEBxO1FPMcZJrHKAZuNjYdj1tzYA/rbTdYmVbno1TG5/
-O6rVb7A624UZHoucW+NpfNCrxfQY+BliMbCKJEWqQE0P6vyDenSYa76NLt1699B5
-vyHbYLrJHAjFzHe7BqSkP815C47KpJFXuGYasewJDOpvyINtn6kBlrAIanoVfDFa
-W9aUjUeNjqmcCEN4TpuSZCf1L8oWAjv5oH0R87orEAFZnSVWDIW8i7TMiFtCiF3D
-LYmN6J96LCNCs0iQIFqcnJnkHAkxggLAMIICvAIBATCBrTCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQCA
-roUAU6I0N2Azn6XKMDyBMA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMDgxNzE1Mzg1MFowLwYJKoZI
-hvcNAQkEMSIEIKp+yumT46Y0BPof3W2NO0CmlqAqm71s9ZlcsDiVKeJsMHkGCSqG
-SIb3DQEJDzFsMGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQME
-AQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMA0GCSqGSIb3DQEBAQUABIIBAJA115j3t9fC
-ETfaULnN1mK7z0cgO5Lj9LfS1K/KMAUIKo6fml6GPfz2/olRUCp2LTYIdI9YTqg/
-73qPqM1ghZQ5XDfJNdFDTi8wf+sCZxfJERmguom8TSiiJvqeUNjMpJQXSzGm/ScD
-1O1k7FRhkDNzu6aRzdX4ZS0QViT8WDUfjo7+y3ZINC7tXBKFbtuCtRX0Gky39H8h
-C8ZOittCxB5dOq/reDFxvRmO5bfH0Fm/PiiRbm7MzFrfXyrPU1Pa7/4v6SGF+uNp
-JYySZiP87GQKn/VI5/N2r4gTPhgYuqJogq+yFnomCdyxz7ONuMPyo7MPQen4AgD2
-M/jmYzbkvBo=
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
+Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
+Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-------2799F02CA61A1B6D0D463196D127CBF1--
+---
+ fs/minix/inode.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -150,6 +150,23 @@ static int minix_remount (struct super_b
+ 	return 0;
+ }
+ 
++static bool minix_check_superblock(struct minix_sb_info *sbi)
++{
++	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
++		return false;
++
++	/*
++	 * s_max_size must not exceed the block mapping limitation.  This check
++	 * is only needed for V1 filesystems, since V2/V3 support an extra level
++	 * of indirect blocks which places the limit well above U32_MAX.
++	 */
++	if (sbi->s_version == MINIX_V1 &&
++	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
++		return false;
++
++	return true;
++}
++
+ static int minix_fill_super(struct super_block *s, void *data, int silent)
+ {
+ 	struct buffer_head *bh;
+@@ -228,11 +245,12 @@ static int minix_fill_super(struct super
+ 	} else
+ 		goto out_no_fs;
+ 
++	if (!minix_check_superblock(sbi))
++		goto out_illegal_sb;
++
+ 	/*
+ 	 * Allocate the buffer map to keep the superblock small.
+ 	 */
+-	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
+-		goto out_illegal_sb;
+ 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
+ 	map = kzalloc(i, GFP_KERNEL);
+ 	if (!map)
+
 
