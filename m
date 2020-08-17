@@ -2,102 +2,116 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9099AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFFD6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A0F20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597689657;
+	bh=NowYS8qpEH68XmJngN9/L6QIe7P91u5W7CVd5KLUnZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uYut7scv6djXoyGuZ4z2bbmHZqKLx4kdg15GwNVgnHa5NPXcPtyhvOZpwGUhc5NzB
+	 V5E3iLa0v5RNi0VAbed2ipXJyGp6WSzf3hgT9eWhF7ZlSx9HRORjcyCiZtheo3gBzo
+	 rHT74KHAK9cG1WLnNUsksntvIPmHPGjvw7Cq3Crc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391367AbgHQSkt (ORCPT
+        id S2391425AbgHQSk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:40:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34905 "EHLO mga07.intel.com"
+        Mon, 17 Aug 2020 14:40:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387965AbgHQSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:40:23 -0400
-IronPort-SDR: C+wxtgCfVfmKhcjAu48yXh8rPzLOnHkB+CFaCj57oPK8885Sx8EVQPlttXu/S6u7+7lcDEsWJi
- uA6MSfaaFWpA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219093665"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="219093665"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:40:21 -0700
-IronPort-SDR: qwIq53Nbz+h+rUZRC7HF+/ezgtonG3ao5oVglIRhEJtkrL7hwHqBOsP2WxnnIOK8/5fin4ByJG
- fv0DtQKglrDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="326491264"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 11:40:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k7k3O-009UFq-Ck; Mon, 17 Aug 2020 21:40:18 +0300
-Date:   Mon, 17 Aug 2020 21:40:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200817184018.GV1891694@smile.fi.intel.com>
-References: <20200814030257.135463-1-warthog618@gmail.com>
- <CAMpxmJUCwXVv6U9sE=8isRMoNd8QvM9XLu4PU2Rr454wt_FTUw@mail.gmail.com>
+        id S1730827AbgHQP5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C73E2053B;
+        Mon, 17 Aug 2020 15:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679867;
+        bh=NowYS8qpEH68XmJngN9/L6QIe7P91u5W7CVd5KLUnZU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CjZqKS48gbNxK+K7Un1ZKMktgXq1+tbbcG3KoyetoQEGob/oJz+wsRkPkeokzNmnt
+         7kPwp4kss0+yvgdZ9GYIz1n7ic/9x8B/BpJ7iQEOqEBhuK/kDq37Vxo04Lq1IX/Uct
+         tZHFOYMn8D39BfzlFi5aeaQPYlz1HPSPjTvR0OOg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Romain Naour <romain.naour@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alan Modra <amodra@gmail.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rich Felker <dalias@libc.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 362/393] include/asm-generic/vmlinux.lds.h: align ro_after_init
+Date:   Mon, 17 Aug 2020 17:16:52 +0200
+Message-Id: <20200817143837.161151880@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJUCwXVv6U9sE=8isRMoNd8QvM9XLu4PU2Rr454wt_FTUw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 08:24:24PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Aug 14, 2020 at 5:03 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > This patchset defines and implements adds a new version of the
-> > GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-> > support for debounce, event sequence numbers, and allowing for requested
-> > lines with different configurations.
-> > It provides some future proofing by adding optional configuration fields
-> > and padding reserved for future use.
-> >
-> > The series can be partitioned into two sets; the first eleven
-> > contain the v2 uAPI implementation, and the final seven port
-> > the GPIO tools to the v2 uAPI and extend them to use new uAPI features.
-> >
-> > The more complicated patches include their own commentary where
-> > appropriate.
+From: Romain Naour <romain.naour@gmail.com>
 
-> The series looks quite good to me and I think we're on track to get it
-> in for v5.10. I'd love to have Andy (Cc'd) take a look as well. There
-> are some nits here and there but as long as we get the ABI right, any
-> implementation details can be ironed out later.
-> 
-> I need to think about some details a bit more but I really like the
-> current state of the patches.
+commit 7f897acbe5d57995438c831670b7c400e9c0dc00 upstream.
 
-First of all, I apologize for being silent, I'm quite busy with internal
-development / work.
+Since the patch [1], building the kernel using a toolchain built with
+binutils 2.33.1 prevents booting a sh4 system under Qemu.  Apply the patch
+provided by Alan Modra [2] that fix alignment of rodata.
 
-Second, I didn't hear further why we can't fix current ABI as proposed by Arnd
-and see what we will have afterwards?
+[1] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=ebd2263ba9a9124d93bbc0ece63d7e0fae89b40e
+[2] https://www.sourceware.org/ml/binutils/2019-12/msg00112.html
 
-Third, I'm not satisfied with the approach of wasting some memory for padding
-and I think the proper solution for the ABI is to have versioning inside the
-structures.
+Signed-off-by: Romain Naour <romain.naour@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alan Modra <amodra@gmail.com>
+Cc: Bin Meng <bin.meng@windriver.com>
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: <stable@vger.kernel.org>
+Link: https://marc.info/?l=linux-sh&m=158429470221261
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-What do you think?
+---
+ include/asm-generic/vmlinux.lds.h |    1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-With Best Regards,
-Andy Shevchenko
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -375,6 +375,7 @@
+  */
+ #ifndef RO_AFTER_INIT_DATA
+ #define RO_AFTER_INIT_DATA						\
++	. = ALIGN(8);							\
+ 	__start_ro_after_init = .;					\
+ 	*(.data..ro_after_init)						\
+ 	JUMP_TABLE_DATA							\
 
 
