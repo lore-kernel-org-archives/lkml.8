@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCA8C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B02D62067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA643206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684244;
-	bh=5umpobZfU532MNHExFEMg4AwPASjY4mr8L46crhIfWk=;
+	s=default; t=1597684257;
+	bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WXHTxZ1x+9Dn1qo36oQsAXfVTBTAgWCuWsRalNduVYWpBQs18lVE8oPE8ZD8zISML
-	 3frFdJPEdS/LcgUSh2ZEVaIi+86dm+PbSfXli2SHjcYQVgw5SD30Umpu62C5rApw6x
-	 q/ASiPmHBhDVCJ/yPMGbczNy2mx8Udab0PCJcflA=
+	b=YJ3dNSVNIwBGPXHMH3V9zgoCU9otKxah/slr80pOZcQ+51F20Anl8knf5PoW+d0WM
+	 OVe+k/XkIMkXezlilUql5eTT06MVyEE6eGGOKl2iW7KD5tubAmKiInuNq8O8JvcQ8O
+	 mbmAA83o8WzkgdYL2Ru+R+WH8pr7TGGoA88C4d5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389341AbgHQRKj (ORCPT
+        id S2389318AbgHQRKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388606AbgHQQLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:17 -0400
+        id S2388604AbgHQQLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 916C022BF5;
-        Mon, 17 Aug 2020 16:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B7820658;
+        Mon, 17 Aug 2020 16:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680676;
-        bh=5umpobZfU532MNHExFEMg4AwPASjY4mr8L46crhIfWk=;
+        s=default; t=1597680671;
+        bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fk86VXhBa4tBbGHDJxjIr3BWLnMCtm5NvY4KH2BvwV0GeQxkqmEr2iCPLAT8g6naT
-         IailWnlTPxWuy038uF3UTU/n3WbWnBasI5TTPl6U1iiO+MahDp2x5lz6NU7XTSj1t6
-         rRqW0IaD1bReqwiDjsZ9DCzlvy2A5q43VecVJ9Wo=
+        b=PHOI44LScfXG7iNATNIqy5Pmoy6eFxcA6EmPkjnqnovHfrp6pT2zZmzl4t1w7y5AI
+         urqdzdiw2JyGIOzq6SzNtrMuSqozA9OzHVP5Nn3lD+f+i67Mr9cGQNH98b+UGfR/ri
+         SDEis6NFEHLuGKhygMm9/YjT8CNXlT0FlvJzVKBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/168] crypto: ccree - fix resource leak on error path
-Date:   Mon, 17 Aug 2020 17:15:43 +0200
-Message-Id: <20200817143734.336080170@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 010/168] EDAC: Fix reference count leaks
+Date:   Mon, 17 Aug 2020 17:15:41 +0200
+Message-Id: <20200817143734.228179359@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,84 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
+[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
 
-Fix a small resource leak on the error path of cipher processing.
+When kobject_init_and_add() returns an error, it should be handled
+because kobject_init_and_add() takes a reference even when it fails. If
+this function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Therefore, replace calling kfree() and call kobject_put() and add a
+missing kobject_put() in the edac_device_register_sysfs_main_kobj()
+error path.
+
+ [ bp: Massage and merge into a single patch. ]
+
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
+Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/edac/edac_device_sysfs.c | 1 +
+ drivers/edac/edac_pci_sysfs.c    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index 28a5b8b38fa2f..1bcb6f0157b07 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -137,7 +137,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 				     skcipher_alg.base);
- 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
- 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
--	int rc = 0;
+diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
+index 0e7ea3591b781..5e75937537997 100644
+--- a/drivers/edac/edac_device_sysfs.c
++++ b/drivers/edac/edac_device_sysfs.c
+@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
  
- 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
- 		crypto_tfm_alg_name(tfm));
-@@ -149,10 +148,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	ctx_p->flow_mode = cc_alg->flow_mode;
- 	ctx_p->drvdata = cc_alg->drvdata;
+ 	/* Error exit stack */
+ err_kobj_reg:
++	kobject_put(&edac_dev->kobj);
+ 	module_put(edac_dev->owner);
  
-+	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
-+		/* Alloc hash tfm for essiv */
-+		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
-+		if (IS_ERR(ctx_p->shash_tfm)) {
-+			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
-+			return PTR_ERR(ctx_p->shash_tfm);
-+		}
-+	}
-+
- 	/* Allocate key buffer, cache line aligned */
- 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
- 	if (!ctx_p->user.key)
--		return -ENOMEM;
-+		goto free_shash;
+ err_out:
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 72c9eb9fdffbe..53042af7262e2 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
  
- 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
- 		ctx_p->user.key);
-@@ -164,21 +172,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
- 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
- 			max_key_buf_size, ctx_p->user.key);
--		return -ENOMEM;
-+		goto free_key;
- 	}
- 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
- 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
  
--	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
--		/* Alloc hash tfm for essiv */
--		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
--		if (IS_ERR(ctx_p->shash_tfm)) {
--			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
--			return PTR_ERR(ctx_p->shash_tfm);
--		}
--	}
-+	return 0;
- 
--	return rc;
-+free_key:
-+	kfree(ctx_p->user.key);
-+free_shash:
-+	crypto_free_shash(ctx_p->shash_tfm);
-+
-+	return -ENOMEM;
- }
- 
- static void cc_cipher_exit(struct crypto_tfm *tfm)
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
 -- 
 2.25.1
 
