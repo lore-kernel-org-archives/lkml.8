@@ -2,51 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD82C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3607204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69C2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689861;
-	bh=ajvV0d32WBJRaggyuBZcCSeJkyczV/yiyWt3d1xXQAA=;
+	s=default; t=1597689876;
+	bh=b11HqNpdArzBfb36qjl30UnIfQaDQAJ3CJtGITz78ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0rGxELv7Lwlk5NRTyGg3LBn3PZLFWpqg/7XknOBljSEYvwwGiacKKEtYb+1vI0lB
-	 4+L06r4fmxZbkmX5v5gwnECCRuxk2Vho+tNAqTv1SKqbGPAeC0L29unZPgqvnVgvI3
-	 ZVkHM04D3hVYIOwdP30/fPao2zgy7Q4baXH6zSic=
+	b=g5eESzO+RyQwslyxTCRDg8LIQ3qudk78WbmRvcT9LynOE0AZeTFiVKtobBl3LtLdb
+	 vB6iAlFqA3gq9S7XS61M4egWmuKiRkfh88nBx8Blr8iu4TrpzGZpfKrhUknME/c9dE
+	 Y3DUn6/HK4mIqaZcJu0oZt/IB2/670/6TTtS5no4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390989AbgHQSnp (ORCPT
+        id S2391048AbgHQSof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388082AbgHQP4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:34 -0400
+        id S2388071AbgHQP4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6912173E;
-        Mon, 17 Aug 2020 15:56:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696CB208E4;
+        Mon, 17 Aug 2020 15:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679794;
-        bh=ajvV0d32WBJRaggyuBZcCSeJkyczV/yiyWt3d1xXQAA=;
+        s=default; t=1597679783;
+        bh=b11HqNpdArzBfb36qjl30UnIfQaDQAJ3CJtGITz78ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XchvJ4jVjcTCZ4/g5nsc8iGTaPksmq1qFiNX2p+u8Sl1MbjDqDjGmQWBENi5tQzTD
-         i/Hsr1IuteFEDOtkgyy2k4LMebYHcQQbb0kMaHgAf2WvVHua78NLZFPfR9fhmHq+r9
-         b6ybiCrRoOSgt0BuGwxEmHhmUFCgL+4NM8mfG75I=
+        b=N1OWw45dHesvNL/h7RSQkGuYz0kYg6kfsOYx0A98ZWKY/BNDqftm0iRkz0qKW+f37
+         aIYBWKUvvsECx3j8WIE6VlTI6cYMt3go3vYMGCvQsfL4n5YjtT7VJbk2kQKvwG/1nh
+         IruQ5neUi4P6S1ZWfgeTrd7fVpB50Ud7SSC1RZuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 337/393] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
-Date:   Mon, 17 Aug 2020 17:16:27 +0200
-Message-Id: <20200817143835.944446284@linuxfoundation.org>
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.7 333/393] vdpasim: protect concurrent access to iommu iotlb
+Date:   Mon, 17 Aug 2020 17:16:23 +0200
+Message-Id: <20200817143835.751584540@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,80 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
+commit 0ea9ee430e74b16c6b17e70757d1c26d8d140e1f upstream.
 
-Further investigation of the L-R swap problem on the MS2109 reveals that
-the problem isn't that the channels are swapped, but rather that they
-are swapped and also out of phase by one sample. In other words, the
-issue is actually that the very first frame that comes from the hardware
-is a half-frame containing only the right channel, and after that
-everything becomes offset.
+Iommu iotlb can be accessed by different cores for performing IO using
+multiple virt queues. Add a spinlock to synchronize iotlb accesses.
 
-So introduce a new quirk field to drop the very first 2 bytes that come
-in after the format is configured and a capture stream starts. This puts
-the channels in phase and in the correct order.
+This could be easily reproduced when using more than 1 pktgen threads
+to inject traffic to vdpa simulator.
 
+Fixes: 2c53d0f64c06f("vdpasim: vDPA device simulator")
 Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Link: https://lore.kernel.org/r/20200731073822.13326-1-jasowang@redhat.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/card.h   |    1 +
- sound/usb/pcm.c    |    6 ++++++
- sound/usb/quirks.c |    3 +++
- sound/usb/stream.c |    1 +
- 4 files changed, 11 insertions(+)
+ drivers/vdpa/vdpa_sim/vdpa_sim.c |   31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -133,6 +133,7 @@ struct snd_usb_substream {
- 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
- 	unsigned int fmt_type;		/* USB audio format type (1-3) */
- 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-+	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -70,6 +70,8 @@ struct vdpasim {
+ 	u32 status;
+ 	u32 generation;
+ 	u64 features;
++	/* spinlock to synchronize iommu table */
++	spinlock_t iommu_lock;
+ };
  
- 	unsigned int running: 1;	/* running status */
+ static struct vdpasim *vdpasim_dev;
+@@ -118,7 +120,9 @@ static void vdpasim_reset(struct vdpasim
+ 	for (i = 0; i < VDPASIM_VQ_NUM; i++)
+ 		vdpasim_vq_reset(&vdpasim->vqs[i]);
  
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1416,6 +1416,12 @@ static void retire_capture_urb(struct sn
- 			// continue;
- 		}
- 		bytes = urb->iso_frame_desc[i].actual_length;
-+		if (subs->stream_offset_adj > 0) {
-+			unsigned int adj = min(subs->stream_offset_adj, bytes);
-+			cp += adj;
-+			bytes -= adj;
-+			subs->stream_offset_adj -= adj;
-+		}
- 		frames = bytes / stride;
- 		if (!subs->txfr_quirk)
- 			bytes = frames * stride;
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1468,6 +1468,9 @@ void snd_usb_set_format_quirk(struct snd
- 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
- 		set_format_emu_quirk(subs, fmt);
- 		break;
-+	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
-+		subs->stream_offset_adj = 2;
-+		break;
- 	}
++	spin_lock(&vdpasim->iommu_lock);
+ 	vhost_iotlb_reset(vdpasim->iommu);
++	spin_unlock(&vdpasim->iommu_lock);
+ 
+ 	vdpasim->features = 0;
+ 	vdpasim->status = 0;
+@@ -235,8 +239,10 @@ static dma_addr_t vdpasim_map_page(struc
+ 	/* For simplicity, use identical mapping to avoid e.g iova
+ 	 * allocator.
+ 	 */
++	spin_lock(&vdpasim->iommu_lock);
+ 	ret = vhost_iotlb_add_range(iommu, pa, pa + size - 1,
+ 				    pa, dir_to_perm(dir));
++	spin_unlock(&vdpasim->iommu_lock);
+ 	if (ret)
+ 		return DMA_MAPPING_ERROR;
+ 
+@@ -250,8 +256,10 @@ static void vdpasim_unmap_page(struct de
+ 	struct vdpasim *vdpasim = dev_to_sim(dev);
+ 	struct vhost_iotlb *iommu = vdpasim->iommu;
+ 
++	spin_lock(&vdpasim->iommu_lock);
+ 	vhost_iotlb_del_range(iommu, (u64)dma_addr,
+ 			      (u64)dma_addr + size - 1);
++	spin_unlock(&vdpasim->iommu_lock);
  }
  
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -94,6 +94,7 @@ static void snd_usb_init_substream(struc
- 	subs->tx_length_quirk = as->chip->tx_length_quirk;
- 	subs->speed = snd_usb_get_speed(subs->dev);
- 	subs->pkt_offset_adj = 0;
-+	subs->stream_offset_adj = 0;
+ static void *vdpasim_alloc_coherent(struct device *dev, size_t size,
+@@ -263,9 +271,10 @@ static void *vdpasim_alloc_coherent(stru
+ 	void *addr = kmalloc(size, flag);
+ 	int ret;
  
- 	snd_usb_set_pcm_ops(as->pcm, stream);
+-	if (!addr)
++	spin_lock(&vdpasim->iommu_lock);
++	if (!addr) {
+ 		*dma_addr = DMA_MAPPING_ERROR;
+-	else {
++	} else {
+ 		u64 pa = virt_to_phys(addr);
  
+ 		ret = vhost_iotlb_add_range(iommu, (u64)pa,
+@@ -278,6 +287,7 @@ static void *vdpasim_alloc_coherent(stru
+ 		} else
+ 			*dma_addr = (dma_addr_t)pa;
+ 	}
++	spin_unlock(&vdpasim->iommu_lock);
+ 
+ 	return addr;
+ }
+@@ -289,8 +299,11 @@ static void vdpasim_free_coherent(struct
+ 	struct vdpasim *vdpasim = dev_to_sim(dev);
+ 	struct vhost_iotlb *iommu = vdpasim->iommu;
+ 
++	spin_lock(&vdpasim->iommu_lock);
+ 	vhost_iotlb_del_range(iommu, (u64)dma_addr,
+ 			      (u64)dma_addr + size - 1);
++	spin_unlock(&vdpasim->iommu_lock);
++
+ 	kfree(phys_to_virt((uintptr_t)dma_addr));
+ }
+ 
+@@ -531,6 +544,7 @@ static int vdpasim_set_map(struct vdpa_d
+ 	u64 start = 0ULL, last = 0ULL - 1;
+ 	int ret;
+ 
++	spin_lock(&vdpasim->iommu_lock);
+ 	vhost_iotlb_reset(vdpasim->iommu);
+ 
+ 	for (map = vhost_iotlb_itree_first(iotlb, start, last); map;
+@@ -540,10 +554,12 @@ static int vdpasim_set_map(struct vdpa_d
+ 		if (ret)
+ 			goto err;
+ 	}
++	spin_unlock(&vdpasim->iommu_lock);
+ 	return 0;
+ 
+ err:
+ 	vhost_iotlb_reset(vdpasim->iommu);
++	spin_unlock(&vdpasim->iommu_lock);
+ 	return ret;
+ }
+ 
+@@ -551,16 +567,23 @@ static int vdpasim_dma_map(struct vdpa_d
+ 			   u64 pa, u32 perm)
+ {
+ 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
++	int ret;
+ 
+-	return vhost_iotlb_add_range(vdpasim->iommu, iova,
+-				     iova + size - 1, pa, perm);
++	spin_lock(&vdpasim->iommu_lock);
++	ret = vhost_iotlb_add_range(vdpasim->iommu, iova, iova + size - 1, pa,
++				    perm);
++	spin_unlock(&vdpasim->iommu_lock);
++
++	return ret;
+ }
+ 
+ static int vdpasim_dma_unmap(struct vdpa_device *vdpa, u64 iova, u64 size)
+ {
+ 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+ 
++	spin_lock(&vdpasim->iommu_lock);
+ 	vhost_iotlb_del_range(vdpasim->iommu, iova, iova + size - 1);
++	spin_unlock(&vdpasim->iommu_lock);
+ 
+ 	return 0;
+ }
 
 
