@@ -2,195 +2,86 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E941C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D4CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666B920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6669220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YVJsx2Mk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHQCtq (ORCPT
+        id S1726945AbgHQCuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 22:49:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53446 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726697AbgHQCto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 22:49:44 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2D5E051C329AE0683AE9;
-        Mon, 17 Aug 2020 10:49:40 +0800 (CST)
-Received: from [127.0.0.1] (10.74.185.4) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 17 Aug 2020
- 10:49:30 +0800
-Subject: Re: [PATCH v2] ACPI / APEI: do memory failure on the physical address
- reported by ARM processor error section
-To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>
-References: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
-CC:     <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
-        <jonathan.cameron@huawei.com>
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-Message-ID: <5F39F039.4060201@huawei.com>
-Date:   Mon, 17 Aug 2020 10:49:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Sun, 16 Aug 2020 22:50:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46429 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726451AbgHQCuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 22:50:17 -0400
+X-UUID: 123f6e4c5eaa4592bfa01aface8a5e91-20200817
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=nXcU1Hc02thK0kndiWW9wjNDJvWYN5PNOdsuyKQXNMw=;
+        b=YVJsx2MkcK/1OskF3r85MZd+NidokJyZh5apF5CZHL2nHJdPbSQ3EiUpRCdCgO/j4IZmtXd7e9PkgWaMZaRPnqBL5OLgQMLFdIcWT5zboE33h4aJry6miniFuv/TD0ceJkyR8MPg2cjlOXDvS24S3dX40s+1V3Zhzf3LEMOZCW0=;
+X-UUID: 123f6e4c5eaa4592bfa01aface8a5e91-20200817
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1442053350; Mon, 17 Aug 2020 10:50:11 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 17 Aug 2020 10:50:09 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 17 Aug 2020 10:50:08 +0800
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <s-anna@ti.com>, <afd@ti.com>, <seiya.wang@mediatek.com>,
+        <stanley.chu@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <fan.chen@mediatek.com>, <yong.liang@mediatek.com>
+Subject: [v3,0/6] introduce TI reset controller for MT8192 SoC
+Date:   Mon, 17 Aug 2020 10:48:38 +0800
+Message-ID: <20200817024842.5289-1-crystal.guo@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.185.4]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-@James, Could you help to check if i have fixed your review comments? thanks.
-
-On 2020/8/5 17:12, Xiaofei Tan wrote:
-> After the commit 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea()
-> synchronise with APEI's irq work") applied, user-mode SEA is
-> preferentially processed by APEI. Do memory failure to recover.
-> 
-> But there are some problems:
-> 1) The function apei_claim_sea() has processed an CPER, does not
-> mean that memory failure handling has done. Because the firmware-first
-> RAS error is reported by both producer and consumer. Mostly SEA uses
-> ARM processor error section to report as a consumer. (The producer could
-> be DDRC and cache, and use memory error section and other error section
-> to report). But memory failure handling for ARM processor error section
-> has not been supported. This patch will add it.
-> 
-> 2) Some hardware platforms can't record physical address each time. But
-> they could always have reported a firmware-first RAS error using ARM
-> processor error section. Such platform should update firmware. Don't
-> report the RAS error in SEA processing flow when physical address is
-> not recorded.
-> 
-> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-> ---
->  drivers/acpi/apei/ghes.c | 70 ++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 53 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 81bf71b..aee7787 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -429,28 +429,35 @@ static void ghes_kick_task_work(struct callback_head *head)
->  	gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node, node_len);
->  }
->  
-> -static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
-> -				       int sev)
-> +static bool ghes_do_memory_failure(u64 physical_addr, int flags)
->  {
->  	unsigned long pfn;
-> -	int flags = -1;
-> -	int sec_sev = ghes_severity(gdata->error_severity);
-> -	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
->  
->  	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
->  		return false;
->  
-> -	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
-> -		return false;
-> -
-> -	pfn = mem_err->physical_addr >> PAGE_SHIFT;
-> +	pfn = PHYS_PFN(physical_addr);
->  	if (!pfn_valid(pfn)) {
->  		pr_warn_ratelimited(FW_WARN GHES_PFX
->  		"Invalid address in generic error data: %#llx\n",
-> -		mem_err->physical_addr);
-> +		physical_addr);
->  		return false;
->  	}
->  
-> +	memory_failure_queue(pfn, flags);
-> +	return true;
-> +}
-> +
-> +static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
-> +				       int sev)
-> +{
-> +	int flags = -1;
-> +	int sec_sev = ghes_severity(gdata->error_severity);
-> +	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
-> +
-> +	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
-> +		return false;
-> +
->  	/* iff following two events can be handled properly by now */
->  	if (sec_sev == GHES_SEV_CORRECTED &&
->  	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
-> @@ -458,14 +465,45 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
->  	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
->  		flags = 0;
->  
-> -	if (flags != -1) {
-> -		memory_failure_queue(pfn, flags);
-> -		return true;
-> -	}
-> +	if (flags != -1)
-> +		return ghes_do_memory_failure(mem_err->physical_addr, flags);
->  
->  	return false;
->  }
->  
-> +static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
-> +{
-> +	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-> +	struct cper_arm_err_info *err_info;
-> +	bool queued = false;
-> +	int sec_sev, i;
-> +
-> +	log_arm_hw_error(err);
-> +
-> +	sec_sev = ghes_severity(gdata->error_severity);
-> +	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
-> +		return false;
-> +
-> +	err_info = (struct cper_arm_err_info *) (err + 1);
-> +	for (i = 0; i < err->err_info_num; i++, err_info++) {
-> +		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
-> +			continue;
-> +
-> +		if (err_info->type != CPER_ARM_CACHE_ERROR) {
-> +			pr_warn_ratelimited(FW_WARN GHES_PFX
-> +			"Physical address should be invalid for %s\n",
-> +			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
-> +			cper_proc_error_type_strs[err_info->type] : "unknown error type");
-> +			continue;
-> +		}
-> +
-> +		if (ghes_do_memory_failure(err_info->physical_fault_addr, 0))
-> +			queued = true;
-> +	}
-> +
-> +	return queued;
-> +}
-> +
->  /*
->   * PCIe AER errors need to be sent to the AER driver for reporting and
->   * recovery. The GHES severities map to the following AER severities and
-> @@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
->  			ghes_handle_aer(gdata);
->  		}
->  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
-> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-> -
-> -			log_arm_hw_error(err);
-> +			queued = ghes_handle_arm_hw_error(gdata, sev);
->  		} else {
->  			void *err = acpi_hest_get_payload(gdata);
->  
-> 
-
--- 
- thanks
-tanxiaofei
+djM6DQoxLiByZXZlcnQgdjIgY2hhbmdlcy4NCjIuIGFkZCAncmVzZXQtZHVyYXRpb24tdXMnIHBy
+b3BlcnR5IHRvIGRlY2xhcmUgYSBtaW5pbXVtIGRlbGF5LA0Kd2hpY2ggbmVlZHMgdG8gYmUgd2Fp
+dGVkIGJldHdlZW4gYXNzZXJ0IGFuZCBkZWFzc2VydC4NCjMuIGFkZCAnbWVkaWF0ZWssaW5mcmEt
+cmVzZXQnIHRvIGNvbXBhdGlibGUuDQoNCnYyIGNoYW5nZXM6DQpodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzExNjk3MzcxLw0KMS4gYWRkICdhc3NlcnQtZGVhc3NlcnQtdG9nZXRo
+ZXInIHByb3BlcnR5IHRvIGludHJvZHVjZSBhIG5ldyByZXNldCBoYW5kbGVyLA0Kd2hpY2ggYWxs
+b3dzIGRldmljZSB0byBkbyBzZXJpYWxpemVkIGFzc2VydCBhbmQgZGVhc3NlcnQgb3BlcmF0aW9u
+cyBpbiBhIHNpbmdsZQ0Kc3RlcCBieSAncmVzZXQnIG1ldGhvZC4NCjIuIGFkZCAndXBkYXRlLWZv
+cmNlJyBwcm9wZXJ0eSB0byBpbnRyb2R1Y2UgZm9yY2UtdXBkYXRlIG1ldGhvZCwgd2hpY2ggZm9y
+Y2VzDQp0aGUgd3JpdGUgb3BlcmF0aW9uIGluIGNhc2UgdGhlIHJlYWQgYWxyZWFkeSBoYXBwZW5z
+IHRvIHJldHVybiB0aGUgY29ycmVjdCB2YWx1ZS4NCjMuIGFkZCAnZ2VuZXJpYy1yZXNldCcgdG8g
+Y29tcGF0aWJsZQ0KDQp2MSBjaGFuZ2VzOg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMTY5MDUyMy8NCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTE2OTA1
+MjcvDQoNCkNyeXN0YWwgR3VvICg0KToNCiAgZHQtYmluZGluZzogcmVzZXQtY29udHJvbGxlcjog
+dGk6IGFkZCByZXNldC1kdXJhdGlvbi11cyBwcm9wZXJ0eQ0KICBkdC1iaW5kaW5nOiByZXNldC1j
+b250cm9sbGVyOiB0aTogYWRkICdtZWRpYXRlayxpbmZyYS1yZXNldCcgdG8NCiAgICBjb21wYXRp
+YmxlDQogIHJlc2V0LWNvbnRyb2xsZXI6IHRpOiBpbnRyb2R1Y2UgYSBuZXcgcmVzZXQgaGFuZGxl
+cg0KICBhcm02NDogZHRzOiBtdDgxOTI6IGFkZCBpbmZyYWNmZ19yc3Qgbm9kZQ0KDQogLi4uL2Jp
+bmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50eHQgICAgICAgIHwgIDYgKysrKysNCiBhcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpICAgICAgfCAxMSArKysrKysrLQ0K
+IGRyaXZlcnMvcmVzZXQvcmVzZXQtdGktc3lzY29uLmMgICAgICAgICAgICAgICB8IDI2ICsrKysr
+KysrKysrKysrKysrLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pDQoNCg==
 
