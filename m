@@ -2,127 +2,132 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D100C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785F420789
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04222078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597668847;
-	bh=yXbkJO+AVueQneW/5rkVBFci8Ti4tdrOnnW+0ECarQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cWA9WWORk3Vkkfi7i4Mn6VLYEn2AaFHxJdQQYjqWy/vh/YfDFSLwZvK+s/Hxc2riU
-	 g1/71GsmQTWYKor7hE//3WJ05wZj5mvUqksX+DVwxUaEO8xBb8KaiNmlPWGnAer4E+
-	 FqTSjidC3Tme1363aNVWtR/d00KSnZBireQfeD7Y=
+	s=default; t=1597669013;
+	bh=ERpMAdayk233Labrw+Lu7muZTEwuPknh19NdvGNHSMI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZVxy0yfssqvgKPBc8M3Pt1e3W4ofUbze+VeU4O/vHCxkW1FmloR59F1XSmPc5sBNi
+	 Rb1yahejuf/Ch4tr0GDoaVvn1szl1PBhoCFMNaDKYdc0YhtRwkfKk0bH9UhusdBzCm
+	 ZWW/q95sV4tZgLsRSnlO+PE9LOr4LxNkEQqfgDY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgHQMyG (ORCPT
+        id S1728509AbgHQM4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:54:06 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49354 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgHQMyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:54:04 -0400
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 07HCroxc007537;
-        Mon, 17 Aug 2020 21:53:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 07HCroxc007537
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597668831;
-        bh=i2VUE7m6FG7xtIb7aj8NrP+Jw3rgatTjlVR1yynH7H4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U5owIxf5Uqd0qx1fccT0kbLjLnE0WcolYlUz2vVEbOHKrG3z8fDQplbvraSY13/C0
-         zrggnBOgkO8qbPaxeDO+IfGjz69XXTLxfXJnmTHKErGxWfNT+HVu74s0ABz74dLtq/
-         wonG1HbJq0JeJWe0mqSSoQxLmdG9CjM7e0CF2ZNpO/M9I9A+tsB6U0IebHkNUTIjP+
-         TBKBionpfzqdfsas+GLUETtpXu/YI0MYXkORK8YM3oisJ82T4PDzDysuDSgDh3m9Ne
-         i2xvPKG0H48fmrNrhRhEHh0WUftWnHsKLsflWkOkAGNlQdAW/QoPvK7w0Nul+NXxPd
-         6JpMWXHEFKF/A==
-X-Nifty-SrcIP: [209.85.221.178]
-Received: by mail-vk1-f178.google.com with SMTP id j7so3485650vkk.12;
-        Mon, 17 Aug 2020 05:53:51 -0700 (PDT)
-X-Gm-Message-State: AOAM53195ERnnHPMxA/ST6OoZkjn2guWsUmUVxJJhHHgfsXfHeDguPWa
-        QjQRgdSc5oBQYcSReV2LGboIyf4FZh2hSKzUpM4=
-X-Google-Smtp-Source: ABdhPJwEB2mLy/gohrdWwNFFDcCF6t2Tp1syp/i9+uvrpZZr4JVmhMZ4GG+9bsSz+sgQSfyDbhca8jDp1IT+HsPi1nw=
-X-Received: by 2002:a1f:8f52:: with SMTP id r79mr7609653vkd.96.1597668830250;
- Mon, 17 Aug 2020 05:53:50 -0700 (PDT)
+        Mon, 17 Aug 2020 08:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgHQM4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:56:50 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC552072E;
+        Mon, 17 Aug 2020 12:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597669009;
+        bh=ERpMAdayk233Labrw+Lu7muZTEwuPknh19NdvGNHSMI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q5my1Mwo8/rP50v751943fs0FGAFtFae1A+Dz+biD7l+GcRGAiMRNkn8qGgI7zspP
+         cEpukEBSMsw3z7ejoG8++F6AGY8JyrdeuevwPlIHFlvr6yP17ft7SPLeS6htKMEAqd
+         XXVaERjnM8M8XvIYIw2P3xjXzpyt9obh8PR2A21U=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k7egy-003ZLe-9G; Mon, 17 Aug 2020 13:56:48 +0100
 MIME-Version: 1.0
-References: <20200817083508.22657-1-allen.lkml@gmail.com>
-In-Reply-To: <20200817083508.22657-1-allen.lkml@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 17 Aug 2020 21:53:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ=t-6aA80FW+7PKfb36yuhMKBW9_kCdTrmkWiWi9k-9Q@mail.gmail.com>
-Message-ID: <CAK7LNAQ=t-6aA80FW+7PKfb36yuhMKBW9_kCdTrmkWiWi9k-9Q@mail.gmail.com>
-Subject: Re: [PATCH 00/10] mmc: convert tasklets to use new tasklet_setup()
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Bruce Chang <brucechang@via.com.tw>,
-        Harald Welte <HaraldWelte@viatech.com>,
-        Kees Cook <keescook@chromium.org>, inux-mmc@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Aug 2020 13:56:48 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Keqian Zhu <zhukeqian1@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steven Price <steven.price@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH 2/2] clocksource: arm_arch_timer: Correct fault
+ programming of CNTKCTL_EL1.EVNTI
+In-Reply-To: <20200817122415.6568-3-zhukeqian1@huawei.com>
+References: <20200817122415.6568-1-zhukeqian1@huawei.com>
+ <20200817122415.6568-3-zhukeqian1@huawei.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <b37f6cf6a660f51690f0689509650eed@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, steven.price@arm.com, drjones@redhat.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 5:35 PM Allen Pais <allen.lkml@gmail.com> wrote:
->
-> Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
-> introduced a new tasklet initialization API. This series converts
-> all the mmc drivers to use the new tasklet_setup() API
+On 2020-08-17 13:24, Keqian Zhu wrote:
+> ARM virtual counter supports event stream, it can only trigger an event
+> when the trigger bit (the value of CNTKCTL_EL1.EVNTI) of CNTVCT_EL0 
+> changes,
+> so the actual period of event stream is 2^(cntkctl_evnti + 1). For 
+> example,
+> when the trigger bit is 0, then virtual counter trigger an event for 
+> every
+> two cycles.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
+I have never given you this tag, you are making it up. Please read
+Documentation/process/submitting-patches.rst to understand what
+tag you can put by yourself.
 
-I did not know this was the direction to invest efforts
-because I thought the threaded-irq was supposed to replace
-the tasklet.
+At best, put "Suggested-by" tag, as this is different from what
+I posted anyway.
 
+Thanks,
 
+         M.
 
+> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+> ---
+>  drivers/clocksource/arm_arch_timer.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clocksource/arm_arch_timer.c
+> b/drivers/clocksource/arm_arch_timer.c
+> index 6e11c60..4140a37 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -794,10 +794,14 @@ static void arch_timer_configure_evtstream(void)
+>  {
+>  	int evt_stream_div, pos;
+> 
+> -	/* Find the closest power of two to the divisor */
+> -	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
+> +	/*
+> +	 * Find the closest power of two to the divisor. As the event
+> +	 * stream can at most be generated at half the frequency of the
+> +	 * counter, use half the frequency when computing the divider.
+> +	 */
+> +	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ / 2;
+>  	pos = fls(evt_stream_div);
+> -	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
+> +	if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
+>  		pos--;
+>  	/* enable event stream */
+>  	arch_timer_evtstrm_enable(min(pos, 15));
 
-
-> Allen Pais (10):
->   mmc: atmel-mci: convert tasklets to use new tasklet_setup() API
->   mmc: au1xmmc: convert tasklets to use new tasklet_setup() API
->   mmc: cb710: convert tasklets to use new tasklet_setup() API
->   mmc: dw_mmc: convert tasklets to use new tasklet_setup() API
->   mmc: omap: convert tasklets to use new tasklet_setup() API
->   mmc: renesas: convert tasklets to use new tasklet_setup() API
->   mmc: s3cmci: convert tasklets to use new tasklet_setup() API
->   mmc: tifm_sd: convert tasklets to use new tasklet_setup() API
->   mmc: uniphier: convert tasklets to use new tasklet_setup() API
->   mmc: via-sdmmc: convert tasklets to use new tasklet_setup() API
->
->  drivers/mmc/host/atmel-mci.c                  |  6 +++---
->  drivers/mmc/host/au1xmmc.c                    | 15 ++++++--------
->  drivers/mmc/host/cb710-mmc.c                  | 11 +++++-----
->  drivers/mmc/host/dw_mmc.c                     |  6 +++---
->  drivers/mmc/host/omap.c                       |  7 +++----
->  drivers/mmc/host/renesas_sdhi.h               |  1 +
->  drivers/mmc/host/renesas_sdhi_core.c          |  2 ++
->  drivers/mmc/host/renesas_sdhi_internal_dmac.c | 20 +++++++++----------
->  drivers/mmc/host/renesas_sdhi_sys_dmac.c      |  9 ++++-----
->  drivers/mmc/host/s3cmci.c                     |  6 +++---
->  drivers/mmc/host/tifm_sd.c                    |  7 +++----
->  drivers/mmc/host/uniphier-sd.c                | 14 ++++++-------
->  drivers/mmc/host/via-sdmmc.c                  |  7 +++----
->  13 files changed, 53 insertions(+), 58 deletions(-)
->
-> --
-> 2.17.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Jazz is not dead. It just smells funny...
