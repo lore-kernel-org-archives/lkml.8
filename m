@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73C720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686110;
-	bh=h6Fj3ETpMGOpPRh1EYAIBRsMwJkRuf4kml+PDi+3WTA=;
+	s=default; t=1597686130;
+	bh=aFj2RC1IAslrTgOyq9gjjESOkCwLJCnXovMpudGyz3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWPUdcM3+2I2TQLBYV4akI/Pd4Ordc/KAcZD6e2fz1XqwFslucFsG9air7vNTo+SK
-	 ao7ANgtyaDbKalgb0mkxCkMQtS3lWIyLUgosfi5ZrFWOzcQ88Hfqbq53iV540gNM9p
-	 yLsgBUNlHiIkNF+/3djbuN3nIPKYCnbhaO2t0/dQ=
+	b=oOTkEuTW2N+yK9qrbsRzscf6aiHirCcdSnKnOC6fleAH46OZlNJnDHVlTwDBZA64R
+	 hKBJEgy2YToMoIa6EtyWNzwRm60KKgEB/GkFmukAN4MvvEzj+fp6R9orH7Kj5L1S/J
+	 3UXthQKQXIbopiM8LY+o9LqzuKnDdFeFg7Zw/+9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbgHQRlr (ORCPT
+        id S1731133AbgHQRmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731116AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5102722CAF;
-        Mon, 17 Aug 2020 16:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B232075B;
+        Mon, 17 Aug 2020 16:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680956;
-        bh=h6Fj3ETpMGOpPRh1EYAIBRsMwJkRuf4kml+PDi+3WTA=;
+        s=default; t=1597680981;
+        bh=aFj2RC1IAslrTgOyq9gjjESOkCwLJCnXovMpudGyz3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/QURIUEos7AxRnk4nqQQIseSB8gsgqq4B6DnhTAv22rdoCXoJm8g8gfXkP+ibPOv
-         5/49toUdvNv2NdWCWETX4ESwg8Ts3Q5nUJH8ExswgcQAjCs4p3qdbY0Dtjf+yz41v0
-         oe6fEYNI+bslap3USnnNr12Lt0iuUL2/lJ0tUR/8=
+        b=mhZVQ1EsIVmXtdzKJU0lfEXHVzn1NR8PJjsh87sUS770EYjKaWqKlaPNpK85VZMma
+         5PXJa3oS9qKMBnB8PHhi5dn7R4E0l7iwJ6oWG/C3QjX7SNLpHT0IJ1uQftC0J2HYRU
+         4MmAPNvybG3lZhfBsTU5Wbyp4QNcm6dBrxCahC5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/168] dlm: Fix kobject memleak
-Date:   Mon, 17 Aug 2020 17:17:36 +0200
-Message-Id: <20200817143739.928348964@linuxfoundation.org>
+Subject: [PATCH 4.19 105/168] Bluetooth: hci_h5: Set HCI_UART_RESET_ON_INIT to correct flags
+Date:   Mon, 17 Aug 2020 17:17:16 +0200
+Message-Id: <20200817143738.942387579@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,50 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 0ffddafc3a3970ef7013696e7f36b3d378bc4c16 ]
+[ Upstream commit a7ad4b6119d740b1ec5788f1b98be0fd1c1b5a5a ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+HCI_UART_RESET_ON_INIT belongs in hdev_flags, not flags.
 
-Set do_unreg = 1 before kobject_init_and_add() to ensure that
-kobject_put() can be called in its error patch.
-
-Fixes: 901195ed7f4b ("Kobject: change GFS2 to use kobject_init_and_add")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: ce945552fde4a09 ("Bluetooth: hci_h5: Add support for serdev enumerated devices")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/lockspace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_h5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index f1261fa0af8a1..244b87e4dfe7f 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -633,6 +633,9 @@ static int new_lockspace(const char *name, const char *cluster,
- 	wait_event(ls->ls_recover_lock_wait,
- 		   test_bit(LSFL_RECOVER_LOCK, &ls->ls_flags));
+diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+index 8eede1197cd2e..5a68cd4dd71cb 100644
+--- a/drivers/bluetooth/hci_h5.c
++++ b/drivers/bluetooth/hci_h5.c
+@@ -803,7 +803,7 @@ static int h5_serdev_probe(struct serdev_device *serdev)
+ 	if (!h5)
+ 		return -ENOMEM;
  
-+	/* let kobject handle freeing of ls if there's an error */
-+	do_unreg = 1;
-+
- 	ls->ls_kobj.kset = dlm_kset;
- 	error = kobject_init_and_add(&ls->ls_kobj, &dlm_ktype, NULL,
- 				     "%s", ls->ls_name);
-@@ -640,9 +643,6 @@ static int new_lockspace(const char *name, const char *cluster,
- 		goto out_recoverd;
- 	kobject_uevent(&ls->ls_kobj, KOBJ_ADD);
+-	set_bit(HCI_UART_RESET_ON_INIT, &h5->serdev_hu.flags);
++	set_bit(HCI_UART_RESET_ON_INIT, &h5->serdev_hu.hdev_flags);
  
--	/* let kobject handle freeing of ls if there's an error */
--	do_unreg = 1;
--
- 	/* This uevent triggers dlm_controld in userspace to add us to the
- 	   group of nodes that are members of this lockspace (managed by the
- 	   cluster infrastructure.)  Once it's done that, it tells us who the
+ 	h5->hu = &h5->serdev_hu;
+ 	h5->serdev_hu.serdev = serdev;
 -- 
 2.25.1
 
