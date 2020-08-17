@@ -2,102 +2,136 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20896C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C39C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA74420716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648672;
-	bh=f4HewaCYievJrLRvMK/fDp2BbemnrtBLKk/Ff2OgQC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hfr6YlKy2wlXlejWn4EYya3NxIxHTfFhkeAl+ahkuju+KM2JfoPem19ZbR4dWQ+bm
-	 SbW0JamYuhyp1N9av7HxW891z5CsQSU5pEAf4+ztT0SuQIhFUG8qwM7bzvYLCrgwYL
-	 aTwYSnq/l7Uqwdb0GTcvzZml0OsDf5Vcp6tvISsw=
+	by mail.kernel.org (Postfix) with ESMTP id C205620772
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JdBgyG4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHQHRu (ORCPT
+        id S1726772AbgHQHSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgHQHRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:17:48 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D595D20716;
-        Mon, 17 Aug 2020 07:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597648668;
-        bh=f4HewaCYievJrLRvMK/fDp2BbemnrtBLKk/Ff2OgQC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ph9xxuqG8+vsYp6/8R/Tr9wuklhpLGPk2NnuOQgrWzi0xFTW8rDIYuAS5fFTZUs8n
-         h2Dgv6W9knp1DLYKhpbW2fv2a0EASTSAoufqIxPPovVorS0Z260TqkFAiEPGc5z7D1
-         9zELhrsdSQeGHU1w10RYLIxUBfoUYjVRiD3poZXI=
-Date:   Mon, 17 Aug 2020 15:17:28 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>
-Cc:     s.hauer@pengutronix.de,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] imx6qp QuadPlus: support improved enet clocking
-Message-ID: <20200817071726.GA16951@dragon>
-References: <20200713002512.28742-1-TheSven73@gmail.com>
+        Mon, 17 Aug 2020 03:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgHQHSI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:18:08 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C899BC061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 00:18:07 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id d14so14124442qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 00:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=/Set//dgm7G/XdtiNNP38eYsEDsXQCMaAkbmzasEPMg=;
+        b=JdBgyG4W1iyFfmRRasE/WxCe+QioC2gKjz2BHSMl7Mow6xxBfhSXol7QKLgheZht1F
+         DCP89xzuke3Sm08FZLbNOchZ6zcVdgyjGxrQvFUAex9B0thU/DTSkHj4VuCOriaw+0BA
+         F8vW+w84c7DQPmVSRTBWs1SE2R4Ii17eZwzyepJKanQZQIiR23vJ6J3doVGopNqc8Dmh
+         IzgN3x1rlXiMnMaCCLNUDrRptOHoWc/4whQuHkVAM5RuSkDe+AbSD87BPWofVBE2le1c
+         3omWdmBJa8cVa3g0KiG0+gAZNxEnsOtHDL7XsdndPbfhfd1rlNabtWjsdl3QZ29vOxx7
+         k5Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=/Set//dgm7G/XdtiNNP38eYsEDsXQCMaAkbmzasEPMg=;
+        b=Cy9NJqT1tItvk2XJOSmy/uLY1m2qUJ5k+KAtNhyn6CWxiUCWAfc0i5Re97AVJ7WaBy
+         CfKpJZ3k7DX2+Zd3rgof3yuSjXj98bdU78q6V10WFUaml1wtC8y0qVQJ+m5QS2Y8H3uI
+         OYpzqyd0L9y94KcPYHEWjmVB2YFVuRv7kuIb45feniHD5qtn33CuViDasfAOj0hjK57X
+         xJNr5P2HOzDnKdkmCPIlVn01UAmu8BnEMvc7iqoxcrUIJGGrNuxS8oYYMA8DkWernhK6
+         eNuXd0XrEvNRvDtuZTOAV+gfvBiMVHDWwhLu5RWwHzqBixEE90I3O2qKne/eGOiZP8uz
+         IrYA==
+X-Gm-Message-State: AOAM531xbVvYGX6Mxioa6kBtGj/K4qgo3mH3czvPm5IxvzNUkOTDEwig
+        2s0vkFjnOdwyL2FRWGMpI9d4P94t5q5QJw==
+X-Google-Smtp-Source: ABdhPJxYEgL55GYgsN0r/l+TigB5h3PzzlWKJwkc8ZGKufBA3D5n+IxqISh4QRcIWzBUlPgZjKA4JQ==
+X-Received: by 2002:a05:620a:152d:: with SMTP id n13mr10980555qkk.43.1597648686064;
+        Mon, 17 Aug 2020 00:18:06 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id b187sm15642131qkd.107.2020.08.17.00.18.02
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 17 Aug 2020 00:18:04 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 00:17:49 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Song Liu <songliubraving@fb.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] uprobes: __replace_page() avoid BUG in
+ munlock_vma_page()
+In-Reply-To: <852258AE-75B6-404A-B236-9EEF37AEE43F@fb.com>
+Message-ID: <alpine.LSU.2.11.2008162340320.1025@eggly.anvils>
+References: <alpine.LSU.2.11.2008161338360.20413@eggly.anvils> <852258AE-75B6-404A-B236-9EEF37AEE43F@fb.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713002512.28742-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 08:25:07PM -0400, Sven Van Asbroeck wrote:
-> On the imx6qp QuadPlus, the h/w designers have improved enet clocking.
+On Mon, 17 Aug 2020, Song Liu wrote:
+> > On Aug 16, 2020, at 1:44 PM, Hugh Dickins <hughd@google.com> wrote:
+> > 
+> > syzbot crashed on the VM_BUG_ON_PAGE(PageTail) in munlock_vma_page(),
+> > when called from uprobes __replace_page().  Which of many ways to fix it?
+> > Settled on not calling when PageCompound (since Head and Tail are equals
+> > in this context, PageCompound the usual check in uprobes.c, and the prior
+> > use of FOLL_SPLIT_PMD will have cleared PageMlocked already).
+> > 
+> > Reported-by: syzbot <syzkaller@googlegroups.com>
+> > Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
+> > Signed-off-by: Hugh Dickins <hughd@google.com>
+> > Cc: stable@vger.kernel.org # v5.4+
+> > ---
+> > This one is not a 5.9-rc regression, but still good to fix.
+> > 
+> > kernel/events/uprobes.c |    2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- v5.9-rc/kernel/events/uprobes.c	2020-08-12 19:46:50.851196584 -0700
+> > +++ linux/kernel/events/uprobes.c	2020-08-16 13:18:35.292821674 -0700
+> > @@ -205,7 +205,7 @@ static int __replace_page(struct vm_area
+> > 		try_to_free_swap(old_page);
+> > 	page_vma_mapped_walk_done(&pvmw);
+> > 
+> > -	if (vma->vm_flags & VM_LOCKED)
+> > +	if ((vma->vm_flags & VM_LOCKED) && !PageCompound(old_page))
 > 
-> This patchset extends the clock tree to reflect the situation on QuadPlus.
-> 
-> This allows board designers to choose the enet clocking method by making
-> simple clocktree changes in the devicetree.
-> 
-> Default setting: external routing of enet_ref from pad to pad.
-> 
-> Example, change the default to enet_ref @ 125MHz clock routed internally:
-> 
-> &fec {
-> 	assigned-clocks = <&clks IMX6QDL_CLK_ENET_PTP>,
-> 			  <&clks IMX6QDL_CLK_ENET_REF>;
-> 	assigned-clock-parents = <&clks IMX6QDL_CLK_ENET_REF>;
-> 	assigned-clock-rates = <0>, <125000000>;
-> };
-> 
-> To: Shawn Guo <shawnguo@kernel.org>
-> To: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-clk@vger.kernel.org
-> 
-> Sven Van Asbroeck (5):
->   ARM: mach-imx6q: do not select enet PTP clock source on QuadPlus
->   clk: imx: add simple regmap-backed clock mux
->   dt-bindings: imx6qdl-clock: add QuadPlus enet clocks
->   clk: imx6q: support improved enet clocking on QuadPlus
->   ARM: dts: imx6qp: support improved enet clocking on QuadPlus
+> Do we need munlock_vma_page() for THP page head? 
 
-Hi Fugang,
+No: as the commit message says "the prior use of FOLL_SPLIT_PMD
+will have cleared PageMlocked already" - our THP implementation
+has difficulty supporting Mlocked consistently when the huge page is
+somewhere mapped by ptes, so one of the things that __split_huge_pmd()
+does is clear_page_mlock(), then PageDoubleMap will prevent Mlocked
+being set again once GUP has brought the old_page pte back in.
 
-Can you take a look at the series?
+But if you'd prefer us to munlock_vma_page(compound_head(old_page))
+instead, I can certainly change the patch: it's one of the options
+I considered, but couldn't quite bring myself to do it that way,
+knowing that actually it would never find PageMlocked set.  (If
+PageMlocked were allowed on tail pages, I'd have used a PageMlocked
+test instead of the PageCompound one: I spent nearly an hour
+bikeshedding the alternatives here!)
 
-Shawn
+(One day I must remind myself of when munlock_vma_page() should be
+used, versus when clear_page_mlock() should be used: I think it comes
+down to a choice of which stats get incremented, but I may also be
+forgetting something more important: anyway, no obvious reason to
+depart from the munlock_vma_page() that's always been used here.)
+
+Hugh
