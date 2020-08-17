@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96532C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33936C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54DBD206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7BD2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679869;
-	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+	s=default; t=1597679909;
+	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZr99JqzyznE+fsGgrv1M963nb7O23YjuiQ8rSl+IRcJ0w7IB+f2Hy3sxm8gWvw9J
-	 ko+w8fHo2ps2snDo+eDr4Cg7CJq1C33UqYteiCgFlHtJDW6jTNyRsVSEjXL4mj8sQh
-	 /agQwZf37ziR+Cz/3KHE6d4BPhONRr3ZH3NrgPVE=
+	b=S4QyD0v2jp5VEGCv4FEW6otX4mNWWW9/JjKiBHG0PUf61c6lXpLXlBXMCEnYozj4W
+	 Fg3/dd8fwD9k5KTaqBE1lvG+tDceCEy78LQupZaC+kDvqD9ZSP1VGHyq/akKokjnYu
+	 IVMlCjELpx0nYGjCI3u4orfN0dIJ21md+wPghc2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgHQP5o (ORCPT
+        id S2388128AbgHQP60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52172 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387503AbgHQPmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:14 -0400
+        id S2387543AbgHQPm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CA920760;
-        Mon, 17 Aug 2020 15:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9F4D2075B;
+        Mon, 17 Aug 2020 15:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678933;
-        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+        s=default; t=1597678945;
+        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlrNQFiqVa+DQoMwyQZh1KUzFi6YeOg7Tu1A62aSJYiJPhcxFLr8db1z/JwX2t7+o
-         dtlxmfzQpvH5zO8vkU6THhDmj2LuSTdjzOeN5aom+D95CcLQRjcnOmXPdpE4xqh8nm
-         Czi0JY6yeYeiX9VgeQjwLeWnTqrK3+s2I684vxS8=
+        b=FX6XCDI/4mXRUyfiJbfjl7IxtHH6JlaRICv6+m/BmoPQ+nO32OEm2Zl0gcX5vdry6
+         pCJ05FF/HFvnLzYJ/dAx56qHK9FrzWH6piwpg9RAKrHjci4LyBg8H0KZvObz+nxvHb
+         RvDMSRS9UHYWh9en18njuZaem4lLP9rFFwAJgjXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org,
+        Gregory Herrero <gregory.herrero@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 040/393] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
-Date:   Mon, 17 Aug 2020 17:11:30 +0200
-Message-Id: <20200817143821.544251963@linuxfoundation.org>
+Subject: [PATCH 5.7 043/393] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
+Date:   Mon, 17 Aug 2020 17:11:33 +0200
+Message-Id: <20200817143821.691864055@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,47 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Gregory Herrero <gregory.herrero@oracle.com>
 
-[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
+[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
 
-The Bananapi M2+ uses a GPIO line to change the effective resistance of
-the CPU supply regulator's feedback resistor network. The voltages
-described in the device tree were given directly by the vendor. This
-turns out to be slightly off compared to the real values.
+Currently, if a section has a relocation to '_mcount' symbol, a new
+__mcount_loc entry will be added whatever the relocation type is.
+This is problematic when a relocation to '_mcount' is in the middle of a
+section and is not a call for ftrace use.
 
-The updated voltages are based on calculations of the feedback resistor
-network, and verified down to three decimal places with a multi-meter.
+Such relocation could be generated with below code for example:
+    bool is_mcount(unsigned long addr)
+    {
+        return (target == (unsigned long) &_mcount);
+    }
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
+With this snippet of code, ftrace will try to patch the mcount location
+generated by this code on module load and fail with:
+
+    Call trace:
+     ftrace_bug+0xa0/0x28c
+     ftrace_process_locs+0x2f4/0x430
+     ftrace_module_init+0x30/0x38
+     load_module+0x14f0/0x1e78
+     __do_sys_finit_module+0x100/0x11c
+     __arm64_sys_finit_module+0x28/0x34
+     el0_svc_common+0x88/0x194
+     el0_svc_handler+0x38/0x8c
+     el0_svc+0x8/0xc
+    ---[ end trace d828d06b36ad9d59 ]---
+    ftrace failed to modify
+    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
+     actual:   66:a9:3c:90
+    Initializing ftrace call sites
+    ftrace record flags: 2000000
+     (0)
+    expected tramp: ffffa2dc6cf66724
+
+So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
+recordmcount.
+
+Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
+Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ scripts/recordmcount.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index a628b5ee72b65..235994a4a2ebb 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
- 		regulator-type = "voltage";
- 		regulator-boot-on;
- 		regulator-always-on;
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1300000>;
-+		regulator-min-microvolt = <1108475>;
-+		regulator-max-microvolt = <1308475>;
- 		regulator-ramp-delay = <50>; /* 4ms */
- 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
- 		gpios-states = <0x1>;
--		states = <1100000 0>, <1300000 1>;
-+		states = <1108475 0>, <1308475 1>;
- 	};
- };
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 7225107a9aafe..e59022b3f1254 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
+ 	return 1;
+ }
  
++static int arm64_is_fake_mcount(Elf64_Rel const *rp)
++{
++	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
++}
++
+ /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
+ 		make_nop = make_nop_arm64;
+ 		rel_type_nop = R_AARCH64_NONE;
+ 		ideal_nop = ideal_nop4_arm64;
++		is_fake_mcount64 = arm64_is_fake_mcount;
+ 		break;
+ 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
+ 	case EM_MIPS:	/* reltype: e_class    */ break;
 -- 
 2.25.1
 
