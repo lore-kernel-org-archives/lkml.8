@@ -2,160 +2,152 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7332072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0482072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lj+Nh9g1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VGxOIYRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgHQWEj (ORCPT
+        id S1729709AbgHQWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38898 "EHLO
+        Mon, 17 Aug 2020 18:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbgHQWDP (ORCPT
+        with ESMTP id S1729299AbgHQWCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:03:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAD1C061343;
-        Mon, 17 Aug 2020 15:03:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ha11so8306643pjb.1;
-        Mon, 17 Aug 2020 15:03:14 -0700 (PDT)
+        Mon, 17 Aug 2020 18:02:32 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FC9C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:31 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id r1so20178789ybg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VoyPgLas/EUNbQEYprU6PB/6pOwjqGOdvclKJYENFWw=;
-        b=lj+Nh9g1Fq/xON7fwxuChAfJOTx6pH9nErfD/IK3WCKUggySkSqe0+krFy2k4RLa3m
-         rM+h0ElOBHrlt6FS2cSGvE9jWG6jeyeBDUgPcmITY0VqS8kRxZOg335DYkg1oAWoel0Q
-         +LAoiypyeupaVlutsZ+m5ISzx78hhGA4Mkmy7SPe4ZFIYk/f20x6k60xkrRx3z3HcgGp
-         6b0x5sfZQ1W/2XY4aLl0J6PAC5OsfHlkF+IdAvOAQavegChIxMrkbhkEQaE8XLe4gx/P
-         bTIBgCbC10yfukyXQExlbxeMt/frC5wXL0G88N0un+CAnkYwknoIt/4KcdDR8u8oZKG8
-         rC6A==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=9SBJtwgo4QVHI3Sdc2C7hxhI+hybE6P8MqvKEbw6VA0=;
+        b=VGxOIYRqvHa4OmoZURsCdy57u/bUJl6KzXrNgmOYkyrfrvR66YapPh4X97oYZQWWRg
+         PPSFP8ab88uJEB4dM5x690TZN4TeToNbmWek+tEXy/8FIxeHJogFlT3E+cY+vwQJJh+V
+         UqzXvJ6LICQvDFw0d2Wfm5VbtDO+s2FYD4Z5rXsmF8BSsaOhwv8nwSBJYe5TuGUqZ28r
+         eUqYly78IEZl2y2yTtKRIxrBG9WbrXpbJCxrKKp9G5eVg4dNrjD4kHGgxygmNlFo55ul
+         32YKIftLGlp4bO7YlOx051frMawUBgZZgnhziC63JGQbuH6MBwfbeUvcpyUofVzXzab8
+         HUPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VoyPgLas/EUNbQEYprU6PB/6pOwjqGOdvclKJYENFWw=;
-        b=kVD0l1Fy3EKqkWIsd2RtWiLbgTaKeh9GH50+jaT0hnyP0rbBmLnl4BglC5EgsWnKRw
-         E8CLLDZgA+3NYoNq8M7bPf+a8ZDQiNPVoLpD5B1Xr9fuCD7PPyit2PHVThkJ8VIo0wZd
-         dtWaVOP+SH92SMi/ORDfNBbZh2eueJFmmoJ5eHjzkTfDdJ4ZE5ZCF3mrQkd4ScWw8PsK
-         XQPwRJ7oAAfEoF+lpMjb+FJSFX6B5NM31uOYPEtmaBe1d1AF2U6PhoH5MB4UfkeGWTNp
-         +gSejsrBjgBUyJrrqzqH5+yfDqT11lWixPRYfM3LPxCPUOUvfPUP6SG2fjY96qa+AXoo
-         FhqA==
-X-Gm-Message-State: AOAM530AMwd+uh9kJK7CrEMm1EgPlzMVxujZ5UHxhQqsdxiL6Gb642SO
-        MI2gEkRbIwaBzBQKk4I7gGc=
-X-Google-Smtp-Source: ABdhPJwhXURO/k/X3Ef3oo89v7mRBW4D4QjKqxgVtsXicxqmnflfZ25dMk5hEf48tEb3uwJsfCEa/Q==
-X-Received: by 2002:a17:90a:e292:: with SMTP id d18mr14374836pjz.181.1597701794026;
-        Mon, 17 Aug 2020 15:03:14 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id y21sm6634279pgc.43.2020.08.17.15.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:03:13 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Eric Anholt <eric@anholt.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 13/20] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Mon, 17 Aug 2020 15:01:38 -0700
-Message-Id: <20200817220238.603465-14-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200817220238.603465-1-robdclark@gmail.com>
-References: <20200817220238.603465-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=9SBJtwgo4QVHI3Sdc2C7hxhI+hybE6P8MqvKEbw6VA0=;
+        b=P12A+vmiWxJKD8FwKf0pVIIbY+/LpCvDuYb1Z6YeiyA8SIu9cLTO2d505XLfGidXBp
+         fMP4ThZYhm4Ce86YcD0A2cSayzcfz0sVYkw1DISQChm+q2/wbV4onxe/SlpCfFzl4LP+
+         BBHMv+UeR4PYzrbFQZSQEhIkRE91BuoNIzRgT1oRK8eOdgFfsbJedN9cFKBsp/TM+88f
+         X6T4dTBY3onOwtfInSibJ+GxptxSVUsmNKJfWgSEgpxHaJmLqsO1gxjlBiWm5PYzvC7L
+         ELrgrDfJhDuRRsekWzgf7RxpAdeRqep9RpA0sFgDbYjR/ZGDll9sTGNbOhJ5uzVyGbqe
+         xTEw==
+X-Gm-Message-State: AOAM531FDTC+eWUAsC6UZ9eVBus3ZhYhOeRARhFWWWUwjEX8Hz8M+P5V
+        QR7D1C1cM0A+0T9S9079BDA5xReoBv656F8FK00=
+X-Google-Smtp-Source: ABdhPJyJAr0txHHVKZqlGNMtvo97G00mjqcvpxwQOE5FwBgb1PBKiVkhfn3k+w3BBZIVVlLui27r6uHth2/gthlkOD8=
+X-Received: by 2002:a25:3f83:: with SMTP id m125mr22563936yba.324.1597701750925;
+ Mon, 17 Aug 2020 15:02:30 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 15:02:11 -0700
+In-Reply-To: <20200817220212.338670-1-ndesaulniers@google.com>
+Message-Id: <20200817220212.338670-4-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH 3/4] x86/boot: use -fno-builtin-bcmp
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "=?UTF-8?q?D=C3=A1vid=20Bolvansk=C3=BD?=" <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+We're reverting
+commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+in favor of -fno-builtin-bcmp. Remove the additional definition here,
+too.
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
+arch/x86/purgatory/Makefile uses -ffreestanding, so there's no risk of
+this libcall optimization occurring for arch/x86/boot/purgatory.ro.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+arch/x86/boot/Makefile resets KBUILD_CFLAGS, so make sure to reset this
+flag that was set for the top level Makefile.
+
+Fixes: 4ce97317f41d ("x86/purgatory: Do not use __builtin_memcpy and __builtin_memset")
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/boot/Makefile | 1 +
+ arch/x86/boot/string.c | 8 --------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 533a34b4cce2..34e6242c1767 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index fe605205b4ce..ef7f15bfceab 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -70,6 +70,7 @@ KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
+ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
++KBUILD_CFLAGS	+= -fno-builtin-bcmp
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
  
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xffffffff - SZ_16M);
-+	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
-+	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
-+
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 8a3fff9128bb..23d91aa7691e 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -37,14 +37,6 @@ int memcmp(const void *s1, const void *s2, size_t len)
+ 	return diff;
+ }
  
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..1b6635504069 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
+-/*
+- * Clang may lower `memcmp == 0` to `bcmp == 0`.
+- */
+-int bcmp(const void *s1, const void *s2, size_t len)
+-{
+-	return memcmp(s1, s2, len);
+-}
+-
+ int strcmp(const char *str1, const char *str2)
  {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	iommu_unmap(iommu->domain, iova, len);
- 
- 	return 0;
+ 	const unsigned char *s1 = (const unsigned char *)str1;
 -- 
-2.26.2
+2.28.0.220.ged08abb693-goog
 
