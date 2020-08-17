@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8380C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930852072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968E62063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679506;
-	bh=mdDePSu7eStr8QxZQkIFDAJN7NczDRXPX+oERb1uTbE=;
+	s=default; t=1597679531;
+	bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzsPuYuOVMISfZBsbTsmZ/Nm85wSNNGPQCXgh1CuZH5N/eH373vTDGNLZf796zYTE
-	 FyhUvAJUrVQNtrSzopG8K92hbARUl1akW03n50rrjwLbFSVYbb2qiIKG5oy6plsFwJ
-	 SgH/v4v9ZUow+bNzNw7nevQn0l2t7EnVqvjxwVBM=
+	b=wpuyr/FqgCNJs76a/8PWloUzRzIqDY/e8+Rwd0QWqRA+zldAk4TzRtIpzno5/Vhpf
+	 VpJEVC/7upfLDh6fYWXXhGBxLWQKUvZ+PqPmE9T5j6i1pECE8duYhepLlmEBUp+UnU
+	 vJUXAfbTNuB2LE5EwVA4Un5K7nPmlgKv/BGR/TNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbgHQPvk (ORCPT
+        id S2387812AbgHQPwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48136 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbgHQPjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:39:35 -0400
+        id S2387462AbgHQPjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:39:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620DA208E4;
-        Mon, 17 Aug 2020 15:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C99208E4;
+        Mon, 17 Aug 2020 15:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678774;
-        bh=mdDePSu7eStr8QxZQkIFDAJN7NczDRXPX+oERb1uTbE=;
+        s=default; t=1597678786;
+        bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhSyKbVnIOc984eDtcCTZ524Txqjt+V8Z6iZXVUdyi/0M6iU0SFM1kZsaVMiTcJRf
-         sok6HYoGACghfcmdFf7f7CLbDuUAmrk+Ix9hSomQX7AGxGuqCzUpdhQQvAFZSJoVqU
-         MzQ7tmc4WHFOew86C4TxKv7cLwc3lCPBSZJK3NoE=
+        b=KeUhkvkZglNm3D+TB7o3HbWSi4BID/cYZ066eFdFVsvGu0+CYaULi8aGsXLCyIyQ6
+         TeHklHoEaUB5AeJ4YDw1TSXbSgKRCNBkyr4rL2f3YyQIXULWmixuNureRllRJqP027
+         R042B6Tq1DGM6IRLYz2xAs3ICKqVt7dzdcFVSRtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.8 448/464] ARM: dts: exynos: Extend all Exynos5800 A15s OPPs with max voltage data
-Date:   Mon, 17 Aug 2020 17:16:41 +0200
-Message-Id: <20200817143855.233813199@linuxfoundation.org>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 5.8 423/464] drm/ttm/nouveau: dont call tt destroy callback on alloc failure.
+Date:   Mon, 17 Aug 2020 17:16:16 +0200
+Message-Id: <20200817143854.036702394@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,48 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Dave Airlie <airlied@redhat.com>
 
-commit d644853ff8fcbb7a4e3757f9d8ccc39d930b7e3c upstream.
+commit 5de5b6ecf97a021f29403aa272cb4e03318ef586 upstream.
 
-On Exynos5422/5800 the regulator supply for the A15 cores ("vdd_arm") is
-coupled with the regulator supply for the SoC internal circuits
-("vdd_int"), thus all operating points that modify one of those supplies
-have to specify a triplet of the min/target/max values to properly work
-with regulator coupling.
+This is confusing, and from my reading of all the drivers only
+nouveau got this right.
 
-Fixes: eaffc4de16c6 ("ARM: dts: exynos: Add missing CPU frequencies for Exynos5422/5800")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Just make the API act under driver control of it's own allocation
+failing, and don't call destroy, if the page table fails to
+create there is nothing to cleanup here.
+
+(I'm willing to believe I've missed something here, so please
+review deeply).
+
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200728041736.20689-1-airlied@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos5800.dtsi |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_sgdma.c |    9 +++------
+ drivers/gpu/drm/ttm/ttm_tt.c            |    3 ---
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -23,17 +23,17 @@
- &cluster_a15_opp_table {
- 	opp-2000000000 {
- 		opp-hz = /bits/ 64 <2000000000>;
--		opp-microvolt = <1312500>;
-+		opp-microvolt = <1312500 1312500 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-1900000000 {
- 		opp-hz = /bits/ 64 <1900000000>;
--		opp-microvolt = <1262500>;
-+		opp-microvolt = <1262500 1262500 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-1800000000 {
- 		opp-hz = /bits/ 64 <1800000000>;
--		opp-microvolt = <1237500>;
-+		opp-microvolt = <1237500 1237500 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-1700000000 {
+--- a/drivers/gpu/drm/nouveau/nouveau_sgdma.c
++++ b/drivers/gpu/drm/nouveau/nouveau_sgdma.c
+@@ -96,12 +96,9 @@ nouveau_sgdma_create_ttm(struct ttm_buff
+ 	else
+ 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
+ 
+-	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
+-		/*
+-		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
+-		 * and thus our nouveau_sgdma_destroy() hook, so we don't need
+-		 * to free nvbe here.
+-		 */
++	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
++		kfree(nvbe);
+ 		return NULL;
++	}
+ 	return &nvbe->ttm.ttm;
+ }
+--- a/drivers/gpu/drm/ttm/ttm_tt.c
++++ b/drivers/gpu/drm/ttm/ttm_tt.c
+@@ -242,7 +242,6 @@ int ttm_tt_init(struct ttm_tt *ttm, stru
+ 	ttm_tt_init_fields(ttm, bo, page_flags);
+ 
+ 	if (ttm_tt_alloc_page_directory(ttm)) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
+@@ -266,7 +265,6 @@ int ttm_dma_tt_init(struct ttm_dma_tt *t
+ 
+ 	INIT_LIST_HEAD(&ttm_dma->pages_list);
+ 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
+@@ -288,7 +286,6 @@ int ttm_sg_tt_init(struct ttm_dma_tt *tt
+ 	else
+ 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
+ 	if (ret) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
 
 
