@@ -2,89 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDFD206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38006206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vs8KGi9W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="SeE8f4Bs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHQDpw (ORCPT
+        id S1726967AbgHQDrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37780 "EHLO
+        Sun, 16 Aug 2020 23:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgHQDpw (ORCPT
+        with ESMTP id S1726315AbgHQDrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:45:52 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E7EC061389
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:45:52 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f5so6827540plr.9
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MA/9gHI0V+yftTzDrDx3504zFpgx5aUeDq1OIejihpQ=;
-        b=vs8KGi9WejCWcKWcxD6bsXKCrIcM0+m4Bw8FfFf3Og83i3+KSRNNLWCD4ty/tof3Nr
-         4iKnYwHGhQzW/DLjCAlrjRt/VjAL+bRx0t7QGSPZMmnAXHZOjye2Zh5oghknrvL2Juco
-         gLVkZFd1cJAMCWC0w9qW8GeKTVfXiaxcIGi98sOYGm5cyiAGdgVeSkRwWjbVZjQsubmy
-         yheIf4xhYRDJCIa8y8TNxAB6L0U8GwS+VMZV2+VtMq95iBnPmBxmt91jPbSaizfLN4uY
-         Guo9phQx+7+J6PPgpTaUcKFvTetyfEm652SAIY3I5MsWNCtyDZDR4wIPrnloFWg9Y8gS
-         xnZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MA/9gHI0V+yftTzDrDx3504zFpgx5aUeDq1OIejihpQ=;
-        b=HdOQULKAk9xX+OKIzOE0cPZ9k/xrXIOu30IvC4jU7OF8ZzYUhMogvjv/j0knrCeG7F
-         a8eD4FJwOKndtYg0IYAv3lQDHoedoWR1sMmvkQJECthDJSBTPQ3tHKpyvt6pZAELlnvC
-         b9jORsDiCq9pCqkpod2KdOyUFzoo4wGIi4eXeLYPRUEhnH9K1SKc5paa/fc19SIoHOFo
-         5QySulGlA9QRr4qDMF5AiXK96xgRMTuBIIir4BF5DoM4ueylp/NcZvn6iwXwggvDeqTb
-         /3WywxnAZTaGpIcoLB8EXUOQZ4IrLBfstaxJjr79uuO4eVSs/iQnde2FcI0qVrkKsCrJ
-         TBaQ==
-X-Gm-Message-State: AOAM530w/WLiY2T3s6hMBXRsKCmbLnrx2U/7WuDOWKyf1DE77ZYday37
-        PtlkZr1oOo4Moov3H1vfDTs/YWneVQNWlQ==
-X-Google-Smtp-Source: ABdhPJziFq7DHhuHPYkQ5rKF4HfMbh/cUrsPSHGpavzCqwuHvA591aVIa0+v1ku33lFfVV8TOVUIXQ==
-X-Received: by 2002:a17:90b:8e:: with SMTP id bb14mr11493068pjb.170.1597635951325;
-        Sun, 16 Aug 2020 20:45:51 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:ea1b:63b0:364:3a3b? ([2605:e000:100e:8c61:ea1b:63b0:364:3a3b])
-        by smtp.gmail.com with ESMTPSA id s24sm15332095pjp.1.2020.08.16.20.45.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Aug 2020 20:45:50 -0700 (PDT)
-Subject: Re: [PATCH] ata: ahci: use ata_link_info() instead of
- ata_link_printk()
-To:     Xu Wang <vulab@iscas.ac.cn>, linux-ide@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200817032913.10173-1-vulab@iscas.ac.cn>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <de66f1e7-9ac6-b8be-a243-0fe68419bc24@kernel.dk>
-Date:   Sun, 16 Aug 2020 20:45:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 16 Aug 2020 23:47:40 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58306C061388;
+        Sun, 16 Aug 2020 20:47:40 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id B244B1FED2;
+        Mon, 17 Aug 2020 03:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1597636056; bh=oWs/OR6uGAmxHxGeX7FqOfuNk1VxyUq9ikoG+zJSSlo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SeE8f4Bsk8v5HwBE92s2WK9WLsmYWvUXvxLjfOaOzszCjrx79qi3FPbEnCiaRsa9n
+         /6ddDJ+tF5mM9foWZQbiDUJswvc4fUzFgsKCBJ5IT8ywjYbXREg9bFoeTJ+QBwrZ0O
+         iHe1rePOJzxFY6rTuL4WtbAucL+4ZTix36nTA+tTzmPC0C0hkI6EVdqWieDkliuUgM
+         4mrKC+qblbk4dmAy0UMKrXtMvuz0unwudD6IkBQCUBdsDFJf0FgdEPbuywPiVqOQhT
+         zSE0ocSK6vWCx6KHK99NQs34WpGXnPOav3E9GU4wieOIXRrIHKSjP9E7hGUOlA5arQ
+         X/J8G6CCAE4gg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        WANG Xuerui <git@xen0n.name>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sergey Korolev <s.korolev@ndmsystems.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Marc Zyngier <maz@kernel.org>, Anup Patel <anup.patel@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steven Price <steven.price@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH 0/7] R4000 clock enhancements for Loongson
+Date:   Mon, 17 Aug 2020 11:46:39 +0800
+Message-Id: <20200817034701.3515721-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.28.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200817032913.10173-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/20 8:29 PM, Xu Wang wrote:
-> Using ata_link_info() instead of ata_link_printk().
+Jiaxun Yang (7):
+  MIPS: sync-r4k: Rework to be many cores firendly
+  MIPS: time: Use CPUHUP to handle r4k timer
+  MIPS: Kconfig: Always select SYNC_R4K if both SMP and r4k timer is
+    enabled
+  MIPS: Loongson64: Remove custom count sync procudure
+  MIPS: cevt-r4k: Don't handle IRQ if clockevent is not enabled
+  MIPS: cevt-r4k: Enable intimer for Loongson CPUs with extimer
+  MIPS: KVM: Don't use htimer when INTIMER is disabled
 
-Applied, thanks.
+ arch/mips/Kconfig                    |  10 +-
+ arch/mips/include/asm/cpu-features.h |   4 +
+ arch/mips/include/asm/cpu.h          |   1 +
+ arch/mips/include/asm/r4k-timer.h    |   5 -
+ arch/mips/include/asm/smp.h          |   1 -
+ arch/mips/include/asm/time.h         |  28 +++---
+ arch/mips/kernel/cevt-r4k.c          |  65 ++++++++++--
+ arch/mips/kernel/cpu-probe.c         |   6 +-
+ arch/mips/kernel/smp.c               |   5 -
+ arch/mips/kernel/sync-r4k.c          | 143 ++++++++++++---------------
+ arch/mips/kernel/time.c              |  22 ++++-
+ arch/mips/kvm/vz.c                   |   6 ++
+ arch/mips/loongson64/smp.c           |  32 +-----
+ include/linux/cpuhotplug.h           |   1 +
+ 14 files changed, 173 insertions(+), 156 deletions(-)
 
 -- 
-Jens Axboe
+2.28.0.rc1
 
