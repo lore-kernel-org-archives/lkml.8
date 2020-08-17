@@ -2,97 +2,100 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405952054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108B2206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:53:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eKQ8syUb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHQFsC (ORCPT
+        id S1726582AbgHQFxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:48:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31624 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgHQFr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:47:59 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BVNP36Zdkz9tytn;
-        Mon, 17 Aug 2020 07:47:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Q31TzKBgDRfA; Mon, 17 Aug 2020 07:47:51 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVNP35csXz9tytl;
-        Mon, 17 Aug 2020 07:47:51 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9216E8B772;
-        Mon, 17 Aug 2020 07:47:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id szLHl23uqWEw; Mon, 17 Aug 2020 07:47:56 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6CE298B75B;
-        Mon, 17 Aug 2020 07:47:56 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 6210965CDD; Mon, 17 Aug 2020 05:47:56 +0000 (UTC)
-Message-Id: <03ba6b52344ca7c336df2bc6e3d31d736c804ae2.1597643221.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <0eb61cf0dc66d781d47deb2228498cd61d03a754.1597643221.git.christophe.leroy@csgroup.eu>
-References: <0eb61cf0dc66d781d47deb2228498cd61d03a754.1597643221.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 2/4] powerpc/process: Remove useless #ifdef CONFIG_ALTIVEC
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 17 Aug 2020 05:47:56 +0000 (UTC)
+        Mon, 17 Aug 2020 01:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgHQFxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:53:15 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AD67C061388;
+        Sun, 16 Aug 2020 22:53:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BVNW94j1Sz9sTH;
+        Mon, 17 Aug 2020 15:53:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597643591;
+        bh=mFaorMpU/2N/sp0r+EBSBM5/iK2seMXlAMNmtKFb8gE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eKQ8syUbyAAwD18TMeRtgc+1zXZAX6X4m35PkCX99AXOfCKMVtu8Ztn31qz/uPq3s
+         Bcq/0mLRLuoZTc3UNUkTxsm88EffOucRVnEjubK3sw6dehy28kkxzwEu6AlKYKLUtP
+         llnkJna5blfOLl1u4R8oqkROIaIy6jslpFZIgtaI6jwOgNVGi0HIX8hogzcBUh0YBP
+         unAtlfGckqvI4badOtK1qezo4k5ZuLRveiyrD5yVFs5Rkf3z9Tqv4F+BjYd2GD5Hg1
+         Wa2uKUBSp9TTCbdfZpwyrNDsWxdeaVqo/i4+CsUrkrHgwApkfbr1WQp5Jqa1SqkW33
+         12noW141lN1Eg==
+Date:   Mon, 17 Aug 2020 15:53:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20200817155307.2aabc9ea@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Yp2VGUoYxVJg.uX4ToQ_9UU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_has_feature(CPU_FTR_ALTIVEC) returns false when CONFIG_ALTIVEC is
-not set.
+--Sig_/Yp2VGUoYxVJg.uX4ToQ_9UU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There is no need to enclose the test in an #ifdef CONFIG_ALTIVEC.
-Remove it.
+Hi all,
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/process.c | 4 ----
- 1 file changed, 4 deletions(-)
+In commit
 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index b64d71188715..360415689f8a 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -409,10 +409,8 @@ static int __init init_msr_all_available(void)
- #ifdef CONFIG_PPC_FPU
- 	msr_all_available |= MSR_FP;
- #endif
--#ifdef CONFIG_ALTIVEC
- 	if (cpu_has_feature(CPU_FTR_ALTIVEC))
- 		msr_all_available |= MSR_VEC;
--#endif
- 	if (cpu_has_feature(CPU_FTR_VSX))
- 		msr_all_available |= MSR_VSX;
- #ifdef CONFIG_SPE
-@@ -446,10 +444,8 @@ void giveup_all(struct task_struct *tsk)
- 	if (usermsr & MSR_FP)
- 		__giveup_fpu(tsk);
- #endif
--#ifdef CONFIG_ALTIVEC
- 	if (usermsr & MSR_VEC)
- 		__giveup_altivec(tsk);
--#endif
- #ifdef CONFIG_SPE
- 	if (usermsr & MSR_SPE)
- 		__giveup_spe(tsk);
--- 
-2.25.0
+  b3b2854dcf70 ("mptcp: sendmsg: reset iter on error redux")
 
+Fixes tag
+
+  Fixes: 35759383133f64d "(mptcp: sendmsg: reset iter on error)"
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Yp2VGUoYxVJg.uX4ToQ_9UU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl86G0QACgkQAVBC80lX
+0Gw9rgf/WsitZxRFjYFoS8rdLpln+Q9Vqd0cDd8JHGPQWMP0M49/bJjwoQ6ry4dl
+UwBq3WCW+Ts6e60v9Okdjid4N9FFn/O0q7a/yT5xYvQoKbQ/y8R6zepNBESuSzdd
+yZPW+l4JuVpTamz/li4ReSKQfrnWsJ0wLQBGFpiQZgKjDejPk0vklGjYFJ9kE6EL
+6TEIO0gzEpol9dm3A47BlEqwMf50vkfEXGvRR36csIEteCcFjkmLA5utKsTQsCSV
+ENVQQ8ZNC+h7CtlJ+lHPxD5L0f2TkOP6xw6C5VxM2E6HSgqKv4KUzAFNXC+zHwx5
+vk0UShCeCnmbRohz3RnvPmG5cNi9jQ==
+=ToE4
+-----END PGP SIGNATURE-----
+
+--Sig_/Yp2VGUoYxVJg.uX4ToQ_9UU--
