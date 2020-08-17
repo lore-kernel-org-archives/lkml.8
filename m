@@ -2,138 +2,160 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF00C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11999C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29486207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597656453;
-	bh=J/kOpSEU8RbORM5aCdkVXUkRjQk8bFOWgJybhAWbpJU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VX1Rp+xKAAlxb5n3z5Xn1HORgDR6YNuS50a8zp5HnVXxq7nRduRBWWjYndT44S8ky
-	 h3aw/v3TCYpO5FzL4wohsX1Q4Mx2VuCoJnxhyKI2e4Zyoh/4rngcUkaTBWKGgsH4la
-	 SbZoVbJNZ/rEKFx7S0laIgBW7TBMLQF4GrNYU3FM=
+	by mail.kernel.org (Postfix) with ESMTP id D9DD12072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tJOL8qVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgHQJ1c (ORCPT
+        id S1727970AbgHQJ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbgHQJ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:27:31 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6CF2072D;
-        Mon, 17 Aug 2020 09:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597656451;
-        bh=J/kOpSEU8RbORM5aCdkVXUkRjQk8bFOWgJybhAWbpJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vqk5sYZZ5vFZvh+OqPDYux84g9ZoKEUfl5z4tXlktjbc5mbcZQo9e27w5hlB9T2ZO
-         hUtwy0hXhHzgSFFRkZjOfcnrDWyr8IUSf4FplhzqtGDtOHOLFXvmhtO/K4kBNzavLa
-         F3lePsGgArFX+LDzGfPRsQr7vKYAV3zzh8B8ZqAs=
-Date:   Mon, 17 Aug 2020 11:27:25 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org,
-        Chenfeng <puck.chen@hisilicon.com>, devel@driverdev.osuosl.org,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-Message-ID: <20200817112725.26f1b7d6@coco.lan>
-In-Reply-To: <20200817082106.GA16296@infradead.org>
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
-        <20200817082106.GA16296@infradead.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 17 Aug 2020 05:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgHQJ2e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 05:28:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8D3C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 02:28:33 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r15so4325153wrp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 02:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OZHrD7AsFMu/AjqlVhFN/H/E4vrlCUlBMfXDwCoSB1k=;
+        b=tJOL8qVLXsnrVmao1/kfme1r1s7BPYaV2Llpy3btp+lbz8qf5SWwLY5FodS6ODMtOW
+         lVkHcC5DFKnzxul97uhq07cmV32gKgVgLGe5efRdIuzMfsKJCbiJ542ZhCntsrg21KzS
+         t1ndiyxJS6jZJ/TV+ku/KAytl6EdLfNsxDQdXxDgElKPnmUAlJmocohxcNLU9TvPSEPP
+         /Oq1JbCvmGQl18dGytAegkp0UtlnvowDlyvTIv9gE3y63MwVukK/vIuNbLVDJV3hgDzx
+         lSKYXbahutZnfvYHKPeSzo98hwcrwtpOXcT79g7EdmVCSjjQwlTwwhnuJXkz9eItb9E3
+         1XDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OZHrD7AsFMu/AjqlVhFN/H/E4vrlCUlBMfXDwCoSB1k=;
+        b=XC9AT+RVAttqQSAjAcdInvC3Vim8REiO9tLywrl02XUyWVta5+UgXqYNBtktjU+VCk
+         jLIB+CUH8Z5oNQ2lKQ1LZaah4YM2D67oyiAQsS29vx13hWEG5lCREy4tQo34JUCaMXKH
+         KSjgLFRko/WKzIaw7VfjLH23lGPrsdP/oskyiB6uDUt6/h0p/JNBMzUOtwInMtrZ4kP7
+         pzlt3QtFtddHKjdU79JZmTw4+SS2FnYyAp0g9pPAGO/kSqTdwNelCagNE3rxyRmeWQsY
+         UBIx2OSLK+FUMAL+gwPXrru2EGt5H02qiQAcM38i1cePQtqUx0TGDjCaMKytH622G0hE
+         TO1A==
+X-Gm-Message-State: AOAM532nKDNQhE2Hp/ny4x2f7rkroCKVEPFxJZwG4nw3hWQLWK1OP41y
+        PIGsHl1jXGzQoz6TfDbLl8x6yA==
+X-Google-Smtp-Source: ABdhPJyXOFbcuO2y4SsfG64eFw4++PxepXSqaoKyOWHlAufgH8Jeb2VmgQakN+PqFUlSIBjcNZABxg==
+X-Received: by 2002:a5d:414e:: with SMTP id c14mr15581729wrq.57.1597656512419;
+        Mon, 17 Aug 2020 02:28:32 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a10sm29800393wro.35.2020.08.17.02.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 02:28:31 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 10:28:30 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+Message-ID: <20200817092830.xcl2gkyxoe5grgnz@holly.lan>
+References: <20200811145816.GA424033@kroah.com>
+ <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
+ <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
+ <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
+ <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+ <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
+ <20200813101703.566thqmnc2d7cb3n@holly.lan>
+ <CAFA6WYPd-fcDkYNk1KrjYwD=FH3FBvjDGEoxCBBN9CRidoVXbw@mail.gmail.com>
+ <20200814141822.opahh33nfc5yodkb@holly.lan>
+ <CAFA6WYO3YmgCftr-hFdiHGHATeox9en_HZvgnAL=zhoa=OEi_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYO3YmgCftr-hFdiHGHATeox9en_HZvgnAL=zhoa=OEi_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-Em Mon, 17 Aug 2020 09:21:06 +0100
-Christoph Hellwig <hch@infradead.org> escreveu:
-
-> On Mon, Aug 17, 2020 at 09:49:59AM +0200, Mauro Carvalho Chehab wrote:
-> > Add a driver for the Kirin 960/970 iommu.
-> > 
-> > As on the past series, this starts from the original 4.9 driver from
-> > the 96boards tree:
-> > 
-> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > 
-> > The remaining patches add SPDX headers and make it build and run with
-> > the upstream Kernel.  
+On Mon, Aug 17, 2020 at 10:42:43AM +0530, Sumit Garg wrote:
+> On Fri, 14 Aug 2020 at 19:48, Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Fri, Aug 14, 2020 at 05:36:36PM +0530, Sumit Garg wrote:
+> > > On Thu, 13 Aug 2020 at 15:47, Daniel Thompson
+> > > <daniel.thompson@linaro.org> wrote:
+> > > >
+> > > > On Thu, Aug 13, 2020 at 02:55:12PM +0530, Sumit Garg wrote:
+> > > > > On Thu, 13 Aug 2020 at 05:38, Doug Anderson <dianders@chromium.org> wrote:
+> > > > > > On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > > > > > One
+> > > > > > > last worry is that I assume that most people testing (and even
+> > > > > > > automated testing labs) will either always enable NMI or won't enable
+> > > > > > > NMI.  That means that everyone will be only testing one codepath or
+> > > > > > > the other and (given the complexity) the non-tested codepath will
+> > > > > > > break.
+> > > > > > >
+> > > > >
+> > > > > The current patch-set only makes this NMI to work when debugger (kgdb)
+> > > > > is enabled which I think is mostly suitable for development
+> > > > > environments. So most people testing will involve existing IRQ mode
+> > > > > only.
+> > > > >
+> > > > > However, it's very much possible to make NMI mode as default for a
+> > > > > particular serial driver if the underlying irqchip supports it but it
+> > > > > depends if we really see any production level usage of NMI debug
+> > > > > feature.
+> > > >
+> > > > The effect of this patch is not to make kgdb work from NMI it is to make
+> > > > (some) SysRqs work from NMI. I think that only allowing it to deploy for
+> > > > kgdb users is a mistake.
+> > > >
+> > > > Having it deploy automatically for kgdb users might be OK but it seems
+> > > > sensible to make this feature available for other users too.
+> > >
+> > > I think I wasn't clear enough in my prior reply. Actually I meant to
+> > > say that this patch-set enables NMI support for a particular serial
+> > > driver via ".poll_init()" interface and the only current user of that
+> > > interface is kgdb.
+> > >
+> > > So if there are other users interested in this feature, they can use
+> > > ".poll_init()" interface as well to enable it.
+> >
+> > Huh?
+> >
+> > We appear to speaking interchangably about users (people who sit in
+> > front of the machine and want a stack trace) and sub-systems ;-).
+> >
+> > I don't think other SysRq commands have quite such a direct relationship
+> > between the sub-system and the sysrq command. For example who are you
+> > expecting to call .poll_init() if a user wants to use the SysRq to
+> > provoke a stack trace?
+> >
 > 
-> Please don't add iommu drivers to staging, and just work with the
-> maintainers to properly clean it up.
+> Ah, I see. So you meant to provide a user-space interface to
+> dynamically enable/disable NMI debug, correct? It will require IRQ <->
+> NMI switching at runtime which should be doable safely.
 
-I need to start from the original patch in order to preserve its
-authorship.
+I haven't given much thought to the exact mechanism, though I would
+perhaps have started by thinking about a module parameter).
 
-My plan is to work with the iommu subsystem maintainers after
-have this (and another pending patch series for DRM) merged.
+From an RFC point of view, I simple think this feature is potentially
+useful on systems without kgdb (which, let's be honest, are firmly in
+the majority) so making .poll_init() the only way to activate it is a
+mistake.
 
-> I also don't think adding a totally out of date not compiling version
-> is a good idea.  Please do a proper rollup, and if required (probably
-> not in this case), split it into useful chunks.
 
-This series make this driver working as expected.
-
-I mean, while patch 01/16 is against Kernel 4.9, the other patches
-on this series ports it to upstream, cleans up the driver and
-address several issues on it.
-
-This specific IOMMU seems to be an specific part of the SoC dedicated for 
-the display engine and by the encoding/decoding images via the ISP. 
-With this series, this driver builds and runs as expected, providing
-IOMMU support needed by the upcoming KMS/DRM driver.
-
-The only issue on it (as far as I can tell) is that the DT bindings
-require some work, as, instead of using dma-ranges, the DRM driver binds
-into it with:
-
-	smmu_lpae {
-                 compatible = "hisilicon,smmu-lpae";
-         };
-
-         dpe: dpe@e8600000 {
-                 compatible = "hisilicon,kirin970-dpe";
-...
-                 iommu_info {
-                         start-addr = <0x8000>;
-                         size = <0xbfff8000>;
-                 };
-         };
-
-In order to properly address it, the best would be to also have the
-DRM driver merged upstream, as it relies on it. So, a change in DT will 
-also mean a change at the way the DRM uses it.
-
-The DRM itself should go via staging, as it has some bugs that I'd
-like to fix before moving it to drivers/gpu/drm. Those are more
-tricky to solve, as they seem to require using different settings for 
-some hardware registers, and the downstream driver also have the same 
-issues. Fixing them will likely require some time.
-
-Thanks,
-Mauro
+Daniel.
