@@ -2,52 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D90C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A751C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87FD2204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379DB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690060;
-	bh=32lIzJAnUv4Rf9+Zm6bqbTnb8HSvaEfJkalMsbS//Z4=;
+	s=default; t=1597690070;
+	bh=dHoB6WN7dMe7me8nFYFb2Na5SEj5aIZg5J6VQssDatI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXqCy64/84gCAFbbsdboiKHdVw8qz8fxzkd0aVOk7K0ouNTf0WBUk6ehu8yR3qv+0
-	 uzJU/BDqlGYR4zhtESU4kaBQL/RRKnziPxDSpQK81a8BFmQG0J0cXbRWWkbkrZAP7T
-	 5u319xgH9Pij5qHCp56ICUf8QIp4Y4dPhCJXI8dI=
+	b=ZLf1gxw2yXppyL25JnyyNfPCLf4/Sy7/MCZwiwXHT/a6Y4DSQyENJwm9Ft49JZgrT
+	 3UB6htc0R94vvDd1/Q6mJGHgvvtglCEXjrGvcS0HIdMWUTMeM7boDdHwkpCSIGf2pL
+	 TKbtCABLeqTsLxYWYH5R0qO/3UGZP296d2zmyddU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391639AbgHQSra (ORCPT
+        id S2391360AbgHQSrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:47:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:47:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388036AbgHQPzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:55:43 -0400
+        id S2388028AbgHQPzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:55:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B255B206FA;
-        Mon, 17 Aug 2020 15:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2390F207DA;
+        Mon, 17 Aug 2020 15:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679742;
-        bh=32lIzJAnUv4Rf9+Zm6bqbTnb8HSvaEfJkalMsbS//Z4=;
+        s=default; t=1597679736;
+        bh=dHoB6WN7dMe7me8nFYFb2Na5SEj5aIZg5J6VQssDatI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsEzcEk2zlX4jfxD66TyXc9YqrsGLYJ0H37PfGSVBlgaoUAXBLajYgolBUU6RphC6
-         lvf6k2yDNwi3NcaYPzuHvvqvUgB6ruojxs//2IB5pAHk/iwVdHQ120+wx+Uj5eIfUr
-         tik04Dq9BOuDUS5PqKPLSLyUKzEstNWYZu1ymORw=
+        b=Moe8LbpojW1yjvaPjDYkTC1f803SkghqIXrBLBQJ4GQ6GV3lzIFiFvtiX/HZ7Ux6z
+         EJKlX6Ghe0FuyJbsNKR8ocKNYcHwW0Twyu+HIMTsat2k7V782ee3jy0rg+tHfGgpKk
+         ZCRPU0zltybHWLBzYbEwY3FZTIz1u+o+Q3Ly/eKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
-        kernel test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 317/393] af_packet: TPACKET_V3: fix fill status rwlock imbalance
-Date:   Mon, 17 Aug 2020 17:16:07 +0200
-Message-Id: <20200817143834.981951350@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Sergey Matyukevich <geomatsi@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 289/393] qtnfmac: Missing platform_device_unregister() on error in qtnf_core_mac_alloc()
+Date:   Mon, 17 Aug 2020 17:15:39 +0200
+Message-Id: <20200817143833.641551886@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,72 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 88fd1cb80daa20af063bce81e1fad14e945a8dc4 ]
+[ Upstream commit 141bc9abbbffa89d020957caa9ac4a61d0ef1e26 ]
 
-After @blk_fill_in_prog_lock is acquired there is an early out vnet
-situation that can occur. In that case, the rwlock needs to be
-released.
+Add the missing platform_device_unregister() before return from
+qtnf_core_mac_alloc() in the error handling case.
 
-Also, since @blk_fill_in_prog_lock is only acquired when @tp_version
-is exactly TPACKET_V3, only release it on that exact condition as
-well.
-
-And finally, add sparse annotation so that it is clearer that
-prb_fill_curr_block() and prb_clear_blk_fill_status() are acquiring
-and releasing @blk_fill_in_prog_lock, respectively. sparse is still
-unable to understand the balance, but the warnings are now on a
-higher level that make more sense.
-
-Fixes: 632ca50f2cbd ("af_packet: TPACKET_V3: replace busy-wait loop")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 616f5701f4ab ("qtnfmac: assign each wiphy to its own virtual platform device")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Reviewed-by: Sergey Matyukevich <geomatsi@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200730064910.37589-1-wanghai38@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/wireless/quantenna/qtnfmac/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -942,6 +942,7 @@ static int prb_queue_frozen(struct tpack
- }
- 
- static void prb_clear_blk_fill_status(struct packet_ring_buffer *rb)
-+	__releases(&pkc->blk_fill_in_prog_lock)
- {
- 	struct tpacket_kbdq_core *pkc  = GET_PBDQC_FROM_RB(rb);
- 	atomic_dec(&pkc->blk_fill_in_prog);
-@@ -989,6 +990,7 @@ static void prb_fill_curr_block(char *cu
- 				struct tpacket_kbdq_core *pkc,
- 				struct tpacket_block_desc *pbd,
- 				unsigned int len)
-+	__acquires(&pkc->blk_fill_in_prog_lock)
- {
- 	struct tpacket3_hdr *ppd;
- 
-@@ -2286,8 +2288,11 @@ static int tpacket_rcv(struct sk_buff *s
- 	if (do_vnet &&
- 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
- 				    sizeof(struct virtio_net_hdr),
--				    vio_le(), true, 0))
-+				    vio_le(), true, 0)) {
-+		if (po->tp_version == TPACKET_V3)
-+			prb_clear_blk_fill_status(&po->rx_ring);
- 		goto drop_n_account;
-+	}
- 
- 	if (po->tp_version <= TPACKET_V2) {
- 		packet_increment_rx_head(po, &po->rx_ring);
-@@ -2393,7 +2398,7 @@ static int tpacket_rcv(struct sk_buff *s
- 		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
- 		spin_unlock(&sk->sk_receive_queue.lock);
- 		sk->sk_data_ready(sk);
--	} else {
-+	} else if (po->tp_version == TPACKET_V3) {
- 		prb_clear_blk_fill_status(&po->rx_ring);
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/core.c b/drivers/net/wireless/quantenna/qtnfmac/core.c
+index eea777f8acea5..6aafff9d4231b 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/core.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/core.c
+@@ -446,8 +446,11 @@ static struct qtnf_wmac *qtnf_core_mac_alloc(struct qtnf_bus *bus,
  	}
  
+ 	wiphy = qtnf_wiphy_allocate(bus, pdev);
+-	if (!wiphy)
++	if (!wiphy) {
++		if (pdev)
++			platform_device_unregister(pdev);
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	mac = wiphy_priv(wiphy);
+ 
+-- 
+2.25.1
+
 
 
