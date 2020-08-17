@@ -2,155 +2,179 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5398C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54019C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89EEC2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CEB20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LiE9k63v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NXzN4f82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgHQWEv (ORCPT
+        id S1729790AbgHQWGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
+        Mon, 17 Aug 2020 18:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbgHQWCY (ORCPT
+        with ESMTP id S1729767AbgHQWGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:02:24 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C85EC061343
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:24 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id a14so19694438ybm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:02:24 -0700 (PDT)
+        Mon, 17 Aug 2020 18:06:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A259C061343
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:06:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id f9so8299888pju.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=UpYGtC8VuPYbMUYzVChohylhl5f+DwA/jtv3WLbpTdU=;
-        b=LiE9k63vyCkhMTzCYeoaOM75uDKE+XeLSj2h/3vVFNBtsbG28nLNlqtKpTLxlj5faJ
-         AAYS7sxuGNAA16qzVg1TR2Xrv4mJvPmQInmvyq957XguEVvW2RlgPL24OfTHYZyM7jTd
-         aYh3VfLRRQofH8X4nGmNCAahxvnwi+L5GwOV6amHL6jODkxTtu+gCzfcVlnUcpjEhjLv
-         i4zVI2Y07P0ZX3H26HpgtYeiV+DfeXO+PoBd/WycXbEG4u3e1rv9smrAfL1pQ1kMTEaR
-         eD9vQkiLdGUIg/t0Cz5lu6Ku1Wop0JRuKdYyFaNxzSm3dlF/+n1KvP2pYqjs2LUfecLh
-         dzLQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cWCid31trlwRX7XdfsbfwsYP5/XIk2QJn77x1TORX4M=;
+        b=NXzN4f82HnWfQkiCcF+SX5NXOiO4v+KrUeo/LrrpOV+3MGTS+4cyvz3PWtiz+gB6vr
+         QL0TK1sDFtGUtdMqdj8BplSJ+vL9el6/RVpkjy03Npgh44KcgW+WykjkSKy3c3yi7ve5
+         uZsoIrNDJcDgFuj7T3th5Mh3X9k5tHK5ZzPdGdH72PjjkYd8YGJrA2wHlgHoO6DtH3xJ
+         M9oNHiXVM/91ZencrMHLzl34yY6uSdOKyh3sRihaaxspFIRXrkkQQQiMDnG9cyZ2KvwO
+         EbA/uWWkwxeUvPGqI1GzFSzcml5KspjAgCsntz81TrfELRcidw7/keX+nZo0Z7ph9z7o
+         vnZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=UpYGtC8VuPYbMUYzVChohylhl5f+DwA/jtv3WLbpTdU=;
-        b=WkwMEkBx8QYzfLRNt+GYFlk9qCgX6rNKIMAay+5geW1cxbkH9UfGhLqhmEjQu/14LU
-         ykztU+J5hw9yyVJ1EByxmlDN7ThTQE0RvCND7cafP5/66Kaf6qc67Z8NgC0GrhJcyu2z
-         NCy6ORzj0PMo7OuSUnDCNW2ZVcFXOA1KqeEyQMYBLmQbV1PijnNSiWvZry81gyZQ20zo
-         mdd+4PmTZjteGLiaHx7KAiwfmeoU0xhZxXoViOIka05uFOX6Ttt9USmdl5rblAGWQeod
-         m78obZOGzPRpqGJ4Cph76MgYxUQ8PyVi3AEtfOpLiQpQzLZySHr9EVc74iGUnBN6zpxS
-         pVHQ==
-X-Gm-Message-State: AOAM532yZiclXBmYp/FUh6hT3NWfme8qjk+Ex0g+YEmKKlb8XFaReYAt
-        EQ5E4ZUf4heJEVdTuVCTohpwPbkI+QOOKd39mmM=
-X-Google-Smtp-Source: ABdhPJxizyp67lNME36xRZPdIHp+ZAc9h1Guk5DKKetBtfDNGZaI3fQVyPo4QkcGpgpnPDnBe+lR31JKDOpF3hrgtgc=
-X-Received: by 2002:a25:4252:: with SMTP id p79mr24577079yba.229.1597701743469;
- Mon, 17 Aug 2020 15:02:23 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 15:02:09 -0700
-In-Reply-To: <20200817220212.338670-1-ndesaulniers@google.com>
-Message-Id: <20200817220212.338670-2-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cWCid31trlwRX7XdfsbfwsYP5/XIk2QJn77x1TORX4M=;
+        b=GALW36X0UPjdeUHty9RfYki5gVee/jVBmk4kSg3gurNqHMH3cHuZ9dr4DOryGHOmCl
+         Fy3gFlQlQj8WeDWERmH4EsgdBjhrbodafZoqMS3ilqkr6gtW0fegb5dpOHkPlEK8yNDy
+         SK2nGakryR0QVQQ7PZDUlw7q5xnz2SX5B90coBd9+j7VAJF1C19+PLfOZI3rvMiVA4cE
+         R/dXLXFCjnCGyJcsdT0iKk4r8THAWgY2X0HYyai3uWpc+fOnlmNXBTTsKSANe9voajum
+         28Kg72CbXfm+P9R/6OiKGtF0NuXDrlPqNfnlXD6pHeRpzgvh7W9e3ghMd5cIBj7RKr/d
+         Xnow==
+X-Gm-Message-State: AOAM531nx/EWepDqcHm+Nm0JAKkFDFvBrfLNUA2WmfUu2d6m059p3AkT
+        3U2wJQjCebPzk5GFkDvdbbWu7w==
+X-Google-Smtp-Source: ABdhPJyX2YqsEKBUUEhjY7AqW5QScCarLEIXr9eJDcVCFNHsKfKduPE6VRJ2uTT7E90j6XOcZsqfXA==
+X-Received: by 2002:a17:902:8210:: with SMTP id x16mr13374143pln.166.1597701993230;
+        Mon, 17 Aug 2020 15:06:33 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
+        by smtp.gmail.com with ESMTPSA id j142sm21983520pfd.100.2020.08.17.15.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 15:06:32 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 15:06:29 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "=?UTF-8?q?D=C3=A1vid=20Bolvansk=C3=BD?=" <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 23/36] arm/build: Explicitly keep .ARM.attributes
+ sections
+Message-ID: <20200817220629.3pkabegeedomsaaz@google.com>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-24-keescook@chromium.org>
+ <CAKwvOdn11z+iFQZC54JvQHC=NFX1FsoRMw2a-2P=5sQ6FKwbnw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdn11z+iFQZC54JvQHC=NFX1FsoRMw2a-2P=5sQ6FKwbnw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLVM implemented a recent "libcall optimization" that lowers calls to
-`sprintf(dest, "%s", str)` where the return value is used to
-`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-in parsing format strings. This optimization was introduced into
-clang-12. Because the kernel does not provide an implementation of
-stpcpy, we observe linkage failures for almost all targets when building
-with ToT clang.
+On 2020-08-03, 'Nick Desaulniers' via Clang Built Linux wrote:
+>On Fri, Jul 31, 2020 at 4:18 PM Kees Cook <keescook@chromium.org> wrote:
+>>
+>> In preparation for adding --orphan-handling=warn, explicitly keep the
+>> .ARM.attributes section by expanding the existing ELF_DETAILS macro into
+>> ARM_DETAILS.
+>>
+>> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+>> Link: https://lore.kernel.org/lkml/CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com/
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  arch/arm/include/asm/vmlinux.lds.h | 4 ++++
+>>  arch/arm/kernel/vmlinux-xip.lds.S  | 2 +-
+>>  arch/arm/kernel/vmlinux.lds.S      | 2 +-
+>>  3 files changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
+>> index a08f4301b718..c4af5182ab48 100644
+>> --- a/arch/arm/include/asm/vmlinux.lds.h
+>> +++ b/arch/arm/include/asm/vmlinux.lds.h
+>> @@ -52,6 +52,10 @@
+>>                 ARM_MMU_DISCARD(*(__ex_table))                          \
+>>                 COMMON_DISCARDS
+>>
+>> +#define ARM_DETAILS                                                    \
+>> +               ELF_DETAILS                                             \
+>> +               .ARM.attributes 0 : { *(.ARM.attributes) }
+>
+>I had to look up what the `0` meant:
+>https://sourceware.org/binutils/docs/ld/Output-Section-Attributes.html#Output-Section-Attributes
+>mentions it's an "address" and
+>https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC21
+>mentions it as "start" (an address).
+>Unless we need those, can we drop them? (Sorry for the resulting churn
+>that would cause).  I think the NO_LOAD stuff makes more sense, but
+>I'm curious if the kernel checks for that.
 
-The interface is unsafe as it does not perform any bounds checking.
-Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
+NOLOAD means SHT_NOBITS (usually SHF_ALLOC). .ARM.attributes is a
+non-SHF_ALLOC section.
 
-Unlike
-commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-which cited failures with `-fno-builtin-*` flags being retained in LLVM
-LTO, that bug seems to have been fixed by
-https://reviews.llvm.org/D71193, so the above sha can now be reverted in
-favor of `-fno-builtin-bcmp`.
+An explicit 0 (output section address) is good - GNU ld's internal
+linker scripts (ld --verbose output) use 0 for such non-SHF_ALLOC sections.
+Without the 0, the section may get a non-zero address, which is not
+wrong - but probably does not look well. See https://reviews.llvm.org/D85867 for details.
 
-Cc: stable@vger.kernel.org # 4.4
-Link: https://bugs.llvm.org/show_bug.cgi?id=3D47162
-Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-Link: https://reviews.llvm.org/D85963
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Suggested-by: D=C3=A1vid Bolvansk=C3=BD <david.bolvansky@gmail.com>
-Suggested-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index 9cac6fde3479..211a1b6f6478 100644
---- a/Makefile
-+++ b/Makefile
-@@ -959,6 +959,12 @@ ifdef CONFIG_RETPOLINE
- KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
- endif
-=20
-+# The compiler may "libcall optimize" certain function calls into the belo=
-w
-+# functions, for architectures that don't use -ffreestanding. If we don't =
-plan
-+# to provide implementations of these routines, then prevent the compiler =
-from
-+# emitting calls to what will be undefined symbols.
-+KBUILD_CFLAGS	+=3D -fno-builtin-stpcpy
-+
- # include additional Makefiles when needed
- include-y			:=3D scripts/Makefile.extrawarn
- include-$(CONFIG_KASAN)		+=3D scripts/Makefile.kasan
---=20
-2.28.0.220.ged08abb693-goog
+Reviewed-by: Fangrui Song <maskray@google.com>
 
+>> +
+>>  #define ARM_STUBS_TEXT                                                 \
+>>                 *(.gnu.warning)                                         \
+>>                 *(.glue_7)                                              \
+>> diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
+>> index 904c31fa20ed..57fcbf55f913 100644
+>> --- a/arch/arm/kernel/vmlinux-xip.lds.S
+>> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
+>> @@ -150,7 +150,7 @@ SECTIONS
+>>         _end = .;
+>>
+>>         STABS_DEBUG
+>> -       ELF_DETAILS
+>> +       ARM_DETAILS
+>>  }
+>>
+>>  /*
+>> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+>> index bb950c896a67..1d3d3b599635 100644
+>> --- a/arch/arm/kernel/vmlinux.lds.S
+>> +++ b/arch/arm/kernel/vmlinux.lds.S
+>> @@ -149,7 +149,7 @@ SECTIONS
+>>         _end = .;
+>>
+>>         STABS_DEBUG
+>> -       ELF_DETAILS
+>> +       ARM_DETAILS
+>>  }
+>>
+>>  #ifdef CONFIG_STRICT_KERNEL_RWX
+>> --
+>> 2.25.1
+>>
