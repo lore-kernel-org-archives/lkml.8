@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D73C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C964B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7AA2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693256;
-	bh=8B3cUnRmx62sFKs0qlloxzrRqSMU4MSjAFmvDjdYovk=;
+	s=default; t=1597693267;
+	bh=T0tVjBCCXbNXEeU92uTxmw1N0dDtQvtH7f6NELAnp1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHUG5m6khOH8bYMr7m0ICp4qEw3oLudqFyur3TGa3lNxGtapsRfxp5yzWt5rQvb8i
-	 jvOZyQdksIPS6tpoLpQE/CwkifhBAkkyypVNjGCG/dA+VKG/DRDZWrSZmvC/yDSS6u
-	 7sy3As0fqjyf2R56nSIq9ywcM+Izjj0OkXqH30b4=
+	b=tkBc/xCu5RoL2hqPOMEro4f6W2jPpi+h7AG5dimyd4Hsm4uzKD0ivUJshYOM+5cWF
+	 i3LwVYoe4Nb5KG+GRfKSDN8HTZ+L8VcL1/hJoYPk9mo6Z+3KPnqc0SXaoR85rGma+a
+	 M1Qy+8Q/39E+aLCSBBP92hwhy4L9RAXFipYn8ewQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404258AbgHQTkz (ORCPT
+        id S2404262AbgHQTlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60276 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:41:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbgHQPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:36 -0400
+        id S1729712AbgHQPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5203B2395A;
-        Mon, 17 Aug 2020 15:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD2623A03;
+        Mon, 17 Aug 2020 15:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677935;
-        bh=8B3cUnRmx62sFKs0qlloxzrRqSMU4MSjAFmvDjdYovk=;
+        s=default; t=1597677915;
+        bh=T0tVjBCCXbNXEeU92uTxmw1N0dDtQvtH7f6NELAnp1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQiA2KhGJIPsmz/sOFKHIQlqNCYYk7n0oyGz2gKdG+RZ0tVCOT849awo7YuVfXTO6
-         CYa8msKdrp/170Xij1GmXbbCLE++Hn1CDOOMsRtFnNrWByZFVCP2ypbu6vClDk0CTK
-         0sOQfEPuesukLfk+Lv0QK0SmU+vMSlOFfKOxlhtU=
+        b=qkuf0c3zmzAJy7TYJ61ZE8olcXaBqiC2dgYBuNPwvoHT1YEDZedvkZC9SBCNv4yf/
+         uRdFxSUQAF7+NZ9TwvD6RnUhykVrrK3p87Fg41e02K7oKJKhklsXoWRZGVjAbzIfHH
+         yCA69Sz/5tk+4W/KWu+vy22Ry4pXetHvJ18CACWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 162/464] drm/etnaviv: Fix error path on failure to enable bus clk
-Date:   Mon, 17 Aug 2020 17:11:55 +0200
-Message-Id: <20200817143841.568807126@linuxfoundation.org>
+Subject: [PATCH 5.8 124/464] drm/amd/powerplay: suppress compile error around BUG_ON
+Date:   Mon, 17 Aug 2020 17:11:17 +0200
+Message-Id: <20200817143839.751831494@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,45 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit f8794feaf65cdc97767604cf864775d20b97f397 ]
+[ Upstream commit 75bc07e2403caea9ecac69f766dfb7dc33547594 ]
 
-Since commit 65f037e8e908 ("drm/etnaviv: add support for slave interface
-clock") the reg clock is enabled before the bus clock and we need to undo
-its enablement on error.
+To suppress the compile error below for "ARCH=arc".
+   drivers/gpu/drm/amd/amdgpu/../powerplay/arcturus_ppt.c: In function 'arcturus_fill_eeprom_i2c_req':
+>> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
+      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
+         |  ^~~~~~~
+   include/asm-generic/bug.h:62:57: note: in expansion of macro 'BUG'
+      62 | #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+         |                                                         ^~~
+   drivers/gpu/drm/amd/amdgpu/../powerplay/arcturus_ppt.c:2157:2: note: in expansion of macro 'BUG_ON'
+    2157 |  BUG_ON(numbytes > MAX_SW_I2C_COMMANDS);
 
-Fixes: 65f037e8e908 ("drm/etnaviv: add support for slave interface clock")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index 7c9f3f9ba1235..4a512b062df8f 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1502,7 +1502,7 @@ static int etnaviv_gpu_clk_enable(struct etnaviv_gpu *gpu)
- 	if (gpu->clk_bus) {
- 		ret = clk_prepare_enable(gpu->clk_bus);
- 		if (ret)
--			return ret;
-+			goto disable_clk_reg;
- 	}
+diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+index 27c5fc9572b27..e4630a76d7bf5 100644
+--- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+@@ -2042,8 +2042,6 @@ static void arcturus_fill_eeprom_i2c_req(SwI2cRequest_t  *req, bool write,
+ {
+ 	int i;
  
- 	if (gpu->clk_core) {
-@@ -1525,6 +1525,9 @@ static int etnaviv_gpu_clk_enable(struct etnaviv_gpu *gpu)
- disable_clk_bus:
- 	if (gpu->clk_bus)
- 		clk_disable_unprepare(gpu->clk_bus);
-+disable_clk_reg:
-+	if (gpu->clk_reg)
-+		clk_disable_unprepare(gpu->clk_reg);
+-	BUG_ON(numbytes > MAX_SW_I2C_COMMANDS);
+-
+ 	req->I2CcontrollerPort = 0;
+ 	req->I2CSpeed = 2;
+ 	req->SlaveAddress = address;
+@@ -2081,6 +2079,12 @@ static int arcturus_i2c_eeprom_read_data(struct i2c_adapter *control,
+ 	struct smu_table_context *smu_table = &adev->smu.smu_table;
+ 	struct smu_table *table = &smu_table->driver_table;
  
- 	return ret;
- }
++	if (numbytes > MAX_SW_I2C_COMMANDS) {
++		dev_err(adev->dev, "numbytes requested %d is over max allowed %d\n",
++			numbytes, MAX_SW_I2C_COMMANDS);
++		return -EINVAL;
++	}
++
+ 	memset(&req, 0, sizeof(req));
+ 	arcturus_fill_eeprom_i2c_req(&req, false, address, numbytes, data);
+ 
+@@ -2117,6 +2121,12 @@ static int arcturus_i2c_eeprom_write_data(struct i2c_adapter *control,
+ 	SwI2cRequest_t req;
+ 	struct amdgpu_device *adev = to_amdgpu_device(control);
+ 
++	if (numbytes > MAX_SW_I2C_COMMANDS) {
++		dev_err(adev->dev, "numbytes requested %d is over max allowed %d\n",
++			numbytes, MAX_SW_I2C_COMMANDS);
++		return -EINVAL;
++	}
++
+ 	memset(&req, 0, sizeof(req));
+ 	arcturus_fill_eeprom_i2c_req(&req, true, address, numbytes, data);
+ 
 -- 
 2.25.1
 
