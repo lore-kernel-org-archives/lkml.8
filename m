@@ -2,124 +2,115 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6388BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE02820786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4259920786
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ckeoC9vO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="roh64oPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgHQNo1 (ORCPT
+        id S1728714AbgHQNos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:44:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgHQNoU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:44:20 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C22BC061343
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 06:44:19 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id b12so4739942uae.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 06:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YK1g7CpAj1uxdUMop0TAQ/KlG7NubSk4gl7YMK07x3k=;
-        b=ckeoC9vO/EDF3YhPTlzEiluCGyrsP53BCP34FHVrdI8dpxxDV3K+SwS1hVvx0mZcmM
-         e2O91NKmU+NTYcN/tz61BiWW9QlDpE/ctnp1RkSV1f3S0tJquoPdWFtFvwbM/qj+ig42
-         Zx0Etpm3KzjpWimA7LfYgeTbvIYJ+MqLP2/1WK0GsLq/AJ4Gq3/IYaIVHao2TI3hcZfP
-         68I7yu3R0UWmbe6eTH+cBL+DEwLUN/83wu07NWUwmKKz3AZctOS6JJatO5ps/e1MpIEc
-         FG4FYDE5qqMgZ9NiMEdTtKRZS7MBhdsf9UCzEXzeLnjCseF8vqop52zofptLynay9JjQ
-         6qpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YK1g7CpAj1uxdUMop0TAQ/KlG7NubSk4gl7YMK07x3k=;
-        b=tzeY1Ox9NCxTyqpg/p6CLdjpD8gEDNwLsAXAljE0XVFJsPz+daa2YowubFZstDDIrS
-         80x8ZHJZGp1kNWDS+s4g7BFFKeXjQkRU/ZK4G8O+G7V4uzpx3WyPm9H8y1MyEfAQksHZ
-         n7b/Dy+wJp2j2k2hk5Nqn7NTBNjRq85b+SQGZ/23C9c/1eAMawvCkCAN3iX/nGI+HEdh
-         5y/08lmp9jekL+9sawpk8ZLXm35ZsnK4dgOydwnvi4ZJOmKEqdCH8YANVx3emwHW9+N4
-         85fR0Jv0Em6CFXTImpukSdl1fzQOqg2ZydFLSSLRmiEa4E9rMPyIQbMfZNsvva2WVqoG
-         BpPA==
-X-Gm-Message-State: AOAM530y0O8LUsDftJ1yA1pBmkgp+v3yqPGeh7HBUqqmpBgRib/xh28y
-        2oaZF1DxTRAhFvzlzGMtPbv5wLEyce+tpkR8oQ+h/Q==
-X-Google-Smtp-Source: ABdhPJx2boyWtvrgXSxzxAFNpocIavvkFNhc8FhgjvFzGZM8f5Qera674/ApAjhCKTryvJlmcUOHc2HfleHlukxtHlM=
-X-Received: by 2002:a9f:35d0:: with SMTP id u16mr7432899uad.113.1597671858524;
- Mon, 17 Aug 2020 06:44:18 -0700 (PDT)
+        Mon, 17 Aug 2020 09:44:48 -0400
+Received: from mail-vi1eur05on2049.outbound.protection.outlook.com ([40.107.21.49]:47670
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728588AbgHQNoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:44:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ebrYNN5NNAVzn3Apk9BswLV50smSxovJQcwOlQmh82rnE8RN2BmK+cbdg0OhY3/WvpZZVtF6xBihvjv+5Li5F/QST3iZKW4mdb3fqYdyzLf3OrPOZuN7U/gp6X0CCasYXnnu/IZYtGNGUvoP6C7i+2FdzsQSWOiunQLjzjVdXFN2JHkFr4/Ko11iOd2MrSi0bqC+P5UM16RZ2DlCZ9S6VmCGcAXAhzGmZUG8upAkN2KlNJkyfm9DUdnBNwhbnWDg+eT5qwH4vwbMz7kRVUpS6IJ+pmZULW5F7slFiHrqECmItb3FVJUiy5w6FeKq50/f7uN9Yf0GGvYWxv+HgPkPUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BWTGhFA9DJ+idcpI4wdhpwqIvT/5X6BPJEodIHsPS2M=;
+ b=B0U/Q3F/wspvpgHk+eO5Ym/pfzFV2aNBOLRg8IWzKJ447rLfFReB9JFvGcEtswUtH34NenU8N0O3yLVFCh9Nacfiz7gQILE7s9/2q2Wjkie9vVRKxoFPD/wWiMPTDwu1cmTVuWp2Rp31PNY6lmx3PryZctcF8Mwxi/7TSVqsZGWRM5geutp83zJLcpQ46P8QqbJVcrd/LQpRVdjltwwYjAL0eBkxJCFeC5o7B/WgFXxufcCHZo0Df+1GcxSGHnG4FpxQ78sKUBavB+ZZ4czOdbq5nRdxI8GwVgMKY9/7w7Zg8aotUPI/of4ZMh0dQ/OsjpJkqQpWPVCP5QHxIGcYXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BWTGhFA9DJ+idcpI4wdhpwqIvT/5X6BPJEodIHsPS2M=;
+ b=roh64oPASeLh2ZnkHOZC6u8Qtsd2UHQy5bK/sHA6+Aq9QVaAQL7mq8mfNFzsydUpiqPYYvDhk3XIxGsIeD6qdzwWFPgvAZXnhF+voD1yLKClf+8XBIOZSdKfqEhxT7xcrtbOCX0pLb2ABi64aDL5GVMMq7MWjge0GfcBAREaHkc=
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ (2603:10a6:803:11::14) by VI1PR04MB4174.eurprd04.prod.outlook.com
+ (2603:10a6:803:3d::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Mon, 17 Aug
+ 2020 13:44:42 +0000
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f]) by VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f%7]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
+ 13:44:42 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: dts: imx7d-sdb: Add notes for audio sound card
+Thread-Topic: [PATCH] ARM: dts: imx7d-sdb: Add notes for audio sound card
+Thread-Index: AdZ0nG79T94FsqlQSjOjVmae9L0DEA==
+Date:   Mon, 17 Aug 2020 13:44:41 +0000
+Message-ID: <VI1PR0402MB3342CA1812DF86434FABE918E35F0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0b581c09-6b0e-440c-c679-08d842b3b1ba
+x-ms-traffictypediagnostic: VI1PR04MB4174:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB417456C0BDCF55211FAC05ABE35F0@VI1PR04MB4174.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3od7XLFWfx0ygVS0UezRVQvxrpqdWOXh8vX/DkCfTu92/utqTLBLesUMOweacHloAkHaSUCoetp+mfOfRAoIIoAzYa7N9sGCycQjMNSf3KennDyPQAe0ckDpCEaFGvFtT3HXwvO+Q4BmbGzZtIoWrFncA7LObN4KuMwJScrCwCBEoJJUv2gZi3EYHPSEGKqTd3ceBplrXkZhpoR4R/B/LXI2QZ8KqLG8Em33xajnaIZTYS2UJR4AUU2g8qlWsOKORa70CAH8BDTPVnQySAuTcyJYXKiZdmMO0IdePsiMvNsY9RGb8IX2sNDeZqIslOoQ0fQDgE8hr61q9kzhu2iwrg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3342.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(186003)(33656002)(26005)(76116006)(52536014)(2906002)(6506007)(71200400001)(478600001)(4326008)(54906003)(83380400001)(8676002)(558084003)(55016002)(6916009)(9686003)(86362001)(7696005)(66946007)(66476007)(64756008)(66446008)(66556008)(5660300002)(316002)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: brj1bJUqgSLp63k9jH5Uk/wP91ipsl22aVdJCQ3fkh5kE7wePefcXTpZmNVES8F+u5ASsAMKIXXWUXd1oGBkJlWxYuNNZyssxIO85EWrZC8Fizr8XeiZjjTvTezZ/vybX9sLbrPIrR9kVFEyGQr+IsLtlzSFG2sAVvbkBRKu0I+pepsH23ELlZo6M8T4JYM2vpCVBYUWrSuR5nrzUDOKoX4Aknzgl4z+oMXv7mkHOOZonXAGNpjM4/6bAqhy0iec3nrAuo/CLvGnojAFZOSjib6Bk9+jG63IRPArvjl1sEIo6ht8u9DYZ739EfBpNfWyTu9G0Aw8sek/1IiYVCI2ThOrN6H0MCcJpHsAMCg+GHuCTeEGMHTGx/eXYK/Or4Lt4qRFbvDEHrJNwhXHvcKdNhx9Dm3Y785sQjty+5I+DGE7XSKV9Jv2a1lABPbYhKiMeli6DrW8LnfH8rk36bsCGn8A4OA8QN9YsrpPZCBhmNa/PZKNa3rwz9iLkJSCSuGF6qbUV9kIRKqRQozrNmf9UQr99AFDYqXtkV27CZ1abMJY3KKHvzOAzuvczTKTE+eqflKY11pmGKOQdxZG4yf4LisQuzRnpe0DzIfQChwXvelcdIVI34/tJgsu6LYwip1YKEhKzaKrhP67zLjxDkpm4A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200728163416.556521-1-hch@lst.de> <20200728163416.556521-3-hch@lst.de>
- <CA+G9fYuYxGBKR5aQqCQwA=SjLRDbyQKwQYJvbJRaKT7qwy7voQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYuYxGBKR5aQqCQwA=SjLRDbyQKwQYJvbJRaKT7qwy7voQ@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 17 Aug 2020 19:14:04 +0530
-Message-ID: <CA+G9fYs4w46bZtgaKTzTLgaqNDcw3vdRaKWuGJ4wN4SSKJqUKA@mail.gmail.com>
-Subject: Re: [PATCH 02/23] fs: refactor ksys_umount
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        chrubis <chrubis@suse.cz>, lkft-triage@lists.linaro.org,
-        LTP List <ltp@lists.linux.it>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3342.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b581c09-6b0e-440c-c679-08d842b3b1ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 13:44:41.9313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C9xwmXyQzhShOyf7E7NqvtyMGg+rJBC43tOwD8a15kMUrwc3GQFhd0EwkmXZW/3SAHOTU75/2BbwTlkYwDGslQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 at 20:14, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Tue, 28 Jul 2020 at 22:04, Christoph Hellwig <hch@lst.de> wrote:
+
+> > Configure the SAI device node, configure audio clock and pinctrl.
 > >
-> > Factor out a path_umount helper that takes a struct path * instead of the
-> > actual file name.  This will allow to convert the init and devtmpfs code
-> > to properly mount based on a kernel pointer instead of relying on the
-> > implicit set_fs(KERNEL_DS) during early init.
+> > Enable the audio sound card, which use the SAI1 and wm8960, and enable
+> > headphone detection.
 > >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  fs/namespace.c | 40 ++++++++++++++++++----------------------
-> >  1 file changed, 18 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index 6f8234f74bed90..43834b59eff6c3 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+>=20
+> s/notes/nodes in subject?
 
-<trim>
+Yes.  Thanks for fixing it.
 
->
-> Regressions on linux next 20200803 tag kernel.
-> LTP syscalls test umount03 mount a path for testing and
-> umount failed and retired for 50 times and test exit with warning
-> and following test cases using that mount path failed.
->
-> LTP syscalls tests failed list,
->     * umount03
->     * umount2_01
->     * umount2_02
->     * umount2_03
->     * utime06
->     * copy_file_range01
-
-The reported issue has been fixed in linux next 20200817 tag by
-below patch.
-
-fs: fix a struct path leak in path_umount
-Make sure we also put the dentry and vfsmnt in the illegal flags and
-!may_umount cases.
-Fixes: 41525f56e256 ("fs: refactor ksys_umount")
-
-- Naresh
+Best regards
+Wang shengjiu
