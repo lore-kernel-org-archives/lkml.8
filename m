@@ -2,143 +2,125 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616CDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38851C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2C12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597703078;
-	bh=o61YhvDLcpTWPSTbalCw7Ijn7+cVlJNuvPEz9eAJyv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=qGdK9BXDM0+HoMFR3J9Zfe9ALJduS1DEaCKbDD7M9uYNSHcMfMIUWgAS0IiUj866X
-	 7Ehpg9l02F7kNyAxlGVtT10fuIZdrT2UKd02tMV4w+DhVILCL0wUCuKBRPwrG0AnZY
-	 favJdejQBtXuRXD3ghJK0I8hDS5vUih7uafQxiT0=
+	by mail.kernel.org (Postfix) with ESMTP id 154EC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OD6CK52y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgHQWYg (ORCPT
+        id S1726639AbgHQWZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:24:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgHQWYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:24:35 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7512072D;
-        Mon, 17 Aug 2020 22:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597703074;
-        bh=o61YhvDLcpTWPSTbalCw7Ijn7+cVlJNuvPEz9eAJyv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M4HrR5HEVBOUY+f7cCMEeQqu/IO7NhvM5jTNuvV0osZuW2n+FN8YvItOFyxtZfEOM
-         In6+vdc80th4PlscWfms5JLY8lOKRkGTi7tVGViFFGZ183dYDTi2gHQpgmosB1xNvB
-         guzt5y1y41nfTiTZcznMjiRZI6iB80vYXBBv7Rjg=
-Date:   Mon, 17 Aug 2020 17:24:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Sean V Kelley <sean.v.kelley@intel.com>, rjw@rjwysocki.net,
-        bhelgaas@google.com, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
-Message-ID: <20200817222433.GA1453800@bjorn-Precision-5520>
+        Mon, 17 Aug 2020 18:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgHQWZy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:25:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83CFC061389;
+        Mon, 17 Aug 2020 15:18:58 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g15so4351026plj.6;
+        Mon, 17 Aug 2020 15:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IC+PLCb5BjjrXT4nXK1CE0auHVxv7INrZUJfLM7s8b0=;
+        b=OD6CK52yqlmbuPU8ShWjTmv4dQV5QdmDq4dADEWii8Heu1Da/BEe7At9MszRnoWCOx
+         hUaieFOvUxFCRy+B9DdomVp+HqDXZDPA3BWKjnN1mVJfh6Xnf4JqT5ISkGLcCxGIx0m2
+         vwAcYUpDSo10bFh+ZI7oHpopC4o0DvT63jh5aoU3x+RN1CCHy7ufqeihU/pBIG8sWwxt
+         GeCdXS/kMnuQpx0d3wq9sFOC914V1nqt6cI+it2iU/zmCyhwKCIsj2Qkb+KTF3fBrZiP
+         +M9Iz6ERW7HgndpieUliURMrXbK7GZ6VWZFOUGuDHf0EcPsCqo4bqIottMTyxt0ZesXT
+         KYUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IC+PLCb5BjjrXT4nXK1CE0auHVxv7INrZUJfLM7s8b0=;
+        b=O8A7ZFZbIe1esNmPGumd4IxWSgBBsKLHIaEzCCqiDABAAGioYrDtMv9ftjDbb3jJO1
+         7gt4wU1D+l5KrQqKS9l0Mw9Jd0waJFPGtT+D81P0CB6shssis2Wa/eNzj5mfyYLICUGl
+         VLUbt/BneJtPcPPw+njok48wUV91ieqrAC1mxumriV/05LPaKficXbeAvB2eK0ZO/IEe
+         vYJZ8jQ/MC8xF00NGf8yaUEmGAVM1NOR36X9WWw8F/+5TEPIbcZ6ANoigClFfX9/HlLG
+         uwSu0mvjsveGBDdqroxHPXbeJfe2TpxrZGxSjQD150d4gO6oq0tPWRVRHlN+jejbxXfg
+         7ueg==
+X-Gm-Message-State: AOAM530X/iWi6pzDiXTeixxk4nvXIbddY5xHNU8C3vesnxKFlgGLrbbO
+        N61ryzrfwkZcWHDnOXZJlR7+xJnnMoc=
+X-Google-Smtp-Source: ABdhPJzd5z+TE/voo9ADy7aHL82gwXxsBXcvXOFCGJrwqsqSaKtsgR7Wd9hBDKiXtMq2vaUdyX07IQ==
+X-Received: by 2002:a17:902:b28a:: with SMTP id u10mr13206624plr.195.1597702737909;
+        Mon, 17 Aug 2020 15:18:57 -0700 (PDT)
+Received: from [0.0.0.0] ([149.28.25.175])
+        by smtp.gmail.com with ESMTPSA id 198sm20828568pfz.120.2020.08.17.15.18.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 15:18:57 -0700 (PDT)
+Subject: Re: [PATCH] of/fdt: Remove duplicate check in
+ early_init_dt_scan_memory()
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200814225637.702584-1-arch0.zheng@gmail.com>
+ <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
+From:   Qi Zheng <arch0.zheng@gmail.com>
+Message-ID: <f2d32b47-cf84-4e09-a8a1-08a323ddd134@gmail.com>
+Date:   Tue, 18 Aug 2020 06:18:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810103252.00000318@Huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:32:52AM +0100, Jonathan Cameron wrote:
-> On Fri, 7 Aug 2020 17:55:17 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> > On 7 Aug 2020, at 15:53, Bjorn Helgaas wrote:
-> > > On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:  
-
-> > >>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > >> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-> > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
-> > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
-> > >>  		dev = dev->bus->self;
-
-I'm not sure I understand this "if" statement.  Previously (with no
-RCEC support), the possible ways I see to call pcie_do_recovery() are
-with:
-
-  AER native:   Root Port
-  AER via APEI: Root Port or other PCIe device (ACPI v6.3, 18.3.2.5)
-  DPC:          Root Port or Switch Downstream Port
-  EDR:          Root Port or Switch Downstream Port
-
-I *guess* the reason we have this "if" statement is for the AER/APEI
-case?  And the effect is that even if AER/APEI gives us an Endpoint,
-we back up and handle it as though we got it from the Downstream Port
-above it, i.e., we reset the Endpoint along with any other children of
-that Downstream Port?
-
-Then, IIUC, your patches add this case:
-
-  AER native:   Root Port or RCEC
-  AER via APEI: Root Port, RCEC, or other PCIe device
-
-Just noodling here, but I wonder if this would be more understandable
-as something like:
-
-  type = pci_pcie_type(dev);
-  if (type == PCI_EXP_TYPE_ROOT_PORT ||
-      type == PCI_EXP_TYPE_DOWNSTREAM ||
-      type == PCI_EXP_TYPE_RC_EC)
-    bridge = dev;
-  else if (type == PCI_EXP_TYPE_RC_END)
-    bridge = dev->rcec;
-  else
-    bridge = pci_upstream_bridge(dev);
-
-and then we could do:
-
-  if (type == PCI_EXP_TYPE_RC_END)
-    flr_on_rciep(dev);
-  else
-    reset_link(bridge);
-
-It's still awkward to have to deal with being supplied either
-endpoints or bridges.  But I guess in the AER/APEI case, we aren't
-allowed to touch the error registers so maybe we can't avoid the
-awkwardness.
-
-> > >>  		status = reset_link(dev);  
-> > >
-> > > reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
-> > > is really to reset any devices below "dev."  Whether we do that by
-> > > resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
-> > > immaterial.  Some of those methods might be applicable for RCiEPs.
-> > >
-> > > But you didn't add that name; I'm just trying to understand this
-> > > better.  
-> > 
-> > Yes, that’s a confusing term with the _link attached. It’s difficult 
-> > to relate to the different resets that might be applicable. I was 
-> > thinking about that when looking at the callback path via the 
-> > “reset_link” of the RCiEP to the RCEC for the sole purpose of 
-> > clearing the Root Port Error Status. It would be worth time to spend 
-> > looking at better descriptive naming/methods.
+On 2020/8/18 上午2:21, Rob Herring wrote:
+> On Fri, Aug 14, 2020 at 4:57 PM Qi Zheng <arch0.zheng@gmail.com> wrote:
+>>
+>> When the value of the first reg is not NULL, there will be
+>> two repeated checks. So modify it.
 > 
-> Agreed, this caused me some some confusion as well so more descriptive
-> naming would be good.
+> I prefer the way it was. I'm sure the compiler is smart enough to
+> throw out the 2nd check. Plus, 'linux,usable-memory' being present is
+> the exception, so usually 'reg' will be NULL.
 
-Maybe something like reset_subordinate_devices()?  Then it's clear
-that we pass a bridge and reset the devices *below* it.  It's not
-quite as obvious for RCECs, since they aren't bridges and the RCiEPs
-aren't actually *subordinates*, but maybe it's still suggestive of the
-logical relationship?
+I got it, and thanks for your review.
+Please ignore this patch.
 
-Bjorn
+> 
+>> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+>> ---
+>>   drivers/of/fdt.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 4602e467ca8b..f54412c00642 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -1002,10 +1002,11 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+>>                  return 0;
+>>
+>>          reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
+>> -       if (reg == NULL)
+>> +       if (reg == NULL) {
+>>                  reg = of_get_flat_dt_prop(node, "reg", &l);
+>> -       if (reg == NULL)
+>> -               return 0;
+>> +               if (reg == NULL)
+>> +                       return 0;
+>> +       }
+>>
+>>          endp = reg + (l / sizeof(__be32));
+>>          hotpluggable = of_get_flat_dt_prop(node, "hotpluggable", NULL);
+>> --
+>> 2.25.1
+>>
