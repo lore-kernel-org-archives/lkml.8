@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D50AF20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AE62054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681592;
-	bh=aA5Kts/EOMrSJOwXS+IBSah7je7tbYhhRPRHVnVJbmY=;
+	s=default; t=1597681608;
+	bh=TVYzjNuX4vwDfn/79udKVbRMl5PZMEj9N1jvPHPi73c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5NmC1FcxH+8ZeEl6vdG/1g7jBLK1BdQLMHOxvsJH7akf/9Fqh+hO40NE+WLMxHFh
-	 KKFitsdImF+3Kd1Ifp0+IV30s+dPKDJcTrRlvfLF4dNX6XrxZDgmc9IuuS9ePWoA+G
-	 YSrPZksqdiOmGBs3mzUTwxs6ZG2TRJcw7CKigWGU=
+	b=tMpqrixKIEE6hswZ0dBGqSEBLnCBG2FqkZ4WZ/f+RgnAm+3MtzTWDHz68leShPDZ7
+	 FxDqYtbfmP2meU1uLSmzlzLC8sBLKB1u4csvbP3xUW7IR+ECjK5vEGBFHBtXY0IoUN
+	 OZ7g08yTZZlHcyJZAx0FjEQQvnRmbJ5PvCeoVE8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388652AbgHQQ02 (ORCPT
+        id S2388528AbgHQQ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387420AbgHQPvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:33 -0400
+        id S2387825AbgHQPv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CDEB2072E;
-        Mon, 17 Aug 2020 15:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C5220882;
+        Mon, 17 Aug 2020 15:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679492;
-        bh=aA5Kts/EOMrSJOwXS+IBSah7je7tbYhhRPRHVnVJbmY=;
+        s=default; t=1597679514;
+        bh=TVYzjNuX4vwDfn/79udKVbRMl5PZMEj9N1jvPHPi73c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzHs/NAQoOAAtjxm//IyX1BOF92gWDAoVxRJ9t9pfc5Bly73T1Jsotq9v2MlMh289
-         CWWZn4Qku66nei64khRcpMSIVQt5UWIyVajvzQ5N4FdUMUngOetXwoNIwKrZr7Ixsv
-         DFAMrtfyhDWtXnSQuZ8Wz6lpECvN+MtmE0rVv0ZA=
+        b=mPs7ZcBW+W7aHnTs/fEKEWCNg/z3AOG4q+40Xdzc1VlUgU1bMSyJiXpw2NkSPeQeh
+         hZvqIeVo0wj06HoVYoyCLrc8QIYE7+Iy3iNQryyZfU4KoFspdPrRMnQNzs1yVxtsKl
+         CWzd9bTHXHEGrQFPZolOX5bQPqwPNtFCWh0+6hyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 231/393] coresight: etm4x: Fix save/restore during cpu idle
-Date:   Mon, 17 Aug 2020 17:14:41 +0200
-Message-Id: <20200817143830.831016065@linuxfoundation.org>
+Subject: [PATCH 5.7 221/393] drm/imx: tve: fix regulator_disable error path
+Date:   Mon, 17 Aug 2020 17:14:31 +0200
+Message-Id: <20200817143830.343688448@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,92 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 342c8a1d1d9e418d32fa02d635cf96989f9a986e ]
+[ Upstream commit 7bb58b987fee26da2a1665c01033022624986b7c ]
 
-The ETM state save/restore incorrectly reads/writes some of the 64bit
-registers (e.g, address comparators, vmid/cid comparators etc.) using
-32bit accesses. Ensure we use the appropriate width accessors for
-the registers.
+Add missing regulator_disable() as devm_action to avoid dedicated
+unbind() callback and fix the missing error handling.
 
-Fixes: f188b5e76aae ("coresight: etm4x: Save/restore state across CPU low power states")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200716175746.3338735-18-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: fcbc51e54d2a ("staging: drm/imx: Add support for Television Encoder (TVEv2)")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 16 ++++++++--------
- drivers/hwtracing/coresight/coresight-etm4x.h |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/imx/imx-tve.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 942b362a1f220..13c362cddd6a6 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1213,8 +1213,8 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
+index 9fd4b464e829c..f91c3eb7697bc 100644
+--- a/drivers/gpu/drm/imx/imx-tve.c
++++ b/drivers/gpu/drm/imx/imx-tve.c
+@@ -494,6 +494,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
+ 	return 0;
+ }
+ 
++static void imx_tve_disable_regulator(void *data)
++{
++	struct imx_tve *tve = data;
++
++	regulator_disable(tve->dac_reg);
++}
++
+ static bool imx_tve_readable_reg(struct device *dev, unsigned int reg)
+ {
+ 	return (reg % 4 == 0) && (reg <= 0xdc);
+@@ -617,6 +624,9 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 		ret = regulator_enable(tve->dac_reg);
+ 		if (ret)
+ 			return ret;
++		ret = devm_add_action_or_reset(dev, imx_tve_disable_regulator, tve);
++		if (ret)
++			return ret;
  	}
  
- 	for (i = 0; i < drvdata->nr_addr_cmp * 2; i++) {
--		state->trcacvr[i] = readl(drvdata->base + TRCACVRn(i));
--		state->trcacatr[i] = readl(drvdata->base + TRCACATRn(i));
-+		state->trcacvr[i] = readq(drvdata->base + TRCACVRn(i));
-+		state->trcacatr[i] = readq(drvdata->base + TRCACATRn(i));
- 	}
+ 	tve->clk = devm_clk_get(dev, "tve");
+@@ -661,18 +671,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ }
  
- 	/*
-@@ -1225,10 +1225,10 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
- 	 */
+-static void imx_tve_unbind(struct device *dev, struct device *master,
+-	void *data)
+-{
+-	struct imx_tve *tve = dev_get_drvdata(dev);
+-
+-	if (!IS_ERR(tve->dac_reg))
+-		regulator_disable(tve->dac_reg);
+-}
+-
+ static const struct component_ops imx_tve_ops = {
+ 	.bind	= imx_tve_bind,
+-	.unbind	= imx_tve_unbind,
+ };
  
- 	for (i = 0; i < drvdata->numcidc; i++)
--		state->trccidcvr[i] = readl(drvdata->base + TRCCIDCVRn(i));
-+		state->trccidcvr[i] = readq(drvdata->base + TRCCIDCVRn(i));
- 
- 	for (i = 0; i < drvdata->numvmidc; i++)
--		state->trcvmidcvr[i] = readl(drvdata->base + TRCVMIDCVRn(i));
-+		state->trcvmidcvr[i] = readq(drvdata->base + TRCVMIDCVRn(i));
- 
- 	state->trccidcctlr0 = readl(drvdata->base + TRCCIDCCTLR0);
- 	state->trccidcctlr1 = readl(drvdata->base + TRCCIDCCTLR1);
-@@ -1326,18 +1326,18 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
- 	}
- 
- 	for (i = 0; i < drvdata->nr_addr_cmp * 2; i++) {
--		writel_relaxed(state->trcacvr[i],
-+		writeq_relaxed(state->trcacvr[i],
- 			       drvdata->base + TRCACVRn(i));
--		writel_relaxed(state->trcacatr[i],
-+		writeq_relaxed(state->trcacatr[i],
- 			       drvdata->base + TRCACATRn(i));
- 	}
- 
- 	for (i = 0; i < drvdata->numcidc; i++)
--		writel_relaxed(state->trccidcvr[i],
-+		writeq_relaxed(state->trccidcvr[i],
- 			       drvdata->base + TRCCIDCVRn(i));
- 
- 	for (i = 0; i < drvdata->numvmidc; i++)
--		writel_relaxed(state->trcvmidcvr[i],
-+		writeq_relaxed(state->trcvmidcvr[i],
- 			       drvdata->base + TRCVMIDCVRn(i));
- 
- 	writel_relaxed(state->trccidcctlr0, drvdata->base + TRCCIDCCTLR0);
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-index b0d633daf7162..47729e04aac72 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.h
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-@@ -334,7 +334,7 @@ struct etmv4_save_state {
- 	u64	trcacvr[ETM_MAX_SINGLE_ADDR_CMP];
- 	u64	trcacatr[ETM_MAX_SINGLE_ADDR_CMP];
- 	u64	trccidcvr[ETMv4_MAX_CTXID_CMP];
--	u32	trcvmidcvr[ETM_MAX_VMID_CMP];
-+	u64	trcvmidcvr[ETM_MAX_VMID_CMP];
- 	u32	trccidcctlr0;
- 	u32	trccidcctlr1;
- 	u32	trcvmidcctlr0;
+ static int imx_tve_probe(struct platform_device *pdev)
 -- 
 2.25.1
 
