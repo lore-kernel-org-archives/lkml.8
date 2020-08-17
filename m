@@ -2,87 +2,205 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8339DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B303EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B15D205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="ADVwlWEX"
+	by mail.kernel.org (Postfix) with ESMTP id 890FF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgHQPAN (ORCPT
+        id S1729108AbgHQPAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:00:13 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.170]:60730 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgHQPAE (ORCPT
+        Mon, 17 Aug 2020 11:00:34 -0400
+Received: from mx-ginzinger.sigmacloud.services ([185.154.235.147]:37269 "EHLO
+        mx-ginzinger.sigmacloud.services" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726630AbgHQPAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:00:04 -0400
-Received: from mxout2.routing.net (unknown [192.168.10.82])
-        by backup.mxwww.masterlogin.de (Postfix) with ESMTPS id 592332C50B
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:58:01 +0000 (UTC)
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout2.routing.net (Postfix) with ESMTP id ED0345FC27;
-        Mon, 17 Aug 2020 14:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1597676275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=JxtKGSfzAAilxUKwLtaxmOttaDPpQe5ywMco1swezzI=;
-        b=ADVwlWEXLFA/o5NoLJkNMKH50lW4l8zhhbBqa6obXkkT6OkBY6qqFrw0sZiuGEWYVRghnI
-        3OWFLA8qEnzT2yalBF6sGWtccH+flROqPm7T/woCEeXuvmZr5djc8d1OGZ/LMflVamSoPq
-        vkF1UyjGwpFzL4B0dGOKPDPKtsdRacM=
-Received: from localhost.localdomain (fttx-pool-217.61.148.252.bambit.de [217.61.148.252])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 4ACA2100474;
-        Mon, 17 Aug 2020 14:57:54 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] Revert "irqchip/mtk-sysirq: Convert to a platform driver"
-Date:   Mon, 17 Aug 2020 16:57:38 +0200
-Message-Id: <20200817145738.986999-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
+        Mon, 17 Aug 2020 11:00:31 -0400
+Received: from [31.193.165.228] (port=14233 helo=mx-ginzinger.sigmacloud.services)
+        by mx-ginzinger.sigmacloud.services with esmtps (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.82_1-5b7a7c0-XX)
+        (envelope-from <Henri.Roosen@ginzinger.com>)
+        id 1k7gcb-0005z0-0j; Mon, 17 Aug 2020 17:00:25 +0200
+Received: from exc1.buero.ginzinger.com (10.1.1.204) by
+ exc1.buero.ginzinger.com (10.1.1.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1466.3; Mon, 17 Aug 2020 17:00:25 +0200
+Received: from exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4]) by
+ exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4%3]) with mapi id
+ 15.01.1466.012; Mon, 17 Aug 2020 17:00:24 +0200
+X-CTCH-RefID: str=0001.0A09020F.5F3A9B89.0047,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+From:   Roosen Henri <Henri.Roosen@ginzinger.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "y2038@lists.linaro.org" <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: y2038 backport to v5.4
+Thread-Topic: y2038 backport to v5.4
+Thread-Index: AQHWdKOWCxSmqfLSi0CDBaH/6mjU6qk8Q3YA
+Date:   Mon, 17 Aug 2020 15:00:24 +0000
+Message-ID: <372cbefff43c2a96379f00de5880bc9d54df6acd.camel@ginzinger.com>
+References: <d159c66c6e67480ab48ac44716443358@ginzinger.com>
+         <CAK8P3a2icd72R+4Z5dLPvGuofsq3VOBYBdCnC4806V5znqrytg@mail.gmail.com>
+         <6c77e2a615ca01e753735e21752fe5e1b3fb636f.camel@ginzinger.com>
+         <20200817143513.GA539521@kroah.com>
+In-Reply-To: <20200817143513.GA539521@kroah.com>
+Accept-Language: en-US, de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.2.1.65]
+x-exclaimer-md-original-subject: [NOSIG][NODISC]Re: y2038 backport to v5.4
+x-exclaimer-md-config: 9dd172f7-de2e-4231-b886-ec11f46e03b3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----292CCFCA5BA9BE571AD0D0D27E000EE2"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+This is an S/MIME signed message
 
-This reverts commit f97dbf48ca43009e8b8bcdf07f47fc9f06149b36 which
-breaks bootup of arm/arm64 devices like bananapi-r2/mt7623 and
-bananapi-r64/mt7622
+------292CCFCA5BA9BE571AD0D0D27E000EE2
+Content-Language: de-DE
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <21D288B95D24CF4899801923DEBE9290@ginzinger.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- drivers/irqchip/irq-mtk-sysirq.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+T24gTW9uLCAyMDIwLTA4LTE3IGF0IDE2OjM1ICswMjAwLCBncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZyB3cm90ZToNCj4gT24gTW9uLCBBdWcgMTcsIDIwMjAgYXQgMDI6MTU6MTZQTSArMDAwMCwg
+Um9vc2VuIEhlbnJpIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0wNi0wOSBhdCAxNjoxOCArMDIw
+MCwgQXJuZCBCZXJnbWFubiB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgSnVuIDksIDIwMjAgYXQgMjoz
+NiBQTSBSb29zZW4gSGVucmkgPA0KPiA+ID4gSGVucmkuUm9vc2VuQGdpbnppbmdlci5jb20+IHdy
+b3RlOg0KPiA+ID4gPiBIaSBBcm5kLA0KPiA+ID4gPiANCj4gPiA+ID4gSSBob3BlIHlvdSBhcmUg
+d2VsbCBhbmQgY291bGQgYW5zd2VyIG1lIGEgcXVpY2sgcXVlc3Rpb24uDQo+ID4gPiA+IA0KPiA+
+ID4gPiBJJ3ZlIHJlYWQgb24gdGhlIGtlcm5lbCBtYWlsaW5nLWxpc3QgdGhhdCBpbml0aWFsbHkg
+dGhlcmUgd2FzDQo+ID4gPiA+IGFuDQo+ID4gPiA+IGludGVudGlvbiB0byBiYWNrcG9ydCB0aGUg
+ZmluYWwgeTIwMzggcGF0Y2hlcyB0byB2NS40LiBXZSdyZQ0KPiA+ID4gPiBjdXJyZW50bHkgdGFy
+Z2V0aW5nIHRvIHVzZSB0aGUgdjUuNCBMVFMga2VybmVsIGZvciBhIHByb2plY3QNCj4gPiA+ID4g
+d2hpY2gNCj4gPiA+ID4gc2hvdWxkIGJlIHkyMDM4IGNvbXBsaWFudC4NCj4gPiA+ID4gDQo+ID4g
+PiA+IEkgY291bGRuJ3QgZmluZCBhbGwgb2YgdGhlIHkyMDM4LWVuZGdhbWUgcGF0Y2hlcyBpbiB0
+aGUgY3VycmVudA0KPiA+ID4gPiB2NS40LXN0YWJsZSBicmFuY2guIEFyZSB0aGVyZSBhbnkgcGF0
+Y2hlcyBzdGlsbCByZXF1aXJlZCB0byBiZQ0KPiA+ID4gPiBiYWNrcG9ydGVkIGluIG9yZGVyIGZv
+ciB2NS40IHRvIGJlIHkyMDM4IGNvbXBsaWFudCwgb3IgY2FuIHRoZQ0KPiA+ID4gPiByZW1haW5p
+bmcgcGF0Y2hlcyBiZSBpZ25vcmVkIChiZWNhdXNlIG9mIG9ubHkgY2xlYW51cD8pPyBFbHNlLA0K
+PiA+ID4gPiBpcw0KPiA+ID4gPiB0aGVyZSBzdGlsbCBhbiBpbnRlbnRpb24gdG8gZ2V0IHRoZSB2
+NS40IExUUyBrZXJuZWwgeTIwMzgNCj4gPiA+ID4gY29tcGxpYW50Pw0KPiA+ID4gDQo+ID4gPiBJ
+IGRvbid0IHRoaW5rIHRoZXJlIGFyZSBjdXJyZW50bHkgYW55IHBsYW5zIHRvIG1lcmdlIG15IHky
+MDM4LQ0KPiA+ID4gZW5kZ2FtZSANCj4gPiA+IGJyYW5jaA0KPiA+ID4gaW50byB0aGUgb2ZmaWNp
+YWwgbGludXgtNS40IGx0cyBrZXJuZWwsIGJ1dCB5b3Ugc2hvdWxkIGJlIGFibGUgdG8NCj4gPiA+
+IGp1c3QgcHVsbCBmcm9tDQo+ID4gPiANCj4gPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHVi
+L3NjbS9saW51eC9rZXJuZWwvZ2l0L2FybmQvcGxheWdyb3VuZC5naXQvbG9nLz9oPXkyMDM4LWVu
+ZGdhbWUNCj4gPiA+IA0KPiA+ID4gYW5kIGdldCB0aGUgc2FtZSByZXN1bHRzLiBJZiB5b3Ugc2Vl
+IGFueSBwcm9ibGVtcyB3aXRoIHRoYXQsDQo+ID4gPiBwbGVhc2UNCj4gPiA+IHJlcG9ydA0KPiA+
+ID4gdGhhdCB0byBtZSB3aXRoIENjIHRvIHRoZSBtYWlsaW5nIGxpc3QgYW5kIHBlcmhhcHMgZ3Jl
+Z2toLCBzbyBJDQo+ID4gPiBjYW4NCj4gPiA+IHNlZSBpZg0KPiA+ID4gSSBjYW4gcmVzb2x2ZSBp
+dCBieSByZWJhc2luZyBteSBwYXRjaGVzLCBvciBpZiBoZSB3b3VsZCBsaWtlIHRvDQo+ID4gPiBt
+ZXJnZQ0KPiA+ID4gdGhlDQo+ID4gPiBwYXRjaGVzLg0KPiA+IA0KPiA+IFB1bGxpbmcgdGhlIHky
+MDM4LWVuZGdhbWUgYnJhbmNoIGRvZXMgbGVhZCB0byBzb21lIGNvbmZsaWN0cywgd2hpY2gNCj4g
+PiBhcmUNCj4gPiBjdXJyZW50bHkgc3RpbGwga2luZGEgc3RhaWdodGZvcndhcmQgdG8gc29sdmUu
+DQo+ID4gDQo+ID4gSG93ZXZlciBJJ2QgYmUgdmVyeSBpbnRlcmVzdGVkIGluIGdldHRpbmcgdGhp
+cyBicmFuY2ggbWVyZ2VkIHRvDQo+ID4gdjUuNCwNCj4gPiBzbyB3ZSBkb24ndCBydW4gaW50byBt
+b3JlIGRpZmZpY3VsdCBtZXJnZSBjb25mbGljdHMgdGhlIGNvbWluZw0KPiA+IHllYXJzDQo+ID4g
+d2hlcmUgdGhlIHY1LjQtTFRTIHN0aWxsIGdldHMgc3RhYmxlIHVwZGF0ZXMgKERlYywgMjAyNSkg
+YW5kDQo+ID4gcG9zc2libHkNCj4gPiB0byBnZXQgYW55IHJlbGF0ZWQgZml4ZXMgZnJvbSB1cHN0
+cmVhbS4NCj4gPiANCj4gPiBAR3JlZzogYW55IGNoYW5jZSB0byBnZXQgdGhlIHkyMDM4LWVuZGdh
+bWUgbWVyZ2VkIGludG8gdjUuNC55Pw0KPiANCj4gSSBoYXZlIG5vIGlkZWEgd2hhdCB0aGlzIHJl
+YWxseSBtZWFucywgYW5kIHdoYXQgaXQgZW50YWlscywgYnV0IG9kZHMNCj4gYXJlLCBubyA6KQ0K
+DQpJIGZ1bGx5IHVuZGVyc3RhbmQsIHRoYW5rcyBmb3IgeW91ciBzdGF0ZW1lbnQgb24gdGhpcy4N
+Cg0KPiANCj4gV2h5IG5vdCBqdXN0IHVzZSBhIG5ld2VyIGtlcm5lbD8gIFdoeSBhcmUgeW91IHN0
+dWNrIHVzaW5nIGEgNS40DQo+IGtlcm5lbA0KPiBmb3IgYSBkZXZpY2UgdGhhdCBoYXMgdG8gbGl2
+ZSBpbiAyMDM4PyAgVGhhdCBmZWVscyB2ZXJ5IGZvb2xpc2ggdG8NCj4gbWUuLi4NCg0KT2ggSSBh
+Z3JlZSBvbiB0aGF0IDopIEl0J3MganVzdCB0aGF0IHRoZXNlIGFyZSBjdXJyZW50bHkgY3VzdG9t
+ZXINCnJlcXVpcmVtZW50cy4gQnV0IHdlJ2xsIGFkdmljZSB0aGVtIHRvIHVwZ3JhZGUgdG8gbmV3
+ZXIga2VybmVscyBhbmQNCnByb3ZpZGUgdXAtdG8tZGF0ZSBrZXJuZWxzIGZvciB0aGVtIGFsb25n
+IHRoZSBhd2F5IHRvIGFuZCBiZXlvbmQgeTIwMzguDQoNClRoYW5rcywNCkhlbnJpDQoNCj4gDQo+
+IHRoYW5rcywNCj4gDQo+IGdyZWcgay1oDQo=
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 7299c5ab4d10..6ff98b87e5c0 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -231,6 +231,4 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 	kfree(chip_data);
- 	return ret;
- }
--IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_sysirq)
--IRQCHIP_MATCH("mediatek,mt6577-sysirq", mtk_sysirq_of_init)
--IRQCHIP_PLATFORM_DRIVER_END(mtk_sysirq)
-+IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
--- 
-2.25.1
+------292CCFCA5BA9BE571AD0D0D27E000EE2
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIIOFAYJKoZIhvcNAQcCoIIOBTCCDgECAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggsYMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
+hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
+Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
+bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
+dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
+R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
+ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
+U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
+UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
+fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
+KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
+03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
+k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
+AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
+HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
+EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
+oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
+b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
+cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
+AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
+GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
+ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
+WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
+NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
+2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
+BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
+fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
+cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
+2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
+csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUqMIIEEqAD
+AgECAhEAgK6FAFOiNDdgM5+lyjA8gTANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
+TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0Ew
+HhcNMTgwNzE4MDAwMDAwWhcNMjEwNzE3MjM1OTU5WjArMSkwJwYJKoZIhvcNAQkB
+FhpoZW5yaS5yb29zZW5AZ2luemluZ2VyLmNvbTCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMmwBmquEWhoUH5WNJe7bQRLBAccBq0ZBVQbLAbJQwN5bg9i
+wSsPG7mveXqXYWpuHhbb7lbs3zFTS4H511nWurRqcvVceVOs5vtsbVMHjfuNmHo8
+WrMCJPFBw64uBUoGdsiwuAvA0CeFpPyA/CsAuvIbmvEF+GxMjaeQhqQ9d5K4z4I6
+w6R3wFtNJiSUMUSdgtnNPDYnUIKILR3mfbSCHWA7Pepe1dh+S9JFWhcoNv1h6D/R
+SAKVdUtC2GS0vt3nk4cEg8Z0s4/OvVDRm2jluvPK+fEeUfGahwHFrk68nYTq3v2P
+dMxHg93+Li+jYAX6R3XXGbdcjZJ3UM5MGEKq+u0CAwEAAaOCAdowggHWMB8GA1Ud
+IwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBQ9s9JCcV1JOI2I
+/oXSyF8VIj2VhTAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUE
+FjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIB
+AwUwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMw
+WgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RP
+UlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYI
+KwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNv
+bS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0Eu
+Y3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wJQYDVR0R
+BB4wHIEaaGVucmkucm9vc2VuQGdpbnppbmdlci5jb20wDQYJKoZIhvcNAQELBQAD
+ggEBAKdv6bSTLlu63Ckq7aibIwJCE0hhs83Z6Jr5G2wWrwVdFB9Dkb6l2NmdGRoq
+qbSz3Remg5qamURXec3XdEBxO1FPMcZJrHKAZuNjYdj1tzYA/rbTdYmVbno1TG5/
+O6rVb7A624UZHoucW+NpfNCrxfQY+BliMbCKJEWqQE0P6vyDenSYa76NLt1699B5
+vyHbYLrJHAjFzHe7BqSkP815C47KpJFXuGYasewJDOpvyINtn6kBlrAIanoVfDFa
+W9aUjUeNjqmcCEN4TpuSZCf1L8oWAjv5oH0R87orEAFZnSVWDIW8i7TMiFtCiF3D
+LYmN6J96LCNCs0iQIFqcnJnkHAkxggLAMIICvAIBATCBrTCBlzELMAkGA1UEBhMC
+R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
+ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
+U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQCA
+roUAU6I0N2Azn6XKMDyBMA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMDgxNzE1MDAyN1owLwYJKoZI
+hvcNAQkEMSIEIAFWwY2Rz75kQxhpl3VcXuglrP5sfeefW40wjfZmJvLjMHkGCSqG
+SIb3DQEJDzFsMGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQME
+AQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
+BSsOAwIHMA0GCCqGSIb3DQMCAgEoMA0GCSqGSIb3DQEBAQUABIIBALtmZOecAf1M
+bz9e4x6vDfaW5J0vGy1Pq6+wlR2wy5mHWAdVglViI8QiPrNkWv8gck9qwa2rUYxT
+kH7ZlW3jh3RTzG06WLYPvHSdicUS0KjQ0FwszkZ3SJw/6VuQQUHnbxhoiCKL5ami
+BvurPgbT0t6HUngOARR9OMZY3b8pgh/VQwudZWCylzUHYSvV+xSpacYfUhXsmG/H
+KUC0voTJtHoOX3TgU5reG5sYFqO4t+6EOGiAxqKrNdQ9aTvhNQAePTNolEpS8Fu3
+eJkC7t1Tbv/l7Hmu0GY5HM6geLEDlz4nVxxCI+cERikuno7erT7P47NXfvC/K+Kj
+nMDAUsTD9+U=
+
+------292CCFCA5BA9BE571AD0D0D27E000EE2--
 
