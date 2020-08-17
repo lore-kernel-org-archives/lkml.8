@@ -2,123 +2,143 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31831C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C0B2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="hUOEEO0p"
+	by mail.kernel.org (Postfix) with ESMTP id 14CEA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597688781;
+	bh=b5mYsWDWNrPjfGKIVbFfaWyh7YbIqQ4vNdJfuc4VLhY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t+ntgOB2fDH/Er+fDf4nl9IN5/v1W84yyuJjRvQSl34rsVRMZMR10MLQbWeeVvObU
+	 91zeBMfcPOlcoC261R0OO2hzHV30gSnVqajVFKGmATF6fJju63lB94Me2HYOcvYY3g
+	 3P0fosJGSO64UeKWbvBHLj8giiZy6vUpUJEurVaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390697AbgHQS0H (ORCPT
+        id S2390947AbgHQS0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:26:07 -0400
-Received: from vern.gendns.com ([98.142.107.122]:44834 "EHLO vern.gendns.com"
+        Mon, 17 Aug 2020 14:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390893AbgHQSZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:25:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ze/Fp2bEpwKS0D9hQT11IEgTLHA/U4BtBRsUXbpJDzw=; b=hUOEEO0pBh6USLjb3wUcU7dmJ5
-        NTOn7l7umnSmy9ivG4IgvlD3g2YSwGVz4aItNZTyKLAIPOygQvs06lPjhAFblIRvmXfHmtrIE6szG
-        Zkq409nojD8P1KSuIJX/LJeLfO8/X82EM91pvuzsyU5lugzgkPwZkecPrrvnzawI2U6DbvYI5TZvi
-        0AWzSkE3GYALchMBbPwjk0WxuXkBuioJ+xe/VhnWNpnYZOct76FhUTwUcDEaESyrnqnGEysRiveKD
-        XdFvkVl/dZFeXUulybWzbbIFi4AmRGts8gbjAFk7QdiaJo5pGREiSvx0kk/Fxcs3Y9G0MD5akqBJf
-        3FVSWpLA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:39396 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k7jpK-0006y6-Eb; Mon, 17 Aug 2020 14:25:46 -0400
-Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery Kconfig
- options
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
-References: <20200809185444.54247-1-alex.dewar90@gmail.com>
- <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
- <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
- <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
- <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
- <0927eaf0-62d6-adaf-c4b0-89d7f4cc7b4a@lechnology.com>
- <20200817174344.lxuzlly4it5vpfmz@lenovo-laptop>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <dc296c76-b997-c711-7f60-a7a993601443@lechnology.com>
-Date:   Mon, 17 Aug 2020 13:25:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2388195AbgHQQC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3CFF20729;
+        Mon, 17 Aug 2020 16:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680146;
+        bh=b5mYsWDWNrPjfGKIVbFfaWyh7YbIqQ4vNdJfuc4VLhY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=beDh+1CvkMUsW6Xi8QniXLEzD56kDfX3CmpCaSUlpFH73DuC/NXJQd5yJVaNj83h7
+         By6rJn91Kf0uwGUJpZMWgYDoUvoI9BpupYqf2MujARb3KzHucAfGH4zaem2C/5fG/6
+         1it11I4j96MRIbyPF0EetKeSWXJFBiLCZI2A1sJc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 071/270] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Mon, 17 Aug 2020 17:14:32 +0200
+Message-Id: <20200817143759.288375238@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200817174344.lxuzlly4it5vpfmz@lenovo-laptop>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 12:43 PM, Alex Dewar wrote:
-> On Wed, Aug 12, 2020 at 02:12:57PM -0500, David Lechner wrote:
->> On 8/12/20 2:02 PM, Alex Dewar wrote:
->>> On Wed, Aug 12, 2020 at 10:24:30AM -0500, David Lechner wrote:
->>>> On 8/12/20 8:37 AM, Alex Dewar wrote:
->>>>> On Tue, Aug 11, 2020 at 09:24:10AM -0500, David Lechner wrote:
->>>>>> On 8/9/20 1:54 PM, Alex Dewar wrote:
->>>>>>> This battery appears only to be used by a single board (DA850), so it
->>>>>>> makes sense to add this to the Kconfig file so that users don't build
->>>>>>> the module unnecessarily. It currently seems to be built for the x86
->>>>>>> Arch Linux kernel where it's probably not doing much good.
->>>>>>
->>>>>> It would probably also make sense to add "default n" since it only
->>>>>> applies to one board in the entire arch.
->>>>>
->>>>> Ah ok. That makes sense. Would you like me to send a follow-on patch for
->>>>> this?
->>>>
->>>> You can just send a v2 patch that includes the change below and the
->>>> additional change.
->>>
->>> I've just had a look at the documentation[1] and it seems that as there's
->>> no "default y" there it'll default to n anyway. Have I got that right?
->>>
->>> [1] https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html#menu-attributes
->>>
->>
->> Yes, that seems right. That makes me wonder why this would have been enabled in
->> the Arch Linux kernel for x86 then.
-> 
-> Not sure, maybe the Arch devs like Lego? ;-)
-> 
-> Are you happy to give an Acked-by for this anyhoo?
+From: Paul E. McKenney <paulmck@kernel.org>
 
-Yup.
+[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
 
-Acked-by: David Lechner <david@lechnology.com>
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-> 
-> @Sebastian, are you happy to pick up this patch?
-> 
-> Best,
-> Alex
-> 
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  	(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index ea1ba2db4f4fe..a3584a90c55c2 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3172,6 +3172,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
+ 	}
+ 	vm_unacct_memory(nr_accounted);
+ }
+-- 
+2.25.1
+
+
 
