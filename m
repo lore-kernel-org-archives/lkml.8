@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBD22053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28EF2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689247;
-	bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
+	s=default; t=1597689250;
+	bh=mPYpUOLwPa6N6HVe+fte52UqhbZ4u8iZpGJl2gAFN0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nTiw2XZ5iR/MJ5rGzbeCIxKFuLIR3gEv79AjG4SpF2lkhspU982aPgTUnJlQpnb07
-	 ZyxnSweTohReCRw1onlApdk1Nng1Qtw7lg0QkOoqGoQXTHQRjuvyVMIrU9G04Zfute
-	 YX3kLdJ/DAKyb2gePDy6K7eYSUVN6cIjiWdNCweg=
+	b=SnjP+dNaGPub5GlaLfH/Ax13B4Ys9kq5yoFGkUFkwSGFbsECqD2sn+SHazeViFuuI
+	 JlgeoeaB2TkEs0RgAbtNRCaa49E9P3vL17uvpoIu8JtPuqRVgT0mVj3TU27vK5CyBd
+	 Vf3sdICqyBk2J9zj4Jd8s3DEFI174Yjf9kyUxacA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbgHQSeG (ORCPT
+        id S2391236AbgHQSeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbgHQQAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731010AbgHQQAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:00:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 758A6208E4;
-        Mon, 17 Aug 2020 16:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D65208C7;
+        Mon, 17 Aug 2020 16:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680022;
-        bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
+        s=default; t=1597680019;
+        bh=mPYpUOLwPa6N6HVe+fte52UqhbZ4u8iZpGJl2gAFN0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcyUZR5BktA4pA7fiRMXb9XgNw05HKDpJ6n3dumJST+Uwm/Cx+v/RJGFaBIKUA+ec
-         vSUqU/HStijoeXRSsYlrM1e5Tifu7xIk17VVHK152IBZTI8487AxCTLR2YlReI7Evy
-         89wuZUa2LHFqYLFkkm9UQ+SEfh7E7KPe1ZL6xfsk=
+        b=17UtooQVrnP3wH8SBWMV+NeTEZ09lre//UZwJYZBhLRjAUgINWiOIPzK1GdJs9ykG
+         rU0hqTS/jB+O3JkSnszNHQGwLE0pyZGVv3o+TffXUQ5imGPJwc91rM8iJKVVS3xV9X
+         iQ9MzXJT5VXdK0weWL1xsR6qY3Xkd8pki+PFPb+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/270] m68k: mac: Dont send IOP message until channel is idle
-Date:   Mon, 17 Aug 2020 17:13:43 +0200
-Message-Id: <20200817143756.888470754@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Dien Pham <dien.pham.ry@renesas.com>
+Subject: [PATCH 5.4 021/270] clk: scmi: Fix min and max rate when registering clocks with discrete rates
+Date:   Mon, 17 Aug 2020 17:13:42 +0200
+Message-Id: <20200817143756.840496842@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,66 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
+[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
 
-In the following sequence of calls, iop_do_send() gets called when the
-"send" channel is not in the IOP_MSG_IDLE state:
+Currently we are not initializing the scmi clock with discrete rates
+correctly. We fetch the min_rate and max_rate value only for clocks with
+ranges and ignore the ones with discrete rates. This will lead to wrong
+initialization of rate range when clock supports discrete rate.
 
-	iop_ism_irq()
-		iop_handle_send()
-			(msg->handler)()
-				iop_send_message()
-			iop_do_send()
+Fix this by using the first and the last rate in the sorted list of the
+discrete clock rates while registering the clock.
 
-Avoid this by testing the channel state before calling iop_do_send().
-
-When sending, and iop_send_queue is empty, call iop_do_send() because
-the channel is idle. If iop_send_queue is not empty, iop_do_send() will
-get called later by iop_handle_send().
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
+Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index 9bfa170157688..d8f2282978f9c 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
- 	msg->status = IOP_MSGSTATUS_UNUSED;
- 	msg = msg->next;
- 	iop_send_queue[iop_num][chan] = msg;
--	if (msg) iop_do_send(msg);
-+	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
-+		iop_do_send(msg);
- }
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index 886f7c5df51a9..e3cdb4a282fea 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
+ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ {
+ 	int ret;
++	unsigned long min_rate, max_rate;
++
+ 	struct clk_init_data init = {
+ 		.flags = CLK_GET_RATE_NOCACHE,
+ 		.num_parents = 0,
+@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
  
- /*
-@@ -490,16 +491,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
- 
- 	if (!(q = iop_send_queue[iop_num][chan])) {
- 		iop_send_queue[iop_num][chan] = msg;
-+		iop_do_send(msg);
- 	} else {
- 		while (q->next) q = q->next;
- 		q->next = msg;
- 	}
- 
--	if (iop_readb(iop_base[iop_num],
--	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
--		iop_do_send(msg);
--	}
--
- 	return 0;
+ 	sclk->hw.init = &init;
+ 	ret = devm_clk_hw_register(dev, &sclk->hw);
+-	if (!ret)
+-		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
+-				      sclk->info->range.max_rate);
++	if (ret)
++		return ret;
++
++	if (sclk->info->rate_discrete) {
++		int num_rates = sclk->info->list.num_rates;
++
++		if (num_rates <= 0)
++			return -EINVAL;
++
++		min_rate = sclk->info->list.rates[0];
++		max_rate = sclk->info->list.rates[num_rates - 1];
++	} else {
++		min_rate = sclk->info->range.min_rate;
++		max_rate = sclk->info->range.max_rate;
++	}
++
++	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
+ 	return ret;
  }
  
 -- 
