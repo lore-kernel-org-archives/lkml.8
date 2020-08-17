@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F44C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C31C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBC920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6EA20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691224;
-	bh=55zPMrOyzs+dc28APjjiaBiOGfinJF0QO6Cjsln7vf4=;
+	s=default; t=1597691232;
+	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=okrfD2baio3SDqMaEgOdYE5M4qaZ7jgq48+BPXysugojdNAgfN/jFXh8TR4Cg2q+l
-	 yiReu9QHZxPEWPVR1qQASTtlqkqYhUp/rIjE1z3pLfIqVkShk7Gfg71TjdE4ajOwHm
-	 Cf03NqpbtqpdAVXKMPAfPcaJQEzJuqzMpJxIDjtU=
+	b=YlbfnvxCR2hgHzqw/VbefeKodBY1yCNbFREZTHhEhb0E6exILufokm9rozXCO/atM
+	 ETCLgwtKnZQskCQVN2+4VTQVAZa48ENVOyk9FBhxcMfubn18/zck2AGXSbSQkxICOP
+	 /ZO+sm/GIjw59t2mlpPH1iTFVx3/ydxbASXc3wwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391909AbgHQTG5 (ORCPT
+        id S2404129AbgHQTHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54566 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387683AbgHQPn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:43:57 -0400
+        id S2387677AbgHQPny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:43:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F0320760;
-        Mon, 17 Aug 2020 15:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB6C2075B;
+        Mon, 17 Aug 2020 15:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679036;
-        bh=55zPMrOyzs+dc28APjjiaBiOGfinJF0QO6Cjsln7vf4=;
+        s=default; t=1597679033;
+        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdVgQmpccqIwJ0VR0o/ZxbzotOrvJ5Igw0U+g6FzKAEwIQETfr3J/yfKJIhVS+QO1
-         TFtQQkZNfGLeaT+U+NbITodBCTRtTT1VSTRfwyjOs3AUmQVb+cAgiP17XcbAA4lOlr
-         sRvi/qrZBzPKC/UVPy7R6CR2RhjOh1XdMmyLmEDQ=
+        b=qL0ovati17HC3ou39KMAVdBpieN5agH+hBUxNcLvA0oeWAlqxj/kwhdh3JVcA+b1b
+         Vx5yOtgYqPp9/gEDAROiSmf4fxlva/4i6JYCJMi7EwbmrCeNkmoEeyGx/2FTHdjU8g
+         3ZxXtiqqFItadqsJI3wKxgsw5u7gqy8mO3Y9KVFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Antonino Daplas <adaplas@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 074/393] video: fbdev: savage: fix memory leak on error handling path in probe
-Date:   Mon, 17 Aug 2020 17:12:04 +0200
-Message-Id: <20200817143823.206617055@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 056/393] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
+Date:   Mon, 17 Aug 2020 17:11:46 +0200
+Message-Id: <20200817143822.335398984@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,42 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
+[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
 
-savagefb_probe() calls savage_init_fb_info() that can successfully
-allocate memory for info->pixmap.addr but then fail when
-fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
-does not free allocated memory. It is not valid to go to label
-failed_mmio since savage_init_fb_info() can fail during memory
-allocation as well. So, the patch free allocated memory on the error
-handling path in savage_init_fb_info() itself.
+cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
+UP configuration, the boot CPU is 0.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Antonino Daplas <adaplas@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
+Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
-index aab312a7d9da3..a542c33f20828 100644
---- a/drivers/video/fbdev/savage/savagefb_driver.c
-+++ b/drivers/video/fbdev/savage/savagefb_driver.c
-@@ -2158,6 +2158,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
- 			info->flags |= FBINFO_HWACCEL_COPYAREA |
- 				       FBINFO_HWACCEL_FILLRECT |
- 				       FBINFO_HWACCEL_IMAGEBLIT;
-+		else
-+			kfree(info->pixmap.addr);
- 	}
- #endif
- 	return err;
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fd7c537fb42ac..4127eeab10af1 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
+ 	u32 val;
+ 
+ 	/* Wakeup interrupt should only come from the boot cpu */
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
+ 
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
+@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
+ 	struct bcm7038_l1_chip *intc;
+ 	int boot_cpu, word;
+ 
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
+ 
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
 -- 
 2.25.1
 
