@@ -2,140 +2,68 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DABDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF1FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4A620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uoe1K7zm"
+	by mail.kernel.org (Postfix) with ESMTP id 3172B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgHQU3U (ORCPT
+        id S1728417AbgHQU3i convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:29:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33278 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726628AbgHQU3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:29:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597696158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vcZ5xeR/B2zIC2A6zYV92v7HTxGjQeb7b0PrwKaVjKY=;
-        b=Uoe1K7zmp1mZenB0ECK3GFRN5SE/34PJCA5jKaaqkKJiAnU8w1NTuwfUe4ntyCNOL44tcw
-        fYsXRGAZpUubf1g+yCHuQBsJ6U8UDUDkV9sZT5ZUHNOF+YEtuoyW9sFZx8ZHEok8/nDEdS
-        iKfSxbKAo83kegCvNeamrIZVeo7C6mM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-6zTHQQx7Ojqg_stoRS3UUA-1; Mon, 17 Aug 2020 16:29:16 -0400
-X-MC-Unique: 6zTHQQx7Ojqg_stoRS3UUA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 17 Aug 2020 16:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbgHQU3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 16:29:37 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD71D1005E5F;
-        Mon, 17 Aug 2020 20:29:14 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-81.rdu2.redhat.com [10.10.115.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39FED5D9D2;
-        Mon, 17 Aug 2020 20:29:06 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id A93D3222E58; Mon, 17 Aug 2020 16:29:05 -0400 (EDT)
-Date:   Mon, 17 Aug 2020 16:29:05 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Gurchetan Singh <gurchetansingh@google.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>, virtio-fs@redhat.com,
-        miklos@szeredi.hu, stefanha@redhat.com, dgilbert@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kbuild test robot <lkp@intel.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 04/20] virtio: Implement get_shm_region for PCI
- transport
-Message-ID: <20200817202905.GA659987@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-5-vgoyal@redhat.com>
- <20200810100327-mutt-send-email-mst@kernel.org>
- <20200810145019.GB455528@redhat.com>
- <CAAfnVBk+Hmcm2ftd3wOK-P2NyYQ7z4Wrf1JKhLJaNkCZBLoo6g@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA882072E;
+        Mon, 17 Aug 2020 20:29:35 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 16:29:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     =?UTF-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+Message-ID: <20200817162933.79f69c66@oasis.local.home>
+In-Reply-To: <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com>
+References: <20200817170729.2605279-1-tweek@google.com>
+        <20200817170729.2605279-4-tweek@google.com>
+        <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAfnVBk+Hmcm2ftd3wOK-P2NyYQ7z4Wrf1JKhLJaNkCZBLoo6g@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 07:51:56PM -0700, Gurchetan Singh wrote:
-> On Mon, Aug 10, 2020 at 7:50 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+On Mon, 17 Aug 2020 16:13:29 -0400
+Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+
+> Does this require a corresponding patch to userspace?  Otherwise, I get 
+> the following:
 > 
-> > On Mon, Aug 10, 2020 at 10:05:17AM -0400, Michael S. Tsirkin wrote:
-> > > On Fri, Aug 07, 2020 at 03:55:10PM -0400, Vivek Goyal wrote:
-> > > > From: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > > >
-> > > > On PCI the shm regions are found using capability entries;
-> > > > find a region by searching for the capability.
-> > > >
-> > > > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > > > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> > > > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > > > Cc: kvm@vger.kernel.org
-> > > > Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> > >
-> > > Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> > >
-> >
-> > [..]
-> > > > +static bool vp_get_shm_region(struct virtio_device *vdev,
-> > > > +                         struct virtio_shm_region *region, u8 id)
-> > > > +{
-> > > > +   struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-> > > > +   struct pci_dev *pci_dev = vp_dev->pci_dev;
-> > > > +   u8 bar;
-> > > > +   u64 offset, len;
-> > > > +   phys_addr_t phys_addr;
-> > > > +   size_t bar_len;
-> > > > +
-> > > > +   if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> > > > +           return false;
-> > > > +   }
-> > > > +
-> > > > +   phys_addr = pci_resource_start(pci_dev, bar);
-> > > > +   bar_len = pci_resource_len(pci_dev, bar);
-> > > > +
-> > > > +   if ((offset + len) < offset) {
-> > > > +           dev_err(&pci_dev->dev, "%s: cap offset+len overflow
-> > detected\n",
-> > > > +                   __func__);
-> > > > +           return false;
-> > > > +   }
-> > > > +
-> > > > +   if (offset + len > bar_len) {
-> > > > +           dev_err(&pci_dev->dev, "%s: bar shorter than cap
-> > offset+len\n",
-> > > > +                   __func__);
-> > > > +           return false;
-> > > > +   }
-> > >
-> > > Maybe move this to a common header so the checks can be reused by
-> > > other transports? Can be a patch on top.
-> >
-> > Will do as patch on top once these patches get merged.
-> >
-> 
-> There's also some minor checkpatch complaints.  I fixed them with the
-> series I sent out with virtio-gpu.
+> libtraceevent: No such file or directory
+>    [avc:selinux_audited] function avc_trace_perm_to_name not defined
 
-Thanks Gurchetan. I will post the patch with V3 posting anyway. We both
-need these patches. So whatever gets merged in the tree first, other
-person can use it.
+Yes, we need to add a plugin to libtraceevent that will add that
+function.
 
-Vivek
+I could possibly write one up real quick.
 
+-- Steve
