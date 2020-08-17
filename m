@@ -2,101 +2,131 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30969C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134C72072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691550;
-	bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvoDaZD79zFmfejZSYgWBUliiWrd1chpPizJrxnUO2qknzZnn4s3HNk5TOr8Yy0P7
-	 5rgOL6KnEars/fIMET1+4igLXv/7aIL+/bvPv6tGRuAiBks49uTgo3VCUwFOeeMxKO
-	 2/hugrHONzeja0rR1cluvrsFOJb3KMdIy2HFSaos=
+	by mail.kernel.org (Postfix) with ESMTP id 0F1562072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvMzuAxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbgHQTMU (ORCPT
+        id S2392046AbgHQTMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730690AbgHQPkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8DFB20760;
-        Mon, 17 Aug 2020 15:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678851;
-        bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rsj5sC+CQ1L9NAsUsl6Hw/xO8GA2iJ6ydshhDbzf5CBruwxWeQFvpJ3K5TyRBgj9e
-         GKY6agJo4vt+iGqxDrvNtf6y/Z1iLhWxkhMYR1MlFpuMWoHuAOMScNixLQSWTuBgrL
-         S/3koDIWlFF7pulfrCIFc1o9GW0c2dtL42dN6OHg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 012/393] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
-Date:   Mon, 17 Aug 2020 17:11:02 +0200
-Message-Id: <20200817143820.194373451@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 15:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbgHQTM0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:12:26 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C642FC061389;
+        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q14so15501476ilj.8;
+        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
+        b=GvMzuAxS6elmKSXxwtmwDg4ZABKQ94RBoIywyhmFuxzOvYj70kocfV6jjnvsD6xJUG
+         TDoxSm0valHIzQ+TX5vr9M31BeFGUFSufYX4P6oEOMp0EM+3WgULq2SPTUHCgsOIRxuI
+         fDyMPGMz+v+4byLbGWFj/UVM5255nK7fua7CeNib7oKaPFCl1EXmMDRODEX3VnP75fLd
+         grnlAHLzvu/8yvLB6wGOmLG/dhoY8pJbKuZoJFz1OrzTsTTMBng+mF7Yb3wcndmk68im
+         uw4FgY0JdtfocFKOeNcsRmidTCINPH/bEXdOXIZv0ihpFzBXEJoD1Qtei9Vvrm3Cod6j
+         Eglg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
+        b=VWAHb/g8D5UURwdhTs2KJ3iPt66p3RPHgiSwFuTRl6+q2LEhQVFLlqk1wuR66+8KpB
+         06KL1LRdLwwxwbyLcS8Ou/j4EhmIhrpPt6Qj+dgkNbhT05jBfmtgUqowKE05yA0CgLU1
+         UCA/QDq9ATyXYc/pL1wtA/58rqkilEA+iXOg6BJSk90xA9TS7ljmD44O+2twcekHMG/7
+         iMw4sjqJZx/IhPeWhXKdZrtwMg11nG/VliCxHK22Q3tyYSyiEj5DjVfIQZj5emz1VrEh
+         0Ru2u3M1v1Okae6XLll76NauQa0BlEjMfKiaf4rgBAjakw9WVBrrNoWP9EN88TRC+wYz
+         2FuQ==
+X-Gm-Message-State: AOAM532D8bjdrDJMSznm/TotFkZy+GZH+iJo0LZaFO2okhm+PrnkbpHB
+        YbwIYpQCjFEp8/zW6DfiDf1JiehC0Ps7T5Fv80c=
+X-Google-Smtp-Source: ABdhPJzXgU+DNHNKO8z9tSqkcxA+YPlJ5aCtnpEUqz2sSEapV34xuQepCaVuriNJ1z06vI0ZEuk2ZLoKyfGEp42KQIo=
+X-Received: by 2002:a05:6e02:5c7:: with SMTP id l7mr15394166ils.268.1597691543350;
+ Mon, 17 Aug 2020 12:12:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200816071518.6964-1-colyli@suse.de> <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+ <20200817054538.GA11705@lst.de>
+In-Reply-To: <20200817054538.GA11705@lst.de>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 17 Aug 2020 12:12:12 -0700
+Message-ID: <CAM_iQpWnzm=cQZvZMcjKXez1L55tSVfWyadP3d0CUaT=D4nOhw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in include/linux/net.h
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Sun, Aug 16, 2020 at 10:45 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Sun, Aug 16, 2020 at 10:55:09AM -0700, Cong Wang wrote:
+> > On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
+> > >
+> > > The original problem was from nvme-over-tcp code, who mistakenly uses
+> > > kernel_sendpage() to send pages allocated by __get_free_pages() without
+> > > __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+> > > tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+> > > from a corrupted kernel heap, because these pages are incorrectly freed
+> > > in network stack as page_count 0 pages.
+> > >
+> > > This patch introduces a helper sendpage_ok(), it returns true if the
+> > > checking page,
+> > > - is not slab page: PageSlab(page) is false.
+> > > - has page refcount: page_count(page) is not zero
+> > >
+> > > All drivers who want to send page to remote end by kernel_sendpage()
+> > > may use this helper to check whether the page is OK. If the helper does
+> > > not return true, the driver should try other non sendpage method (e.g.
+> > > sock_no_sendpage()) to handle the page.
+> >
+> > Can we leave this helper to mm subsystem?
+> >
+> > I know it is for sendpage, but its implementation is all about some
+> > mm details and its two callers do not belong to net subsystem either.
+> >
+> > Think this in another way: who would fix it if it is buggy? I bet mm people
+> > should. ;)
+>
+> No.  This is all about a really unusual imitation in sendpage, which
 
-[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
+So netdev people will have to understand and support PageSlab() or
+page_count()?
 
-The lion gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+If it is unusual even for mm people, how could netdev people suppose
+to understand this unusual mm bug? At least not any better.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+> is pretty much unexpected.  In fact the best thing would be to make
+> sock_sendpage do the right thing and call sock_no_sendpage based
+> on this condition, so that driver writers don't have to worry at all.
 
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
+Agreed, but kernel_sendpage() still relies on mm to provide a helper
+to make the decision and ensure this helper is always up-to-date.
 
-Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In short, it is all about ownership.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index e17311e090826..216aafd90e7f1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -156,7 +156,7 @@ &gmac {
- 	pinctrl-0 = <&rgmii_pins>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
- 	tx_delay = <0x10>;
- 	rx_delay = <0x10>;
- 	status = "okay";
--- 
-2.25.1
-
-
-
+Thanks.
