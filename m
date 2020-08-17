@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6526C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00BDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB53E20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831642076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691187;
-	bh=CKEwHfjYMaMRptnZa9Xtr3VDwhMRZ/6+GvzVOGRbGrk=;
+	s=default; t=1597691189;
+	bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBU1i7dqbA8V+DbOguupUQM+YjCR/wXAjE6/hDhugqJA0m9A3ik4iJ0pgyBQlT2iC
-	 HK1CkPtjic3akPuTdN28kq6DRVFeabDhTJZqMilXAEU+jDmBv57Mkpgp2vbJhS9yHd
-	 GBlrnSXiUrqhQam+Cgk/Hxpwx385dscUM+O/i+2M=
+	b=XDR36YWczhAWPk4Ot9PRNgziBhajxzTLW7YIlfbWhGYhlEqR3KJmaRVOto7bg/bNT
+	 2IjZ0YIlMQxoCzowQ/DDc/gkPkIkmIf00g2KM/D1gVdASXcH+EUcwRBCqgOAtQ1gxc
+	 +HIj+qncCsAEyybd6APDhbt52s35tsLgapS4glqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbgHQTGV (ORCPT
+        id S1731868AbgHQTGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54446 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbgHQPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:20 -0400
+        id S1730462AbgHQPoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B21F22D0B;
-        Mon, 17 Aug 2020 15:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5FB622D06;
+        Mon, 17 Aug 2020 15:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679058;
-        bh=CKEwHfjYMaMRptnZa9Xtr3VDwhMRZ/6+GvzVOGRbGrk=;
+        s=default; t=1597679054;
+        bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZG4vJBYmgu78cwFgckCnOZ2P0cbM3ZuE5hkJnWNddZ6bftlDiIrl2rcotyjcurlKD
-         1P3fa083qXF4DeWCaOQRcloaoFGP04MaSFCHWuNFlGHC01nPTnDlJI5wjxorm+xY6J
-         ef8CQFgJr4BxU1gIGnCtJh0ooeDMQ7i0A3D9QgxE=
+        b=z4jloOh1x+G/wlWZwySFYP+uOz71xWpVKWuLiviT/DpKR3Bo7Pz2ABmyjGc9qVLKn
+         gMATl3YHfxt7yRLkSVxZAHadU8l0DyU9fSIdyADuHf2iY6whzIUZt1YBIQoo7sfvnE
+         nI7rrPumbnwg//urHqIu3heoLgdzYmQLnkcSRzD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/393] memory: samsung: exynos5422-dmc: Do not ignore return code of regmap_read()
-Date:   Mon, 17 Aug 2020 17:12:11 +0200
-Message-Id: <20200817143823.547062832@linuxfoundation.org>
+Subject: [PATCH 5.7 080/393] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
+Date:   Mon, 17 Aug 2020 17:12:10 +0200
+Message-Id: <20200817143823.499603641@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,78 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit c4f16e96d8fdd62ef12898fc0965c42093bed237 ]
+[ Upstream commit c5d5a32ead1e3a61a07a1e59eb52a53e4a6b2a7f ]
 
-Check for regmap_read() return code before using the read value in
-following write in exynos5_switch_timing_regs().  Pass reading error
-code to the callers.
+in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
+and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-This does not introduce proper error handling for such failed reads (and
-obviously regmap_write() error is still ignored) because the driver
-ignored this in all places.  Therefor it only fixes reported issue while
-matching current driver coding style:
-
-       drivers/memory/samsung/exynos5422-dmc.c: In function 'exynos5_switch_timing_regs':
-    >> drivers/memory/samsung/exynos5422-dmc.c:216:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/samsung/exynos5422-dmc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 22a43d6628336..3460ba55fd596 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -270,12 +270,14 @@ static int find_target_freq_idx(struct exynos5_dmc *dmc,
-  * This function switches between these banks according to the
-  * currently used clock source.
-  */
--static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
-+static int exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
- {
- 	unsigned int reg;
- 	int ret;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index a31eeff2b297a..7c9f3f9ba1235 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -722,7 +722,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0) {
+ 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
+-		return ret;
++		goto pm_put;
+ 	}
  
- 	ret = regmap_read(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, &reg);
-+	if (ret)
-+		return ret;
+ 	etnaviv_hw_identify(gpu);
+@@ -819,6 +819,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
  
- 	if (set)
- 		reg |= EXYNOS5_TIMING_SET_SWI;
-@@ -283,6 +285,8 @@ static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
- 		reg &= ~EXYNOS5_TIMING_SET_SWI;
- 
- 	regmap_write(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, reg);
-+
-+	return 0;
- }
- 
- /**
-@@ -516,7 +520,7 @@ exynos5_dmc_switch_to_bypass_configuration(struct exynos5_dmc *dmc,
- 	/*
- 	 * Delays are long enough, so use them for the new coming clock.
- 	 */
--	exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
+ fail:
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
  
  	return ret;
+@@ -859,7 +860,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto pm_put;
+ 
+ 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
+ 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
+@@ -1003,6 +1004,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 	ret = 0;
+ 
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -1016,7 +1018,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 	dev_err(gpu->dev, "recover hung GPU!\n");
+ 
+ 	if (pm_runtime_get_sync(gpu->dev) < 0)
+-		return;
++		goto pm_put;
+ 
+ 	mutex_lock(&gpu->lock);
+ 
+@@ -1035,6 +1037,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 
+ 	mutex_unlock(&gpu->lock);
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
  }
-@@ -577,7 +581,9 @@ exynos5_dmc_change_freq_and_volt(struct exynos5_dmc *dmc,
  
- 	clk_set_rate(dmc->fout_bpll, target_rate);
+@@ -1308,8 +1311,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
  
--	exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	if (ret)
-+		goto disable_clocks;
+ 	if (!submit->runtime_resumed) {
+ 		ret = pm_runtime_get_sync(gpu->dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_noidle(gpu->dev);
+ 			return NULL;
++		}
+ 		submit->runtime_resumed = true;
+ 	}
  
- 	ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
- 	if (ret)
+@@ -1326,6 +1331,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 	ret = event_alloc(gpu, nr_events, event);
+ 	if (ret) {
+ 		DRM_ERROR("no free events\n");
++		pm_runtime_put_noidle(gpu->dev);
+ 		return NULL;
+ 	}
+ 
 -- 
 2.25.1
 
