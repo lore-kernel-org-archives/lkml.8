@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15D12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE542067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686470;
-	bh=rfUtZhsMXIoOiMMBGCFy1MRNH9HgQVcvEGbRUYRHj3A=;
+	s=default; t=1597686477;
+	bh=pAS/hYblmsO3E35MNJN90DL9EWQ7bUZaa5L6YODH46Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0jj3w8VF/KtZs4hP22+qbqgzqDURJdWI1M90p7WoTTApsfTP0gMexTgTvjRK4Xgc
-	 FAzh3FF0VhXIh1O9ugUKs+bKKB8V215oMWL8wybNBuEJ0+ttjZs52DYj1mH5qGSt04
-	 psVr5TvNEO3orAaIofOSzTb/ojBHG08IAkYskW04=
+	b=hiuazQSluWQvXPMcS9NKQHt93UCFFej+1UsArBKs7lr+nTYPSRbjQqWBwlTuaMJqJ
+	 Lmfrz8FQkQsdgmUNPqru1IT3jLiUdnl4yHTedVbBfQ8m7NJK4sNJFYmOErk9shazRp
+	 hUlBUsYGCcrE4LEB0oIAENE2oudfy81G2w4A7gJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbgHQRrq (ORCPT
+        id S2390079AbgHQRrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:47:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388755AbgHQQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388209AbgHQQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C27B22D74;
-        Mon, 17 Aug 2020 16:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42A0320772;
+        Mon, 17 Aug 2020 16:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680816;
-        bh=rfUtZhsMXIoOiMMBGCFy1MRNH9HgQVcvEGbRUYRHj3A=;
+        s=default; t=1597680800;
+        bh=pAS/hYblmsO3E35MNJN90DL9EWQ7bUZaa5L6YODH46Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KrrUj5XYIDygSl6DQH00QIGIk34G5/YdarbujrJf2X2dJy4V1MYCHA5gdAQzURjR5
-         fO4vx6yTT98gkni7gugPXgjGOt12jNzn/f9NiTmvrozIhMMoDOnXy11OYEYkoMjwB+
-         o7WcT2fF1kd1UNwmiAyuOwcBID9nXaM/l+vQW23M=
+        b=ePtK1zIZwvGLRuMaAvon/DS580718lbRbDXSr8EdJooMCUQM6n8MdKp9mimnsStLe
+         2yvH6Of55gPe/8/PRgOSb77L76s0PIddSwIMmW1khYm/sQp/jClPM+LDOUWMz/l5Tb
+         V2zwI4Z6D5YIhUsfrHmi60EZU/nmmcfevGrJ1lB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/168] usb: mtu3: clear dual mode of u3port when disable device
-Date:   Mon, 17 Aug 2020 17:16:09 +0200
-Message-Id: <20200817143735.681987236@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 035/168] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Mon, 17 Aug 2020 17:16:06 +0200
+Message-Id: <20200817143735.519300879@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,39 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-[ Upstream commit f1e51e99ed498d4aa9ae5df28e43d558ea627781 ]
+[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
 
-If not clear u3port's dual mode when disable device, the IP
-will fail to enter sleep mode when suspend.
+hi3660-hikey960.dts:
+  Define a 'ports' node for 'adv7533: adv7533@39' and the
+  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+  binding.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Link: https://lore.kernel.org/r/1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  This fills the requirements to meet the binding requirements,
+  remote endpoints are not defined.
+
+hi6220-hikey.dts:
+  Change property name s/pd-gpio/pd-gpios, gpio properties should be
+  plural. This is just a cosmetic change.
+
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/mtu3/mtu3_core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index 8606935201326..408e964522ab9 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -128,8 +128,12 @@ static void mtu3_device_disable(struct mtu3 *mtu)
- 	mtu3_setbits(ibase, SSUSB_U2_CTRL(0),
- 		SSUSB_U2_PORT_DIS | SSUSB_U2_PORT_PDN);
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index c98bcbc8dfba3..53848e0e5e0c6 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+ 		reg = <0x39>;
++		adi,dsi-lanes = <4>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
+ 	};
+ };
  
--	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG)
-+	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG) {
- 		mtu3_clrbits(ibase, SSUSB_U2_CTRL(0), SSUSB_U2_PORT_OTG_SEL);
-+		if (mtu->is_u3_ip)
-+			mtu3_clrbits(ibase, SSUSB_U3_CTRL(0),
-+				     SSUSB_U3_PORT_DUAL_MODE);
-+	}
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index e80a792827edb..60568392d21eb 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -515,7 +515,7 @@ adv7533: adv7533@39 {
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <1 2>;
+-		pd-gpio = <&gpio0 4 0>;
++		pd-gpios = <&gpio0 4 0>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
  
- 	mtu3_setbits(ibase, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
- }
 -- 
 2.25.1
 
