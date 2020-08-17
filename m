@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418282067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BC42067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683898;
-	bh=db7ks6C0AJctQO49/B+ps/2x8OHnvLRgvbnNsrSvoHc=;
+	s=default; t=1597683915;
+	bh=3ZUdMGNGVtzVHRjFEW6QRWy7L4pih5J5PASz2rAOfto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBlTG/tkt9bAcD1jQNJ4KqYgHC2nHFZ8a5qX1sQdei+C+GS6fjnG4v4NUgzYhyfcU
-	 t01I14g80Wfz6ZCt+GWUMI/3WvO/pGdBRb8bcQVuE8tcZlmt2WJOh6zfYpYqU+w3UA
-	 pFsKZtWBBTTqywOnjfxry5UtaRcEuVRH2JKT5c9o=
+	b=qmgI4j0YVkDQKIDztecjWoYp3mpYsHsIMAiBMV+SntnwrVtc915MVAv2IqN1jNg+C
+	 +bHWLoPZaVWfwsSJx1mDC9pKf5gOsqRcVmJSU0siGYPswLBWMYsx3rzKaK1tQhxyEt
+	 2zwHecNlFmPBWvS1vrrm8yngxs6HsBKwERT3DRkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbgHQREy (ORCPT
+        id S2387405AbgHQRFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388505AbgHQQJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:09:23 -0400
+        id S2388507AbgHQQJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:09:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C37122C9F;
-        Mon, 17 Aug 2020 16:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46F4522BEF;
+        Mon, 17 Aug 2020 16:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680562;
-        bh=db7ks6C0AJctQO49/B+ps/2x8OHnvLRgvbnNsrSvoHc=;
+        s=default; t=1597680567;
+        bh=3ZUdMGNGVtzVHRjFEW6QRWy7L4pih5J5PASz2rAOfto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2BJPGyy+Mq0UjHo1WHbWkNrDwVGPuOqvO7LnGpa1cv8hyt/Li83ueZZ/P51+1DQJ
-         8umA8CXo0GE7owILJ1KnoTk92YIqWx9mIXOLAYfYN6RxkXA2tWH4t9T729krFZJVJi
-         Fcf9uIoe9P09VmkMzYq4MH1AJhfLmAvLs47jFgy0=
+        b=smtnGIpFbHk9zsVOVui9ykLgzU1tRkDBmxjb86VvNruYBUY7BgFCFNbwuSxnKWTih
+         rybL8mzqKC81VpxspGa4gn6qv62A7ixh9ndcHYgYdtxvwI8iE1mVP+Uw+H88SHZo/I
+         WGkVdUMA1uuDkOK3+X9UfhpbJaogqyW6NPHj1hWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Tom=C3=A1=C5=A1=20Chaloupka?= <chalucha@gmail.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 237/270] io_uring: set ctx sq/cq entry count earlier
-Date:   Mon, 17 Aug 2020 17:17:18 +0200
-Message-Id: <20200817143807.599814411@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.4 239/270] NFS: Dont return layout segments that are in use
+Date:   Mon, 17 Aug 2020 17:17:20 +0200
+Message-Id: <20200817143807.711054341@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,49 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit bd74048108c179cea0ff52979506164c80f29da7 upstream.
+commit d474f96104bd4377573526ebae2ee212205a6839 upstream.
 
-If we hit an earlier error path in io_uring_create(), then we will have
-accounted memory, but not set ctx->{sq,cq}_entries yet. Then when the
-ring is torn down in error, we use those values to unaccount the memory.
+If the NFS_LAYOUT_RETURN_REQUESTED flag is set, we want to return the
+layout as soon as possible, meaning that the affected layout segments
+should be marked as invalid, and should no longer be in use for I/O.
 
-Ensure we set the ctx entries before we're able to hit a potential error
-path.
-
-Cc: stable@vger.kernel.org
-Reported-by: Tomáš Chaloupka <chalucha@gmail.com>
-Tested-by: Tomáš Chaloupka <chalucha@gmail.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: f0b429819b5f ("pNFS: Ignore non-recalled layouts in pnfs_layout_need_return()")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfs/pnfs.c |   34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3857,6 +3857,10 @@ static int io_allocate_scq_urings(struct
- 	struct io_rings *rings;
- 	size_t size, sq_array_offset;
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1198,31 +1198,27 @@ out:
+ 	return status;
+ }
  
-+	/* make sure these are sane, as we already accounted them */
-+	ctx->sq_entries = p->sq_entries;
-+	ctx->cq_entries = p->cq_entries;
++static bool
++pnfs_layout_segments_returnable(struct pnfs_layout_hdr *lo,
++				enum pnfs_iomode iomode,
++				u32 seq)
++{
++	struct pnfs_layout_range recall_range = {
++		.length = NFS4_MAX_UINT64,
++		.iomode = iomode,
++	};
++	return pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
++					       &recall_range, seq) != -EBUSY;
++}
 +
- 	size = rings_size(p->sq_entries, p->cq_entries, &sq_array_offset);
- 	if (size == SIZE_MAX)
- 		return -EOVERFLOW;
-@@ -3873,8 +3877,6 @@ static int io_allocate_scq_urings(struct
- 	rings->cq_ring_entries = p->cq_entries;
- 	ctx->sq_mask = rings->sq_ring_mask;
- 	ctx->cq_mask = rings->cq_ring_mask;
--	ctx->sq_entries = rings->sq_ring_entries;
--	ctx->cq_entries = rings->cq_ring_entries;
+ /* Return true if layoutreturn is needed */
+ static bool
+ pnfs_layout_need_return(struct pnfs_layout_hdr *lo)
+ {
+-	struct pnfs_layout_segment *s;
+-	enum pnfs_iomode iomode;
+-	u32 seq;
+-
+ 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
+ 		return false;
+-
+-	seq = lo->plh_return_seq;
+-	iomode = lo->plh_return_iomode;
+-
+-	/* Defer layoutreturn until all recalled lsegs are done */
+-	list_for_each_entry(s, &lo->plh_segs, pls_list) {
+-		if (seq && pnfs_seqid_is_newer(s->pls_seq, seq))
+-			continue;
+-		if (iomode != IOMODE_ANY && s->pls_range.iomode != iomode)
+-			continue;
+-		if (test_bit(NFS_LSEG_LAYOUTRETURN, &s->pls_flags))
+-			return false;
+-	}
+-
+-	return true;
++	return pnfs_layout_segments_returnable(lo, lo->plh_return_iomode,
++					       lo->plh_return_seq);
+ }
  
- 	size = array_size(sizeof(struct io_uring_sqe), p->sq_entries);
- 	if (size == SIZE_MAX) {
+ static void pnfs_layoutreturn_before_put_layout_hdr(struct pnfs_layout_hdr *lo)
 
 
