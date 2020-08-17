@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F39BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF24C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB486204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F03020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692222;
-	bh=QNi9gv+rf5slUxfdHR740fYbHA5xhV8irPouXkkHkWA=;
+	s=default; t=1597692227;
+	bh=nY7Z+58bxMpqeEY+egYViKeihsa18A5ZvgjKv7qVcAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+/Po1jaJQSnl2krAmsv7lVu6ayKy7ob4pgegxZAgX+XgIU1mF3bXHUgMZgN6gUeM
-	 uVy12TeN6F2Nb8baYvIRYZsX3YXu9k3JoGtJCtj2qCqEEJBQxUaBDdfSVtHvq/dshN
-	 0zr3VibGWXFOtljf/PAjCJr+vDVgUs2DUQK65/+M=
+	b=IwuziWU+QnIxg5ZDWFAhb3OOtgCs+ChkZ9ZclWm1eO8/8ahKpTlQ2qPJyRjqQSBed
+	 DKMKSMkEMWzKOkHZcRmrdfVxOiCnDW/OkD+r4vo7vR1znhl/hTO0Iy57LJPIcRBEVc
+	 MbhY6nRFm2UttG3UlghdB2zS7NKI7UslXKXZwXQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392217AbgHQTXk (ORCPT
+        id S2392467AbgHQTXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbgHQPfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:35:03 -0400
+        id S1730116AbgHQPe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCBB023128;
-        Mon, 17 Aug 2020 15:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A1823434;
+        Mon, 17 Aug 2020 15:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678503;
-        bh=QNi9gv+rf5slUxfdHR740fYbHA5xhV8irPouXkkHkWA=;
+        s=default; t=1597678497;
+        bh=nY7Z+58bxMpqeEY+egYViKeihsa18A5ZvgjKv7qVcAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EwKLRa4a+D1udlgs+Rkfb4YxvLSbaYDVt6ciNb5VjYUmTlAnSMb7jwL04IQ5ZUqIh
-         0yjosWsySJZX9GNhdbG8qevHZDek4uzTSMr1fO+ioFUA+84YM5B6TfojKjq1KqOgWu
-         m9iXjGu5BPzk6KR3rDSDAk7LfNb32U3+ZPcWLuAY=
+        b=vg8Lgph2zzaTLFM+4gdil9wAU9TZOwXyI5JvPOsGGqjLjXYCFMqTem4rk/7J10h2V
+         BhGApiiq7k1DoXrtpYqzZEvPVw9MvaHUN3g/4l3/giQwSmFm7+bTYtELDAOEh8WRFk
+         dX5MACFzBqShm6yl43zHMSqwh4PSNr5NksvZRzmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 325/464] powerpc/pseries/hotplug-cpu: Remove double free in error path
-Date:   Mon, 17 Aug 2020 17:14:38 +0200
-Message-Id: <20200817143849.360812255@linuxfoundation.org>
+Subject: [PATCH 5.8 323/464] PCI: Release IVRS table in AMD ACS quirk
+Date:   Mon, 17 Aug 2020 17:14:36 +0200
+Message-Id: <20200817143849.265318404@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit a0ff72f9f5a780341e7ff5e9ba50a0dad5fa1980 ]
+[ Upstream commit 090688fa4e448284aaa16136372397d7d10814db ]
 
-In the unlikely event that the device tree lacks a /cpus node,
-find_dlpar_cpus_to_add() oddly frees the cpu_drcs buffer it has been
-passed before returning an error. Its only caller also frees the
-buffer on error.
+The acpi_get_table() should be coupled with acpi_put_table() if the mapped
+table is not used at runtime to release the table mapping.
 
-Remove the less conventional kfree() of a caller-supplied buffer from
-find_dlpar_cpus_to_add().
+In pci_quirk_amd_sb_acs(), IVRS table is just used for checking AMD IOMMU
+is supported, not used at runtime, so put the table after using it.
 
-Fixes: 90edf184b9b7 ("powerpc/pseries: Add CPU dlpar add functionality")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190919231633.1344-1-nathanl@linux.ibm.com
+Fixes: 15b100dfd1c9 ("PCI: Claim ACS support for AMD southbridge devices")
+Link: https://lore.kernel.org/r/1595411068-15440-1-git-send-email-guohanjun@huawei.com
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index d4b346355bb9e..6d4ee03d476a9 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -739,7 +739,6 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
- 	parent = of_find_node_by_path("/cpus");
- 	if (!parent) {
- 		pr_warn("Could not find CPU root node in device tree\n");
--		kfree(cpu_drcs);
- 		return -1;
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 2ea61abd58302..d442219cd2708 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4422,6 +4422,8 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
+ 
++	acpi_put_table(header);
++
+ 	/* Filter out flags not applicable to multifunction */
+ 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
  
 -- 
 2.25.1
