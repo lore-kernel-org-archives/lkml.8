@@ -2,71 +2,70 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8913C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3396204EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB88C2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHQL6P (ORCPT
+        id S1727878AbgHQMAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:58:15 -0400
-Received: from elvis.franken.de ([193.175.24.41]:49839 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgHQL6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:58:13 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k7dmF-0004BP-00; Mon, 17 Aug 2020 13:58:11 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 6F205C0D74; Mon, 17 Aug 2020 13:53:08 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 13:53:08 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-mips@linux-mips.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "open list:BROADCOM BCM47XX MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] firmware: bcm47xx_sprom: Fix -Wmissing-prototypes
- warnings
-Message-ID: <20200817115308.GA4796@alpha.franken.de>
-References: <20200726041521.5398-1-f.fainelli@gmail.com>
+        Mon, 17 Aug 2020 08:00:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9749 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726457AbgHQMAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:00:46 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6ADAEE713FB79A561007;
+        Mon, 17 Aug 2020 20:00:44 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 17 Aug 2020
+ 20:00:37 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] mm/migrate: Avoid possible unnecessary ptrace_may_access() call in kernel_move_pages()
+Date:   Mon, 17 Aug 2020 07:59:33 -0400
+Message-ID: <20200817115933.44565-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726041521.5398-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 09:15:19PM -0700, Florian Fainelli wrote:
-> Hi Thomas,
-> 
-> This patch series fixes W=1 -Wmissing-prototypes warnings for the
-> bcm47xx_sprom.c firmware file.
-> 
-> Thanks!
-> 
-> Florian Fainelli (2):
->   firmware: bcm47xx_sprom: Fix -Wmissing-prototypes warnings
->   MIPS: BCM47xx: Include bcm47xx_sprom.h
-> 
->  arch/mips/include/asm/mach-bcm47xx/bcm47xx.h |  4 +---
->  drivers/firmware/broadcom/bcm47xx_sprom.c    |  1 +
->  include/linux/bcm47xx_sprom.h                | 10 ++++++++++
->  3 files changed, 12 insertions(+), 3 deletions(-)
+There is no need to check if this process has the right to modify the
+specified process when they are same.
 
-series applied to mips-next.
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/migrate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thomas.
-
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 34a842a8eb6a..342c1ce0b433 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1903,7 +1903,7 @@ static int kernel_move_pages(pid_t pid, unsigned long nr_pages,
+ 	 * Check if this process has the right to modify the specified
+ 	 * process. Use the regular "ptrace_may_access()" checks.
+ 	 */
+-	if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
++	if (pid && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
+ 		rcu_read_unlock();
+ 		err = -EPERM;
+ 		goto out;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.19.1
+
