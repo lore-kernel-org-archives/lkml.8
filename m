@@ -2,94 +2,123 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E66F20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686235;
-	bh=xG8/kLZ35jqLlqpTwQ2SgV6SH5BSThBWrl/d887Snko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzXpqC4ia4v41BQ9dvwEpoqCiS1jHkW+FWKfPgGzIV4KNZb4TKIfp+DnaBQ7obBpi
-	 Xo8sA3Ao9u9Hlzs1MMWTuPoFYXEDzSlrUyyUFzccuS/jVYBzu4W7ONLZpgrC4jtT/j
-	 xdImYpVg0SLYZwNDXjFx1T1iLOWOcsXo5iRPhcHI=
+	by mail.kernel.org (Postfix) with ESMTP id 7F6EC20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BEVJDvx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388938AbgHQRnc (ORCPT
+        id S2389108AbgHQRn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgHQQQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFFA204FD;
-        Mon, 17 Aug 2020 16:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680949;
-        bh=xG8/kLZ35jqLlqpTwQ2SgV6SH5BSThBWrl/d887Snko=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnV34G9w1EaVNRP50sN9yI9FpWWDzTkkC1E87xE0aCrQVWkD+UsyuT1w4dQtTmLFy
-         yyyYxq/pRuyFKhyQibNoQ8T6LRA+Ij8/wzSWnO25viN3IMdhXJFaSdYVWGItHaoBFI
-         rsje/Ti0JBswqgLKuO8nYA0KTM0KFluEmqJnKZJ8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 122/168] fsl/fman: fix unreachable code
-Date:   Mon, 17 Aug 2020 17:17:33 +0200
-Message-Id: <20200817143739.771651641@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 13:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389020AbgHQRns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:43:48 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99461C061389;
+        Mon, 17 Aug 2020 10:43:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x5so13949493wmi.2;
+        Mon, 17 Aug 2020 10:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HFsbrpQA/6K/m6r64TJHx6ZpqfJgPOgySDUCEdnMbUs=;
+        b=BEVJDvx4JugvWQ1LtNcvyOtVSVOmLiagYyaUL4nRagGU9m0FqRjQngHvQ+WqZu1gpN
+         G/6e3/WToUY711n0lcpG6utJKT4+1ge+FKcETxwVdq8SwEXmmWFJA5dF/7jhjYLYBrpG
+         s9pk+O6sE35yNH8cZFSwElKy6xPNP11BZZIHzGrsN4DopoNUVdZtIp8mEMVZ85ZDDvzD
+         hdWV4V9hlZNZxt1k833BuryAlMT2pqX/UEbCoSstqGFxgYX0hQXnfmxyvyYKjUe3uWz3
+         AUy9/GH+rZixjDs9WNrEKmcvmJOO4+8BJx3do2iJzZ3GLCbrpUcPRo1Ggqo+zowb/8BE
+         ANMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HFsbrpQA/6K/m6r64TJHx6ZpqfJgPOgySDUCEdnMbUs=;
+        b=LuGTfsvtC+Z1EaJL5ODbGrNibIZwnZzuMl+XAFSANSMWMsx6+swTbqEg7MzLgJZ7bY
+         E3Hu7fdeJHMUud8lfDY/nTIiYuyBJEHqN8Dxl4FzzHsh3cb/5wgd5XZOf2sLUv7ojdvT
+         nTovuRT59CHyqwAx1MJoDZIT+6asx3bOujFzwURkZGeByqNatN0XNZ/2iixxbemZZtee
+         YNjFX5D2/0RAUgEoQjJS2+k3UasVoVe1YjW9t9QZlthKFBXC63vy3zP49sJ9B7Cx8RMg
+         Yml01QSAG0O78drOKisKlLCkJK9NUKExrB3BgnlP5CniAIV9Pm0C6JghtjsiHdhO9G6Y
+         ncxA==
+X-Gm-Message-State: AOAM533dMbWWspZsHtQShfvqWvIPJ0o0Y2/mtbV2c/161HUn5UTYje/j
+        RAXqmxS4KkEeE0P+DQmt4X8=
+X-Google-Smtp-Source: ABdhPJyrcKXTHc4h4Psph7lG3cawYaF1Uisg47sIhEE1aW8mNmbTC9HMd1oGHBj6YzpuAqNrjqVsyw==
+X-Received: by 2002:a1c:3b89:: with SMTP id i131mr15545485wma.30.1597686227372;
+        Mon, 17 Aug 2020 10:43:47 -0700 (PDT)
+Received: from lenovo-laptop (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id a10sm31312236wro.35.2020.08.17.10.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 10:43:46 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Mon, 17 Aug 2020 18:43:44 +0100
+To:     David Lechner <david@lechnology.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery
+ Kconfig options
+Message-ID: <20200817174344.lxuzlly4it5vpfmz@lenovo-laptop>
+References: <20200809185444.54247-1-alex.dewar90@gmail.com>
+ <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
+ <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
+ <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
+ <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
+ <0927eaf0-62d6-adaf-c4b0-89d7f4cc7b4a@lechnology.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0927eaf0-62d6-adaf-c4b0-89d7f4cc7b4a@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florinel Iordache <florinel.iordache@nxp.com>
+On Wed, Aug 12, 2020 at 02:12:57PM -0500, David Lechner wrote:
+> On 8/12/20 2:02 PM, Alex Dewar wrote:
+> > On Wed, Aug 12, 2020 at 10:24:30AM -0500, David Lechner wrote:
+> > > On 8/12/20 8:37 AM, Alex Dewar wrote:
+> > > > On Tue, Aug 11, 2020 at 09:24:10AM -0500, David Lechner wrote:
+> > > > > On 8/9/20 1:54 PM, Alex Dewar wrote:
+> > > > > > This battery appears only to be used by a single board (DA850), so it
+> > > > > > makes sense to add this to the Kconfig file so that users don't build
+> > > > > > the module unnecessarily. It currently seems to be built for the x86
+> > > > > > Arch Linux kernel where it's probably not doing much good.
+> > > > > 
+> > > > > It would probably also make sense to add "default n" since it only
+> > > > > applies to one board in the entire arch.
+> > > > 
+> > > > Ah ok. That makes sense. Would you like me to send a follow-on patch for
+> > > > this?
+> > > 
+> > > You can just send a v2 patch that includes the change below and the
+> > > additional change.
+> > 
+> > I've just had a look at the documentation[1] and it seems that as there's
+> > no "default y" there it'll default to n anyway. Have I got that right?
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html#menu-attributes
+> > 
+> 
+> Yes, that seems right. That makes me wonder why this would have been enabled in
+> the Arch Linux kernel for x86 then.
 
-[ Upstream commit cc79fd8f557767de90ff199d3b6fb911df43160a ]
+Not sure, maybe the Arch devs like Lego? ;-)
 
-The parameter 'priority' is incorrectly forced to zero which ultimately
-induces logically dead code in the subsequent lines.
+Are you happy to give an Acked-by for this anyhoo?
 
-Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/freescale/fman/fman_memac.c | 1 -
- 1 file changed, 1 deletion(-)
+@Sebastian, are you happy to pick up this patch?
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-index e1901874c19f0..08f8b36779ea4 100644
---- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-@@ -856,7 +856,6 @@ int memac_set_tx_pause_frames(struct fman_mac *memac, u8 priority,
- 
- 	tmp = ioread32be(&regs->command_config);
- 	tmp &= ~CMD_CFG_PFC_MODE;
--	priority = 0;
- 
- 	iowrite32be(tmp, &regs->command_config);
- 
--- 
-2.25.1
-
-
-
+Best,
+Alex
