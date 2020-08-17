@@ -2,130 +2,162 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F55C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EACCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152F8205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097CF205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1lMOhR/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMYUOdqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgHQOKA (ORCPT
+        id S1728790AbgHQOM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:10:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58035 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728897AbgHQOJx (ORCPT
+        Mon, 17 Aug 2020 10:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbgHQOM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:09:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597673391;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=+lmlYQx2uz53YfMyFrKjqL1FinoRZitUJmdbvkIY3+4=;
-        b=O1lMOhR/ZwxLiHxgvd8pefOfMvFy460VENnRCg4mQP+oZ7VXpOPIthpprK4n1C7rrxkrSt
-        vZu570eoKMRLqd4CHzKAnUedCvvE40+vbTP+0Qekk/aXQJcNJhHOASLwAVhdv2hh3DYcab
-        cDnRvyCWOWdguNYVXGnzp+40SuvOgHQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-z0VJS0sDPW6M5J-0AMqYtA-1; Mon, 17 Aug 2020 10:09:49 -0400
-X-MC-Unique: z0VJS0sDPW6M5J-0AMqYtA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DCE281F001;
-        Mon, 17 Aug 2020 14:09:47 +0000 (UTC)
-Received: from llong.com (ovpn-118-35.rdu2.redhat.com [10.10.118.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11C7926323;
-        Mon, 17 Aug 2020 14:09:38 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Waiman Long <longman@redhat.com>
-Subject: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory control
-Date:   Mon, 17 Aug 2020 10:08:23 -0400
-Message-Id: <20200817140831.30260-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Mon, 17 Aug 2020 10:12:28 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381BEC061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:12:27 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g6so17595597ljn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q7d9pcUKbDGfUpE6Avug3GSgjxvOVpz7Xk0gMD0ttFI=;
+        b=gMYUOdqdelXi5UQrg9TpMibqw1w8S+D7awDT/BVjaXw0fti06gTMWCpDjBZe1W3JuF
+         8kvgIhZgJvl2rmVX9sEqiCzZuIFkC8nAmnRa1P9BdBrDlVfna7dmE4p4LsGXFIi84F1z
+         Xwp39IbROt/uopEH0yzVyvloQrlb7SUdwdrSX54JKhlP7hSlH2Jlkb1FF+QZX1AnhtA6
+         DG2/CggHeahPAYMXlvXPAmxz01X9bZ5KKSFsCKsVlv2fzk9Nr/6zHNDKFnM8m56OSV52
+         Aut9y7m932gKz0zRZaps3FnIUKfRrzulUVC09X1S6VMJvradsQl61jIhQLcIitHOgmWa
+         xynw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q7d9pcUKbDGfUpE6Avug3GSgjxvOVpz7Xk0gMD0ttFI=;
+        b=bb7IhcHfDDoJAwmuri8ycVp8B4yYBnYLB4KOMgQln584LBUNhByDtqeTR2leh57xHI
+         Oir8GBnTOvvwS3I01NfHUCFMoSDzBvDn8kS+ecU5JTjjPZZJRSpDr6ep9Lq51otRuZ0J
+         EJ0n7Do3nmYDft9cDzKAji84yw/Wtayz0UiZBrv6qZ9zjZ4WPQlhkMhUJ8NURKfkW0i7
+         t6gRb29bLeGHQtzrY2K+zzVlfpD3aq8ENBWVLjHzoDl1edyQVpO6DXPVS4bz4pkICHJP
+         NEQEYTatRA/XLeczDD5C7Pd4Yupf1HhUGlZg1NH6BPWe93DEnyd2n2trIIoWeMPpw59W
+         o6zw==
+X-Gm-Message-State: AOAM532EIjZ8Y+XYuSSpfWWhfZrR8SaFFmTWFNZwsmNcwfqEpUi2+E1d
+        RV2Mo/7s0/lF/PPIvQPRar2st5mz1nxUS5FQ/4+kWQ==
+X-Google-Smtp-Source: ABdhPJzZvNTsjJlCZRY46qgZ5XPfaIqBt+6PYchX+KcW7o6RJ0edJpORQWsb2GY8kITxV/aTPnf5HGKblVtJ7XlEV8w=
+X-Received: by 2002:a2e:b6cc:: with SMTP id m12mr6743907ljo.256.1597673545599;
+ Mon, 17 Aug 2020 07:12:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200811145816.GA424033@kroah.com> <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
+ <CAFA6WYPBdOiVsKR_hSLpigN_1b9jimXKaqyRZjvKSx3xpAmLjA@mail.gmail.com>
+ <CAD=FV=WccmFRkV4UUTLSYR9+7210h00Si=nG4tRs3BBuweA6ng@mail.gmail.com>
+ <CAD=FV=V8UhQVQvcAp6XCmT3=6FYM=_zPELy4FTj4kMKUswaR8Q@mail.gmail.com>
+ <CAFA6WYPxieH6ZTa_BFdaLuiwbqAs6r7eKmxG7ci4XtyRONGN7g@mail.gmail.com>
+ <20200813101703.566thqmnc2d7cb3n@holly.lan> <CAFA6WYPd-fcDkYNk1KrjYwD=FH3FBvjDGEoxCBBN9CRidoVXbw@mail.gmail.com>
+ <20200814141822.opahh33nfc5yodkb@holly.lan> <CAFA6WYO3YmgCftr-hFdiHGHATeox9en_HZvgnAL=zhoa=OEi_w@mail.gmail.com>
+ <20200817092830.xcl2gkyxoe5grgnz@holly.lan>
+In-Reply-To: <20200817092830.xcl2gkyxoe5grgnz@holly.lan>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 17 Aug 2020 19:42:14 +0530
+Message-ID: <CAFA6WYOX0VzSvCyNTPemNMBPmSY75Q8vKdyQLc9cuq2m5eBWLg@mail.gmail.com>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory controller can be used to control and limit the amount of
-physical memory used by a task. When a limit is set in "memory.high" in
-a v2 non-root memory cgroup, the memory controller will try to reclaim
-memory if the limit has been exceeded. Normally, that will be enough
-to keep the physical memory consumption of tasks in the memory cgroup
-to be around or below the "memory.high" limit.
+On Mon, 17 Aug 2020 at 14:58, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Mon, Aug 17, 2020 at 10:42:43AM +0530, Sumit Garg wrote:
+> > On Fri, 14 Aug 2020 at 19:48, Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > On Fri, Aug 14, 2020 at 05:36:36PM +0530, Sumit Garg wrote:
+> > > > On Thu, 13 Aug 2020 at 15:47, Daniel Thompson
+> > > > <daniel.thompson@linaro.org> wrote:
+> > > > >
+> > > > > On Thu, Aug 13, 2020 at 02:55:12PM +0530, Sumit Garg wrote:
+> > > > > > On Thu, 13 Aug 2020 at 05:38, Doug Anderson <dianders@chromium.org> wrote:
+> > > > > > > On Wed, Aug 12, 2020 at 8:27 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > > > > > > One
+> > > > > > > > last worry is that I assume that most people testing (and even
+> > > > > > > > automated testing labs) will either always enable NMI or won't enable
+> > > > > > > > NMI.  That means that everyone will be only testing one codepath or
+> > > > > > > > the other and (given the complexity) the non-tested codepath will
+> > > > > > > > break.
+> > > > > > > >
+> > > > > >
+> > > > > > The current patch-set only makes this NMI to work when debugger (kgdb)
+> > > > > > is enabled which I think is mostly suitable for development
+> > > > > > environments. So most people testing will involve existing IRQ mode
+> > > > > > only.
+> > > > > >
+> > > > > > However, it's very much possible to make NMI mode as default for a
+> > > > > > particular serial driver if the underlying irqchip supports it but it
+> > > > > > depends if we really see any production level usage of NMI debug
+> > > > > > feature.
+> > > > >
+> > > > > The effect of this patch is not to make kgdb work from NMI it is to make
+> > > > > (some) SysRqs work from NMI. I think that only allowing it to deploy for
+> > > > > kgdb users is a mistake.
+> > > > >
+> > > > > Having it deploy automatically for kgdb users might be OK but it seems
+> > > > > sensible to make this feature available for other users too.
+> > > >
+> > > > I think I wasn't clear enough in my prior reply. Actually I meant to
+> > > > say that this patch-set enables NMI support for a particular serial
+> > > > driver via ".poll_init()" interface and the only current user of that
+> > > > interface is kgdb.
+> > > >
+> > > > So if there are other users interested in this feature, they can use
+> > > > ".poll_init()" interface as well to enable it.
+> > >
+> > > Huh?
+> > >
+> > > We appear to speaking interchangably about users (people who sit in
+> > > front of the machine and want a stack trace) and sub-systems ;-).
+> > >
+> > > I don't think other SysRq commands have quite such a direct relationship
+> > > between the sub-system and the sysrq command. For example who are you
+> > > expecting to call .poll_init() if a user wants to use the SysRq to
+> > > provoke a stack trace?
+> > >
+> >
+> > Ah, I see. So you meant to provide a user-space interface to
+> > dynamically enable/disable NMI debug, correct? It will require IRQ <->
+> > NMI switching at runtime which should be doable safely.
+>
+> I haven't given much thought to the exact mechanism, though I would
+> perhaps have started by thinking about a module parameter).
+>
+> From an RFC point of view, I simple think this feature is potentially
+> useful on systems without kgdb (which, let's be honest, are firmly in
+> the majority) so making .poll_init() the only way to activate it is a
+> mistake.
+>
 
-Sometimes, memory reclaim may not be able to recover memory in a rate
-that can catch up to the physical memory allocation rate. In this case,
-the physical memory consumption will keep on increasing.  When it reaches
-"memory.max" for memory cgroup v2 or when the system is running out of
-free memory, the OOM killer will be invoked to kill some tasks to free
-up additional memory. However, one has little control of which tasks
-are going to be killed by an OOM killer. Killing tasks that hold some
-important resources without freeing them first can create other system
-problems down the road.
+Makes sense, will add a module parameter to enable this feature during
+boot as well.
 
-Users who do not want the OOM killer to be invoked to kill random
-tasks in an out-of-memory situation can use the memory control
-facility provided by this new patchset via prctl(2) to better manage
-the mitigation action that needs to be performed to various tasks when
-the specified memory limit is exceeded with memory cgroup v2 being used.
+-Sumit
 
-The currently supported mitigation actions include the followings:
-
- 1) Return ENOMEM for some syscalls that allocate or handle memory
- 2) Slow down the process for memory reclaim to catch up
- 3) Send a specific signal to the task
- 4) Kill the task
-
-The users that want better memory control for their applicatons can
-either modify their applications to call the prctl(2) syscall directly
-with the new memory control command code or write the desired action to
-the newly provided memctl procfs files of their applications provided
-that those applications run in a non-root v2 memory cgroup.
-
-Waiman Long (8):
-  memcg: Enable fine-grained control of over memory.high action
-  memcg, mm: Return ENOMEM or delay if memcg_over_limit
-  memcg: Allow the use of task RSS memory as over-high action trigger
-  fs/proc: Support a new procfs memctl file
-  memcg: Allow direct per-task memory limit checking
-  memcg: Introduce additional memory control slowdown if needed
-  memcg: Enable logging of memory control mitigation action
-  memcg: Add over-high action prctl() documentation
-
- Documentation/userspace-api/index.rst      |   1 +
- Documentation/userspace-api/memcontrol.rst | 174 ++++++++++++++++
- fs/proc/base.c                             | 109 ++++++++++
- include/linux/memcontrol.h                 |   4 +
- include/linux/sched.h                      |  24 +++
- include/uapi/linux/prctl.h                 |  48 +++++
- kernel/fork.c                              |   1 +
- kernel/sys.c                               |  16 ++
- mm/memcontrol.c                            | 227 +++++++++++++++++++++
- mm/mlock.c                                 |   6 +
- mm/mmap.c                                  |  12 ++
- mm/mprotect.c                              |   3 +
- 12 files changed, 625 insertions(+)
- create mode 100644 Documentation/userspace-api/memcontrol.rst
-
--- 
-2.18.1
-
+>
+> Daniel.
