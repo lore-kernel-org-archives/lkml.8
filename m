@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52123C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3315D2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B312065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692916;
-	bh=I0mBP7wTCEKkZIwHjCDfXcQWyWEOqJFbo3CJkQzU6tM=;
+	s=default; t=1597692922;
+	bh=XmOtBywmvijbi4qbmel2vVyDLiX30NEigxI5LnAU8Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IlW8zpcB1icVuhRS2KrulozbzcISZSMFp6tCb4rCDoeYcd3nxXHzFooT93rTREUR/
-	 MuCPp3mrz/KMfK7sa8lunD2BlnGxZAFuSHqw86swYbA3es0rnvm2ge+0M8/22FwKAC
-	 APLwEKQr+QL2ehjAwQ+r+P4jSssEzL/BhmgFMfy0=
+	b=Cl2L0TuOXdiXErkIt9zSz6t9e5DlRDbYg6mzTM5RM+CCEXZUNXiXrvm1M9rZuqKj4
+	 akot+K/z1hUybCbUkr9cCX+k4fmSEf1GuWDFVLS1YDVYgJzEqFP4olrX+AvEGNW7Vf
+	 3+EJ0ZvUmoYzGBaV0qxolQJUEScADcO/hNU8/yKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732210AbgHQTfO (ORCPT
+        id S1730098AbgHQP3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgHQP3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:35 -0400
+        id S1729884AbgHQP1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B821323BE2;
-        Mon, 17 Aug 2020 15:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE6E2078D;
+        Mon, 17 Aug 2020 15:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678174;
-        bh=I0mBP7wTCEKkZIwHjCDfXcQWyWEOqJFbo3CJkQzU6tM=;
+        s=default; t=1597678041;
+        bh=XmOtBywmvijbi4qbmel2vVyDLiX30NEigxI5LnAU8Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHiCEKVoCE8AHo/GCm4wLGyioymWD3Kkm3HJEqJJnOIfG9IjxzRFy4u3idJKd6nVR
-         VgfiW6a5NVnSzNdlzGSN2O8nTIUBr/k0GoRCDLgs2kSa1qHgy+O2reKXZ3L+twUfSx
-         j973Pa2756YdpInrR50EssfzsCuxvJfnmozls0cc=
+        b=1D0KfV80eSpz5lB682K6x+pIiy5RG0buYj6NZ7lonrKqc8MxHu1Ys8efImwZmuFTE
+         VDQL8poS4VBY/EqreyZZofZdkVFajYlTvzE3pmfRPlEujYgxjDhKluL3Ek9Ky+ZBKM
+         wSgL9gWQB2cs2T+/i/nReG5Kg3zjK2Kyduo9BCZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        stable@vger.kernel.org,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 243/464] ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an invalid cond
-Date:   Mon, 17 Aug 2020 17:13:16 +0200
-Message-Id: <20200817143845.436176143@linuxfoundation.org>
+Subject: [PATCH 5.8 199/464] dma-buf: fix dma-fence-chain out of order test
+Date:   Mon, 17 Aug 2020 17:12:32 +0200
+Message-Id: <20200817143843.354544668@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,78 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
 
-[ Upstream commit db2045f5892a9db7354442bf77f9b03b50ff9ee1 ]
+[ Upstream commit 4cca2e641641767593583749dec26bfebd8f6f2d ]
 
-The KEXEC_CMDLINE hook function only supports the pcr conditional. Make
-this clear at policy load so that IMA policy authors don't assume that
-other conditionals are supported.
+There was probably a misunderstand on how the dma-fence-chain is
+supposed to work or what dma_fence_chain_find_seqno() is supposed to
+return.
 
-Since KEXEC_CMDLINE's inception, ima_match_rules() has always returned
-true on any loaded KEXEC_CMDLINE rule without any consideration for
-other conditionals present in the rule. Make it clear that pcr is the
-only supported KEXEC_CMDLINE conditional by returning an error during
-policy load.
+dma_fence_chain_find_seqno() is here to give us the fence to wait upon
+for a particular point in the timeline. The timeline progresses only
+when all the points prior to a given number have completed.
 
-An example of why this is a problem can be explained with the following
-rule:
-
- dont_measure func=KEXEC_CMDLINE obj_type=foo_t
-
-An IMA policy author would have assumed that rule is valid because the
-parser accepted it but the result was that measurements for all
-KEXEC_CMDLINE operations would be disabled.
-
-Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Fixes: dc2f7e67a28a5c ("dma-buf: Exercise dma-fence-chain under selftests")
+Link: https://patchwork.freedesktop.org/patch/372960/
+Signed-off-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/dma-buf/st-dma-fence-chain.c | 43 ++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index a3d72342408ad..a77e0b34e72f7 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -343,6 +343,17 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
- 	return 0;
- }
+diff --git a/drivers/dma-buf/st-dma-fence-chain.c b/drivers/dma-buf/st-dma-fence-chain.c
+index 5d45ba7ba3cd3..9525f7f561194 100644
+--- a/drivers/dma-buf/st-dma-fence-chain.c
++++ b/drivers/dma-buf/st-dma-fence-chain.c
+@@ -318,15 +318,16 @@ static int find_out_of_order(void *arg)
+ 		goto err;
+ 	}
  
-+static bool ima_rule_contains_lsm_cond(struct ima_rule_entry *entry)
-+{
-+	int i;
-+
-+	for (i = 0; i < MAX_LSM_RULES; i++)
-+		if (entry->lsm[i].args_p)
-+			return true;
-+
-+	return false;
-+}
-+
- /*
-  * The LSM policy can be reloaded, leaving the IMA LSM based rules referring
-  * to the old, stale LSM policy.  Update the IMA LSM based rules to reflect
-@@ -998,6 +1009,16 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 		/* Validation of these hook functions is in ima_parse_rule() */
- 		break;
- 	case KEXEC_CMDLINE:
-+		if (entry->action & ~(MEASURE | DONT_MEASURE))
-+			return false;
-+
-+		if (entry->flags & ~(IMA_FUNC | IMA_PCR))
-+			return false;
-+
-+		if (ima_rule_contains_lsm_cond(entry))
-+			return false;
-+
-+		break;
- 	case KEY_CHECK:
- 		if (entry->action & ~(MEASURE | DONT_MEASURE))
- 			return false;
+-	if (fence && fence != fc.chains[1]) {
++	/*
++	 * We signaled the middle fence (2) of the 1-2-3 chain. The behavior
++	 * of the dma-fence-chain is to make us wait for all the fences up to
++	 * the point we want. Since fence 1 is still not signaled, this what
++	 * we should get as fence to wait upon (fence 2 being garbage
++	 * collected during the traversal of the chain).
++	 */
++	if (fence != fc.chains[0]) {
+ 		pr_err("Incorrect chain-fence.seqno:%lld reported for completed seqno:2\n",
+-		       fence->seqno);
+-
+-		dma_fence_get(fence);
+-		err = dma_fence_chain_find_seqno(&fence, 2);
+-		dma_fence_put(fence);
+-		if (err)
+-			pr_err("Reported %d for finding self!\n", err);
++		       fence ? fence->seqno : 0);
+ 
+ 		err = -EINVAL;
+ 	}
+@@ -415,20 +416,18 @@ static int __find_race(void *arg)
+ 		if (!fence)
+ 			goto signal;
+ 
+-		err = dma_fence_chain_find_seqno(&fence, seqno);
+-		if (err) {
+-			pr_err("Reported an invalid fence for find-self:%d\n",
+-			       seqno);
+-			dma_fence_put(fence);
+-			break;
+-		}
+-
+-		if (fence->seqno < seqno) {
+-			pr_err("Reported an earlier fence.seqno:%lld for seqno:%d\n",
+-			       fence->seqno, seqno);
+-			err = -EINVAL;
+-			dma_fence_put(fence);
+-			break;
++		/*
++		 * We can only find ourselves if we are on fence we were
++		 * looking for.
++		 */
++		if (fence->seqno == seqno) {
++			err = dma_fence_chain_find_seqno(&fence, seqno);
++			if (err) {
++				pr_err("Reported an invalid fence for find-self:%d\n",
++				       seqno);
++				dma_fence_put(fence);
++				break;
++			}
+ 		}
+ 
+ 		dma_fence_put(fence);
 -- 
 2.25.1
 
