@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1478DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC882207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73752204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690134;
-	bh=qdbaxaqAipz0TJG72rVuGZ2oH2GletrRjHby+KTDcls=;
+	s=default; t=1597690145;
+	bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXLNaedYkwWB4gsbbmysHFQL7tT0BwYFKQehca4E745Z5Dkn+0A1xXq+yMx/g69w/
-	 +V0xtKTSy7LRFq13DU8gRwUF2zrwEIWm4y6/9Ce9jsIeBzfItE7NXosaP7GgUIHNZf
-	 wY0OXitb19WGZAJGWfc2aGb9jxPtiC3dYdl5ZcNE=
+	b=SJBdEI012IxOd46/47kvl2OYXIEyLCVaC8q/7XukbMlsNNaitikCF93iVAJKnBPvl
+	 90A02aGPd/1/aCrhTQw17GIVWCyteAOHv+THHcpa3IJ9/286pjWHWfp7PKApnh2wlV
+	 bgPWqO6Yy2/UXVMA+IhWUw+3gNojQFAMngw/Reek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403846AbgHQSsv (ORCPT
+        id S2391661AbgHQStD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42484 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbgHQPyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:46 -0400
+        id S2388002AbgHQPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C751E2072E;
-        Mon, 17 Aug 2020 15:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BC5320657;
+        Mon, 17 Aug 2020 15:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679686;
-        bh=qdbaxaqAipz0TJG72rVuGZ2oH2GletrRjHby+KTDcls=;
+        s=default; t=1597679678;
+        bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2sFlAzpUXd3XpM4M1xi/NH8x/hbR/jBLbCcHtZJRIOJfvzOKQTqAI1VY0TZzji6S
-         GIa3nmkNkqHTOtnubs/znO/gj+OaJ9wf2QCGyMVgfqG2b6NqKPpA0SOJ9l1FQlms/+
-         eNx4WdT5ftdpzOr1A980wbLcb9La0WkpCc/TsLwk=
+        b=jruYTLusaVXWdbWsGH/pntRCt+2nIe6hvZN3/LFvzCGMX5e0e0GPEa7NIHHcZ9cYl
+         zWodsqrCDRmzLdGTrP/Ish9ZTjmCPTPUxJnsNqWQvu959Zsx6JLM4APVVviBEpp8MU
+         LXkePC7dmepsygXt2KSZrO7SDm39G+kqQLpj9FcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>,
+        Rick Farrington <ricardo.farrington@cavium.com>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 300/393] fsl/fman: use 32-bit unsigned integer
-Date:   Mon, 17 Aug 2020 17:15:50 +0200
-Message-Id: <20200817143834.168239056@linuxfoundation.org>
+Subject: [PATCH 5.7 297/393] liquidio: Fix wrong return value in cn23xx_get_pf_num()
+Date:   Mon, 17 Aug 2020 17:15:47 +0200
+Message-Id: <20200817143834.023942814@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,39 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florinel Iordache <florinel.iordache@nxp.com>
+From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-[ Upstream commit 99f47abd9f7bf6e365820d355dc98f6955a562df ]
+[ Upstream commit aa027850a292ea65524b8fab83eb91a124ad362c ]
 
-Potentially overflowing expression (ts_freq << 16 and intgr << 16)
-declared as type u32 (32-bit unsigned) is evaluated using 32-bit
-arithmetic and then used in a context that expects an expression of
-type u64 (64-bit unsigned) which ultimately is used as 16-bit
-unsigned by typecasting to u16. Fixed by using an unsigned 32-bit
-integer since the value is truncated anyway in the end.
+On an error exit path, a negative error code should be returned
+instead of a positive return value.
 
-Fixes: 414fd46e7762 ("fsl/fman: Add FMan support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+Fixes: 0c45d7fe12c7e ("liquidio: fix use of pf in pass-through mode in a virtual machine")
+Cc: Rick Farrington <ricardo.farrington@cavium.com>
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
-index f151d6e111dd9..ef67e8599b393 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -1398,8 +1398,7 @@ static void enable_time_stamp(struct fman *fman)
- {
- 	struct fman_fpm_regs __iomem *fpm_rg = fman->fpm_regs;
- 	u16 fm_clk_freq = fman->state->fm_clk_freq;
--	u32 tmp, intgr, ts_freq;
--	u64 frac;
-+	u32 tmp, intgr, ts_freq, frac;
+diff --git a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
+index 43d11c38b38a9..4cddd628d41b2 100644
+--- a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
++++ b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
+@@ -1167,7 +1167,7 @@ static int cn23xx_get_pf_num(struct octeon_device *oct)
+ 		oct->pf_num = ((fdl_bit >> CN23XX_PCIE_SRIOV_FDL_BIT_POS) &
+ 			       CN23XX_PCIE_SRIOV_FDL_MASK);
+ 	} else {
+-		ret = EINVAL;
++		ret = -EINVAL;
  
- 	ts_freq = (u32)(1 << fman->state->count1_micro_bit);
- 	/* configure timestamp so that bit 8 will count 1 microsecond
+ 		/* Under some virtual environments, extended PCI regs are
+ 		 * inaccessible, in which case the above read will have failed.
 -- 
 2.25.1
 
