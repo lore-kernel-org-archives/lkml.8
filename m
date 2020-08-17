@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB57C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA32DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851C120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E3920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684790;
-	bh=b8dcykdGfMKAbIUCpCxX7tLSFSWEjDh6yo3ccQiiFkc=;
+	s=default; t=1597684791;
+	bh=OtTp3PyblAUp8Wp+dnJEmCKgocH/UUyepd5ozcYHdiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0HDCCKuFwqSVNXYGFtjFV7E6MQjKPQcBb1qzDVjir01kFssP91QavLiNzdjS3uWr
-	 7k0BqH5z8G66pfblKz+VifO09Ug+2QIXxT6kEHC0of29QigxjXSsP+7KO78xFd/JRN
-	 BRVds9DP67mXd22+50h7+f2CnJFTQbimiJKhWTTg=
+	b=vgSC7eJSQdzQydVK6Qe/HtEjscpEInt3bx8a/bV32r94Iy/8Zm2CvVqSxURCYSmuJ
+	 RrTIQ4mLxHKOnNsc/Igeqm+onadSn8z1UhnrIpSejdhNc1i20zRMf3he7xU0r1SqgV
+	 6u9+IfXWFTYolLl8Io5hzZsGHLijIXssZvXlNRg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbgHQRTn (ORCPT
+        id S1731408AbgHQRTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731071AbgHQQPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:37 -0400
+        id S1731080AbgHQQQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:16:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B269B22CB3;
-        Mon, 17 Aug 2020 16:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C60A20658;
+        Mon, 17 Aug 2020 16:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680937;
-        bh=b8dcykdGfMKAbIUCpCxX7tLSFSWEjDh6yo3ccQiiFkc=;
+        s=default; t=1597680942;
+        bh=OtTp3PyblAUp8Wp+dnJEmCKgocH/UUyepd5ozcYHdiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FH11BozWF7GzfLw7YHCnPRubhjh5cwZ+d7FCSQwZr2EiGRCO4GtD8yfvsGCSL7V4S
-         124vpyNeOvhvssJAzOTYQ/NA5ozTTe57/4UTF1d6iD2onN46thwRwsZ5E4wHL03k8A
-         3Whv8ekprg4D8wZVq5M4ACeGQEh6VFqoM2x5Bd+s=
+        b=BHltiM7LoZAAaRUnZuTl+pn5quMKxjQ9GT5WQV0KCqNAz7w0qbbFnSNfiNHeUVhPt
+         c70qjJg0lzCGoPNof+lyTafJuVxLcy/tZzeziB2ntokyFEYEo9zknM+XMkrVV2noYL
+         +q2/OjgahVjSVUrrs0TSexo8nCNCdPTC99CcZ3fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/168] PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
-Date:   Mon, 17 Aug 2020 17:17:11 +0200
-Message-Id: <20200817143738.710505810@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 119/168] net: spider_net: Fix the size used in a dma_free_coherent() call
+Date:   Mon, 17 Aug 2020 17:17:30 +0200
+Message-Id: <20200817143739.620295702@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,54 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit e3bca37d15dca118f2ef1f0a068bb6e07846ea20 ]
+[ Upstream commit 36f28f7687a9ce665479cce5d64ce7afaa9e77ae ]
 
-Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
-controller") in order to update Vendor ID, directly wrote to
-PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
-space is read-only register and writing to it will have no effect.
-Use local management register to configure Vendor ID and Subsystem Vendor
-ID.
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()', in
+'spider_net_init_chain()'.
 
-Link: https://lore.kernel.org/r/20200722110317.4744-10-kishon@ti.com
-Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fixes: d4ed8f8d1fb7 ("Spidernet DMA coalescing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-cadence-host.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/spider_net.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index ec394f6a19c8e..ae7affcb1a811 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -102,6 +102,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
- 	u32 value, ctrl;
-+	u32 id;
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index 23417266b7ecc..e66014e0427f7 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -296,8 +296,8 @@ spider_net_free_chain(struct spider_net_card *card,
+ 		descr = descr->next;
+ 	} while (descr != chain->ring);
  
- 	/*
- 	 * Set the root complex BAR configuration register:
-@@ -121,8 +122,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+-	dma_free_coherent(&card->pdev->dev, chain->num_desc,
+-	    chain->hwring, chain->dma_addr);
++	dma_free_coherent(&card->pdev->dev, chain->num_desc * sizeof(struct spider_net_hw_descr),
++			  chain->hwring, chain->dma_addr);
+ }
  
- 	/* Set root port configuration space */
--	if (rc->vendor_id != 0xffff)
--		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
-+	if (rc->vendor_id != 0xffff) {
-+		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
-+			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
-+		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
-+	}
-+
- 	if (rc->device_id != 0xffff)
- 		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
- 
+ /**
 -- 
 2.25.1
 
