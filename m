@@ -2,127 +2,161 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B09C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0835EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5649620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597703287;
-	bh=NUONv9kLCShilfn9ZT/o30cFFqVc/L2+Z/w6nr7C0zk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=x4yMZCe0vibMnuaTvIRpzj3LA1O4IFNjr087NxLw0x3o0s3SZYt8xuaxfyIyjAl2a
-	 GbsGloeqwcsoWLGZvlFv5ruIqJ1m7IzemIdbO9AWaK8cHuErNa6GEv2wcfE2CMc5J/
-	 XzLdWCUOCU5J5LhCQDmAvfSIf+TceonYD3VI2SvY=
+	by mail.kernel.org (Postfix) with ESMTP id D670E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="swgkvlSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgHQW2F (ORCPT
+        id S1729695AbgHQWd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgHQW2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:28:05 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC39204EC;
-        Mon, 17 Aug 2020 22:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597703284;
-        bh=NUONv9kLCShilfn9ZT/o30cFFqVc/L2+Z/w6nr7C0zk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=z2inuekbTwOWe5b25wv8EliIvOxNuBYdsAw0rDxdv8Tx1PeutqY/VjF5lmu44RB7h
-         11nUJyqzMMgH8lXsbxK2+PVorRtEXuGvPQXRL5rtuxd2GNLaKnBPuwzPIHkYG9klAk
-         kKI2Pc2NooJe/okdbcRDEET3yYg5bItBBn++/0jQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DA17C3522617; Mon, 17 Aug 2020 15:28:03 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 15:28:03 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200817222803.GE23602@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200814083037.GD3982@worktop.programming.kicks-ass.net>
- <20200814141425.GM4295@paulmck-ThinkPad-P72>
- <20200814161106.GA13853@paulmck-ThinkPad-P72>
- <20200814174924.GI3982@worktop.programming.kicks-ass.net>
- <20200814180224.GQ4295@paulmck-ThinkPad-P72>
- <875z9lkoo4.fsf@nanos.tec.linutronix.de>
- <20200814204140.GT4295@paulmck-ThinkPad-P72>
- <20200814215206.GL3982@worktop.programming.kicks-ass.net>
- <20200816225655.GA17869@pc636>
- <20200817082849.GA28270@dhcp22.suse.cz>
+        Mon, 17 Aug 2020 18:33:26 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51290 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgHQWdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:33:17 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id BE15420B4908;
+        Mon, 17 Aug 2020 15:33:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE15420B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597703596;
+        bh=aibMo0CumtGR31rpfcglMmxeuGyUCEhP5RyL6PW1LkE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=swgkvlSDWoMKDBUbT0Y9k20qov6zELpI0CXmJhEbkIJoOdx8fRSj3XGPlhHd3faWB
+         j8HkqPr1z2+K8ErzkwNs8PH40LSkZWZi/b84oN4FmiUHxpwa+r4uZV+LWXzNl1DY5X
+         K1ihZPDsL4GYak+MZDT3xVFhzrN4pN3EUGX5K44I=
+Subject: Re: [PATCH 2/2] SELinux: Measure state and hash of policy using IMA
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        paul Moore <paul@paul-moore.com>
+References: <20200813170707.2659-1-nramas@linux.microsoft.com>
+ <20200813170707.2659-3-nramas@linux.microsoft.com>
+ <5f738fd8-fe28-5358-b3d8-b671b45caa7f@gmail.com>
+ <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
+ <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
+ <e935c06f-09e2-a2f7-f97f-768bc017f477@linux.microsoft.com>
+ <CAEjxPJ7uWee5jjALtQ3azMvKRMk8pxFiYByWmYVhjgJiMNZ8ww@mail.gmail.com>
+ <3679df359c35561f5bf6608911f96cc0292c7854.camel@linux.ibm.com>
+ <57f972a7-26f1-3ac7-4001-54c0bc7e12a8@schaufler-ca.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <089ca24d-863b-ca84-4859-d2d6e4f09b4c@linux.microsoft.com>
+Date:   Mon, 17 Aug 2020 15:33:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817082849.GA28270@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <57f972a7-26f1-3ac7-4001-54c0bc7e12a8@schaufler-ca.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:28:49AM +0200, Michal Hocko wrote:
-> On Mon 17-08-20 00:56:55, Uladzislau Rezki wrote:
-
-[ . . . ]
-
-> > wget ftp://vps418301.ovh.net/incoming/1000000_kmalloc_kfree_rcu_proc_percpu_pagelist_fractio_is_8.png
+On 8/17/20 3:00 PM, Casey Schaufler wrote:
+> On 8/17/2020 2:31 PM, Mimi Zohar wrote:
+>> On Thu, 2020-08-13 at 14:13 -0400, Stephen Smalley wrote:
+>>> On Thu, Aug 13, 2020 at 2:03 PM Lakshmi Ramasubramanian
+>>> <nramas@linux.microsoft.com> wrote:
+>>>> On 8/13/20 10:58 AM, Stephen Smalley wrote:
+>>>>> On Thu, Aug 13, 2020 at 1:52 PM Lakshmi Ramasubramanian
+>>>>> <nramas@linux.microsoft.com> wrote:
+>>>>>> On 8/13/20 10:42 AM, Stephen Smalley wrote:
+>>>>>>
+>>>>>>>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+>>>>>>>> new file mode 100644
+>>>>>>>> index 000000000000..f21b7de4e2ae
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/security/selinux/measure.c
+>>>>>>>> @@ -0,0 +1,204 @@
+>>>>>>>> +static int selinux_hash_buffer(void *buf, size_t buf_len,
+>>>>>>>> +                   void **buf_hash, int *buf_hash_len)
+>>>>>>>> +{
+>>>>>>>> +    struct crypto_shash *tfm;
+>>>>>>>> +    struct shash_desc *desc = NULL;
+>>>>>>>> +    void *digest = NULL;
+>>>>>>>> +    int desc_size;
+>>>>>>>> +    int digest_size;
+>>>>>>>> +    int ret = 0;
+>>>>>>>> +
+>>>>>>>> +    tfm = crypto_alloc_shash("sha256", 0, 0);
+>>>>>>>> +    if (IS_ERR(tfm))
+>>>>>>>> +        return PTR_ERR(tfm);
+>>>>>>> Can we make the algorithm selectable via kernel parameter and/or writing
+>>>>>>> to a new selinuxfs node?
+>>>>>> I can add a kernel parameter to select this hash algorithm.
+>>>>> Also can we provide a Kconfig option for the default value like IMA does?
+>>>>>
+>>>> Would we need both - Kconfig and kernel param?
+>>>>
+>>>> The other option is to provide an IMA function to return the current
+>>>> hash algorithm used for measurement. That way a consistent hash
+>>>> algorithm can be employed by both IMA and the callers. Would that be better?
+>>> This is why I preferred just passing the serialized policy buffer to
+>>> IMA and letting it handle the hashing.  But apparently that approach
+>>> wouldn't fly.  IMA appears to support both a Kconfig option for
+>>> selecting a default algorithm and a kernel parameter for overriding
+>>> it.  I assume the idea is that the distros can pick a reasonable
+>>> default and then the end users can override that if they have specific
+>>> requirements.  I'd want the same for SELinux.  If IMA is willing to
+>>> export its hash algorithm to external components, then I'm willing to
+>>> reuse that but not sure if that's a layering violation.
+>> With the new ima_measure_critical_data() hook, I agree with you and
+>> Casey it doesn't make sense for each caller to have to write their own
+>> function.  Casey suggested exporting IMA's hash function or defining a
+>> new common hash function.   There's nothing specific to IMA.
 > 
-> 1/8 of the memory in pcp lists is quite large and likely not something
-> used very often.
+> Except that no one is going to use the function unless they're
+> doing an IMA operation.
+
+Can we do the following instead:
+
+In ima_measure_critical_data() IMA hook, we can add another param for 
+the caller to indicate whether
+
+  => The contents of "buf" needs to be measured
+     OR
+  => Hash of the contents of "buf" needs to be measured.
+
+This way IMA doesn't need to export any new function to meet the hashing 
+requirement.
+
+  -lakshmi
+
 > 
-> Both these numbers just make me think that a dedicated pool of page
-> pre-allocated for RCU specifically might be a better solution. I still
-> haven't read through that branch of the email thread though so there
-> might be some pretty convincing argments to not do that.
+>>    Should
+>> the common hash function be prefixed with "security_"?
+> 
+> Yuck. That prefix is for interfaces that are exported outside the
+> security sub-system. We're talking about a function that is provided
+> for use within the security sub-system, but not for any one particular
+> security module or non-module feature. We're currently using the lsm_
+> prefix for interfaces used within the security subsystem, so I suggest
+> lsm_hash_brown_potatoes() might be the way to go.
 
-To avoid the problematic corner cases, we would need way more dedicated
-memory than is reasonable, as in well over one hundred pages per CPU.
-Sure, we could choose a smaller number, but then we are failing to defend
-against flooding, even on systems that have more than enough free memory
-to be able to do so.  It would be better to live within what is available,
-taking the performance/robustness hit only if there isn't enough.
 
-My current belief is that we need a combination of (1) either the
-GFP_NOLOCK flag or Peter Zijlstra's patch and (2) Thomas Gleixner's
-delayed allocation approach.  As you say and as Uladislau's measurements
-suggest, if we only have Peter's approach, although we could handle short
-floods just fine, we could not handle longer-term floods.  And Thomas's
-approach is in fact designed to handle these longer-term floods.
+> 
+>>
+>> Like when we add a new security hook call, the new LSM call is separate
+>> from any other change.   Please break up this patch with the SELinux
+>> specific pieces separated from the ima_measure_critical_data() call as
+>> much as possible.
+>>
 
-Except that if we have only Thomas's approach, then we have to handle the
-possibility that RCU_SOFTIRQ happened on the back of an interrupt that
-happened while the interrupted process was holding a memory-allocator
-lock.  This means further deferral, such as going into a workqueue,
-which would allow better memory-allocator results, but which would also
-mean further delays from the time that memory was needed until the time
-that it was actually supplied.  Delays that could be bridged by either
-a GFP_NOLOCK flag or Peter's patch.
-
-So again, it looks like this is not an either/or situation, but rather
-an need-both situation.
-
-I freely confess that one of my hopes almost 30 years ago was that a
-high-quality parallel memory allocator would eliminate the need for
-special-purpose allocators, but as has been noted several times on this
-thread, reality does not always seem to be compelled to take such
-hopes into account.
-
-							Thanx, Paul
