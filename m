@@ -2,213 +2,94 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C3F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C963204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689694;
-	bh=DWTVzSsMCSmP9vYrGkvMqgt0NcExBvacQ+f8zAp15ek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xu6t0kuGyloOcU1wYo1KW7NU/ULJMvGYaq93b7kE88JCkjTIuEoVHTdT+DuRuSnkN
-	 kOAcK3e+XxZgM9bgCgmpfm8G8U3nG+qrMjim5Z6K+8/FKh7nTUo5KmVjfKRcsXxsGt
-	 qKeDACE8oYB89kl50cOHj5VvHgXu9Ku3rynTd2qM=
+	s=default; t=1597689713;
+	bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BkHfOqtfGHidUUkOogusJdGxxVHE476PtW6b5km4uBySxFanbqLbqpE3YQr+OR1sV
+	 66lOCYt40tVFghCZ9GFRPUWCdCnkxhhJdok6h/np2keY9YVhcsCX6SMnP32KEHDcWe
+	 h24a+Tisit8mG24oVNOBEQ+F/64pWmxPZ3I2tZUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731589AbgHQSlY (ORCPT
+        id S2391445AbgHQSlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbgHQP5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2389597AbgHQSlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:41:40 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4AF207DA;
-        Mon, 17 Aug 2020 15:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73123204EC;
+        Mon, 17 Aug 2020 18:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679853;
-        bh=DWTVzSsMCSmP9vYrGkvMqgt0NcExBvacQ+f8zAp15ek=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLdsP8zHjXMi5XBxDSzr/PFuDvrykvkiBuSVXwebv24HWEq7Mgz6gh/sLSaYfmtdK
-         F8N6vstwXVWF3Vu8B4+Yna8lTBKjNADzjxNqAPHHGDw+IsMuppGdToPC24rDdGEzy0
-         K6glVnnjSVqS4Uj2lgAV+xkFLhsvk6t4jep34kEU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 326/393] net: refactor bind_bucket fastreuse into helper
-Date:   Mon, 17 Aug 2020 17:16:16 +0200
-Message-Id: <20200817143835.409260921@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1597689700;
+        bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jHawPRZQrrd5xxfRQtHweKENED5UFeclNEs/TU/nUtthQQZGnCL0R1AJ+Sk46mDyQ
+         icRCngDuUc/ZyulO0k04YaBQYT5wRmJvOyTh0Yqj/ernE9YH+1S6cpkWclCHRgMYQA
+         3d20KnUo5XBAY2DvCeRAvg2R4oADhEYrn4Kfvg4k=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
+Date:   Mon, 17 Aug 2020 20:41:30 +0200
+Message-Id: <20200817184131.907-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+The entry for MIPS Ingenic JZ4780 DMA driver is not up to date anymore.
+Zubair Lutfullah Kakakhel's email bounces and no maintenance is
+provided.
 
-[ Upstream commit 62ffc589abb176821662efc4525ee4ac0b9c3894 ]
+Suggested-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Refactor the fastreuse update code in inet_csk_get_port into a small
-helper function that can be called from other places.
-
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/inet_connection_sock.h |    4 +
- net/ipv4/inet_connection_sock.c    |   97 ++++++++++++++++++++-----------------
- 2 files changed, 57 insertions(+), 44 deletions(-)
 
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -309,6 +309,10 @@ int inet_csk_compat_getsockopt(struct so
- int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
- 			       char __user *optval, unsigned int optlen);
- 
-+/* update the fast reuse flag when adding a socket */
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk);
-+
- struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
- 
- #define TCP_PINGPONG_THRESH	3
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -296,6 +296,57 @@ static inline int sk_reuseport_match(str
- 				    ipv6_only_sock(sk), true, false);
- }
- 
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk)
-+{
-+	kuid_t uid = sock_i_uid(sk);
-+	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
-+
-+	if (hlist_empty(&tb->owners)) {
-+		tb->fastreuse = reuse;
-+		if (sk->sk_reuseport) {
-+			tb->fastreuseport = FASTREUSEPORT_ANY;
-+			tb->fastuid = uid;
-+			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
-+			tb->fast_ipv6_only = ipv6_only_sock(sk);
-+			tb->fast_sk_family = sk->sk_family;
-+#if IS_ENABLED(CONFIG_IPV6)
-+			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
-+#endif
-+		} else {
-+			tb->fastreuseport = 0;
-+		}
-+	} else {
-+		if (!reuse)
-+			tb->fastreuse = 0;
-+		if (sk->sk_reuseport) {
-+			/* We didn't match or we don't have fastreuseport set on
-+			 * the tb, but we have sk_reuseport set on this socket
-+			 * and we know that there are no bind conflicts with
-+			 * this socket in this tb, so reset our tb's reuseport
-+			 * settings so that any subsequent sockets that match
-+			 * our current socket will be put on the fast path.
-+			 *
-+			 * If we reset we need to set FASTREUSEPORT_STRICT so we
-+			 * do extra checking for all subsequent sk_reuseport
-+			 * socks.
-+			 */
-+			if (!sk_reuseport_match(tb, sk)) {
-+				tb->fastreuseport = FASTREUSEPORT_STRICT;
-+				tb->fastuid = uid;
-+				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
-+				tb->fast_ipv6_only = ipv6_only_sock(sk);
-+				tb->fast_sk_family = sk->sk_family;
-+#if IS_ENABLED(CONFIG_IPV6)
-+				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
-+#endif
-+			}
-+		} else {
-+			tb->fastreuseport = 0;
-+		}
-+	}
-+}
-+
- /* Obtain a reference to a local port for the given sock,
-  * if snum is zero it means select any available local port.
-  * We try to allocate an odd port (and leave even ports for connect())
-@@ -308,7 +359,6 @@ int inet_csk_get_port(struct sock *sk, u
- 	struct inet_bind_hashbucket *head;
- 	struct net *net = sock_net(sk);
- 	struct inet_bind_bucket *tb = NULL;
--	kuid_t uid = sock_i_uid(sk);
- 	int l3mdev;
- 
- 	l3mdev = inet_sk_bound_l3mdev(sk);
-@@ -345,49 +395,8 @@ tb_found:
- 			goto fail_unlock;
- 	}
- success:
--	if (hlist_empty(&tb->owners)) {
--		tb->fastreuse = reuse;
--		if (sk->sk_reuseport) {
--			tb->fastreuseport = FASTREUSEPORT_ANY;
--			tb->fastuid = uid;
--			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
--			tb->fast_ipv6_only = ipv6_only_sock(sk);
--			tb->fast_sk_family = sk->sk_family;
--#if IS_ENABLED(CONFIG_IPV6)
--			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
--#endif
--		} else {
--			tb->fastreuseport = 0;
--		}
--	} else {
--		if (!reuse)
--			tb->fastreuse = 0;
--		if (sk->sk_reuseport) {
--			/* We didn't match or we don't have fastreuseport set on
--			 * the tb, but we have sk_reuseport set on this socket
--			 * and we know that there are no bind conflicts with
--			 * this socket in this tb, so reset our tb's reuseport
--			 * settings so that any subsequent sockets that match
--			 * our current socket will be put on the fast path.
--			 *
--			 * If we reset we need to set FASTREUSEPORT_STRICT so we
--			 * do extra checking for all subsequent sk_reuseport
--			 * socks.
--			 */
--			if (!sk_reuseport_match(tb, sk)) {
--				tb->fastreuseport = FASTREUSEPORT_STRICT;
--				tb->fastuid = uid;
--				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
--				tb->fast_ipv6_only = ipv6_only_sock(sk);
--				tb->fast_sk_family = sk->sk_family;
--#if IS_ENABLED(CONFIG_IPV6)
--				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
--#endif
--			}
--		} else {
--			tb->fastreuseport = 0;
--		}
--	}
-+	inet_csk_update_fastreuse(tb, sk);
-+
- 	if (!inet_csk(sk)->icsk_bind_hash)
- 		inet_bind_hash(sk, tb, port);
- 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
+Changes since v1:
+1. New patch
+---
+ MAINTAINERS | 5 -----
+ 1 file changed, 5 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b0a742ce8f2c..9ab3a7fd6451 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8580,11 +8580,6 @@ F:	include/uapi/rdma/
+ F:	samples/bpf/ibumad_kern.c
+ F:	samples/bpf/ibumad_user.c
+ 
+-INGENIC JZ4780 DMA Driver
+-M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+-S:	Maintained
+-F:	drivers/dma/dma-jz4780.c
+-
+ INGENIC JZ4780 NAND DRIVER
+ M:	Harvey Hunt <harveyhuntnexus@gmail.com>
+ L:	linux-mtd@lists.infradead.org
+-- 
+2.17.1
 
