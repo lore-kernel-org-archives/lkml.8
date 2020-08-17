@@ -7,84 +7,81 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8061C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0552C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A22242065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4202065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597700093;
-	bh=0qRptCY+3XGfLJA9OnNfAXcHIukaL8MVdYom+hlnyi8=;
+	s=default; t=1597700208;
+	bh=vLdaF8FikEjp93m/7OHjPVeE6NZewZPXuLQ37gDUZ1Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DurdYEsT97lTHEvOzi1fQ5l2TfusOaWobpIjJ/HUklQwGQM1KVpchhrEe4VQ3hWCw
-	 YFw7TTTEKyzbqm2R17TzEzRiGe8rGxrW1gTrGsgBY7pSrDuPnOX6+JjzaemoS8zlpe
-	 yxKIUT/PsjNkruhGPVmz07wGjjsbNSdy59bw9X7c=
+	b=eE2+ovKt0PjPixFNL0YDBtvBGWLOcggTOR9xS+m/GHb4yZy34asUpOSaovZVBGGKX
+	 o5BnxRRpV/BLaNmYBTXs5B0HZyrL0vx2ZqYSeFUuCRhnsyaVEYkP/V9IBe28JF2/e5
+	 nTEj/g5/ABXkF7tchaOhuyzH9zhgXEoIux1cudBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgHQVev (ORCPT
+        id S1728521AbgHQVgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:34:51 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33181 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgHQVeq (ORCPT
+        Mon, 17 Aug 2020 17:36:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38809 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgHQVgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:34:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id r13so11411876iln.0;
-        Mon, 17 Aug 2020 14:34:45 -0700 (PDT)
+        Mon, 17 Aug 2020 17:36:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id h4so19151472ioe.5;
+        Mon, 17 Aug 2020 14:36:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=M17OJ6k51qxI3ec/ySrRyXYB06yaGD5CoRfH7xHKp+Q=;
-        b=O+uxKdr/WmdPod41FKEZ4HC2dh1VfyARrXrsQoZScOhOKULelYl4a3s3AyL4gBt0vi
-         7G2JAdUGed734p7To/Ckoob4j8OMzPIYIGG127Jvk55wBTZYa34ed2UVu+2auMQhroCq
-         qdpGPWtf7D/UE03f5hVf82KuWgzUTYXqRhOIs7nKSUbzuAmMH1TnbRqiqYZOjqJdS8kt
-         6fDeLQ3RkPvrxngmXgOVnT0Og7ev//BkaYm4q/Fjhi+y43PWM+RGQ5Ys6pG99ZdNLOlt
-         2Wi4fMsVU+sdAMtbIzoY4GTsqHu6ae6+BSYZ/IwfmbskXztzdmxuGnH83cYVzvqjteiy
-         cV7Q==
-X-Gm-Message-State: AOAM532MLSyW+gpTvWlxitYDJ0CNskyiXDGuIGC1ZFlL9wYyXvmQ5cL/
-        no9PzvYCPYZg+oHmVrFP+Q==
-X-Google-Smtp-Source: ABdhPJxQbJ20eP2dxZaWGNcGWNFQy3RfTLGBs6D+3dMQARE7ctR6XhuOf2CzwwEt95w6FAGFcjA4Vg==
-X-Received: by 2002:a05:6e02:13ac:: with SMTP id h12mr14963174ilo.153.1597700085465;
-        Mon, 17 Aug 2020 14:34:45 -0700 (PDT)
+        bh=OZFGynvYRACIfLrkLQO1tg1ssrvEIvNb+ROWjP+mHJo=;
+        b=dzP99uW7890M4O8wOkHBp8iui5floQ2Y8gEPbPP4fTDy+l0CfqaqGQkWlWY+wvIw26
+         dgtAIExJzT8YRvHwtXo4lzgOsp/gI4QhV8ch+kzmeuALDICW4XrikFrzBbW/Eb60hg+o
+         vH4F2OmBVL7Fv99RFQPNP1B7AjxJKEWroAMnO1h8kKvJ5U27t7mXVgmFkw235PW21Gpo
+         OcBp/AOObmwBwiMy8pMU4YsYZvM/JqkrwQzdbxbJE371vEDPMpRkUdNMd7igDNqLW1zE
+         TMOLP/gVSr3F7Nbge6kMNf5ZvpVLc1Lmf36RPm+xRdNO0iWKEZGFQlXJymYtOOIMBMqN
+         MzFg==
+X-Gm-Message-State: AOAM530XFTllOFvk6doP60+YQ81jWKE47j2mthbUR1+nIbUhJj3YV8+E
+        pTs5t8pN4aBn75kTbHinHg==
+X-Google-Smtp-Source: ABdhPJz8To4nkVTyS7sMS/xd6kJ0R8xV7e9DxlzHo8J4xNxoWUt9tTVlbwJwHU+TATFt9QbQNudFig==
+X-Received: by 2002:a5e:d505:: with SMTP id e5mr13889224iom.77.1597700204960;
+        Mon, 17 Aug 2020 14:36:44 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id m7sm10148537ilq.45.2020.08.17.14.34.44
+        by smtp.gmail.com with ESMTPSA id v10sm9731931iom.31.2020.08.17.14.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 14:34:44 -0700 (PDT)
-Received: (nullmailer pid 1606763 invoked by uid 1000);
-        Mon, 17 Aug 2020 21:34:43 -0000
-Date:   Mon, 17 Aug 2020 15:34:43 -0600
+        Mon, 17 Aug 2020 14:36:44 -0700 (PDT)
+Received: (nullmailer pid 1610036 invoked by uid 1000);
+        Mon, 17 Aug 2020 21:36:41 -0000
+Date:   Mon, 17 Aug 2020 15:36:41 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-crypto@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org, s.hauer@pengutronix.de,
-        s.trumtrar@pengutronix.de, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, shawnguo@kernel.org, Linux-imx@nxp.com,
-        marex@denx.de, linux-kernel@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, herbert@gondor.apana.org.au
-Subject: Re: [PATCH 3/3] dt-bindings: crypto: Convert i.MX sahara to
- json-schema
-Message-ID: <20200817213443.GA1606655@bogus>
-References: <1596595410-26921-1-git-send-email-Anson.Huang@nxp.com>
- <1596595410-26921-3-git-send-email-Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        shawnguo@kernel.org, Linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        aisheng.dong@nxp.com
+Subject: Re: [PATCH 1/2] dt-bindings: fsl: Convert i.MX7ULP PM to json-schema
+Message-ID: <20200817213641.GA1609903@bogus>
+References: <1596595841-27563-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596595410-26921-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1596595841-27563-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Aug 2020 10:43:30 +0800, Anson Huang wrote:
-> Convert the i.MX sahara binding to DT schema format using json-schema.
+On Wed, 05 Aug 2020 10:50:40 +0800, Anson Huang wrote:
+> Convert the i.MX7ULP PM binding to DT schema format using json-schema.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/crypto/fsl-imx-sahara.txt  | 15 ----------
->  .../devicetree/bindings/crypto/fsl-imx-sahara.yaml | 35 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
->  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-sahara.yaml
+>  .../bindings/arm/freescale/fsl,imx7ulp-pm.txt      | 23 -------------
+>  .../bindings/arm/freescale/fsl,imx7ulp-pm.yaml     | 40 ++++++++++++++++++++++
+>  2 files changed, 40 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.yaml
 > 
 
 Applied, thanks!
