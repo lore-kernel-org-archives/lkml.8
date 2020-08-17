@@ -2,53 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08554C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85662065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9FE207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692903;
-	bh=BuJEaREvInwyPxaAcnGoOa/f2RTigPclr2JZ8rA+a6Q=;
+	s=default; t=1597692908;
+	bh=Zh9oM4GCQTS+18YkdBVLhEwe5pHdYjWG+RtkW0jpUi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjh620NatxdcdzBYyrDViAPMnlcKjRNIMzt4/L7HiJYM6fXmrimxpNVRTorMYChOF
-	 ywafVd2PcFcthGoKW13r0OMuEdmDxURUEy2sE3spC5utfAPhkw9CIQv7bNkvoceJkk
-	 vXoZukQqmifJLbEjy1lqVcYop/6CBHsfzHofIndk=
+	b=wTyGkcP8IVaE7q1z/gs0NZTKZMf5SuEnRTQbpEuLPZj+ednhEEhTcDNjrc+zzZhnc
+	 P52rToAsIiFvVNnbmhBQw/d6Z8df/Ao6fbSGDqpenWMrqEEIXl6MOc7UH4a5V7fVw8
+	 ucIUSZ4P+1GiHwoclFKKc6L+ht+MHIzBaB1lILTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732338AbgHQTfB (ORCPT
+        id S1730123AbgHQP3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49048 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbgHQP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:43 -0400
+        id S1729922AbgHQP1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1EE2395B;
-        Mon, 17 Aug 2020 15:29:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF31F239D0;
+        Mon, 17 Aug 2020 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678183;
-        bh=BuJEaREvInwyPxaAcnGoOa/f2RTigPclr2JZ8rA+a6Q=;
+        s=default; t=1597678053;
+        bh=Zh9oM4GCQTS+18YkdBVLhEwe5pHdYjWG+RtkW0jpUi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkbC00oPTHFIT6I/0pS/XC/sKSNXi3W5ZGX4r8M0xyBSZSCO4fqEexvgTJKWFh/OO
-         hGCtj2ICsLB2xVFf7W/znue3vZt+Qob3m1bINq97fGCy6I3Flq9nho0fqUZS1qUUD5
-         IrVYNwcfRKCMt27eKPuO64nbWcGtHqBpEVnW2UxM=
+        b=zc2w791dQjulHoGyj7rxroXyZUXZHGywGMjLtvFew5C3wcky3eoe9wnYGMWNz4+ZZ
+         fzrsU3g/6gwVEj8JvhpE4GiMVsj0Dx9WRvt4BGMRiZAD7fYhwHEdGwFvsQCiYRSAZS
+         08N21+Jl36VlQlRjNffc4gF5OkYo/UffHLGERKDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, YangYuxi <yx.atom1@gmail.com>,
+        Julian Anastasov <ja@ssi.bg>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 246/464] ASoC: meson: fixes the missed kfree() for axg_card_add_tdm_loopback
-Date:   Mon, 17 Aug 2020 17:13:19 +0200
-Message-Id: <20200817143845.580630640@linuxfoundation.org>
+Subject: [PATCH 5.8 203/464] ipvs: allow connection reuse for unconfirmed conntrack
+Date:   Mon, 17 Aug 2020 17:12:36 +0200
+Message-Id: <20200817143843.541299303@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,37 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+From: Julian Anastasov <ja@ssi.bg>
 
-[ Upstream commit bd054ece7d9cdd88e900df6625e951a01d9f655e ]
+[ Upstream commit f0a5e4d7a594e0fe237d3dfafb069bb82f80f42f ]
 
-axg_card_add_tdm_loopback() misses to call kfree() in an error path. We
-can use devm_kasprintf() to fix the issue, also improve maintainability.
-So use it instead.
+YangYuxi is reporting that connection reuse
+is causing one-second delay when SYN hits
+existing connection in TIME_WAIT state.
+Such delay was added to give time to expire
+both the IPVS connection and the corresponding
+conntrack. This was considered a rare case
+at that time but it is causing problem for
+some environments such as Kubernetes.
 
-Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200717082242.130627-1-jingxiangfeng@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+As nf_conntrack_tcp_packet() can decide to
+release the conntrack in TIME_WAIT state and
+to replace it with a fresh NEW conntrack, we
+can use this to allow rescheduling just by
+tuning our check: if the conntrack is
+confirmed we can not schedule it to different
+real server and the one-second delay still
+applies but if new conntrack was created,
+we are free to select new real server without
+any delays.
+
+YangYuxi lists some of the problem reports:
+
+- One second connection delay in masquerading mode:
+https://marc.info/?t=151683118100004&r=1&w=2
+
+- IPVS low throughput #70747
+https://github.com/kubernetes/kubernetes/issues/70747
+
+- Apache Bench can fill up ipvs service proxy in seconds #544
+https://github.com/cloudnativelabs/kube-router/issues/544
+
+- Additional 1s latency in `host -> service IP -> pod`
+https://github.com/kubernetes/kubernetes/issues/90854
+
+Fixes: f719e3754ee2 ("ipvs: drop first packet to redirect conntrack")
+Co-developed-by: YangYuxi <yx.atom1@gmail.com>
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+Signed-off-by: Julian Anastasov <ja@ssi.bg>
+Reviewed-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/ip_vs.h             | 10 ++++------
+ net/netfilter/ipvs/ip_vs_core.c | 12 +++++++-----
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index 89f7f64747cd0..47f2d93224fea 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -116,7 +116,7 @@ static int axg_card_add_tdm_loopback(struct snd_soc_card *card,
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index 83be2d93b4076..fe96aa462d050 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -1624,18 +1624,16 @@ static inline void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
+ }
+ #endif /* CONFIG_IP_VS_NFCT */
  
- 	lb = &card->dai_link[*index + 1];
+-/* Really using conntrack? */
+-static inline bool ip_vs_conn_uses_conntrack(struct ip_vs_conn *cp,
+-					     struct sk_buff *skb)
++/* Using old conntrack that can not be redirected to another real server? */
++static inline bool ip_vs_conn_uses_old_conntrack(struct ip_vs_conn *cp,
++						 struct sk_buff *skb)
+ {
+ #ifdef CONFIG_IP_VS_NFCT
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_conn *ct;
  
--	lb->name = kasprintf(GFP_KERNEL, "%s-lb", pad->name);
-+	lb->name = devm_kasprintf(card->dev, GFP_KERNEL, "%s-lb", pad->name);
- 	if (!lb->name)
- 		return -ENOMEM;
+-	if (!(cp->flags & IP_VS_CONN_F_NFCT))
+-		return false;
+ 	ct = nf_ct_get(skb, &ctinfo);
+-	if (ct)
++	if (ct && nf_ct_is_confirmed(ct))
+ 		return true;
+ #endif
+ 	return false;
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index aa6a603a2425b..517f6a2ac15af 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2066,14 +2066,14 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
  
+ 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
+ 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
+-		bool uses_ct = false, resched = false;
++		bool old_ct = false, resched = false;
+ 
+ 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
+ 		    unlikely(!atomic_read(&cp->dest->weight))) {
+ 			resched = true;
+-			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
++			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
+ 		} else if (is_new_conn_expected(cp, conn_reuse_mode)) {
+-			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
++			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
+ 			if (!atomic_read(&cp->n_control)) {
+ 				resched = true;
+ 			} else {
+@@ -2081,15 +2081,17 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 				 * that uses conntrack while it is still
+ 				 * referenced by controlled connection(s).
+ 				 */
+-				resched = !uses_ct;
++				resched = !old_ct;
+ 			}
+ 		}
+ 
+ 		if (resched) {
++			if (!old_ct)
++				cp->flags &= ~IP_VS_CONN_F_NFCT;
+ 			if (!atomic_read(&cp->n_control))
+ 				ip_vs_conn_expire_now(cp);
+ 			__ip_vs_conn_put(cp);
+-			if (uses_ct)
++			if (old_ct)
+ 				return NF_DROP;
+ 			cp = NULL;
+ 		}
 -- 
 2.25.1
 
