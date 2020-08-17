@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CF3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67112C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368512072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3917420709
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677567;
-	bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+	s=default; t=1597677607;
+	bh=+mpINWnZ77fQrIFcKNZzBdvpHqJ/JoGT+r1RxI/vdvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrugqBy/MNs1vP+A6tjqkjEquOyoEcswwv+edrPz4K/BvE5qNTJMW8x3Ewoi6nudB
-	 +BdYzV6S/NOF8SUoXW27qx9K2xYsUbj5RRMj6D+VYIOjHWd48HXmAbhlzzF9t3tQN4
-	 1wOs/yJ5/abcyRXIypOz42CLBt9tqmG/r6cppxsc=
+	b=De/f+45i6H+DorXyyoDaRl9UdA8wMybq9lSkoZ5rlCnHRZqgdWXJCwyMJiam8Kb8B
+	 J9HFvv0TpgAV0B+NcjXpi0xSla85kS221Pybnbo9vRk5qhZ6BOwdrdNAzQhTwAn+Vz
+	 egBtgI2oTDMXXoH+e7eul6YyT6bgXGRtDWvCDyHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgHQPTQ (ORCPT
+        id S1729236AbgHQPTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgHQPSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:18:43 -0400
+        id S1729191AbgHQPSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:18:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF14205CB;
-        Mon, 17 Aug 2020 15:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10AC8205CB;
+        Mon, 17 Aug 2020 15:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677522;
-        bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+        s=default; t=1597677528;
+        bh=+mpINWnZ77fQrIFcKNZzBdvpHqJ/JoGT+r1RxI/vdvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxPBjgUOW8SytjXVuXcH16pxZbY8Dr1DXs6mPAL1fzqaFie5xs2gEl3iPDthLon3r
-         fQQpFGHGUPTBTTfssFq5xfuah42qgiNhxRlTF/v3l4FDJzK9WqvMh53bSF4EBfDazY
-         5aIv4+uSoVOIu6xD8YXBg6Sq2EnyC5T8bEMxaMrw=
+        b=JJJhq7A2bABxD7mE2WdajAb+zn7F+kWQvLCY7wNB883tAZQE05TiDJiX7ZqTEYpXp
+         6v2RZQByR6p0cbnMJlZREJkJBZSYqNdDG/6o3VSVhXNzEzhN8avRvXsQVOgKZA8CFP
+         dNGryMfpzoQ1rUShkADM4wd56WP7hJrLlYLOEm80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 014/464] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
-Date:   Mon, 17 Aug 2020 17:09:27 +0200
-Message-Id: <20200817143834.438811775@linuxfoundation.org>
+Subject: [PATCH 5.8 016/464] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
+Date:   Mon, 17 Aug 2020 17:09:29 +0200
+Message-Id: <20200817143834.534889384@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,9 +62,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
+[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
 
-The lion gmac node currently uses opposite active-values for the
+The puma gmac node currently uses opposite active-values for the
 gmac phy reset pin. The gpio-declaration uses active-high while the
 separate snps,reset-active-low property marks the pin as active low.
 
@@ -74,27 +74,27 @@ confused - as seen with uboot right now.
 So bring this in line and make both properties match, similar to the
 other Rockchip board.
 
-Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
 Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
+Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index e17311e090826..216aafd90e7f1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -156,7 +156,7 @@ &gmac {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 063f59a420b65..72c06abd27ea7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -157,7 +157,7 @@ &gmac {
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
  	pinctrl-0 = <&rgmii_pins>;
+-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
  	snps,reset-active-low;
  	snps,reset-delays-us = <0 10000 50000>;
--	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
  	tx_delay = <0x10>;
- 	rx_delay = <0x10>;
- 	status = "okay";
 -- 
 2.25.1
 
