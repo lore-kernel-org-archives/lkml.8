@@ -2,105 +2,140 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E32C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DABDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C492072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4A620738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:29:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uoe1K7zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgHQU2d (ORCPT
+        id S1728218AbgHQU3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:28:33 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39672 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbgHQU2c (ORCPT
+        Mon, 17 Aug 2020 16:29:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33278 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726628AbgHQU3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:28:32 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7D8651C0BB6; Mon, 17 Aug 2020 22:28:29 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 22:28:29 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, Milo Kim <milo.kim@ti.com>
-Subject: Re: [PATCH] leds: LP55XX_COMMON needs to depend on LEDS_CLASS
-Message-ID: <20200817202829.GA14094@amd>
-References: <0ad9338b-e2da-e269-db49-b448977bdc83@infradead.org>
+        Mon, 17 Aug 2020 16:29:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597696158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vcZ5xeR/B2zIC2A6zYV92v7HTxGjQeb7b0PrwKaVjKY=;
+        b=Uoe1K7zmp1mZenB0ECK3GFRN5SE/34PJCA5jKaaqkKJiAnU8w1NTuwfUe4ntyCNOL44tcw
+        fYsXRGAZpUubf1g+yCHuQBsJ6U8UDUDkV9sZT5ZUHNOF+YEtuoyW9sFZx8ZHEok8/nDEdS
+        iKfSxbKAo83kegCvNeamrIZVeo7C6mM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-6zTHQQx7Ojqg_stoRS3UUA-1; Mon, 17 Aug 2020 16:29:16 -0400
+X-MC-Unique: 6zTHQQx7Ojqg_stoRS3UUA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD71D1005E5F;
+        Mon, 17 Aug 2020 20:29:14 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-81.rdu2.redhat.com [10.10.115.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39FED5D9D2;
+        Mon, 17 Aug 2020 20:29:06 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A93D3222E58; Mon, 17 Aug 2020 16:29:05 -0400 (EDT)
+Date:   Mon, 17 Aug 2020 16:29:05 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Gurchetan Singh <gurchetansingh@google.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>, virtio-fs@redhat.com,
+        miklos@szeredi.hu, stefanha@redhat.com, dgilbert@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] virtio: Implement get_shm_region for PCI
+ transport
+Message-ID: <20200817202905.GA659987@redhat.com>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
+ <20200807195526.426056-5-vgoyal@redhat.com>
+ <20200810100327-mutt-send-email-mst@kernel.org>
+ <20200810145019.GB455528@redhat.com>
+ <CAAfnVBk+Hmcm2ftd3wOK-P2NyYQ7z4Wrf1JKhLJaNkCZBLoo6g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0ad9338b-e2da-e269-db49-b448977bdc83@infradead.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAAfnVBk+Hmcm2ftd3wOK-P2NyYQ7z4Wrf1JKhLJaNkCZBLoo6g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 13, 2020 at 07:51:56PM -0700, Gurchetan Singh wrote:
+> On Mon, Aug 10, 2020 at 7:50 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > On Mon, Aug 10, 2020 at 10:05:17AM -0400, Michael S. Tsirkin wrote:
+> > > On Fri, Aug 07, 2020 at 03:55:10PM -0400, Vivek Goyal wrote:
+> > > > From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> > > >
+> > > > On PCI the shm regions are found using capability entries;
+> > > > find a region by searching for the capability.
+> > > >
+> > > > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> > > > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> > > > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > > > Cc: kvm@vger.kernel.org
+> > > > Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> > >
+> > > Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> > >
+> >
+> > [..]
+> > > > +static bool vp_get_shm_region(struct virtio_device *vdev,
+> > > > +                         struct virtio_shm_region *region, u8 id)
+> > > > +{
+> > > > +   struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> > > > +   struct pci_dev *pci_dev = vp_dev->pci_dev;
+> > > > +   u8 bar;
+> > > > +   u64 offset, len;
+> > > > +   phys_addr_t phys_addr;
+> > > > +   size_t bar_len;
+> > > > +
+> > > > +   if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> > > > +           return false;
+> > > > +   }
+> > > > +
+> > > > +   phys_addr = pci_resource_start(pci_dev, bar);
+> > > > +   bar_len = pci_resource_len(pci_dev, bar);
+> > > > +
+> > > > +   if ((offset + len) < offset) {
+> > > > +           dev_err(&pci_dev->dev, "%s: cap offset+len overflow
+> > detected\n",
+> > > > +                   __func__);
+> > > > +           return false;
+> > > > +   }
+> > > > +
+> > > > +   if (offset + len > bar_len) {
+> > > > +           dev_err(&pci_dev->dev, "%s: bar shorter than cap
+> > offset+len\n",
+> > > > +                   __func__);
+> > > > +           return false;
+> > > > +   }
+> > >
+> > > Maybe move this to a common header so the checks can be reused by
+> > > other transports? Can be a patch on top.
+> >
+> > Will do as patch on top once these patches get merged.
+> >
+> 
+> There's also some minor checkpatch complaints.  I fixed them with the
+> series I sent out with virtio-gpu.
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Gurchetan. I will post the patch with V3 posting anyway. We both
+need these patches. So whatever gets merged in the tree first, other
+person can use it.
 
-Hi!
+Vivek
 
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> With these kernel configs:
-> CONFIG_LEDS_CLASS=3Dm
-> # CONFIG_LEDS_CLASS_MULTICOLOR is not set
-> CONFIG_LEDS_LP55XX_COMMON=3Dy
-> CONFIG_LEDS_LP5521=3Dm
-> CONFIG_LEDS_LP5562=3Dm
->=20
-> leds-lp55xx-common.c has a build error because it is builtin and
-> calls an interface that is built as a loadable module (due to
-> LEDS_CLASS=3Dm). By making LEDS_LP55XX_COMMON depend on LEDS_CLASS,
-> this config combination cannot happen, thus preventing the build error.
->=20
-> ld: drivers/leds/leds-lp55xx-common.o: in function `lp55xx_register_leds':
-> leds-lp55xx-common.c:(.text+0xc5f): undefined reference to `devm_led_clas=
-sdev_register_ext'
->=20
-> Fixes: 33b3a561f417 ("leds: support new LP8501 device - another LP55xx co=
-mmon")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Milo Kim <milo.kim@ti.com>
-> Cc: linux-leds@vger.kernel.org
-> ---
-> The Fixes: tag might be incorrect...  I also considered:
-> 92a81562e695 ("leds: lp55xx: Add multicolor framework support to
-> lp55xx")
-
-Thanks, makes sense, I'll take this one. I believe the second fixes
-tag is correct; not that it matters.
-
-Thanks and best regards,
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl866G0ACgkQMOfwapXb+vJP0ACaAjGL6iWTlMJgZWv/0GstL3Jo
-teYAn1/ww9G4UvzjCi/vXaTiUmKaGfd2
-=OYmR
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
