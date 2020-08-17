@@ -8,68 +8,72 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2782CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B875420772
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0498C20772
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDJHqykY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXJimjsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgHQFXp (ORCPT
+        id S1726545AbgHQFXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        Mon, 17 Aug 2020 01:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHQFXo (ORCPT
+        with ESMTP id S1726203AbgHQFXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:23:44 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54486C061388
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:23:44 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so7573186pgl.3
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:23:44 -0700 (PDT)
+        Mon, 17 Aug 2020 01:23:51 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240FAC061388
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:23:51 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d188so7666332pfd.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 22:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rvHREJoleP0JUZs3Dvt83vX65WijQycSG2RFi03WGKs=;
-        b=QDJHqykYOPiXjK9hVif8fRYqxZCtxZqRXzuVfseze4T4GKQ+5BidtRUWsKFJFiC2+5
-         OktCe6fkxBGeHYPJCRAm54qiktc572cEIo2LEh9bIrZbRm1kkroyEbHQOHWQHOHg49CM
-         MuUSuLo5wwycxrP8HSPmJ2dFHtpHORNggrZZtalHXEHZRk4HQnXuVOKjTeKCl5u3uQ8J
-         aIvCo/Fv0wRvofFqIPJ21pcgYtvZeqY6DBi4lvctvwb1MlxXj9PRIzHtUwWiSvlbO3J4
-         mOY9rvaKGaVfihNSsFXgA+Alu3g3VTQd3FQ2m9hvgJBajuM1ry3GnykQxqLr8/E7uOUP
-         kYVw==
+        bh=lX4MGl52Lwj2RqDLktcES8oPE5Th7oKu9QQhvN2v7jY=;
+        b=mXJimjsCVLFGwN07Ny7dByJ3vouBK6S3ibvsZmxXm4JnTzYEIvPzYpQd9r7/SyxwAV
+         OMEAtyH77MVQACvVj/bQNjHOFRLnxSuEoWonEHiJzsEr7GSJiym6cCWK95oES2cos1v+
+         OX3wMVoalujQtUwV1aaQOTvDhJ6XR/98SNXU/QLW7Tvg3Jzpy/mDE8aosfOkBy84wE2l
+         WXWcamaqFYduXq3Te6w2i4oxG2FuRCdz14TMyQWlr9LUW37GwNj7/c9I8yISYv4H925J
+         M9OBG+jG1eODVqPkp/qTTPo4pA+hMrHtKaHTaqvO3kDe/ymk3d9C7PGBl40dNHVikrWe
+         RO6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rvHREJoleP0JUZs3Dvt83vX65WijQycSG2RFi03WGKs=;
-        b=rgitBSgGOcvaxY0Q3zN+vNjSM4+7mjs77GpRD3kFYKi5Xl+2jys/EOAGBsgNrscwEg
-         gLsSOGg3X1tx424+T+AvXlWzO0pgl6B0y1WuVO/Jnda74wIna+CLPG8heTYaCVxxMo6R
-         BsKR/loc5MBkNlI0G8yKM5oqWJibpd+pn2Vw9/z8tSkVHltN0wKkxCIwLub1EWcDIbuW
-         snjZj5KYnVMiCdpe1aIXmJyHSAa6Zky0xrn3Km62txjAmlh2VRX7ZrAw9DR3/zEWdYcc
-         fmd0vhio8CN2IA91J5ldM+/oty12waEsNEyFcWd27V0ljyUl0pGFri1xdFA7m1/DT7XZ
-         3n/w==
-X-Gm-Message-State: AOAM533o3JHNb1ZnLMUe+ThRV/o9NblU8zcilt5Bb19p5TBWVTfVTBrN
-        zaNO75UdL57SXSQRHpFWmxU=
-X-Google-Smtp-Source: ABdhPJxZSepobHQ9GAwcE1Tb82oTAsdlrtp659qhIYWGrs5giqtKaaDHxKJrDhawAJJZNs/yyvdCOg==
-X-Received: by 2002:a63:ea41:: with SMTP id l1mr6258912pgk.419.1597641823903;
-        Sun, 16 Aug 2020 22:23:43 -0700 (PDT)
+        bh=lX4MGl52Lwj2RqDLktcES8oPE5Th7oKu9QQhvN2v7jY=;
+        b=K+kGmicyZYC7lA/mx0nczbti9GF5hIxxz3az92wHedAIFbzuN3/gl1wCxisjyekZNT
+         f0kPp4HoC9PDY/NHrXAq/fwLbOM9tZrU+E150n+ndeJFmeypWp65gBzm4mZ+mFeRKFta
+         FblZ5A8MjiF2J4HHPLNqw9h6tjwrCx2i5DDERQ/1AbWl8qRL/+hz4Q59forQLLHvqcPZ
+         AZ+A0pqKdF1B9PX5BZbNEo2gVnUlEv2fUPJAfebThH+77GjMhJgvMx8vFqClWOjRsSJ3
+         K+QZqNLNWEowLKgJ0swrBe5fb4syuh/fFosC1BYqiW+64z/2G6cb0swzRFr1WZvDwimW
+         S+AA==
+X-Gm-Message-State: AOAM533LSeBuy98q81RVkFkZMP/z4z7EYh6jDBvDIZA4IdQ0j2VR4Vzw
+        lptDTrGotXpAwotEbvQJpjGchCJE0Jne35Jg
+X-Google-Smtp-Source: ABdhPJyDEbtVQsPGOWj+0ZwgV07yUPF2CH+IRuT0AA1Pr4lU4/stExycIprGHRU+b35/tfTbT2xPfg==
+X-Received: by 2002:a62:7d0b:: with SMTP id y11mr1326662pfc.262.1597641830144;
+        Sun, 16 Aug 2020 22:23:50 -0700 (PDT)
 Received: from localhost ([121.0.29.56])
-        by smtp.gmail.com with ESMTPSA id d93sm15904744pjk.44.2020.08.16.22.23.43
+        by smtp.gmail.com with ESMTPSA id y4sm17676282pff.44.2020.08.16.22.23.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Aug 2020 22:23:43 -0700 (PDT)
+        Sun, 16 Aug 2020 22:23:49 -0700 (PDT)
 From:   Lai Jiangshan <jiangshanlai@gmail.com>
 Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
         Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V3 1/3] x86/entry: avoid calling into sync_regs() when entering from userspace
-Date:   Mon, 17 Aug 2020 14:23:53 +0800
-Message-Id: <20200817062355.2884-2-jiangshanlai@gmail.com>
+Subject: [PATCH V3 2/3] x86/entry: directly switch to kernel stack when .Lerror_bad_iret
+Date:   Mon, 17 Aug 2020 14:23:54 +0800
+Message-Id: <20200817062355.2884-3-jiangshanlai@gmail.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20200817062355.2884-1-jiangshanlai@gmail.com>
 References: <CALCETrWx66qLc-NiwKS_Zu=BP8JDTzfeUO7A2vDd01kXNmiNiA@mail.gmail.com>
@@ -84,91 +88,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lai Jiangshan <laijs@linux.alibaba.com>
 
+Directly copy pt_regs to kernel stack when .Lerror_bad_iret.
+Directly switch to kernel stack when .Lerror_bad_iret.
+
+We can see that entry_64.S do the following things back to back
+when .Lerror_bad_iret:
+  call fixup_bad_iret(), switch to sp0 stack with pt_regs copied
+  call sync_regs(), switch to kernel stack with pt_regs copied
+
+So we can do the all things together in fixup_bad_iret().
+
+After this patch, fixup_bad_iret() is restored to the behavior before
 7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
-made a change that when any exception happens on userspace, the
-entry code will save the pt_regs on the sp0 stack, and then copy it
-to the thread stack via sync_regs() and switch to thread stack
-afterward.
-
-And recent x86/entry work makes interrupt also use idtentry
-and makes all the interrupt code save the pt_regs on the sp0 stack
-and then copy it to the thread stack like exception.
-
-This is hot path (page fault, ipi), such overhead should be avoided.
-This patch borrows the way how original interrupt_entry handles it.
-It switches to the thread stack directly right away when comes
-from userspace.
 
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- arch/x86/entry/entry_64.S | 43 +++++++++++++++++++++++++++++++--------
- 1 file changed, 34 insertions(+), 9 deletions(-)
+ arch/x86/entry/entry_64.S | 13 ++-----------
+ arch/x86/kernel/traps.c   |  9 ++++-----
+ 2 files changed, 6 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 70dea9337816..1a7715430da3 100644
+index 1a7715430da3..911cfa0da637 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -928,19 +928,42 @@ SYM_CODE_END(paranoid_exit)
- SYM_CODE_START_LOCAL(error_entry)
- 	UNWIND_HINT_FUNC
- 	cld
--	PUSH_AND_CLEAR_REGS save_ret=1
--	ENCODE_FRAME_POINTER 8
--	testb	$3, CS+8(%rsp)
-+	testb	$3, CS-ORIG_RAX+8(%rsp)
- 	jz	.Lerror_kernelspace
+@@ -965,16 +965,6 @@ SYM_CODE_START_LOCAL(error_entry)
+ 	ENCODE_FRAME_POINTER 8
+ 	ret
  
--	/*
--	 * We entered from user mode or we're pretending to have entered
--	 * from user mode due to an IRET fault.
--	 */
- 	SWAPGS
- 	FENCE_SWAPGS_USER_ENTRY
--	/* We have user CR3.  Change to kernel CR3. */
--	SWITCH_TO_KERNEL_CR3 scratch_reg=%rax
-+	/*
-+	 * Switch to the thread stack. The IRET frame and orig_ax are
-+	 * on the stack, as well as the return address. RDI..R12 are
-+	 * not (yet) on the stack and space has not (yet) been
-+	 * allocated for them.
-+	 */
-+	pushq	%rdx
-+
-+	/* Need to switch before accessing the thread stack. */
-+	SWITCH_TO_KERNEL_CR3 scratch_reg=%rdx
-+	movq	%rsp, %rdx
-+	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
-+
-+	 /*
-+	  * We have RDX, return address, and orig_ax on the stack on
-+	  * top of the IRET frame. That means offset=24
-+	  */
-+	UNWIND_HINT_IRET_REGS base=%rdx offset=24
-+
-+	pushq	7*8(%rdx)		/* regs->ss */
-+	pushq	6*8(%rdx)		/* regs->rsp */
-+	pushq	5*8(%rdx)		/* regs->eflags */
-+	pushq	4*8(%rdx)		/* regs->cs */
-+	pushq	3*8(%rdx)		/* regs->ip */
-+	pushq	2*8(%rdx)		/* regs->orig_ax */
-+	pushq	8(%rdx)			/* return address */
-+	UNWIND_HINT_FUNC
-+
-+	PUSH_AND_CLEAR_REGS rdx=(%rdx), save_ret=1
+-.Lerror_entry_from_usermode_after_swapgs:
+-	/* Put us onto the real thread stack. */
+-	popq	%r12				/* save return addr in %12 */
+-	movq	%rsp, %rdi			/* arg0 = pt_regs pointer */
+-	call	sync_regs
+-	movq	%rax, %rsp			/* switch stack */
+-	ENCODE_FRAME_POINTER
+-	pushq	%r12
+-	ret
+-
+ .Lerror_entry_done_lfence:
+ 	FENCE_SWAPGS_KERNEL_ENTRY
+ .Lerror_entry_done:
+@@ -1028,7 +1018,8 @@ SYM_CODE_START_LOCAL(error_entry)
+ 	mov	%rsp, %rdi
+ 	call	fixup_bad_iret
+ 	mov	%rax, %rsp
+-	jmp	.Lerror_entry_from_usermode_after_swapgs
 +	ENCODE_FRAME_POINTER 8
 +	ret
+ SYM_CODE_END(error_entry)
  
- .Lerror_entry_from_usermode_after_swapgs:
- 	/* Put us onto the real thread stack. */
-@@ -964,6 +987,8 @@ SYM_CODE_START_LOCAL(error_entry)
- 	 * for these here too.
+ SYM_CODE_START_LOCAL(error_return)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1f66d2d1e998..852de6f1bf88 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -684,13 +684,12 @@ struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
+ 	/*
+ 	 * This is called from entry_64.S early in handling a fault
+ 	 * caused by a bad iret to user mode.  To handle the fault
+-	 * correctly, we want to move our stack frame to where it would
+-	 * be had we entered directly on the entry stack (rather than
+-	 * just below the IRET frame) and we want to pretend that the
+-	 * exception came from the IRET target.
++	 * correctly, we want to move our stack frame to kernel stack
++	 * (rather than just below the IRET frame) and we want to
++	 * pretend that the exception came from the IRET target.
  	 */
- .Lerror_kernelspace:
-+	PUSH_AND_CLEAR_REGS save_ret=1
-+	ENCODE_FRAME_POINTER 8
- 	leaq	native_irq_return_iret(%rip), %rcx
- 	cmpq	%rcx, RIP+8(%rsp)
- 	je	.Lerror_bad_iret
+ 	struct bad_iret_stack tmp, *new_stack =
+-		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
++		(struct bad_iret_stack *)__this_cpu_read(cpu_current_top_of_stack) - 1;
+ 
+ 	/* Copy the IRET target to the temporary storage. */
+ 	__memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
 -- 
 2.19.1.6.gb485710b
 
