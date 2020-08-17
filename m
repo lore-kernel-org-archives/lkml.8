@@ -2,101 +2,87 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD945C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E4520716
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A413F20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHRDWW (ORCPT
+        id S1726639AbgHRDXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:22:22 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:39478 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgHRDWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:22:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U668H2X_1597720937;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U668H2X_1597720937)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Aug 2020 11:22:17 +0800
-Date:   Tue, 18 Aug 2020 11:22:17 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_reporting: the "page" must not be the list head
-Message-ID: <20200818032217.GA31960@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200817084836.29216-1-richard.weiyang@linux.alibaba.com>
- <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com>
- <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
+        Mon, 17 Aug 2020 23:23:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63964 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgHRDXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 23:23:13 -0400
+IronPort-SDR: detyl8IJJyRj/h0Tt25xkLObltL0Fge78eMG7hgzP8KoAtVjK70OQPthtmiHFgM6BskEw0tjbT
+ I6CxFtUJv++Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154806464"
+X-IronPort-AV: E=Sophos;i="5.76,325,1592895600"; 
+   d="scan'208";a="154806464"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 20:23:13 -0700
+IronPort-SDR: dBqri11ZwARXckzMCI9IAK9ShWp/IapE+rA0W6ovd1YbrdwL8AyUCbE5EkLYuHqkC6zgbr+udy
+ IXui0HcAJUBQ==
+X-IronPort-AV: E=Sophos;i="5.76,325,1592895600"; 
+   d="scan'208";a="441084518"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 20:23:09 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH v2 00/12] soundwire: intel: add power management support
+Date:   Mon, 17 Aug 2020 23:29:11 +0800
+Message-Id: <20200817152923.3259-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:05:32AM -0700, Alexander Duyck wrote:
->
->
->On 8/17/2020 2:35 AM, David Hildenbrand wrote:
->> On 17.08.20 10:48, Wei Yang wrote:
->> > If "page" is the list head, list_for_each_entry_safe() would stop
->> > iteration.
->> > 
->> > Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> > ---
->> >   mm/page_reporting.c | 2 +-
->> >   1 file changed, 1 insertion(+), 1 deletion(-)
->> > 
->> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
->> > index 3bbd471cfc81..aaaa3605123d 100644
->> > --- a/mm/page_reporting.c
->> > +++ b/mm/page_reporting.c
->> > @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
->> >   		 * the new head of the free list before we release the
->> >   		 * zone lock.
->> >   		 */
->> > -		if (&page->lru != list && !list_is_first(&page->lru, list))
->> > +		if (!list_is_first(&page->lru, list))
->> >   			list_rotate_to_front(&page->lru, list);
->> >   		/* release lock before waiting on report processing */
->> > 
->> 
->> Is this a fix or a cleanup? If it's a fix, can this be reproduced easily
->> and what ere the effects?
->> 
->
->This should be a clean-up. Since the &page->lru != list will always be true.
->
->If I recall at some point the that was a check for &next->lru != list but I
->think I pulled out an additional conditional check somewhere so that we just
->go through the start of the loop again and iterate over reported pages until
->we are guaranteed to have a non-reported page to rotate to the top of the
->list with the general idea being that we wanted the allocator to pull
->non-reported pages before reported pages.
+This series adds power management support for Intel soundwire links.
 
-Hi, Alexander,
+Changes in v2:
+- Move "#include <linux/pm_runtime.h>" to the first required patch.
+- Fit debug log in single line. 
 
-I see you mentioned in the changelog, this change "mm/page_reporting: rotate
-reported pages to the tail of the list" brings some performance gain.
+Bard Liao (1):
+  soundwire: intel: reinitialize IP+DSP in .prepare(), but only when
+    resuming
 
-Would you mind sharing more test detail? I would like to have a try at my
-side.
+Pierre-Louis Bossart (9):
+  soundwire: intel: add pm_runtime support
+  soundwire: intel: reset pm_runtime status during system resume
+  soundwire: intel: fix race condition on system resume
+  soundwire: intel: call helper to reset Slave states on resume
+  soundwire: intel: pm_runtime idle scheduling
+  soundwire: intel: add CLK_STOP_TEARDOWN for pm_runtime suspend
+  soundwire: intel: add CLK_STOP_NOT_ALLOWED support
+  soundwire: intel_init: handle power rail dependencies for clock stop
+    mode
+  soundwire: intel: support clock_stop mode without quirks
 
-Thanks :-)
+Rander Wang (2):
+  soundwire: intel: add CLK_STOP_BUS_RESET support
+  soundwire: intel: refine runtime pm for SDW_INTEL_CLK_STOP_BUS_RESET
+
+ drivers/soundwire/cadence_master.h |   4 +
+ drivers/soundwire/intel.c          | 363 ++++++++++++++++++++++++++++-
+ drivers/soundwire/intel.h          |   2 +
+ drivers/soundwire/intel_init.c     |  19 +-
+ 4 files changed, 382 insertions(+), 6 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.17.1
+
