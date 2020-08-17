@@ -2,110 +2,263 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7202B2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55F82063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="F2yCHAjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgHQRw0 (ORCPT
+        id S1731605AbgHQRxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:52:26 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38615 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731115AbgHQRvW (ORCPT
+        Mon, 17 Aug 2020 13:53:04 -0400
+Received: from rcdn-iport-2.cisco.com ([173.37.86.73]:11902 "EHLO
+        rcdn-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731600AbgHQRwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:51:22 -0400
-Received: by mail-io1-f69.google.com with SMTP id e73so10325014iof.5
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:51:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tef9SyC/DPbeM4vGO9X8D7q/BkFTLwMgzsKkMCcRRfY=;
-        b=H/9Ocz/qjxOf3Ql62s9RIl7X61ipfu/FMsRK/FU0zU23r8h5GnuurY3O/HK8TdTIY/
-         xXQGWtA7e40mIdEJVaVoPLW3eVuGjYqO/SdiwFq3iIawIftfuGWtp56rGIedV40OsD0M
-         IfK8TqYkb7NmEH43ortETIIQPAQuHXQ0BdJg2aixJC8oLGO1j/z/vPbZXs42XY3flogQ
-         xrCr1kNz8NnqyzscGaNR2naNgopMv16u9GriQpyLYoxCBFktBVPiW1gJXzitQdtG5ddS
-         3KQ47jd8M8elkws7lyKW+ERNWJA+TxSS373z+Pf5GL5Q7bN+Q25fhJzKCUrrwyH+UenP
-         fmKQ==
-X-Gm-Message-State: AOAM533pyhB6yZKp91lysztJnSwZF+1PAxZAwxG6FfXTzLn54weAvBNj
-        TOeQAneRJhXjYIFgyZZ1CbLjVmDngpbNxDc1HwADnY7H0aXd
-X-Google-Smtp-Source: ABdhPJzsDWXHbORSENDAZjQHsVROvP425ZbcV35BXeYXiXRrUfjPOzhoidxjUoFMg+GQnjyPIe2MW/KmGPKvfyOcP727hATbvgkc
+        Mon, 17 Aug 2020 13:52:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=6582; q=dns/txt; s=iport;
+  t=1597686752; x=1598896352;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JeSwWmzIRAQz6j2ejwjeJoylWXxzdWjzKvU1IpkMkOc=;
+  b=F2yCHAjBkONahjLeoZz8iATsQoNd4cUdmo9BMOp+z4iQXgaCf1INA8vi
+   vojsEscquicST5bN3duFpGUg66xzpBbID9f7JLtGef5BwukF1NuApXCTo
+   GwY9v0siTLk4A4iowILzfU8U4w1Y1Y3tfi6WnNtVZUUvWjS3U9yi1zz+V
+   o=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BbBACIwjpf/5tdJa1fHQEBAQEJARI?=
+ =?us-ascii?q?BBQUBggqBdTWBRAEyLLFuCwEBAQ4vBAEBhEyCTwIkOBMCAwEBCwEBBQEBAQI?=
+ =?us-ascii?q?BBgRthWiGHwsBRoENMhKDJoJ9sA+BdTOJGYFAgTiIIm2EDhuBQT+EX4o0BJJ?=
+ =?us-ascii?q?Ch0SBa5o+gmyaEQ8hoCGSOZ9ngWojgVczGggbFTuCaVAZDY4rF45EIQMwNwI?=
+ =?us-ascii?q?GCgEBAwmRLQEB?=
+X-IronPort-AV: E=Sophos;i="5.76,324,1592870400"; 
+   d="scan'208";a="816481828"
+Received: from rcdn-core-4.cisco.com ([173.37.93.155])
+  by rcdn-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 Aug 2020 17:52:24 +0000
+Received: from sjc-ads-9103.cisco.com (sjc-ads-9103.cisco.com [10.30.208.113])
+        by rcdn-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id 07HHqOF6012615;
+        Mon, 17 Aug 2020 17:52:24 GMT
+Received: by sjc-ads-9103.cisco.com (Postfix, from userid 487941)
+        id 3A37B9A8; Mon, 17 Aug 2020 10:52:24 -0700 (PDT)
+From:   Denys Zagorui <dzagorui@cisco.com>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org
+Cc:     "ikhoronz@cisco.com--cc=xe-linux-external"@cisco.com,
+        xiyou.wangcong@gmail.com, ap420073@gmail.com,
+        richardcochran@gmail.com, f.fainelli@gmail.com, andrew@lunn.ch,
+        mkubecek@suse.cz, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: core: SIOCADDMULTI/SIOCDELMULTI distinguish between uc and mc
+Date:   Mon, 17 Aug 2020 10:52:24 -0700
+Message-Id: <20200817175224.49608-1-dzagorui@cisco.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:4414:: with SMTP id r20mr14870589ila.299.1597686681560;
- Mon, 17 Aug 2020 10:51:21 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 10:51:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001ded4605ad166bda@google.com>
-Subject: KMSAN: uninit-value in smsc95xx_reset
-From:   syzbot <syzbot+c74c24b43c9ae534f0e0@syzkaller.appspotmail.com>
-To:     UNGLinuxDriver@microchip.com, davem@davemloft.net,
-        glider@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        steve.glendinning@shawell.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Outbound-SMTP-Client: 10.30.208.113, sjc-ads-9103.cisco.com
+X-Outbound-Node: rcdn-core-4.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+SIOCADDMULTI API allows adding multicast/unicast mac addresses but
+doesn't deferentiate them so if someone tries to add secondary
+unicast mac addr it will be added to multicast netdev list which is
+confusing. There is at least one user that allows adding secondary
+unicast through this API.
+(2f41f3358672 i40e/i40evf: fix unicast mac address add)
 
-syzbot found the following issue on:
+This patch adds check whether passed mac addr is uc or mc and adds
+this mac addr to the corresponding list. Add 'global' variant for
+adding/removing uc addresses similarly to mc.
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1496679e900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=c74c24b43c9ae534f0e0
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d8cc86900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117e8fbe900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c74c24b43c9ae534f0e0@syzkaller.appspotmail.com
-
-smsc95xx 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read reg index 0x00000030: -32
-smsc95xx 1-1:1.0 (unnamed net_device) (uninitialized): Error reading E2P_CMD
-=====================================================
-BUG: KMSAN: uninit-value in smsc95xx_reset+0x353/0x3eb0 drivers/net/usb/smsc95xx.c:1039
-CPU: 1 PID: 27 Comm: kworker/1:1 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- smsc95xx_reset+0x353/0x3eb0 drivers/net/usb/smsc95xx.c:1039
- smsc95xx_bind+0x8b3/0x1720 drivers/net/usb/smsc95xx.c:1289
- usbnet_probe+0x1152/0x3f90 drivers/net/usb/usbnet.c:1737
- usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
- usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
- 
-
-
+Signed-off-by: Denys Zagorui <dzagorui@cisco.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/linux/netdevice.h    |  2 +
+ include/uapi/linux/sockios.h |  2 +-
+ net/core/dev_addr_lists.c    | 75 +++++++++++++++++++++++++++---------
+ net/core/dev_ioctl.c         | 13 ++++++-
+ 4 files changed, 71 insertions(+), 21 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index b0e303f6603f..9394f369be33 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -4345,8 +4345,10 @@ int dev_addr_init(struct net_device *dev);
+ 
+ /* Functions used for unicast addresses handling */
+ int dev_uc_add(struct net_device *dev, const unsigned char *addr);
++int dev_uc_add_global(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_del(struct net_device *dev, const unsigned char *addr);
++int dev_uc_del_global(struct net_device *dev, const unsigned char *addr);
+ int dev_uc_sync(struct net_device *to, struct net_device *from);
+ int dev_uc_sync_multiple(struct net_device *to, struct net_device *from);
+ void dev_uc_unsync(struct net_device *to, struct net_device *from);
+diff --git a/include/uapi/linux/sockios.h b/include/uapi/linux/sockios.h
+index 7d1bccbbef78..f41b152b0268 100644
+--- a/include/uapi/linux/sockios.h
++++ b/include/uapi/linux/sockios.h
+@@ -80,7 +80,7 @@
+ #define SIOCGIFHWADDR	0x8927		/* Get hardware address		*/
+ #define SIOCGIFSLAVE	0x8929		/* Driver slaving support	*/
+ #define SIOCSIFSLAVE	0x8930
+-#define SIOCADDMULTI	0x8931		/* Multicast address lists	*/
++#define SIOCADDMULTI	0x8931		/* Mac address lists	*/
+ #define SIOCDELMULTI	0x8932
+ #define SIOCGIFINDEX	0x8933		/* name -> if_index mapping	*/
+ #define SIOGIFINDEX	SIOCGIFINDEX	/* misprint compatibility :-)	*/
+diff --git a/net/core/dev_addr_lists.c b/net/core/dev_addr_lists.c
+index 54cd568e7c2f..d150c2d84df4 100644
+--- a/net/core/dev_addr_lists.c
++++ b/net/core/dev_addr_lists.c
+@@ -573,6 +573,20 @@ int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr)
+ }
+ EXPORT_SYMBOL(dev_uc_add_excl);
+ 
++static int __dev_uc_add(struct net_device *dev, const unsigned char *addr,
++			bool global)
++{
++	int err;
++
++	netif_addr_lock_bh(dev);
++	err = __hw_addr_add_ex(&dev->uc, addr, dev->addr_len,
++			       NETDEV_HW_ADDR_T_UNICAST, global, false, 0);
++	if (!err)
++		__dev_set_rx_mode(dev);
++	netif_addr_unlock_bh(dev);
++	return err;
++}
++
+ /**
+  *	dev_uc_add - Add a secondary unicast address
+  *	@dev: device
+@@ -583,18 +597,37 @@ EXPORT_SYMBOL(dev_uc_add_excl);
+  */
+ int dev_uc_add(struct net_device *dev, const unsigned char *addr)
+ {
+-	int err;
+-
+-	netif_addr_lock_bh(dev);
+-	err = __hw_addr_add(&dev->uc, addr, dev->addr_len,
+-			    NETDEV_HW_ADDR_T_UNICAST);
+-	if (!err)
+-		__dev_set_rx_mode(dev);
+-	netif_addr_unlock_bh(dev);
+-	return err;
++	return __dev_uc_add(dev, addr, false);
+ }
+ EXPORT_SYMBOL(dev_uc_add);
+ 
++/**
++ *	dev_uc_add_global - Add a global unicast address
++ *	@dev: device
++ *	@addr: address to add
++ *
++ *	Add a global unicast address to the device.
++ */
++int dev_uc_add_global(struct net_device *dev, const unsigned char *addr)
++{
++	return __dev_uc_add(dev, addr, true);
++}
++EXPORT_SYMBOL(dev_uc_add_global);
++
++static int __dev_uc_del(struct net_device *dev, const unsigned char *addr,
++			bool global)
++{
++	int err;
++
++	netif_addr_lock_bh(dev);
++	err = __hw_addr_del_ex(&dev->uc, addr, dev->addr_len,
++			       NETDEV_HW_ADDR_T_UNICAST, global, false);
++	if (!err)
++		__dev_set_rx_mode(dev);
++	netif_addr_unlock_bh(dev);
++	return err;
++}
++
+ /**
+  *	dev_uc_del - Release secondary unicast address.
+  *	@dev: device
+@@ -605,18 +638,24 @@ EXPORT_SYMBOL(dev_uc_add);
+  */
+ int dev_uc_del(struct net_device *dev, const unsigned char *addr)
+ {
+-	int err;
+-
+-	netif_addr_lock_bh(dev);
+-	err = __hw_addr_del(&dev->uc, addr, dev->addr_len,
+-			    NETDEV_HW_ADDR_T_UNICAST);
+-	if (!err)
+-		__dev_set_rx_mode(dev);
+-	netif_addr_unlock_bh(dev);
+-	return err;
++	return __dev_uc_del(dev, addr, false);
+ }
+ EXPORT_SYMBOL(dev_uc_del);
+ 
++/**
++ *	dev_uc_del_global - Delete a global unicast address.
++ *	@dev: device
++ *	@addr: address to delete
++ *
++ *	Release reference to a unicast address and remove it
++ *	from the device if the reference count drops to zero.
++ */
++int dev_uc_del_global(struct net_device *dev, const unsigned char *addr)
++{
++	return __dev_uc_del(dev, addr, true);
++}
++EXPORT_SYMBOL(dev_uc_del_global);
++
+ /**
+  *	dev_uc_sync - Synchronize device's unicast list to another device
+  *	@to: destination device
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index b2cf9b7bb7b8..7883bfd920fd 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -7,6 +7,7 @@
+ #include <linux/wireless.h>
+ #include <net/dsa.h>
+ #include <net/wext.h>
++#include <linux/if_arp.h>
+ 
+ /*
+  *	Map an interface index to its name (SIOCGIFNAME)
+@@ -299,7 +300,11 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
+ 			return -EINVAL;
+ 		if (!netif_device_present(dev))
+ 			return -ENODEV;
+-		return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
++		if (dev->type == ARPHRD_ETHER &&
++		    is_unicast_ether_addr(ifr->ifr_hwaddr.sa_data))
++			return dev_uc_add_global(dev, ifr->ifr_hwaddr.sa_data);
++		else
++			return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
+ 
+ 	case SIOCDELMULTI:
+ 		if (!ops->ndo_set_rx_mode ||
+@@ -307,7 +312,11 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
+ 			return -EINVAL;
+ 		if (!netif_device_present(dev))
+ 			return -ENODEV;
+-		return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
++		if (dev->type == ARPHRD_ETHER &&
++		    is_unicast_ether_addr(ifr->ifr_hwaddr.sa_data))
++			return dev_uc_del_global(dev, ifr->ifr_hwaddr.sa_data);
++		else
++			return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
+ 
+ 	case SIOCSIFTXQLEN:
+ 		if (ifr->ifr_qlen < 0)
+-- 
+2.19.1
+
