@@ -2,182 +2,124 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18892C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1CA62053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0168C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597688955;
+	bh=L6SlWHQmOlG7InphGxh1u2m96mugPu3A3OzyT6FCBJI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FeCksCn9NcNlNUH0ikyznzMRCqHp+9HC+gKGr997xCckFySv9NWhPVG11zErBxpYR
+	 N9Ltm4b74UbmD5u7usJ1wiVKbM78OoMOI7dBFc6GOoyPpQ30oANdNh/uTvjNwNg/sk
+	 i2t2Y65MDxCfm9nyz5suL3qihbfUpvyhUC5ntbwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388225AbgHQS27 (ORCPT
+        id S2390956AbgHQS1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:28:59 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:59030 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391002AbgHQS2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:28:34 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7jrk-001UEg-5B; Mon, 17 Aug 2020 12:28:16 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7jrj-0003E9-5O; Mon, 17 Aug 2020 12:28:15 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Will Deacon <will@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        notify@kernel.org, Kexec Mailing List <kexec@lists.infradead.org>
-References: <20200813151922.1093791-1-alex.popov@linux.com>
-        <20200813151922.1093791-3-alex.popov@linux.com>
-Date:   Mon, 17 Aug 2020 13:24:37 -0500
-In-Reply-To: <20200813151922.1093791-3-alex.popov@linux.com> (Alexander
-        Popov's message of "Thu, 13 Aug 2020 18:19:22 +0300")
-Message-ID: <87zh6t9llm.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 17 Aug 2020 14:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388174AbgHQQCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B211207FF;
+        Mon, 17 Aug 2020 16:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680123;
+        bh=L6SlWHQmOlG7InphGxh1u2m96mugPu3A3OzyT6FCBJI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y68EuzNFUHgzBht8BwzD2BN2Cr7rGFmyyso1yIb/I72k1ScN/2Tjbrdaszqk5xRlz
+         KB297OXARxYVz3AtkZCbF3Od4ip/mnoKag8re8zyTgQ/80URnD8AU6K6Wwz53wgNgp
+         zjKdr5wDJtUXYYMB8fxSvf3cIq/LU98a/WWg2eIM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 031/270] spi: lantiq: fix: Rx overflow error in full duplex mode
+Date:   Mon, 17 Aug 2020 17:13:52 +0200
+Message-Id: <20200817143757.346687525@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k7jrj-0003E9-5O;;;mid=<87zh6t9llm.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+IYzzebB5ZnTtqYaH62lkbTUMdTHJJuM0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH RFC 2/2] lkdtm: Add heap spraying test
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Popov <alex.popov@linux.com> writes:
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-> Add a simple test for CONFIG_SLAB_QUARANTINE.
->
-> It performs heap spraying that aims to reallocate the recently freed heap
-> object. This technique is used for exploiting use-after-free
-> vulnerabilities in the kernel code.
->
-> This test shows that CONFIG_SLAB_QUARANTINE breaks heap spraying
-> exploitation technique.
->
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+[ Upstream commit 661ccf2b3f1360be50242726f7c26ced6a9e7d52 ]
 
-Why put this test in the linux kernel dump test module?
+In full duplex mode, rx overflow error is observed. To overcome the error,
+wait until the complete data got received and proceed further.
 
-I have no problem with tests, and I may be wrong but this
-does not look like you are testing to see if heap corruption
-triggers a crash dump.  Which is what the rest of the tests
-in lkdtm are about.  Seeing if the test triggers successfully
-triggers a crash dump.
+Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Link: https://lore.kernel.org/r/efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-lantiq-ssc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Eric
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index 9dfe8b04e6880..55394bdbc5a30 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -184,6 +184,7 @@ struct lantiq_ssc_spi {
+ 	unsigned int			tx_fifo_size;
+ 	unsigned int			rx_fifo_size;
+ 	unsigned int			base_cs;
++	unsigned int			fdx_tx_level;
+ };
+ 
+ static u32 lantiq_ssc_readl(const struct lantiq_ssc_spi *spi, u32 reg)
+@@ -481,6 +482,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int tx_free = tx_fifo_free(spi);
+ 
++	spi->fdx_tx_level = 0;
+ 	while (spi->tx_todo && tx_free) {
+ 		switch (spi->bits_per_word) {
+ 		case 2 ... 8:
+@@ -509,6 +511,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ 
+ 		lantiq_ssc_writel(spi, data, LTQ_SPI_TB);
+ 		tx_free--;
++		spi->fdx_tx_level++;
+ 	}
+ }
+ 
+@@ -520,6 +523,13 @@ static void rx_fifo_read_full_duplex(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int rx_fill = rx_fifo_level(spi);
+ 
++	/*
++	 * Wait until all expected data to be shifted in.
++	 * Otherwise, rx overrun may occur.
++	 */
++	while (rx_fill != spi->fdx_tx_level)
++		rx_fill = rx_fifo_level(spi);
++
+ 	while (rx_fill) {
+ 		data = lantiq_ssc_readl(spi, LTQ_SPI_RB);
+ 
+-- 
+2.25.1
 
-> ---
->  drivers/misc/lkdtm/core.c  |  1 +
->  drivers/misc/lkdtm/heap.c  | 40 ++++++++++++++++++++++++++++++++++++++
->  drivers/misc/lkdtm/lkdtm.h |  1 +
->  3 files changed, 42 insertions(+)
->
-> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> index a5e344df9166..78b7669c35eb 100644
-> --- a/drivers/misc/lkdtm/core.c
-> +++ b/drivers/misc/lkdtm/core.c
-> @@ -126,6 +126,7 @@ static const struct crashtype crashtypes[] = {
->  	CRASHTYPE(SLAB_FREE_DOUBLE),
->  	CRASHTYPE(SLAB_FREE_CROSS),
->  	CRASHTYPE(SLAB_FREE_PAGE),
-> +	CRASHTYPE(HEAP_SPRAY),
->  	CRASHTYPE(SOFTLOCKUP),
->  	CRASHTYPE(HARDLOCKUP),
->  	CRASHTYPE(SPINLOCKUP),
-> diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
-> index 1323bc16f113..a72a241e314a 100644
-> --- a/drivers/misc/lkdtm/heap.c
-> +++ b/drivers/misc/lkdtm/heap.c
-> @@ -205,6 +205,46 @@ static void ctor_a(void *region)
->  static void ctor_b(void *region)
->  { }
->  
-> +#define HEAP_SPRAY_SIZE 128
-> +
-> +void lkdtm_HEAP_SPRAY(void)
-> +{
-> +	int *addr;
-> +	int *spray_addrs[HEAP_SPRAY_SIZE] = { 0 };
-> +	unsigned long i = 0;
-> +
-> +	addr = kmem_cache_alloc(a_cache, GFP_KERNEL);
-> +	if (!addr) {
-> +		pr_info("Unable to allocate memory in lkdtm-heap-a cache\n");
-> +		return;
-> +	}
-> +
-> +	*addr = 0x31337;
-> +	kmem_cache_free(a_cache, addr);
-> +
-> +	pr_info("Performing heap spraying...\n");
-> +	for (i = 0; i < HEAP_SPRAY_SIZE; i++) {
-> +		spray_addrs[i] = kmem_cache_alloc(a_cache, GFP_KERNEL);
-> +		*spray_addrs[i] = 0x31337;
-> +		pr_info("attempt %lu: spray alloc addr %p vs freed addr %p\n",
-> +						i, spray_addrs[i], addr);
-> +		if (spray_addrs[i] == addr) {
-> +			pr_info("freed addr is reallocated!\n");
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (i < HEAP_SPRAY_SIZE)
-> +		pr_info("FAIL! Heap spraying succeed :(\n");
-> +	else
-> +		pr_info("OK! Heap spraying hasn't succeed :)\n");
-> +
-> +	for (i = 0; i < HEAP_SPRAY_SIZE; i++) {
-> +		if (spray_addrs[i])
-> +			kmem_cache_free(a_cache, spray_addrs[i]);
-> +	}
-> +}
-> +
->  void __init lkdtm_heap_init(void)
->  {
->  	double_free_cache = kmem_cache_create("lkdtm-heap-double_free",
-> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-> index 8878538b2c13..dfafb4ae6f3a 100644
-> --- a/drivers/misc/lkdtm/lkdtm.h
-> +++ b/drivers/misc/lkdtm/lkdtm.h
-> @@ -45,6 +45,7 @@ void lkdtm_READ_BUDDY_AFTER_FREE(void);
->  void lkdtm_SLAB_FREE_DOUBLE(void);
->  void lkdtm_SLAB_FREE_CROSS(void);
->  void lkdtm_SLAB_FREE_PAGE(void);
-> +void lkdtm_HEAP_SPRAY(void);
->  
->  /* lkdtm_perms.c */
->  void __init lkdtm_perms_init(void);
+
+
