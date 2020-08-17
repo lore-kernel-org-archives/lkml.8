@@ -2,210 +2,114 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C1F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482792072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtZnUJR5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="LP63tE3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgHQLdV (ORCPT
+        id S1726480AbgHQLi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:33:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39439 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726530AbgHQLdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:33:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597663993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yGNaFx2Jg2/WUMJiM6JmNJk/uv+6+QM3rr6hE8Ya/eo=;
-        b=PtZnUJR5a9JSQgyU+ItmmzZMu6sNk0KMuB/vCsf534Yoa9ItmaVxZp4iUS4Ap9Soim5ScH
-        +s3O9zO1MpwcmoTN+i0qr6//ySqJs7CI8HaZfvNWHJbwDDihamjZEYQFS3KVlHk51Y109c
-        Zv617MAE011K4XzmrLD8gl/o3OPtY4I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-WwqY1EEVM_-CA6hqEqDjGw-1; Mon, 17 Aug 2020 07:33:07 -0400
-X-MC-Unique: WwqY1EEVM_-CA6hqEqDjGw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98322E75C;
-        Mon, 17 Aug 2020 11:33:04 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AC7C7D66F;
-        Mon, 17 Aug 2020 11:32:57 +0000 (UTC)
-Subject: Re: file metadata via fs API
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1842689.1596468469@warthog.procyon.org.uk>
- <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
- <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com>
-Date:   Mon, 17 Aug 2020 12:32:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Aug 2020 07:38:27 -0400
+Received: from mail2.skidata.com ([91.230.2.91]:5503 "EHLO mail2.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbgHQLiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:38:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1597664295; x=1629200295;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=qAiSySTl/y8QrdoOwS73hqC2vZPrIK22GvC7HIEK8Sw=;
+  b=LP63tE3J/JW2ErnnxJAehAh0T7+LeTm3GauBDpY8jJWSpOmTCkiomLNt
+   xSxIHMFnQNyovd0/2aHVfx4HJGyc+QedBfLCAgswXz7VzO6mMQRdTtGs3
+   CHLHba95AO6BrIzEjGI1BwSgMTq11LnJi6zHCBbG3HVs33XolXG1MvgaG
+   xNSPMxFp6O40rhqzgCJQtyxBBLCjqqnmMOH7w8prsfRyVSRGufSbKxP5c
+   KB9HFM5hBOdG2S1GdZzsnitaBtSVzHif/HodY3OHO4mCuGzxLdaJnNiir
+   NeKNBwCD4J4GYVz/0+uC3Z4yV9pgJ3k7Ov7SICIYFuVuJItxfJ3bhDllP
+   Q==;
+IronPort-SDR: r14hO/kLklIsGQ2dnpEN7qM09P2f2aF1EjhAlxzmSMcuqfvXFBRe+N2g2GbNAQy6RBnH6mvub4
+ G9CzTCq5/0Xu34vgrQoODE4XvobffdAgUcNAoI/Wd3UL6Jq51FS5mK4HdyazyQntye83cu6C1d
+ Utxs08P5rh1ovPmRJnbqt32sNVRq/vBpgr26ga+RPc5pxsLbfheQqpxpsN6+Av0kB6MiwftAt7
+ /fB6w62Tw9zJn1oFUf2wPuRXpstyhH7KMAs9dQhCYg8DlQFi2903uhUeTmOramaYOuZ2OpH0lA
+ PAs=
+X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
+   d="scan'208";a="2642801"
+From:   Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
+Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Index: AQHWcWQZKYOChL0mPkuCFeZyDJy6mKk3KiiAgABS1/CABG6hAIAARo2Q
+Date:   Mon, 17 Aug 2020 11:38:10 +0000
+Message-ID: <a64ae27d9f1348ecae6adc74969cc88c@skidata.com>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <VE1PR04MB6638AC2A3AE852C3047E7B97895F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB6638AC2A3AE852C3047E7B97895F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Accept-Language: en-US, de-AT
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.111.252]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> -----Original Message-----
+> From: Robin Gong <yibin.gong@nxp.com>
+> Sent: Montag, 17. August 2020 11:23
+> busy_wait is not good I think, would you please have a try with the attac=
+hed patch
+> which is based on https://lkml.org/lkml/2020/8/11/111? The basic idea is
+> to keep the freed descriptor into another list for freeing in later termi=
+nate_worker
+> instead of freeing directly all in terminate_worker by vchan_get_all_desc=
+riptors
+> which may break next descriptor coming soon
 
-On 12/08/2020 20:50, Linus Torvalds wrote:
-> On Wed, Aug 12, 2020 at 12:34 PM Steven Whitehouse <swhiteho@redhat.com> wrote:
->> The point of this is to give us the ability to monitor mounts from
->> userspace.
-> We haven't had that before, I don't see why it's suddenly such a big deal.
->
-> The notification side I understand. Polling /proc files is not the answer.
->
-> But the whole "let's design this crazy subsystem for it" seems way
-> overkill. I don't see anybody caring that deeply.
->
-> It really smells like "do it because we can, not because we must".
->
-> Who the hell cares about monitoring mounts at a kHz frequencies? If
-> this is for MIS use, you want a nice GUI and not wasting CPU time
-> polling.
->
-> I'm starting to ignore the pull requests from David Howells, because
-> by now they have had the same pattern for a couple of years now:
-> esoteric new interfaces that seem overdesigned for corner-cases that
-> I'm not seeing people clamoring for.
->
-> I need (a) proof this is actualyl something real users care about and
-> (b) way more open discussion and implementation from multiple parties.
->
-> Because right now it looks like a small in-cabal of a couple of people
-> who have wild ideas but I'm not seeing the wider use of it.
->
-> Convince me otherwise. AGAIN. This is the exact same issue I had with
-> the notification queues that I really wanted actual use-cases for, and
-> feedback from actual outside users.
->
-> I really think this is engineering for its own sake, rather than
-> responding to actual user concerns.
->
->                 Linus
->
+The idea sounds good, but with this attempt we are still not sure that the =
+1ms
+(the ultimate reason why this is a problem) is awaited between DMA disablin=
+g and
+re-enabling.
 
-I've been hesitant to reply to this immediately, because I can see that 
-somehow there is a significant disconnect between what you expect to 
-happen, and what has actually happened in this case. Have pondered this 
-for a few days, I hope that the best way forward might be to explore 
-where the issues are, with the intention of avoiding a repeat in the 
-future. Sometimes email is a difficult medium for these kinds of 
-communication, and face to face is better, but with the lack of 
-conferences/travel at the moment, that option is not open in the near 
-future.
+If we are allowed to leave the atomic PCM context on each trigger, synchron=
+ize the DMA and then
+enter it back again, everything is fine.
+This might be the most performant and elegant solution.
+However, since we are in an atomic context for a reason, it might not be wa=
+nted by the PCM system
+that the DMA termination completion of the previous context happens within =
+the next call,
+but we are not sure about that.
+In this case, a busy wait is not a good solution, but a necessary one,
+or at least the only valid solution we are aware of.
 
-The whole plan here, leading towards the ability to get a "dump plus 
-updates" view of mounts in the kernel has been evolving over time. It 
-has been discussed at LSF over a number of years [1] and in fact the new 
-mount API which was merged recently - I wonder if this is what you are 
-referring to above as:
-
-> I'm starting to ignore the pull requests from David Howells, because
-> by now they have had the same pattern for a couple of years now
-
-was originally proposed by Al, and also worked on by Miklos[2] in 2017 
-and others. Community discussion resulted in that becoming a 
-prerequisite for the later notifications/fsinfo work. This was one of 
-the main reasons that David picked it up[3] to work on, but not the only 
-reason. That did also appear to be logical, in that cleaning up the way 
-in which arguments were handled during mount would make it much easier 
-to create future generic code to handle them.
-
-That said, the overall aim here is to solve the problem and if there are 
-better solutions available then I'm sure that everyone is very open to 
-those. I agree very much that monitoring at kHz frequencies is not 
-useful, but at the same time, there are cases which can generate large 
-amounts of mount changes in a very short time period. We want to be 
-reasonably efficient, but not to over-optimise, and sometimes that is a 
-fine line. We also don't want to block mounts if the notifications queue 
-fills up, so some kind of resync operation would be required in the 
-queue overflows. The notifications and fsinfo were designed very much as 
-two sides of the same coin, but submitted separately for ease of review 
-more than anything else.
-
-You recently requested some details of real users for the notifications, 
-and (I assumed) by extension fsinfo too. Ian wrote these emails [4][5] 
-in direct response to your request. That is what we thought you were 
-looking for, so if that isn't not quite what you meant, perhaps you 
-could clarify a bit more. Again, apologies if we've misinterpreted what 
-you were asking for.
-
-You also mention "...it looks like a small in-cabal of a couple of 
-people..." and I hope that it doesn't look that way, it is certainly not 
-our intention. There have been a fair number of people involved, and 
-we've done our best to ensure that the development is guided by the 
-potential users, such as autofs, AFS and systemd. If there are others 
-out there with use cases, and particularly so if the use case is a GUI 
-file manager type application who'd like to get involved, then please 
-do. We definitely want to see involvement from end users, since there is 
-no point in spending a large effort creating something that is then 
-never used. As you pointed that out above, this kind of application was 
-very much part of the original motivation, but we had started with the 
-other users since there were clearly defined use cases that could 
-demonstrate significant performance gains in those cases.
-
-So hopefully that helps to give a bit more background about where we are 
-and how we got here. Where we go next will no doubt depend on the 
-outcome of the current discussions, and any guidance you can give around 
-how we should have better approached this would be very helpful at this 
-stage,
-
-Steve.
-
-
-[1] https://lwn.net/Articles/718803/
-
-[2] https://lwn.net/Articles/718638/
-
-[3] https://lwn.net/Articles/753473/
-
-[4] https://lkml.org/lkml/2020/6/2/1182
-
-[5] 
-https://lore.kernel.org/linux-fsdevel/8eb2e52f1cbdbb8bcf5c5205a53bdc9aaa11a071.camel@themaw.net/
-
+Anyhow, based on my understanding, either the start or the stop trigger has=
+ to wait the 1ms
+(or whats left of it).
 
