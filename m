@@ -2,147 +2,91 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406DC20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D90204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WybhKnmc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cwPg6sKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgHQT7U (ORCPT
+        id S1730690AbgHQUAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:59:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32285 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729118AbgHQT7S (ORCPT
+        Mon, 17 Aug 2020 16:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729118AbgHQUAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:59:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597694357;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Akt231nbJT27WH5md9D56a/U0FCRNSIPTF5o4fM5va4=;
-        b=WybhKnmcCi0rTAuvcZB17plFfKUaLqveWIby4onHUFQUQwPIrbxK6voQC+4ASj500y5ZC5
-        rBGhhNYMGsLYdP703Sgf9FC5ewk0Vrk0P0aHQcfExD6C11dm4/Y04q64b0JMaG2r1BEC0V
-        zoBI1xDy/jSP1goJ9NQ/28akfOPR+uw=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-NYEHXarkPcKIVr2WXdzdHQ-1; Mon, 17 Aug 2020 15:59:15 -0400
-X-MC-Unique: NYEHXarkPcKIVr2WXdzdHQ-1
-Received: by mail-oo1-f70.google.com with SMTP id t20so8717664oot.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:59:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Akt231nbJT27WH5md9D56a/U0FCRNSIPTF5o4fM5va4=;
-        b=dV9ODEpob9aTbeIFbrfOIZT4OXvJ6brhZTtIsFdngvOoArygi/hoAWWtwMRQv+4eEs
-         5ALNrvmq9hf8zYnKqf/6WVhO+dJs4ybUfLA5w2tvZsI7HNV5ywEdMXKN9AOpaifCKGK+
-         ZSL4EpLOEAupB15HASZ8kv99beJkO1qMOO3wihCbw2oD3kh5GctyS7QOm5LwnTIfdt7k
-         Wy0GdpIvU//HVWN4bqWx5H15OlVLZlh0xhoCrLCtTaqaBuL/BIF8XjIonbPhl77yyMJF
-         5Y8kPBUDB/3lBabhFAzkQYpnokqwUjjDP4IeubHm82TepeYU0tSdRY1g2uO1TcNalGH3
-         ZLTg==
-X-Gm-Message-State: AOAM531dXqWc82tfWrY07aSxr8uhDcTg7sVIw4kWkEZ2GDkaq0aFaX6S
-        afwHIqZ+ECjjsYTwnMQcgCmRtghAwQySjUSJ/e8QJn35S7cLIYIEg5b76SqrVCfvvRJV2g1+MB0
-        9vaMklybUssiQ5vMivPkSOuJnEfkXcISSzkKjgv9j
-X-Received: by 2002:aca:5295:: with SMTP id g143mr10368058oib.178.1597694354775;
-        Mon, 17 Aug 2020 12:59:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzmcY/DzmE+N9edYr9NSQmMn/ATGYSyGPIuPTnoP9kH8BAGbpSJJujQxh70rkCiaDL/ZOBUm5KAokfBwmJLefg=
-X-Received: by 2002:aca:5295:: with SMTP id g143mr10368042oib.178.1597694354548;
- Mon, 17 Aug 2020 12:59:14 -0700 (PDT)
+        Mon, 17 Aug 2020 16:00:03 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE55C061389;
+        Mon, 17 Aug 2020 13:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JvFsJsVah9hNUUBcuUOzHtwAbnw84m6c+Ym/sqopwyg=; b=cwPg6sKS99k7Z/W8H7CydeRAtI
+        mrv1duiZdj1i7d7qoQdL6kyezw0sauPEQkcqm6lMBqJT/uYsmWXLN9VGTRYqT+722nBMx4OAT33B0
+        cSS0N1xGekrFlj+hOUdSgJInOPrIql34bC+BGt99DFuuAx42MFiNAW2dsD+hk/xm+tdM=;
+Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k7lIQ-0004uS-5Y; Mon, 17 Aug 2020 21:59:54 +0200
+Date:   Mon, 17 Aug 2020 21:59:53 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, aford@beaconembedded.com,
+        =?UTF-8?B?QmVu?= =?UTF-8?B?b8OudA==?= Cousson 
+        <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hns@goldelico.com
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200817215953.59607c11@aktux>
+In-Reply-To: <20200817133931.11785-1-aford173@gmail.com>
+References: <20200817133931.11785-1-aford173@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200817143755.807583758@linuxfoundation.org> <20200817143802.211923175@linuxfoundation.org>
-In-Reply-To: <20200817143802.211923175@linuxfoundation.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Mon, 17 Aug 2020 21:59:03 +0200
-Message-ID: <CAHc6FU7-B6kpJSSz5JC-47qGVQEiSwB3oePr=R5QacHw_P=jcg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 129/270] iomap: Make sure iomap_end is called after iomap_begin
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg,
+On Mon, 17 Aug 2020 08:39:31 -0500
+Adam Ford <aford173@gmail.com> wrote:
 
-On Mon, Aug 17, 2020 at 6:06 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> From: Andreas Gruenbacher <agruenba@redhat.com>
->
-> [ Upstream commit 856473cd5d17dbbf3055710857c67a4af6d9fcc0 ]
->
-> Make sure iomap_end is always called when iomap_begin succeeds.
->
-> Without this fix, iomap_end won't be called when a filesystem's
-> iomap_begin operation returns an invalid mapping, bypassing any
-> unlocking done in iomap_end.  With this fix, the unlocking will still
-> happen.
->
-> This bug was found by Bob Peterson during code review.  It's unlikely
-> that such iomap_begin bugs will survive to affect users, so backporting
-> this fix seems unnecessary.
+> The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> depending on commercial or industrial temperature ratings.
+> 
+> This patch expands the thermal information to include the limits of 90
+> and 105C for alert and critical.  It sets the coolings-cells for the
+> 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
+> 
+> For boards who never use industrial temperatures, these can be
+> changed on their respective device trees with something like:
+> 
+> &cpu_alert0 {
+> 	temperature = <85000>; /* millicelsius */
+> };
+> 
+> &cpu_crit {
+> 	temperature = <90000>; /* millicelsius */
+> };
+> 
+> OMAP3_THERMAL will need to be enabled.  It is off by default.
+> 
+hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+got stuck somewhere. It still seems not to work. Shouldn't that patch
+be applied first?
 
-as said for 5.7 / 5.8 already, this patch doesn't need to be backported.
-
-Thanks,
+Regards,
 Andreas
-
-> Fixes: ae259a9c8593 ("fs: introduce iomap infrastructure")
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/iomap/apply.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
-> index 54c02aecf3cd8..c2281a6a7f320 100644
-> --- a/fs/iomap/apply.c
-> +++ b/fs/iomap/apply.c
-> @@ -41,10 +41,14 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
->         ret = ops->iomap_begin(inode, pos, length, flags, &iomap);
->         if (ret)
->                 return ret;
-> -       if (WARN_ON(iomap.offset > pos))
-> -               return -EIO;
-> -       if (WARN_ON(iomap.length == 0))
-> -               return -EIO;
-> +       if (WARN_ON(iomap.offset > pos)) {
-> +               written = -EIO;
-> +               goto out;
-> +       }
-> +       if (WARN_ON(iomap.length == 0)) {
-> +               written = -EIO;
-> +               goto out;
-> +       }
->
->         /*
->          * Cut down the length to the one actually provided by the filesystem,
-> @@ -60,6 +64,7 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
->          */
->         written = actor(inode, pos, length, data, &iomap);
->
-> +out:
->         /*
->          * Now the data has been copied, commit the range we've copied.  This
->          * should not fail unless the filesystem has had a fatal error.
-> --
-> 2.25.1
->
->
->
-
