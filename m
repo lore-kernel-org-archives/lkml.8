@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C5C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307DC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B38D2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16121206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684346;
-	bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+	s=default; t=1597684349;
+	bh=XJ5DmlNOlYa9O5RhsrLNP3SNVFa/vv5QstJP+KMrTms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knjtPlzXh2/Iyu8vLFK9Q9RqMqBjAMMCL6DWKNw+nk40FvbOHprmkhcZJ+RMVStWV
-	 WuMOq60gseh9hFzroRziG7B0zXC7+NNIRde0VBEA+N8I9g03BWzniGdQIjU541SKHE
-	 sLDkT+XTU5HzkzkhcEOubBcbZdnzOvpBIYu12HBI=
+	b=lIlkULsBMNAOJ0rlNJYNa09/2bEZg3aWhsKhaKAsDC0e8w0HN/YxUFtXq/HCuIugz
+	 oyWrj3TS+T9Rb8Mm35qgLbIEX5YcKhyn+n7yyIPJ8ymILCRKOhIce0AAq3CDaEfUhy
+	 rloJCvfnKrX8qIcngDtWszS3yuUVF4IJpCzRmkpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389440AbgHQRMF (ORCPT
+        id S2389472AbgHQRM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:12:05 -0400
+        Mon, 17 Aug 2020 13:12:26 -0400
 Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388620AbgHQQLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:33 -0400
+        id S2388160AbgHQQLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2276620760;
-        Mon, 17 Aug 2020 16:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5874A22D74;
+        Mon, 17 Aug 2020 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680688;
-        bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+        s=default; t=1597680705;
+        bh=XJ5DmlNOlYa9O5RhsrLNP3SNVFa/vv5QstJP+KMrTms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/VOJgtYSvbjsoqD+6Imh2f2t6AWGhaUImrT4XIh2MTviPJgHFLxAB3zvBSZnpqk4
-         YKyfjykO4Fnz4H3hAYH31DtKNoTgetZy4toH7076qW6OSaSOO6q96jYl68zYjk02L5
-         qPIz6shIKT5PYAok5emNuL8nRMi19e6z+lTyhNkk=
+        b=IfHrk6WVZhPOMZjkiJRp9PsdHfJ2qJPAQih5RBkw34j7Rwga8qjL5VnGPQQz1kBMQ
+         9oWenNVWEwWxXX4T01drGVPGLcmJ+Ns2VZrbVaGNFLzzoqwzA39puxuwBys1cmIih7
+         jZgo9QY3+EzToRyVFQtJr2JdBStz0gOjf2LX6FEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/168] m68k: mac: Fix IOP status/control register writes
-Date:   Mon, 17 Aug 2020 17:15:48 +0200
-Message-Id: <20200817143734.609136780@linuxfoundation.org>
+Subject: [PATCH 4.19 023/168] spi: lantiq: fix: Rx overflow error in full duplex mode
+Date:   Mon, 17 Aug 2020 17:15:54 +0200
+Message-Id: <20200817143734.881911918@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,77 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
+[ Upstream commit 661ccf2b3f1360be50242726f7c26ced6a9e7d52 ]
 
-When writing values to the IOP status/control register make sure those
-values do not have any extraneous bits that will clear interrupt flags.
+In full duplex mode, rx overflow error is observed. To overcome the error,
+wait until the complete data got received and proceed further.
 
-To place the SCC IOP into bypass mode would be desirable but this is not
-achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
-to the control register. Drop this ineffective register write.
-
-Remove the flawed and unused iop_bypass() function. Make use of the
-unused iop_stop() function.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Link: https://lore.kernel.org/r/efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/spi/spi-lantiq-ssc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index d8f2282978f9c..c432bfafe63e2 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index d5976615d924b..dc740b5f720ba 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -187,6 +187,7 @@ struct lantiq_ssc_spi {
+ 	unsigned int			tx_fifo_size;
+ 	unsigned int			rx_fifo_size;
+ 	unsigned int			base_cs;
++	unsigned int			fdx_tx_level;
+ };
  
- static __inline__ void iop_stop(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl &= ~IOP_RUN;
-+	iop->status_ctrl = IOP_AUTOINC;
+ static u32 lantiq_ssc_readl(const struct lantiq_ssc_spi *spi, u32 reg)
+@@ -484,6 +485,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int tx_free = tx_fifo_free(spi);
+ 
++	spi->fdx_tx_level = 0;
+ 	while (spi->tx_todo && tx_free) {
+ 		switch (spi->bits_per_word) {
+ 		case 2 ... 8:
+@@ -512,6 +514,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ 
+ 		lantiq_ssc_writel(spi, data, LTQ_SPI_TB);
+ 		tx_free--;
++		spi->fdx_tx_level++;
+ 	}
  }
  
- static __inline__ void iop_start(volatile struct mac_iop *iop)
-@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
- 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
- }
+@@ -523,6 +526,13 @@ static void rx_fifo_read_full_duplex(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int rx_fill = rx_fifo_level(spi);
  
--static __inline__ void iop_bypass(volatile struct mac_iop *iop)
--{
--	iop->status_ctrl |= IOP_BYPASS;
--}
--
- static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl |= IOP_IRQ;
-+	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
- }
++	/*
++	 * Wait until all expected data to be shifted in.
++	 * Otherwise, rx overrun may occur.
++	 */
++	while (rx_fill != spi->fdx_tx_level)
++		rx_fill = rx_fifo_level(spi);
++
+ 	while (rx_fill) {
+ 		data = lantiq_ssc_readl(spi, LTQ_SPI_RB);
  
- static int iop_alive(volatile struct mac_iop *iop)
-@@ -244,7 +239,6 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
- 		iop_scc_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_SCC] = NULL;
-@@ -256,7 +250,7 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
-+		iop_stop(iop_base[IOP_NUM_ISM]);
- 		iop_ism_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_ISM] = NULL;
 -- 
 2.25.1
 
