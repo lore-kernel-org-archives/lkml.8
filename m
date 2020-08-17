@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD1220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C866205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681916;
-	bh=lPwaDgqodgo5PJ/CLW43a1CyO2NVrcWLZMq9KWFqots=;
+	s=default; t=1597681956;
+	bh=EXzeOTHPIzPxT19jkvKZyyanh+VKXO8I23xTbKj1mVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQOIdRUVFbi665bKVNvIH8gYfBxvHeCo+HVIe59RUOWgMW7WjSoUr4m5tbo+/6+NT
-	 IAuVzl56zidXgFYLEKPGSnI/AH7WTjd5LbGRBjMQW8nUKFf9p3A0UHQkDn1V36w92P
-	 rIButS15idIUMWqXn9Voip+10QuAMV1VkfBzVUtU=
+	b=GIuTZ/avsvxMzoeFW4UbbScyj4mMtiph+D9ZOQ8UsT2Hhd7V/6f4XrIXjlCInSgKv
+	 5alPjmH9YQ4hRBAOAjoxqGXuz+POJOi6g4shtiI/HQCH4e34F5ZcdzA0blpwLAesd0
+	 KvgcAqN8IV0OEdiQlloH8cZhcW1I3p2+AdxQgAEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbgHQQbx (ORCPT
+        id S2388693AbgHQQcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:32:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388007AbgHQPyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:55 -0400
+        id S2388004AbgHQPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 715F4208C7;
-        Mon, 17 Aug 2020 15:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86AEF208B3;
+        Mon, 17 Aug 2020 15:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679695;
-        bh=lPwaDgqodgo5PJ/CLW43a1CyO2NVrcWLZMq9KWFqots=;
+        s=default; t=1597679689;
+        bh=EXzeOTHPIzPxT19jkvKZyyanh+VKXO8I23xTbKj1mVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yUQlJz0E2w0RauiXN89l/WNrsVYA2o0wDsboiwbQEGWPry9l6WDN2z3PaLkYw2eY2
-         VyzwuJ8iv3+4bM1FI3lT8ykgxMhR80VkYwRHNjVaNR1HfCsHwvtZ9RNJvyQ4uznmgA
-         h2BOLO0t6ih9flN9bgUt/1nPzEwBDdXRgOQaCCh8=
+        b=bLTR2EMK8ESYlrRXVvSpncdcfpxlejdAVnDHLep4e76G7MQofGOA6xx+Uk4d6qSRP
+         AdUqzmZUSu+0eRcwujIGQJXUAzqQA1kvXez5f+2DGNpYD3A5B/x+1SwGzxYPBgGQEk
+         5ppQnh3idMUGKdrnzowxaqvmiaBwLuqx1IwkEFRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florinel Iordache <florinel.iordache@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 303/393] fsl/fman: check dereferencing null pointer
-Date:   Mon, 17 Aug 2020 17:15:53 +0200
-Message-Id: <20200817143834.312852947@linuxfoundation.org>
+Subject: [PATCH 5.7 301/393] fsl/fman: fix dereference null return value
+Date:   Mon, 17 Aug 2020 17:15:51 +0200
+Message-Id: <20200817143834.216276087@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,68 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit cc5d229a122106733a85c279d89d7703f21e4d4f ]
+[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
 
-Add a safe check to avoid dereferencing null pointer
+Check before using returned value to avoid dereferencing null pointer.
 
-Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
+Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
 Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_dtsec.c | 4 ++--
- drivers/net/ethernet/freescale/fman/fman_memac.c | 2 +-
- drivers/net/ethernet/freescale/fman/fman_tgec.c  | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_dtsec.c b/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-index 004c266802a87..bce3c9398887c 100644
---- a/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-@@ -1200,7 +1200,7 @@ int dtsec_del_hash_mac_address(struct fman_mac *dtsec, enet_addr_t *eth_addr)
- 		list_for_each(pos,
- 			      &dtsec->multicast_addr_hash->lsts[bucket]) {
- 			hash_entry = ETH_HASH_ENTRY_OBJ(pos);
--			if (hash_entry->addr == addr) {
-+			if (hash_entry && hash_entry->addr == addr) {
- 				list_del_init(&hash_entry->node);
- 				kfree(hash_entry);
- 				break;
-@@ -1213,7 +1213,7 @@ int dtsec_del_hash_mac_address(struct fman_mac *dtsec, enet_addr_t *eth_addr)
- 		list_for_each(pos,
- 			      &dtsec->unicast_addr_hash->lsts[bucket]) {
- 			hash_entry = ETH_HASH_ENTRY_OBJ(pos);
--			if (hash_entry->addr == addr) {
-+			if (hash_entry && hash_entry->addr == addr) {
- 				list_del_init(&hash_entry->node);
- 				kfree(hash_entry);
- 				break;
-diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-index bb02b37422cc2..645764abdaae5 100644
---- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-@@ -981,7 +981,7 @@ int memac_del_hash_mac_address(struct fman_mac *memac, enet_addr_t *eth_addr)
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index 87b26f063cc82..c27df153f8959 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1767,6 +1767,7 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 	struct fman_port *port;
+ 	struct fman *fman;
+ 	struct device_node *fm_node, *port_node;
++	struct platform_device *fm_pdev;
+ 	struct resource res;
+ 	struct resource *dev_res;
+ 	u32 val;
+@@ -1791,8 +1792,14 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 		goto return_err;
+ 	}
  
- 	list_for_each(pos, &memac->multicast_addr_hash->lsts[hash]) {
- 		hash_entry = ETH_HASH_ENTRY_OBJ(pos);
--		if (hash_entry->addr == addr) {
-+		if (hash_entry && hash_entry->addr == addr) {
- 			list_del_init(&hash_entry->node);
- 			kfree(hash_entry);
- 			break;
-diff --git a/drivers/net/ethernet/freescale/fman/fman_tgec.c b/drivers/net/ethernet/freescale/fman/fman_tgec.c
-index 8c7eb878d5b43..41946b16f6c72 100644
---- a/drivers/net/ethernet/freescale/fman/fman_tgec.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_tgec.c
-@@ -626,7 +626,7 @@ int tgec_del_hash_mac_address(struct fman_mac *tgec, enet_addr_t *eth_addr)
- 
- 	list_for_each(pos, &tgec->multicast_addr_hash->lsts[hash]) {
- 		hash_entry = ETH_HASH_ENTRY_OBJ(pos);
--		if (hash_entry->addr == addr) {
-+		if (hash_entry && hash_entry->addr == addr) {
- 			list_del_init(&hash_entry->node);
- 			kfree(hash_entry);
- 			break;
+-	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
++	fm_pdev = of_find_device_by_node(fm_node);
+ 	of_node_put(fm_node);
++	if (!fm_pdev) {
++		err = -EINVAL;
++		goto return_err;
++	}
++
++	fman = dev_get_drvdata(&fm_pdev->dev);
+ 	if (!fman) {
+ 		err = -EINVAL;
+ 		goto return_err;
 -- 
 2.25.1
 
