@@ -2,121 +2,152 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F1C206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889D420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597684941;
+	bh=RMezxvyS8iFcMKzp1LQ+u1AFe7pYAv6qmunQOJKS+ns=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RBpCTP3ltKldJkHnuWkGSBZ0SVtiz4l59Nf6iF3Ts5zQclK7w8kJoDuwoBAvKrL1I
+	 Ol7VH12IyDnqLdY6TaifI3ijMe3LT6C9fQ/1tK8QtyxfQytlbpYU7aeE9mbUv4inhr
+	 Ks7BiYy8xpCI65ZdwjFTSXo8LXXb3HrZa/KStn3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgHQRWR (ORCPT
+        id S2389790AbgHQRWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10701 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731243AbgHQQcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:32:09 -0400
-IronPort-SDR: OgIy0tFYSB8VRyYiBcpQMHC9GDDfYcELHRgBZhGW0HcidjHM+hJ0MZQGuk208kf2oX4zN908ie
- ou2w8V/yiuNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154720042"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="154720042"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 09:32:08 -0700
-IronPort-SDR: gNGa53ARN2B7I6Gdco4Cf5OlcSb1BwI/csVdhVxHYKUn7DGgGs7yaKNfcMPwlAdWh87KZIXCG+
- eiiPc4lUjVHA==
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="440920616"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 09:32:08 -0700
-Date:   Mon, 17 Aug 2020 09:32:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-Message-ID: <20200817163207.GC22407@linux.intel.com>
-References: <20200807141232.402895-1-vkuznets@redhat.com>
- <20200807141232.402895-3-vkuznets@redhat.com>
- <20200814023139.GB4845@linux.intel.com>
- <20200814102850-mutt-send-email-mst@kernel.org>
+        Mon, 17 Aug 2020 13:22:20 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:42207 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388850AbgHQQhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:37:16 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 07HGah91005234;
+        Tue, 18 Aug 2020 01:36:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 07HGah91005234
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1597682204;
+        bh=Y9kvCkBRDORVCPVT1mJPY0BBXHAw2O9i2u+eZvD4dPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eKqRHXAeWe6ohDPKS4xWtiJqfmxpRMMbN/ZZVDhaVYZGUG84bEZV9Byu0L/ps7QV1
+         XfmKdfdzJ4Z0UYFY+GS4TnedR97hZea2odbuHhpN7G7QlZ/bNaq+k7rLtAFvXN3a38
+         42CXBisAZe+SvuMTJZy5SXtRnk0LwbT5mgHBUOykHwJomueliJGn/SwpCKcTJxo9GD
+         Pgjzg+LyZvZuCojaE8xNdQt7W8TXna88zMMWzzJAElcvso+I5KEUyfvHLgyEfOtToz
+         YfSRZ6vbGLrWFi71PFFsOG13XxB5vanjNyEATvU2cgoSt3CbtSQbQv39pEYtYtDzBe
+         BcOkpEJCBhnag==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] kconfig: qconf: fix the popup menu in the ConfigInfoView window
+Date:   Tue, 18 Aug 2020 01:36:30 +0900
+Message-Id: <20200817163631.37034-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200817163631.37034-1-masahiroy@kernel.org>
+References: <20200817163631.37034-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814102850-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:30:14AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Aug 13, 2020 at 07:31:39PM -0700, Sean Christopherson wrote:
-> > > @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
-> > >  	int r;
-> > >  	unsigned long addr;
-> > >  
-> > > +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
-> > > +		memset(data, 0xff, len);
-> > > +		return 0;
-> > > +	}
-> > 
-> > This feels wrong, shouldn't we be treating PCI_HOLE as MMIO?  Given that
-> > this is performance oriented, I would think we'd want to leverage the
-> > GPA from the VMCS instead of doing a full translation.
-> > 
-> > That brings up a potential alternative to adding a memslot flag.  What if
-> > we instead add a KVM_MMIO_BUS device similar to coalesced MMIO?  I think
-> > it'd be about the same amount of KVM code, and it would provide userspace
-> > with more flexibility, e.g. I assume it would allow handling even writes
-> > wholly within the kernel for certain ranges and/or use cases, and it'd
-> > allow stuffing a value other than 0xff (though I have no idea if there is
-> > a use case for this).
-> 
-> I still think down the road the way to go is to map
-> valid RO page full of 0xff to avoid exit on read.
-> I don't think a KVM_MMIO_BUS device will allow this, will it?
+I do not know when ConfigInfoView::createStandardContextMenu() is
+called.
 
-No, it would not, but adding KVM_MEM_PCI_HOLE doesn't get us any closer to
-solving that problem either.
+Because QTextEdit::createStandardContextMenu() is not virtual,
+ConfigInfoView::createStandardContextMenu() cannot override it.
+Even if right-click the ConfigInfoView window, the "Show Debug Info"
+menu does not show up.
 
-What if we add a flag to allow routing all GFNs in a memslot to a single
-HVA?  At a glance, it doesn't seem to heinous.  It would have several of the
-same touchpoints as this series, e.g. __kvm_set_memory_region() and
-kvm_alloc_memslot_metadata().
+Build up the menu in the constructor, and invoke it from the
+contextMenuEvent().
 
-The functional changes (for x86) would be a few lines in
-__gfn_to_hva_memslot() and some new logic in kvm_handle_hva_range().  The
-biggest concern is probably the fragility of such an implementation, as KVM
-has a habit of open coding operations on memslots.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-The new flags could then be paired with KVM_MEM_READONLY to yield the desired
-behavior of reading out 0xff for an arbitrary range without requiring copious
-memslots and/or host pages.
+ scripts/kconfig/qconf.cc | 29 +++++++++++++----------------
+ scripts/kconfig/qconf.h  |  4 ++--
+ 2 files changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 852fc8274bdd..875243a0ab36 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1103,6 +1103,9 @@ __gfn_to_memslot(struct kvm_memslots *slots, gfn_t gfn)
- static inline unsigned long
- __gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
- {
-+       if (unlikely(slot->flags & KVM_MEM_SINGLE_HVA))
-+               return slot->userspace_addr;
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index c1812563b818..5a0aa159ec80 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -1012,6 +1012,16 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
+ 		configSettings->endGroup();
+ 		connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
+ 	}
 +
-        return slot->userspace_addr + (gfn - slot->base_gfn) * PAGE_SIZE;
++	contextMenu = createStandardContextMenu();
++	QAction *action = new QAction("Show Debug Info", contextMenu);
++
++	action->setCheckable(true);
++	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
++	action->setChecked(showDebug());
++	contextMenu->addSeparator();
++	contextMenu->addAction(action);
  }
+ 
+ void ConfigInfoView::saveSettings(void)
+@@ -1268,23 +1278,10 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 	delete data;
+ }
+ 
+-QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+-{
+-	QMenu* popup = Parent::createStandardContextMenu(pos);
+-	QAction* action = new QAction("Show Debug Info", popup);
+-
+-	action->setCheckable(true);
+-	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
+-	action->setChecked(showDebug());
+-	popup->addSeparator();
+-	popup->addAction(action);
+-	return popup;
+-}
+-
+-void ConfigInfoView::contextMenuEvent(QContextMenuEvent *e)
++void ConfigInfoView::contextMenuEvent(QContextMenuEvent *event)
+ {
+-	Parent::contextMenuEvent(e);
++	contextMenu->popup(event->globalPos());
++	event->accept();
+ }
+ 
+ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index 461df6419f15..0b97a9817d2b 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -215,6 +215,7 @@ public slots:
+ class ConfigInfoView : public QTextBrowser {
+ 	Q_OBJECT
+ 	typedef class QTextBrowser Parent;
++	QMenu *contextMenu;
+ public:
+ 	ConfigInfoView(QWidget* parent, const char *name = 0);
+ 	bool showDebug(void) const { return _showDebug; }
+@@ -235,8 +236,7 @@ public slots:
+ 	QString debug_info(struct symbol *sym);
+ 	static QString print_filter(const QString &str);
+ 	static void expr_print_help(void *data, struct symbol *sym, const char *str);
+-	QMenu *createStandardContextMenu(const QPoint & pos);
+-	void contextMenuEvent(QContextMenuEvent *e);
++	void contextMenuEvent(QContextMenuEvent *event);
+ 
+ 	struct symbol *sym;
+ 	struct menu *_menu;
+-- 
+2.25.1
 
