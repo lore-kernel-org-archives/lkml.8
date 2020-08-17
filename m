@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C4220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F4620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693286;
-	bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+	s=default; t=1597693293;
+	bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dq1tKB2MwmwhoRsSPtd847t34Uyj+x3JkM/HpcgofiunAJ1oCoUR7uoM+DHmEWNuk
-	 9G6FxG53iO8RGYQYf7JwRxft2w48NzqunR+VbBEx2qwYEEuP30YfsM2epiJDlgGUxe
-	 s8BJs1u5VIybwSP10QZiMK2QgeEMgzUJHQiNLs/I=
+	b=zyHVqIN3LrlkShqtgppTJRIMWkKt+uxu0navxD67bHWMXIsRyvf5+l81z1Ozyro+O
+	 BXs+HVN10/reg4c7bgbAB33/5R/Ek7nca+3YV4e+O1vmUO0fLzKzzdMJRnKn3S//jb
+	 yVADn/5utjVk+Qd9LFeY1smoB3Lc2F/JAixyzOTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404280AbgHQTlW (ORCPT
+        id S2404287AbgHQTlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58422 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbgHQPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729709AbgHQPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:25:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E472310F;
-        Mon, 17 Aug 2020 15:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2DED22D6F;
+        Mon, 17 Aug 2020 15:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677912;
-        bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+        s=default; t=1597677909;
+        bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=osKzxK9f9+2fVk5QsDNDUGB4DquqZzgFu9IVIlPdoV43hw3mW1ZhSXnQrQb7PBqsD
-         teuUI3fenVILkOc+rrqYhPRhHSswOAmB8Uw1zCREVeGWNBNxynfbT1WOnnzjTwCJ8C
-         uI+T29wf1hFv6VeamSokLqxTERl6VjuPqJR4n6YI=
+        b=tiq3mhzV9vygI1uMRelv32L51fOfkUa5XcMjFNyjU9UhoyuQn1BpTQ5Yl0JktZa0e
+         6EMP6uXbdvZcarT8qBTs4BXcHW5Cv+Fb3GFN7SFXRt/7ch8wDKaMSqaAd8+2Cy94Uj
+         JBVLATH3MFJCdNTkcWiKGDntZt63nryX1V+aXw7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
+        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 123/464] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
-Date:   Mon, 17 Aug 2020 17:11:16 +0200
-Message-Id: <20200817143839.704870535@linuxfoundation.org>
+Subject: [PATCH 5.8 122/464] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Mon, 17 Aug 2020 17:11:15 +0200
+Message-Id: <20200817143839.656558576@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,51 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-Once channel's job is hung, it dumps the channel's state into KMSG before
-tearing down the offending job. If multiple channels hang at once, then
-they dump messages simultaneously, making the debug info unreadable, and
-thus, useless. This patch adds mutex which allows only one channel to emit
-debug messages at a time.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
+
+Check the return value of pcie_capability_read_dword() to ensure success.
+
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
-index c0392672a8421..1b4997bda1c79 100644
---- a/drivers/gpu/host1x/debug.c
-+++ b/drivers/gpu/host1x/debug.c
-@@ -16,6 +16,8 @@
- #include "debug.h"
- #include "channel.h"
- 
-+static DEFINE_MUTEX(debug_lock);
-+
- unsigned int host1x_debug_trace_cmdbuf;
- 
- static pid_t host1x_debug_force_timeout_pid;
-@@ -52,12 +54,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
- 	struct output *o = data;
- 
- 	mutex_lock(&ch->cdma.lock);
-+	mutex_lock(&debug_lock);
- 
- 	if (show_fifo)
- 		host1x_hw_show_channel_fifo(m, ch, o);
- 
- 	host1x_hw_show_channel_cdma(m, ch, o);
- 
-+	mutex_unlock(&debug_lock);
- 	mutex_unlock(&ch->cdma.lock);
- 
- 	return 0;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 348c17ce72f5c..f78e062df572a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
