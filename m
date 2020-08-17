@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70403C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB0B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC8422CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680669;
-	bh=5nvVShMLBwuUp6LU+hHsIvdvQMl7FDGzUFNL3/E2l6g=;
+	s=default; t=1597680683;
+	bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3VVvq72iF4O4+lIOKpNMQY0+mWDduxL9P23RVr/yVdzxzWtp4EnvyCYQIWaum9R2
-	 ViykD20ACVqJ7wCJwKwWPpeD1X5uXHzSe+Rl0eKYW5BAwMfMjY+Plyk53p3TewOEKi
-	 XqZgrgr+zM88Za8iZZBBgeIipcRbJtAxLM/3xxe8=
+	b=JRJlfNwrabz+Wyaf/BycXnlxJvVLzv2SexWk/iU18xmZ1LWbHHaQ24fAJo+BkobwF
+	 1T0foQksj62riPEyrBNCQ+r5NFkAUAaLM2/wjtOrB45RNpczCVy6Hgw3ZiRvC18Cta
+	 hhW3lu49pnGZpRo/UtkhaytjmMpB8QpqkyNzX8wU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388595AbgHQQLH (ORCPT
+        id S2388613AbgHQQLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbgHQPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:27 -0400
+        id S1730363AbgHQPqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:46:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8F72067C;
-        Mon, 17 Aug 2020 15:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 768182075B;
+        Mon, 17 Aug 2020 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679186;
-        bh=5nvVShMLBwuUp6LU+hHsIvdvQMl7FDGzUFNL3/E2l6g=;
+        s=default; t=1597679184;
+        bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVcMbVvlVy3W4vHeWpx3Wp0gwpncIuwOjS10Dxo5OKdQ8t/pCuLypGyKrGMmmDR1F
-         LtCd57qi3y7dEHx1tZJmBktRUdAv1d79I8USzKW4+bTL1ohzKPsMfQLrUhBc5imD24
-         c5BezZjuRbZP3cxp1kScuMlZ31fI9YT1IJd7ioEs=
+        b=kZkCoAhdm5f8CoZNy/WeSpNjgFWu0A8ukXYKg3KxSn3W4hidlK+gGzrNqbSj73dc0
+         7Vp6pR7V8mIdWpX8RQwP2naIlHUPZTtopM5QHEzhTYii9PTNS70Zv/1mtmaPzPnezO
+         J1ue9wtkU8nOt/OLmMHSDqnfL4WEbnms/HQ9SokI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 095/393] drm/amdgpu/display bail early in dm_pp_get_static_clocks
-Date:   Mon, 17 Aug 2020 17:12:25 +0200
-Message-Id: <20200817143824.235333380@linuxfoundation.org>
+Subject: [PATCH 5.7 094/393] drm/amd/display: Improve DisplayPort monitor interop
+Date:   Mon, 17 Aug 2020 17:12:24 +0200
+Message-Id: <20200817143824.187072938@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,33 +63,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit 376814f5fcf1aadda501d1413d56e8af85d19a97 ]
+[ Upstream commit eec3303de3378cdfaa0bb86f43546dbbd88f94e2 ]
 
-If there are no supported callbacks.  We'll fall back to the
-nominal clocks.
+[Why]
+DC is very fast at link training and stream enablement
+which causes issues such as blackscreens for non-compliant
+monitors.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
-Reviewed-by: Evan Quan <evan.quan@amd.com>
+[How]
+After debugging with scaler vendors we implement the
+minimum delays at the necessary locations to ensure
+the monitor does not hang.  Delays are generic due to
+lack of IEEE OUI information on the failing displays.
+
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Acked-by: Tony Cheng <Tony.Cheng@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c    |  4 +++-
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 16 ++++++++++------
+ .../amd/display/dc/dce110/dce110_hw_sequencer.c  | 11 ++++++++++-
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-index a2e1a73f66b81..7cee8070cb113 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -530,6 +530,8 @@ bool dm_pp_get_static_clocks(
- 			&pp_clk_info);
- 	else if (adev->smu.ppt_funcs)
- 		ret = smu_get_current_clocks(&adev->smu, &pp_clk_info);
-+	else
-+		return false;
- 	if (ret)
- 		return false;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 67cfff1586e9f..3f157bcc174b9 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -3146,9 +3146,11 @@ void core_link_disable_stream(struct pipe_ctx *pipe_ctx)
+ 			write_i2c_redriver_setting(pipe_ctx, false);
+ 		}
+ 	}
+-	dc->hwss.disable_stream(pipe_ctx);
+ 
+ 	disable_link(pipe_ctx->stream->link, pipe_ctx->stream->signal);
++
++	dc->hwss.disable_stream(pipe_ctx);
++
+ 	if (pipe_ctx->stream->timing.flags.DSC) {
+ 		if (dc_is_dp_signal(pipe_ctx->stream->signal))
+ 			dp_set_dsc_enable(pipe_ctx, false);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index caa090d0b6acc..1ada01322cd2c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -1103,6 +1103,10 @@ static inline enum link_training_result perform_link_training_int(
+ 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET = DPCD_TRAINING_PATTERN_VIDEOIDLE;
+ 	dpcd_set_training_pattern(link, dpcd_pattern);
+ 
++	/* delay 5ms after notifying sink of idle pattern before switching output */
++	if (link->connector_signal != SIGNAL_TYPE_EDP)
++		msleep(5);
++
+ 	/* 4. mainlink output idle pattern*/
+ 	dp_set_hw_test_pattern(link, DP_TEST_PATTERN_VIDEO_MODE, NULL, 0);
+ 
+@@ -1552,6 +1556,12 @@ bool perform_link_training_with_retries(
+ 	struct dc_link *link = stream->link;
+ 	enum dp_panel_mode panel_mode = dp_get_panel_mode(link);
+ 
++	/* We need to do this before the link training to ensure the idle pattern in SST
++	 * mode will be sent right after the link training
++	 */
++	link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
++							pipe_ctx->stream_res.stream_enc->id, true);
++
+ 	for (j = 0; j < attempts; ++j) {
+ 
+ 		dp_enable_link_phy(
+@@ -1568,12 +1578,6 @@ bool perform_link_training_with_retries(
+ 
+ 		dp_set_panel_mode(link, panel_mode);
+ 
+-		/* We need to do this before the link training to ensure the idle pattern in SST
+-		 * mode will be sent right after the link training
+-		 */
+-		link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
+-								pipe_ctx->stream_res.stream_enc->id, true);
+-
+ 		if (link->aux_access_disabled) {
+ 			dc_link_dp_perform_link_training_skip_aux(link, link_setting);
+ 			return true;
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+index 10527593868cc..24ca592c90df5 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+@@ -1090,8 +1090,17 @@ void dce110_blank_stream(struct pipe_ctx *pipe_ctx)
+ 		dc_link_set_abm_disable(link);
+ 	}
+ 
+-	if (dc_is_dp_signal(pipe_ctx->stream->signal))
++	if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
+ 		pipe_ctx->stream_res.stream_enc->funcs->dp_blank(pipe_ctx->stream_res.stream_enc);
++
++		/*
++		 * After output is idle pattern some sinks need time to recognize the stream
++		 * has changed or they enter protection state and hang.
++		 */
++		if (!dc_is_embedded_signal(pipe_ctx->stream->signal))
++			msleep(60);
++	}
++
+ }
+ 
  
 -- 
 2.25.1
