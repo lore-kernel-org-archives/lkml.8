@@ -2,61 +2,62 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AAEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB002063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7482063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nD24KhF8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1AE04mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgHQI2A (ORCPT
+        id S1727813AbgHQI2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
+        Mon, 17 Aug 2020 04:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgHQI1q (ORCPT
+        with ESMTP id S1728405AbgHQI1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:27:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB55C06138A
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so14076138wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:45 -0700 (PDT)
+        Mon, 17 Aug 2020 04:27:49 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8C7C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:49 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c80so12523045wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=/MeQgobB67Kfom3s+YkCdvLeiREa8hjlhCt5MNPwpVY=;
-        b=nD24KhF8r6AcrSKMIX6irVZl79yTcBlQd36rEnuhaZo8d/9DFl3/aWhsHqODTW4dWE
-         6bgjKA+PPn5QUM0eCBPRQsPM/gQbhn2G4vworT+IQsHnZt8JcW5ITsjGcs0Q0Cvt9kJf
-         JM7CHEZvaRVRrjhLXofuMnBMXAh4oFIgfQ7tHdIl5VNtE9ose8Ul7M52HH03GPs1agwo
-         RoePHIwq+FOy5078Qlj0rHuGiCxu7Mlz3mx0xqhgi8eG+kfXDUigxkMJvGWK17Vd9Gs8
-         IqISumd0XG8U/L5gHxzmIEealTXEGjAzqIqMvhXS7hpPV33Wvl5zSjp+74t+N+UpZftC
-         P1wQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dHHx8tCCD/f7cY2UrgoF5DI2HEp6u7sbKILLzlEPxJo=;
+        b=I1AE04mm3Cu7IVOIi8qpjZg6MCi5n70hUykAwGaeJFE7bwTb1gQIAVIHzAEv+Y5Omw
+         RgkVQw4b5L5iE8LKIL7w01TK18n0Ok1yjMshCjuYyWy0LDrw0ZsaQo8TfFAmVNpxY1tH
+         Jm+2/+r+1CQygJMbY13/L1uQGIz5EhYgNSN3Il0PbNQnO13KFO4TlExBROgkRBXhTCJF
+         joeA2bowB5XNZJKTSt/puj/2resoPZsPs33XpWLXO0gzTkPQoMru2iaMbszx+kjWKAwe
+         vx/b2t17P5kYM0HlbPra4N5Pxr/TZ/Do62wZQDPDy1P1yYu2JTZAAMWYEKaS4Pv9d6hH
+         DWgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/MeQgobB67Kfom3s+YkCdvLeiREa8hjlhCt5MNPwpVY=;
-        b=IQY5w1Vd+aB0Phv6NyV0J2dfO/C6uJBiJ1Ri3zNODu8RzKbanoFp9WWEtjuUnprKwd
-         xO0FQNRYjbrZyKCKzh80VQ3WSShVhn7I9PnVge1Ww2dL9bRP1oosjKc3LM/OQIcRVdZu
-         UNQT3DraLNDQhZcuSLXvD+EtSRwbztTATeXdi0tXwj1+RhO3V7c5dCKp2/O36I7BW91N
-         9kzHGrw7ZMiEoKKvlpRNJNs4+bnvQfwx4Y7NUfTRHPAFvCN67sHgUt8Nwrj8FNfSbg4d
-         gJgLyUDPo3tSgFaS1G48B4fXzk3BoNO6rdIoCy9SxdSYfCN+hT3tCTF6v6/Fk9XENnLT
-         kmIg==
-X-Gm-Message-State: AOAM530jX/eCc38UnskjpmLMHCjqxlSUXSqXGPsF3IIco3GCdavN6UFK
-        05+JpcGixmpY0gyMFkZ94WMcGw==
-X-Google-Smtp-Source: ABdhPJxRASNZ/4Ci1xX88rgpdzZo6Ubi7BbRnlcmzgqWzruYtPmJ7w373dxouwOPYL109NNb6CuO7A==
-X-Received: by 2002:adf:ca06:: with SMTP id o6mr13656275wrh.181.1597652864488;
-        Mon, 17 Aug 2020 01:27:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dHHx8tCCD/f7cY2UrgoF5DI2HEp6u7sbKILLzlEPxJo=;
+        b=ULB4FHeBUZVv/Xxf8UsNlVOpJ0ERw984v073Q1HrjilcGMr8FhaDZlA5Rm5pmF8XQI
+         vLuwpidQoMfidmT3qvN5p5VM6frq/dtgZWPRC5W0WJ3ws5ZzOJKXk0jQaNKLBCY0cb8Y
+         kxl0hgWzRR+9wPVSq//YwnjMe7LwFxYACaHtsJBhUhbmDJ3fUBPXWQNNolbpWiK/7YOJ
+         lcuzXS3hh49JreI+suad7v5N/BUB8EEIlpxVZxspjc/TY4E7wA809PxASsVOSeBz4R81
+         YhChdtaTXXLV2aa0aFUUKojKAQWBRmpswPgHy0AQ+Co5lhmejy5yechH5PZC6IcbtDOR
+         jcrg==
+X-Gm-Message-State: AOAM530MN4et+P8ka4QAT4PG0DuUefdja23zDVtUECRix17RVHPfF3pY
+        SDgbLwF6d/n7qLa8YhggiEqlEg==
+X-Google-Smtp-Source: ABdhPJygsWhnExsJ/xP1fb11YBvOMxcj7El2Fr8xMQQ66XknjoVoYJbBPz4hWT/idFpM2qhQ3mVQ2A==
+X-Received: by 2002:a05:600c:202:: with SMTP id 2mr12754388wmi.147.1597652868062;
+        Mon, 17 Aug 2020 01:27:48 -0700 (PDT)
 Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id h5sm33270888wrc.97.2020.08.17.01.27.42
+        by smtp.gmail.com with ESMTPSA id h5sm33270888wrc.97.2020.08.17.01.27.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:27:43 -0700 (PDT)
+        Mon, 17 Aug 2020 01:27:47 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
@@ -64,39 +65,103 @@ Cc:     Elliot Berman <eberman@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 0/2] Venus - fix firmware load failure
-Date:   Mon, 17 Aug 2020 11:27:21 +0300
-Message-Id: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 1/2] firmware: qcom_scm: Add memory protect virtual address ranges
+Date:   Mon, 17 Aug 2020 11:27:22 +0300
+Message-Id: <20200817082723.17458-2-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
+References: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This adds a new SCM memprotect command to set virtual address ranges.
 
-Changes since v1:
- * Move the new scm call above assign mem - Elliot Berman
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+ drivers/firmware/qcom_scm.h |  1 +
+ include/linux/qcom_scm.h    |  8 +++++++-
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-v1 can be found at [1].
-
-regards,
-Stan
-
-[1] https://lkml.org/lkml/2020/7/9/472
-
-Stanimir Varbanov (2):
-  firmware: qcom_scm: Add memory protect virtual address ranges
-  venus: firmware: Set virtual address ranges
-
- drivers/firmware/qcom_scm.c                  | 24 ++++++++++++++++++++
- drivers/firmware/qcom_scm.h                  |  1 +
- drivers/media/platform/qcom/venus/core.c     |  4 ++++
- drivers/media/platform/qcom/venus/core.h     |  4 ++++
- drivers/media/platform/qcom/venus/firmware.c | 18 ++++++++++++++-
- include/linux/qcom_scm.h                     |  8 ++++++-
- 6 files changed, 57 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 0e7233a20f34..dec8dc42a6bc 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -757,6 +757,30 @@ int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+ }
+ EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
+ 
++int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
++				   u32 cp_nonpixel_start,
++				   u32 cp_nonpixel_size)
++{
++	int ret;
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_MP,
++		.cmd = QCOM_SCM_MP_VIDEO_VAR,
++		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
++					 QCOM_SCM_VAL, QCOM_SCM_VAL),
++		.args[0] = cp_start,
++		.args[1] = cp_size,
++		.args[2] = cp_nonpixel_start,
++		.args[3] = cp_nonpixel_size,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
++	struct qcom_scm_res res;
++
++	ret = qcom_scm_call(__scm->dev, &desc, &res);
++
++	return ret ? : res.result[0];
++}
++EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
++
+ static int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+ 				 size_t mem_sz, phys_addr_t src, size_t src_sz,
+ 				 phys_addr_t dest, size_t dest_sz)
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index d9ed670da222..14da834ac593 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+ #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+ #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+ #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
++#define QCOM_SCM_MP_VIDEO_VAR			0x08
+ #define QCOM_SCM_MP_ASSIGN			0x16
+ 
+ #define QCOM_SCM_SVC_OCMEM		0x0f
+diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+index 3d6a24697761..ba45537f688b 100644
+--- a/include/linux/qcom_scm.h
++++ b/include/linux/qcom_scm.h
+@@ -77,11 +77,13 @@ extern bool qcom_scm_restore_sec_cfg_available(void);
+ extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+ extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
+ extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
++extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
++					  u32 cp_nonpixel_start,
++					  u32 cp_nonpixel_size);
+ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 			       unsigned int *src,
+ 			       const struct qcom_scm_vmperm *newvm,
+ 			       unsigned int dest_cnt);
+-
+ extern bool qcom_scm_ocmem_lock_available(void);
+ extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+ 			       u32 size, u32 mode);
+@@ -128,6 +130,10 @@ static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size)
+ 		{ return -ENODEV; }
+ static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+ 		{ return -ENODEV; }
++extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
++						 u32 cp_nonpixel_start,
++						 u32 cp_nonpixel_size)
++		{ return -ENODEV; }
+ static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+ 		unsigned int dest_cnt) { return -ENODEV; }
 -- 
 2.17.1
 
