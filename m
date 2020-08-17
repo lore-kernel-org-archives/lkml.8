@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334F520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809FE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682625;
-	bh=Awa9szfVnyfHhZXV0EKIVyiunFy+LWKFXGUkDfuCRVk=;
+	s=default; t=1597682644;
+	bh=kLRldtUwC7t3HFPXhNORNdUQOkvhyX8mWGlBQq4PcV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEEv3ZqCkXFGeW1xnFKTQ6BQkZybqnrdbqJ89mLQe2iF+Uiv051I91bCVrRbYI0QL
-	 LYwYvImPg+u3+bi/CSzY9zH/5kFjiBBItNY5csdQW1vhfBr5m7q34RVjYCq1JK+SO+
-	 1DBUeB0s2knxIazVN3W/53DTh3LJv8jsTC+RBP0U=
+	b=d4j4lCjFXJBuIMpsPWm0ExdywyDZzkCuPgNXA9jrXZfNydxWq702sF3zbtoFyhFT5
+	 NQoHS1xlul5Vyd3vrlOej9nD91W+qz9eoKkfey3Wvy8Ynw/OTB7K//7Q5WT2lcJcRa
+	 j1j/JUKpdHVL9rOjxKHwmFvSKdca3WnVOPlNzjpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgHQQnf (ORCPT
+        id S1730947AbgHQQoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbgHQP7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:13 -0400
+        id S1730964AbgHQP7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD06920729;
-        Mon, 17 Aug 2020 15:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A821206FA;
+        Mon, 17 Aug 2020 15:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679952;
-        bh=Awa9szfVnyfHhZXV0EKIVyiunFy+LWKFXGUkDfuCRVk=;
+        s=default; t=1597679961;
+        bh=kLRldtUwC7t3HFPXhNORNdUQOkvhyX8mWGlBQq4PcV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gB0mKpFSuvlUHhx0KTi2rVElOuXcEZ4D0NVpcoc0tUb3NM4Ar14of0CKuF6PasKeC
-         bh75QSvc1EAZIhxjZ9pILv8hGdyCFxdRkwzlHK3D8e7B5bl6Ubgil+eI3QGZ6I1pBn
-         c+dQxXgudZr2LNAL4Tf5P6ibMeeKW/gvWDzSzMxo=
+        b=0qBjtwDaxOUQjqvvenH6FRGmF79VuxICOn3HLyGZnrps5mh2uBfIFZwDA+Wo48G4y
+         KSJeb3IExNtG7oqzsjipfFopKxYmbA//XOAENqOVzTCvAW1KvgcfWXstc3G9WGjnph
+         1HsW3T78JyE+stzrqaFw+B42x78m4mYF25Qe2u9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quentin Perret <qperret@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 360/393] cpufreq: Fix locking issues with governors
-Date:   Mon, 17 Aug 2020 17:16:50 +0200
-Message-Id: <20200817143837.065164987@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.7 386/393] s390/numa: set node distance to LOCAL_DISTANCE
+Date:   Mon, 17 Aug 2020 17:17:16 +0200
+Message-Id: <20200817143838.323520254@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,136 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-commit 8cc46ae565c393f77417cb9530b1265eb50f5d2e upstream.
+commit 535e4fc623fab2e09a0653fc3a3e17f382ad0251 upstream.
 
-The locking around governors handling isn't adequate currently.
+The node distance is hardcoded to 0, which causes a trouble
+for some user-level applications. In particular, "libnuma"
+expects the distance of a node to itself as LOCAL_DISTANCE.
+This update removes the offending node distance override.
 
-The list of governors should never be traversed without the locking
-in place. Also governor modules must not be removed while the code
-in them is still in use.
-
-Reported-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: All applicable <stable@vger.kernel.org>
-[ rjw: Changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: <stable@vger.kernel.org> # 4.4
+Fixes: 3a368f742da1 ("s390/numa: add core infrastructure")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c |   58 +++++++++++++++++++++++++++-------------------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ arch/s390/include/asm/topology.h |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -621,6 +621,24 @@ static struct cpufreq_governor *find_gov
- 	return NULL;
- }
+--- a/arch/s390/include/asm/topology.h
++++ b/arch/s390/include/asm/topology.h
+@@ -86,12 +86,6 @@ static inline const struct cpumask *cpum
  
-+static struct cpufreq_governor *get_governor(const char *str_governor)
-+{
-+	struct cpufreq_governor *t;
-+
-+	mutex_lock(&cpufreq_governor_mutex);
-+	t = find_governor(str_governor);
-+	if (!t)
-+		goto unlock;
-+
-+	if (!try_module_get(t->owner))
-+		t = NULL;
-+
-+unlock:
-+	mutex_unlock(&cpufreq_governor_mutex);
-+
-+	return t;
-+}
-+
- static unsigned int cpufreq_parse_policy(char *str_governor)
- {
- 	if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
-@@ -640,28 +658,14 @@ static struct cpufreq_governor *cpufreq_
- {
- 	struct cpufreq_governor *t;
+ #define pcibus_to_node(bus) __pcibus_to_node(bus)
  
--	mutex_lock(&cpufreq_governor_mutex);
+-#define node_distance(a, b) __node_distance(a, b)
+-static inline int __node_distance(int a, int b)
+-{
+-	return 0;
+-}
 -
--	t = find_governor(str_governor);
--	if (!t) {
--		int ret;
-+	t = get_governor(str_governor);
-+	if (t)
-+		return t;
+ #else /* !CONFIG_NUMA */
  
--		mutex_unlock(&cpufreq_governor_mutex);
-+	if (request_module("cpufreq_%s", str_governor))
-+		return NULL;
- 
--		ret = request_module("cpufreq_%s", str_governor);
--		if (ret)
--			return NULL;
--
--		mutex_lock(&cpufreq_governor_mutex);
--
--		t = find_governor(str_governor);
--	}
--	if (t && !try_module_get(t->owner))
--		t = NULL;
--
--	mutex_unlock(&cpufreq_governor_mutex);
--
--	return t;
-+	return get_governor(str_governor);
- }
- 
- /**
-@@ -815,12 +819,14 @@ static ssize_t show_scaling_available_go
- 		goto out;
- 	}
- 
-+	mutex_lock(&cpufreq_governor_mutex);
- 	for_each_governor(t) {
- 		if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
- 		    - (CPUFREQ_NAME_LEN + 2)))
--			goto out;
-+			break;
- 		i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
- 	}
-+	mutex_unlock(&cpufreq_governor_mutex);
- out:
- 	i += sprintf(&buf[i], "\n");
- 	return i;
-@@ -1058,15 +1064,17 @@ static int cpufreq_init_policy(struct cp
- 	struct cpufreq_governor *def_gov = cpufreq_default_governor();
- 	struct cpufreq_governor *gov = NULL;
- 	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
-+	int ret;
- 
- 	if (has_target()) {
- 		/* Update policy governor to the one used before hotplug. */
--		gov = find_governor(policy->last_governor);
-+		gov = get_governor(policy->last_governor);
- 		if (gov) {
- 			pr_debug("Restoring governor %s for cpu %d\n",
- 				 policy->governor->name, policy->cpu);
- 		} else if (def_gov) {
- 			gov = def_gov;
-+			__module_get(gov->owner);
- 		} else {
- 			return -ENODATA;
- 		}
-@@ -1089,7 +1097,11 @@ static int cpufreq_init_policy(struct cp
- 			return -ENODATA;
- 	}
- 
--	return cpufreq_set_policy(policy, gov, pol);
-+	ret = cpufreq_set_policy(policy, gov, pol);
-+	if (gov)
-+		module_put(gov->owner);
-+
-+	return ret;
- }
- 
- static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
+ #define numa_node_id numa_node_id
 
 
