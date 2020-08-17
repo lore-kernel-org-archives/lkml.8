@@ -2,98 +2,150 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6872C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A7DC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B75762075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597701290;
-	bh=Q151OcxfVK5+W50g+orX+Xdf9Ht0NdL90Vbo2D+cfFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VTbWV67Rmm78KVdqn7PWN8Q5+zbgUrWb0utb/qwcSXQKemPfaa4t375RIKxjcrczY
-	 PJOJZRgnWIDxP2cXyF+UQUnjDTjFNNINy6QUiQaWyGnGtPvdEOwyLLtlK3LKc5qeAd
-	 5S3h4h1Pcj3v1AhzAv6Zg0XdlTOuVR4hidDPDQRo=
+	by mail.kernel.org (Postfix) with ESMTP id 80C3B20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="l9bODBOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgHQVys (ORCPT
+        id S1728856AbgHQVxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:54:48 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34904 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgHQVxy (ORCPT
+        Mon, 17 Aug 2020 17:53:53 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:47558 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728802AbgHQVxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:53:54 -0400
-Received: by mail-il1-f195.google.com with SMTP id q14so12432265ilm.2;
-        Mon, 17 Aug 2020 14:53:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=irJy6S2QShWPaULF8WN8Xlc9QcpqNGnW+ZOqavaiAyM=;
-        b=d8cM75gEHUaRRHCqQTxgy6t8O4641CoUmEi85l9mVCM++fJvJoBppibjxYGD6LGzR2
-         Fm4RcV/+ArH/ke/aFw9iH6kIfvrtw35rKOZLOPIilHCzOFCxAlwccHfWT8ZjJy/LbH+d
-         eic/9Q5CDgsKUkaMppZl99j0IDOOjIrR4FEJPPxmQ0UqvyrFX8SxRS7ESTUYMKfoUtPg
-         d5A94l8ZalyJpCszH4hkRntGgu8SjBsTp0g3Yw37Hj7jOVfS1hzizhNIz51z5sl1Pw6N
-         bXf8FIVrgp4xzJmgcGMnGM04P0dP0ItI4ANhVs+rPXB1k84pFYl4ECNmFuLdCqQBGx02
-         OyXw==
-X-Gm-Message-State: AOAM532yyzNkWew9sSGYW/aGXrt7yQzdu+Fv9szg6bFpsGNBOfqXU3ZR
-        lL0DCTyYGin9elB3JMDwdg==
-X-Google-Smtp-Source: ABdhPJzI1M0gVI1I3xczRo7fzd9EhOM5wg2+74nfZYkCDwTZcLbXmRjG9cYzZnFU3l78Z92I5uWOog==
-X-Received: by 2002:a92:aa94:: with SMTP id p20mr15902826ill.266.1597701233225;
-        Mon, 17 Aug 2020 14:53:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n5sm742881ilj.43.2020.08.17.14.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 14:53:52 -0700 (PDT)
-Received: (nullmailer pid 1638312 invoked by uid 1000);
-        Mon, 17 Aug 2020 21:53:50 -0000
-Date:   Mon, 17 Aug 2020 15:53:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: platform: Destroy child devices symmetrically
-Message-ID: <20200817215350.GA1638282@bogus>
-References: <20200806153650.3883530-1-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806153650.3883530-1-thierry.reding@gmail.com>
+        Mon, 17 Aug 2020 17:53:41 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 3D35130C1FA;
+        Mon, 17 Aug 2020 14:51:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 3D35130C1FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1597701078;
+        bh=iwvBHnllAMckovF6ltNCNQi+jMXHwnBrRf5LtKVSL+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l9bODBOaSDrV8dwZz2sRws0xOw3G2mj2v+N28tvDJ2Yc50EzQoab6LmFveAF3Afh7
+         wkiHDvM9FFyvTwoF31mADM0Ac1U/clRneNbo7i5dDHiSJuaM2yIeVja3NhZ51tOuuI
+         6SH3r1CnK6NUUqFenwmkpTJXOC9cTHRTBKw0paXw=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 20878140069;
+        Mon, 17 Aug 2020 14:53:39 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH RESEND v10 04/11] PCI: brcmstb: Add suspend and resume pm_ops
+Date:   Mon, 17 Aug 2020 17:53:06 -0400
+Message-Id: <20200817215326.30912-5-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817215326.30912-1-james.quinlan@broadcom.com>
+References: <20200817215326.30912-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 06 Aug 2020 17:36:50 +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Iterate over child devices in reverse when unpopulating a platform
-> device to make this step symmetrical with the population step. This
-> fixes an issue in the Tegra DRM driver where upon module unload the
-> DPAUX controller tries to unregister an I2C controller but will end
-> up waiting indefinitely because one of the SOR devices is keeping a
-> reference to it. Since the SOR devices are instantiated after the
-> DPAUX devices, they would only be removed (and hence release their
-> reference to the I2C controller) after the DPAUX devices have been
-> removed.
-> 
-> While destroying the child devices in reverse order helps in this
-> situation, it isn't fully safe to do so either. An even better way
-> would be for the child devices to be reordered to match the probe
-> order, which would work irrespective of the instantiation order.
-> 
-> However, reordering by probe order would be fairly complicated and
-> doesn't fix any known issues, so we'll go with the simpler fix for
-> now.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/of/platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-Applied, thanks!
+Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+and resume.  Now the PCIe driver may do so as well.
+
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index b7a222fde3c4..7c148eb65170 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -979,6 +979,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	brcm_pcie_bridge_sw_init_set(pcie, 1);
+ }
+ 
++static int brcm_pcie_suspend(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++
++	brcm_pcie_turn_off(pcie);
++	clk_disable_unprepare(pcie->clk);
++
++	return 0;
++}
++
++static int brcm_pcie_resume(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	void __iomem *base;
++	u32 tmp;
++	int ret;
++
++	base = pcie->base;
++	clk_prepare_enable(pcie->clk);
++
++	/* Take bridge out of reset so we can access the SERDES reg */
++	brcm_pcie_bridge_sw_init_set(pcie, 0);
++
++	/* SERDES_IDDQ = 0 */
++	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
++	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++
++	/* wait for serdes to be stable */
++	udelay(100);
++
++	ret = brcm_pcie_setup(pcie);
++	if (ret)
++		return ret;
++
++	if (pcie->msi)
++		brcm_msi_set_regs(pcie->msi);
++
++	return 0;
++}
++
+ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+ {
+ 	brcm_msi_remove(pcie);
+@@ -1110,12 +1151,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+ 
++static const struct dev_pm_ops brcm_pcie_pm_ops = {
++	.suspend_noirq = brcm_pcie_suspend,
++	.resume_noirq = brcm_pcie_resume,
++};
++
+ static struct platform_driver brcm_pcie_driver = {
+ 	.probe = brcm_pcie_probe,
+ 	.remove = brcm_pcie_remove,
+ 	.driver = {
+ 		.name = "brcm-pcie",
+ 		.of_match_table = brcm_pcie_match,
++		.pm = &brcm_pcie_pm_ops,
+ 	},
+ };
+ module_platform_driver(brcm_pcie_driver);
+-- 
+2.17.1
+
