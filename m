@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83446C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718E920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B1720866
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686250;
-	bh=mNPQzFRpnFM/yjUDRE1EI03Lr2TjX1ko4u6BoKoOOBA=;
+	s=default; t=1597686252;
+	bh=8n4MLbFEc1JbadAecSR/+GsTldndIr6BwD9NawghAOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITt3M8TEJxHYkjw3tB8U1rCGHEzcMqChiMHoI6ZWIiuFe1OwS+UKxlafV1/sbMISk
-	 8U4VWxMtQgaAzqcQS+hcmAni+ogzn/SJ43NRAimgwHYYhv8LUWw3bOvnP02oIL8gtn
-	 zKNq7KyEhYXFMLooWq5qS0UiozGjBa3LMRjY6xII=
+	b=ooleBjCK+xP61QalgfKoNsJ2qkDpOWQNq4Yy8fRxSviPrPpOzzI9xwQfcM+Um+jEW
+	 gulNJsK3/GBWXFZLtnSdtXPiQkpeet4S1RgzpU4fsnmxc2DU8rsslQ6uhPEk325BoN
+	 Vn5fE2Svolm7uo6SvUdY/cIkrzH1C657PfLuEk94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbgHQRoG (ORCPT
+        id S1731105AbgHQRoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388533AbgHQQPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:08 -0400
+        id S2388808AbgHQQPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:15:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DEFE20658;
-        Mon, 17 Aug 2020 16:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22FA1208C7;
+        Mon, 17 Aug 2020 16:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680907;
-        bh=mNPQzFRpnFM/yjUDRE1EI03Lr2TjX1ko4u6BoKoOOBA=;
+        s=default; t=1597680914;
+        bh=8n4MLbFEc1JbadAecSR/+GsTldndIr6BwD9NawghAOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HIj1jfZl3ofqdSMQIH7KVmUwKpdel9pMWGo2xt1ftxiN5D9/WTjlgbAB/SajRW3ck
-         H4FulamO2IIN6IlT7zU3IpyA0QNiAnohFQj+Fp/WEu+XKyWH6KqhjedhPQAKQpkpCQ
-         51xQgX5o6JgMT/YX55bCHBbHRTU3AzhVsvteuuYc=
+        b=yQVg/Gif/46TBO+nQvIu+Gn7SSoc9Yf2b6Hrv5xmpT+P6jrXtRRwLyqGLt+qpnoQ+
+         ckwemZpXGvcl2aYYE41+VQh3Zm+Q9XIXD8w2iskSCb4fZZsa3LL6BEBYxyIe7MI/qA
+         KEIMzXJVrDDpMURauj7TyAuq4PZZlS7XARJyegLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/168] ASoC: Intel: bxt_rt298: add missing .owner field
-Date:   Mon, 17 Aug 2020 17:16:36 +0200
-Message-Id: <20200817143736.979549233@linuxfoundation.org>
+Subject: [PATCH 4.19 109/168] powerpc/boot: Fix CONFIG_PPC_MPC52XX references
+Date:   Mon, 17 Aug 2020 17:17:20 +0200
+Message-Id: <20200817143739.136316245@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -63,48 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 88cee34b776f80d2da04afb990c2a28c36799c43 ]
+[ Upstream commit e5eff89657e72a9050d95fde146b54c7dc165981 ]
 
-This field is required for ASoC cards. Not setting it will result in a
-module->name pointer being NULL and generate problems such as
+Commit 866bfc75f40e ("powerpc: conditionally compile platform-specific
+serial drivers") made some code depend on CONFIG_PPC_MPC52XX, which
+doesn't exist.
 
-cat /proc/asound/modules
- 0 (efault)
+Fix it to use CONFIG_PPC_MPC52xx.
 
-Fixes: 76016322ec56 ('ASoC: Intel: Add Broxton-P machine driver')
-Reported-by: Jaroslav Kysela <perex@perex.cz>
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200625191308.3322-5-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 866bfc75f40e ("powerpc: conditionally compile platform-specific serial drivers")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200724131728.1643966-7-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bxt_rt298.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/boot/Makefile | 2 +-
+ arch/powerpc/boot/serial.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bxt_rt298.c b/sound/soc/intel/boards/bxt_rt298.c
-index 27308337ab127..ba76e37a4b094 100644
---- a/sound/soc/intel/boards/bxt_rt298.c
-+++ b/sound/soc/intel/boards/bxt_rt298.c
-@@ -544,6 +544,7 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
- /* broxton audio machine driver for SPT + RT298S */
- static struct snd_soc_card broxton_rt298 = {
- 	.name = "broxton-rt298",
-+	.owner = THIS_MODULE,
- 	.dai_link = broxton_rt298_dais,
- 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
- 	.controls = broxton_controls,
-@@ -559,6 +560,7 @@ static struct snd_soc_card broxton_rt298 = {
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 7d5ddf53750ce..7a83b5e136e0d 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -122,7 +122,7 @@ src-wlib-y := string.S crt0.S stdio.c decompress.c main.c \
+ 		elf_util.c $(zlib-y) devtree.c stdlib.c \
+ 		oflib.c ofconsole.c cuboot.c
  
- static struct snd_soc_card geminilake_rt298 = {
- 	.name = "geminilake-rt298",
-+	.owner = THIS_MODULE,
- 	.dai_link = broxton_rt298_dais,
- 	.num_links = ARRAY_SIZE(broxton_rt298_dais),
- 	.controls = broxton_controls,
+-src-wlib-$(CONFIG_PPC_MPC52XX) += mpc52xx-psc.c
++src-wlib-$(CONFIG_PPC_MPC52xx) += mpc52xx-psc.c
+ src-wlib-$(CONFIG_PPC64_BOOT_WRAPPER) += opal-calls.S opal.c
+ ifndef CONFIG_PPC64_BOOT_WRAPPER
+ src-wlib-y += crtsavres.S
+diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
+index 48e3743faedfd..83c78427c20be 100644
+--- a/arch/powerpc/boot/serial.c
++++ b/arch/powerpc/boot/serial.c
+@@ -127,7 +127,7 @@ int serial_console_init(void)
+ 	         dt_is_compatible(devp, "fsl,cpm2-smc-uart"))
+ 		rc = cpm_console_init(devp, &serial_cd);
+ #endif
+-#ifdef CONFIG_PPC_MPC52XX
++#ifdef CONFIG_PPC_MPC52xx
+ 	else if (dt_is_compatible(devp, "fsl,mpc5200-psc-uart"))
+ 		rc = mpc5200_psc_console_init(devp, &serial_cd);
+ #endif
 -- 
 2.25.1
 
