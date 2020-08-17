@@ -2,156 +2,75 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D414C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F422072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cADBKzRc"
+	by mail.kernel.org (Postfix) with ESMTP id 8F0262072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597670956;
+	bh=BymKps12XsZQl4YKZ1c0eB9rH+lInt76AzC41AOqUvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Czj6hrG7ppQe/jy/hDROgdhm59MNe+rZF88TPO9PGCh5p+7nkp1QeBakdw3XY4WbP
+	 8OCyLT9HVhkdDZRxFhX05BQOZUa73PzEfJbJX6N2Wj1YOkWXxynZG+i1GLIbPD9kKV
+	 fO4PXeUzSMT9d86aQxIoOcu1uN7wXsBfCd5juBjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgHQN14 (ORCPT
+        id S1728592AbgHQN3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:27:56 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26991 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 09:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgHQN1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:27:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597670873; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=INTxAt5lNz/SJ0qOc87ualrdr+KyL5wjMAo0+q1t93w=; b=cADBKzRc9s9ID4+8nkKvw7v1nEQaZ2dlXy/cyzvtEfAt8V+iuRJmN1OOzutyO5VvtpMP0R+3
- ghE/8mmRi7ukNGA1JqhW60Xc1pL+72MEfYdFzY9KpgQ7a4QtMKXA7sZSwVdA+4mRrhRF8UAs
- a/QA4WmAboTeUVn/gQIrqCx8SAo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f3a85acf2b697637a049000 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 13:27:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17D74C433AD; Mon, 17 Aug 2020 13:27:06 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728358AbgHQN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:29:14 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 259DAC433CA;
-        Mon, 17 Aug 2020 13:27:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 259DAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        Fabrice Bellet <fabrice@bellet.info>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Ondrej Zary <linux@rainbow-software.org>
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
-        <20200814113933.1903438-13-lee.jones@linaro.org>
-        <87r1s9l0mc.fsf@codeaurora.org> <20200814163831.GN4354@dell>
-Date:   Mon, 17 Aug 2020 16:27:01 +0300
-In-Reply-To: <20200814163831.GN4354@dell> (Lee Jones's message of "Fri, 14 Aug
-        2020 17:38:31 +0100")
-Message-ID: <87a6ytmmhm.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F8D2072D;
+        Mon, 17 Aug 2020 13:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597670953;
+        bh=BymKps12XsZQl4YKZ1c0eB9rH+lInt76AzC41AOqUvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wpv5465BkVtFkvEjq8ovwgg4Ym9eooROzit5pFuUECfQjFRTG1KLS8YItLAfTi+ad
+         V9ROkqnVpc3j67L3rgYU7thJeb9JGWCKI/JCqzkZhlRLgMjQRn3WzhRmQs5JuGHa3G
+         r+SwuGpuGeix5DRooPEVYZg8yLmPs8pz7FGFBMcc=
+Date:   Mon, 17 Aug 2020 21:29:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, festevam@gmail.com
+Subject: Re: [PATCH v2] ARM: dts: ZII: Disable HW Ethernet switch reset GPIOs
+Message-ID: <20200817132903.GG16951@dragon>
+References: <20200722203341.578651-1-cphealy@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722203341.578651-1-cphealy@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+On Wed, Jul 22, 2020 at 01:33:41PM -0700, Chris Healy wrote:
+> From: Chris Healy <cphealy@gmail.com>
+> 
+> Disable Ethernet switch reset GPIO with ZII platforms that have it
+> enabled.  HW switch reset results in a reset of the copper PHYs
+> inside of the switch.  We want to avoid this reset of the copper PHYs
+> in the switch as this results in unnecessary broader network disruption on
+> a soft reboot of the application processor.
+> 
+> With the HW GPIO removed, the switch driver still performs a soft reset of
+> the switch core which has been shown to sufficiently meet our needs with
+> other ZII platforms that do not have the HW switch reset GPIO defined. 
+> 
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-> On Fri, 14 Aug 2020, Kalle Valo wrote:
->
->> Lee Jones <lee.jones@linaro.org> writes:
->> 
->> >  - Ensure spaces appear after {for, if, while, etc}
->> >  - Ensure spaces to not appear after '('
->> >  - Ensure spaces to not appear before ')'
->> >  - Ensure spaces appear between ')' and '{'
->> >  - Ensure spaces appear after ','
->> >  - Ensure spaces do not appear before ','
->> >  - Ensure spaces appear either side of '='
->> >  - Ensure '{'s which open functions are on a new line
->> >  - Remove trailing whitespace
->> >
->> > There are still a whole host of issues with this file, but this
->> > patch certainly breaks the back of them.
->> >
->> > Cc: Kalle Valo <kvalo@codeaurora.org>
->> > Cc: "David S. Miller" <davem@davemloft.net>
->> > Cc: Jakub Kicinski <kuba@kernel.org>
->> > Cc: Benjamin Reed <breed@users.sourceforge.net>
->> > Cc: Javier Achirica <achirica@users.sourceforge.net>
->> > Cc: Jean Tourrilhes <jt@hpl.hp.com>
->> > Cc: Fabrice Bellet <fabrice@bellet.info>
->> > Cc: linux-wireless@vger.kernel.org
->> > Cc: netdev@vger.kernel.org
->> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> > ---
->> >  drivers/net/wireless/cisco/airo.c | 897 ++++++++++++++++--------------
->> >  1 file changed, 467 insertions(+), 430 deletions(-)
->> 
->> This is a driver for ancient hardware, I'm not sure if it's worth trying
->> to fix any style issues. Is anyone even using it? Should we instead just
->> remove the driver?
->
-> Sounds like a reasonable solution to me.
->
-> I'm also happy to do it, if there are no objections.
->
-> As it stands, it's polluting the code-base and the build-log, so
-> something should be done.
-
-I tried to find some comments about the driver and here's one successful
-report from 2013:
-
-https://martybugs.net/wireless/aironet4800.cgi
-
-And here's one commit from 2015 where Ondrej (CCed) was also testing the
-driver:
-
-----------------------------------------------------------------------
-commit dae0412d0caa4948da07fe4ad91352b5b61a70ec
-Author:     Ondrej Zary <linux@rainbow-software.org>
-AuthorDate: Fri Oct 16 21:04:14 2015 +0200
-Commit:     Kalle Valo <kvalo@codeaurora.org>
-CommitDate: Wed Oct 28 20:54:39 2015 +0200
-
-    airo: fix scan after SIOCSIWAP (airo_set_wap)
-    
-    SIOCSIWAP (airo_set_wap) affects scan: only the AP specified by
-    SIOCSIWAP is present in scan results.
-    
-    This makes NetworkManager work for the first time but then unable to
-    find any other APs.
-    
-    Clear APList before starting scan and set it back after scan completes
-    to work-around the problem.
-    
-    To avoid losing packets during scan, modify disable_MAC() to omit
-    netif_carrier_off() call when lock == 2.
-    
-    Signed-off-by: Ondrej Zary <linux@rainbow-software.org>
-    Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-----------------------------------------------------------------------
-
-I was surprised to see that someone was using this driver in 2015, so
-I'm not sure anymore what to do. Of course we could still just remove it
-and later revert if someone steps up and claims the driver is still
-usable. Hmm. Does anyone any users of this driver?
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Applied, thanks.
