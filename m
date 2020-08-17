@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C94B82072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A35204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690242;
-	bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
+	s=default; t=1597690253;
+	bh=Zhr72qCloKmSKihEzvvhRpi+WqP9C5JQJiJVztuEjV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hA5Hu/S86SP3VGruDU23QHtBV5G9IV4mbNJXxc5576LII53d8DNcf6Rarsqp+suGC
-	 3Hrl7LXt+17/Mu9MMGGxVkgzY7ayzf0uoO8PoG/pt8qwTa41cFXawD6oibDSoc4WnT
-	 WrllITxZEczhTcL+NO3PW8zgQ7HVOx9yipDkvVig=
+	b=Y/4iS5kAOheUUA4rgg097E5xTPe6+Ant/jlik1vXlhOGiOsG4wMdg3pMmAWSoTmyE
+	 uIjAbHHEOgYYmrmJSIB9Y6ED2TbBmvB+PwTqa0wwqknB9BHkuqmp6yWHZoR32amxZP
+	 Rz3gH96zr8WakfSkwtQYCpv8mxQ2xNsucUXaHQNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391710AbgHQSuk (ORCPT
+        id S2391583AbgHQSuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387920AbgHQPxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:53:34 -0400
+        id S2387919AbgHQPx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:53:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2225C2063A;
-        Mon, 17 Aug 2020 15:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAEF0208C7;
+        Mon, 17 Aug 2020 15:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679612;
-        bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
+        s=default; t=1597679598;
+        bh=Zhr72qCloKmSKihEzvvhRpi+WqP9C5JQJiJVztuEjV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIzoxWlNKuw+3xG7jUxtd1TbDI/PMMfVAz8q+MWHGipi8wmBwunxcSNJplnfK7a2F
-         j8nl4TSqWkj6cptRNcAl3BO1iO73yKQlPDD3K/rj7wvPPYcyu3+cH8ZZQeoA3B43np
-         ksZl8j7/izLBLJNe6EQMm8xp7kKOj1IsAXRs/8JA=
+        b=fy5jzI2wnAObdrvxd85YxMukHxI18WnB10Za6mU28thnJDRuKwMhJxCyCso/O4NsT
+         NCo69M1IBALO20jJv3ViCxOgZJW+ap7errIeZPxivImJDWs0LefdhiJN7utmqElvbX
+         PoTb7Q5lonzcLGBcybeKeuBnCh7GE7RZU6W7rqtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 274/393] selftests/powerpc: Fix online CPU selection
-Date:   Mon, 17 Aug 2020 17:15:24 +0200
-Message-Id: <20200817143832.911323527@linuxfoundation.org>
+Subject: [PATCH 5.7 270/393] RDMA/netlink: Remove CAP_NET_RAW check when dump a raw QP
+Date:   Mon, 17 Aug 2020 17:15:20 +0200
+Message-Id: <20200817143832.717274797@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,93 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
+[ Upstream commit 1d70ad0f85435a7262de802b104e49e6598c50ff ]
 
-The size of the CPU affinity mask must be large enough for
-systems with a very large number of CPUs. Otherwise, tests
-which try to determine the first online CPU by calling
-sched_getaffinity() will fail. This makes sure that the size
-of the allocated affinity mask is dependent on the number of
-CPUs as reported by get_nprocs_conf().
+When dumping QPs bound to a counter, raw QPs should be allowed to dump
+without the CAP_NET_RAW privilege. This is consistent with what "rdma res
+show qp" does.
 
-Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
-Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
+Fixes: c4ffee7c9bdb ("RDMA/netlink: Implement counter dumpit calback")
+Link: https://lore.kernel.org/r/20200727095828.496195-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ drivers/infiniband/core/nldev.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
-index 5ee0e98c48967..eb530e73e02c1 100644
---- a/tools/testing/selftests/powerpc/utils.c
-+++ b/tools/testing/selftests/powerpc/utils.c
-@@ -16,6 +16,7 @@
- #include <string.h>
- #include <sys/ioctl.h>
- #include <sys/stat.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
- #include <sys/utsname.h>
- #include <unistd.h>
-@@ -88,28 +89,40 @@ void *get_auxv_entry(int type)
+diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
+index e16105be2eb23..98cd6403ca602 100644
+--- a/drivers/infiniband/core/nldev.c
++++ b/drivers/infiniband/core/nldev.c
+@@ -738,9 +738,6 @@ static int fill_stat_counter_qps(struct sk_buff *msg,
+ 	xa_lock(&rt->xa);
+ 	xa_for_each(&rt->xa, id, res) {
+ 		qp = container_of(res, struct ib_qp, res);
+-		if (qp->qp_type == IB_QPT_RAW_PACKET && !capable(CAP_NET_RAW))
+-			continue;
+-
+ 		if (!qp->counter || (qp->counter->id != counter->id))
+ 			continue;
  
- int pick_online_cpu(void)
- {
--	cpu_set_t mask;
--	int cpu;
-+	int ncpus, cpu = -1;
-+	cpu_set_t *mask;
-+	size_t size;
-+
-+	ncpus = get_nprocs_conf();
-+	size = CPU_ALLOC_SIZE(ncpus);
-+	mask = CPU_ALLOC(ncpus);
-+	if (!mask) {
-+		perror("malloc");
-+		return -1;
-+	}
- 
--	CPU_ZERO(&mask);
-+	CPU_ZERO_S(size, mask);
- 
--	if (sched_getaffinity(0, sizeof(mask), &mask)) {
-+	if (sched_getaffinity(0, size, mask)) {
- 		perror("sched_getaffinity");
--		return -1;
-+		goto done;
- 	}
- 
- 	/* We prefer a primary thread, but skip 0 */
--	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = 8; cpu < ncpus; cpu += 8)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	/* Search for anything, but in reverse */
--	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = ncpus - 1; cpu >= 0; cpu--)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	printf("No cpus in affinity mask?!\n");
--	return -1;
-+
-+done:
-+	CPU_FREE(mask);
-+	return cpu;
- }
- 
- bool is_ppc64le(void)
 -- 
 2.25.1
 
