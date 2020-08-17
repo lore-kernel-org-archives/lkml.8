@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B410C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30835C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676F7206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137D620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684471;
-	bh=yH+DAPdtU3IVv54d4VVXWRQgzC7pzyB7IRbaGehowlw=;
+	s=default; t=1597684472;
+	bh=eKLmI6yIRznVo57G102CPPtPPxx8TC3m3pHQ/L+bVTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hy+R/SolcopfebKNynnohTndF8WZyajSYbzkPlXd7kUaJI2U+9eZSnGSFWcAu3xo7
-	 rcDCnKjLgcdwqBDbwYHmFlsYAX91NmaJIP9vTQgF8I4T+oe9pNhRQ3ribAJ2Tj+p/C
-	 DsSTzZZa0RBxZLSb2Yyed+hwUimyVCh72yI7efAg=
+	b=kvyigf11x7bVntMTXkzsB/Oyq8y7SNMdZ5OcBYeCnxwhuwZgjqrXHgBecmeZbEn4B
+	 s7f/FDP3jFDWGVABaQWhivf3Z6LR2SZ7Wi8HBiM+96cKe/FUYmeG/7iMkI0b6MMbZr
+	 w6vJDSIW84JelpcJxslW7bEJd1fcsl1oG0iSVLpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbgHQRNj (ORCPT
+        id S1731200AbgHQROa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388669AbgHQQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:12:09 -0400
+        id S2388702AbgHQQMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47BE720760;
-        Mon, 17 Aug 2020 16:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344B922CF6;
+        Mon, 17 Aug 2020 16:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680729;
-        bh=yH+DAPdtU3IVv54d4VVXWRQgzC7pzyB7IRbaGehowlw=;
+        s=default; t=1597680756;
+        bh=eKLmI6yIRznVo57G102CPPtPPxx8TC3m3pHQ/L+bVTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWjaQVeCNEMeRuH2m0hUozb+MCmUVocsAXNRKHDP9cH9zJ4cUpNsIccAp4R/caG3E
-         p7dnpJztfEYKQSb2PhcMxyMiJT9jngb2YPRYgL4remMNow5x45/Sm+3wLPN5PwhU5i
-         KRYkY4PyW8ttJtlcCQwP6Bpq0smU7WUdwVocg3NY=
+        b=Y7EsZqqszVaNPu4jg1P8CNbG1uHlDFT/xPFFxxypQHCYP4XV5kCy5+T4/CFwWmLl2
+         wjntZCsyR8Np9y4XFj8MrU3ZIn3HtxqPgeWtaYcLS0nKMlU16dJ9tH+E34L9Y56Vwp
+         M/rglPecIDcZDOQ3G8YpLbV31AU5Np9VVSQ8zeQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
+        stable@vger.kernel.org,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/168] x86/mce/inject: Fix a wrong assignment of i_mce.status
-Date:   Mon, 17 Aug 2020 17:15:35 +0200
-Message-Id: <20200817143733.928530433@linuxfoundation.org>
+Subject: [PATCH 4.19 045/168] brcmfmac: set state of hanger slot to FREE when flushing PSQ
+Date:   Mon, 17 Aug 2020 17:16:16 +0200
+Message-Id: <20200817143736.011532438@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,36 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Wright Feng <wright.feng@cypress.com>
 
-[ Upstream commit 5d7f7d1d5e01c22894dee7c9c9266500478dca99 ]
+[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
 
-The original code is a nop as i_mce.status is or'ed with part of itself,
-fix it.
+When USB or SDIO device got abnormal bus disconnection, host driver
+tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
+slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
+to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
+In brcmf_fws_bus_txq_cleanup it already sets
+BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
+same thing in brcmf_fws_psq_flush to avoid following warning message.
 
-Fixes: a1300e505297 ("x86/ras/mce_amd_inj: Trigger deferred and thresholding errors interrupts")
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20200611023238.3830-1-zhenzhong.duan@gmail.com
+   [ 1580.012880] ------------   [ cut here ]------------
+   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
+drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
+brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
+   [ 1580.184017] Call Trace:
+   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
+   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
+   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
+   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
+   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
+   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
+   [ 1580.217557]  usb_unbind_interface+0x72/0x260
+   [ 1580.221857]  device_release_driver_internal+0x141/0x200
+   [ 1580.227152]  device_release_driver+0x12/0x20
+   [ 1580.231460]  bus_remove_device+0xfd/0x170
+   [ 1580.235504]  device_del+0x1d9/0x300
+   [ 1580.239041]  usb_disable_device+0x9e/0x270
+   [ 1580.243160]  usb_disconnect+0x94/0x270
+   [ 1580.246980]  hub_event+0x76d/0x13b0
+   [ 1580.250499]  process_one_work+0x144/0x360
+   [ 1580.254564]  worker_thread+0x4d/0x3c0
+   [ 1580.258247]  kthread+0x109/0x140
+   [ 1580.261515]  ? rescuer_thread+0x340/0x340
+   [ 1580.265543]  ? kthread_park+0x60/0x60
+   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
+   [ 1580.273118]  ret_from_fork+0x25/0x30
+   [ 1580.300446] ------------   [ cut here ]------------
+
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce-inject.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-index 1ceccc4a5472c..9cc524be3c949 100644
---- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-@@ -518,7 +518,7 @@ static void do_inject(void)
- 	 */
- 	if (inj_type == DFR_INT_INJ) {
- 		i_mce.status |= MCI_STATUS_DEFERRED;
--		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
-+		i_mce.status &= ~MCI_STATUS_UC;
- 	}
- 
- 	/*
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+index 1de8497d92b8a..dc7c970257d2f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+@@ -653,6 +653,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
+ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
+ 				int ifidx)
+ {
++	struct brcmf_fws_hanger_item *hi;
+ 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
+ 	struct sk_buff *skb;
+ 	int prec;
+@@ -664,6 +665,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
+ 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
+ 		while (skb) {
+ 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
++			hi = &fws->hanger.items[hslot];
++			WARN_ON(skb != hi->pkt);
++			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
+ 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
+ 						true);
+ 			brcmu_pkt_buf_free_skb(skb);
 -- 
 2.25.1
 
