@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59781C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55109C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3841B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDE02063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687112;
-	bh=Xv54CaqVCi1m1GANoiOQQGe55LlmlYY8gLV+z/tCpRA=;
+	s=default; t=1597687116;
+	bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bijhkoVw7BbT6k0/BZZdp4cXEOuvlEMVyvF52NTLiAcZ/taH92EwVJZZzssGX0MR4
-	 WffjhuP4XsbmbMDucK2+3ByMOS1P9GMLHRjJUmhAv0L8npvROA8W67M/ZykdLHf3bR
-	 dDtt4P9p10b8h0Ri+w3X7r7hfOdweTy0MHiBRmd8=
+	b=f1tpednMfa0w01zBklPSrXjshj/mDmW5IyEPWvZOjQhLlYRxCciT9d4QL+LXahv/j
+	 ftPYvvJKpMNbWXsWCkwPzMNPGtuOGN6l2Me/AM2mVb2sUSY5Cwe8fTV0M68d44zH2b
+	 SGe79p1mTsDYOfRwS4CBqK4CNIwkI85YrYJ7ARvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390082AbgHQR6Q (ORCPT
+        id S2390190AbgHQR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388550AbgHQQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:10:29 -0400
+        id S2388541AbgHQQKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1619820748;
-        Mon, 17 Aug 2020 16:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D731A20760;
+        Mon, 17 Aug 2020 16:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680622;
-        bh=Xv54CaqVCi1m1GANoiOQQGe55LlmlYY8gLV+z/tCpRA=;
+        s=default; t=1597680592;
+        bh=0vzo1+dfsxzsfhFpidf+D+o54CBDt9UpG9cy1L0J2jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hEn80OWVybnpAV6jSyCobu59H3pcijsi4yPpnJIaVQUC6fTue9cugyhozihrCAYP
-         1vOUjR5HSIazUUNySQJT3WWkRO8RS2GGGyjmyY8uf4H/7E2jLzTkw7YYrmj/bOI6Ie
-         rZqrjcaRdNa6IzdlHEyFqsAn9dI1JX00EDXhx8PI=
+        b=a7S6sHeludi7srU4D3lEZl6UupwUz40oAinfj7aaFeTuBTu7xSgLkni4N6ll4R9oV
+         KqbiHMmUnOZl6FPsQeVXWJd6Zae0MhToYEXBE3PmZ4Fk9HDpqHMm3/AG+d2+YO4hYg
+         U60bLPPZvd8LhgKaQBN3gDs7fQv2ZL6ZPg1aXwCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 230/270] ALSA: hda - fix the micmute led status for Lenovo ThinkCentre AIO
-Date:   Mon, 17 Aug 2020 17:17:11 +0200
-Message-Id: <20200817143807.250424208@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.4 248/270] Revert "parisc: Revert "Release spinlocks using ordered store""
+Date:   Mon, 17 Aug 2020 17:17:29 +0200
+Message-Id: <20200817143808.169137147@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,36 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 386a6539992b82fe9ac4f9dc3f548956fd894d8c upstream.
+commit 157e9afcc4fa25068b0e8743bc254a9b56010e13 upstream.
 
-After installing the Ubuntu Linux, the micmute led status is not
-correct. Users expect that the led is on if the capture is disabled,
-but with the current kernel, the led is off with the capture disabled.
+This reverts commit 86d4d068df573a8c2105554624796c086d6bec3d.
 
-We tried the old linux kernel like linux-4.15, there is no this issue.
-It looks like we introduced this issue when switching to the led_cdev.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200810021659.7429-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org> # v5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/include/asm/spinlock.h |    4 ++--
+ arch/parisc/kernel/syscall.S       |   12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4391,6 +4391,7 @@ static void alc233_fixup_lenovo_line2_mi
- {
- 	struct alc_spec *spec = codec->spec;
+--- a/arch/parisc/include/asm/spinlock.h
++++ b/arch/parisc/include/asm/spinlock.h
+@@ -37,8 +37,8 @@ static inline void arch_spin_unlock(arch
+ 	volatile unsigned int *a;
  
-+	spec->micmute_led_polarity = 1;
- 	alc_fixup_hp_gpio_led(codec, action, 0, 0x04);
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		spec->init_amp = ALC_INIT_DEFAULT;
+ 	a = __ldcw_align(x);
+-	mb();
+-	*a = 1;
++	/* Release with ordered store. */
++	__asm__ __volatile__("stw,ma %0,0(%1)" : : "r"(1), "r"(a) : "memory");
+ }
+ 
+ static inline int arch_spin_trylock(arch_spinlock_t *x)
+--- a/arch/parisc/kernel/syscall.S
++++ b/arch/parisc/kernel/syscall.S
+@@ -640,8 +640,7 @@ cas_action:
+ 	sub,<>	%r28, %r25, %r0
+ 2:	stw	%r24, 0(%r26)
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ #if ENABLE_LWS_DEBUG
+ 	/* Clear thread register indicator */
+ 	stw	%r0, 4(%sr2,%r20)
+@@ -655,8 +654,7 @@ cas_action:
+ 3:		
+ 	/* Error occurred on load or store */
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ #if ENABLE_LWS_DEBUG
+ 	stw	%r0, 4(%sr2,%r20)
+ #endif
+@@ -857,8 +855,7 @@ cas2_action:
+ 
+ cas2_end:
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ 	/* Enable interrupts */
+ 	ssm	PSW_SM_I, %r0
+ 	/* Return to userspace, set no error */
+@@ -868,8 +865,7 @@ cas2_end:
+ 22:
+ 	/* Error occurred on load or store */
+ 	/* Free lock */
+-	sync
+-	stw	%r20, 0(%sr2,%r20)
++	stw,ma	%r20, 0(%sr2,%r20)
+ 	ssm	PSW_SM_I, %r0
+ 	ldo	1(%r0),%r28
+ 	b	lws_exit
 
 
