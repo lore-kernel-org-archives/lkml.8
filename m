@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DF1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A4920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BB020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688133;
-	bh=MjrENXJKdwxN5BZbjYPF3FJVWJtHmP5do7pjlhfS0Vo=;
+	s=default; t=1597688141;
+	bh=a7E2beN0GPmKTpYoQDTwY7mJKGFsxlXkNeufTEdGSfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iRW/d/ae/HK8NJSQrXblZxnqXPbr0+lhkOfMqxpdhepc+kKIzbcHgTZRbCbVf8Cty
-	 MZcHC0iBS5VEUxTJwhRHKfgSM/QWSu2Gs8DuiLR9wt7gPzGRzqMbQzntiQmSlxiu91
-	 /5CappR1qGaQioHFLn5brsphJq9Ip3kQbbN7R5Y0=
+	b=0m2u9N20yCQcBnCjzjlzbsPUQMc9jG1L45KJA0IoJyrcfhSrvxhzNfD4XZrypIF5p
+	 JyDxVYNErER8XNah+omL62F1JLETCyObvoyM3+ArJ8BviyMJW2vDgnb1R/ZAKOP1kb
+	 jTPpsuq9SlLa6dLVt7QMvyFjg7SDSP55Hlh6QaZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390404AbgHQSPc (ORCPT
+        id S2390687AbgHQSPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731053AbgHQQGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:06:23 -0400
+        id S2388392AbgHQQGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B80720658;
-        Mon, 17 Aug 2020 16:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D38D820888;
+        Mon, 17 Aug 2020 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680374;
-        bh=MjrENXJKdwxN5BZbjYPF3FJVWJtHmP5do7pjlhfS0Vo=;
+        s=default; t=1597680361;
+        bh=a7E2beN0GPmKTpYoQDTwY7mJKGFsxlXkNeufTEdGSfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D03OkFWvSK0vRIElLx7EaM39sq+2GAnBpa7dJu2opOMDT9lC7o/WmE1PpRz/l4J5V
-         bJ8ObBTlXNgxXmSIBA4kX2u7kIUTTGaXw/8J8mVpDCSO/DFb8vsE6uaCWGdT85FoM9
-         TMsYT6yXE722TN49+/mqx0OQFCszY7mlOrK8m9G4=
+        b=1pisfiNdwFp0CKI/BCwPzS4TUuftwZlJFhN+kfOz2k9AqsSVNSo1Eivdplbd6PGK3
+         65a3CpuaZlMM4eW7uzRyO25mYslMTU+4yNFWKYQrY0L8SHW8lne9h6nnDnvoLxB1oP
+         9h/VSrDije1E68kMit1kzSVy1QsliLg9eKWHjYDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Xiang Zheng <zhengxiang9@huawei.com>,
-        Heyi Guo <guoheyi@huawei.com>,
-        Biaoxiang Ye <yebiaoxiang@huawei.com>,
+        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 131/270] PCI: Fix pci_cfg_wait queue locking problem
-Date:   Mon, 17 Aug 2020 17:15:32 +0200
-Message-Id: <20200817143802.306082833@linuxfoundation.org>
+Subject: [PATCH 5.4 155/270] USB: serial: iuu_phoenix: fix led-activity helpers
+Date:   Mon, 17 Aug 2020 17:15:56 +0200
+Message-Id: <20200817143803.548988411@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,70 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 2a7e32d0547f41c5ce244f84cf5d6ca7fccee7eb ]
+[ Upstream commit de37458f8c2bfc465500a1dd0d15dbe96d2a698c ]
 
-The pci_cfg_wait queue is used to prevent user-space config accesses to
-devices while they are recovering from reset.
+The set-led command is eight bytes long and starts with a command byte
+followed by six bytes of RGB data and ends with a byte encoding a
+frequency (see iuu_led() and iuu_rgbf_fill_buffer()).
 
-Previously we used these operations on pci_cfg_wait:
+The led activity helpers had a few long-standing bugs which corrupted
+the command packets by inserting a second command byte and thereby
+offsetting the RGB data and dropping the frequency in non-xmas mode.
 
-  __add_wait_queue(&pci_cfg_wait, ...)
-  __remove_wait_queue(&pci_cfg_wait, ...)
-  wake_up_all(&pci_cfg_wait)
+In xmas mode, a related off-by-one error left the frequency field
+uninitialised.
 
-The wake_up acquires the wait queue lock, but the add and remove do not.
-
-Originally these were all protected by the pci_lock, but cdcb33f98244
-("PCI: Avoid possible deadlock on pci_lock and p->pi_lock"), moved
-wake_up_all() outside pci_lock, so it could race with add/remove
-operations, which caused occasional kernel panics, e.g., during vfio-pci
-hotplug/unplug testing:
-
-  Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-
-Resolve this by using wait_event() instead of __add_wait_queue() and
-__remove_wait_queue().  The wait queue lock is held by both wait_event()
-and wake_up_all(), so it provides mutual exclusion.
-
-Fixes: cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and p->pi_lock")
-Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/T/#u
-Based-on: https://lore.kernel.org/linux-pci/20191210031527.40136-1-zhengxiang9@huawei.com/
-Based-on-patch-by: Xiang Zheng <zhengxiang9@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+Fixes: 60a8fc017103 ("USB: add iuu_phoenix driver")
+Reported-by: George Spelvin <lkml@sdf.org>
+Link: https://lore.kernel.org/r/20200716085056.31471-1-johan@kernel.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/access.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/usb/serial/iuu_phoenix.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 2fccb5762c762..0914ddeae17f4 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -204,17 +204,13 @@ EXPORT_SYMBOL(pci_bus_set_ops);
- static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
- 
- static noinline void pci_wait_cfg(struct pci_dev *dev)
-+	__must_hold(&pci_lock)
- {
--	DECLARE_WAITQUEUE(wait, current);
--
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
--		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
--		schedule();
-+		wait_event(pci_cfg_wait, !dev->block_cfg_access);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
- }
- 
- /* Returns 0 on success, negative values indicate error. */
+diff --git a/drivers/usb/serial/iuu_phoenix.c b/drivers/usb/serial/iuu_phoenix.c
+index b8dfeb4fb2ed6..ffbb2a8901b2b 100644
+--- a/drivers/usb/serial/iuu_phoenix.c
++++ b/drivers/usb/serial/iuu_phoenix.c
+@@ -353,10 +353,11 @@ static void iuu_led_activity_on(struct urb *urb)
+ 	struct usb_serial_port *port = urb->context;
+ 	int result;
+ 	char *buf_ptr = port->write_urb->transfer_buffer;
+-	*buf_ptr++ = IUU_SET_LED;
++
+ 	if (xmas) {
+-		get_random_bytes(buf_ptr, 6);
+-		*(buf_ptr+7) = 1;
++		buf_ptr[0] = IUU_SET_LED;
++		get_random_bytes(buf_ptr + 1, 6);
++		buf_ptr[7] = 1;
+ 	} else {
+ 		iuu_rgbf_fill_buffer(buf_ptr, 255, 255, 0, 0, 0, 0, 255);
+ 	}
+@@ -374,13 +375,14 @@ static void iuu_led_activity_off(struct urb *urb)
+ 	struct usb_serial_port *port = urb->context;
+ 	int result;
+ 	char *buf_ptr = port->write_urb->transfer_buffer;
++
+ 	if (xmas) {
+ 		iuu_rxcmd(urb);
+ 		return;
+-	} else {
+-		*buf_ptr++ = IUU_SET_LED;
+-		iuu_rgbf_fill_buffer(buf_ptr, 0, 0, 255, 255, 0, 0, 255);
+ 	}
++
++	iuu_rgbf_fill_buffer(buf_ptr, 0, 0, 255, 255, 0, 0, 255);
++
+ 	usb_fill_bulk_urb(port->write_urb, port->serial->dev,
+ 			  usb_sndbulkpipe(port->serial->dev,
+ 					  port->bulk_out_endpointAddress),
 -- 
 2.25.1
 
