@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95986C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273A0206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7150320729
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683445;
-	bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+	s=default; t=1597683475;
+	bh=bNnF3Nxe6ZKunnmwlPkm1Ly4NV7ktCyAenwMQmCP6TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QOV0lB3ZUDkVEd+nGACwjuYC39w2pV8iqRy6vb0XRoPs6zxvrgw8alcNa73ysdod
-	 uAxkTeqnuI97Bdk73MuHXaYTCQH9R/9+xKGq+8TDEltcEKtanYAkSJyd7a0tX5bdHx
-	 mmXsY1m5F/eZVT7OlKns+Yz25g7Fu7+KRXwIw5a4=
+	b=Vam9nzGWzUXXneAuCvZd47fu3SAnfUTXdk98NSNszywYLz6SaRRvi2t3TBhwtwjJu
+	 Wsr4j5Tc4sufh8TcjFvz7C89sjxqlZN6VWEDXO5sExvzTBFCIRMFe5Y6SdApsckZKF
+	 TMbvYDwklrwkWCO/XqWDOMxXlnSAlN9B4DonIMvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389251AbgHQQ5T (ORCPT
+        id S2389246AbgHQQ5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388340AbgHQQEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:44 -0400
+        id S2388351AbgHQQE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE15B206FA;
-        Mon, 17 Aug 2020 16:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FF4120772;
+        Mon, 17 Aug 2020 16:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680284;
-        bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+        s=default; t=1597680297;
+        bh=bNnF3Nxe6ZKunnmwlPkm1Ly4NV7ktCyAenwMQmCP6TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hQ9d7g59mbqZ2dl9ymC4S4lM9IAruMQVLVGdPD+yGj+J1Tgu4L1kChWIkp/wjewsB
-         BAkcOl/G3AgfDlf0p796IBxb4UnEw/nE9U2hUb3BbkR9L1jpJHUHNJIDbsdatiTOta
-         C8EczJsbIpZ/PDjfefWHFpZsAhmsLyyZo8T0x4BQ=
+        b=sPjp7ymvnP35GdDINA5qELuG5PplCuYpgLiPMka6MkZG+eTECLVwuriPF+ZBcY8Kt
+         +iLjvxEkfIlTfs4Ywh9Wzt4RyhiCSCazMXoGp693SbJU/skagUU23Oc3vXA4SUlL5R
+         +8DNxgCnECs9+Wix6tRQhq8jec5v+Kj3gqRE7cEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/270] media: firewire: Using uninitialized values in node_probe()
-Date:   Mon, 17 Aug 2020 17:15:25 +0200
-Message-Id: <20200817143801.952102926@linuxfoundation.org>
+Subject: [PATCH 5.4 100/270] ath10k: Acquire tx_lock in tx error paths
+Date:   Mon, 17 Aug 2020 17:15:01 +0200
+Message-Id: <20200817143800.757322647@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,38 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
+[ Upstream commit a738e766e3ed92c4ee5ec967777276b5ce11dd2c ]
 
-If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
-then the "strlen(model_names[i]) <= name_len" is true because strlen()
-is unsigned and -ENOENT is type promoted to a very high positive value.
-Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
-data because "name" is uninitialized.
+ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
+is held. Acquire the lock in a couple of error paths when calling that
+function to ensure this condition is met.
 
-Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
+Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64 descriptor")
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/firewire/firedtv-fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/ath10k/htt_tx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
-index 97144734eb052..3f1ca40b9b987 100644
---- a/drivers/media/firewire/firedtv-fw.c
-+++ b/drivers/media/firewire/firedtv-fw.c
-@@ -272,6 +272,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
- 
- 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
- 				 name, sizeof(name));
-+	if (name_len < 0)
-+		return name_len;
- 	for (i = ARRAY_SIZE(model_names); --i; )
- 		if (strlen(model_names[i]) <= name_len &&
- 		    strncmp(name, model_names[i], name_len) == 0)
+diff --git a/drivers/net/wireless/ath/ath10k/htt_tx.c b/drivers/net/wireless/ath/ath10k/htt_tx.c
+index 735482877a1f5..c38e1963ebc05 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_tx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_tx.c
+@@ -1540,7 +1540,9 @@ static int ath10k_htt_tx_32(struct ath10k_htt *htt,
+ err_unmap_msdu:
+ 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
+ err_free_msdu_id:
++	spin_lock_bh(&htt->tx_lock);
+ 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
++	spin_unlock_bh(&htt->tx_lock);
+ err:
+ 	return res;
+ }
+@@ -1747,7 +1749,9 @@ static int ath10k_htt_tx_64(struct ath10k_htt *htt,
+ err_unmap_msdu:
+ 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
+ err_free_msdu_id:
++	spin_lock_bh(&htt->tx_lock);
+ 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
++	spin_unlock_bh(&htt->tx_lock);
+ err:
+ 	return res;
+ }
 -- 
 2.25.1
 
