@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3778C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19295C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64E6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42AF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691975;
-	bh=bYZSsDbdKIVHwZyGePACRao7ZG9/BLMU1o3jf/HNoGI=;
+	s=default; t=1597691985;
+	bh=XgOrT0vcgqMw2nMkmaD47txC4iPex3+wH6BiKJBG6qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1m2uV5oToT0A/GNy047Xh6uf0HaY+qWlodeGbhO/XSjtrSyTn/dk4eazYnpSggk4
-	 cTIOV57Q7WIWGe4YQ5w2c2yb13teMIeCPrw2UHjZXPxIfFzBMMCwy7J2cMseJvrtmX
-	 UBq64u55oADL7LDf3bNDILUP5a7XZVtMUSJo8Tc4=
+	b=pFivJexTjiNTB9OxDpzZFlHKX5qKxsbGlM3EM/7VjCNKzHh2bRmOuzSTLF4RDh1/z
+	 Tx9OxkmjfpDlCscUpA1cicGA122DSAM+YmHD+uxbGa7fEM5nE5zikkOC10rg9zpRaX
+	 VxrOsl6vIDPdSCDcIbQ71upw6fTBqBW6o0a0aQzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404207AbgHQTTe (ORCPT
+        id S2392296AbgHQTTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387404AbgHQPhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:16 -0400
+        id S1730538AbgHQPhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BEA622DD6;
-        Mon, 17 Aug 2020 15:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D835A22C9F;
+        Mon, 17 Aug 2020 15:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678636;
-        bh=bYZSsDbdKIVHwZyGePACRao7ZG9/BLMU1o3jf/HNoGI=;
+        s=default; t=1597678633;
+        bh=XgOrT0vcgqMw2nMkmaD47txC4iPex3+wH6BiKJBG6qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AETwqkhBo7CGpTDXZl89UgX3LXXXlsUu+ZXnUoAz+rdOoFuB67ewn6xleqajkPFhY
-         CeSyNBeUNTKx/m7X17dryjbSw0FZfZZh4LpxkhB/ZNU/b9vmWacE+BltOIuHvJxh2K
-         ihRhaRGHtZHl0v+P+NbjyEyMK+6qw1TwY4GbkV2Y=
+        b=sW1huQsmHQsHLbn1bOQ5+KKlzeunYFGFCH7rFEGeUDoa9DgeUybS5a3wljV9pWYWP
+         eyS29dvGFyf/xdin2El9ZTRIJhTM/KIEGiGC3mwu1bvoXtbpTFdkHCtliBf8qeAsTq
+         v63FZZe+2QXownweJ28Z8nm63R3InVuu6Xi3v6d0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 385/464] net: Fix potential memory leak in proto_register()
-Date:   Mon, 17 Aug 2020 17:15:38 +0200
-Message-Id: <20200817143852.221924572@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 402/464] ALSA: hda - fix the micmute led status for Lenovo ThinkCentre AIO
+Date:   Mon, 17 Aug 2020 17:15:55 +0200
+Message-Id: <20200817143853.036666469@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,82 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 0f5907af39137f8183ed536aaa00f322d7365130 ]
+commit 386a6539992b82fe9ac4f9dc3f548956fd894d8c upstream.
 
-If we failed to assign proto idx, we free the twsk_slab_name but forget to
-free the twsk_slab. Add a helper function tw_prot_cleanup() to free these
-together and also use this helper function in proto_unregister().
+After installing the Ubuntu Linux, the micmute led status is not
+correct. Users expect that the led is on if the capture is disabled,
+but with the current kernel, the led is off with the capture disabled.
 
-Fixes: b45ce32135d1 ("sock: fix potential memory leak in proto_register()")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We tried the old linux kernel like linux-4.15, there is no this issue.
+It looks like we introduced this issue when switching to the led_cdev.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200810021659.7429-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/sock.c |   25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3443,6 +3443,16 @@ static void sock_inuse_add(struct net *n
- }
- #endif
- 
-+static void tw_prot_cleanup(struct timewait_sock_ops *twsk_prot)
-+{
-+	if (!twsk_prot)
-+		return;
-+	kfree(twsk_prot->twsk_slab_name);
-+	twsk_prot->twsk_slab_name = NULL;
-+	kmem_cache_destroy(twsk_prot->twsk_slab);
-+	twsk_prot->twsk_slab = NULL;
-+}
-+
- static void req_prot_cleanup(struct request_sock_ops *rsk_prot)
+---
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4426,6 +4426,7 @@ static void alc233_fixup_lenovo_line2_mi
  {
- 	if (!rsk_prot)
-@@ -3513,7 +3523,7 @@ int proto_register(struct proto *prot, i
- 						  prot->slab_flags,
- 						  NULL);
- 			if (prot->twsk_prot->twsk_slab == NULL)
--				goto out_free_timewait_sock_slab_name;
-+				goto out_free_timewait_sock_slab;
- 		}
- 	}
+ 	struct alc_spec *spec = codec->spec;
  
-@@ -3521,15 +3531,15 @@ int proto_register(struct proto *prot, i
- 	ret = assign_proto_idx(prot);
- 	if (ret) {
- 		mutex_unlock(&proto_list_mutex);
--		goto out_free_timewait_sock_slab_name;
-+		goto out_free_timewait_sock_slab;
- 	}
- 	list_add(&prot->node, &proto_list);
- 	mutex_unlock(&proto_list_mutex);
- 	return ret;
- 
--out_free_timewait_sock_slab_name:
-+out_free_timewait_sock_slab:
- 	if (alloc_slab && prot->twsk_prot)
--		kfree(prot->twsk_prot->twsk_slab_name);
-+		tw_prot_cleanup(prot->twsk_prot);
- out_free_request_sock_slab:
- 	if (alloc_slab) {
- 		req_prot_cleanup(prot->rsk_prot);
-@@ -3553,12 +3563,7 @@ void proto_unregister(struct proto *prot
- 	prot->slab = NULL;
- 
- 	req_prot_cleanup(prot->rsk_prot);
--
--	if (prot->twsk_prot != NULL && prot->twsk_prot->twsk_slab != NULL) {
--		kmem_cache_destroy(prot->twsk_prot->twsk_slab);
--		kfree(prot->twsk_prot->twsk_slab_name);
--		prot->twsk_prot->twsk_slab = NULL;
--	}
-+	tw_prot_cleanup(prot->twsk_prot);
- }
- EXPORT_SYMBOL(proto_unregister);
- 
++	spec->micmute_led_polarity = 1;
+ 	alc_fixup_hp_gpio_led(codec, action, 0, 0x04);
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+ 		spec->init_amp = ALC_INIT_DEFAULT;
 
 
