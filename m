@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D61CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88269C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1530223A83
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABB023730
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677934;
-	bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
+	s=default; t=1597677943;
+	bh=E5VFAU4pKlcc7oy2AktMdjxV68dwiIrYRVznhcynNiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ei7BDoB6AaIO8W2RAylvuObH1z7ASO6UITb/r7rdj72t1/NgSJPJZ1Fg31Zub25JD
-	 D1T829GRenCTA8R1bPMghar1bGdARz8wleDC4XfQ5a9ol0sbe8TSwe/PFe7l0E7l3i
-	 AXpJwJ2g9SX2tT/7GtRmvg1lixmbLeyhim7WJlTw=
+	b=EGnBaK2rE4kgClHKgUSCF6bxwSmw/HWEjYh7mpxGjNmm3XDEd79RBydEkEEzQmz47
+	 edEPllkGPLJJX1J75W4boHhsgVFcEsUzY7cLFfWIzzcsucDZPBNE1KC2jZlEZWYoK7
+	 KTNoTHanwk3E9JSFgeYOSagvsmZRNOJ4+cgWWVKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgHQPZ2 (ORCPT
+        id S1729457AbgHQPZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52464 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:25:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgHQPXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:53 -0400
+        id S1729609AbgHQPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E54322B4E;
-        Mon, 17 Aug 2020 15:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33EB23384;
+        Mon, 17 Aug 2020 15:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677832;
-        bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
+        s=default; t=1597677844;
+        bh=E5VFAU4pKlcc7oy2AktMdjxV68dwiIrYRVznhcynNiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNtfH1d5rDC2z6hLmpVqbe48LiuBK/iWe3Uxi3Pv5aj0CmxW/2nBGNXcp8R+K1x4Y
-         klcAO36x9zJ2fvaOCNDYa1LNKyyVGqoRXpSPwFEFlhktI/cnuQQsGxFCLleeIyvxCx
-         zwX8FAIlPwULGAarHN2MsHshR0H3gwTe3VQst1w0=
+        b=ojGfpIfNoNTCIxJ6IKbK4Am/6gvyeW3cbobdjak8zrfsEiL7Zw/4Ry7fyVnMVta++
+         3I4cujWKfZhu0baEowqn7Z1PdeI4pQWhax9s6NSCmurN99KqIyuogxcCZaEb2WVnFA
+         3FbF8paiXg4Gc2Yj6fl+GkjgMlaAU9XoFSRPemYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 094/464] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
-Date:   Mon, 17 Aug 2020 17:10:47 +0200
-Message-Id: <20200817143838.293313598@linuxfoundation.org>
+        stable@vger.kernel.org, Sasi Kumar <sasi.kumar@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 129/464] bdc: Fix bug causing crash after multiple disconnects
+Date:   Mon, 17 Aug 2020 17:11:22 +0200
+Message-Id: <20200817143839.992041992@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,66 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+From: Sasi Kumar <sasi.kumar@broadcom.com>
 
-[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
+[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
 
-hi3660-hikey960.dts:
-  Define a 'ports' node for 'adv7533: adv7533@39' and the
-  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
-  binding.
+Multiple connects/disconnects can cause a crash on the second
+disconnect. The driver had a problem where it would try to send
+endpoint commands after it was disconnected which is not allowed
+by the hardware. The fix is to only allow the endpoint commands
+when the endpoint is connected. This will also fix issues that
+showed up when using configfs to create gadgets.
 
-  This fills the requirements to meet the binding requirements,
-  remote endpoints are not defined.
-
-hi6220-hikey.dts:
-  Change property name s/pd-gpio/pd-gpios, gpio properties should be
-  plural. This is just a cosmetic change.
-
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
+ drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e035cf195b19a..8c4bfbaf3a806 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
- 		status = "ok";
- 		compatible = "adi,adv7533";
- 		reg = <0x39>;
-+		adi,dsi-lanes = <4>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+			};
-+			port@1 {
-+				reg = <1>;
-+			};
-+		};
- 	};
- };
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 02a3a774670b1..5fde5a8b065c1 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 	 * in that case reinit is passed as 1
+ 	 */
+ 	if (reinit) {
++		int i;
+ 		/* Enable interrupts */
+ 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
+ 		temp |= BDC_GIE;
+@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 		/* Initialize SRR to 0 */
+ 		memset(bdc->srr.sr_bds, 0,
+ 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
++		/* clear ep flags to avoid post disconnect stops/deconfigs */
++		for (i = 1; i < bdc->num_eps; ++i)
++			bdc->bdc_ep_array[i]->flags = 0;
+ 	} else {
+ 		/* One time initiaization only */
+ 		/* Enable status report function pointers */
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+index d49c6dc1082dc..9ddc0b4e92c9c 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
+ 	}
+ 	bdc_dbg_bd_list(bdc, ep);
+ 	/* only for ep0: config ep is called for ep0 from connect event */
+-	ep->flags |= BDC_EP_ENABLED;
+ 	if (ep->ep_num == 1)
+ 		return ret;
  
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index c14205cd6bf5c..3e47150c05ec2 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -516,7 +516,7 @@ adv7533: adv7533@39 {
- 		reg = <0x39>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <1 2>;
--		pd-gpio = <&gpio0 4 0>;
-+		pd-gpios = <&gpio0 4 0>;
- 		adi,dsi-lanes = <4>;
- 		#sound-dai-cells = <0>;
+@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
+ 					__func__, ep->name, start_bdi, end_bdi);
+ 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
+ 						ep, (void *)ep->usb_ep.desc);
+-	/* Stop the ep to see where the HW is ? */
+-	ret = bdc_stop_ep(bdc, ep->ep_num);
+-	/* if there is an issue with stopping ep, then no need to go further */
+-	if (ret)
++	/* if still connected, stop the ep to see where the HW is ? */
++	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
++		ret = bdc_stop_ep(bdc, ep->ep_num);
++		/* if there is an issue, then no need to go further */
++		if (ret)
++			return 0;
++	} else
+ 		return 0;
  
+ 	/*
+@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
+ 		__func__, ep->name, ep->flags);
+ 
+ 	if (!(ep->flags & BDC_EP_ENABLED)) {
+-		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
++		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
++			dev_warn(bdc->dev, "%s is already disabled\n",
++				 ep->name);
+ 		return 0;
+ 	}
+ 	spin_lock_irqsave(&bdc->lock, flags);
 -- 
 2.25.1
 
