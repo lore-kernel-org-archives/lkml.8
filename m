@@ -2,99 +2,112 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A94620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53032078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skok8w30"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtvONkuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgHQKsv (ORCPT
+        id S1728008AbgHQKtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46732 "EHLO
+        Mon, 17 Aug 2020 06:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgHQKsl (ORCPT
+        with ESMTP id S1727942AbgHQKsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:48:41 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04958C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:48:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 189so7292995pgg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:48:40 -0700 (PDT)
+        Mon, 17 Aug 2020 06:48:43 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21799C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:48:43 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s15so7927816pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:48:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6l78lXwR/yjlw8bo2gFOnw4SGZQb3C/vx4zGLauS1as=;
-        b=skok8w30JX83F/n0CTjywpZkjOauFx8e98U3T7xkSpAcx2wxT90ofOzO80ro0566IG
-         BKWfbDesOgk8d3hUECshOfwo4bG0AsItZi7foV3vbE8wc8MbGopUvz0gTi2UVG90o7f2
-         S0fnXrUgHt/LBmvl33phs5qfPVkaUViRiMo1L3NGyalsmL2POsEvDFjuwJRVBR/3z8hm
-         1/wLPnHVnbMQ8Yn/4/7WsKdsEjR9o7vhFA2S72++Ff+4IQ3+vgw/vOw+jdWEGiAGm49W
-         aJK/xR3ReEVeUET3G8W8Uj8E7L4Kjt7u5ehTWzZXgyRTlBHgl8MBLibjN1ZdXq07TItn
-         tPqw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wr09/zFN7INgSL/hkVohJfKLUB87eURQe5zN5T5ukzo=;
+        b=OtvONkuDX/JtzqrfZY+TxOmI8lyI6PDeI7k0FZY4qhEoncR0+soBHQhZtFjF+usPRr
+         1ze3nfbc20Yp138T4zZo9DT0pewwaoxDysUNteVuUtIDF2hujacA6Q3psOT5Z5fIRUvA
+         7AA2UQAqLT8wzZRDIUyIs926/HYiA6IESW69ySeDrPIHSLiNuP3N2VZDxNBeWESNDs2v
+         A44H2aMiCroqhnMQ+PFB3M9db6eSphx7/EQYSPUcryYwFurEIX+Asq8+61bSQFLg12Ap
+         ca15SA0pY/9Q3rQ5DeTExsJxb0163NuzzVEQ1fZFn92QDJmHQzAZwVP3Ilban7ZtCZV7
+         f9yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6l78lXwR/yjlw8bo2gFOnw4SGZQb3C/vx4zGLauS1as=;
-        b=F1eeZYjdI27kLp4RhSyW5IRjr1OXAKKjhaeZWhm1GWVJuH10R1dzIWEcYtMUN6L+DI
-         Qap+KbaVEc6Y2zoslyvxC+Ekxfs7GnW1r2VKQaPEbu58Hs0DYXFVcWmx4KyIWZSYC4Vg
-         pwAsC7zkIliLkv2mkucyufTvuO3eoX5c16q2kCZUhdvwyHzLc4IbFGXWJzDc6tXAKTgX
-         gvbWOpuihW0z8UJwkUTBpTHTuPH3+VUw0pASc4tmu3WCmoY9wV+Rpc4Dd7zA+tEAMg6x
-         fFciQJnoTLZzOv06N92geqjot4nMzvEvqbCIH30ZMoEOwZilucQhpqsFPO21jAcHgJZw
-         Ursg==
-X-Gm-Message-State: AOAM530vOOH7X+d/YOsvvp18XJHiQHCUFXwaQVnwCEHGyc58vUZx6PvQ
-        nNrSHYpu8AUyHfof1yPatiw=
-X-Google-Smtp-Source: ABdhPJxEwBbdlU1Kyyt1rmPfqNt8TJgGT5wdmGswAeFJAmpELOGqZ+rxlTl/nd+KcDgI4ZEdf6t1/A==
-X-Received: by 2002:a62:7853:: with SMTP id t80mr10868286pfc.47.1597661319769;
-        Mon, 17 Aug 2020 03:48:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wr09/zFN7INgSL/hkVohJfKLUB87eURQe5zN5T5ukzo=;
+        b=bENQG2Avi9F4UnKKdfh4EtAC4RAl4sTBRwnIX3oZE3uvCZ2JBPLuD1RC0OaCqt2xl6
+         +9ETaq9DTMWQ/G5dYrofYiEtE1MEzqCeECPeZsx+cfIbxNniW0eSwm1A19Lxj0nyJp5O
+         0f0forNjwk1PC4LlFz+Vv/Tfj8udf/hKV6gFI0PPmVuKJ0NUrWAEj6HgGQRW/F7ehaAt
+         27TjvCCCyqaBYV1NaXwGAiO6okik+o5DQ2lOt+42TJFAC47+3y3ovFOnK3Ilb42ylG/+
+         SdwOq1doqLac/kexEqz6sgLbzuRS1ZvT0pG/rUvH8eBH3VOXfr3qdcG9iDBUszCyVHLh
+         tOmA==
+X-Gm-Message-State: AOAM531D/3+HRF1OjQcb5io3sh0Vfv8YGMC4aH/K8gT6HJhs2niuN9rV
+        8u2n2VlQjZgdMhZMFlUB57oweXa4to0=
+X-Google-Smtp-Source: ABdhPJypfnuZ3OolRwpPhckjGq08CPfzsBhlNMD0yOvzvwP6FwnpGP6tL5N7eubwyT2d0PQIaARwGQ==
+X-Received: by 2002:a62:26c2:: with SMTP id m185mr11042846pfm.115.1597661322750;
+        Mon, 17 Aug 2020 03:48:42 -0700 (PDT)
 Received: from localhost.localdomain ([2402:7500:577:c217:67e6:a40c:a3bf:1945])
-        by smtp.gmail.com with ESMTPSA id k12sm16976528pjp.38.2020.08.17.03.48.36
+        by smtp.gmail.com with ESMTPSA id k12sm16976528pjp.38.2020.08.17.03.48.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Aug 2020 03:48:39 -0700 (PDT)
+        Mon, 17 Aug 2020 03:48:42 -0700 (PDT)
 From:   Gene Chen <gene.chen.richtek@gmail.com>
 To:     lee.jones@linaro.org, matthias.bgg@gmail.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         gene_chen@richtek.com, benjamin.chao@mediatek.com,
         shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: [PATCH v4 0/9] mfd: mt6360: Merge different sub-devices I2C read/write
-Date:   Mon, 17 Aug 2020 18:47:48 +0800
-Message-Id: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
+Subject: [PATCH v4 1/9] mfd: mt6360: Rearrange include file
+Date:   Mon, 17 Aug 2020 18:47:49 +0800
+Message-Id: <1597661277-27862-2-git-send-email-gene.chen.richtek@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series merge different sub-device I2C read/write into one Regmap and
-fix coding style for well-organized.
+From: Gene Chen <gene_chen@richtek.com>
 
-Gene Chen (9)
-  mfd: mt6360: Rearrange include file
-  mfd: mt6360: Remove redundant brackets around raw numbers
-  mfd: mt6360: Indicate sub-dev compatible name by using
-  mfd: mt6360: Combine mt6360 pmic/ldo resources into mt6360
-  mfd: mt6360: Rename mt6360_pmu_data by mt6360_ddata
-  mfd: mt6360: Rename mt6360_pmu by mt6360
-  mfd: mt6360: Remove handle_post_irq callback function
-  mfd: mt6360: Fix flow which is used to check ic exist
-  mfd: mt6360: Merge different sub-devices I2C read/write
+Rearrange include file without sorting by alphabet.
 
- b/drivers/mfd/Kconfig       |    1 
- b/drivers/mfd/mt6360-core.c |  550 +++++++++++++++++++++++++++++---------------
- include/linux/mfd/mt6360.h  |  240 -------------------
- 3 files changed, 368 insertions(+), 423 deletions(-)
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+---
+ drivers/mfd/mt6360-core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-changelogs between v2 & v3
-- Replace mt6360_data to mt6360_ddata
-- Split I2C read/write to regmap driver
-
-changelogs between v3 & v4
-- Merge back mt6360 regmap driver to MFD driver
+diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+index e9cacc2..c7a955f 100644
+--- a/drivers/mfd/mt6360-core.c
++++ b/drivers/mfd/mt6360-core.c
+@@ -5,15 +5,14 @@
+  * Author: Gene Chen <gene_chen@richtek.com>
+  */
+ 
++#include <linux/crc8.h>
+ #include <linux/i2c.h>
+-#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/core.h>
+ #include <linux/module.h>
+-#include <linux/of_irq.h>
+-#include <linux/of_platform.h>
+-#include <linux/version.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
+ 
+ #include <linux/mfd/mt6360.h>
+ 
+-- 
+2.7.4
 
