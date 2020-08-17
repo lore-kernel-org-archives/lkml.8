@@ -2,109 +2,125 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58261C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44367205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DA8205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597690842;
+	bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C+acrsqOj+dFQs/XnI8Clhy+/du7goiGYgLHxE0QxIYxkwGnRZ/rR1VVP6UX2Ng7Z
+	 KTijNT/neU+Y2yoQ1ogQepUACAXHq4AhSvmGmxZ4lJ/eHBSIZUKZJXdxfbiDEq0FxD
+	 4MgY5SpltCWjoV4/KyGbXf9322Lvf8/Ra0z3ZoDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403991AbgHQTAc (ORCPT
+        id S2404002AbgHQTAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:00:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14031 "EHLO pegase1.c-s.fr"
+        Mon, 17 Aug 2020 15:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730832AbgHQPsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730842AbgHQPsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:48:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BVdjS6XRmz9vCxl;
-        Mon, 17 Aug 2020 17:47:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HMNM4ubvFG_E; Mon, 17 Aug 2020 17:47:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVdjS5Vhfz9vCxf;
-        Mon, 17 Aug 2020 17:47:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 35ED38B7C2;
-        Mon, 17 Aug 2020 17:48:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id i100p36g_FZq; Mon, 17 Aug 2020 17:48:01 +0200 (CEST)
-Received: from [172.25.230.104] (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA36D8B779;
-        Mon, 17 Aug 2020 17:47:59 +0200 (CEST)
-Subject: Re: [PATCH 10/11] powerpc: use non-set_fs based maccess routines
-To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-11-hch@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <84df68bd-eb66-0105-1f3c-f3b07e5d60e6@csgroup.eu>
-Date:   Mon, 17 Aug 2020 17:47:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357002067C;
+        Mon, 17 Aug 2020 15:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679289;
+        bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oegW66dysqiskC83vyZ1y93AKbVTIl7YHDFHE1+O88AxJFSxF0EK7O8GwtwNUhS9N
+         bZrbwXLIBm6J9gPY/sYa1kHPUNpzzfZ4zQmuVvQbveYVwAG76Zsy9mIshXGEUIUWp1
+         takhr69R9NoJCHcyjVERXOWD7ftASRx7ptmXi8OI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 120/393] crypto: caam - silence .setkey in case of bad key length
+Date:   Mon, 17 Aug 2020 17:12:50 +0200
+Message-Id: <20200817143825.433597223@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200817073212.830069-11-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Horia Geantă <horia.geanta@nxp.com>
+
+[ Upstream commit da6a66853a381864f4b040832cf11f0dbba0a097 ]
+
+In case of bad key length, driver emits "key size mismatch" messages,
+but only for xts(aes) algorithms.
+
+Reduce verbosity by making them visible only when debugging.
+This way crypto fuzz testing log cleans up a bit.
+
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/caam/caamalg.c     | 2 +-
+ drivers/crypto/caam/caamalg_qi.c  | 2 +-
+ drivers/crypto/caam/caamalg_qi2.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index b2f9882bc010f..bf90a4fcabd1f 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -838,7 +838,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index 27e36bdf6163b..315d53499ce85 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -728,7 +728,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	int ret = 0;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 28669cbecf77c..e1b6bc6ef091b 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -1058,7 +1058,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(dev, "key size mismatch\n");
++		dev_dbg(dev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.25.1
 
 
-Le 17/08/2020 à 09:32, Christoph Hellwig a écrit :
-> Provide __get_kernel_nofault and __put_kernel_nofault routines to
-> implement the maccess routines without messing with set_fs and without
-> opening up access to user space.
 
-__get_user_size() opens access to user space. You have to use 
-__get_user_size_allowed() when user access is already allowed (or when 
-not needed to allow it).
-
-Christophe
-
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   arch/powerpc/include/asm/uaccess.h | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> index 00699903f1efca..a31de40ac00b62 100644
-> --- a/arch/powerpc/include/asm/uaccess.h
-> +++ b/arch/powerpc/include/asm/uaccess.h
-> @@ -623,4 +623,20 @@ do {									\
->   		__put_user_goto(*(u8*)(_src + _i), (u8 __user *)(_dst + _i), e);\
->   } while (0)
->   
-> +#define HAVE_GET_KERNEL_NOFAULT
-> +
-> +#define __get_kernel_nofault(dst, src, type, err_label)			\
-> +do {									\
-> +	int __kr_err;							\
-> +									\
-> +	__get_user_size(*((type *)(dst)), (__force type __user *)(src),	\
-> +			sizeof(type), __kr_err);			\
-> +	if (unlikely(__kr_err))						\
-> +		goto err_label;						\
-> +} while (0)
-> +
-> +#define __put_kernel_nofault(dst, src, type, err_label)			\
-> +	__put_user_size_goto(*((type *)(src)),				\
-> +		(__force type __user *)(dst), sizeof(type), err_label)
-> +
->   #endif	/* _ARCH_POWERPC_UACCESS_H */
-> 
