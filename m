@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92724C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D61CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6750C23110
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1530223A83
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677922;
-	bh=OXG6lde0xlK5QBw+e52bLhB7Zjqw0VD/6DAOhjeBn3s=;
+	s=default; t=1597677934;
+	bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVl47tFcxjTfIXhc1oZMfIjBHxKbmaUp8JQII0BOqBx9bCyMb6b6p8cSQAWJOWcTV
-	 kAx89hwwl0uNx27bVCjqlaG3vriAvhzKLiDhlEX8gRFEhvFKEeE7IRcW5kv1l1PbRC
-	 xfVX0YbVfGjFYCVO1sPyl/QrZA65Xj+2tVjEOgTk=
+	b=ei7BDoB6AaIO8W2RAylvuObH1z7ASO6UITb/r7rdj72t1/NgSJPJZ1Fg31Zub25JD
+	 D1T829GRenCTA8R1bPMghar1bGdARz8wleDC4XfQ5a9ol0sbe8TSwe/PFe7l0E7l3i
+	 AXpJwJ2g9SX2tT/7GtRmvg1lixmbLeyhim7WJlTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgHQPZU (ORCPT
+        id S1729316AbgHQPZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52008 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgHQPXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:45 -0400
+        id S1729349AbgHQPXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B4E233EA;
-        Mon, 17 Aug 2020 15:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E54322B4E;
+        Mon, 17 Aug 2020 15:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677825;
-        bh=OXG6lde0xlK5QBw+e52bLhB7Zjqw0VD/6DAOhjeBn3s=;
+        s=default; t=1597677832;
+        bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QhR/u0fd6y7f+fDSu1IdwWLeMHq2tAD7OhYiugTQnoie7mIdMvMLkpFWvEVP2t9xX
-         c7As91EwbfTkSsHx2s9pVzi+GkHZoPqVY3Wu7odo8RR5m/QWuHbQ4DDyD881XqvWX2
-         CvhrGoLBLoiRyU8NvagdvIqTqyL68xQgE6qKu8Dg=
+        b=fNtfH1d5rDC2z6hLmpVqbe48LiuBK/iWe3Uxi3Pv5aj0CmxW/2nBGNXcp8R+K1x4Y
+         klcAO36x9zJ2fvaOCNDYa1LNKyyVGqoRXpSPwFEFlhktI/cnuQQsGxFCLleeIyvxCx
+         zwX8FAIlPwULGAarHN2MsHshR0H3gwTe3VQst1w0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhao Heming <heming.zhao@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 091/464] md-cluster: fix wild pointer of unlock_all_bitmaps()
-Date:   Mon, 17 Aug 2020 17:10:44 +0200
-Message-Id: <20200817143838.148739285@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 094/464] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Mon, 17 Aug 2020 17:10:47 +0200
+Message-Id: <20200817143838.293313598@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,69 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhao Heming <heming.zhao@suse.com>
+From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-[ Upstream commit 60f80d6f2d07a6d8aee485a1d1252327eeee0c81 ]
+[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
 
-reproduction steps:
-```
-node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
-/dev/sdb
-node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb
-node1 # mdadm -G /dev/md0 -b none
-mdadm: failed to remove clustered bitmap.
-node1 # mdadm -S --scan
-^C  <==== mdadm hung & kernel crash
-```
+hi3660-hikey960.dts:
+  Define a 'ports' node for 'adv7533: adv7533@39' and the
+  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+  binding.
 
-kernel stack:
-```
-[  335.230657] general protection fault: 0000 [#1] SMP NOPTI
-[...]
-[  335.230848] Call Trace:
-[  335.230873]  ? unlock_all_bitmaps+0x5/0x70 [md_cluster]
-[  335.230886]  unlock_all_bitmaps+0x3d/0x70 [md_cluster]
-[  335.230899]  leave+0x10f/0x190 [md_cluster]
-[  335.230932]  ? md_super_wait+0x93/0xa0 [md_mod]
-[  335.230947]  ? leave+0x5/0x190 [md_cluster]
-[  335.230973]  md_cluster_stop+0x1a/0x30 [md_mod]
-[  335.230999]  md_bitmap_free+0x142/0x150 [md_mod]
-[  335.231013]  ? _cond_resched+0x15/0x40
-[  335.231025]  ? mutex_lock+0xe/0x30
-[  335.231056]  __md_stop+0x1c/0xa0 [md_mod]
-[  335.231083]  do_md_stop+0x160/0x580 [md_mod]
-[  335.231119]  ? 0xffffffffc05fb078
-[  335.231148]  md_ioctl+0xa04/0x1930 [md_mod]
-[  335.231165]  ? filename_lookup+0xf2/0x190
-[  335.231179]  blkdev_ioctl+0x93c/0xa10
-[  335.231205]  ? _cond_resched+0x15/0x40
-[  335.231214]  ? __check_object_size+0xd4/0x1a0
-[  335.231224]  block_ioctl+0x39/0x40
-[  335.231243]  do_vfs_ioctl+0xa0/0x680
-[  335.231253]  ksys_ioctl+0x70/0x80
-[  335.231261]  __x64_sys_ioctl+0x16/0x20
-[  335.231271]  do_syscall_64+0x65/0x1f0
-[  335.231278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-```
+  This fills the requirements to meet the binding requirements,
+  remote endpoints are not defined.
 
-Signed-off-by: Zhao Heming <heming.zhao@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+hi6220-hikey.dts:
+  Change property name s/pd-gpio/pd-gpios, gpio properties should be
+  plural. This is just a cosmetic change.
+
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-cluster.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 813a99ffa86f8..73fd50e779754 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1518,6 +1518,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
- 			}
- 		}
- 		kfree(cinfo->other_bitmap_lockres);
-+		cinfo->other_bitmap_lockres = NULL;
- 	}
- }
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e035cf195b19a..8c4bfbaf3a806 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+ 		reg = <0x39>;
++		adi,dsi-lanes = <4>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index c14205cd6bf5c..3e47150c05ec2 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -516,7 +516,7 @@ adv7533: adv7533@39 {
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <1 2>;
+-		pd-gpio = <&gpio0 4 0>;
++		pd-gpios = <&gpio0 4 0>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
  
 -- 
 2.25.1
