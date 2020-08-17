@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA51204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BAC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690530;
-	bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+	s=default; t=1597690535;
+	bh=BuJEaREvInwyPxaAcnGoOa/f2RTigPclr2JZ8rA+a6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUphm7oaTpLjJRberm/tjPyr6dNnLuqCYk6q8P6IOeTmtmG6Sc3jd81L2K/0YDryS
-	 OI6u0FKIovHBAt5r9jU+XBVbdOztCTVVTE1iol3ACcmJCrDhAxD7nX8Pv2u4wMK55t
-	 P8XEbknNlfKS/hWjnZxeCZhw0hjEAupFnO1x8Xck=
+	b=FFNh6CkvxJSnihcTEz+hxxlhUq0PKJIsGKYgimShLnHPzPiNOmjqscDXYcJ/a5vKK
+	 5UDSGOn8iBlWrDaPfOxEVgggEAggxIiRaDgTmymiNBpZwaFxp7fg4Jd72UigZzIeEZ
+	 YXsMWzqny7mVkGWKix4TS8VoVefIGthoma0+Bk+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403839AbgHQSz3 (ORCPT
+        id S2403908AbgHQSzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730896AbgHQPuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:52 -0400
+        id S1730647AbgHQPur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5832054F;
-        Mon, 17 Aug 2020 15:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B9EB2065C;
+        Mon, 17 Aug 2020 15:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679452;
-        bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+        s=default; t=1597679446;
+        bh=BuJEaREvInwyPxaAcnGoOa/f2RTigPclr2JZ8rA+a6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S08URsXlDDHWoce6EjCcBzRZZvCT5INI2ZQX7kPXXxsyjaY56O/N/VcmmwELTdJeQ
-         lMoz6qlO0PkFITHeVZb5KSNkPHOEF8UcHkIcHZksfRZdkO4qE22m6FZ0aJYtIKosCQ
-         S0xSHUI1rRxgDCi3a+MGVaDsjA0WP0AQa0NNtd9g=
+        b=n6kd+V9fzYHcYGqZACBeP+I8Se63CFLVFRU9x4U1oW5EUUQBTlqNSWnSnTc25HsCz
+         Zd4NS5sA/lAO0h9IdCP5fzjRtLr5ctkXhkYCeNwQTVUPNT8wjmjWP/kt+CFfTzXOoQ
+         I7tVfLQTXJMr6dE0fAxbAth4peHt8X/+WVf4mFgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 189/393] RDMA/rxe: Skip dgid check in loopback mode
-Date:   Mon, 17 Aug 2020 17:13:59 +0200
-Message-Id: <20200817143828.789045704@linuxfoundation.org>
+Subject: [PATCH 5.7 214/393] ASoC: meson: fixes the missed kfree() for axg_card_add_tdm_loopback
+Date:   Mon, 17 Aug 2020 17:14:24 +0200
+Message-Id: <20200817143830.007216996@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,70 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+From: Jing Xiangfeng <jingxiangfeng@huawei.com>
 
-[ Upstream commit 5c99274be8864519328aa74bc550ba410095bc1c ]
+[ Upstream commit bd054ece7d9cdd88e900df6625e951a01d9f655e ]
 
-In the loopback tests, the following call trace occurs.
+axg_card_add_tdm_loopback() misses to call kfree() in an error path. We
+can use devm_kasprintf() to fix the issue, also improve maintainability.
+So use it instead.
 
- Call Trace:
-  __rxe_do_task+0x1a/0x30 [rdma_rxe]
-  rxe_qp_destroy+0x61/0xa0 [rdma_rxe]
-  rxe_destroy_qp+0x20/0x60 [rdma_rxe]
-  ib_destroy_qp_user+0xcc/0x220 [ib_core]
-  uverbs_free_qp+0x3c/0xc0 [ib_uverbs]
-  destroy_hw_idr_uobject+0x24/0x70 [ib_uverbs]
-  uverbs_destroy_uobject+0x43/0x1b0 [ib_uverbs]
-  uobj_destroy+0x41/0x70 [ib_uverbs]
-  __uobj_get_destroy+0x39/0x70 [ib_uverbs]
-  ib_uverbs_destroy_qp+0x88/0xc0 [ib_uverbs]
-  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb9/0xf0 [ib_uverbs]
-  ib_uverbs_cmd_verbs+0xb16/0xc30 [ib_uverbs]
-
-The root cause is that the actual RDMA connection is not created in the
-loopback tests and the rxe_match_dgid will fail randomly.
-
-To fix this call trace which appear in the loopback tests, skip check of
-the dgid.
-
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200630123605.446959-1-leon@kernel.org
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200717082242.130627-1-jingxiangfeng@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/soc/meson/axg-card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index 831ad578a7b29..46e111c218fd4 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -330,10 +330,14 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
+diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+index 89f7f64747cd0..47f2d93224fea 100644
+--- a/sound/soc/meson/axg-card.c
++++ b/sound/soc/meson/axg-card.c
+@@ -116,7 +116,7 @@ static int axg_card_add_tdm_loopback(struct snd_soc_card *card,
  
- static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
- {
-+	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
- 	const struct ib_gid_attr *gid_attr;
- 	union ib_gid dgid;
- 	union ib_gid *pdgid;
+ 	lb = &card->dai_link[*index + 1];
  
-+	if (pkt->mask & RXE_LOOPBACK_MASK)
-+		return 0;
-+
- 	if (skb->protocol == htons(ETH_P_IP)) {
- 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
- 				       (struct in6_addr *)&dgid);
-@@ -366,7 +370,7 @@ void rxe_rcv(struct sk_buff *skb)
- 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
- 		goto drop;
+-	lb->name = kasprintf(GFP_KERNEL, "%s-lb", pad->name);
++	lb->name = devm_kasprintf(card->dev, GFP_KERNEL, "%s-lb", pad->name);
+ 	if (!lb->name)
+ 		return -ENOMEM;
  
--	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
-+	if (rxe_match_dgid(rxe, skb) < 0) {
- 		pr_warn_ratelimited("failed matching dgid\n");
- 		goto drop;
- 	}
 -- 
 2.25.1
 
