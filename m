@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ABDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 616C12075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A1D2076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="E7jiwY3H"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qB2IfX5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgHQNNS (ORCPT
+        id S1728851AbgHQNNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:13:18 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:22355 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgHQNMb (ORCPT
+        Mon, 17 Aug 2020 09:13:44 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:32892 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728395AbgHQNMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:12:31 -0400
+        Mon, 17 Aug 2020 09:12:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597669951; x=1629205951;
+  t=1597669964; x=1629205964;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=htnncjjl+S5fLaxkynUMEyDjHBhcTj+SwhLxbd25kfA=;
-  b=E7jiwY3H8U+uo3nIAhgiDAquKos+z+q0OhkexSKELrcTo8X4tEIF32bL
-   ScQisNfcyXFsn7KB6pHkgH7CW8CWVjT416mJ9Dj01npU1etC9VAi2Ie5b
-   n+w/Mcr27Vo7577vxfOftjXEAvxzhQkeTj2sAogsELHiQs77+qAVxHlqM
-   k=;
+  bh=p5B8InopTH0GMSrY5JLiA61CEjkmlA6ymqcnQfODCWw=;
+  b=qB2IfX5VCkqpkMm4EgofnN00U67w9Kx4k/3nil8dqWV80UcX7xrko3Cg
+   pkUVPSn7sm3ZVI4f8u7yPbMQHuWw8TlQD5UXMy+Cktv8vWVaHks2umo2I
+   mM2Br+UnE7Y+bBs+s0xJ3lrR2HJ3gJ72BybTF5UAdq2HNdU6gQLeGou20
+   I=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48202812"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Aug 2020 13:12:30 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 7ACB8A04EA;
-        Mon, 17 Aug 2020 13:12:27 +0000 (UTC)
+   d="scan'208";a="48113486"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Aug 2020 13:12:43 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id CE292A237B;
+        Mon, 17 Aug 2020 13:12:41 +0000 (UTC)
 Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:12:26 +0000
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:41 +0000
 Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.228) by
  EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:12:13 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:32 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -70,9 +70,9 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v7 12/18] nitro_enclaves: Add logic for starting an enclave
-Date:   Mon, 17 Aug 2020 16:09:57 +0300
-Message-ID: <20200817131003.56650-13-andraprs@amazon.com>
+Subject: [PATCH v7 14/18] nitro_enclaves: Add Kconfig for the Nitro Enclaves driver
+Date:   Mon, 17 Aug 2020 16:09:59 +0300
+Message-ID: <20200817131003.56650-15-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200817131003.56650-1-andraprs@amazon.com>
 References: <20200817131003.56650-1-andraprs@amazon.com>
@@ -87,185 +87,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After all the enclave resources are set, the enclave is ready for
-beginning to run.
-
-Add ioctl command logic for starting an enclave after all its resources,
-memory regions and CPUs, have been set.
-
-The enclave start information includes the local channel addressing -
-vsock CID - and the flags associated with the enclave.
-
-Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
 Changelog
 
 v6 -> v7
 
-* Update the naming and add more comments to make more clear the logic
-  of handling full CPU cores and dedicating them to the enclave.
+* Remove, for now, the dependency on ARM64 arch. x86 is currently
+  supported, with Arm to come afterwards. The NE kernel driver can be
+  built for aarch64 arch.
 
 v5 -> v6
 
-* Check for invalid enclave start flags.
-* Update documentation to kernel-doc format.
+* No changes.
 
 v4 -> v5
 
-* Add early exit on enclave start ioctl function call error.
-* Move sanity checks in the enclave start ioctl function, outside of the
-  switch-case block.
-* Remove log on copy_from_user() / copy_to_user() failure.
+* Add arch dependency for Arm / x86.
 
 v3 -> v4
 
-* Use dev_err instead of custom NE log pattern.
-* Update the naming for the ioctl command from metadata to info.
-* Check for minimum enclave memory size.
+* Add PCI and SMP dependencies.
 
 v2 -> v3
 
-* Remove the WARN_ON calls.
-* Update static calls sanity checks.
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
 
 v1 -> v2
 
-* Add log pattern for NE.
-* Check if enclave state is init when starting an enclave.
-* Remove the BUG_ON calls.
+* Update path to Kconfig to match the drivers/virt/nitro_enclaves
+  directory.
+* Update help in Kconfig.
 ---
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 109 ++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+ drivers/virt/Kconfig                |  2 ++
+ drivers/virt/nitro_enclaves/Kconfig | 20 ++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 drivers/virt/nitro_enclaves/Kconfig
 
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 3d8a771bde1d..be81ff5634af 100644
---- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -957,6 +957,77 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
- 	return rc;
- }
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index cbc1f25c79ab..80c5f9c16ec1 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -32,4 +32,6 @@ config FSL_HV_MANAGER
+ 	     partition shuts down.
  
-+/**
-+ * ne_start_enclave_ioctl() - Trigger enclave start after the enclave resources,
-+ *			      such as memory and CPU, have been set.
-+ * @ne_enclave :		Private data associated with the current enclave.
-+ * @enclave_start_info :	Enclave info that includes enclave cid and flags.
-+ *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_start_enclave_ioctl(struct ne_enclave *ne_enclave,
-+	struct ne_enclave_start_info *enclave_start_info)
-+{
-+	struct ne_pci_dev_cmd_reply cmd_reply = {};
-+	unsigned int cpu = 0;
-+	struct enclave_start_req enclave_start_req = {};
-+	unsigned int i = 0;
-+	int rc = -EINVAL;
+ source "drivers/virt/vboxguest/Kconfig"
 +
-+	if (!ne_enclave->nr_mem_regions) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no mem regions\n");
++source "drivers/virt/nitro_enclaves/Kconfig"
+ endif
+diff --git a/drivers/virt/nitro_enclaves/Kconfig b/drivers/virt/nitro_enclaves/Kconfig
+new file mode 100644
+index 000000000000..8c9387a232df
+--- /dev/null
++++ b/drivers/virt/nitro_enclaves/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 +
-+		return -NE_ERR_NO_MEM_REGIONS_ADDED;
-+	}
++# Amazon Nitro Enclaves (NE) support.
++# Nitro is a hypervisor that has been developed by Amazon.
 +
-+	if (ne_enclave->mem_size < NE_MIN_ENCLAVE_MEM_SIZE) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave memory is less than %ld\n",
-+				    NE_MIN_ENCLAVE_MEM_SIZE);
++# TODO: Add dependency for ARM64 once NE is supported on Arm platforms. For now,
++# the NE kernel driver can be built for aarch64 arch.
++# depends on (ARM64 || X86) && HOTPLUG_CPU && PCI && SMP
 +
-+		return -NE_ERR_ENCLAVE_MEM_MIN_SIZE;
-+	}
++config NITRO_ENCLAVES
++	tristate "Nitro Enclaves Support"
++	depends on X86 && HOTPLUG_CPU && PCI && SMP
++	help
++	  This driver consists of support for enclave lifetime management
++	  for Nitro Enclaves (NE).
 +
-+	if (!ne_enclave->nr_vcpus) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no vCPUs\n");
-+
-+		return -NE_ERR_NO_VCPUS_ADDED;
-+	}
-+
-+	for (i = 0; i < ne_enclave->nr_parent_vm_cores; i++)
-+		for_each_cpu(cpu, ne_enclave->threads_per_core[i])
-+			if (!cpumask_test_cpu(cpu, ne_enclave->vcpu_ids)) {
-+				dev_err_ratelimited(ne_misc_dev.this_device,
-+						    "Full CPU cores not used\n");
-+
-+				return -NE_ERR_FULL_CORES_NOT_USED;
-+			}
-+
-+	enclave_start_req.enclave_cid = enclave_start_info->enclave_cid;
-+	enclave_start_req.flags = enclave_start_info->flags;
-+	enclave_start_req.slot_uid = ne_enclave->slot_uid;
-+
-+	rc = ne_do_request(ne_enclave->pdev, ENCLAVE_START, &enclave_start_req,
-+			   sizeof(enclave_start_req), &cmd_reply, sizeof(cmd_reply));
-+	if (rc < 0) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Error in enclave start [rc=%d]\n", rc);
-+
-+		return rc;
-+	}
-+
-+	ne_enclave->state = NE_STATE_RUNNING;
-+
-+	enclave_start_info->enclave_cid = cmd_reply.enclave_cid;
-+
-+	return 0;
-+}
-+
- /**
-  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
-  * @file:	File associated with this ioctl function.
-@@ -1105,6 +1176,44 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
- 	}
- 
-+	case NE_START_ENCLAVE: {
-+		struct ne_enclave_start_info enclave_start_info = {};
-+		int rc = -EINVAL;
-+
-+		if (copy_from_user(&enclave_start_info, (void __user *)arg,
-+				   sizeof(enclave_start_info)))
-+			return -EFAULT;
-+
-+		if (enclave_start_info.flags >= NE_ENCLAVE_START_MAX_FLAG_VAL)
-+			return -EINVAL;
-+
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
-+
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
-+
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return -NE_ERR_NOT_IN_INIT_STATE;
-+		}
-+
-+		rc = ne_start_enclave_ioctl(ne_enclave, &enclave_start_info);
-+		if (rc < 0) {
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return rc;
-+		}
-+
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+		if (copy_to_user((void __user *)arg, &enclave_start_info,
-+				 sizeof(enclave_start_info)))
-+			return -EFAULT;
-+
-+		return 0;
-+	}
-+
- 	default:
- 		return -ENOTTY;
- 	}
++	  To compile this driver as a module, choose M here.
++	  The module will be called nitro_enclaves.
 -- 
 2.20.1 (Apple Git-117)
 
