@@ -2,98 +2,121 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA27C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7BB2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EE420578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689446;
-	bh=ZvpahDhkg89FNBXKuOcFyLEElSuru0O/KnHA7e6cObA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CtjLvSKKNsBYrMsutMAjG6EJplSt5Wi2QU7hkDsZxdaarJtG5TD3DqU8e7L9mYQAQ
-	 ZgU+5X2VkxaqXB5As9UCzKGr3YGSgvCmPDC33Kt0gnQsCAGtUPjrIDdc/oUNp5+bHF
-	 1lW+nAhIlfq/bqZUJurpydJEJYAeUK/BWYhgD120=
+	s=default; t=1597689460;
+	bh=bG8t/xepkdf4mxiEc3Yj/rM9RKATeDbJ8MdTAc8pIqU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rBN32MWtobwRGxKMg4uQJWdzeDMEkWgo/9b/tSFa9dI8+McqALffmuxbApgU+TFSu
+	 fEwJPqhSntF0p0+/OLgsigx4CUdpFcRWJFX3LOTG0Kf+fv52eF+5+IopqP0EgP+HIs
+	 UXIgXJnU2dSiwA3nZeS8Mbw8rNKfbYlC7tpJ8sm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbgHQShY (ORCPT
+        id S1731018AbgHQShj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:37:24 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45976 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390329AbgHQShP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:37:15 -0400
-Received: by mail-ed1-f66.google.com with SMTP id di22so13101765edb.12;
-        Mon, 17 Aug 2020 11:37:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r3OujnDYBJiMjjYF4tDkGDXWRYlpy502WI/tJfc+oIw=;
-        b=AdiZG3DOxzwQcOXiC68Lm2Lw0MrcEChq7segwFnNK6zSXe9Kzj9AchQ04RtFUDinm9
-         5rb0uzxrXlMrYsrGjwHrddfyqArWI9UZW4hHysYFV5jdm1tzz44IXTvOqIEBbzcTHkQ3
-         VlvN0o8lbiap2v1IVWm3T174IrEXxBrRGH2eu2cb0ndfpPkvMexLlrVuVOJmYGLYdPsQ
-         aaA9JFfu+TCyXRW/yxXi+n+TivwZVUBKoCDkjxviWLVFXgzr+ocSazEappoDwqu8CIeb
-         2N1cDwl8mLUDobFbtqmqDHemiCTNhT3IvRuxZG+rEBApX6cKWz8+e8dxCfuFmNOWh3Ev
-         1y5g==
-X-Gm-Message-State: AOAM533rigNJZPlYelpXEHInRVur5DDKoTCS2tou3vmzvy8A7x7w7leC
-        L8MBKmF26fGz0uh0Oeckpbw=
-X-Google-Smtp-Source: ABdhPJwXp0oWcKnxB/vu/Vh1NkpFBtizO0iqHqdEUD+yH3nZv5VYR3Vw6iHDWpHXbr2EI4z3rHuuow==
-X-Received: by 2002:a05:6402:b45:: with SMTP id bx5mr16373796edb.22.1597689433351;
-        Mon, 17 Aug 2020 11:37:13 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id c7sm14179668edf.1.2020.08.17.11.37.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Aug 2020 11:37:12 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 20:37:09 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-pm@vger.kernel.orgq
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 10/16] memory: omap-gpmc: Consistently use !res for NULL
- checks
-Message-ID: <20200817183709.GH3464@kozik-lap>
-References: <20200724182328.3348-1-krzk@kernel.org>
- <20200724182328.3348-11-krzk@kernel.org>
+        Mon, 17 Aug 2020 14:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730945AbgHQP7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27920206FA;
+        Mon, 17 Aug 2020 15:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679940;
+        bh=bG8t/xepkdf4mxiEc3Yj/rM9RKATeDbJ8MdTAc8pIqU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=af/XlmM/TAUvgHJLkHlp1FowPdXDp+9D+NGgKiy94JAUBEDhecy4icxyOwHhsKAhN
+         ORWMEOX1iIOFD6k6I/VC5xJzBHIShY7+MwmuV9oQxhLwwlEVa9Ncp/xoRfSbJHGnwm
+         K/629xnoCuN5gTUIOgSt6k+rSicfI1c+6v5AbMNI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef <josef.grieb@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 356/393] io_uring: use TWA_SIGNAL for task_work uncondtionally
+Date:   Mon, 17 Aug 2020 17:16:46 +0200
+Message-Id: <20200817143836.867157350@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724182328.3348-11-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 08:23:22PM +0200, Krzysztof Kozlowski wrote:
-> The driver already uses 'if (!res)' pattern in the probe function so be
-> consistent.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/omap-gpmc.c | 2 +-
+From: Jens Axboe <axboe@kernel.dk>
 
-Applied.
+commit 0ba9c9edcd152158a0e321a4c13ac1dfc571ff3d upstream.
 
-Best regards,
-Krzysztof
+An earlier commit:
+
+b7db41c9e03b ("io_uring: fix regression with always ignoring signals in io_cqring_wait()")
+
+ensured that we didn't get stuck waiting for eventfd reads when it's
+registered with the io_uring ring for event notification, but we still
+have cases where the task can be waiting on other events in the kernel and
+need a bigger nudge to make forward progress. Or the task could be in the
+kernel and running, but on its way to blocking.
+
+This means that TWA_RESUME cannot reliably be used to ensure we make
+progress. Use TWA_SIGNAL unconditionally.
+
+Cc: stable@vger.kernel.org # v5.7+
+Reported-by: Josef <josef.grieb@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/io_uring.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4161,22 +4161,22 @@ static int io_req_task_work_add(struct i
+ {
+ 	struct task_struct *tsk = req->task;
+ 	struct io_ring_ctx *ctx = req->ctx;
+-	int ret, notify = TWA_RESUME;
++	int ret, notify;
+ 
+ 	/*
+-	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
+-	 * If we're not using an eventfd, then TWA_RESUME is always fine,
+-	 * as we won't have dependencies between request completions for
+-	 * other kernel wait conditions.
++	 * SQPOLL kernel thread doesn't need notification, just a wakeup. For
++	 * all other cases, use TWA_SIGNAL unconditionally to ensure we're
++	 * processing task_work. There's no reliable way to tell if TWA_RESUME
++	 * will do the job.
+ 	 */
+-	if (ctx->flags & IORING_SETUP_SQPOLL)
+-		notify = 0;
+-	else if (ctx->cq_ev_fd)
++	notify = 0;
++	if (!(ctx->flags & IORING_SETUP_SQPOLL))
+ 		notify = TWA_SIGNAL;
+ 
+ 	ret = task_work_add(tsk, cb, notify);
+ 	if (!ret)
+ 		wake_up_process(tsk);
++
+ 	return ret;
+ }
+ 
+
 
