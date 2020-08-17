@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7023AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F8D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AFE20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680717;
-	bh=bXOSpFUr15VAm3bVAU/GBKdHAAr5b+vERnYtChHHRIU=;
+	s=default; t=1597680729;
+	bh=vQjJ6UcD+doQVa+pDtluqxrSBvd9GD0lW9GeyRa4m7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhgIkgQgC8hnH5A8legfChBMifvlmrj4hGs9BWM/BrySYQVRLQvUmRZkvmFBjcf0Q
-	 njO8W1MTAxPK1S7LDd3OwixOE6J0C+b2CQ/X7Nr+ip/yoi0420nj1LGsZokBwxOSew
-	 2oSgLB5E/WFdeJiYGVb1lbZ1rPdJChS3HB5gAHoQ=
+	b=s5A5CpgNzlElHFrO0ggMxfpfA5b3U/z1fKNRJgtHZl82uv7R+plbyF/kCwjd0aDJD
+	 E5FNxBt3WcBgIO9ZicSlyBPwTeR9qiHWCCqj2eB5Hg+l0WwkIrpy76UcXuTxCV4ZOA
+	 n1yUoR9vLzRmJEtWUhJJptWK2LgdwjhKpjCfSICI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388648AbgHQQLw (ORCPT
+        id S2388663AbgHQQMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbgHQPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:42 -0400
+        id S2387407AbgHQPqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:46:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37A32067C;
-        Mon, 17 Aug 2020 15:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D874020855;
+        Mon, 17 Aug 2020 15:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679201;
-        bh=bXOSpFUr15VAm3bVAU/GBKdHAAr5b+vERnYtChHHRIU=;
+        s=default; t=1597679204;
+        bh=vQjJ6UcD+doQVa+pDtluqxrSBvd9GD0lW9GeyRa4m7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxZFeGXB0kKwMqAVY2cF6xu/lQOiUnk6b8klVdyrHVb7KDoohKOUb7McAYwAWMcpn
-         a0tdZVfW/yBhJIVJaq54S/lxz+1PT0walA2U9lWvDrlIEYVKhB0OxUJf8TK7mdwptW
-         gspuaxdpiRBgulauzfKArHOc77zonkUNcpsP2pZE=
+        b=2S6T/NY6AEnXiG2Sr3MEUth05ktoKN4eJoT/HBb3SHt9OXpXHa6pZoTjVDDVhAmGH
+         TajSNOfah/0GHYvVPZFOKEDOV/KKXh/SL5FkZ1CUOY6EN+RdeXzrq9EmtrflRTMkal
+         iHXEeuZzM935Vb0TCS5EMBw1URPvcSiMfDFtfqyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 131/393] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
-Date:   Mon, 17 Aug 2020 17:13:01 +0200
-Message-Id: <20200817143825.963891853@linuxfoundation.org>
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@osdl.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 132/393] console: newport_con: fix an issue about leak related system resources
+Date:   Mon, 17 Aug 2020 17:13:02 +0200
+Message-Id: <20200817143826.010586163@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -66,38 +65,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
+[ Upstream commit fd4b8243877250c05bb24af7fea5567110c9720b ]
 
-the sfb->fb->screen_base is not save the value get by iounmap() when
-the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
-is not right.
+A call of the function do_take_over_console() can fail here.
+The corresponding system resources were not released then.
+Thus add a call of iounmap() and release_mem_region()
+together with the check of a failure predicate. and also
+add release_mem_region() on device removal.
 
-Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e86bb8acc0fdc ("[PATCH] VT binding: Make newport_con support binding")
+Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@osdl.org>
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20200423164251.3349-1-zhengdejin5@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/console/newport_con.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 6a1b4a853d9ee..8cd655d6d6280 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- static void smtc_unmap_smem(struct smtcfb_info *sfb)
+diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
+index 00dddf6e08b0c..2d2ee17052e83 100644
+--- a/drivers/video/console/newport_con.c
++++ b/drivers/video/console/newport_con.c
+@@ -32,6 +32,8 @@
+ #include <linux/linux_logo.h>
+ #include <linux/font.h>
+ 
++#define NEWPORT_LEN	0x10000
++
+ #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
+ 
+ /* borrowed from fbcon.c */
+@@ -43,6 +45,7 @@
+ static unsigned char *font_data[MAX_NR_CONSOLES];
+ 
+ static struct newport_regs *npregs;
++static unsigned long newport_addr;
+ 
+ static int logo_active;
+ static int topscan;
+@@ -702,7 +705,6 @@ const struct consw newport_con = {
+ static int newport_probe(struct gio_device *dev,
+ 			 const struct gio_device_id *id)
  {
- 	if (sfb && sfb->fb->screen_base) {
-+		if (sfb->chip_id == 0x720)
-+			sfb->fb->screen_base -= 0x00200000;
- 		iounmap(sfb->fb->screen_base);
- 		sfb->fb->screen_base = NULL;
- 	}
+-	unsigned long newport_addr;
+ 	int err;
+ 
+ 	if (!dev->resource.start)
+@@ -712,7 +714,7 @@ static int newport_probe(struct gio_device *dev,
+ 		return -EBUSY; /* we only support one Newport as console */
+ 
+ 	newport_addr = dev->resource.start + 0xF0000;
+-	if (!request_mem_region(newport_addr, 0x10000, "Newport"))
++	if (!request_mem_region(newport_addr, NEWPORT_LEN, "Newport"))
+ 		return -ENODEV;
+ 
+ 	npregs = (struct newport_regs *)/* ioremap cannot fail */
+@@ -720,6 +722,11 @@ static int newport_probe(struct gio_device *dev,
+ 	console_lock();
+ 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
+ 	console_unlock();
++
++	if (err) {
++		iounmap((void *)npregs);
++		release_mem_region(newport_addr, NEWPORT_LEN);
++	}
+ 	return err;
+ }
+ 
+@@ -727,6 +734,7 @@ static void newport_remove(struct gio_device *dev)
+ {
+ 	give_up_console(&newport_con);
+ 	iounmap((void *)npregs);
++	release_mem_region(newport_addr, NEWPORT_LEN);
+ }
+ 
+ static struct gio_device_id newport_ids[] = {
 -- 
 2.25.1
 
