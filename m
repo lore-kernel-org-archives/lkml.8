@@ -2,62 +2,58 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4645AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBD020882
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC6220888
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679578;
-	bh=3vfQKMttlM0pOTyMoFBwaEXl9k9Q1/ngIocA8s8nfjU=;
+	s=default; t=1597679591;
+	bh=TKxSJQ7vNumH47O7qPfVFf/C+OEWYUJDGaHXT7FsDWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCc5bszQXMVSrKlRRPM7ijwQ9rGqcsOe564PoletrB3ftNQMEKYdlA7hZLnkuWhx+
-	 kWWA62cQNHYXTHA1HU63FmKSgYY/6TiMWis5v6tCRMlIBl+XPaSLHuL9/KQjEkwN3v
-	 Xm05hOmZA8wptm+wamtQXYQN2C2UQinP6QXwXfM0=
+	b=MlfZczx/96fuaAgPsy6w6HTppXQ1rN44hbYLZuM1Nxt9qSgbV/vRdmG7pGWWHZxtY
+	 A2NFPA47sgUqn6kcz06FQwzkTP4X+QxOqfeT6pYaqXDBwgowHSTs8XsYhR4uoDCXxO
+	 hI5Wg5MAn4VuYXmcquYJL0JPY+KF8rJA6gx0flT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbgHQPwz (ORCPT
+        id S2387901AbgHQPxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbgHQPkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:43 -0400
+        id S1730684AbgHQPks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 481F32075B;
-        Mon, 17 Aug 2020 15:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B8E207DA;
+        Mon, 17 Aug 2020 15:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678842;
-        bh=3vfQKMttlM0pOTyMoFBwaEXl9k9Q1/ngIocA8s8nfjU=;
+        s=default; t=1597678848;
+        bh=TKxSJQ7vNumH47O7qPfVFf/C+OEWYUJDGaHXT7FsDWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dh1ZpV+X/2Pej+WxVo7EmU2fCW0rGz9YdvGfHJmGx9CoJdr7ajflJPFp2Ylzd4tnQ
-         hbOf6uEBYz/XqNYRMD4EXCY9BE55+PYn0GQZxtBlwRn8RQV2VdsxYUcQMimM3L6aIO
-         3JfyOt7CJfbygP5kI+hMHDFXq+f7hfGuCBbo+zfY=
+        b=2rnHbxHLuApF8P/a+GnvHvJnUl7P1HMEINlMn7KLe8ZLmXqxOUIc/MLUFjywhzj2W
+         P3C4w7RFm43eNucIegLbdACgkZCKonet46e7fY/weYqu16fSrX44Gsm8vx6UFmBoqf
+         M38vpyfUpk0CrhqOMTvy1S3obTLk2q4uPfVNQHDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Simon MacMullen <simonmacm@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.7 001/393] tracepoint: Mark __tracepoint_strings __used
-Date:   Mon, 17 Aug 2020 17:10:51 +0200
-Message-Id: <20200817143819.658929848@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 011/393] sched: correct SD_flags returned by tl->sd_flags()
+Date:   Mon, 17 Aug 2020 17:11:01 +0200
+Message-Id: <20200817143820.146094440@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,50 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Peng Liu <iwtbavbm@gmail.com>
 
-commit f3751ad0116fb6881f2c3c957d66a9327f69cefb upstream.
+[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
 
-__tracepoint_string's have their string data stored in .rodata, and an
-address to that data stored in the "__tracepoint_str" section. Functions
-that refer to those strings refer to the symbol of the address. Compiler
-optimization can replace those address references with references
-directly to the string data. If the address doesn't appear to have other
-uses, then it appears dead to the compiler and is removed. This can
-break the /tracing/printk_formats sysfs node which iterates the
-addresses stored in the "__tracepoint_str" section.
+During sched domain init, we check whether non-topological SD_flags are
+returned by tl->sd_flags(), if found, fire a waning and correct the
+violation, but the code failed to correct the violation. Correct this.
 
-Like other strings stored in custom sections in this header, mark these
-__used to inform the compiler that there are other non-obvious users of
-the address, so they should still be emitted.
-
-Link: https://lkml.kernel.org/r/20200730224555.2142154-2-ndesaulniers@google.com
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: stable@vger.kernel.org
-Fixes: 102c9323c35a8 ("tracing: Add __tracepoint_string() to export string pointers")
-Reported-by: Tim Murray <timmurray@google.com>
-Reported-by: Simon MacMullen <simonmacm@google.com>
-Suggested-by: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/tracepoint.h |    2 +-
+ kernel/sched/topology.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -361,7 +361,7 @@ static inline struct tracepoint *tracepo
- 		static const char *___tp_str __tracepoint_string = str; \
- 		___tp_str;						\
- 	})
--#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
-+#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
- #else
- /*
-  * tracepoint_string() is used to save the string address for userspace
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 8344757bba6e6..160178d6eb20e 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1338,7 +1338,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		sd_flags = (*tl->sd_flags)();
+ 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
+ 			"wrong sd_flags in topology description\n"))
+-		sd_flags &= ~TOPOLOGY_SD_FLAGS;
++		sd_flags &= TOPOLOGY_SD_FLAGS;
+ 
+ 	/* Apply detected topology flags */
+ 	sd_flags |= dflags;
+-- 
+2.25.1
+
 
 
