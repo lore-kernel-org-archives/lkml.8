@@ -2,56 +2,56 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885CEC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C9CC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D420786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D473206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682922;
-	bh=B4iLvHS422inQpm20uXUDus5u/N3W7EZbG8sPHI9O4c=;
+	s=default; t=1597682938;
+	bh=4p3nu2oPiPE8Vo2908t2ftK8TP2JOed8GPvSMAzGE+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGniKGskguA0l0iiD8BaCtLx4sXnY8lJk4uLbzBpqfFzR52Y2ne0IMvFP1IQignal
-	 WsLYwxJTVyRTBeXhEM2vo97dNh7YDYYdQGY/S72+sI4uLM8B7fLUlErS4gUrprYzBk
-	 3mxZ567dTIwWPM53oILoCbLjqfTqI2L0Yh/nBvdQ=
+	b=g7b995ARDr0hS2Oc/NKgPJXsYa43+bYsQVlM8Lg4KIIjt9ybRGFcQbJlOFweY+xg3
+	 j2qjgH842Ffkpyezc7F6OorgfR7BBnDmVT5zwGIEmklfTt2qSSo1Djo64pPhbLPr2I
+	 wx0W8aqkoJPdoiWhZ/zvBEcu6B5cpcyASY9STUZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388958AbgHQQsg (ORCPT
+        id S2388856AbgHQQsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388161AbgHQQBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:01:49 -0400
+        id S2388158AbgHQQBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:01:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4142520729;
-        Mon, 17 Aug 2020 16:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F21207FF;
+        Mon, 17 Aug 2020 16:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680108;
-        bh=B4iLvHS422inQpm20uXUDus5u/N3W7EZbG8sPHI9O4c=;
+        s=default; t=1597680103;
+        bh=4p3nu2oPiPE8Vo2908t2ftK8TP2JOed8GPvSMAzGE+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRl3ljUPrghBeA1r/2s2C/uZErVCdqiORSKlJ5Tiim/Ng8CRZgIjJIOUw62kfTpKg
-         IP/tYzb7LqaKdl64y5BcQ9CWc9EBl50B6zUzhc13N9GxLhH4/FhK1OBgJaEXAIo1XJ
-         +MaTJcEY4DLPC5BCCOVJxzvL3pQ3Ib+u+r4cy0bQ=
+        b=PSHqay2OIySf0+SJJ8bpxlnw99WUCniOzyknIOetpR6RHyMgJpTyp7DKxWhIF3PyJ
+         YzjsqPSmm2pLq8lmf8oQzPEV4upM4n52MuthurNCEF84alkQF38rb4/OrjJlLIxxEi
+         iPKq7taK7YmjiteYxia8jlU9/2Jc1qwvzVanL5JQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Craig Topper <craig.topper@intel.com>,
+        Craig Topper <craig.topper@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/270] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Mon, 17 Aug 2020 17:14:16 +0200
-Message-Id: <20200817143758.522143935@linuxfoundation.org>
+Subject: [PATCH 5.4 053/270] crypto: aesni - Fix build with LLVM_IAS=1
+Date:   Mon, 17 Aug 2020 17:14:14 +0200
+Message-Id: <20200817143758.423332394@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -64,44 +64,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Sedat Dilek <sedat.dilek@gmail.com>
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
+When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
+from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
+I see the following breakage in Debian/testing AMD64:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+<instantiation>:15:74: error: too many positional arguments
+ PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
+                                                                         ^
+ arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
+ GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
+ ^
+<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
+ GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
+ ^
+arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
+ GCM_ENC_DEC dec
+ ^
+<instantiation>:15:74: error: too many positional arguments
+ PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
+                                                                         ^
+arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
+ GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
+ ^
+<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
+ GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
+ ^
+arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
+ GCM_ENC_DEC enc
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
+Craig Topper suggested me in ClangBuiltLinux issue #1050:
+
+> I think the "too many positional arguments" is because the parser isn't able
+> to handle the trailing commas.
+>
+> The "unknown use of instruction mnemonic" is because the macro was named
+> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
+> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
+> macro instantiation, but llvm doesn't.
+
+First, I removed the trailing comma in the PRECOMPUTE line.
+
+Second, I substituted:
+1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
+2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
+
+With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
+
+I confirmed that this works with Linux-kernel v5.7.5 final.
+
+NOTE: This patch is on top of Linux v5.7 final.
+
+Thanks to Craig and especially Nick for double-checking and his comments.
+
+Suggested-by: Craig Topper <craig.topper@intel.com>
+Suggested-by: Craig Topper <craig.topper@gmail.com>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1050
+Link: https://bugs.llvm.org/show_bug.cgi?id=24494
+Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/neofb.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/crypto/aesni-intel_asm.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index b770946a09206..76464000933d8 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
+diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
+index e40bdf024ba76..9afeb58c910eb 100644
+--- a/arch/x86/crypto/aesni-intel_asm.S
++++ b/arch/x86/crypto/aesni-intel_asm.S
+@@ -266,7 +266,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
+ 	PSHUFB_XMM %xmm2, %xmm0
+ 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+ 
+-	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
++	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
+ 	movdqu HashKey(%arg2), %xmm13
+ 
+ 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
+@@ -978,7 +978,7 @@ _initial_blocks_done\@:
+ * arg1, %arg3, %arg4 are used as pointers only, not modified
+ * %r11 is the data offset value
+ */
+-.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
++.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
+ TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 
+ 	movdqa	  \XMM1, \XMM5
+@@ -1186,7 +1186,7 @@ aes_loop_par_enc_done\@:
+ * arg1, %arg3, %arg4 are used as pointers only, not modified
+ * %r11 is the data offset value
+ */
+-.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
++.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
+ TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 
+ 	movdqa	  \XMM1, \XMM5
 -- 
 2.25.1
 
