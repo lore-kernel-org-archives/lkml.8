@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00649C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B041EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D935E20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912A920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691121;
-	bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
+	s=default; t=1597691128;
+	bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WoBKoYDnAVBsc2J4yjWSe+5ZLqQFM7jE9KHsjF38eCWH8RWaX8IoDqTxPXMiadq9Q
-	 TZDH1FR0UpaTN8UEKl8YSAgcuHIH46ur0rmfMbTME4VepjmzC6Nvsk0uhHjttCGybd
-	 Us7pEGZ4f9bzDkxhqo7DH2jWrG8MZJFBBE3F1dOI=
+	b=eEaxSqJXX1I0xdHyJscCrhtx8/Rfqxvk6scsk9UgbEhGKDUjIjlh+3k5cbgyoyp9F
+	 HZ1ZwWRGdfKffe2D+FFD32eLfNk4Q3+hWL/cLmISonxrZ8JZKuJ+R6yR0etO19KuvP
+	 +vcLmRkmfKMPxlcxGd3dlq16TjHdE+lHx2wuvoxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbgHQTFU (ORCPT
+        id S2404098AbgHQTFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730578AbgHQPpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:08 -0400
+        id S1730615AbgHQPpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:45:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7DC222D01;
-        Mon, 17 Aug 2020 15:45:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE6962075B;
+        Mon, 17 Aug 2020 15:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679107;
-        bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
+        s=default; t=1597679122;
+        bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OT97ZJNgT7DPD0sFgb9iL7lBVIF7nhC34VS5ldP2MhrCSrRFq75wBOE7ddfUz/1K7
-         6nRo7fYBY1BKdOBdQsLgoo35Z0VmkiVgNmKoh0ILjW6qz1PU0R5Ebsjo3xEpFHhr77
-         jfTkH/SAWcHekLKfMCp2+YLw8gqK3PtgsE2CNOjs=
+        b=AZoFbXhjTvqB7E5MjbuE9j9jt2uFpbH4QqKkmsP2R1ai82TRtT56zM5A7GjueVxKV
+         SBp8QBE3uPDImORveA0StOdOqG1d2rY2PS4SFVrIBH3aHFnzHvXafDYToHKKEaidnh
+         zlbP0gZSiug/7PeWjDYVB/a0UTQWo0x5tx5wsTAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
+        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 099/393] Bluetooth: hci_qca: Bug fixes for SSR
-Date:   Mon, 17 Aug 2020 17:12:29 +0200
-Message-Id: <20200817143824.419459119@linuxfoundation.org>
+Subject: [PATCH 5.7 104/393] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Mon, 17 Aug 2020 17:12:34 +0200
+Message-Id: <20200817143824.658859548@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,111 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 3344537f614b966f726c1ec044d1c70a8cabe178 ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-1.During SSR for command time out if BT SoC goes to inresponsive
-state, power cycling of BT SoC was not happening. Given the fix by
-sending hw error event to reset the BT SoC.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-2.If SSR is triggered then ignore the transmit data requests to
-BT SoC until SSR is completed.
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Check the return value of pcie_capability_read_dword() to ensure success.
+
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 40 +++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 0b1036e5e963c..14e4d2eaf8959 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -71,7 +71,8 @@ enum qca_flags {
- 	QCA_DROP_VENDOR_EVENT,
- 	QCA_SUSPENDING,
- 	QCA_MEMDUMP_COLLECTION,
--	QCA_HW_ERROR_EVENT
-+	QCA_HW_ERROR_EVENT,
-+	QCA_SSR_TRIGGERED
- };
- 
- 
-@@ -854,6 +855,13 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
- 	BT_DBG("hu %p qca enq skb %p tx_ibs_state %d", hu, skb,
- 	       qca->tx_ibs_state);
- 
-+	if (test_bit(QCA_SSR_TRIGGERED, &qca->flags)) {
-+		/* As SSR is in progress, ignore the packets */
-+		bt_dev_dbg(hu->hdev, "SSR is in progress");
-+		kfree_skb(skb);
-+		return 0;
-+	}
-+
- 	/* Prepend skb with frame type */
- 	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
- 
-@@ -1085,6 +1093,7 @@ static int qca_controller_memdump_event(struct hci_dev *hdev,
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	skb_queue_tail(&qca->rx_memdump_q, skb);
- 	queue_work(qca->workqueue, &qca->ctrl_memdump_evt);
- 
-@@ -1445,6 +1454,7 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
- 	char *memdump_buf = NULL;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
- 
-@@ -1489,10 +1499,30 @@ static void qca_cmd_timeout(struct hci_dev *hdev)
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
--	if (qca->memdump_state == QCA_MEMDUMP_IDLE)
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-+		set_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
- 		qca_send_crashbuffer(hu);
--	else
--		bt_dev_info(hdev, "Dump collection is in process");
-+		qca_wait_for_dump_collection(hdev);
-+	} else if (qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
-+		/* Let us wait here until memory dump collected or
-+		 * memory dump timer expired.
-+		 */
-+		bt_dev_info(hdev, "waiting for dump to complete");
-+		qca_wait_for_dump_collection(hdev);
-+	}
-+
-+	mutex_lock(&qca->hci_memdump_lock);
-+	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
-+		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
-+		if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
-+			/* Inject hw error event to reset the device
-+			 * and driver.
-+			 */
-+			hci_reset_dev(hu->hdev);
-+		}
-+	}
-+	mutex_unlock(&qca->hci_memdump_lock);
- }
- 
- static int qca_wcn3990_init(struct hci_uart *hu)
-@@ -1603,6 +1633,8 @@ static int qca_setup(struct hci_uart *hu)
- 	if (ret)
- 		return ret;
- 
-+	clear_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+
- 	if (qca_is_wcn399x(soc_type)) {
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
- 
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 348c17ce72f5c..f78e062df572a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
