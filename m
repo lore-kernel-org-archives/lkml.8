@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B68C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD34C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA0920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE49E20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682564;
-	bh=z0J1eYbQcve0sGGPqElMFmUgSvDvv0+awaQ0vlLioAQ=;
+	s=default; t=1597682594;
+	bh=tEM0h2Eeq0xk2+/KRcSElEjI+YzKG8o5jvvzr5kp4tU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtovyZX3Qbk6bTv1GNOQHWis8GGANAQzkuWgn67KkhnO57J2n+Ryv3MkuUfWLTHza
-	 gPjkjuIaOVCqcXl0HSRYiJ/9zmkUSCBrHlc06FQaxZNsqoJhTN+NpB6wWC2aGNCh1O
-	 TuJUkrYltUTsoPhjd+TZUdaz2R9iw4g6M9CwukHE=
+	b=XR++46tcFtkjdLRLDZTq4H0EPy6CZ9U9KAcE99ugJ9qQjH9GCXMa1R48LzmqQ3+Gh
+	 5hbBGEBfE4q3oBBsYkrSzBBWjP7qLvdBHdo7PBd84YOuUFf1oiFfvgiZoPaBJJQr9V
+	 YX7uqAmCSVI4zHAVWmaysTEvMGXclzpFyQWamRa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388941AbgHQQmj (ORCPT
+        id S2388682AbgHQQnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46008 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730820AbgHQP6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:58:41 -0400
+        id S1730939AbgHQP6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31AA320729;
-        Mon, 17 Aug 2020 15:58:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7936920760;
+        Mon, 17 Aug 2020 15:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679920;
-        bh=z0J1eYbQcve0sGGPqElMFmUgSvDvv0+awaQ0vlLioAQ=;
+        s=default; t=1597679935;
+        bh=tEM0h2Eeq0xk2+/KRcSElEjI+YzKG8o5jvvzr5kp4tU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fv4gJyPxzekIEJOuQ8I/Olpc1cFHPv8C/3idWgOijIypNKAlT+9RrgyZH3JfIHUdX
-         M1YuPcLRykESLvxK1Av+Z4gy5/TuRc8xrRi5BZCpbCFvatcpuR6BP3BYr59XyC5ztI
-         ONlCdB/ummJJiJu/MIqHFbAMUj2XCLB3QEAvYxiU=
+        b=0+TqDItDoGl0+80yDxxpfMRz9BfwWKA2ryTjo+1yPk8A89OLcp9DLcz7sZsZXkX7g
+         Wii3N1I23AU6BSOmkujB2f3V5MXuCx8x0d4N3Av1uaLzIx1ETnkSfc0xikKf5WeUzJ
+         vuGjlNiRJW3sIEgAb1HCFb6oPng/T/w6jcewsW64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.7 379/393] irqdomain/treewide: Free firmware node after domain removal
-Date:   Mon, 17 Aug 2020 17:17:09 +0200
-Message-Id: <20200817143837.992791104@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.7 383/393] xen/gntdev: Fix dmabuf import with non-zero sgt offset
+Date:   Mon, 17 Aug 2020 17:17:13 +0200
+Message-Id: <20200817143838.185481005@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,150 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-commit ec0160891e387f4771f953b888b1fe951398e5d9 upstream.
+commit 5fa4e6f1c2d8c9a4e47e1931b42893172d388f2b upstream.
 
-Commit 711419e504eb ("irqdomain: Add the missing assignment of
-domain->fwnode for named fwnode") unintentionally caused a dangling pointer
-page fault issue on firmware nodes that were freed after IRQ domain
-allocation. Commit e3beca48a45b fixed that dangling pointer issue by only
-freeing the firmware node after an IRQ domain allocation failure. That fix
-no longer frees the firmware node immediately, but leaves the firmware node
-allocated after the domain is removed.
+It is possible that the scatter-gather table during dmabuf import has
+non-zero offset of the data, but user-space doesn't expect that.
+Fix this by failing the import, so user-space doesn't access wrong data.
 
-The firmware node must be kept around through irq_domain_remove, but should be
-freed it afterwards.
+Fixes: bf8dc55b1358 ("xen/gntdev: Implement dma-buf import functionality")
 
-Add the missing free operations after domain removal where where appropriate.
-
-Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1595363169-7157-1-git-send-email-jonathan.derrick@intel.com
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Acked-by: Juergen Gross <jgross@suse.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200813062113.11030-2-andr2000@gmail.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/pci/pci-xtalk-bridge.c    |    3 +++
- arch/x86/kernel/apic/io_apic.c      |    5 +++++
- drivers/iommu/intel_irq_remapping.c |    8 ++++++++
- drivers/mfd/ioc3.c                  |    6 ++++++
- drivers/pci/controller/vmd.c        |    3 +++
- 5 files changed, 25 insertions(+)
+ drivers/xen/gntdev-dmabuf.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -728,6 +728,7 @@ err_free_resource:
- 	pci_free_resource_list(&host->windows);
- err_remove_domain:
- 	irq_domain_remove(domain);
-+	irq_domain_free_fwnode(fn);
- 	return err;
- }
- 
-@@ -735,8 +736,10 @@ static int bridge_remove(struct platform
- {
- 	struct pci_bus *bus = platform_get_drvdata(pdev);
- 	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
-+	struct fwnode_handle *fn = bc->domain->fwnode;
- 
- 	irq_domain_remove(bc->domain);
-+	irq_domain_free_fwnode(fn);
- 	pci_lock_rescan_remove();
- 	pci_stop_root_bus(bus);
- 	pci_remove_root_bus(bus);
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2348,8 +2348,13 @@ static int mp_irqdomain_create(int ioapi
- 
- static void ioapic_destroy_irqdomain(int idx)
- {
-+	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
-+	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
-+
- 	if (ioapics[idx].irqdomain) {
- 		irq_domain_remove(ioapics[idx].irqdomain);
-+		if (!cfg->dev)
-+			irq_domain_free_fwnode(fn);
- 		ioapics[idx].irqdomain = NULL;
- 	}
- }
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -628,13 +628,21 @@ out_free_table:
- 
- static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
- {
-+	struct fwnode_handle *fn;
-+
- 	if (iommu && iommu->ir_table) {
- 		if (iommu->ir_msi_domain) {
-+			fn = iommu->ir_msi_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_msi_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_msi_domain = NULL;
- 		}
- 		if (iommu->ir_domain) {
-+			fn = iommu->ir_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_domain = NULL;
- 		}
- 		free_pages((unsigned long)iommu->ir_table->base,
---- a/drivers/mfd/ioc3.c
-+++ b/drivers/mfd/ioc3.c
-@@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev
- 		/* Remove all already added MFD devices */
- 		mfd_remove_devices(&ipd->pdev->dev);
- 		if (ipd->domain) {
-+			struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 			irq_domain_remove(ipd->domain);
-+			irq_domain_free_fwnode(fn);
- 			free_irq(ipd->domain_irq, (void *)ipd);
- 		}
- 		pci_iounmap(pdev, regs);
-@@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_d
- 	/* Release resources */
- 	mfd_remove_devices(&ipd->pdev->dev);
- 	if (ipd->domain) {
-+		struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 		irq_domain_remove(ipd->domain);
-+		irq_domain_free_fwnode(fn);
- 		free_irq(ipd->domain_irq, (void *)ipd);
- 	}
- 	pci_iounmap(pdev, ipd->regs);
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_
- 	if (!vmd->bus) {
- 		pci_free_resource_list(&resources);
- 		irq_domain_remove(vmd->irq_domain);
-+		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
+--- a/drivers/xen/gntdev-dmabuf.c
++++ b/drivers/xen/gntdev-dmabuf.c
+@@ -613,6 +613,14 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_
+ 		goto fail_detach;
  	}
  
-@@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_
- static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
-+	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
- 
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
-@@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *d
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
-+	irq_domain_free_fwnode(fn);
- }
- 
- #ifdef CONFIG_PM_SLEEP
++	/* Check that we have zero offset. */
++	if (sgt->sgl->offset) {
++		ret = ERR_PTR(-EINVAL);
++		pr_debug("DMA buffer has %d bytes offset, user-space expects 0\n",
++			 sgt->sgl->offset);
++		goto fail_unmap;
++	}
++
+ 	/* Check number of pages that imported buffer has. */
+ 	if (attach->dmabuf->size != gntdev_dmabuf->nr_pages << PAGE_SHIFT) {
+ 		ret = ERR_PTR(-EINVAL);
 
 
