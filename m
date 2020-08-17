@@ -2,57 +2,62 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE52FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5EC2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBD020882
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679567;
-	bh=oiYqFNOTIqWznWy5oZ7YjAKLAwxOQpK6HJg4N1XZrkQ=;
+	s=default; t=1597679578;
+	bh=3vfQKMttlM0pOTyMoFBwaEXl9k9Q1/ngIocA8s8nfjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eci3BGLDSP6y/60jYKJy9DXof9K+8Feiks/vEMa0Zt3u1B5xhCQmbP3b1L2uJH92+
-	 aexFyBcGv58lgQx7LrbRPluzY6mwXKjD31e6mh6KqvYN+FuavC1/ks6qhF3oVnccxT
-	 n9XOutUArU8BgM+MITY1rRoa9ZKkVxgbw2rv1V9Q=
+	b=sCc5bszQXMVSrKlRRPM7ijwQ9rGqcsOe564PoletrB3ftNQMEKYdlA7hZLnkuWhx+
+	 kWWA62cQNHYXTHA1HU63FmKSgYY/6TiMWis5v6tCRMlIBl+XPaSLHuL9/KQjEkwN3v
+	 Xm05hOmZA8wptm+wamtQXYQN2C2UQinP6QXwXfM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387864AbgHQPwq (ORCPT
+        id S2387880AbgHQPwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49112 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:52:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730676AbgHQPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:41 -0400
+        id S1730677AbgHQPkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EBF22BEB;
-        Mon, 17 Aug 2020 15:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481F32075B;
+        Mon, 17 Aug 2020 15:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678840;
-        bh=oiYqFNOTIqWznWy5oZ7YjAKLAwxOQpK6HJg4N1XZrkQ=;
+        s=default; t=1597678842;
+        bh=3vfQKMttlM0pOTyMoFBwaEXl9k9Q1/ngIocA8s8nfjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3h5SgYjodMPr9cCbqvMpQ10cJlP115b1EU3hqejCBPjAD5we5niJfADD4czef1b/
-         +P9u7vH4mtB324uopY/Cp5XQmPjZVR9iXxnj3dnz1ZLdrFb8jBb3aUD6PZhwckerj0
-         lh7lxyxq3hR2mwBhs4AKUchPfiOr1zFDz+GZjurI=
+        b=Dh1ZpV+X/2Pej+WxVo7EmU2fCW0rGz9YdvGfHJmGx9CoJdr7ajflJPFp2Ylzd4tnQ
+         hbOf6uEBYz/XqNYRMD4EXCY9BE55+PYn0GQZxtBlwRn8RQV2VdsxYUcQMimM3L6aIO
+         3JfyOt7CJfbygP5kI+hMHDFXq+f7hfGuCBbo+zfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Simon MacMullen <simonmacm@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.8 449/464] ARM: 8992/1: Fix unwind_frame for clang-built kernels
-Date:   Mon, 17 Aug 2020 17:16:42 +0200
-Message-Id: <20200817143855.280685160@linuxfoundation.org>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.7 001/393] tracepoint: Mark __tracepoint_strings __used
+Date:   Mon, 17 Aug 2020 17:10:51 +0200
+Message-Id: <20200817143819.658929848@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,80 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-commit b4d5ec9b39f8b31d98f65bc5577b5d15d93795d7 upstream.
+commit f3751ad0116fb6881f2c3c957d66a9327f69cefb upstream.
 
-Since clang does not push pc and sp in function prologues, the current
-implementation of unwind_frame does not work. By using the previous
-frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
-kernels.
+__tracepoint_string's have their string data stored in .rodata, and an
+address to that data stored in the "__tracepoint_str" section. Functions
+that refer to those strings refer to the symbol of the address. Compiler
+optimization can replace those address references with references
+directly to the string data. If the address doesn't appear to have other
+uses, then it appears dead to the compiler and is removed. This can
+break the /tracing/printk_formats sysfs node which iterates the
+addresses stored in the "__tracepoint_str" section.
 
-The bounds check on next frame pointer must be changed as well since
-there are 8 less bytes between frames.
+Like other strings stored in custom sections in this header, mark these
+__used to inform the compiler that there are other non-obvious users of
+the address, so they should still be emitted.
 
-This fixes /proc/<pid>/stack.
+Link: https://lkml.kernel.org/r/20200730224555.2142154-2-ndesaulniers@google.com
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/912
-
-Reported-by: Miles Chen <miles.chen@mediatek.com>
-Tested-by: Miles Chen <miles.chen@mediatek.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 102c9323c35a8 ("tracing: Add __tracepoint_string() to export string pointers")
+Reported-by: Tim Murray <timmurray@google.com>
+Reported-by: Simon MacMullen <simonmacm@google.com>
+Suggested-by: Greg Hackmann <ghackmann@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/kernel/stacktrace.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ include/linux/tracepoint.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -22,6 +22,19 @@
-  * A simple function epilogue looks like this:
-  *	ldm	sp, {fp, sp, pc}
-  *
-+ * When compiled with clang, pc and sp are not pushed. A simple function
-+ * prologue looks like this when built with clang:
-+ *
-+ *	stmdb	{..., fp, lr}
-+ *	add	fp, sp, #x
-+ *	sub	sp, sp, #y
-+ *
-+ * A simple function epilogue looks like this when built with clang:
-+ *
-+ *	sub	sp, fp, #x
-+ *	ldm	{..., fp, pc}
-+ *
-+ *
-  * Note that with framepointer enabled, even the leaf functions have the same
-  * prologue and epilogue, therefore we can ignore the LR value in this case.
-  */
-@@ -34,6 +47,16 @@ int notrace unwind_frame(struct stackfra
- 	low = frame->sp;
- 	high = ALIGN(low, THREAD_SIZE);
- 
-+#ifdef CONFIG_CC_IS_CLANG
-+	/* check current frame pointer is within bounds */
-+	if (fp < low + 4 || fp > high - 4)
-+		return -EINVAL;
-+
-+	frame->sp = frame->fp;
-+	frame->fp = *(unsigned long *)(fp);
-+	frame->pc = frame->lr;
-+	frame->lr = *(unsigned long *)(fp + 4);
-+#else
- 	/* check current frame pointer is within bounds */
- 	if (fp < low + 12 || fp > high - 4)
- 		return -EINVAL;
-@@ -42,6 +65,7 @@ int notrace unwind_frame(struct stackfra
- 	frame->fp = *(unsigned long *)(fp - 12);
- 	frame->sp = *(unsigned long *)(fp - 8);
- 	frame->pc = *(unsigned long *)(fp - 4);
-+#endif
- 
- 	return 0;
- }
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -361,7 +361,7 @@ static inline struct tracepoint *tracepo
+ 		static const char *___tp_str __tracepoint_string = str; \
+ 		___tp_str;						\
+ 	})
+-#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
++#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
+ #else
+ /*
+  * tracepoint_string() is used to save the string address for userspace
 
 
