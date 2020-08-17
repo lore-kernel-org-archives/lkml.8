@@ -2,51 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E24820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D5620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683775;
-	bh=CfZVTiWmvsNIp/eM2/UdKh3fA5wDsnpRGCYMfhKh0fk=;
+	s=default; t=1597683784;
+	bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U1pQ2kESw2E71BFUxgAiaPguRb+FXp3jmuY97USoepvwDzX8qfJxddWSlpxBuqexk
-	 KSi1a8Vde+I4hGsCZ0jnin54IPIXBCIVtXSiaT7uwiRip8bHAp1qP+tehnM+ZjJXgq
-	 W+vqIxOOHMY7FJ4tQOPHkrnk9Z0zOEYtIdGtzyw0=
+	b=f1d0OfaoVZtWD03s4nGhsgYhK0CcL6QRXOTSPvOO+QrLF10wpUGmceX8Iu9ipR77S
+	 0wKbt+Ezv2A+CWrKEBK/DTk5GkrfnERXfekpyZ0FOApMKd6mDR8sfewdWO8GJit6/3
+	 gPQctsOlno4kX3xhEPigZfDtHD31eQ3wrV8CsLX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgHQRCx (ORCPT
+        id S1731299AbgHQRDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:02:53 -0400
+        Mon, 17 Aug 2020 13:03:03 -0400
 Received: from mail.kernel.org ([198.145.29.99]:57766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387959AbgHQQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:26 -0400
+        id S2388460AbgHQQId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372FC20825;
-        Mon, 17 Aug 2020 16:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35CC22B4E;
+        Mon, 17 Aug 2020 16:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680505;
-        bh=CfZVTiWmvsNIp/eM2/UdKh3fA5wDsnpRGCYMfhKh0fk=;
+        s=default; t=1597680513;
+        bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xGR1xWN47cXKWUiX9vl5xdlKiCASCGpdT3w1k3XjIkyfm4O0Ox8jRpee+d3yRzmRu
-         MLvm+uI4zxssaHXp2nc9K6P2VAZqVjGhQrbXQOkFWLGoZJPDjwD5fa/RegWokRGdAy
-         P6SFQz+2QpslDGNw7RKBR5r1qOtxqVT5vuYVruLk=
+        b=PKeGfvAxolKR1etI1Me32n9r35xq6ny7NG0483KNNx3S8YSpd5K6r+UA5uDeOyaiE
+         guCwUFbOjr/uL0ItojtzWAOQFzcmkzjix9NUYvLeiSyLJZWYWTXA0B8BnpMn3Srzq7
+         bWMsMDRETaXPSmb4Jt2XCjkwo/1GK9lSJZRNN1hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 213/270] svcrdma: Fix page leak in svc_rdma_recv_read_chunk()
-Date:   Mon, 17 Aug 2020 17:16:54 +0200
-Message-Id: <20200817143806.388010888@linuxfoundation.org>
+Subject: [PATCH 5.4 216/270] crypto: aesni - add compatibility with IAS
+Date:   Mon, 17 Aug 2020 17:16:57 +0200
+Message-Id: <20200817143806.536073644@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,82 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Jian Cai <caij2003@gmail.com>
 
-[ Upstream commit e814eecbe3bbeaa8b004d25a4b8974d232b765a9 ]
+[ Upstream commit 44069737ac9625a0f02f0f7f5ab96aae4cd819bc ]
 
-Commit 07d0ff3b0cd2 ("svcrdma: Clean up Read chunk path") moved the
-page saver logic so that it gets executed event when an error occurs.
-In that case, the I/O is never posted, and those pages are then
-leaked. Errors in this path, however, are quite rare.
+Clang's integrated assembler complains "invalid reassignment of
+non-absolute variable 'var_ddq_add'" while assembling
+arch/x86/crypto/aes_ctrby8_avx-x86_64.S. It was because var_ddq_add was
+reassigned with non-absolute values several times, which IAS did not
+support. We can avoid the reassignment by replacing the uses of
+var_ddq_add with its definitions accordingly to have compatilibility
+with IAS.
 
-Fixes: 07d0ff3b0cd2 ("svcrdma: Clean up Read chunk path")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1008
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reported-by: Fangrui Song <maskray@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot Linux v5.7.5; clang v11.0.0-git
+Signed-off-by: Jian Cai <caij2003@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 066af6b2eb012..0bb3f0dca80d6 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -677,7 +677,6 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
- 				     struct svc_rdma_read_info *info,
- 				     __be32 *p)
- {
--	unsigned int i;
- 	int ret;
+diff --git a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+index 5f6a5af9c489b..77043a82da510 100644
+--- a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
++++ b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+@@ -127,10 +127,6 @@ ddq_add_8:
  
- 	ret = -EINVAL;
-@@ -700,12 +699,6 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
- 		info->ri_chunklen += rs_length;
- 	}
+ /* generate a unique variable for ddq_add_x */
  
--	/* Pages under I/O have been copied to head->rc_pages.
--	 * Prevent their premature release by svc_xprt_release() .
--	 */
--	for (i = 0; i < info->ri_readctxt->rc_page_count; i++)
--		rqstp->rq_pages[i] = NULL;
+-.macro setddq n
+-	var_ddq_add = ddq_add_\n
+-.endm
 -
- 	return ret;
- }
+ /* generate a unique variable for xmm register */
+ .macro setxdata n
+ 	var_xdata = %xmm\n
+@@ -140,9 +136,7 @@ ddq_add_8:
  
-@@ -800,6 +793,26 @@ static int svc_rdma_build_pz_read_chunk(struct svc_rqst *rqstp,
- 	return ret;
- }
+ .macro club name, id
+ .altmacro
+-	.if \name == DDQ_DATA
+-		setddq %\id
+-	.elseif \name == XDATA
++	.if \name == XDATA
+ 		setxdata %\id
+ 	.endif
+ .noaltmacro
+@@ -165,9 +159,8 @@ ddq_add_8:
  
-+/* Pages under I/O have been copied to head->rc_pages. Ensure they
-+ * are not released by svc_xprt_release() until the I/O is complete.
-+ *
-+ * This has to be done after all Read WRs are constructed to properly
-+ * handle a page that is part of I/O on behalf of two different RDMA
-+ * segments.
-+ *
-+ * Do this only if I/O has been posted. Otherwise, we do indeed want
-+ * svc_xprt_release() to clean things up properly.
-+ */
-+static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
-+				   const unsigned int start,
-+				   const unsigned int num_pages)
-+{
-+	unsigned int i;
-+
-+	for (i = start; i < num_pages + start; i++)
-+		rqstp->rq_pages[i] = NULL;
-+}
-+
- /**
-  * svc_rdma_recv_read_chunk - Pull a Read chunk from the client
-  * @rdma: controlling RDMA transport
-@@ -853,6 +866,7 @@ int svc_rdma_recv_read_chunk(struct svcxprt_rdma *rdma, struct svc_rqst *rqstp,
- 	ret = svc_rdma_post_chunk_ctxt(&info->ri_cc);
- 	if (ret < 0)
- 		goto out_err;
-+	svc_rdma_save_io_pages(rqstp, 0, head->rc_page_count);
- 	return 0;
+ 	.set i, 1
+ 	.rept (by - 1)
+-		club DDQ_DATA, i
+ 		club XDATA, i
+-		vpaddq	var_ddq_add(%rip), xcounter, var_xdata
++		vpaddq	(ddq_add_1 + 16 * (i - 1))(%rip), xcounter, var_xdata
+ 		vptest	ddq_low_msk(%rip), var_xdata
+ 		jnz 1f
+ 		vpaddq	ddq_high_add_1(%rip), var_xdata, var_xdata
+@@ -180,8 +173,7 @@ ddq_add_8:
+ 	vmovdqa	1*16(p_keys), xkeyA
  
- out_err:
+ 	vpxor	xkey0, xdata0, xdata0
+-	club DDQ_DATA, by
+-	vpaddq	var_ddq_add(%rip), xcounter, xcounter
++	vpaddq	(ddq_add_1 + 16 * (by - 1))(%rip), xcounter, xcounter
+ 	vptest	ddq_low_msk(%rip), xcounter
+ 	jnz	1f
+ 	vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
 -- 
 2.25.1
 
