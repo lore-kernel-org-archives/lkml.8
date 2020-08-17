@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E741C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6E020786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4C82311A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678351;
-	bh=w5U96Fw6mjrn3JpYW7hRBEbu4JgEbS0Dkmw6fue0zYU=;
+	s=default; t=1597678366;
+	bh=qjqPb3dOM/LPD8Ih3PTP0yXu8B4/jodgik7nxXEZ9+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLzm/565orXvvAwaexHSsHH5c3SOGa4j9wr8njKPuavqjVM7zzMjCzrfoQCSpQh2o
-	 iiDIx/jPJzHS/dsbZIrpF++mS03G82Hm2Ik+91tTwy2qTAjpo2tim8TP2CkjVetSO5
-	 TuhHS7+KnvdITsUIysNZPav3KKSC1wK4qq1R71sw=
+	b=Gip+erSLmEV5vExtw9i8V6PLtK2jBeP9VZQBrgP1cg1dDI5ktgXfLdmZY/uooL6WO
+	 L7VYOLm7TNlIrrCrkuQuzU6deYdC3uZwgD/tcqdz02oXb3cn3n+q+N59FpWB4XW6+B
+	 2Mt4BO/Kbf4PKnv4o2F1xTswlTCFpIxukn0lU6kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgHQPcV (ORCPT
+        id S1730328AbgHQPcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbgHQP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:15 -0400
+        id S1729632AbgHQP3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD8A823A9B;
-        Mon, 17 Aug 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE90523B16;
+        Mon, 17 Aug 2020 15:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678153;
-        bh=w5U96Fw6mjrn3JpYW7hRBEbu4JgEbS0Dkmw6fue0zYU=;
+        s=default; t=1597678159;
+        bh=qjqPb3dOM/LPD8Ih3PTP0yXu8B4/jodgik7nxXEZ9+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1yCYbC+J9WK3kOhzfac+bmy+2wNi0RZr0HdpyJJY5A17FXp2jHlcHt0+aiIRNLfFi
-         XcbUNMPMtMldOjUkjGv9V2YAIinR2J9XAjBfbUy0m1BFR+d+l+QrZ9VvcDXWib439n
-         ue88nbXR+E2JXxcs0FPo6jIqOn3dGAUmS/jZ54RA=
+        b=fSyG+bFczTP61wAC+2fJ1ugrR8lPtg+BoJ9uWuFqSpXxPuGpEgWDUg+iI28JbcJCD
+         BFEDzAK1jHCw6QERiqOR/o5eIi5TpTRX5HoPgbBvH88Og7NvPBDOwTH2yZ7MaBqPIO
+         5sewWbmCPET3LAU320XgbEk7/tOJioiWKbOQSeME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Mikhail Malygin <m.malygin@yadro.com>,
+        Sergey Kojushev <s.kojushev@yadro.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 219/464] kobject: Avoid premature parent object freeing in kobject_cleanup()
-Date:   Mon, 17 Aug 2020 17:12:52 +0200
-Message-Id: <20200817143844.294781668@linuxfoundation.org>
+Subject: [PATCH 5.8 238/464] RDMA/rxe: Prevent access to wr->next ptr afrer wr is posted to send queue
+Date:   Mon, 17 Aug 2020 17:13:11 +0200
+Message-Id: <20200817143845.200649254@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,114 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Mikhail Malygin <m.malygin@yadro.com>
 
-[ Upstream commit 079ad2fb4bf9eba8a0aaab014b49705cd7f07c66 ]
+[ Upstream commit 5f0b2a6093a4d9aab093964c65083fe801ef1e58 ]
 
-If kobject_del() is invoked by kobject_cleanup() to delete the
-target kobject, it may cause its parent kobject to be freed
-before invoking the target kobject's ->release() method, which
-effectively means freeing the parent before dealing with the
-child entirely.
+rxe_post_send_kernel() iterates over linked list of wr's, until the
+wr->next ptr is NULL.  However if we've got an interrupt after last wr is
+posted, control may be returned to the code after send completion callback
+is executed and wr memory is freed.
 
-That is confusing at best and it may also lead to functional
-issues if the callers of kobject_cleanup() are not careful enough
-about the order in which these calls are made, so avoid the
-problem by making kobject_cleanup() drop the last reference to
-the target kobject's parent at the end, after invoking the target
-kobject's ->release() method.
+As a result, wr->next pointer may contain incorrect value leading to
+panic. Store the wr->next on the stack before posting it.
 
-[ rjw: Rewrite the subject and changelog, make kobject_cleanup()
-  drop the parent reference only when __kobject_del() has been
-  called. ]
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/1908555.IiAGLGrh1Z@kreacher
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Link: https://lore.kernel.org/r/20200716190340.23453-1-m.malygin@yadro.com
+Signed-off-by: Mikhail Malygin <m.malygin@yadro.com>
+Signed-off-by: Sergey Kojushev <s.kojushev@yadro.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kobject.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 1e4b7382a88ed..3afb939f2a1cc 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
- }
- EXPORT_SYMBOL_GPL(kobject_move);
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
+index b8a22af724e8b..84fec5fd798d5 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.c
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
+@@ -684,6 +684,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
+ 	unsigned int mask;
+ 	unsigned int length = 0;
+ 	int i;
++	struct ib_send_wr *next;
  
--/**
-- * kobject_del() - Unlink kobject from hierarchy.
-- * @kobj: object.
-- *
-- * This is the function that should be called to delete an object
-- * successfully added via kobject_add().
-- */
--void kobject_del(struct kobject *kobj)
-+static void __kobject_del(struct kobject *kobj)
- {
- 	struct kernfs_node *sd;
- 	const struct kobj_type *ktype;
-@@ -632,9 +625,23 @@ void kobject_del(struct kobject *kobj)
+ 	while (wr) {
+ 		mask = wr_opcode_mask(wr->opcode, qp);
+@@ -700,6 +701,8 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
+ 			break;
+ 		}
  
- 	kobj->state_in_sysfs = 0;
- 	kobj_kset_leave(kobj);
--	kobject_put(kobj->parent);
- 	kobj->parent = NULL;
- }
++		next = wr->next;
 +
-+/**
-+ * kobject_del() - Unlink kobject from hierarchy.
-+ * @kobj: object.
-+ *
-+ * This is the function that should be called to delete an object
-+ * successfully added via kobject_add().
-+ */
-+void kobject_del(struct kobject *kobj)
-+{
-+	struct kobject *parent = kobj->parent;
-+
-+	__kobject_del(kobj);
-+	kobject_put(parent);
-+}
- EXPORT_SYMBOL(kobject_del);
- 
- /**
-@@ -670,6 +677,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-  */
- static void kobject_cleanup(struct kobject *kobj)
- {
-+	struct kobject *parent = kobj->parent;
- 	struct kobj_type *t = get_ktype(kobj);
- 	const char *name = kobj->name;
- 
-@@ -684,7 +692,10 @@ static void kobject_cleanup(struct kobject *kobj)
- 	if (kobj->state_in_sysfs) {
- 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
- 			 kobject_name(kobj), kobj);
--		kobject_del(kobj);
-+		__kobject_del(kobj);
-+	} else {
-+		/* avoid dropping the parent reference unnecessarily */
-+		parent = NULL;
+ 		length = 0;
+ 		for (i = 0; i < wr->num_sge; i++)
+ 			length += wr->sg_list[i].length;
+@@ -710,7 +713,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
+ 			*bad_wr = wr;
+ 			break;
+ 		}
+-		wr = wr->next;
++		wr = next;
  	}
  
- 	if (t && t->release) {
-@@ -698,6 +709,8 @@ static void kobject_cleanup(struct kobject *kobj)
- 		pr_debug("kobject: '%s': free name\n", name);
- 		kfree_const(name);
- 	}
-+
-+	kobject_put(parent);
- }
- 
- #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+ 	rxe_run_task(&qp->req.task, 1);
 -- 
 2.25.1
 
