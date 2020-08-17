@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33936C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7BD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D0B206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679909;
-	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+	s=default; t=1597679957;
+	bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4QyD0v2jp5VEGCv4FEW6otX4mNWWW9/JjKiBHG0PUf61c6lXpLXlBXMCEnYozj4W
-	 Fg3/dd8fwD9k5KTaqBE1lvG+tDceCEy78LQupZaC+kDvqD9ZSP1VGHyq/akKokjnYu
-	 IVMlCjELpx0nYGjCI3u4orfN0dIJ21md+wPghc2M=
+	b=lnRDdxUUZ70xlgzV3JsNJID8V74fEfiOjtawc6wZMEky/uGa+4sh72ztObqTAnMmw
+	 h9z6TCklzm5ecc1havxDYjR6OlWV5QNc0zqULd9oNGMMzF4cRWt9rYBtRJtAfD/jUx
+	 6a3iaoN1bcViVh5Vazj7fQlLPASMkH8x16f47hKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgHQP60 (ORCPT
+        id S1730955AbgHQP7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387543AbgHQPm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:26 -0400
+        id S2387560AbgHQPme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F4D2075B;
-        Mon, 17 Aug 2020 15:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F6222BF3;
+        Mon, 17 Aug 2020 15:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678945;
-        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+        s=default; t=1597678954;
+        bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FX6XCDI/4mXRUyfiJbfjl7IxtHH6JlaRICv6+m/BmoPQ+nO32OEm2Zl0gcX5vdry6
-         pCJ05FF/HFvnLzYJ/dAx56qHK9FrzWH6piwpg9RAKrHjci4LyBg8H0KZvObz+nxvHb
-         RvDMSRS9UHYWh9en18njuZaem4lLP9rFFwAJgjXc=
+        b=KMHpHeqGc+saEF/9YC8PL8WTKq7+aQg0EjN+UfR9It0OrgXYnZhQYcg0YVQxymhZ5
+         JW12ROvWTt+pJzSFh3sRn91oWS5LAFNkFJUWCMnBzOZrKqe6aw4JJtYByItm3FxTTo
+         6G/bDDdsA292wWPiwi3DcOyFHKxKYp2F9/ZWCtSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gregory Herrero <gregory.herrero@oracle.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 043/393] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
-Date:   Mon, 17 Aug 2020 17:11:33 +0200
-Message-Id: <20200817143821.691864055@linuxfoundation.org>
+Subject: [PATCH 5.7 046/393] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Mon, 17 Aug 2020 17:11:36 +0200
+Message-Id: <20200817143821.850179161@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,80 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory Herrero <gregory.herrero@oracle.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
+[ Upstream commit f1bb924e8f5b50752a80fa5b48c43003680a7b64 ]
 
-Currently, if a section has a relocation to '_mcount' symbol, a new
-__mcount_loc entry will be added whatever the relocation type is.
-This is problematic when a relocation to '_mcount' is in the middle of a
-section and is not a call for ftrace use.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-Such relocation could be generated with below code for example:
-    bool is_mcount(unsigned long addr)
-    {
-        return (target == (unsigned long) &_mcount);
-    }
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
 
-With this snippet of code, ftrace will try to patch the mcount location
-generated by this code on module load and fail with:
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
 
-    Call trace:
-     ftrace_bug+0xa0/0x28c
-     ftrace_process_locs+0x2f4/0x430
-     ftrace_module_init+0x30/0x38
-     load_module+0x14f0/0x1e78
-     __do_sys_finit_module+0x100/0x11c
-     __arm64_sys_finit_module+0x28/0x34
-     el0_svc_common+0x88/0x194
-     el0_svc_handler+0x38/0x8c
-     el0_svc+0x8/0xc
-    ---[ end trace d828d06b36ad9d59 ]---
-    ftrace failed to modify
-    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
-     actual:   66:a9:3c:90
-    Initializing ftrace call sites
-    ftrace record flags: 2000000
-     (0)
-    expected tramp: ffffa2dc6cf66724
-
-So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-recordmcount.
-
-Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
-Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721015950.11816-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 7225107a9aafe..e59022b3f1254 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
- 	return 1;
- }
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b967..ff5ba85b7562e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -270,7 +270,6 @@ &sd_emmc_a {
  
-+static int arm64_is_fake_mcount(Elf64_Rel const *rp)
-+{
-+	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
-+}
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6d..026b21708b078 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@ &pcie {
+ 	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
 +
- /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
-  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
-  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
-@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
- 		make_nop = make_nop_arm64;
- 		rel_type_nop = R_AARCH64_NONE;
- 		ideal_nop = ideal_nop4_arm64;
-+		is_fake_mcount64 = arm64_is_fake_mcount;
- 		break;
- 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
- 	case EM_MIPS:	/* reltype: e_class    */ break;
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.25.1
 
