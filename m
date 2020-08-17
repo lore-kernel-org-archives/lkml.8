@@ -2,121 +2,89 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB103C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C27C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0DE20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B7C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgHQUSs (ORCPT
+        id S1728052AbgHQUZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:18:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40123 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgHQUSp (ORCPT
+        Mon, 17 Aug 2020 16:25:13 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39384 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgHQUZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:18:45 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h16so14467381oti.7;
-        Mon, 17 Aug 2020 13:18:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q8fJC9UFW+gDhKkGJlnq8tYL/hhtE98vgO7P0bnTQ1M=;
-        b=qqeSE5Za5/30/WJGXvJEK9+94AS5BBGWmdYx2AkxPPAc780OKbPA2jBYHGamTzZKtP
-         /S5Q1NY7EpyqnuQtmGyteYR+Vad5A2AAWC9OU2wzmvNyOP5uYl4+L1rlx4Fe/EH4D+Nw
-         Ojj1mwGClrychu4i7LU8U5v6cDPKMv1CHeVJB3SdTXgZSEc1goXoRCEf8nq6QZWMNKoy
-         zeGRk6bKgCMvh+qDB74AIwqOrcUINlGFXb1ejk4r0QYp28c02nhVIxOorD7rm7/DvziN
-         NvcEv84Ns9N2cgd6xaVNiy4EA419NnGNNXkpeLzMnlrod05brFIb+NlsNRr5jMDKJ2XK
-         YC+w==
-X-Gm-Message-State: AOAM533osh//F0p/WblbcvfIytmIoyyopTNit6Egho4GOGMSgBoCOzZU
-        m8WGuDtZ0Qm3qi6sYo50mWAzV1+IaeKdfRDua2k=
-X-Google-Smtp-Source: ABdhPJyP2t3ptdX9ajliOwPSmixn53N3tcagdfS0vTKBqGq1kZ+iE5n/OLcnjQq+uY7hewdd1gEv6hDB4/NeEsVn/M4=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr12261426otl.145.1597695524287;
- Mon, 17 Aug 2020 13:18:44 -0700 (PDT)
+        Mon, 17 Aug 2020 16:25:12 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B40CA1C0BB6; Mon, 17 Aug 2020 22:25:08 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 22:25:08 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>, vishwa@linux.ibm.com,
+        andy.shevchenko@gmail.com, robh+dt@kernel.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmurphy@ti.com,
+        jacek.anaszewski@gmail.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM
+ implementation compatible string
+Message-ID: <20200817202508.GA13123@amd>
+References: <20200803145055.5203-1-eajames@linux.ibm.com>
+ <20200803145055.5203-2-eajames@linux.ibm.com>
+ <20200812195747.GA2605701@bogus>
 MIME-Version: 1.0
-References: <202008172354.zWuvIIj7%lkp@intel.com>
-In-Reply-To: <202008172354.zWuvIIj7%lkp@intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Aug 2020 22:18:33 +0200
-Message-ID: <CAMuHMdX4jA1UAhu=odCFHgj4adL3T5hEDoqgqnrFw3L492g+QA@mail.gmail.com>
-Subject: Re: drivers/media/platform/fsl-viu.c:36: warning: "out_be32" redefined
-To:     kernel test robot <lkp@intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20200812195747.GA2605701@bogus>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 9:32 PM kernel test robot <lkp@intel.com> wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
-> commit: a19f228b8dd9a67e8de4ebd4eac8a4c94ec39d1a media: Kconfig: not all V4L2 platform drivers are for camera
-> date:   4 months ago
-> config: m68k-randconfig-r021-20200817 (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout a19f228b8dd9a67e8de4ebd4eac8a4c94ec39d1a
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
 
->    drivers/media/platform/fsl-viu.c: At top level:
-> >> drivers/media/platform/fsl-viu.c:36: warning: "out_be32" redefined
->       36 | #define out_be32(v, a) iowrite32be(a, (void __iomem *)v)
->          |
->    In file included from arch/m68k/include/asm/io_mm.h:25,
->                     from arch/m68k/include/asm/io.h:8,
->                     from include/linux/io.h:13,
->                     from include/linux/irq.h:20,
->                     from include/asm-generic/hardirq.h:13,
->                     from ./arch/m68k/include/generated/asm/hardirq.h:1,
->                     from include/linux/hardirq.h:9,
->                     from include/linux/interrupt.h:11,
->                     from drivers/media/platform/fsl-viu.c:17:
->    arch/m68k/include/asm/raw_io.h:32: note: this is the location of the previous definition
->       32 | #define out_be32(addr,l) (void)((*(__force volatile u32 *) (addr)) = (l))
->          |
-> >> drivers/media/platform/fsl-viu.c:37: warning: "in_be32" redefined
->       37 | #define in_be32(a) ioread32be((void __iomem *)a)
->          |
->    In file included from arch/m68k/include/asm/io_mm.h:25,
->                     from arch/m68k/include/asm/io.h:8,
->                     from include/linux/io.h:13,
->                     from include/linux/irq.h:20,
->                     from include/asm-generic/hardirq.h:13,
->                     from ./arch/m68k/include/generated/asm/hardirq.h:1,
->                     from include/linux/hardirq.h:9,
->                     from include/linux/interrupt.h:11,
->                     from drivers/media/platform/fsl-viu.c:17:
->    arch/m68k/include/asm/raw_io.h:23: note: this is the location of the previous definition
->       23 | #define in_be32(addr) \
->          |
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fix available for +2 years
+On Wed 2020-08-12 13:57:47, Rob Herring wrote:
+> On Mon, 03 Aug 2020 09:50:54 -0500, Eddie James wrote:
+> > IBM created an implementation of the PCA9552 on a PIC16F
+> > microcontroller. Document the new compatible string for this device.
+> >=20
+> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > ---
+> >  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-[PATCH] media: fsl-viu: Use proper check for presence of {out,in}_be32()
-https://lore.kernel.org/linux-media/1528451328-21316-1-git-send-email-geert@linux-m68k.org/
+Thanks, I applied the series.
 
-Gr{oetje,eeting}s,
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-                        Geert
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iEYEARECAAYFAl8656QACgkQMOfwapXb+vJ/vgCggeE9wN9rcZ//IBVRvJwgJupz
+L5cAoKKJ85ZMJGg6Sf/GbCNP2talpcIQ
+=wI1t
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
