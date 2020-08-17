@@ -2,92 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4975DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D9F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22179207DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685035;
-	bh=yO4PoRr63jcQQ0ftSvdUnNxZtL/3FxKQFScT69SJ/Rw=;
+	s=default; t=1597685042;
+	bh=GUsArLbL02qpHoztHYo42iM7UEhUrFu2gzZLc6e45Xw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PaNU/B1DG5MBMnxiGgQTDyUeqYH0H3eoaqVV6fXA+hPVxdyNPoB3w4/xb7fCklZdZ
-	 7z0AmGZaVyNQG4jxytzW5g7Lbbe6iFCsg/s9GUMQciF6y55/FwCluvG6LnuzvhujSc
-	 wRgpI9jBRzTiOR2tOwLtxCZOMjtAdqk5CRyQiTbU=
+	b=YN5qNNy/vw2fmYlOtr9vljclObpow0fgV/7BnqWVqYUKXFVAuJf2+nGuvQB+dOI9W
+	 P026AjkU5ZQoe1Yo7rJO3P9I6qnbK36EMmRuW8tEEf0MwQQrT+3MBl9Cck5O7rxswj
+	 2XnNC3p+0A35QdB/wOBgL+86ypes+JDxmGjBwih8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389943AbgHQRXp (ORCPT
+        id S2389946AbgHQRX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:23:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389145AbgHQRAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:00:45 -0400
+        id S1731373AbgHQRFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:05:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27BB6206FA;
-        Mon, 17 Aug 2020 17:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E8F2067C;
+        Mon, 17 Aug 2020 17:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597683619;
-        bh=yO4PoRr63jcQQ0ftSvdUnNxZtL/3FxKQFScT69SJ/Rw=;
+        s=default; t=1597683903;
+        bh=GUsArLbL02qpHoztHYo42iM7UEhUrFu2gzZLc6e45Xw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YaBS2/oFgSG5MSTySuwiK+6hhB4ljDcZc/hzpBllKv/U/U90KubJudAXLBhcMZHzJ
-         CsdvGlepjVndFjiJ9HREJmTXrjzYGpwhVMYj3uQW5Mer5L/0ugBxwqwcrbkxekaF/c
-         ZsPo+DMRLZCrLgA9rCYcobXP1cFqwoddmkMkZo9A=
-Date:   Mon, 17 Aug 2020 19:00:38 +0200
+        b=WrOmmGSWsfm1b1BGZwv55E9QTH0wydsd48MODLzbQ6ilDmmo3YgzJtjKI+0yIYKGW
+         4/vjd/CYFEzjL2JyUrIzKmX9IyMR3GzVgcAU3zKJ9uLHzW7I3fKNma7b+3OZcqhni/
+         a3WHDpUR1MxN+7CX5zZi9N2c0hMY5I4xBPkfwyeU=
+Date:   Mon, 17 Aug 2020 19:05:22 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tong Zhang <ztong0001@gmail.com>
-Cc:     jirislaby@kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: serial: fix earlycon dependency
-Message-ID: <20200817170038.GA725471@kroah.com>
-References: <20200817165059.957748-1-ztong0001@gmail.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, jan.kiszka@siemens.com,
+        jbeulich@suse.com, linux-kernel@vger.kernel.org,
+        marc.zyngier@arm.com, stable@vger.kernel.org,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        pedro.principeza@canonical.com
+Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
+ spurious entry again
+Message-ID: <20200817170522.GA795695@kroah.com>
+References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+ <20200817162156.GA715236@kroah.com>
+ <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
+ <20200817164924.GA721399@kroah.com>
+ <14968c46-ad8f-fbdf-88d6-0ded954534c9@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817165059.957748-1-ztong0001@gmail.com>
+In-Reply-To: <14968c46-ad8f-fbdf-88d6-0ded954534c9@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:50:59PM -0400, Tong Zhang wrote:
-> parse_options() in drivers/tty/serial/earlycon.c calls
-> uart_parse_earlycon() in drivers/tty/serial/serial_core.c
-> therefore selecting SERIAL_EARLYCON should automatically
-> select SERIAL_CORE, otherwise will result in symbol not
-> found error during linking if SERIAL_CORE is not configured
-> as builtin
-
-We can handle lines 72 characters long :)
-
+On Mon, Aug 17, 2020 at 01:59:00PM -0300, Guilherme G. Piccoli wrote:
+> On 17/08/2020 13:49, Greg KH wrote:
+> > [...]
+> >> I'm sorry, I hoped the subject + thread would suffice heh
+> > 
+> > There is no thread here :(
+> > 
 > 
-> Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+> Wow, that's odd. I've sent with In-Reply-To, I'd expect it'd get
+> threaded with the original message. Looking in lore archive [1], it
+> seems my first message wasn't threaded but the others were...apologies
+> for that, not sure what happened...
 
-What broke to cause this to be needed?
+reply to is fine, but how do you know what my email client has (hint,
+not a copy of 1.5 years of history sitting around in it at the
+moment...)  So there is no "thread" here as far as it is concerned...
 
-Can you provide a "Fixes:" tag for this?
+Anyway, not a big deal, just properly quote emails in the future, that's
+good to get used to no matter what :)
 
-> ---
->  drivers/tty/serial/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> >> So, the mainline commit is: f8a8fe61fec8 ("x86/irq: Seperate unused
+> >> system vectors from spurious entry again") [0]. The backport to 4.19
+> >> stable tree has the following id: fc6975ee932b .
+> > 
+> > Wow, over 1 1/2 years old, can you remember individual patches that long
+> > ago?
+> > 
+> > Anyway, did you try to backport the patch to older kernels to see if it
+> > was possible and could work?
+> > 
+> > If so, great, please feel free to submit it to the
+> > stable@vger.kernel.org list and I will be glad to pick it up.
+> > 
 > 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 8a0352eb337c..42e844314cbb 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -8,6 +8,7 @@ menu "Serial drivers"
->  
->  config SERIAL_EARLYCON
->  	bool
-> +	select SERIAL_CORE
+> I'm working on it, it is feasible. But I'm seeking here, in this
+> message, what is the reason it wasn't backported for pre-4.19
 
-Are you _sure_ about this?  This feels odd...
+Try reading the stable mailing list archives, again, you are asking
+about a patch 1.5 years ago.  I can't remember information about patches
+sent _yesterday_ given the quantity we go through...
 
 thanks,
 
