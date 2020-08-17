@@ -2,87 +2,111 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A066CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD6620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CB520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691101;
-	bh=sBUCv5w3lNjKLqyJWKSVBjVv87IacI3e30a6X4QqE6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JfZy0sLjCQGNiIpmcmKUGT+ubcWHOzA98NAXh53AzUjFvdd+RzXx3wEn+4RD5/DrL
-	 oe7/aDeCA3OLIv1zbPTWb4X64MwUp4VksKvRMnkKnZq+/wiVRyzAmNqLcCKurJmYql
-	 GcuQgHfmxgpRU9J2Au7hXWyff9sWPA/RogkbuRXU=
+	s=default; t=1597691105;
+	bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i2q3M/zDhdBChLsIyHtl58AwwUMlSPJ/XzgjO5BL99ar0YB652HD/cSPNLDKctf6n
+	 0vsgzLGD7+OlOErfif3umvDYhFw2pevuay0IkQigwvv5/9s5UKU0u4kNswfolT7Tpb
+	 XQYApLc0bFLIZ+5OjCQmvPZSe746YkNDlydrQOtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404090AbgHQTFA (ORCPT
+        id S1731738AbgHQTFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:05:00 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:41785 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730618AbgHQPp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730626AbgHQPp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:45:26 -0400
-Received: by mail-ej1-f67.google.com with SMTP id t10so18278770ejs.8;
-        Mon, 17 Aug 2020 08:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=88NsSfMcBydVtMdxoydTDCkwKyXtq2TXNnD+2/bVGE0=;
-        b=Jafkq9PPkG1zkZN6RAB54JHNcKYZvbiTZjQswfkCRrI8IOa2GEQr6RRASL9kGvdgiL
-         bmli8G8wVuP6URqwOb+BY4imLLXLLGxJp9Y1+UQtBVWuCcU9/lZjMF2pmVbM06UBTZbf
-         Dq7nhknCdaXCF5N0fhN+k5F8AVUaR1MJHQHPRLI40ez7uJfL7uJaIayxwcZSlkc1cXuO
-         cCZGh8vNEkigwC3WZGmARUcb8XJh4b5MktgTxY1Kj/94FOVs9qr7JkVoj7i2OD7TW5h/
-         2CXw0N4deO9/RMUw405l/HpHlT8tX2SU27FAR2jYQsRtAT7DMP9QcdC0sxrKiojR4/Tl
-         LG5Q==
-X-Gm-Message-State: AOAM531X+jvynh68dYEE0m29e8TBGHKe0qfX7x6tmkCLbFpoC44vWL0q
-        7VlLE/dTyEinS0SeEHVGn/U=
-X-Google-Smtp-Source: ABdhPJxhZ268mQwED+RocFeuapgWW+9IdkMyvpMZGdBWtySWhBhqmYB3SPqu8gQUSnqzUJrm7lL6yA==
-X-Received: by 2002:a17:906:228a:: with SMTP id p10mr15557518eja.23.1597679124911;
-        Mon, 17 Aug 2020 08:45:24 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id s18sm14671616ejd.54.2020.08.17.08.45.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Aug 2020 08:45:24 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 17:45:22 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ARM: s3c: fix return value check in
- s3c_usb_otgphy_init()
-Message-ID: <20200817154522.GA15887@kozik-lap>
-References: <20200728022756.87687-1-miaoqinglang@huawei.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A5322D00;
+        Mon, 17 Aug 2020 15:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679125;
+        bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EgbdjFPkmQL7L+cTdnA0aYSmVNlmcSa6mSkEychl0b1+wKXjxqGjJ2rMOZrKBoDaL
+         bunLxO4U5hGqV4St3RO7qb6daK+72L/wzWFrU+lrq+PsqorRMG6oQinAk0PBeKMQLB
+         tXTCPyS3PqQ/N8KwlOLU8n23fFfsDw7heWEcnKgM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 105/393] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
+Date:   Mon, 17 Aug 2020 17:12:35 +0200
+Message-Id: <20200817143824.705770699@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200728022756.87687-1-miaoqinglang@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:27:56AM +0800, Qinglang Miao wrote:
-> the function clk_get() returns ERR_PTR() in case of error and
-> never returns NULL. So there's no need to test whether xusbxti
-> is NULL, just remove the redundant part in the return value check.
-> 
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->  arch/arm/mach-s3c64xx/setup-usb-phy.c | 2 +-
+From: Dmitry Osipenko <digetx@gmail.com>
 
-Thanks, applied.
+[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
 
-Best regards,
-Krzysztof
+Once channel's job is hung, it dumps the channel's state into KMSG before
+tearing down the offending job. If multiple channels hang at once, then
+they dump messages simultaneously, making the debug info unreadable, and
+thus, useless. This patch adds mutex which allows only one channel to emit
+debug messages at a time.
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/host1x/debug.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
+index c0392672a8421..1b4997bda1c79 100644
+--- a/drivers/gpu/host1x/debug.c
++++ b/drivers/gpu/host1x/debug.c
+@@ -16,6 +16,8 @@
+ #include "debug.h"
+ #include "channel.h"
+ 
++static DEFINE_MUTEX(debug_lock);
++
+ unsigned int host1x_debug_trace_cmdbuf;
+ 
+ static pid_t host1x_debug_force_timeout_pid;
+@@ -52,12 +54,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
+ 	struct output *o = data;
+ 
+ 	mutex_lock(&ch->cdma.lock);
++	mutex_lock(&debug_lock);
+ 
+ 	if (show_fifo)
+ 		host1x_hw_show_channel_fifo(m, ch, o);
+ 
+ 	host1x_hw_show_channel_cdma(m, ch, o);
+ 
++	mutex_unlock(&debug_lock);
+ 	mutex_unlock(&ch->cdma.lock);
+ 
+ 	return 0;
+-- 
+2.25.1
+
+
 
