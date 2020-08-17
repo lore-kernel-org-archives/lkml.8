@@ -2,119 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B30CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154372065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Il4/WYWW"
+	by mail.kernel.org (Postfix) with ESMTP id ED6E82065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692688;
+	bh=A9I3Y0ifFr5e1wqS1dyd2VKj/8QcHjUtO1jMJS1N00U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LZtWy6Ehh5Z2a59eFQXYCJbbbRC5Lga2V8eZ0K54+Wyn72X02uUdauML9lrvqcf99
+	 G5hoJsygauXKYlxiLnP/jQ2acsCbJbGMWXoY2mRRFMDHz889k0/VSSnbKnYysJtut6
+	 ncvs0N6zcU9EJQeO/xcN96R5N+fw889t9Cw64R3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbgHQTbX (ORCPT
+        id S2390588AbgHQTb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbgHQT3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:29:49 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4F2C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p37so8587508pgl.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IQEFM5eDrlk4uN0cUulgaoouXT3z+FbkNrUscxGEwfY=;
-        b=Il4/WYWWqFE/qAzOwm9kfMC9NOlA004aXkbH1fIy/V7R5qAIiigoyGwSXJeap5fGzZ
-         IAtDk7ThFw+I+uoN3iEBR0k7l7V4G8iWozOPbWwoF8xpj+feXJjxWDmDJxCbi3yVIIz4
-         DcKKycHMZ5M8iGH9xX6OxumCJ3bPk/sESXWCs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IQEFM5eDrlk4uN0cUulgaoouXT3z+FbkNrUscxGEwfY=;
-        b=mXred5VSDZeLml2eQbfhkA5NgLQ2tHuHXUZ+LH9IKg++NMrkAWPczkDhDJeZ8iwJNy
-         T7JMmrDpUDT5D8ufYw69UbRdrznWXMNLxxmqRkoqdlYM3qODmNduNfc1rlcJQe3TLm0U
-         Fc6CoQNSm4ydWuXAdNwFSw7sRBxnObI0SeWfDdXCIjT9neN7tRyGUQNeWa6LMfRtrNum
-         KeDZH0+0KV1Bqxl6Nea1bZUGxcVlRltBzyRweI35hlI3o/XV0bp8wMwJOda+Ddtv84qw
-         qxams+QbzT+DWGNuN2qvvspym9hMMC0YKM6JEBp3UkW5vWLzPJ0jF2SPsGRsxXXiTPil
-         6egw==
-X-Gm-Message-State: AOAM532tpRqGveHZipxOeL1CmTUaysDMPOoLnCDcRdwD3kCjnHTXD9P8
-        QURv/twnzDzoYBj1rH71hKSwiQ==
-X-Google-Smtp-Source: ABdhPJxcba+zdwEuQprcShXltivd2diUYpTiu6P3/hYoUspmLcf/BB1Tt2/E3lFjFEP7byFNgsURlA==
-X-Received: by 2002:a63:2e87:: with SMTP id u129mr11009060pgu.347.1597692589083;
-        Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h19sm18737765pjv.41.2020.08.17.12.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:29:47 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 12:29:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
-        sre@kernel.org, James.Bottomley@HansenPartnership.com,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        ulf.hansson@linaro.org, mporter@kernel.crashing.org,
-        alex.bou9@gmail.com, broonie@kernel.org, martyn@welchs.me.uk,
-        manohar.vanga@gmail.com, mitch@sfgoth.com, davem@davemloft.net,
-        kuba@kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <202008171228.29E6B3BB@keescook>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com>
- <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+        Mon, 17 Aug 2020 15:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730297AbgHQPb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2236C23120;
+        Mon, 17 Aug 2020 15:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678318;
+        bh=A9I3Y0ifFr5e1wqS1dyd2VKj/8QcHjUtO1jMJS1N00U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xPn8JXIV6Y/EGoVPm9JVkJ/0Mp+B/7wXBxXW/Y2IfuIkoYHzxYbDrN+becZJaWNrm
+         8TAcaftBnV3PJyCg/PP0XffNqgdPc6gQ+gyJNmm84rfTUE3tD8wbWd1ITzHWol1ZCr
+         g7fRj8fjzG94h0sKD6Z3Hv5Xdqurb0qt+xEbgBu0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 293/464] powerpc/watchpoint: Fix 512 byte boundary limit
+Date:   Mon, 17 Aug 2020 17:14:06 +0200
+Message-Id: <20200817143847.790438471@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
-> On 8/17/20 2:15 AM, Allen Pais wrote:
-> > From: Allen Pais <allen.lkml@gmail.com>
-> > 
-> > In preparation for unconditionally passing the
-> > struct tasklet_struct pointer to all tasklet
-> > callbacks, switch to using the new tasklet_setup()
-> > and from_tasklet() to pass the tasklet pointer explicitly.
-> 
-> Who came up with the idea to add a macro 'from_tasklet' that is just
-> container_of? container_of in the code would be _much_ more readable,
-> and not leave anyone guessing wtf from_tasklet is doing.
-> 
-> I'd fix that up now before everything else goes in...
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-As I mentioned in the other thread, I think this makes things much more
-readable. It's the same thing that the timer_struct conversion did
-(added a container_of wrapper) to avoid the ever-repeating use of
-typeof(), long lines, etc.
+[ Upstream commit 3190ecbfeeb2ab17778887ce3fa964615d6460fd ]
 
+Milton Miller reported that we are aligning start and end address to
+wrong size SZ_512M. It should be SZ_512. Fix that.
+
+While doing this change I also found a case where ALIGN() comparison
+fails. Within a given aligned range, ALIGN() of two addresses does not
+match when start address is pointing to the first byte and end address
+is pointing to any other byte except the first one. But that's not true
+for ALIGN_DOWN(). ALIGN_DOWN() of any two addresses within that range
+will always point to the first byte. So use ALIGN_DOWN() instead of
+ALIGN().
+
+Fixes: e68ef121c1f4 ("powerpc/watchpoint: Use builtin ALIGN*() macros")
+Reported-by: Milton Miller <miltonm@us.ibm.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Tested-by: Jordan Niethe <jniethe5@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200723090813.303838-2-ravi.bangoria@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/kernel/hw_breakpoint.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index 0000daf0e1dae..031e6defc08e6 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -419,7 +419,7 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
+ 	if (dawr_enabled()) {
+ 		max_len = DAWR_MAX_LEN;
+ 		/* DAWR region can't cross 512 bytes boundary */
+-		if (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M))
++		if (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512))
+ 			return -EINVAL;
+ 	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
+ 		/* 8xx can setup a range without limitation */
 -- 
-Kees Cook
+2.25.1
+
+
+
