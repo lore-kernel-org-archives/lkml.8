@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB10EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99C0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6D120789
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9059F20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679335;
-	bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+	s=default; t=1597679340;
+	bh=CsHthHehN7Oq9N7RKyJZNpDPp0iklDcRQQ7X8Zxd+CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBPyyu1TwtqrciM74ex7HTAI2EFfX4AuWgN23hRx0wIuTMA+QztPVB9lBroiORX8e
-	 aFlSFS0om942p5UuptSaDkaLGOfW2T2xNWhoLQL60gva8UIvKXGYZ8KEyT9O4ZK3X0
-	 QCvVdRV42yniyV0KcY9wkSuUyj5hjv7CaFeR9zmU=
+	b=pQRyTe53Hrnf7/oaNKZr/InztO1MluJwwQ23bo3rK6W2oRbrrgCIWn6xIXC4Or7F7
+	 gBo0MtnP8KfEbBTTq5rYthShBtTGZiNl750L2H2BQu3mY9Lqew59qa1gECxKhVSuaw
+	 VhiNVGbDMthpyhntWt8CJx8oJ/m7JoZpdEVAibSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387640AbgHQPsx (ORCPT
+        id S2387759AbgHQPs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbgHQPiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:54 -0400
+        id S1730617AbgHQPis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C6A22CB3;
-        Mon, 17 Aug 2020 15:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47613208E4;
+        Mon, 17 Aug 2020 15:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678733;
-        bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+        s=default; t=1597678727;
+        bh=CsHthHehN7Oq9N7RKyJZNpDPp0iklDcRQQ7X8Zxd+CQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNargjWKRDxC3jcF53bKLzKC1dc2ARmqR0CDC/uFvbXknBJcT1ysDJv1CYq3+uLx8
-         PD9+oIxh0kV6Lx6sazAle7I/ebXjor8+CVJHqNkTxPs/gXOAY3Gt5hFM7xPKpsgKfN
-         bDR5geeqWR8E5TnR6X9BBQuIKMK6VQrTYmj06gRw=
+        b=2q344K0V7H44BLO7h8zGnz6NxleCl4TdqDYD3CvR+eyGUHSwgKTDLD5jSmjypLxf/
+         EbPraJb5LjJwpVyct9AnxZ40erjx2pmcoQZxPg22cBSyrCp9mlR4hJXegCkZRaLGXj
+         3c7yGnK3/eZURgSxGfddgd8nIJ4HFnfzrAEw8p7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
-        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
-        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 418/464] fs/minix: reject too-large maximum file size
-Date:   Mon, 17 Aug 2020 17:16:11 +0200
-Message-Id: <20200817143853.801921489@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.8 434/464] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+Date:   Mon, 17 Aug 2020 17:16:27 +0200
+Message-Id: <20200817143854.567216826@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -66,76 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
+commit 63ef91f24f9bfc70b6446319f6cabfd094481372 upstream.
 
-If the minix filesystem tries to map a very large logical block number to
-its on-disk location, block_to_path() can return offsets that are too
-large, causing out-of-bounds memory accesses when accessing indirect index
-blocks.  This should be prevented by the check against the maximum file
-size, but this doesn't work because the maximum file size is read directly
-from the on-disk superblock and isn't validated itself.
+Booting a recent kernel on a rk3399-based system (nanopc-t4),
+equipped with a recent u-boot and ATF results in an Oops due
+to a NULL pointer dereference.
 
-Fix this by validating the maximum file size at mount time.
+This turns out to be due to the rk3399-dmc driver looking for
+an *undocumented* property (rockchip,pmu), and happily using
+a NULL pointer when the property isn't there.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
-Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
-Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Instead, make most of what was brought in with 9173c5ceb035
+("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
+to TF-A.") conditioned on finding this property in the device-tree,
+preventing the driver from exploding.
+
+Cc: stable@vger.kernel.org
+Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/inode.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/devfreq/rk3399_dmc.c |   42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -150,6 +150,23 @@ static int minix_remount (struct super_b
- 	return 0;
- }
+--- a/drivers/devfreq/rk3399_dmc.c
++++ b/drivers/devfreq/rk3399_dmc.c
+@@ -95,18 +95,20 @@ static int rk3399_dmcfreq_target(struct
  
-+static bool minix_check_superblock(struct minix_sb_info *sbi)
-+{
-+	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
-+		return false;
-+
-+	/*
-+	 * s_max_size must not exceed the block mapping limitation.  This check
-+	 * is only needed for V1 filesystems, since V2/V3 support an extra level
-+	 * of indirect blocks which places the limit well above U32_MAX.
-+	 */
-+	if (sbi->s_version == MINIX_V1 &&
-+	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
-+		return false;
-+
-+	return true;
-+}
-+
- static int minix_fill_super(struct super_block *s, void *data, int silent)
- {
- 	struct buffer_head *bh;
-@@ -228,11 +245,12 @@ static int minix_fill_super(struct super
- 	} else
- 		goto out_no_fs;
+ 	mutex_lock(&dmcfreq->lock);
  
-+	if (!minix_check_superblock(sbi))
-+		goto out_illegal_sb;
+-	if (target_rate >= dmcfreq->odt_dis_freq)
+-		odt_enable = true;
+-
+-	/*
+-	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+-	 * timings and to enable or disable the ODT (on-die termination)
+-	 * resistors.
+-	 */
+-	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+-		      dmcfreq->odt_pd_arg1,
+-		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+-		      odt_enable, 0, 0, 0, &res);
++	if (dmcfreq->regmap_pmu) {
++		if (target_rate >= dmcfreq->odt_dis_freq)
++			odt_enable = true;
 +
++		/*
++		 * This makes a SMC call to the TF-A to set the DDR PD
++		 * (power-down) timings and to enable or disable the
++		 * ODT (on-die termination) resistors.
++		 */
++		arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
++			      dmcfreq->odt_pd_arg1,
++			      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
++			      odt_enable, 0, 0, 0, &res);
++	}
+ 
  	/*
- 	 * Allocate the buffer map to keep the superblock small.
- 	 */
--	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
--		goto out_illegal_sb;
- 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
- 	map = kzalloc(i, GFP_KERNEL);
- 	if (!map)
+ 	 * If frequency scaling from low to high, adjust voltage first.
+@@ -371,13 +373,14 @@ static int rk3399_dmcfreq_probe(struct p
+ 	}
+ 
+ 	node = of_parse_phandle(np, "rockchip,pmu", 0);
+-	if (node) {
+-		data->regmap_pmu = syscon_node_to_regmap(node);
+-		of_node_put(node);
+-		if (IS_ERR(data->regmap_pmu)) {
+-			ret = PTR_ERR(data->regmap_pmu);
+-			goto err_edev;
+-		}
++	if (!node)
++		goto no_pmu;
++
++	data->regmap_pmu = syscon_node_to_regmap(node);
++	of_node_put(node);
++	if (IS_ERR(data->regmap_pmu)) {
++		ret = PTR_ERR(data->regmap_pmu);
++		goto err_edev;
+ 	}
+ 
+ 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
+@@ -399,6 +402,7 @@ static int rk3399_dmcfreq_probe(struct p
+ 		goto err_edev;
+ 	};
+ 
++no_pmu:
+ 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
+ 		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
+ 		      0, 0, 0, 0, &res);
 
 
