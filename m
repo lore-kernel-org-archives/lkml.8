@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBC420789
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E287E20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686285;
-	bh=KzTrorgqToKxeGeMpORGOvojfzmMYJVIDA35A+pgvsY=;
+	s=default; t=1597686296;
+	bh=zVij81NjO9OlNZQfJq475tkpwu9Yi7VSo5asPkcp50U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thVBUmiVxsevZQRRDr/O6q7WIqDGn0xa7MwVw/ecZC6g8mXJOba3cYUtH9kssJgRQ
-	 TTOyVT2BE4kqdwl1lSwdr/P0Fxl/EetrQjwgYgUInwRb5q3GMMfDatH0FIJcf28iLu
-	 k1TBt1mAxoUTvAJj+S6CAJpiXSnFrs8IVzhJ8440=
+	b=G6kQjR+wUZ0sWPTWLSp57tuNiTlrORAZF3Y00gjuF3lxFA3P09a2ndN7gUSrlJ/cf
+	 iPhIHRqlhUi06Kc+exKbKNVzeBGGBgrQLKY7bO066N/+rRx8fK/xi0iI5o/0lGZkmD
+	 DJBAggk6T4LXwmoIMpuDfqLa6zau2peESmdlrWDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgHQRoo (ORCPT
+        id S2389409AbgHQRow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:44:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730983AbgHQQOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:47 -0400
+        id S1730934AbgHQQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF1020772;
-        Mon, 17 Aug 2020 16:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C609E20657;
+        Mon, 17 Aug 2020 16:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680884;
-        bh=KzTrorgqToKxeGeMpORGOvojfzmMYJVIDA35A+pgvsY=;
+        s=default; t=1597680882;
+        bh=zVij81NjO9OlNZQfJq475tkpwu9Yi7VSo5asPkcp50U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fsSJ2z6r22IKvkSHy2cvyYNNmXqiS3zGg5rCOxixdFoBlIwxwQpbNdNYJ8wKbn5cA
-         kThsvCtMB0aX5kV3Mry2qw95doT1BmgofamzzK3Zo13PEjaRMOVl189Mt7gKEEQaxC
-         G0vSN8RkpwPact9Xb4oorieCToZwZoqXEqihcrSE=
+        b=PLsm5JXgmZ6Ce01LwralGrlILRGhGR1m16nArrizBvCC1F9kXLtM3SKSgZPUDTgCs
+         /iE7rpaFBZB+XqiL7P/TEfOddYhVLianYzCppOgbXE8uneTwTMEeyM5MMVPe71nmBi
+         fdK+OBImChAc7TWtLfVKhWxtD6WgM6n3BkrFmwXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/168] coresight: tmc: Fix TMC mode read in tmc_read_unprepare_etb()
-Date:   Mon, 17 Aug 2020 17:17:06 +0200
-Message-Id: <20200817143738.465909320@linuxfoundation.org>
+Subject: [PATCH 4.19 068/168] cxl: Fix kobject memleak
+Date:   Mon, 17 Aug 2020 17:16:39 +0200
+Message-Id: <20200817143737.123347684@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,78 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit d021f5c5ff679432c5e9faee0fd7350db2efb97c ]
+[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
 
-Reading TMC mode register without proper coresight power
-management can lead to exceptions like the one in the call
-trace below in tmc_read_unprepare_etb() when the trace data
-is read after the sink is disabled. So fix this by having
-a check for coresight sysfs mode before reading TMC mode
-management register in tmc_read_unprepare_etb() similar to
-tmc_read_prepare_etb().
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-  SError Interrupt on CPU6, code 0xbe000411 -- SError
-  pstate: 80400089 (Nzcv daIf +PAN -UAO)
-  pc : tmc_read_unprepare_etb+0x74/0x108
-  lr : tmc_read_unprepare_etb+0x54/0x108
-  sp : ffffff80d9507c30
-  x29: ffffff80d9507c30 x28: ffffff80b3569a0c
-  x27: 0000000000000000 x26: 00000000000a0001
-  x25: ffffff80cbae9550 x24: 0000000000000010
-  x23: ffffffd07296b0f0 x22: ffffffd0109ee028
-  x21: 0000000000000000 x20: ffffff80d19e70e0
-  x19: ffffff80d19e7080 x18: 0000000000000000
-  x17: 0000000000000000 x16: 0000000000000000
-  x15: 0000000000000000 x14: 0000000000000000
-  x13: 0000000000000000 x12: 0000000000000000
-  x11: 0000000000000000 x10: dfffffd000000001
-  x9 : 0000000000000000 x8 : 0000000000000002
-  x7 : ffffffd071d0fe78 x6 : 0000000000000000
-  x5 : 0000000000000080 x4 : 0000000000000001
-  x3 : ffffffd071d0fe98 x2 : 0000000000000000
-  x1 : 0000000000000004 x0 : 0000000000000001
-  Kernel panic - not syncing: Asynchronous SError Interrupt
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
-Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-Reported-by: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200716175746.3338735-14-mathieu.poirier@linaro.org
+Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/misc/cxl/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index e90af39283b19..29dc2eac5b065 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -583,15 +583,14 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
+diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
+index 629e2e1564124..0baa229d2b7d4 100644
+--- a/drivers/misc/cxl/sysfs.c
++++ b/drivers/misc/cxl/sysfs.c
+@@ -628,7 +628,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
+ 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+ 				  &afu->dev.kobj, "cr%i", cr->cr);
+ 	if (rc)
+-		goto err;
++		goto err1;
  
- 	spin_lock_irqsave(&drvdata->spinlock, flags);
- 
--	/* There is no point in reading a TMC in HW FIFO mode */
--	mode = readl_relaxed(drvdata->base + TMC_MODE);
--	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
--		spin_unlock_irqrestore(&drvdata->spinlock, flags);
--		return -EINVAL;
--	}
--
- 	/* Re-enable the TMC if need be */
- 	if (drvdata->mode == CS_MODE_SYSFS) {
-+		/* There is no point in reading a TMC in HW FIFO mode */
-+		mode = readl_relaxed(drvdata->base + TMC_MODE);
-+		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-+			spin_unlock_irqrestore(&drvdata->spinlock, flags);
-+			return -EINVAL;
-+		}
- 		/*
- 		 * The trace run will continue with the same allocated trace
- 		 * buffer. As such zero-out the buffer so that we don't end
+ 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+ 	if (rc)
 -- 
 2.25.1
 
