@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF31C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6814A2395B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0046623BC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678208;
-	bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
+	s=default; t=1597678216;
+	bh=jdjRE+5r63tjOUDkyebNtk66coHXqWAUqPwlw4LL0Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZ29pSIV/msWBoS1zKU0gG06zOeRinjtzk0OPB82PxLfSUgp1DA7Y0h0gC1DGadRh
-	 Pa4xXbES6AcNEQaUbBaR9SU7U8fPkUMmjGOhE4BFsgn3cKfQCkOT/dG5BPSl+LqS1K
-	 tnR3QqZ1igUkMR5aPHSc/0j4Je6Uw245HwpMLKyY=
+	b=2J6+cc1daZlYhCu2J67KPXSbgr0wTrXKzVNsO5aKZGzn5oPT/NIj4x8NsfGN5MJY3
+	 kFMme8nHA8ne35DLIL7bO4sT8GTpp3BOS+3VJSwXm7uWMyhJL7RoxsFTkie/Zyx48d
+	 I2jG/nw6e/2vF/TX0j8oqMl69XuuUi6eexMlh9O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgHQPaA (ORCPT
+        id S1730163AbgHQPaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40724 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbgHQP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:54 -0400
+        id S1729985AbgHQP2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C07F23B29;
-        Mon, 17 Aug 2020 15:27:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2003F23444;
+        Mon, 17 Aug 2020 15:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678074;
-        bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
+        s=default; t=1597678082;
+        bh=jdjRE+5r63tjOUDkyebNtk66coHXqWAUqPwlw4LL0Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdF8tRhUZOARJBysnLA7oH5l1gLxqNX4fT204s8h2dDeN8sXYz+VakdEzxG5SrjZL
-         yLxXWLQv5F5VTpGgp9iBeSmTWh7xplRkxDuWcWAaOvLNhO4EShlaUKnSzqOPnXE/TF
-         C1DlhZLjWc5HNuWOSqqZHgqeWl0Ni/6BreqtvJ9k=
+        b=TDLqJGlIqe2d1iMmex++QqrznovJ42Pp9SbJOTw2BzdnRNlBRRd6/Tz1snEPBYyxQ
+         EGgBa6EWMLCEI/pELtX5epqF0SOcnAlw8BjiBqdtm5xr7HZaSP1jvoicbTiJFN8xBk
+         wG8r0frPuWPw7yXa2g3ft0UoifjlTgvbiHcKy73A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 209/464] media: exynos4-is: Add missed check for pinctrl_lookup_state()
-Date:   Mon, 17 Aug 2020 17:12:42 +0200
-Message-Id: <20200817143843.826599488@linuxfoundation.org>
+Subject: [PATCH 5.8 212/464] xfs: dont eat an EIO/ENOSPC writeback error when scrubbing data fork
+Date:   Mon, 17 Aug 2020 17:12:45 +0200
+Message-Id: <20200817143843.967245573@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,35 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 18ffec750578f7447c288647d7282c7d12b1d969 ]
+[ Upstream commit eb0efe5063bb10bcb653e4f8e92a74719c03a347 ]
 
-fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
-Add the missed check to fix it.
+The data fork scrubber calls filemap_write_and_wait to flush dirty pages
+and delalloc reservations out to disk prior to checking the data fork's
+extent mappings.  Unfortunately, this means that scrub can consume the
+EIO/ENOSPC errors that would otherwise have stayed around in the address
+space until (we hope) the writer application calls fsync to persist data
+and collect errors.  The end result is that programs that wrote to a
+file might never see the error code and proceed as if nothing were
+wrong.
 
-Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+xfs_scrub is not in a position to notify file writers about the
+writeback failure, and it's only here to check metadata, not file
+contents.  Therefore, if writeback fails, we should stuff the error code
+back into the address space so that an fsync by the writer application
+can pick that up.
+
+Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/xfs/scrub/bmap.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 9aaf3b8060d50..9c31d950cddf7 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
- 
- 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
- 					PINCTRL_STATE_IDLE);
-+	if (IS_ERR(pctl->state_idle))
-+		return PTR_ERR(pctl->state_idle);
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 7badd6dfe5449..955302e7cdde9 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -45,9 +45,27 @@ xchk_setup_inode_bmap(
+ 	 */
+ 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
+ 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
++		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
 +
- 	return 0;
- }
+ 		inode_dio_wait(VFS_I(sc->ip));
+-		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
+-		if (error)
++
++		/*
++		 * Try to flush all incore state to disk before we examine the
++		 * space mappings for the data fork.  Leave accumulated errors
++		 * in the mapping for the writer threads to consume.
++		 *
++		 * On ENOSPC or EIO writeback errors, we continue into the
++		 * extent mapping checks because write failures do not
++		 * necessarily imply anything about the correctness of the file
++		 * metadata.  The metadata and the file data could be on
++		 * completely separate devices; a media failure might only
++		 * affect a subset of the disk, etc.  We can handle delalloc
++		 * extents in the scrubber, so leaving them in memory is fine.
++		 */
++		error = filemap_fdatawrite(mapping);
++		if (!error)
++			error = filemap_fdatawait_keep_errors(mapping);
++		if (error && (error != -ENOSPC && error != -EIO))
+ 			goto out;
+ 	}
  
 -- 
 2.25.1
