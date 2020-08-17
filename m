@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57275C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B7B204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAA1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690474;
-	bh=ZUJRWn2u+zLKI8OJizNnRg3pSjjcXEkJ0NkPxncDCO8=;
+	s=default; t=1597690483;
+	bh=mjuxfjKqgxt2gXjsirK1S359T6DYB81tLFOmd6wXCKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVtA4PAC/E2JC/0RvJpdZfOkqelWp3mooBkMTA43Uas/q6BC6vK7r6IXArfaEFpIA
-	 xkHcZlXLHJP7ZYxrA8uzxUzPFklg00nrqMczag30U4a4jEOdQME+ESCd50VGa0j6Z2
-	 RljP1uedtEc/wTyIyyciAMp0GanexzNhNoNmitDU=
+	b=EAIa+6F7cLjhweE/GlcbtVA3VK9RFgyYIlmuVgB6g+mxOKSLMKy/7Xa3OUIa6OC23
+	 SHMDd/MZKz3nt0xziibA3sQF98ClmjV3qZChKwkROafBM212Cn7GBAHaEgdM28iZzp
+	 ljPfSKEFcpmeQmOx1hULnAL0JLYDyk6jsDnY5vjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbgHQSyd (ORCPT
+        id S1731593AbgHQSym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbgHQPvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:23 -0400
+        id S1730919AbgHQPvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936402063A;
-        Mon, 17 Aug 2020 15:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B1120657;
+        Mon, 17 Aug 2020 15:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679483;
-        bh=ZUJRWn2u+zLKI8OJizNnRg3pSjjcXEkJ0NkPxncDCO8=;
+        s=default; t=1597679480;
+        bh=mjuxfjKqgxt2gXjsirK1S359T6DYB81tLFOmd6wXCKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwTqD/H8CCDntyVOGUjnCJNrpBxvF0l90qgTVNNxRFJNuBSzJda5wrGyCz9YNx5Cw
-         NjxSF3slZZdJgrjYIipUx7gFQS/qlgGIZYJiTGhYUrdrybAsBrB/04qEBzOkWuTv5q
-         sHV3MR9ouAJrHt1ynHM7bo40URf55Wk+va9VLWCY=
+        b=bufl4kw/Ow93RbdStSWLgiWNVRO5vPxQSAM0heWd0o2G0WItFVPuEOOmeXXk8zGTK
+         DmQHfTTRxue6R7/A54miJhJda7mZGrnVdxeAnh996ZMZLiZYN/4CiIiXRWP77Fsm5C
+         3p1ZRbsa7byp51pQTZRZFixc90qntOK1VV3yfQio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 220/393] drm/imx: fix use after free
-Date:   Mon, 17 Aug 2020 17:14:30 +0200
-Message-Id: <20200817143830.295363269@linuxfoundation.org>
+Subject: [PATCH 5.7 186/393] xfs: dont eat an EIO/ENOSPC writeback error when scrubbing data fork
+Date:   Mon, 17 Aug 2020 17:13:56 +0200
+Message-Id: <20200817143828.643410220@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,270 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit ba807c94f67fd64b3051199810d9e4dd209fdc00 ]
+[ Upstream commit eb0efe5063bb10bcb653e4f8e92a74719c03a347 ]
 
-Component driver structures allocated with devm_kmalloc() in bind() are
-freed automatically after unbind(). Since the contained drm structures
-are accessed afterwards in drm_mode_config_cleanup(), move the
-allocation into probe() to extend the driver structure's lifetime to the
-lifetime of the device. This should eventually be changed to use drm
-resource managed allocations with lifetime of the drm device.
+The data fork scrubber calls filemap_write_and_wait to flush dirty pages
+and delalloc reservations out to disk prior to checking the data fork's
+extent mappings.  Unfortunately, this means that scrub can consume the
+EIO/ENOSPC errors that would otherwise have stayed around in the address
+space until (we hope) the writer application calls fsync to persist data
+and collect errors.  The end result is that programs that wrote to a
+file might never see the error code and proceed as if nothing were
+wrong.
 
-We also need to ensure that all componets are available during the
-unbind() so we need to call component_unbind_all() before we free
-non-devres resources like planes.
+xfs_scrub is not in a position to notify file writers about the
+writeback failure, and it's only here to check metadata, not file
+contents.  Therefore, if writeback fails, we should stuff the error code
+back into the address space so that an fsync by the writer application
+can pick that up.
 
-Note this patch fixes the the use after free bug but introduces a
-possible boot loop issue. The issue is triggered if the HDMI support is
-enabled and a component driver always return -EPROBE_DEFER, see
-discussion [1] for more details.
-
-[1] https://lkml.org/lkml/2020/3/24/1467
-
-Fixes: 17b5001b5143 ("imx-drm: convert to componentised device support")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-[m.felsch@pengutronix: fix imx_tve_probe()]
-[m.felsch@pengutronix: resort component_unbind_all())
-[m.felsch@pengutronix: adapt commit message]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/dw_hdmi-imx.c      | 15 ++++++++++-----
- drivers/gpu/drm/imx/imx-drm-core.c     |  3 ++-
- drivers/gpu/drm/imx/imx-ldb.c          | 15 ++++++++++-----
- drivers/gpu/drm/imx/imx-tve.c          | 15 ++++++++++-----
- drivers/gpu/drm/imx/ipuv3-crtc.c       | 21 ++++++++++-----------
- drivers/gpu/drm/imx/parallel-display.c | 15 ++++++++++-----
- 6 files changed, 52 insertions(+), 32 deletions(-)
+ fs/xfs/scrub/bmap.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-index f22cfbf9353ed..2e12a4a3bfa11 100644
---- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
-+++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-@@ -212,9 +212,8 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
- 	if (!pdev->dev.of_node)
- 		return -ENODEV;
- 
--	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
--	if (!hdmi)
--		return -ENOMEM;
-+	hdmi = dev_get_drvdata(dev);
-+	memset(hdmi, 0, sizeof(*hdmi));
- 
- 	match = of_match_node(dw_hdmi_imx_dt_ids, pdev->dev.of_node);
- 	plat_data = match->data;
-@@ -239,8 +238,6 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
- 	drm_encoder_init(drm, encoder, &dw_hdmi_imx_encoder_funcs,
- 			 DRM_MODE_ENCODER_TMDS, NULL);
- 
--	platform_set_drvdata(pdev, hdmi);
--
- 	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
- 
- 	/*
-@@ -270,6 +267,14 @@ static const struct component_ops dw_hdmi_imx_ops = {
- 
- static int dw_hdmi_imx_probe(struct platform_device *pdev)
- {
-+	struct imx_hdmi *hdmi;
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index add8598eacd5d..c4788d244de35 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -45,9 +45,27 @@ xchk_setup_inode_bmap(
+ 	 */
+ 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
+ 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
++		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
 +
-+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return -ENOMEM;
+ 		inode_dio_wait(VFS_I(sc->ip));
+-		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
+-		if (error)
 +
-+	platform_set_drvdata(pdev, hdmi);
-+
- 	return component_add(&pdev->dev, &dw_hdmi_imx_ops);
- }
- 
-diff --git a/drivers/gpu/drm/imx/imx-drm-core.c b/drivers/gpu/drm/imx/imx-drm-core.c
-index da87c70e413b4..881c36d0f16bb 100644
---- a/drivers/gpu/drm/imx/imx-drm-core.c
-+++ b/drivers/gpu/drm/imx/imx-drm-core.c
-@@ -281,9 +281,10 @@ static void imx_drm_unbind(struct device *dev)
- 
- 	drm_kms_helper_poll_fini(drm);
- 
-+	component_unbind_all(drm->dev, drm);
-+
- 	drm_mode_config_cleanup(drm);
- 
--	component_unbind_all(drm->dev, drm);
- 	dev_set_drvdata(dev, NULL);
- 
- 	drm_dev_put(drm);
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index 4da22a94790cf..8e209117b049a 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -594,9 +594,8 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 	int ret;
- 	int i;
- 
--	imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
--	if (!imx_ldb)
--		return -ENOMEM;
-+	imx_ldb = dev_get_drvdata(dev);
-+	memset(imx_ldb, 0, sizeof(*imx_ldb));
- 
- 	imx_ldb->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
- 	if (IS_ERR(imx_ldb->regmap)) {
-@@ -704,8 +703,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 		}
++		/*
++		 * Try to flush all incore state to disk before we examine the
++		 * space mappings for the data fork.  Leave accumulated errors
++		 * in the mapping for the writer threads to consume.
++		 *
++		 * On ENOSPC or EIO writeback errors, we continue into the
++		 * extent mapping checks because write failures do not
++		 * necessarily imply anything about the correctness of the file
++		 * metadata.  The metadata and the file data could be on
++		 * completely separate devices; a media failure might only
++		 * affect a subset of the disk, etc.  We can handle delalloc
++		 * extents in the scrubber, so leaving them in memory is fine.
++		 */
++		error = filemap_fdatawrite(mapping);
++		if (!error)
++			error = filemap_fdatawait_keep_errors(mapping);
++		if (error && (error != -ENOSPC && error != -EIO))
+ 			goto out;
  	}
- 
--	dev_set_drvdata(dev, imx_ldb);
--
- 	return 0;
- 
- free_child:
-@@ -737,6 +734,14 @@ static const struct component_ops imx_ldb_ops = {
- 
- static int imx_ldb_probe(struct platform_device *pdev)
- {
-+	struct imx_ldb *imx_ldb;
-+
-+	imx_ldb = devm_kzalloc(&pdev->dev, sizeof(*imx_ldb), GFP_KERNEL);
-+	if (!imx_ldb)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, imx_ldb);
-+
- 	return component_add(&pdev->dev, &imx_ldb_ops);
- }
- 
-diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
-index 5bbfaa2cd0f47..9fd4b464e829c 100644
---- a/drivers/gpu/drm/imx/imx-tve.c
-+++ b/drivers/gpu/drm/imx/imx-tve.c
-@@ -546,9 +546,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
- 	int irq;
- 	int ret;
- 
--	tve = devm_kzalloc(dev, sizeof(*tve), GFP_KERNEL);
--	if (!tve)
--		return -ENOMEM;
-+	tve = dev_get_drvdata(dev);
-+	memset(tve, 0, sizeof(*tve));
- 
- 	tve->dev = dev;
- 	spin_lock_init(&tve->lock);
-@@ -659,8 +658,6 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		return ret;
- 
--	dev_set_drvdata(dev, tve);
--
- 	return 0;
- }
- 
-@@ -680,6 +677,14 @@ static const struct component_ops imx_tve_ops = {
- 
- static int imx_tve_probe(struct platform_device *pdev)
- {
-+	struct imx_tve *tve;
-+
-+	tve = devm_kzalloc(&pdev->dev, sizeof(*tve), GFP_KERNEL);
-+	if (!tve)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, tve);
-+
- 	return component_add(&pdev->dev, &imx_tve_ops);
- }
- 
-diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-index 63c0284f8b3c0..2256c9789fc2c 100644
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -438,21 +438,13 @@ static int ipu_drm_bind(struct device *dev, struct device *master, void *data)
- 	struct ipu_client_platformdata *pdata = dev->platform_data;
- 	struct drm_device *drm = data;
- 	struct ipu_crtc *ipu_crtc;
--	int ret;
- 
--	ipu_crtc = devm_kzalloc(dev, sizeof(*ipu_crtc), GFP_KERNEL);
--	if (!ipu_crtc)
--		return -ENOMEM;
-+	ipu_crtc = dev_get_drvdata(dev);
-+	memset(ipu_crtc, 0, sizeof(*ipu_crtc));
- 
- 	ipu_crtc->dev = dev;
- 
--	ret = ipu_crtc_init(ipu_crtc, pdata, drm);
--	if (ret)
--		return ret;
--
--	dev_set_drvdata(dev, ipu_crtc);
--
--	return 0;
-+	return ipu_crtc_init(ipu_crtc, pdata, drm);
- }
- 
- static void ipu_drm_unbind(struct device *dev, struct device *master,
-@@ -474,6 +466,7 @@ static const struct component_ops ipu_crtc_ops = {
- static int ipu_drm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct ipu_crtc *ipu_crtc;
- 	int ret;
- 
- 	if (!dev->platform_data)
-@@ -483,6 +476,12 @@ static int ipu_drm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	ipu_crtc = devm_kzalloc(dev, sizeof(*ipu_crtc), GFP_KERNEL);
-+	if (!ipu_crtc)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, ipu_crtc);
-+
- 	return component_add(dev, &ipu_crtc_ops);
- }
- 
-diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-index 08fafa4bf8c21..43e109d67fe30 100644
---- a/drivers/gpu/drm/imx/parallel-display.c
-+++ b/drivers/gpu/drm/imx/parallel-display.c
-@@ -330,9 +330,8 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
- 	u32 bus_format = 0;
- 	const char *fmt;
- 
--	imxpd = devm_kzalloc(dev, sizeof(*imxpd), GFP_KERNEL);
--	if (!imxpd)
--		return -ENOMEM;
-+	imxpd = dev_get_drvdata(dev);
-+	memset(imxpd, 0, sizeof(*imxpd));
- 
- 	edidp = of_get_property(np, "edid", &imxpd->edid_len);
- 	if (edidp)
-@@ -363,8 +362,6 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		return ret;
- 
--	dev_set_drvdata(dev, imxpd);
--
- 	return 0;
- }
- 
-@@ -386,6 +383,14 @@ static const struct component_ops imx_pd_ops = {
- 
- static int imx_pd_probe(struct platform_device *pdev)
- {
-+	struct imx_parallel_display *imxpd;
-+
-+	imxpd = devm_kzalloc(&pdev->dev, sizeof(*imxpd), GFP_KERNEL);
-+	if (!imxpd)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, imxpd);
-+
- 	return component_add(&pdev->dev, &imx_pd_ops);
- }
  
 -- 
 2.25.1
