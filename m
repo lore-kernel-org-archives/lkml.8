@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6759DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDA12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03049207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686573;
-	bh=cUwC9Yi8xFwUR3ud0kfob6ueTPMUW+ozY7s6/mmjJgY=;
+	s=default; t=1597686579;
+	bh=JmPjiIGxttXu3Rqp7YXhR5qsOFbfyP+St63b9kRYUfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1nq1Hn9rUpwqsbWkVgodayX/61Jr5BE1uflkfcEdF0fMxzvPKeOMuNaSc8vablqsb
-	 39+gHac29Mll+0mAJdz+Ee3baQUyf7at1VXnS+mp2/gv7wVebDxaw0wRWEb+wHZaHu
-	 5mkPLshHlBai2N88WxQKXkYWf5nRNbbuhF4C9cUo=
+	b=YsJ81PrA25LSWTG27KDPj8+WxdUfJb5P0CNkDM7thTjpcNhPn8cPLwjbi5sA6wJ7l
+	 ss6FnJpfuKEDCh1Y3g46rNd6YBaE2NtPpaBOmWCj5r0mtACWAAjzwa/6i7SFYLarOb
+	 4PHFCbkf7nLGhBLITwAL+zXC4ZuuPujv0vmoagA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbgHQRtc (ORCPT
+        id S2389917AbgHQRtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388711AbgHQQMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:12:42 -0400
+        id S2388726AbgHQQMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2853920772;
-        Mon, 17 Aug 2020 16:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39CB6207DE;
+        Mon, 17 Aug 2020 16:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680761;
-        bh=cUwC9Yi8xFwUR3ud0kfob6ueTPMUW+ozY7s6/mmjJgY=;
+        s=default; t=1597680771;
+        bh=JmPjiIGxttXu3Rqp7YXhR5qsOFbfyP+St63b9kRYUfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9CdS8Z89pfXZsEuoi2/h1IwIYhVjTP5Do1wB60d3FoBsF9qtJ6SI70lSua7pSZN1
-         CixI7NAmGlOx6FAmOBCtXZg1VZ70YkTBrIrlbP6lt0+l1/7p2jHHhfBc97fZc8RrWb
-         AqhqGkf7HGn7gVSKsH3YoRbkOFUFULkhdSFmK7xM=
+        b=X5RjeRtrylxLSeTR9kJjKBBhU1h2fg8afeLKUXzKojlLP1cHI+HQHtNjlOdJedyPj
+         2pgnBGxb+vD1s1+D1BPlIT3+usu+5arX2AwHNyl8Cd2CnVy1uQUAX7ZN/+l67WKlP1
+         idLFvgayQ42aNtmhYsgAfH1d7G12JEBCfmPBxeXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, jbaron@akamai.com,
+        Jim Cromie <jim.cromie@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/168] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
-Date:   Mon, 17 Aug 2020 17:16:18 +0200
-Message-Id: <20200817143736.104308167@linuxfoundation.org>
+Subject: [PATCH 4.19 051/168] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Mon, 17 Aug 2020 17:16:22 +0200
+Message-Id: <20200817143736.291298404@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,51 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jim Cromie <jim.cromie@gmail.com>
 
-[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
+[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
 
-Once channel's job is hung, it dumps the channel's state into KMSG before
-tearing down the offending job. If multiple channels hang at once, then
-they dump messages simultaneously, making the debug info unreadable, and
-thus, useless. This patch adds mutex which allows only one channel to emit
-debug messages at a time.
+ddebug_describe_flags() currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.  Fix this by
+replacing them with a known-big-enough string buffer wrapped in a
+struct, and passing that instead.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Also simplify ddebug_describe_flags() flags parameter from a struct to
+a member in that struct, and hoist the member deref up to the caller.
+This makes the function reusable (soon) where flags are unpacked.
+
+Acked-by: <jbaron@akamai.com>
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
-index 329e4a3d8ae7b..6c9ad4533999c 100644
---- a/drivers/gpu/host1x/debug.c
-+++ b/drivers/gpu/host1x/debug.c
-@@ -25,6 +25,8 @@
- #include "debug.h"
- #include "channel.h"
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index dbf2b457e47e6..9305ff43fc155 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
  
-+static DEFINE_MUTEX(debug_lock);
++struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
 +
- unsigned int host1x_debug_trace_cmdbuf;
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
  
- static pid_t host1x_debug_force_timeout_pid;
-@@ -61,12 +63,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
- 	struct output *o = data;
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
  
- 	mutex_lock(&ch->cdma.lock);
-+	mutex_lock(&debug_lock);
+-	return buf;
++	return fb->buf;
+ }
  
- 	if (show_fifo)
- 		host1x_hw_show_channel_fifo(m, ch, o);
+ #define vpr_info(fmt, ...)					\
+@@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf fbuf;
  
- 	host1x_hw_show_channel_cdma(m, ch, o);
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &fbuf));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
  
-+	mutex_unlock(&debug_lock);
- 	mutex_unlock(&ch->cdma.lock);
+ 	vpr_info("called m=%p p=%p\n", m, p);
  
- 	return 0;
+@@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.25.1
 
