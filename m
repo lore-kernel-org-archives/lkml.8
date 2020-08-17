@@ -7,48 +7,57 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B237C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC0D20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AD220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693686;
-	bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
+	s=default; t=1597693690;
+	bh=t+bVXdylCAu4wQqJWJCqmHF6xJlMqanJBJbTaWFvrIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=014EUP+aGxWKpVlNctmJH83V92SRoLeXA7W+nRwC06QrHinBZhqY7Lgn4LRyxB9qS
-	 QbpwMdMkruDjjpRKZyni4MxPKX1bPSNE2Il85LOidadLgi57utkrbBKYHEd1G0HEVl
-	 mTfvCdLJHM820Y4ebBcMq6cmWExbZgNagt3ylCDk=
+	b=R6/GjGseeBu5oZw7IQOV+I9Xj8PS+wr5npGzULOn7clWnlFWuVZO4ta+TU0ddZHSa
+	 WcVQud/f2zATzju/lM5fUP6SFXSMa03cNuKJut33r6FW07IiOnUmjNyXaFTWEfJM7D
+	 81bO6BsZK3aaUGHn9rpODikOOq0zVNfm8YldLzJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732733AbgHQTsE (ORCPT
+        id S2404315AbgHQTsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbgHQPUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:24 -0400
+        id S1729274AbgHQPUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07267206FA;
-        Mon, 17 Aug 2020 15:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D96F20760;
+        Mon, 17 Aug 2020 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677624;
-        bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
+        s=default; t=1597677622;
+        bh=t+bVXdylCAu4wQqJWJCqmHF6xJlMqanJBJbTaWFvrIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rkzk0BZmMOyLcmT8ErNAkGUaJlEjqlNHWQErKzf0ZmdPm0W3YDcDIlXwB80ESyGM4
-         cuU16mOQ3gbV/P57Q8+cSTxVRQKGzYLMVpXdlkMlrNhHTjvljFsLTwP3mDOsfa0A3H
-         UmFQ57NAAQd5GTRDvUXVniORuiZPPBY1z1fbgZuw=
+        b=aZVat8sJBAnu4fX2si2QSNgtx1Q+5j3giXWppXbJThas+FgiiyLFQvLdhXjXePryE
+         Du1NYsh02sAL6m1lzQYVvUqfolpJrs+EeHgfURwn9cDwkU/4Rfnt5d4vKjs9CuhDCh
+         DdrkqYd4DcQQnQWJHIUK2f1uZmDouCPgoSVIWFIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        yu kuai <yukuai3@huawei.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 048/464] crypto: x86/crc32c - fix building with clang ias
-Date:   Mon, 17 Aug 2020 17:10:01 +0200
-Message-Id: <20200817143836.060176492@linuxfoundation.org>
+Subject: [PATCH 5.8 021/464] blktrace: fix debugfs use after free
+Date:   Mon, 17 Aug 2020 17:09:34 +0200
+Message-Id: <20200817143834.776921547@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,39 +70,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 44623b2818f4a442726639572f44fd9b6d0ef68c ]
+[ Upstream commit bad8e64fb19d3a0de5e564d9a7271c31bd684369 ]
 
-The clang integrated assembler complains about movzxw:
+On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+merged on v4.12 Omar fixed the original blktrace code for request-based
+drivers (multiqueue). This however left in place a possible crash, if you
+happen to abuse blktrace while racing to remove / add a device.
 
-arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
+We used to use asynchronous removal of the request_queue, and with that
+the issue was easier to reproduce. Now that we have reverted to
+synchronous removal of the request_queue, the issue is still possible to
+reproduce, its however just a bit more difficult.
 
-It seems that movzwq is the mnemonic that it expects instead,
-and this is what objdump prints when disassembling the file.
+We essentially run two instances of break-blktrace which add/remove
+a loop device, and setup a blktrace and just never tear the blktrace
+down. We do this twice in parallel. This is easily reproduced with the
+script run_0004.sh from break-blktrace [0].
 
-Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+We can end up with two types of panics each reflecting where we
+race, one a failed blktrace setup:
+
+[  252.426751] debugfs: Directory 'loop0' with parent 'block' already present!
+[  252.432265] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  252.436592] #PF: supervisor write access in kernel mode
+[  252.439822] #PF: error_code(0x0002) - not-present page
+[  252.442967] PGD 0 P4D 0
+[  252.444656] Oops: 0002 [#1] SMP NOPTI
+[  252.446972] CPU: 10 PID: 1153 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  252.452673] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  252.456343] RIP: 0010:down_write+0x15/0x40
+[  252.458146] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  252.463638] RSP: 0018:ffffa626415abcc8 EFLAGS: 00010246
+[  252.464950] RAX: 0000000000000000 RBX: ffff958c25f0f5c0 RCX: ffffff8100000000
+[  252.466727] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  252.468482] RBP: 00000000000000a0 R08: 0000000000000000 R09: 0000000000000001
+[  252.470014] R10: 0000000000000000 R11: ffff958d1f9227ff R12: 0000000000000000
+[  252.471473] R13: ffff958c25ea5380 R14: ffffffff8cce15f1 R15: 00000000000000a0
+[  252.473346] FS:  00007f2e69dee540(0000) GS:ffff958c2fc80000(0000) knlGS:0000000000000000
+[  252.475225] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  252.476267] CR2: 00000000000000a0 CR3: 0000000427d10004 CR4: 0000000000360ee0
+[  252.477526] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  252.478776] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  252.479866] Call Trace:
+[  252.480322]  simple_recursive_removal+0x4e/0x2e0
+[  252.481078]  ? debugfs_remove+0x60/0x60
+[  252.481725]  ? relay_destroy_buf+0x77/0xb0
+[  252.482662]  debugfs_remove+0x40/0x60
+[  252.483518]  blk_remove_buf_file_callback+0x5/0x10
+[  252.484328]  relay_close_buf+0x2e/0x60
+[  252.484930]  relay_open+0x1ce/0x2c0
+[  252.485520]  do_blk_trace_setup+0x14f/0x2b0
+[  252.486187]  __blk_trace_setup+0x54/0xb0
+[  252.486803]  blk_trace_ioctl+0x90/0x140
+[  252.487423]  ? do_sys_openat2+0x1ab/0x2d0
+[  252.488053]  blkdev_ioctl+0x4d/0x260
+[  252.488636]  block_ioctl+0x39/0x40
+[  252.489139]  ksys_ioctl+0x87/0xc0
+[  252.489675]  __x64_sys_ioctl+0x16/0x20
+[  252.490380]  do_syscall_64+0x52/0x180
+[  252.491032]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+And the other on the device removal:
+
+[  128.528940] debugfs: Directory 'loop0' with parent 'block' already present!
+[  128.615325] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  128.619537] #PF: supervisor write access in kernel mode
+[  128.622700] #PF: error_code(0x0002) - not-present page
+[  128.625842] PGD 0 P4D 0
+[  128.627585] Oops: 0002 [#1] SMP NOPTI
+[  128.629871] CPU: 12 PID: 544 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  128.635595] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  128.640471] RIP: 0010:down_write+0x15/0x40
+[  128.643041] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  128.650180] RSP: 0018:ffffa9c3c05ebd78 EFLAGS: 00010246
+[  128.651820] RAX: 0000000000000000 RBX: ffff8ae9a6370240 RCX: ffffff8100000000
+[  128.653942] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  128.655720] RBP: 00000000000000a0 R08: 0000000000000002 R09: ffff8ae9afd2d3d0
+[  128.657400] R10: 0000000000000056 R11: 0000000000000000 R12: 0000000000000000
+[  128.659099] R13: 0000000000000000 R14: 0000000000000003 R15: 00000000000000a0
+[  128.660500] FS:  00007febfd995540(0000) GS:ffff8ae9afd00000(0000) knlGS:0000000000000000
+[  128.662204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  128.663426] CR2: 00000000000000a0 CR3: 0000000420042003 CR4: 0000000000360ee0
+[  128.664776] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  128.666022] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  128.667282] Call Trace:
+[  128.667801]  simple_recursive_removal+0x4e/0x2e0
+[  128.668663]  ? debugfs_remove+0x60/0x60
+[  128.669368]  debugfs_remove+0x40/0x60
+[  128.669985]  blk_trace_free+0xd/0x50
+[  128.670593]  __blk_trace_remove+0x27/0x40
+[  128.671274]  blk_trace_shutdown+0x30/0x40
+[  128.671935]  blk_release_queue+0x95/0xf0
+[  128.672589]  kobject_put+0xa5/0x1b0
+[  128.673188]  disk_release+0xa2/0xc0
+[  128.673786]  device_release+0x28/0x80
+[  128.674376]  kobject_put+0xa5/0x1b0
+[  128.674915]  loop_remove+0x39/0x50 [loop]
+[  128.675511]  loop_control_ioctl+0x113/0x130 [loop]
+[  128.676199]  ksys_ioctl+0x87/0xc0
+[  128.676708]  __x64_sys_ioctl+0x16/0x20
+[  128.677274]  do_syscall_64+0x52/0x180
+[  128.677823]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The common theme here is:
+
+debugfs: Directory 'loop0' with parent 'block' already present
+
+This crash happens because of how blktrace uses the debugfs directory
+where it places its files. Upon init we always create the same directory
+which would be needed by blktrace but we only do this for make_request
+drivers (multiqueue) block drivers. When you race a removal of these
+devices with a blktrace setup you end up in a situation where the
+make_request recursive debugfs removal will sweep away the blktrace
+files and then later blktrace will also try to remove individual
+dentries which are already NULL. The inverse is also possible and hence
+the two types of use after frees.
+
+We don't create the block debugfs directory on init for these types of
+block devices:
+
+  * request-based block driver block devices
+  * every possible partition
+  * scsi-generic
+
+And so, this race should in theory only be possible with make_request
+drivers.
+
+We can fix the UAF by simply re-using the debugfs directory for
+make_request drivers (multiqueue) and only creating the ephemeral
+directory for the other type of block devices. The new clarifications
+on relying on the q->blk_trace_mutex *and* also checking for q->blk_trace
+*prior* to processing a blktrace ensures the debugfs directories are
+only created if no possible directory name clashes are possible.
+
+This goes tested with:
+
+  o nvme partitions
+  o ISCSI with tgt, and blktracing against scsi-generic with:
+    o block
+    o tape
+    o cdrom
+    o media changer
+  o blktests
+
+This patch is part of the work which disputes the severity of
+CVE-2019-19770 which shows this issue is not a core debugfs issue, but
+a misuse of debugfs within blktace.
+
+Fixes: 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-index 8501ec4532f4f..442599cbe7960 100644
---- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-+++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-@@ -170,7 +170,7 @@ continue_block:
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 5ef0484513ecb..588e8e3960197 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -522,10 +522,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	if (!bt->msg_data)
+ 		goto err;
  
- 	## branch into array
- 	lea	jump_table(%rip), %bufp
--	movzxw  (%bufp, %rax, 2), len
-+	movzwq  (%bufp, %rax, 2), len
- 	lea	crc_array(%rip), %bufp
- 	lea     (%bufp, len, 1), %bufp
- 	JMP_NOSPEC bufp
+-	ret = -ENOENT;
+-
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
++#ifdef CONFIG_BLK_DEBUG_FS
++	/*
++	 * When tracing whole make_request drivers (multiqueue) block devices,
++	 * reuse the existing debugfs directory created by the block layer on
++	 * init. For request-based block devices, all partitions block devices,
++	 * and scsi-generic block devices we create a temporary new debugfs
++	 * directory that will be removed once the trace ends.
++	 */
++	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
++		dir = q->debugfs_dir;
++	else
++#endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+ 
+ 	bt->dev = dev;
+@@ -563,8 +571,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 
+ 	ret = 0;
+ err:
+-	if (dir && !bt->dir)
+-		dput(dir);
+ 	if (ret)
+ 		blk_trace_free(bt);
+ 	return ret;
 -- 
 2.25.1
 
