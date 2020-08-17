@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA92C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE51C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA7B22CB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE0C22C9F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678648;
-	bh=NZLbzGdDFevx1h7AaxcS2n8qYxhLa4r240SWQpjOc8M=;
+	s=default; t=1597678658;
+	bh=qZCuGZZreY0kD5kUbaQ6CJlNK25aU5S6PjzyCntTlDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m30T7fpqNk4nMbmavyzdXXh/Sxuqcs0XxRVDLow7tp3lEJj2TznXt21H9L+DXus83
-	 2O1PD5vSFjL+pvoB/fCANeDZeR9lBeTaHUIR7HlMTh1KCmtIcL/H4Fum9kniDLAfpg
-	 s5KUV1mBWUFhdMYpYfH9XDmRDnwagUWW4o9Pe9SI=
+	b=WbYd5OEQUBLLu9ki6Y/S7fv7Wq3b7tH4+k2B/XnonexTzNjzX6i3jvQQoPbjJtWCT
+	 38LT8CIg6W7/2GzY+TkdicLC1Z9z3WeGV7+/oTJOPLqymxrfrpxburVFcaoEhBN3aB
+	 aKk3DmXktiMntgMmkJp4upFE9klqaoYg8U4kTTD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbgHQPhX (ORCPT
+        id S2387409AbgHQPhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54636 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730267AbgHQPbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:31:12 -0400
+        id S1730273AbgHQPbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2FC22D07;
-        Mon, 17 Aug 2020 15:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4406922B4E;
+        Mon, 17 Aug 2020 15:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678271;
-        bh=NZLbzGdDFevx1h7AaxcS2n8qYxhLa4r240SWQpjOc8M=;
+        s=default; t=1597678274;
+        bh=qZCuGZZreY0kD5kUbaQ6CJlNK25aU5S6PjzyCntTlDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o56TkhcYNOubYjHfUV33x5Pxv+gPhoIFzShZ90GYkpHTHuAZ5D0vNAtJJ0mRkKrqq
-         4Ij6dRxhqbQ+amM4yYz8V476WiReOj9gPY0pRM/x7kNPLMXrJMhb4kzUvJJbVLye+w
-         P78JMNaHHGyUswtUm+nJLO3Jd6I6UHkAWnTTTeL0=
+        b=ZKawQYJh5rDXKUASLME32xn3KkKsHO6Nu4K0vcpJpHyUkv2jfTPxvIAqZiHH8/MhX
+         VpMjNC0NCY0m2hcW9FMW9ABYtyByd8Zp+L23F5FvvKVL1Po4bzSoEMZ0Zlu4JRdewe
+         KBBHRh9iYzKUKo0FqH2uqVGzWzJt4Ac2M6hA3rqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Alexei Starovoitov <ast@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 276/464] s390/bpf: Tolerate not converging code shrinking
-Date:   Mon, 17 Aug 2020 17:13:49 +0200
-Message-Id: <20200817143846.989379419@linuxfoundation.org>
+Subject: [PATCH 5.8 277/464] tools/bpftool: Fix error handing in do_skeleton()
+Date:   Mon, 17 Aug 2020 17:13:50 +0200
+Message-Id: <20200817143847.036709454@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,74 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 1491b73311a15bb5beeab5d30e03bff761ef6c18 ]
+[ Upstream commit 956fcfcd359512f15b19bcd157fa8206ed26605b ]
 
-"BPF_MAXINSNS: Maximum possible literals" unnecessarily falls back to
-the interpreter because of failing sanity check in bpf_set_addr. The
-problem is that there are a lot of branches that can be shrunk, and
-doing so opens up the possibility to shrink even more. This process
-does not converge after 3 passes, causing code offsets to change during
-the codegen pass, which must never happen.
+Fix pass 0 to PTR_ERR, also dump more err info using
+libbpf_strerror.
 
-Fix by inserting nops during codegen pass in order to preserve code
-offets.
-
-Fixes: 4e9b4a6883dd ("s390/bpf: Use relative long branches")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Fixes: 5dc7a8b21144 ("bpftool, selftests/bpf: Embed object file inside skeleton")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200717165326.6786-5-iii@linux.ibm.com
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20200717123059.29624-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ tools/bpf/bpftool/gen.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index 6b8968f6e207d..a78c5b59e1ab6 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -489,6 +489,24 @@ static void save_restore_regs(struct bpf_jit *jit, int op, u32 stack_depth)
- 	} while (re <= last);
- }
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index 10de76b296ba1..540ffde0b03a3 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -305,8 +305,11 @@ static int do_skeleton(int argc, char **argv)
+ 	opts.object_name = obj_name;
+ 	obj = bpf_object__open_mem(obj_data, file_sz, &opts);
+ 	if (IS_ERR(obj)) {
++		char err_buf[256];
++
++		libbpf_strerror(PTR_ERR(obj), err_buf, sizeof(err_buf));
++		p_err("failed to open BPF object file: %s", err_buf);
+ 		obj = NULL;
+-		p_err("failed to open BPF object file: %ld", PTR_ERR(obj));
+ 		goto out;
+ 	}
  
-+static void bpf_skip(struct bpf_jit *jit, int size)
-+{
-+	if (size >= 6 && !is_valid_rel(size)) {
-+		/* brcl 0xf,size */
-+		EMIT6_PCREL_RIL(0xc0f4000000, size);
-+		size -= 6;
-+	} else if (size >= 4 && is_valid_rel(size)) {
-+		/* brc 0xf,size */
-+		EMIT4_PCREL(0xa7f40000, size);
-+		size -= 4;
-+	}
-+	while (size >= 2) {
-+		/* bcr 0,%0 */
-+		_EMIT2(0x0700);
-+		size -= 2;
-+	}
-+}
-+
- /*
-  * Emit function prologue
-  *
-@@ -1503,7 +1521,14 @@ static bool bpf_is_new_addr_sane(struct bpf_jit *jit, int i)
-  */
- static int bpf_set_addr(struct bpf_jit *jit, int i)
- {
--	if (!bpf_is_new_addr_sane(jit, i))
-+	int delta;
-+
-+	if (is_codegen_pass(jit)) {
-+		delta = jit->prg - jit->addrs[i];
-+		if (delta < 0)
-+			bpf_skip(jit, -delta);
-+	}
-+	if (WARN_ON_ONCE(!bpf_is_new_addr_sane(jit, i)))
- 		return -1;
- 	jit->addrs[i] = jit->prg;
- 	return 0;
 -- 
 2.25.1
 
