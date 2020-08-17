@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B09AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CC7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661A920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4608220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InxMEUwY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hG2G6TIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHQIZv (ORCPT
+        id S1727811AbgHQIZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
+        Mon, 17 Aug 2020 04:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgHQIZm (ORCPT
+        with ESMTP id S1728023AbgHQIZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:25:42 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD99C061388;
-        Mon, 17 Aug 2020 01:25:42 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id kr4so7457565pjb.2;
-        Mon, 17 Aug 2020 01:25:42 -0700 (PDT)
+        Mon, 17 Aug 2020 04:25:53 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74A1C061388;
+        Mon, 17 Aug 2020 01:25:53 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d19so7755380pgl.10;
+        Mon, 17 Aug 2020 01:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=39RvJQz8ipypvoPM9UBQxK34sqwXBw2fpRHeH1750N4=;
-        b=InxMEUwYzhx+GnG4B1eM3y4duNRfyx1CZB/Ws7HUtFocxH7jTVin6brUpn0347NKxY
-         G2vDtc6Jn/U+dIZO/rs8meMl8+D5kFk0pTu+Kq8iKPzEQX6z2YVKdlxtJGEdNAEfX4gs
-         HzG5sxEy9yHpH9i/XYP/zjlfTFVttJpEeuCBLjoMmzrtbLpjW8/3H8wGNJLZJLWaX2ZL
-         GRS+u1RdIHn/f/qA2wjdhyEjO3m2RbZX3lxe9fGOEVpBO6OpU5T6MjohvX+6vnKmyZwA
-         CV1bKneiCat0Wl7RPi6Q7NLdBUFgwZJupvGI6vmFPrpDARH658prdsAMmX5pzSXVradm
-         FHVw==
+        bh=iIAfZhwD4u3KlLMECiacU1MTufzkqZbS33SY7LcQr7A=;
+        b=hG2G6TIwKMJXy2HRahBQraJOgltWGzLG9JNMpZ4RSRhs60XANefCGvnE5soeTXpm4f
+         8W7Y1YPZgS9l2UmuOoypi4PZ1qdPVFJ7QEteda3ogrOSn5313M/EE7BZgy5sZrFHhrui
+         KdAhYg0gLgoy5pBrKOtjZKJGxtOE+4FM1rRssMpDabVK+1mj2agBXV7RnGvo3Sx7vvv/
+         0qRK+BXn24CXmouDGXQ2sXFDJUTEkNWdlyk/l+2QSR8ANbeQbj1pMPLjbCHHoaPzPyjG
+         PaFqIMtn8VpzTLw8Vd06NvM257eWA0mBFfDHBaMuUka7/3j5nCdVQi91g8S89hQuYSye
+         dqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=39RvJQz8ipypvoPM9UBQxK34sqwXBw2fpRHeH1750N4=;
-        b=E5GF4UyazdeOOrb7ieQs1EVpUwZWmr2wtaZxOgt+kb3DThwQ/AaihHHppIxx2JDm6E
-         PX0ZRgX/kA2b/GXwK1t1DF+wj53e07QQpTe0MAu5dh9noPWjOcFM5NIXCwWBYfCDjdzy
-         DN3Z9c4OXXMkhh7i0hsUMzWCpfm4kWRCBCsMaTgEVNKLB+dWp+wLfVMr9fqC/ob7N46f
-         1DqnkE/Wioz+YXh5fLwSTxfnPzPbTUDSgV74S9bnsd//bBL6FVRcfBX8UrK0L0UkDW1B
-         /AjUnhnw0jmn0e2i5LJH/ovNKX1T6g5vQ7bjzRCJ351fpUIT9NznXeBfsD4oqsF0G3L7
-         cicQ==
-X-Gm-Message-State: AOAM532XJorQoueLY+cFaBfIQVvg3NWtLrdK1VpGbOY5S+t64kbLOVY5
-        BRnTbvzMtJTxKBV5jQVm4N4=
-X-Google-Smtp-Source: ABdhPJwv5/9VRVYulpBw4/bIATV1JwJ7vrwdzGannOz/rXuZqIamAy8BJXZR+zXTAlce5mRSmFRAtg==
-X-Received: by 2002:a17:90b:100e:: with SMTP id gm14mr11408110pjb.39.1597652741860;
-        Mon, 17 Aug 2020 01:25:41 -0700 (PDT)
+        bh=iIAfZhwD4u3KlLMECiacU1MTufzkqZbS33SY7LcQr7A=;
+        b=dO9onWG2PDjPteApDsRRrlbaP3SELq1IlLkkWQh9jSDO2ii6zy3xiTmV5ni32Tuh/0
+         77zZaIIwAiqJTtzW+CC74F1/waQYmOqNrq0K8h95tN2LUXtymWvbpv1leikfhvRWSHaV
+         94UICcPFicCtg3oYS8YAKOhTi/sd8pHTtNY/SvPXlo4Wm5C/r4oyaJJdbyNywVrfkdGZ
+         xVYgRDYYOsdFuJXtdGe3Jg1g2I9q7ahoiEZQQ+X9HbgMjWmSuG7JqDPUVazBOZdUwLSj
+         YDipVV4wWIxP7G4LI92XBgXBz+tkA5MxB9hW6cBrNwOsI2WdAwt2yhYzdkIOtqi+1KEG
+         evOg==
+X-Gm-Message-State: AOAM530bXA2HpAwNnzOLNGZRR9cMZgN29kcyXHsenLVIzXBuSS9PjfE5
+        p7xE44otWogc720J6ovTOqI=
+X-Google-Smtp-Source: ABdhPJyHdid6AeC6n0Zvp88ugK0l2FhFHXTm5Bvo/3+IlJzMqY2dzIOg8iBwBCBZqkwkbk4eX5A4Ng==
+X-Received: by 2002:aa7:80d6:: with SMTP id a22mr10784840pfn.275.1597652753273;
+        Mon, 17 Aug 2020 01:25:53 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.25.36
+        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.25.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:25:41 -0700 (PDT)
+        Mon, 17 Aug 2020 01:25:52 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
         kda@linux-powerpc.org, dougmill@linux.ibm.com,
@@ -69,9 +69,9 @@ Cc:     keescook@chromium.org, linux-acenic@sunsite.dk,
         linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
         oss-drivers@netronome.com, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 08/20] ethernet: hinic: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:54:22 +0530
-Message-Id: <20200817082434.21176-10-allen.lkml@gmail.com>
+Subject: [PATCH 10/20] ethernet: ibmvnic: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:54:24 +0530
+Message-Id: <20200817082434.21176-12-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817082434.21176-1-allen.lkml@gmail.com>
 References: <20200817082434.21176-1-allen.lkml@gmail.com>
@@ -88,35 +88,35 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c | 7 +++----
+ drivers/net/ethernet/ibm/ibmvnic.c | 7 +++----
  1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-index ca8cb68a8d20..f304a5b16d75 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-@@ -370,9 +370,9 @@ static void eq_irq_work(struct work_struct *work)
-  * ceq_tasklet - the tasklet of the EQ that received the event
-  * @ceq_data: the eq
-  **/
--static void ceq_tasklet(unsigned long ceq_data)
-+static void ceq_tasklet(struct tasklet_struct *t)
- {
--	struct hinic_eq *ceq = (struct hinic_eq *)ceq_data;
-+	struct hinic_eq *ceq = from_tasklet(ceq, t, ceq_tasklet);
- 
- 	eq_irq_handler(ceq);
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 5afb3c9c52d2..7c565e167521 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -4797,9 +4797,9 @@ static irqreturn_t ibmvnic_interrupt(int irq, void *instance)
+ 	return IRQ_HANDLED;
  }
-@@ -782,8 +782,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
  
- 		INIT_WORK(&aeq_work->work, eq_irq_work);
- 	} else if (type == HINIC_CEQ) {
--		tasklet_init(&eq->ceq_tasklet, ceq_tasklet,
--			     (unsigned long)eq);
-+		tasklet_setup(&eq->ceq_tasklet, ceq_tasklet);
- 	}
+-static void ibmvnic_tasklet(void *data)
++static void ibmvnic_tasklet(struct tasklet_struct *t)
+ {
+-	struct ibmvnic_adapter *adapter = data;
++	struct ibmvnic_adapter *adapter = from_tasklet(adapter, t, tasklet);
+ 	struct ibmvnic_crq_queue *queue = &adapter->crq;
+ 	union ibmvnic_crq *crq;
+ 	unsigned long flags;
+@@ -4934,8 +4934,7 @@ static int init_crq_queue(struct ibmvnic_adapter *adapter)
  
- 	/* set the attributes of the msix entry */
+ 	retrc = 0;
+ 
+-	tasklet_init(&adapter->tasklet, (void *)ibmvnic_tasklet,
+-		     (unsigned long)adapter);
++	tasklet_setup(&adapter->tasklet, (void *)ibmvnic_tasklet);
+ 
+ 	netdev_dbg(adapter->netdev, "registering irq 0x%x\n", vdev->irq);
+ 	snprintf(crq->name, sizeof(crq->name), "ibmvnic-%x",
 -- 
 2.17.1
 
