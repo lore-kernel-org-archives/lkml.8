@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA3DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF8520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5318820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693634;
-	bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
+	s=default; t=1597693641;
+	bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crFTEu+ROJghkSsJ+x3tHozOaXYYqagZgbOHYb/AAUXYyY4XadPbfy3wLxsY6GfPC
-	 xMeZAMKfNNGuolYTi3guTLLtiQO3BBWrN0uKWGaks7BIbbyxMA05fbLSbWYMqVmJRU
-	 PcW5ygzEaLaMRgu6dPKNxZzVUQ9jKXdshW/nA8es=
+	b=kyq3z/q6WA8uOy6TGieE3aj9wgad3EuuRh/IqXWnRbebMbkSu1hQb9ARfhfr1Qp1u
+	 IQOKEBmZlUqwORTsgJpnK/i10Wg3u2zBM/E2ZvtWSVQlGHcEyP2EosGsBGSh5VFvDK
+	 d2m36Udpa9N3kVCJ47efojR4kuKDXX12sX0yFzjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbgHQTrM (ORCPT
+        id S1732670AbgHQTrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbgHQPUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:50 -0400
+        id S1729290AbgHQPUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E23207DE;
-        Mon, 17 Aug 2020 15:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6BED207FF;
+        Mon, 17 Aug 2020 15:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677649;
-        bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
+        s=default; t=1597677646;
+        bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPo0jNw3k7/IEj7D9VAbPu2bV/6HqJfGq1vTMNzIx6nI/DBTMKl1O48OraEYS5glM
-         oVTu67Q5QaV88/gXKnV29P8d8DIIV+Qo7PEKjCYydz6OeOZE6AEbZ2kk0D6UQjyOD7
-         t4qn6ir/BKqz3WRn9Hgy2ROP4gGSyFuNUguIxt98=
+        b=Br5wSpYpGxSHA+dlaqG5ws97yRMzRk44twMKeXSLybz1xdG5fl58EwfLKAqTV8sX3
+         adcrhXzQE1DJkY9edwQ2duawJvmdvag9R+6WPQZ2G3omNymCvMb1vHfNW2guOrXem+
+         oKMz5K/JcorAS2ZvEpsvb5dtfgZ3Hk4IyVO1+cnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 018/464] crc-t10dif: Fix potential crypto notify dead-lock
-Date:   Mon, 17 Aug 2020 17:09:31 +0200
-Message-Id: <20200817143834.630795761@linuxfoundation.org>
+Subject: [PATCH 5.8 027/464] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
+Date:   Mon, 17 Aug 2020 17:09:40 +0200
+Message-Id: <20200817143835.062529551@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,155 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 3906f640224dbe7714b52b66d7d68c0812808e19 ]
+[ Upstream commit 86be5c789690eb08656b08c072c50a7b02bf41f1 ]
 
-The crypto notify call occurs with a read mutex held so you must
-not do any substantial work directly.  In particular, you cannot
-call crypto_alloc_* as they may trigger further notifications
-which may dead-lock in the presence of another writer.
+Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
+which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
+connected to is overdriven, and the whole PL port's voltage rises
+somewhat. This results in changing voltage on the R_PWM pin (PL10),
+which is the cause for backlight flickering very noticeably when typing
+on a Bluetooth keyboard, because backlight intensity is highly sensitive
+to the voltage of the R_PWM pin.
 
-This patch fixes this by postponing the work into a work queue and
-taking the same lock in the module init function.
+Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
+the PL port pins via BT and WiFi IO port signals. WiFi and BT
+functionality is unaffected by this change.
 
-While we're at it this patch also ensures that all RCU accesses are
-marked appropriately (tested with sparse).
+This completely stops the backlight flicker when using bluetooth.
 
-Finally this also reveals a race condition in module param show
-function as it may be called prior to the module init function.
-It's fixed by testing whether crct10dif_tfm is NULL (this is true
-iff the init function has not completed assuming fallback is false).
-
-Fixes: 11dcb1037f40 ("crc-t10dif: Allow current transform to be...")
-Fixes: b76377543b73 ("crc-t10dif: Pick better transform if one...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Link: https://lore.kernel.org/r/20200703194842.111845-4-megous@megous.com
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/crc-t10dif.c | 54 +++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 42 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/crc-t10dif.c b/lib/crc-t10dif.c
-index 8cc01a6034165..c9acf1c12cfcb 100644
---- a/lib/crc-t10dif.c
-+++ b/lib/crc-t10dif.c
-@@ -19,39 +19,46 @@
- static struct crypto_shash __rcu *crct10dif_tfm;
- static struct static_key crct10dif_fallback __read_mostly;
- static DEFINE_MUTEX(crc_t10dif_mutex);
-+static struct work_struct crct10dif_rehash_work;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index cefda145c3c9d..342733a20c337 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -279,7 +279,7 @@ &reg_dldo3 {
  
--static int crc_t10dif_rehash(struct notifier_block *self, unsigned long val, void *data)
-+static int crc_t10dif_notify(struct notifier_block *self, unsigned long val, void *data)
- {
- 	struct crypto_alg *alg = data;
--	struct crypto_shash *new, *old;
- 
- 	if (val != CRYPTO_MSG_ALG_LOADED ||
- 	    static_key_false(&crct10dif_fallback) ||
- 	    strncmp(alg->cra_name, CRC_T10DIF_STRING, strlen(CRC_T10DIF_STRING)))
- 		return 0;
- 
-+	schedule_work(&crct10dif_rehash_work);
-+	return 0;
-+}
-+
-+static void crc_t10dif_rehash(struct work_struct *work)
-+{
-+	struct crypto_shash *new, *old;
-+
- 	mutex_lock(&crc_t10dif_mutex);
- 	old = rcu_dereference_protected(crct10dif_tfm,
- 					lockdep_is_held(&crc_t10dif_mutex));
- 	if (!old) {
- 		mutex_unlock(&crc_t10dif_mutex);
--		return 0;
-+		return;
- 	}
- 	new = crypto_alloc_shash("crct10dif", 0, 0);
- 	if (IS_ERR(new)) {
- 		mutex_unlock(&crc_t10dif_mutex);
--		return 0;
-+		return;
- 	}
- 	rcu_assign_pointer(crct10dif_tfm, new);
- 	mutex_unlock(&crc_t10dif_mutex);
- 
- 	synchronize_rcu();
- 	crypto_free_shash(old);
--	return 0;
- }
- 
- static struct notifier_block crc_t10dif_nb = {
--	.notifier_call = crc_t10dif_rehash,
-+	.notifier_call = crc_t10dif_notify,
+ &reg_dldo4 {
+ 	regulator-min-microvolt = <1800000>;
+-	regulator-max-microvolt = <3300000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vcc-wifi-io";
  };
  
- __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
-@@ -86,19 +93,26 @@ EXPORT_SYMBOL(crc_t10dif);
- 
- static int __init crc_t10dif_mod_init(void)
- {
-+	struct crypto_shash *tfm;
-+
-+	INIT_WORK(&crct10dif_rehash_work, crc_t10dif_rehash);
- 	crypto_register_notifier(&crc_t10dif_nb);
--	crct10dif_tfm = crypto_alloc_shash("crct10dif", 0, 0);
--	if (IS_ERR(crct10dif_tfm)) {
-+	mutex_lock(&crc_t10dif_mutex);
-+	tfm = crypto_alloc_shash("crct10dif", 0, 0);
-+	if (IS_ERR(tfm)) {
- 		static_key_slow_inc(&crct10dif_fallback);
--		crct10dif_tfm = NULL;
-+		tfm = NULL;
- 	}
-+	RCU_INIT_POINTER(crct10dif_tfm, tfm);
-+	mutex_unlock(&crc_t10dif_mutex);
- 	return 0;
- }
- 
- static void __exit crc_t10dif_mod_fini(void)
- {
- 	crypto_unregister_notifier(&crc_t10dif_nb);
--	crypto_free_shash(crct10dif_tfm);
-+	cancel_work_sync(&crct10dif_rehash_work);
-+	crypto_free_shash(rcu_dereference_protected(crct10dif_tfm, 1));
- }
- 
- module_init(crc_t10dif_mod_init);
-@@ -106,11 +120,27 @@ module_exit(crc_t10dif_mod_fini);
- 
- static int crc_t10dif_transform_show(char *buffer, const struct kernel_param *kp)
- {
-+	struct crypto_shash *tfm;
-+	const char *name;
-+	int len;
-+
- 	if (static_key_false(&crct10dif_fallback))
- 		return sprintf(buffer, "fallback\n");
- 
--	return sprintf(buffer, "%s\n",
--		crypto_tfm_alg_driver_name(crypto_shash_tfm(crct10dif_tfm)));
-+	rcu_read_lock();
-+	tfm = rcu_dereference(crct10dif_tfm);
-+	if (!tfm) {
-+		len = sprintf(buffer, "init\n");
-+		goto unlock;
-+	}
-+
-+	name = crypto_tfm_alg_driver_name(crypto_shash_tfm(tfm));
-+	len = sprintf(buffer, "%s\n", name);
-+
-+unlock:
-+	rcu_read_unlock();
-+
-+	return len;
- }
- 
- module_param_call(transform, NULL, crc_t10dif_transform_show, NULL, 0644);
 -- 
 2.25.1
 
