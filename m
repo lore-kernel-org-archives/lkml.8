@@ -2,91 +2,148 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D91C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C143C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62CB22078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C7mr/Oip"
+	by mail.kernel.org (Postfix) with ESMTP id E53492078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHQKUG (ORCPT
+        id S1727859AbgHQKU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:20:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57910 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 06:20:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:56177 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgHQKUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:20:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597659604; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=u9MDNHe7mGPtgivIRgFiY5nOhX+4SDqiJEaIWeeplAs=;
- b=C7mr/Oip4eKnVrp4PVWrlvelcediWLruu7nR3l4YQDhdleBQsOTa103cZxnvXSAMu66HxKOz
- T2DW/zEXnOzdo4m2wtAkBnSm+Y9cjHl0B11GUQtt2gha20Buu9SdQJa/GvWHAS1IFTJQ3xNb
- iV0h+l0FP4Zino88tyF0zdnMrzY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f3a59c64c787f237b17db1e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 10:19:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 313D4C43395; Mon, 17 Aug 2020 10:19:50 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DCCFC433C6;
-        Mon, 17 Aug 2020 10:19:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DCCFC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] ath5k: Use fallthrough pseudo-keyword
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200727194930.GA1491@embeddedor>
-References: <20200727194930.GA1491@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        id S1726165AbgHQKU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:20:27 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 46FC568B05; Mon, 17 Aug 2020 12:20:21 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 12:20:20 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200817101950.313D4C43395@smtp.codeaurora.org>
-Date:   Mon, 17 Aug 2020 10:19:50 +0000 (UTC)
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH] swiotlb: Allow allocating buffer anywhere in memory
+Message-ID: <20200817102020.GD25336@lst.de>
+References: <20200815204536.663801-1-bauerman@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815204536.663801-1-bauerman@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
+On Sat, Aug 15, 2020 at 05:45:36PM -0300, Thiago Jung Bauermann wrote:
+> POWER secure guests (i.e., guests which use the Protection Execution
+> Facility) need to use SWIOTLB to be able to do I/O with the hypervisor, but
+> they don't need the SWIOTLB memory to be in low addresses since the
+> hypervisor doesn't have any addressing limitation.
 > 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> This solves a SWIOTLB initialization problem we are seeing in secure guests
+> with 128 GB of RAM: they are configured with 4 GB of crashkernel reserved
+> memory, which leaves no space for SWIOTLB in low addresses.
+
+What about just open coding the allocation and using
+swiotlb_init_with_tbl?
+
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-
-Patch applied to ath-next branch of ath.git, thanks.
-
-273411d5bcd0 ath5k: Use fallthrough pseudo-keyword
-
--- 
-https://patchwork.kernel.org/patch/11687471/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> ---
+>  arch/powerpc/mm/mem.c   |  7 ++++++-
+>  include/linux/swiotlb.h |  8 +++++++-
+>  kernel/dma/swiotlb.c    | 10 +++++++---
+>  3 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> Normally I would split changes like this into one patch touching generic
+> code and another for the arch-specific part, but in this case I thought it
+> would be unneeded complexity. I can split though if people prefer it that
+> way.
+> 
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index c2c11eb8dcfc..13f2e3aff8b5 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -50,6 +50,7 @@
+>  #include <asm/swiotlb.h>
+>  #include <asm/rtas.h>
+>  #include <asm/kasan.h>
+> +#include <asm/svm.h>
+>  
+>  #include <mm/mmu_decl.h>
+>  
+> @@ -290,7 +291,11 @@ void __init mem_init(void)
+>  	 * back to to-down.
+>  	 */
+>  	memblock_set_bottom_up(true);
+> -	swiotlb_init(0);
+> +	/*
+> +	 * SVM guests can use the SWIOTLB wherever it is in memory,
+> +	 * even if not DMA-able.
+> +	 */
+> +	swiotlb_init_anywhere(0, is_secure_guest());
+>  #endif
+>  
+>  	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index 046bb94bd4d6..433f3dbb35b5 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -29,7 +29,13 @@ enum swiotlb_force {
+>   */
+>  #define IO_TLB_SHIFT 11
+>  
+> -extern void swiotlb_init(int verbose);
+> +void __init swiotlb_init_anywhere(int verbose, bool allocate_anywhere);
+> +
+> +static inline void swiotlb_init(int verbose)
+> +{
+> +	swiotlb_init_anywhere(verbose, false);
+> +}
+> +
+>  int swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose);
+>  extern unsigned long swiotlb_nr_tbl(void);
+>  unsigned long swiotlb_size_or_default(void);
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index c19379fabd20..27070aa59e34 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -244,7 +244,7 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+>   * structures for the software IO TLB used to implement the DMA API.
+>   */
+>  void  __init
+> -swiotlb_init(int verbose)
+> +swiotlb_init_anywhere(int verbose, bool allocate_anywhere)
+>  {
+>  	size_t default_size = IO_TLB_DEFAULT_SIZE;
+>  	unsigned char *vstart;
+> @@ -257,8 +257,12 @@ swiotlb_init(int verbose)
+>  
+>  	bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+>  
+> -	/* Get IO TLB memory from the low pages */
+> -	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+> +	if (allocate_anywhere)
+> +		vstart = memblock_alloc(PAGE_ALIGN(bytes), PAGE_SIZE);
+> +	else
+> +		/* Get IO TLB memory from the low pages */
+> +		vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+> +
+>  	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+>  		return;
+>  
+---end quoted text---
