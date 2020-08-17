@@ -2,145 +2,97 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B69C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21232063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF252053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689285;
-	bh=NoKBmNF1CPMXkPxFxDReFjhMpjaSUi0JQfGvv1WQiBM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IFNDghlmAfWMHolh36fRdFq1LpSl4+O9lnIudvD/6Mi8Cqf5M9a6w19rCGk57x4CU
-	 WhZfTB0lhCI3mocJpCsMLL5fLa7ICdor2e2nrCN577+jnP2/fxWSYifZwSwLXGMQH6
-	 tK+XmubMXsK8BJjKwmdgZmdfcpj64ZmbKuJxCX1E=
+	s=default; t=1597689289;
+	bh=WNHpeCpfU5K5sAyKy2agKzdOZGc3/MNtI9TkMs8nLIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zXIupp0iLXY4aQa30TsEldNt9pKMkOP/rJ6cpZSsaGqRTAlQSfZehZTdPMtGnn1yx
+	 qiBRkCvKN0I/lMpaZDKfbDRQmRsjcH5MVRtpEtJO45t6tzp2AsoMXafpOGVWEwX+w6
+	 2epv39Pl+jhN7+M4sRXVqHe/5DflW9drYvxgSMdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391261AbgHQSen (ORCPT
+        id S2391268AbgHQSer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730997AbgHQQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:00:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80793206FA;
-        Mon, 17 Aug 2020 16:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680004;
-        bh=NoKBmNF1CPMXkPxFxDReFjhMpjaSUi0JQfGvv1WQiBM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9MpmUQ6exvtoWD4BpwAfKta/wrxYZ18MAcr5GJdcJFq+I76sVDsKUN6J4TMidDSk
-         qITz62IL21NG4M09YcrmwuC0AEXeuhkQbgNiEcYblZ+24SZxx+IOPGmxHRx4QQpF/a
-         3SzWteDv4ywg2wy0nOxrVlpExt3BE2tSEmP+tfhA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/270] crypto: ccree - fix resource leak on error path
-Date:   Mon, 17 Aug 2020 17:13:37 +0200
-Message-Id: <20200817143756.602395827@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:34:47 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44781 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391240AbgHQSeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:34:25 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l23so13109546edv.11;
+        Mon, 17 Aug 2020 11:34:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UUC1YYZepwSIaUyyVu4p4E8C9yxfTbr1IBllNcE9Kwk=;
+        b=MfTodjseBuS7qqDtmiWPCIgpUvtP/0UwCzMnny0IurDp290oNe8STUEYE7hKiqNHXZ
+         kMDeclKuI+X92y4L1/9Z0LDFUwEdjffxpytT27CiT1XXItmYo5aYLBeUHDk+9agNLexO
+         iTxlZnlRx2tzW8PROX0IQSrnvDbasSLhmt1OwCxgttLJ8WTrJCdkU68DyyyMT6z5fSBK
+         XQgftOCCPuGs5SefZl1Ubo7neu7sXDg9Lq+d7GGtimAqbJEk0awobqBIF2/CFf34y/sh
+         aXJxtui+SaNnnwZiL39zrHf7gWZqvsHmmggWos4CmS5wxmQ7swhUj9MrPOaLrQL7SkGB
+         SI3g==
+X-Gm-Message-State: AOAM530sqIz7whrlSuNrOUviwwV3DxYMB4qmjlP81r5sP9TFZIef9hFt
+        i/TUsTQ358QSwz2bh6x6wWw=
+X-Google-Smtp-Source: ABdhPJyMkkS73tARItUdlMSiGOG9MxnnjtabQxaD28LAXhwot6oVxwb23In6Y3s0rvfq+6XG+6YFUQ==
+X-Received: by 2002:aa7:c50b:: with SMTP id o11mr15637355edq.59.1597689262974;
+        Mon, 17 Aug 2020 11:34:22 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id ss20sm14764697ejb.118.2020.08.17.11.34.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Aug 2020 11:34:22 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 20:34:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 16/29] memory: renesas-rpc-if: Simplify with
+ PTR_ERR_OR_ZERO
+Message-ID: <20200817183419.GE3464@kozik-lap>
+References: <20200724074038.5597-1-krzk@kernel.org>
+ <20200724074038.5597-17-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200724074038.5597-17-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+On Fri, Jul 24, 2020 at 09:40:25AM +0200, Krzysztof Kozlowski wrote:
+> Use PTR_ERR_OR_ZERO to make the code a little bit simpler.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/memory/renesas-rpc-if.c | 4 +---
 
-[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
+Applied.
 
-Fix a small resource leak on the error path of cipher processing.
-
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index cd9c60268bf8d..9bf0cce578f02 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -163,7 +163,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 				     skcipher_alg.base);
- 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
- 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
--	int rc = 0;
- 
- 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
- 		crypto_tfm_alg_name(tfm));
-@@ -175,10 +174,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	ctx_p->flow_mode = cc_alg->flow_mode;
- 	ctx_p->drvdata = cc_alg->drvdata;
- 
-+	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
-+		/* Alloc hash tfm for essiv */
-+		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
-+		if (IS_ERR(ctx_p->shash_tfm)) {
-+			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
-+			return PTR_ERR(ctx_p->shash_tfm);
-+		}
-+	}
-+
- 	/* Allocate key buffer, cache line aligned */
- 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
- 	if (!ctx_p->user.key)
--		return -ENOMEM;
-+		goto free_shash;
- 
- 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
- 		ctx_p->user.key);
-@@ -190,21 +198,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
- 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
- 			max_key_buf_size, ctx_p->user.key);
--		return -ENOMEM;
-+		goto free_key;
- 	}
- 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
- 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
- 
--	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
--		/* Alloc hash tfm for essiv */
--		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
--		if (IS_ERR(ctx_p->shash_tfm)) {
--			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
--			return PTR_ERR(ctx_p->shash_tfm);
--		}
--	}
-+	return 0;
- 
--	return rc;
-+free_key:
-+	kfree(ctx_p->user.key);
-+free_shash:
-+	crypto_free_shash(ctx_p->shash_tfm);
-+
-+	return -ENOMEM;
- }
- 
- static void cc_cipher_exit(struct crypto_tfm *tfm)
--- 
-2.25.1
-
-
+Best regards,
+Krzysztof
 
