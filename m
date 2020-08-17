@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F46DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C20C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E698120716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5EB20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693453;
-	bh=sP4va8tw/LWQq1aLYu/jsNtjodsiB3MIonkDEyyS1RI=;
+	s=default; t=1597693459;
+	bh=CaGu3jCShAi6zK9n0jAB+MVmHli5uXnzyL5xTif5KX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcKY4gzAOqXs4JsJRHb3tkBoP53g3UVCi/yLUKXot3IAyxD2WTKnWgRgxi1qj2bsU
-	 KzOLeZfpuTcuzdT3jiIfUlVH6JeedwM4mOo9jaaSUYf2pI/WHUs04NTBFjn0Pq3KvR
-	 PoYES8dsmygP5cvc6Lct7AnKGBtBGIPRPp+JS6Ng=
+	b=ViOl5TEbAPg+eFkbNLtjUGkLNsb8v99pAgjNLou6f9PpbzPXbNnVG96t29UKffXXK
+	 LQCfLHks59Jpj3RUMovps48nScq/S/hxyNQgNW4LQlIFdiBu3knRC9wc3095U2D+r7
+	 el7LmtYcaVkC52vqM3HRRRb0gGLhEzdlQsXTIr70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732612AbgHQToH (ORCPT
+        id S1732627AbgHQToR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbgHQPXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:15 -0400
+        id S1729511AbgHQPXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9345823136;
-        Mon, 17 Aug 2020 15:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C3E20825;
+        Mon, 17 Aug 2020 15:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677794;
-        bh=sP4va8tw/LWQq1aLYu/jsNtjodsiB3MIonkDEyyS1RI=;
+        s=default; t=1597677781;
+        bh=CaGu3jCShAi6zK9n0jAB+MVmHli5uXnzyL5xTif5KX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0V1XQNPEsf/8wYjKVD7n3fWfFJuLp6S6oGOG7mpPiS+fIVkA8CiFmJxZxX+1HqYu
-         8KYxK40jRXuMgKj6c2JMxA8ZDZPY8JNk/nVPrIrec9jUUURenQ6ulWxCu8xwznSrtQ
-         xypywCF+4hkIc2jnkDo76yairrSWMh2Ys9Oe+gK4=
+        b=rp2FmgRsUo5/TtE75bzMpFGYloBh1P96iozItvGki82C3gaKH0u31xbD9ktRxSOBx
+         rsWE1RWvNXvm38HH0igip1P+Wip4bIcTqGjRtKQlByJSjB3XZVXlRKqPZFq8P36NJg
+         aEO4tNG85GXhysmPRpB6o8f7dHmkxJInaIoM/nDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 110/464] drm/amd/display: Improve DisplayPort monitor interop
-Date:   Mon, 17 Aug 2020 17:11:03 +0200
-Message-Id: <20200817143839.072660737@linuxfoundation.org>
+Subject: [PATCH 5.8 105/464] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 17 Aug 2020 17:10:58 +0200
+Message-Id: <20200817143838.823807881@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,114 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit eec3303de3378cdfaa0bb86f43546dbbd88f94e2 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-[Why]
-DC is very fast at link training and stream enablement
-which causes issues such as blackscreens for non-compliant
-monitors.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-[How]
-After debugging with scaler vendors we implement the
-minimum delays at the necessary locations to ensure
-the monitor does not hang.  Delays are generic due to
-lack of IEEE OUI information on the failing displays.
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+v2: use sysfs_streq instead of stripping trailing whitespace
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    |  4 +++-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 16 ++++++++++------
- .../amd/display/dc/dce110/dce110_hw_sequencer.c  | 11 ++++++++++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 48ab51533d5d6..841cc051b7d01 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -3298,9 +3298,11 @@ void core_link_disable_stream(struct pipe_ctx *pipe_ctx)
- 			write_i2c_redriver_setting(pipe_ctx, false);
- 		}
- 	}
--	dc->hwss.disable_stream(pipe_ctx);
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 2bea221307037..bfe4602f206b4 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -311,13 +311,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
  
- 	disable_link(pipe_ctx->stream->link, pipe_ctx->stream->signal);
-+
-+	dc->hwss.disable_stream(pipe_ctx);
-+
- 	if (pipe_ctx->stream->timing.flags.DSC) {
- 		if (dc_is_dp_signal(pipe_ctx->stream->signal))
- 			dp_set_dsc_enable(pipe_ctx, false);
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 91cd884d6f257..6124af571bff6 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -1102,6 +1102,10 @@ static inline enum link_training_result perform_link_training_int(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET = DPCD_TRAINING_PATTERN_VIDEOIDLE;
- 	dpcd_set_training_pattern(link, dpcd_pattern);
+ 	buf[len] = '\0';
  
-+	/* delay 5ms after notifying sink of idle pattern before switching output */
-+	if (link->connector_signal != SIGNAL_TYPE_EDP)
-+		msleep(5);
-+
- 	/* 4. mainlink output idle pattern*/
- 	dp_set_hw_test_pattern(link, DP_TEST_PATTERN_VIDEO_MODE, NULL, 0);
- 
-@@ -1551,6 +1555,12 @@ bool perform_link_training_with_retries(
- 	struct dc_link *link = stream->link;
- 	enum dp_panel_mode panel_mode = dp_get_panel_mode(link);
- 
-+	/* We need to do this before the link training to ensure the idle pattern in SST
-+	 * mode will be sent right after the link training
-+	 */
-+	link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
-+							pipe_ctx->stream_res.stream_enc->id, true);
-+
- 	for (j = 0; j < attempts; ++j) {
- 
- 		dp_enable_link_phy(
-@@ -1567,12 +1577,6 @@ bool perform_link_training_with_retries(
- 
- 		dp_set_panel_mode(link, panel_mode);
- 
--		/* We need to do this before the link training to ensure the idle pattern in SST
--		 * mode will be sent right after the link training
--		 */
--		link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
--								pipe_ctx->stream_res.stream_enc->id, true);
--
- 		if (link->aux_access_disabled) {
- 			dc_link_dp_perform_link_training_skip_aux(link, link_setting);
- 			return true;
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index b77e9dc160863..2af1d74d16ad8 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -1069,8 +1069,17 @@ void dce110_blank_stream(struct pipe_ctx *pipe_ctx)
- 		link->dc->hwss.set_abm_immediate_disable(pipe_ctx);
- 	}
- 
--	if (dc_is_dp_signal(pipe_ctx->stream->signal))
-+	if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
- 		pipe_ctx->stream_res.stream_enc->funcs->dp_blank(pipe_ctx->stream_res.stream_enc);
-+
-+		/*
-+		 * After output is idle pattern some sinks need time to recognize the stream
-+		 * has changed or they enter protection state and hang.
-+		 */
-+		if (!dc_is_embedded_signal(pipe_ctx->stream->signal))
-+			msleep(60);
-+	}
-+
- }
- 
- 
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
