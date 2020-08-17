@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D216C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB783C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1AF322BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02E120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678883;
-	bh=OizNdolFqPCsXRkXdorZxU6XFRZXjLoM4x3IYzceCvY=;
+	s=default; t=1597678889;
+	bh=swiXXOe0BmDRHvB9gVuUomUblqdxPDy7YROhR5Hm4W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKCE1YANwyN7EN1LXXt7eKj6g35PoBdlhvA276oudbn4wgAXybTi8g8OiecERqkHK
-	 aCz3vezY31pgeh/9uxCTHRLFV9aN3FD5hp5mgMX6EgRyhRI+l/77wS4TLPtyJmPr4F
-	 NXkzWHf40mk3joFksdga9zi3KJES5dyZp2mQbpZA=
+	b=Eup+/swRLSpj3hTNFBflVHD6cqSYT8elihe2mHCPpIk6ghikOxThBvba1A38xbCcz
+	 4wVwrW+zSdbo3uaRmlx8ceuU1JMAfOLX/+PzhgoS23ccu4Y7eF+mDjtkQ7Cde04dyf
+	 lw9XZCHA1d3WED5AGMJVQp7UYgGSPhJPvP9zeBqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbgHQPlV (ORCPT
+        id S1730741AbgHQPlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbgHQPdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:38 -0400
+        id S1730399AbgHQPdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:33:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C47BE22D2B;
-        Mon, 17 Aug 2020 15:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBA720882;
+        Mon, 17 Aug 2020 15:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678418;
-        bh=OizNdolFqPCsXRkXdorZxU6XFRZXjLoM4x3IYzceCvY=;
+        s=default; t=1597678421;
+        bh=swiXXOe0BmDRHvB9gVuUomUblqdxPDy7YROhR5Hm4W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcgOr1hqzBjrdljkThPO6/e495vq7efYhmsZrYYuhrXBhHeszjnwDXYPgWJegGEV/
-         nkXr0fPUfNrgUw9iJWVG5EWOg24z/694RD+SDEgG4RiU2LZ9W+Z3IFkySRtpEYNnq5
-         sdkKsemIimi8JZt9uKKUR1ukMfztvqFt/rzD041k=
+        b=gpKVyv+F2TXM4UbDZPgAkIE+FJQR/kncQd8ccuzKJGruxIk7rDAJdz8WCsZP598c8
+         xyscZAAJkDJncpp8TYhj5d+XrQk2QOv4kVoWUGl4yiXNwbup21VzeMrsQ/iOdScxmr
+         fE+K5AUOOkdRBZVF3KHnfxCGmqduxfAsWHtnyrIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <wangxi11@huawei.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 328/464] RDMA/hns: Fix the unneeded process when getting a general type of CQE error
-Date:   Mon, 17 Aug 2020 17:14:41 +0200
-Message-Id: <20200817143849.501869614@linuxfoundation.org>
+Subject: [PATCH 5.8 329/464] ASoC: meson: axg-tdm-interface: fix link fmt setup
+Date:   Mon, 17 Aug 2020 17:14:42 +0200
+Message-Id: <20200817143849.549560358@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,64 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xi Wang <wangxi11@huawei.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 395f2e8fd340c5bfad026f5968b56ec34cf20dd1 ]
+[ Upstream commit 6878ba91ce84f7a07887a0615af70f969508839f ]
 
-If the hns ROCEE reports a general error CQE (types not specified by the IB
-General Specifications), it's no need to change the QP state to error, and
-the driver should just skip it.
+The .set_fmt() callback of the axg tdm interface incorrectly
+test the content of SND_SOC_DAIFMT_MASTER_MASK as if it was a
+bitfield, which it is not.
 
-Fixes: 7c044adca272 ("RDMA/hns: Simplify the cqe code of poll cq")
-Link: https://lore.kernel.org/r/1595932941-40613-8-git-send-email-liweihang@huawei.com
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
-Signed-off-by: Weihang Li <liweihang@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Implement the test correctly.
+
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200729154456.1983396-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 9 +++++++++
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h | 1 +
- 2 files changed, 10 insertions(+)
+ sound/soc/meson/axg-tdm-interface.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 9833ce3e21f9e..eb71b941d21b7 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -3053,6 +3053,7 @@ static void get_cqe_status(struct hns_roce_dev *hr_dev, struct hns_roce_qp *qp,
- 		  IB_WC_RETRY_EXC_ERR },
- 		{ HNS_ROCE_CQE_V2_RNR_RETRY_EXC_ERR, IB_WC_RNR_RETRY_EXC_ERR },
- 		{ HNS_ROCE_CQE_V2_REMOTE_ABORT_ERR, IB_WC_REM_ABORT_ERR },
-+		{ HNS_ROCE_CQE_V2_GENERAL_ERR, IB_WC_GENERAL_ERR}
- 	};
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 6de27238e9dff..36df30915378c 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -119,18 +119,25 @@ static int axg_tdm_iface_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ {
+ 	struct axg_tdm_iface *iface = snd_soc_dai_get_drvdata(dai);
  
- 	u32 cqe_status = roce_get_field(cqe->byte_4, V2_CQE_BYTE_4_STATUS_M,
-@@ -3074,6 +3075,14 @@ static void get_cqe_status(struct hns_roce_dev *hr_dev, struct hns_roce_qp *qp,
- 	print_hex_dump(KERN_ERR, "", DUMP_PREFIX_NONE, 16, 4, cqe,
- 		       sizeof(*cqe), false);
- 
-+	/*
-+	 * For hns ROCEE, GENERAL_ERR is an error type that is not defined in
-+	 * the standard protocol, the driver must ignore it and needn't to set
-+	 * the QP to an error state.
-+	 */
-+	if (cqe_status == HNS_ROCE_CQE_V2_GENERAL_ERR)
-+		return;
+-	/* These modes are not supported */
+-	if (fmt & (SND_SOC_DAIFMT_CBS_CFM | SND_SOC_DAIFMT_CBM_CFS)) {
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBS_CFS:
++		if (!iface->mclk) {
++			dev_err(dai->dev, "cpu clock master: mclk missing\n");
++			return -ENODEV;
++		}
++		break;
 +
- 	/*
- 	 * Hip08 hardware cannot flush the WQEs in SQ/RQ if the QP state gets
- 	 * into errored mode. Hence, as a workaround to this hardware
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-index e176b0aaa4ac2..e6c385ced1872 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-@@ -230,6 +230,7 @@ enum {
- 	HNS_ROCE_CQE_V2_TRANSPORT_RETRY_EXC_ERR		= 0x15,
- 	HNS_ROCE_CQE_V2_RNR_RETRY_EXC_ERR		= 0x16,
- 	HNS_ROCE_CQE_V2_REMOTE_ABORT_ERR		= 0x22,
-+	HNS_ROCE_CQE_V2_GENERAL_ERR			= 0x23,
++	case SND_SOC_DAIFMT_CBM_CFM:
++		break;
++
++	case SND_SOC_DAIFMT_CBS_CFM:
++	case SND_SOC_DAIFMT_CBM_CFS:
+ 		dev_err(dai->dev, "only CBS_CFS and CBM_CFM are supported\n");
++		/* Fall-through */
++	default:
+ 		return -EINVAL;
+ 	}
  
- 	HNS_ROCE_V2_CQE_STATUS_MASK			= 0xff,
- };
+-	/* If the TDM interface is the clock master, it requires mclk */
+-	if (!iface->mclk && (fmt & SND_SOC_DAIFMT_CBS_CFS)) {
+-		dev_err(dai->dev, "cpu clock master: mclk missing\n");
+-		return -ENODEV;
+-	}
+-
+ 	iface->fmt = fmt;
+ 	return 0;
+ }
+@@ -319,7 +326,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (iface->fmt & SND_SOC_DAIFMT_CBS_CFS) {
++	if ((iface->fmt & SND_SOC_DAIFMT_MASTER_MASK) ==
++	    SND_SOC_DAIFMT_CBS_CFS) {
+ 		ret = axg_tdm_iface_set_sclk(dai, params);
+ 		if (ret)
+ 			return ret;
 -- 
 2.25.1
 
