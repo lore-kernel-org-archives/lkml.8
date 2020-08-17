@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91595C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4378DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E11C20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178DD20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRBYv0V7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPj6GIc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHQIUx (ORCPT
+        id S1728163AbgHQIU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        Mon, 17 Aug 2020 04:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgHQIUs (ORCPT
+        with ESMTP id S1726336AbgHQISo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:20:48 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674E0C061388;
-        Mon, 17 Aug 2020 01:20:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j21so7752756pgi.9;
-        Mon, 17 Aug 2020 01:20:48 -0700 (PDT)
+        Mon, 17 Aug 2020 04:18:44 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39ACC061388;
+        Mon, 17 Aug 2020 01:18:44 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so7871549pfh.3;
+        Mon, 17 Aug 2020 01:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dqznZ0QFtNhvUqAjtholQ/Q+9qOGKPjtIbAySrocxDs=;
-        b=KRBYv0V7RGxjCNY2koURdTLqlf5T4Z5jbej72if9UXEFoL/RlV6R2AvNxEL7dsnkWj
-         0Ocb0N5z5mpfGDeBczn80DTSBEiOrPHHULXZM2bbF2PT18waNq8KIv/teDOjtojWbR/o
-         +utDsvnj0AiO/C0hDKdBK5L3ZEIFNo1ncyj3M37kjc5nrD+4woYiqlvpl7WkU63sNC3s
-         /z4oHsk2a5X6cL0vJjbAo8Q0jygbeBZTUK1omsbE3UDj2SLH/dnrgSMmm41FmZ4H/Jqb
-         uQF+QmUGHr2ATgAq4IklyAkVPA8988eGdhnOuKCkWnKzJ1jh6EvOFScbKkNP2V/Z+eeY
-         +WTQ==
+        bh=KmEcBHcde06arqa/qnAKRl0EaY2afCtuj8GLj4ZTRM0=;
+        b=ZPj6GIc3bq6Ex5uJOYWUiGSZFLN/814K7fHM5oA+Mq5dpIS8LCQPwVQNUGtj44Ywuf
+         8JGtsTJ5CYKCtK8MFgtkNaoVPuAzeoHi+Tf3kpf+KX/PviAbimyTxiPKekd25Jr4pMVy
+         UCEnQYTEvlOVJ0m/i6dJ8djGZdkbONwIig2dW9klIJEKOz/te71+Z0SNAVizpQ8BCtCA
+         WFL7ORtS8TH2YerqRUJ9EvA9XeGa7yQV7z9UH/4tqceHCXwSO0uNAaMdNJMJH8OlIb5H
+         U/inY8+aVvTB9Fx/gLIu/Qpk4P+/FpisLIjv90NGEiWRW3fmCAqamLg/CeJUW/Ku0hVg
+         fRaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dqznZ0QFtNhvUqAjtholQ/Q+9qOGKPjtIbAySrocxDs=;
-        b=pFRM6Vobl4+Fpa64A0bxQVkWROaDZoxKVZklYtH91vH3xNrfMw148NkxDhLkUAyUih
-         eIbkReb2TTzUgsW3lGcQZY71B+LzOw0X/fs8GpcFYqL2cqFznb163vzz84HLxsbLrnHL
-         u4ngSCRE4qubperbVS+aI4S36STFR7Iz1KtixPinwD3byTy7ukZyUKecRTJrKb85pClB
-         5ffacbn/KEhIANLK1+q1xJN5ct3rU9Q56V931j6PMFAK4LbzlxpyN0hWzLjydqKlOuBc
-         SGoUir523JrAv1dWOvvcLb3Eh9Kl3gHusjP67ZlQwfipj/vuQfqTTrNpIVEbVHNBbb4p
-         yaYQ==
-X-Gm-Message-State: AOAM532UwnEBcatZBfnMAyE2m2o1Ak6p6ij3fkQHycrzq0TlPZ72bTWh
-        MpACbLBPdxZSw4lZTvhwRrQ=
-X-Google-Smtp-Source: ABdhPJzX+N/OkXU+vrrmrFmCMg/4yjHapdnCrzQXpTIDVt6HxLMh86+qWux6PojScRvt2WSRNYNUQw==
-X-Received: by 2002:a62:1543:: with SMTP id 64mr10645592pfv.242.1597652447996;
-        Mon, 17 Aug 2020 01:20:47 -0700 (PDT)
+        bh=KmEcBHcde06arqa/qnAKRl0EaY2afCtuj8GLj4ZTRM0=;
+        b=lASCnhsKP8DQLAvf6i+z2GReozSV3NDJzh3yz7xTtw8L2AfKrrIofII8y4cJBmUjZU
+         7j+iSThynhTXDpy8dP2uiU3xbSI7IpGHTlSRWIonXxy1zExip9NGh7zeTkrAdQ5bH6uu
+         24BkViMqCULVmxJUjOm6kJ+JSy32UzLuU1hlnmzs9ykzN6vRc2hW93xD+x4kymUnGuMz
+         ufwxZRzpOvFAtlxGITvinNMzBONZq1jAdgcZ2CFOAW/RvPN3cG5zz6QDP4ZWuwkFERL1
+         kR8NEN/8Uji9iExbBAVBho6PzSMCMvZ16ln9f7czsk1I+tZNZQHEhw08c4mPMQwLPy8F
+         tA+A==
+X-Gm-Message-State: AOAM530H16M9DFx1ycgsAEIhW+9OxlthxvSxZ5Br1JnSWNORbHL5Dm6x
+        M3+X8/3VIUcF+8xsvBi1WE8=
+X-Google-Smtp-Source: ABdhPJzTO4xmXekUKvlKfpAmGwBic+Bzzl9KrxVjZgG/u8ypYaxKauNmxFYJuyl0vzE9Xwqlt1/nCA==
+X-Received: by 2002:a63:ed07:: with SMTP id d7mr8896251pgi.414.1597652324466;
+        Mon, 17 Aug 2020 01:18:44 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.20.39
+        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.18.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:20:47 -0700 (PDT)
+        Mon, 17 Aug 2020 01:18:44 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
         festevam@gmail.com, linux-imx@nxp.com, ast@kernel.org,
@@ -73,9 +73,9 @@ Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 18/35] dma: nbpfaxi: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:47:09 +0530
-Message-Id: <20200817081726.20213-19-allen.lkml@gmail.com>
+Subject: [PATCH 06/35] dma: ep93xx: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:46:57 +0530
+Message-Id: <20200817081726.20213-7-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817081726.20213-1-allen.lkml@gmail.com>
 References: <20200817081726.20213-1-allen.lkml@gmail.com>
@@ -92,34 +92,35 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/dma/nbpfaxi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/ep93xx_dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
-index 74df621402e1..4ef0838840f3 100644
---- a/drivers/dma/nbpfaxi.c
-+++ b/drivers/dma/nbpfaxi.c
-@@ -1113,9 +1113,9 @@ static struct dma_chan *nbpf_of_xlate(struct of_phandle_args *dma_spec,
- 	return dchan;
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index 87a246012629..01027779beb8 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -745,9 +745,9 @@ static void ep93xx_dma_advance_work(struct ep93xx_dma_chan *edmac)
+ 	spin_unlock_irqrestore(&edmac->lock, flags);
  }
  
--static void nbpf_chan_tasklet(unsigned long data)
-+static void nbpf_chan_tasklet(struct tasklet_struct *t)
+-static void ep93xx_dma_tasklet(unsigned long data)
++static void ep93xx_dma_tasklet(struct tasklet_struct *t)
  {
--	struct nbpf_channel *chan = (struct nbpf_channel *)data;
-+	struct nbpf_channel *chan = from_tasklet(chan, t, tasklet);
- 	struct nbpf_desc *desc, *tmp;
+-	struct ep93xx_dma_chan *edmac = (struct ep93xx_dma_chan *)data;
++	struct ep93xx_dma_chan *edmac = from_tasklet(edmac, t, tasklet);
+ 	struct ep93xx_dma_desc *desc, *d;
  	struct dmaengine_desc_callback cb;
+ 	LIST_HEAD(list);
+@@ -1353,8 +1353,7 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 		INIT_LIST_HEAD(&edmac->active);
+ 		INIT_LIST_HEAD(&edmac->queue);
+ 		INIT_LIST_HEAD(&edmac->free_list);
+-		tasklet_init(&edmac->tasklet, ep93xx_dma_tasklet,
+-			     (unsigned long)edmac);
++		tasklet_setup(&edmac->tasklet, ep93xx_dma_tasklet);
  
-@@ -1260,7 +1260,7 @@ static int nbpf_chan_probe(struct nbpf_device *nbpf, int n)
- 
- 	snprintf(chan->name, sizeof(chan->name), "nbpf %d", n);
- 
--	tasklet_init(&chan->tasklet, nbpf_chan_tasklet, (unsigned long)chan);
-+	tasklet_setup(&chan->tasklet, nbpf_chan_tasklet);
- 	ret = devm_request_irq(dma_dev->dev, chan->irq,
- 			nbpf_chan_irq, IRQF_SHARED,
- 			chan->name, chan);
+ 		list_add_tail(&edmac->chan.device_node,
+ 			      &dma_dev->channels);
 -- 
 2.17.1
 
