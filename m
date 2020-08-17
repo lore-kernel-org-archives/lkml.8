@@ -2,115 +2,86 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D47C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64DE52065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1342065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597700242;
-	bh=TCjzNp4qKJTaPscgXMtW9r99luBrplGHLhswQnzjIoA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0XXu6hi0yCyqmpy9nS4Qqkx3gf5dnAB4pOfD667LsvVrNjK1cpxzghL945uqfrq9l
-	 /OZXfg3LstUHlkGUv9SSf4SVwO+bp5lfFIF3K6ixsffJ0vFu9w+e2U5FWR/Unxsz7l
-	 zpO+Ddy8MLL1Sxci/2oAUf6jl7Hy7LlDs5YiOr6o=
+	s=default; t=1597700282;
+	bh=feUszn/vG4TsgKgxCr3MWcp+NBlrtcF7BmIYMqGUmps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ti9mktXIOgR7BLNh6T9AGLIFGq/JKsfYs4Ohlm2dK5P1A6Zdtl1gJ3YWtuV28PJVu
+	 VeyEA3I0RzKLL0stlAa6uaJErT9CxgF+F0qTJaOh2LUohfCA78X/+/EM4xP3kXWSZ+
+	 4g/WlSxBXkWnqJBQUavzvkDhLucV0h3KCI+IXkVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgHQVhV (ORCPT
+        id S1728567AbgHQViB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgHQVhU (ORCPT
+        Mon, 17 Aug 2020 17:38:01 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43460 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgHQViA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:37:20 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9815C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:37:19 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t6so19102183ljk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jm8jZArYddhqUYv8uma7iesaEBvjq6SOsDLcRZUaQ/E=;
-        b=K9ybUtGr6t0dUEotn+b5ds3wNHdUEMLBrVq/JaBumu59HnobQacNfCGqQl5mJHNbVA
-         hkLWBuL6YoF8g3a1YCO+tfDSdddHQkHB/d4NFnZf0r0jOWl5e4HE9u22yd9cLQ+svWGM
-         1fKT0VIsFmJ3woXTAuGbLupTo9xre9P3/nkK8=
+        Mon, 17 Aug 2020 17:38:00 -0400
+Received: by mail-il1-f196.google.com with SMTP id e11so7869515ils.10;
+        Mon, 17 Aug 2020 14:37:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jm8jZArYddhqUYv8uma7iesaEBvjq6SOsDLcRZUaQ/E=;
-        b=MKP+Rd8W40B+ztpQiCxb/VtbFtRO182JjrEPzZlpE6OrYbCpNS8sjxLl/F7Z4AHc4m
-         aKgpaiQwkWcqWl01hVIcgD9IjET7/7pqBIkKpcUHhcz/b/EsOXWA72Y6tYQi2OeSQW+Z
-         c10gsfRfE/Vd0XZvz2QOFHx4+BoDid9Cpmr9DPQFxRt9NQL0s1QFefSwfkSeaC55LMpZ
-         m7XW58OcSDttUWLUOJYwbTng+lSiob2kphqW+tNpT10ag8FdzweDXD+F5hHbtWg8Uuu5
-         VmTPaY3Dy+8uc+gLedCBKnUxEx3PLHMcyZ6yGVaEMX9Sv9DunxGjdsx/F90gnnf4Cmpw
-         1JVA==
-X-Gm-Message-State: AOAM532oDiPopHYqhJcOFMCfuom0HLYpjYcjcAqAF98XyI+Ic8NTrJXZ
-        QyfzvLDreEL2ZDp7Y8nvuSWAmTJzAC1NJw==
-X-Google-Smtp-Source: ABdhPJyuW5Q8YqfLJLXW56QmPE6u6p7BaE/i4CS8iaoP+0+TH9RSAVVg6wJYdU/OIs6+sCuie4bavQ==
-X-Received: by 2002:a05:651c:1343:: with SMTP id j3mr7653130ljb.112.1597700237985;
-        Mon, 17 Aug 2020 14:37:17 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id l24sm5308332ljb.43.2020.08.17.14.37.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 14:37:17 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id m22so19102617ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:37:17 -0700 (PDT)
-X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr8282877lfp.10.1597699793904;
- Mon, 17 Aug 2020 14:29:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bR82rNL4yqjtWxgtLaqjAthZz9IraEgjUWKkJ1P0xIk=;
+        b=buZcVYG8PnyYuICs+rdo4lUdoj+aSVgJgL2CM/fGuiMqJnOpgHM08T7owQQ14gTLpd
+         UoeAua8yo/1ZQcZVVXr912v0N5g4mRonZ9GvoZG3mm0eoZbjKPYZrIYDcDDojOgiomcz
+         Tca21cmxJUqnBK1xmKt/LAnMjHeSH92OXF0DUdO2I+eeJhnLwMY2fZrrCqDaZGRpy0mH
+         eSae9E9ByAhw6yPxmgzxT+kbO7Nr4a3S90hKiPgpUtKDTeqd01mU7iiV1UjY3/HmrXsT
+         EUj5GH/wUUT9x1JbSM2AiwPwznTbi2fCjBVSLtLhD2ybLXnhv6mwkXnI5ck7b6s6PuUt
+         Gq0A==
+X-Gm-Message-State: AOAM533Fmk1L+42sffwe2aBtEXRlfEoaLnxcqQFE/n6E86k6qf4zOWOn
+        54LDjB5RubvriTXl8wbruw==
+X-Google-Smtp-Source: ABdhPJx1AtYHLtHhsASwdPVfW8dhw5e/RniENH9qBgdvo4sf+aZCjqM66Tln6WWQui3HEb4LQN82pQ==
+X-Received: by 2002:a92:6c09:: with SMTP id h9mr9660936ilc.46.1597700279449;
+        Mon, 17 Aug 2020 14:37:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id w22sm9670417ioc.24.2020.08.17.14.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 14:37:59 -0700 (PDT)
+Received: (nullmailer pid 1612265 invoked by uid 1000);
+        Mon, 17 Aug 2020 21:37:57 -0000
+Date:   Mon, 17 Aug 2020 15:37:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     festevam@gmail.com, aisheng.dong@nxp.com, robh+dt@kernel.org,
+        Linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, s.hauer@pengutronix.de
+Subject: Re: [PATCH 2/2] dt-bindings: fsl: Convert i.MX7ULP SIM to json-schema
+Message-ID: <20200817213757.GA1612179@bogus>
+References: <1596595841-27563-1-git-send-email-Anson.Huang@nxp.com>
+ <1596595841-27563-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com> <20200816175303.GB1236603@ZenIV.linux.org.uk>
- <20200817204223.GB12414@amd> <87lfid6kpi.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87lfid6kpi.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 17 Aug 2020 14:29:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
-Message-ID: <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Witten <mfwitten@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        John Levon <john.levon@joyent.com>,
-        John Levon <levon@movementarian.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596595841-27563-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 2:15 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Does anyone remember why we added this warning?  I had always thought
-> it's purpose was to ensure we stayed within our chosen dialect of C.
+On Wed, 05 Aug 2020 10:50:41 +0800, Anson Huang wrote:
+> Convert the i.MX7ULP SIM binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  .../bindings/arm/freescale/fsl,imx7ulp-sim.txt     | 16 ----------
+>  .../bindings/arm/freescale/fsl,imx7ulp-sim.yaml    | 36 ++++++++++++++++++++++
+>  2 files changed, 36 insertions(+), 16 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml
+> 
 
-As far as I'm concerned, that's the primary motivation.
-
-I'm not seeing why we'd suddenly allow the "put variable declarations
-anywhere" when we've been able to keep from doing it until now.
-
-We're still building primarily good old K&R ANSI C, just with
-extensions. Wild variable placement doesn't seem like a useful
-extension.
-
-(Other variable placement improvements are: block-scope variable
-declarations inside the "for()" statement is very syntactically
-useful, for example. THAT would be useful if we can finally enable it
-without gcc going all wonky on us)
-
-                Linus
+Applied, thanks!
