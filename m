@@ -2,97 +2,78 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC058C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D768CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BCD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689993;
-	bh=4CFGfsTcuLmf6c/2l3yQniiMu66wdLCJlBLj0T632xw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qc40Xhu/L5jeh8TzYe/IoMnHobv6klvRxGPIAhJsyyAKGbPWx4mb/Ta7+jmDYPp4X
-	 SmF+6LyV9Tk7kVL+teWMu0keBK4JHwhHDk8uIL7W5eyiKsrWU+wiRrv/SNUK6Dwf16
-	 yjy5rkrnnSwtjcT4JhhN7izugcIHvNm0iIH4ucbI=
+	by mail.kernel.org (Postfix) with ESMTP id B8890204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391589AbgHQSqc (ORCPT
+        id S2391601AbgHQSqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388043AbgHQPzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:55:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E22D2072E;
-        Mon, 17 Aug 2020 15:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679748;
-        bh=4CFGfsTcuLmf6c/2l3yQniiMu66wdLCJlBLj0T632xw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQC/iTIZvDADxgBE3HZqZ30RWTZq+gsO+TqnchXNNvcoCobzOBMPCBEctAGSvbZG1
-         V0Na3tqOApw0O9gP/Z7ThNHI/uBgKVFDB4fnCn3AvNghp5N9NvjV+48n2cvEY8vdMQ
-         TYWTI5PemKEBhzQOOV7B2z0utq4S8mUMTGWwNgio=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 290/393] wl1251: fix always return 0 error
-Date:   Mon, 17 Aug 2020 17:15:40 +0200
-Message-Id: <20200817143833.689660983@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Aug 2020 14:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388043AbgHQSqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:46:42 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEDCC061389;
+        Mon, 17 Aug 2020 11:46:41 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9F77014ACC17C;
+        Mon, 17 Aug 2020 11:29:47 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 11:46:29 -0700 (PDT)
+Message-Id: <20200817.114629.1895503086750807628.davem@davemloft.net>
+To:     rdunlap@infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] phylink: <linux/phylink.h>: fix function prototype
+ kernel-doc warning
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <f99bacca-0868-dff0-ff72-ebe8b8749270@infradead.org>
+References: <20200816222549.379-1-rdunlap@infradead.org>
+        <20200816.211451.1874573780407600816.davem@davemloft.net>
+        <f99bacca-0868-dff0-ff72-ebe8b8749270@infradead.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 17 Aug 2020 11:29:47 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Date: Sun, 16 Aug 2020 22:43:54 -0700
 
-[ Upstream commit 20e6421344b5bc2f97b8e2db47b6994368417904 ]
+> On 8/16/20 9:14 PM, David Miller wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Date: Sun, 16 Aug 2020 15:25:49 -0700
+>> 
+>>> Fix a kernel-doc warning for the pcs_config() function prototype:
+>>>
+>>> ../include/linux/phylink.h:406: warning: Excess function parameter 'permit_pause_to_mac' description in 'pcs_config'
+>>>
+>>> Fixes: 7137e18f6f88 ("net: phylink: add struct phylink_pcs")
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> 
+>> There's no definition of this function anywhere.  Maybe just remove all of
+>> this?
+>> 
+> 
+> It's for documentation purposes...
+> 
+> It's a "method" (callback) function.
 
-wl1251_event_ps_report() should not always return 0 because
-wl1251_ps_set_mode() may fail. Change it to return 'ret'.
+I see, that's an unfortunate shortcoming of kerneldoc.
 
-Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200730073939.33704-1-wanghai38@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ti/wl1251/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
-index 850864dbafa11..e6d426edab56b 100644
---- a/drivers/net/wireless/ti/wl1251/event.c
-+++ b/drivers/net/wireless/ti/wl1251/event.c
-@@ -70,7 +70,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
- 		break;
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
--- 
-2.25.1
-
-
+Applied, thanks.
 
