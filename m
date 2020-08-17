@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C25C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE6FE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3AF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690736;
-	bh=11TQG3Ov6Oau5HVpZcE9BPBg2ylugEwIixlNmsWPxMg=;
+	s=default; t=1597690744;
+	bh=dJ/oRwwx+jniJMh75Sm69hzzChkf4XowTV+cbAgN2Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+iGMeTqWbgdRe+t/7fYhknv/8RlMxPzxywJVtcRADCE8rTaOJIDQQAiVZvADMrnf
-	 aElZyieWIPlqLObdnJLm9mbxTUGurSLorUV+Cuu5gzOn6Rh4a/ip+FUtu6fGo864nK
-	 VH5f29wzOgfaXCqpbFKS2OIOOA4Nih3UH9X5YXVU=
+	b=FXQUKgYTDH/y9TqDQjPSqgNBoexFiX5bKwhICih65dQzybdzDLWZWj5nb7gAU9abY
+	 U3LndcgBGDQfTkxkt1G4oTicgsmscSB5lu6Dstx6oW8ynHgZCf1omDx9xnU5YOUGVK
+	 EEXHNFOjQ1OeQTGCODKm/GxkkYXp0OHaIj2nS400=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391800AbgHQS64 (ORCPT
+        id S2387764AbgHQS7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387681AbgHQPtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:49:17 -0400
+        id S1730770AbgHQPtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB81020855;
-        Mon, 17 Aug 2020 15:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A9102065D;
+        Mon, 17 Aug 2020 15:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679357;
-        bh=11TQG3Ov6Oau5HVpZcE9BPBg2ylugEwIixlNmsWPxMg=;
+        s=default; t=1597679340;
+        bh=dJ/oRwwx+jniJMh75Sm69hzzChkf4XowTV+cbAgN2Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AlquORPRpdmunFGh3iyKYV6mwwh41dh7L75k7HqU5jfxyGw8C/Vt+w/rpJXVAjFKm
-         XEOFSHHtQGJ+X6kN/Ax7sTQf6CNtsnFvfG6X9nLfGYtzCPkxNhxvwaL6Pgc0N8KM32
-         iU3gdZQXFMvM4Jx89YA++0hZ/TeEd79JYTAJCU0Q=
+        b=STP584CmNyyFNaixBy9a+IdmdfaxMTI+o9K1PnaxTcpGfZONrg13L9mc7YNCis8Mk
+         9yAXZpzuuIkZPIpJyQO+KgX69t6PR3fwTB29n3tgO9J1HRxwivBGKgPa/OAe1Y3MkD
+         SSt48UfYQKcG74h5s5HjWxuYzRvYFsyc+ZntsPFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 156/393] dpaa2-eth: fix condition for number of buffer acquire retries
-Date:   Mon, 17 Aug 2020 17:13:26 +0200
-Message-Id: <20200817143827.183301761@linuxfoundation.org>
+Subject: [PATCH 5.7 177/393] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
+Date:   Mon, 17 Aug 2020 17:13:47 +0200
+Message-Id: <20200817143828.202013530@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 0e5ad75b02d9341eb9ca22627247f9a02cc20d6f ]
+[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
 
-We should keep retrying to acquire buffers through the software portals
-as long as the function returns -EBUSY and the number of retries is
-__below__ DPAA2_ETH_SWP_BUSY_RETRIES.
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-Fixes: ef17bd7cc0c8 ("dpaa2-eth: Avoid unbounded while loops")
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 2 +-
+ drivers/scsi/arm/eesox.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-index b7031f8562e04..665ec7269c603 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -1054,7 +1054,7 @@ static void drain_bufs(struct dpaa2_eth_priv *priv, int count)
- 					       buf_array, count);
- 		if (ret < 0) {
- 			if (ret == -EBUSY &&
--			    retries++ >= DPAA2_ETH_SWP_BUSY_RETRIES)
-+			    retries++ < DPAA2_ETH_SWP_BUSY_RETRIES)
- 				continue;
- 			netdev_err(priv->net_dev, "dpaa2_io_service_acquire() failed\n");
- 			return;
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index 134f040d58e26..f441ec8eb93df 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -571,7 +571,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_remove:
+ 	fas216_remove(host);
 -- 
 2.25.1
 
