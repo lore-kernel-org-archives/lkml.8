@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7CFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5DFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE6B20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A30020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691406;
-	bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
+	s=default; t=1597691419;
+	bh=RHEKZ6I/+5OeDI3eloga0sMl+G/igcSeiT7G2cBFdFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jXVaanHrBpnNht9IXQ5G7YLOOLGY5aC4bBdzkC145Hjb+45ovMNURj2VGXhNlR5kT
-	 haXuEDt3ESo9SkkLVKI3jCdRchJSvGkQPJLQkaUbdvPkv28TAKgwEhPpgYfY//Havk
-	 kCFhojciRtwzxBuP6LIu2ew3xqAP0szNicAUCFWg=
+	b=znYEOQnE+v3sFQuq8FtYIWimvi4hULa0XagRYoKiJcuXEaFa1LCuWfDxnddIVMBCT
+	 /+yQ/T/bye2+xI4yFMjzydFGy6kB4nAHiewxKic/m9hJGWlE+DPEmOyTZyzmsylAsd
+	 IO4d5sqQDBiL+uNx2rCv8zNy4ll9LikMNTWUkJzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392087AbgHQTKE (ORCPT
+        id S1730466AbgHQTKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730781AbgHQPly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:41:54 -0400
+        id S1730768AbgHQPlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:41:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7A8520760;
-        Mon, 17 Aug 2020 15:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2122020760;
+        Mon, 17 Aug 2020 15:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678913;
-        bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
+        s=default; t=1597678904;
+        bh=RHEKZ6I/+5OeDI3eloga0sMl+G/igcSeiT7G2cBFdFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cx3HAkA9QWBMrkcr+3VgxK/1SzrEZcG+Pz+b4Eh7f+lnLsVD3V4NjInE6AiLS3k/j
-         AvdRQ1c5TzoblaDdQq4DBKU0fWrqdTQG6crW6LeAI2f4W14TJ3rW0asAlz8VYmXony
-         /8Qcri0pgicpQ3dq3nS8TDH7dAVWx0Gi4T4Tqp50=
+        b=R3kEyt1sGL0y3UmzOw/34p3rl6o044D+nyJzoxo3krQ3G+9kLg0wrWZtzsH6KFPZU
+         ecxwiSlYNJNuK5Das0tALYEXp+4ebt4xJ4V8j68IAYcM7L1PgeSwQ5IGsfV3qXRuVX
+         hIJ3dIVx/nFaHn5wXrrYIp/gBac4HB8Dl6ieOZxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 033/393] ARM: dts: gose: Fix ports node name for adv7180
-Date:   Mon, 17 Aug 2020 17:11:23 +0200
-Message-Id: <20200817143821.215410804@linuxfoundation.org>
+Subject: [PATCH 5.7 022/393] rcu/tree: Repeat the monitor if any free channel is busy
+Date:   Mon, 17 Aug 2020 17:11:12 +0200
+Message-Id: <20200817143820.670019550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,35 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-[ Upstream commit d344234abde938ae1062edb6c05852b0bafb4a03 ]
+[ Upstream commit 594aa5975b9b5cfe9edaec06170e43b8c0607377 ]
 
-When adding the adv7180 device node the ports node was misspelled as
-port, fix this.
+It is possible that one of the channels cannot be detached
+because its free channel is busy and previously queued data
+has not been processed yet. On the other hand, another
+channel can be successfully detached causing the monitor
+work to stop.
 
-Fixes: 8cae359049a88b75 ("ARM: dts: gose: add composite video input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200704155856.3037010-2-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Prevent that by rescheduling the monitor work if there are
+any channels in the pending state after a detach attempt.
+
+Fixes: 34c881745549e ("rcu: Support kfree_bulk() interface in kfree_rcu()")
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 79baf06019f5a..a378b54867bb4 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -336,7 +336,7 @@ composite-in@20 {
- 			reg = <0x20>;
- 			remote = <&vin1>;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index d9a49cd6065a2..a3aa129cc8f5f 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2895,7 +2895,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ {
+ 	struct kfree_rcu_cpu_work *krwp;
+-	bool queued = false;
++	bool repeat = false;
+ 	int i;
  
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+ 	lockdep_assert_held(&krcp->lock);
+@@ -2931,11 +2931,14 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ 			 * been detached following each other, one by one.
+ 			 */
+ 			queue_rcu_work(system_wq, &krwp->rcu_work);
+-			queued = true;
+ 		}
++
++		/* Repeat if any "free" corresponding channel is still busy. */
++		if (krcp->bhead || krcp->head)
++			repeat = true;
+ 	}
  
+-	return queued;
++	return !repeat;
+ }
+ 
+ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
 -- 
 2.25.1
 
