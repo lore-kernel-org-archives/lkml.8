@@ -2,100 +2,155 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EA0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE66D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lfkmiNvf"
+	by mail.kernel.org (Postfix) with ESMTP id E2A98204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692554;
+	bh=OjKwuGq6o48gdmVKs5O1o02EftD/J2g4ZV6Yxn+WrJs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B5m/+Nfhle3fTyPS0fI2unImkjiZsNYkDCLwE/Hn7c5I+6p9zwX+D+Mrznsa5Xemo
+	 6nY6NASMnDtVLqAeTlY0C8KRqmjcaTP7VkzjqY2Ko0Bx+8fY8GkzZgCmugBdX6E/1E
+	 o6J3YYT8PC/4DpCu0qtpG0J3jgV1/Z0aNdJn4KX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbgHQT2o (ORCPT
+        id S1732078AbgHQT3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732190AbgHQT2P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:28:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5904EC061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:28:15 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id f9so8123140pju.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/K/jgK8f2b3gfIxZCz2aodMs51/j1UmWIbA0xQ4Rg4o=;
-        b=lfkmiNvf7aWyMq4W/ABS66AbSGwPDK4/gSe7KpUo1u+V3ZDzJYaa4SZCJM35LFoSeq
-         uypWUeCVnbtPuTlC6Lv32YnGX41etwb0Tro5sTqJv62MgvvHNClJfRyjsQ85Ou5LahfA
-         L3x2mLvPon1Pa5RiuLmxjerV4ytCXX9sKlZ2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/K/jgK8f2b3gfIxZCz2aodMs51/j1UmWIbA0xQ4Rg4o=;
-        b=IRH7ii17nMoMbUywfh8pp1Od86qEN4e0PxeqSK7OyZuIQEaFsBvrFfWZBi4npd8VF/
-         YJ6iyZk4N2ZHFkcVfKMqw3akwwJDrQDKJW9QX9gCHTJtXM7I3EPy8hGOh1vRDgqELVic
-         1iZqlDqHQViB12VJMo1Ent+6G6cHwgW6bAhyV3Pffjy3lgHIJNozNIWLyB3QGM+bnj0n
-         Ias9xRO0UL5QKHZJ2Xhuw+8Qljt5q5bNFo/Z+boh+TyNiCQNqt4z0a5WKbUUvrylZOY+
-         DPMUphFnXTs4/dQbJ3pdqjGpebYbLR/xULNNJw9uBd2wwh6A6DiLE8NEG8HygJYUEBK7
-         ImGg==
-X-Gm-Message-State: AOAM5329hiVsAXrlUbB8ASx1jgSHfAqGGXY88bGdTdyVtAnf+6jFDwbm
-        9NpbJK1kOYRE+4qHJh9CMpwKFA==
-X-Google-Smtp-Source: ABdhPJxQXWN+Ph7ND4lvHYfqN6PVhgPAKtkPfn8HjEia6Dm6hV0gw3K3eYh80/xzuqoQhRxCjmbyAw==
-X-Received: by 2002:a17:902:8210:: with SMTP id x16mr12901228pln.166.1597692494753;
-        Mon, 17 Aug 2020 12:28:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b25sm20700960pft.134.2020.08.17.12.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:28:13 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 12:28:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Allen Pais <allen.cryptic@gmail.com>, martin.petersen@oracle.com,
-        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, Allen Pais <allen.lkml@gmail.com>
-Subject: Re: [PATCH 0/8] scsi: convert tasklets to use new tasklet_setup()
-Message-ID: <202008171227.D3A4F454D8@keescook>
-References: <20200817085409.25268-1-allen.cryptic@gmail.com>
- <1597675318.4475.11.camel@linux.ibm.com>
+        Mon, 17 Aug 2020 15:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730305AbgHQPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145AA2389A;
+        Mon, 17 Aug 2020 15:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678347;
+        bh=OjKwuGq6o48gdmVKs5O1o02EftD/J2g4ZV6Yxn+WrJs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oqrmX5DT27em/lxInYQ8jWIpeLULzOEig82UgXc7Wy+Qo2cifnGIFaSmUavKzrPlk
+         pDHXQkQSNdZGQesvIfQOkswdn1PDcqpTNBaIThWJHpsTsqHOkiND0KNOSyP4DnwjBJ
+         axIE8LB997So7ziSerBPcvfnAIZ21Wl7TLWzWlYA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Robertson <dan@dlrobertson.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 285/464] usb: dwc3: meson-g12a: fix shared reset control use
+Date:   Mon, 17 Aug 2020 17:13:58 +0200
+Message-Id: <20200817143847.406488369@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597675318.4475.11.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 07:41:58AM -0700, James Bottomley wrote:
-> On Mon, 2020-08-17 at 14:24 +0530, Allen Pais wrote:
-> > From: Allen Pais <allen.lkml@gmail.com>
-> > 
-> > Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
-> > introduced a new tasklet initialization API. This series converts 
-> > all the scsi drivers to use the new tasklet_setup() API
-> 
-> I've got to say I agree with Jens, this was a silly obfuscation:
-> 
-> +#define from_tasklet(var, callback_tasklet, tasklet_fieldname) \
-> +       container_of(callback_tasklet, typeof(*var), tasklet_fieldname)
-> 
-> Just use container_of directly since we all understand what it does.
+From: Dan Robertson <dan@dlrobertson.com>
 
-But then the lines get really long, wrapped, etc. This is what the
-timer_struct conversion did too (added a container_of wrapper), so I
-think it makes sense here too.
+[ Upstream commit 7a410953d1fb4dbe91ffcfdee9cbbf889d19b0d7 ]
 
+The reset is a shared reset line, but reset_control_reset is still used
+and reset_control_deassert is not guaranteed to have been called before
+the first reset_control_assert call. When suspending the following
+warning may be seen:
+
+WARNING: CPU: 1 PID: 5530 at drivers/reset/core.c:355 reset_control_assert+0x184/0x19c
+Hardware name: Hardkernel ODROID-N2 (DT)
+[..]
+pc : reset_control_assert+0x184/0x19c
+lr : dwc3_meson_g12a_suspend+0x68/0x7c
+[..]
+Call trace:
+ reset_control_assert+0x184/0x19c
+ dwc3_meson_g12a_suspend+0x68/0x7c
+ platform_pm_suspend+0x28/0x54
+ __device_suspend+0x590/0xabc
+ dpm_suspend+0x104/0x404
+ dpm_suspend_start+0x84/0x1bc
+ suspend_devices_and_enter+0xc4/0x4fc
+ pm_suspend+0x198/0x2d4
+
+Fixes: 6d9fa35a347a87 ("usb: dwc3: meson-g12a: get the reset as shared")
+Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/dwc3/dwc3-meson-g12a.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+index 1f7f4d88ed9d8..88b75b5a039c9 100644
+--- a/drivers/usb/dwc3/dwc3-meson-g12a.c
++++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+@@ -737,13 +737,13 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 		goto err_disable_clks;
+ 	}
+ 
+-	ret = reset_control_reset(priv->reset);
++	ret = reset_control_deassert(priv->reset);
+ 	if (ret)
+-		goto err_disable_clks;
++		goto err_assert_reset;
+ 
+ 	ret = dwc3_meson_g12a_get_phys(priv);
+ 	if (ret)
+-		goto err_disable_clks;
++		goto err_assert_reset;
+ 
+ 	ret = priv->drvdata->setup_regmaps(priv, base);
+ 	if (ret)
+@@ -752,7 +752,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 	if (priv->vbus) {
+ 		ret = regulator_enable(priv->vbus);
+ 		if (ret)
+-			goto err_disable_clks;
++			goto err_assert_reset;
+ 	}
+ 
+ 	/* Get dr_mode */
+@@ -765,13 +765,13 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 
+ 	ret = priv->drvdata->usb_init(priv);
+ 	if (ret)
+-		goto err_disable_clks;
++		goto err_assert_reset;
+ 
+ 	/* Init PHYs */
+ 	for (i = 0 ; i < PHY_COUNT ; ++i) {
+ 		ret = phy_init(priv->phys[i]);
+ 		if (ret)
+-			goto err_disable_clks;
++			goto err_assert_reset;
+ 	}
+ 
+ 	/* Set PHY Power */
+@@ -809,6 +809,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 	for (i = 0 ; i < PHY_COUNT ; ++i)
+ 		phy_exit(priv->phys[i]);
+ 
++err_assert_reset:
++	reset_control_assert(priv->reset);
++
+ err_disable_clks:
+ 	clk_bulk_disable_unprepare(priv->drvdata->num_clks,
+ 				   priv->drvdata->clks);
 -- 
-Kees Cook
+2.25.1
+
+
+
