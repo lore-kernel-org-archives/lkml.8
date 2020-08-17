@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0B12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972F620748
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YRHy6Ddk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+iq+KRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgHQOzh (ORCPT
+        id S1729184AbgHQOzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56570 "EHLO
+        Mon, 17 Aug 2020 10:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729092AbgHQOya (ORCPT
+        with ESMTP id S1729072AbgHQOyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:54:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D087C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id p14so13473103wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:29 -0700 (PDT)
+        Mon, 17 Aug 2020 10:54:20 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D9AC061344
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c19so13367110wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=/J6XwtP+H4HpYFvHEI0FwKaKGsrsWXlEj5IBcsGoHk8=;
-        b=YRHy6DdkOBrydyJjMgR/tIuZqPnHdhXI4rbPEwUh0BoaW4p//1RIH3SJ2ozRK59b29
-         2ayzTb/MUSKZY8qxncecsYuce0C+DpTmKETrKJoZficx7SbMiyUwnnbdlQ3JabqvGHZU
-         xjgpy+MuB/ItMuHXOuW5GGYhDcHat1b8XA1+4vsHKfcfIIgmc1WujUKHiOBkF1q8dres
-         psFDVcupFPjKV6jnrtG2h0l6cHvZkHBZz0l/Xx425RvRdH2fq6DYvZo8aeU5HXO4TNHI
-         fBh6XqdlQPKWS5pvo+vL9I2hxjKgewC3uKtfqvNqT6RfsQI87OpRV3XkCX0zFfnQH5SH
-         vMeA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rP4szUXJvfYTvxUeVM7AVSTLCdSWwY5XZ+xFqvnQB/A=;
+        b=g+iq+KRSVdn3IqbRBT93xFqRdSEbPayULPc8QQxuwLQRWgPYDDmR/ahg2H/BPOgnrW
+         dSyQE40Cso6nylXUI3KRWx6NfCbroN/XG5JaPFSMdQLnb80fJhOctSP++I9EmmvBWCmV
+         myCHMlbnIMwy+d1YLducvdC9CcWROmweGNd/+CrcfwapexKVWTC2uzrkkgCFLJOvRm07
+         K4lWovb0lCgpA1mUrhoPb8bWIA6xsg82xGLohFuoa9W2dgXyAwf3H9fg11+gzUe0S/YF
+         N21P5rKgKnmwPFoAT7IGDNhx85hkizzTWvMZyTShINmRfGBsYIk81Y16U3bOsIn8Q4lZ
+         +3cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/J6XwtP+H4HpYFvHEI0FwKaKGsrsWXlEj5IBcsGoHk8=;
-        b=ZsphUZP7UBgccgUVq1HmaoE3IizQpNtsn9bWJgNIirpgFMQS1qTTcEwNZqx6qKmMSp
-         WrZHbbRF/VzufJldVMMZavoNvOMixwY9IUs76lpU28D2O8twWWqkpLoMZUQIEXdZbiyQ
-         BYx1LhqN+J1ljMMdDWdKg2zI1/+F2bnfo9AVBoyB2Chjkmu/SgbUbF/pvrB3nN7h/u7R
-         ahQLM8Zif6EX+PeTFlIzOaohwnWDoAQ9C9i/wKK/tP0c40kkLkPr/TDZML0cwyZv/BOA
-         c3Mj9ma3iN/wxT8I8ga7efW89x97+GSOTyXYp69SEFQ+BdYx5YxMxAZ0SypNjwKZJuFS
-         mx+Q==
-X-Gm-Message-State: AOAM53172l7v6mM9pq8HMV6PiOUPUPSfpWKJwNjuvODZDNOnRrQNgWv/
-        01ONRjyaLWF3+1+DHTxcxY25tqooRE/IxUFw
-X-Google-Smtp-Source: ABdhPJwyZbUMf3XOfThCucSdueaWkX8qCd5VOvOTf4QgkYC/9M7Pj4fQtE9BEJqnoCFNRgkkWspoOA==
-X-Received: by 2002:a1c:a553:: with SMTP id o80mr14735459wme.50.1597676068187;
-        Mon, 17 Aug 2020 07:54:28 -0700 (PDT)
+        bh=rP4szUXJvfYTvxUeVM7AVSTLCdSWwY5XZ+xFqvnQB/A=;
+        b=XAiNfXTDHfPYt1adAWqK2GoEKPJCvMUM7FgTf5r+BvcLXqOYYBTB7ZuanKlO0LKD0h
+         GYccIc7fjKPsS1yVL+auCJo6e3OKhr9gXgyaw8/X/uzeysJwggopWcVJJJ29rms3WQHX
+         X/P67Kx/nS8iaW77XiQIuFc70VTEFTNXUFMjGdw3UdREj+bDBqQMm6mA3xJDrq0hZ3mJ
+         mSmzvNjwyknm5Nrk8lB6AhWkkREOECkXpxQHRQ6EKQfIj3xsHt7lNxVKXBKkus/fXLUz
+         6CWLIZuCtdtFa5JJpz/G/rOHT6/O7NXxlJvQA9myh+UqH5JZa4JXxw2sW1RKcYNzXZ7V
+         pvLw==
+X-Gm-Message-State: AOAM532LJHjGKrIQsGuKLLMqWuTK51/Mt41hECq86SWt0jihq8kCSHqk
+        z8uLQ6n3J8wznenh+yTFB2ENyg==
+X-Google-Smtp-Source: ABdhPJwvTETI/jkSPzdj8CKJpcQ/FMV+ueWsTXYREJfeIfwcq6AHAifbAJpWJQuQKLuGABB2R5ZFxA==
+X-Received: by 2002:a1c:19c2:: with SMTP id 185mr14758349wmz.8.1597676058315;
+        Mon, 17 Aug 2020 07:54:18 -0700 (PDT)
 Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id r16sm35005678wrr.13.2020.08.17.07.54.27
+        by smtp.gmail.com with ESMTPSA id r16sm35005678wrr.13.2020.08.17.07.54.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 07:54:27 -0700 (PDT)
+        Mon, 17 Aug 2020 07:54:17 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -71,9 +71,10 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Wei Li <liwei391@huawei.com>, linux-kernel@vger.kernel.org,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH RESEND v1 13/13] perf arm-spe: Add support for ARMv8.3-SPE
-Date:   Mon, 17 Aug 2020 15:53:48 +0100
-Message-Id: <20200817145348.14461-14-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH RESEND v1 04/13] perf arm-spe: Fix packet length handling
+Date:   Mon, 17 Aug 2020 15:53:39 +0100
+Message-Id: <20200817145348.14461-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817145348.14461-1-leo.yan@linaro.org>
 References: <20200817145348.14461-1-leo.yan@linaro.org>
@@ -82,157 +83,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+When process address packet and counter packet, if the packet contains
+extended header, it misses to account the extra one byte for header
+length calculation, thus returns the wrong packet length.
 
-This patch is to support Armv8.3 extension for SPE, it adds alignment
-field in the Events packet and it supports the Scalable Vector Extension
-(SVE) for Operation packet and Events packet with two additions:
+To correct the packet length calculation, one possible fixing is simply
+to plus extra 1 for extended header, but will spread some duplicate code
+in the flows for processing address packet and counter packet.
+Alternatively, we can refine the function arm_spe_get_payload() to not
+only support short header and allow it to support extended header, and
+rely on it for the packet length calculation.
 
-  - The vector length for SVE operations in the Operation Type packet;
-  - The incomplete predicate and empty predicate fields in the Events
-    packet.
+So this patch refactors function arm_spe_get_payload() with a new
+argument 'ext_hdr' for support extended header; the packet processing
+flows can invoke this function to unify the packet length calculation.
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- .../arm-spe-decoder/arm-spe-pkt-decoder.c     | 95 ++++++++++++++++++-
- .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  6 ++
- 2 files changed, 98 insertions(+), 3 deletions(-)
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     | 34 +++++++------------
+ 1 file changed, 12 insertions(+), 22 deletions(-)
 
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index 095f344ee26c..637655e28b9f 100644
+index 5a8696031e16..4f0aeb62e97b 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -346,14 +346,77 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
- 				blen -= ret;
- 			}
- 		}
-+
-+		if (idx > 2) {
-+			if (payload & SPE_EVT_PKT_ALIGNMENT) {
-+				ret = snprintf(buf, buf_len, " ALIGNMENT");
-+				if (ret < 0)
-+					return ret;
-+				buf += ret;
-+				blen -= ret;
-+			}
-+			if (payload & SPE_EVT_PKT_SVE_PARTIAL_PREDICATE) {
-+				ret = snprintf(buf, buf_len, " SVE-PARTIAL-PRED");
-+				if (ret < 0)
-+					return ret;
-+				buf += ret;
-+				blen -= ret;
-+			}
-+			if (payload & SPE_EVT_PKT_SVE_EMPTY_PREDICATE) {
-+				ret = snprintf(buf, buf_len, " SVE-EMPTY-PRED");
-+				if (ret < 0)
-+					return ret;
-+				buf += ret;
-+				blen -= ret;
-+			}
-+		}
-+
- 		return buf_len - blen;
+@@ -80,14 +80,15 @@ const char *arm_spe_pkt_name(enum arm_spe_pkt_type type)
+ 	(1 << (((val) & SPE_HEADER_SZ_MASK) >> SPE_HEADER_SZ_SHIFT))
+ 
+ static int arm_spe_get_payload(const unsigned char *buf, size_t len,
++			       unsigned char ext_hdr,
+ 			       struct arm_spe_pkt *packet)
+ {
+-	size_t payload_len = PAYLOAD_LEN(buf[0]);
++	size_t payload_len = PAYLOAD_LEN(buf[ext_hdr]);
+ 
+-	if (len < 1 + payload_len)
++	if (len < 1 + ext_hdr + payload_len)
+ 		return ARM_SPE_NEED_MORE_BYTES;
+ 
+-	buf++;
++	buf += 1 + ext_hdr;
+ 
+ 	switch (payload_len) {
+ 	case 1: packet->payload = *(uint8_t *)buf; break;
+@@ -97,7 +98,7 @@ static int arm_spe_get_payload(const unsigned char *buf, size_t len,
+ 	default: return ARM_SPE_BAD_PACKET;
  	}
- 	case ARM_SPE_OP_TYPE:
- 		switch (idx) {
- 		case SPE_OP_PKT_HDR_CLASS_OTHER:
--			return snprintf(buf, buf_len, "%s",
--					payload & SPE_OP_PKT_OTHER_SUBCLASS_COND ?
--					"COND-SELECT" : "INSN-OTHER");
-+			blen = buf_len;
-+
-+			if ((payload & SPE_OP_PKT_OTHER_SVE_SUBCLASS_MASK) ==
-+					SPE_OP_PKT_OTHER_SUBCLASS_SVG_OP) {
-+				ret = snprintf(buf, buf_len, "SVE-OTHER");
-+				buf += ret;
-+				blen -= ret;
-+
-+				/* Effective Venctor Length */
-+				ret = snprintf(buf, buf_len, " EVL %d",
-+					32 << ((payload & SPE_OP_PKT_SVE_EVL_MASK) >>
-+						SPE_OP_PKT_SVE_EVL_SHIFT));
-+				buf += ret;
-+				blen -= ret;
-+
-+				if (payload & SPE_OP_PKT_SVE_FP) {
-+					ret = snprintf(buf, buf_len, " FP");
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & SPE_OP_PKT_SVE_PRED) {
-+					ret = snprintf(buf, buf_len, " PRED");
-+					buf += ret;
-+					blen -= ret;
-+				}
-+			} else {
-+				ret = snprintf(buf, buf_len, "OTHER");
-+				buf += ret;
-+				blen -= ret;
-+
-+				ret = snprintf(buf, buf_len, " %s",
-+					       payload & SPE_OP_PKT_OTHER_SUBCLASS_COND ?
-+					       "COND-SELECT" : "UNCOND");
-+				buf += ret;
-+				blen -= ret;
-+			}
-+
-+			if (ret < 0)
-+				return ret;
-+			return buf_len - blen;
-+
- 		case SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC:
- 			blen = buf_len;
  
-@@ -416,6 +479,32 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
- 					return ret;
- 				buf += ret;
- 				blen -= ret;
-+			} else if ((payload & SPE_OP_PKT_LDST_SUBCLASS_SVE_MASK) ==
-+					SPE_OP_PKT_LDST_SUBCLASS_SVE) {
-+				/* Effective Venctor Length */
-+				ret = snprintf(buf, buf_len, " EVL %d",
-+					32 << ((payload & SPE_OP_PKT_SVE_EVL_MASK) >>
-+						SPE_OP_PKT_SVE_EVL_SHIFT));
-+				if (ret < 0)
-+					return ret;
-+
-+				buf += ret;
-+				blen -= ret;
-+
-+				if (payload & SPE_OP_PKT_SVE_PRED) {
-+					ret = snprintf(buf, buf_len, " PRED");
-+					if (ret < 0)
-+						return ret;
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & SPE_OP_PKT_SVE_SG) {
-+					ret = snprintf(buf, buf_len, " SG");
-+					if (ret < 0)
-+						return ret;
-+					buf += ret;
-+					blen -= ret;
-+				}
- 			}
- 			return buf_len - blen;
- 		case SPE_OP_PKT_HDR_CLASS_BR_ERET:
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index 295ff8779ce4..1a917a11b395 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -140,6 +140,12 @@ struct arm_spe_pkt {
- #define SPE_OP_PKT_LDST_SUBCLASS_SVE_MASK	(0xa)
- #define SPE_OP_PKT_LDST_SUBCLASS_SVE		(0x8)
+-	return 1 + payload_len;
++	return 1 + ext_hdr + payload_len;
+ }
  
-+#define SPE_OP_PKT_SVE_SG			BIT(7)
-+#define SPE_OP_PKT_SVE_EVL_MASK			(0x70)
-+#define SPE_OP_PKT_SVE_EVL_SHIFT		(4)
-+#define SPE_OP_PKT_SVE_PRED			BIT(2)
-+#define SPE_OP_PKT_SVE_FP			BIT(1)
-+
- #define SPE_OP_PKT_AR				BIT(4)
- #define SPE_OP_PKT_EXCL				BIT(3)
- #define SPE_OP_PKT_AT				BIT(2)
+ static int arm_spe_get_pad(struct arm_spe_pkt *packet)
+@@ -128,7 +129,7 @@ static int arm_spe_get_timestamp(const unsigned char *buf, size_t len,
+ 				 struct arm_spe_pkt *packet)
+ {
+ 	packet->type = ARM_SPE_TIMESTAMP;
+-	return arm_spe_get_payload(buf, len, packet);
++	return arm_spe_get_payload(buf, len, 0, packet);
+ }
+ 
+ static int arm_spe_get_events(const unsigned char *buf, size_t len,
+@@ -143,14 +144,14 @@ static int arm_spe_get_events(const unsigned char *buf, size_t len,
+ 	 */
+ 	packet->index = PAYLOAD_LEN(buf[0]);
+ 
+-	return arm_spe_get_payload(buf, len, packet);
++	return arm_spe_get_payload(buf, len, 0, packet);
+ }
+ 
+ static int arm_spe_get_data_source(const unsigned char *buf, size_t len,
+ 				   struct arm_spe_pkt *packet)
+ {
+ 	packet->type = ARM_SPE_DATA_SOURCE;
+-	return arm_spe_get_payload(buf, len, packet);
++	return arm_spe_get_payload(buf, len, 0, packet);
+ }
+ 
+ static int arm_spe_get_context(const unsigned char *buf, size_t len,
+@@ -158,8 +159,7 @@ static int arm_spe_get_context(const unsigned char *buf, size_t len,
+ {
+ 	packet->type = ARM_SPE_CONTEXT;
+ 	packet->index = buf[0] & 0x3;
+-
+-	return arm_spe_get_payload(buf, len, packet);
++	return arm_spe_get_payload(buf, len, 0, packet);
+ }
+ 
+ static int arm_spe_get_op_type(const unsigned char *buf, size_t len,
+@@ -167,41 +167,31 @@ static int arm_spe_get_op_type(const unsigned char *buf, size_t len,
+ {
+ 	packet->type = ARM_SPE_OP_TYPE;
+ 	packet->index = buf[0] & 0x3;
+-	return arm_spe_get_payload(buf, len, packet);
++	return arm_spe_get_payload(buf, len, 0, packet);
+ }
+ 
+ static int arm_spe_get_counter(const unsigned char *buf, size_t len,
+ 			       const unsigned char ext_hdr, struct arm_spe_pkt *packet)
+ {
+-	if (len < 2)
+-		return ARM_SPE_NEED_MORE_BYTES;
+-
+ 	packet->type = ARM_SPE_COUNTER;
+ 	if (ext_hdr)
+ 		packet->index = ((buf[0] & 0x3) << 3) | (buf[1] & 0x7);
+ 	else
+ 		packet->index = buf[0] & 0x7;
+ 
+-	packet->payload = le16_to_cpu(*(uint16_t *)(buf + 1));
+-
+-	return 1 + ext_hdr + 2;
++	return arm_spe_get_payload(buf, len, ext_hdr, packet);
+ }
+ 
+ static int arm_spe_get_addr(const unsigned char *buf, size_t len,
+ 			    const unsigned char ext_hdr, struct arm_spe_pkt *packet)
+ {
+-	if (len < 8)
+-		return ARM_SPE_NEED_MORE_BYTES;
+-
+ 	packet->type = ARM_SPE_ADDRESS;
+ 	if (ext_hdr)
+ 		packet->index = ((buf[0] & 0x3) << 3) | (buf[1] & 0x7);
+ 	else
+ 		packet->index = buf[0] & 0x7;
+ 
+-	memcpy_le64(&packet->payload, buf + 1, 8);
+-
+-	return 1 + ext_hdr + 8;
++	return arm_spe_get_payload(buf, len, ext_hdr, packet);
+ }
+ 
+ static int arm_spe_do_get_packet(const unsigned char *buf, size_t len,
 -- 
 2.17.1
 
