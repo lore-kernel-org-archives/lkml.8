@@ -2,54 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08554C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52123C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9FE207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3315D2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692908;
-	bh=Zh9oM4GCQTS+18YkdBVLhEwe5pHdYjWG+RtkW0jpUi8=;
+	s=default; t=1597692916;
+	bh=I0mBP7wTCEKkZIwHjCDfXcQWyWEOqJFbo3CJkQzU6tM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTyGkcP8IVaE7q1z/gs0NZTKZMf5SuEnRTQbpEuLPZj+ednhEEhTcDNjrc+zzZhnc
-	 P52rToAsIiFvVNnbmhBQw/d6Z8df/Ao6fbSGDqpenWMrqEEIXl6MOc7UH4a5V7fVw8
-	 ucIUSZ4P+1GiHwoclFKKc6L+ht+MHIzBaB1lILTU=
+	b=IlW8zpcB1icVuhRS2KrulozbzcISZSMFp6tCb4rCDoeYcd3nxXHzFooT93rTREUR/
+	 MuCPp3mrz/KMfK7sa8lunD2BlnGxZAFuSHqw86swYbA3es0rnvm2ge+0M8/22FwKAC
+	 APLwEKQr+QL2ehjAwQ+r+P4jSssEzL/BhmgFMfy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgHQP3m (ORCPT
+        id S1732210AbgHQTfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39528 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:35:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgHQP1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:34 -0400
+        id S1729425AbgHQP3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF31F239D0;
-        Mon, 17 Aug 2020 15:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B821323BE2;
+        Mon, 17 Aug 2020 15:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678053;
-        bh=Zh9oM4GCQTS+18YkdBVLhEwe5pHdYjWG+RtkW0jpUi8=;
+        s=default; t=1597678174;
+        bh=I0mBP7wTCEKkZIwHjCDfXcQWyWEOqJFbo3CJkQzU6tM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zc2w791dQjulHoGyj7rxroXyZUXZHGywGMjLtvFew5C3wcky3eoe9wnYGMWNz4+ZZ
-         fzrsU3g/6gwVEj8JvhpE4GiMVsj0Dx9WRvt4BGMRiZAD7fYhwHEdGwFvsQCiYRSAZS
-         08N21+Jl36VlQlRjNffc4gF5OkYo/UffHLGERKDw=
+        b=uHiCEKVoCE8AHo/GCm4wLGyioymWD3Kkm3HJEqJJnOIfG9IjxzRFy4u3idJKd6nVR
+         VgfiW6a5NVnSzNdlzGSN2O8nTIUBr/k0GoRCDLgs2kSa1qHgy+O2reKXZ3L+twUfSx
+         j973Pa2756YdpInrR50EssfzsCuxvJfnmozls0cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YangYuxi <yx.atom1@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 203/464] ipvs: allow connection reuse for unconfirmed conntrack
-Date:   Mon, 17 Aug 2020 17:12:36 +0200
-Message-Id: <20200817143843.541299303@linuxfoundation.org>
+Subject: [PATCH 5.8 243/464] ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an invalid cond
+Date:   Mon, 17 Aug 2020 17:13:16 +0200
+Message-Id: <20200817143845.436176143@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,125 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit f0a5e4d7a594e0fe237d3dfafb069bb82f80f42f ]
+[ Upstream commit db2045f5892a9db7354442bf77f9b03b50ff9ee1 ]
 
-YangYuxi is reporting that connection reuse
-is causing one-second delay when SYN hits
-existing connection in TIME_WAIT state.
-Such delay was added to give time to expire
-both the IPVS connection and the corresponding
-conntrack. This was considered a rare case
-at that time but it is causing problem for
-some environments such as Kubernetes.
+The KEXEC_CMDLINE hook function only supports the pcr conditional. Make
+this clear at policy load so that IMA policy authors don't assume that
+other conditionals are supported.
 
-As nf_conntrack_tcp_packet() can decide to
-release the conntrack in TIME_WAIT state and
-to replace it with a fresh NEW conntrack, we
-can use this to allow rescheduling just by
-tuning our check: if the conntrack is
-confirmed we can not schedule it to different
-real server and the one-second delay still
-applies but if new conntrack was created,
-we are free to select new real server without
-any delays.
+Since KEXEC_CMDLINE's inception, ima_match_rules() has always returned
+true on any loaded KEXEC_CMDLINE rule without any consideration for
+other conditionals present in the rule. Make it clear that pcr is the
+only supported KEXEC_CMDLINE conditional by returning an error during
+policy load.
 
-YangYuxi lists some of the problem reports:
+An example of why this is a problem can be explained with the following
+rule:
 
-- One second connection delay in masquerading mode:
-https://marc.info/?t=151683118100004&r=1&w=2
+ dont_measure func=KEXEC_CMDLINE obj_type=foo_t
 
-- IPVS low throughput #70747
-https://github.com/kubernetes/kubernetes/issues/70747
+An IMA policy author would have assumed that rule is valid because the
+parser accepted it but the result was that measurements for all
+KEXEC_CMDLINE operations would be disabled.
 
-- Apache Bench can fill up ipvs service proxy in seconds #544
-https://github.com/cloudnativelabs/kube-router/issues/544
-
-- Additional 1s latency in `host -> service IP -> pod`
-https://github.com/kubernetes/kubernetes/issues/90854
-
-Fixes: f719e3754ee2 ("ipvs: drop first packet to redirect conntrack")
-Co-developed-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Reviewed-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h             | 10 ++++------
- net/netfilter/ipvs/ip_vs_core.c | 12 +++++++-----
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ security/integrity/ima/ima_policy.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 83be2d93b4076..fe96aa462d050 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -1624,18 +1624,16 @@ static inline void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index a3d72342408ad..a77e0b34e72f7 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -343,6 +343,17 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
+ 	return 0;
  }
- #endif /* CONFIG_IP_VS_NFCT */
  
--/* Really using conntrack? */
--static inline bool ip_vs_conn_uses_conntrack(struct ip_vs_conn *cp,
--					     struct sk_buff *skb)
-+/* Using old conntrack that can not be redirected to another real server? */
-+static inline bool ip_vs_conn_uses_old_conntrack(struct ip_vs_conn *cp,
-+						 struct sk_buff *skb)
- {
- #ifdef CONFIG_IP_VS_NFCT
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_conn *ct;
- 
--	if (!(cp->flags & IP_VS_CONN_F_NFCT))
--		return false;
- 	ct = nf_ct_get(skb, &ctinfo);
--	if (ct)
-+	if (ct && nf_ct_is_confirmed(ct))
- 		return true;
- #endif
- 	return false;
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index aa6a603a2425b..517f6a2ac15af 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2066,14 +2066,14 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 
- 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
- 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
--		bool uses_ct = false, resched = false;
-+		bool old_ct = false, resched = false;
- 
- 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
- 		    unlikely(!atomic_read(&cp->dest->weight))) {
- 			resched = true;
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 		} else if (is_new_conn_expected(cp, conn_reuse_mode)) {
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 			if (!atomic_read(&cp->n_control)) {
- 				resched = true;
- 			} else {
-@@ -2081,15 +2081,17 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 				 * that uses conntrack while it is still
- 				 * referenced by controlled connection(s).
- 				 */
--				resched = !uses_ct;
-+				resched = !old_ct;
- 			}
- 		}
- 
- 		if (resched) {
-+			if (!old_ct)
-+				cp->flags &= ~IP_VS_CONN_F_NFCT;
- 			if (!atomic_read(&cp->n_control))
- 				ip_vs_conn_expire_now(cp);
- 			__ip_vs_conn_put(cp);
--			if (uses_ct)
-+			if (old_ct)
- 				return NF_DROP;
- 			cp = NULL;
- 		}
++static bool ima_rule_contains_lsm_cond(struct ima_rule_entry *entry)
++{
++	int i;
++
++	for (i = 0; i < MAX_LSM_RULES; i++)
++		if (entry->lsm[i].args_p)
++			return true;
++
++	return false;
++}
++
+ /*
+  * The LSM policy can be reloaded, leaving the IMA LSM based rules referring
+  * to the old, stale LSM policy.  Update the IMA LSM based rules to reflect
+@@ -998,6 +1009,16 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+ 		/* Validation of these hook functions is in ima_parse_rule() */
+ 		break;
+ 	case KEXEC_CMDLINE:
++		if (entry->action & ~(MEASURE | DONT_MEASURE))
++			return false;
++
++		if (entry->flags & ~(IMA_FUNC | IMA_PCR))
++			return false;
++
++		if (ima_rule_contains_lsm_cond(entry))
++			return false;
++
++		break;
+ 	case KEY_CHECK:
+ 		if (entry->action & ~(MEASURE | DONT_MEASURE))
+ 			return false;
 -- 
 2.25.1
 
