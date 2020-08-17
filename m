@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCA92067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E5B2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679354;
-	bh=0t5POLBWNfw7QFM1DJCV/inOcg3oxp4uCilRlsw1hfQ=;
+	s=default; t=1597679374;
+	bh=8a1rTYBeA0M5LsvywqB+Aj7jHIdH0DCuMUGry8MXuHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jbOGBzJc27sesrTVPUMo6LtYnlFf1Y58r33J2XG8v7+UxkkbnUo8CWb9IST5zMLFZ
-	 OePDrimS35zYGzHaatZLeZTEgOIIrinjWZR9VlATwfE6E/r+XgiTnKg62tPuN04YV9
-	 ZPchZmutVGXnyo2RH5stfnH5TxgqzqGkXj80KS0E=
+	b=mX/0lZ+UVOOZni5q98pBEuKAtfK6MnWBojoD6X/NglUb2W6kHhq/CCfXvq+6glEQn
+	 ZXccvGbQdEydG2I9xMLP0tuCyUdnnHMYNfNB/3+gPwm7l26L20GHUMdWwFpaBYIEjJ
+	 EcT8Yl0zzrqbUweygV9zCKWL9XZTRTxV4J6F+Ric=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbgHQPtL (ORCPT
+        id S2387794AbgHQPtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbgHQPi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:58 -0400
+        id S2387442AbgHQPjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:39:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D3CC208E4;
-        Mon, 17 Aug 2020 15:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42C922C9F;
+        Mon, 17 Aug 2020 15:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678735;
-        bh=0t5POLBWNfw7QFM1DJCV/inOcg3oxp4uCilRlsw1hfQ=;
+        s=default; t=1597678745;
+        bh=8a1rTYBeA0M5LsvywqB+Aj7jHIdH0DCuMUGry8MXuHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9nzOz5G2VVDm5WjPtyT69/61bNgjBaYzJBLzBMSiuPdtFWwV5YIgBQqvFKNEuzWo
-         CRaz4RNdTRGTutcQncWEYicMa5mmaUFcWYMf4GcEz/K+A9eQrgr+//hqhELFhDXFWn
-         hL2rb/J5C79G+vRFaPF5wcaPcqSDNCb64r45GNh0=
+        b=kI+cf2tgKHmJ9kVjglR0eN5Kjjo+yygZGmDop9P0qsAxfdiwD4FpHCpwlq1VMW1/S
+         zsxP+bLBAhfNww6sT4OOmxD0D/unYmOXR1rptTrb6NmV9GJRtMsCZK9Lrf5CbBTG+h
+         GjkRNte/ur67Vt+UyveJtd1RObj/IQbJBB/SBrPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Eggers <ceggers@arri.de>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.8 436/464] spi: spidev: Align buffers for DMA
-Date:   Mon, 17 Aug 2020 17:16:29 +0200
-Message-Id: <20200817143854.663083713@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [PATCH 5.8 439/464] erofs: fix extended inode could cross boundary
+Date:   Mon, 17 Aug 2020 17:16:32 +0200
+Message-Id: <20200817143854.802773853@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,94 +59,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Eggers <ceggers@arri.de>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-commit aa9e862d7d5bcecd4dca9f39e8b684b93dd84ee7 upstream.
+commit 0dcd3c94e02438f4a571690e26f4ee997524102a upstream.
 
-Simply copying all xfers from userspace into one bounce buffer causes
-alignment problems if the SPI controller uses DMA.
+Each ondisk inode should be aligned with inode slot boundary
+(32-byte alignment) because of nid calculation formula, so all
+compact inodes (32 byte) cannot across page boundary. However,
+extended inode is now 64-byte form, which can across page boundary
+in principle if the location is specified on purpose, although
+it's hard to be generated by mkfs due to the allocation policy
+and rarely used by Android use case now mainly for > 4GiB files.
 
-Ensure that all transfer data blocks within the rx and tx bounce buffers
-are aligned for DMA (according to ARCH_KMALLOC_MINALIGN).
+For now, only two fields `i_ctime_nsec` and `i_nlink' couldn't
+be read from disk properly and cause out-of-bound memory read
+with random value.
 
-Alignment may increase the usage of the bounce buffers. In some cases,
-the buffers may need to be increased using the "bufsiz" module
-parameter.
+Let's fix now.
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200728100832.24788-1-ceggers@arri.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Link: https://lore.kernel.org/r/20200729175801.GA23973@xiangao.remote.csb
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spidev.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ fs/erofs/inode.c |  121 +++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 79 insertions(+), 42 deletions(-)
 
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -224,6 +224,11 @@ static int spidev_message(struct spidev_
- 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
- 			n;
- 			n--, k_tmp++, u_tmp++) {
-+		/* Ensure that also following allocations from rx_buf/tx_buf will meet
-+		 * DMA alignment requirements.
-+		 */
-+		unsigned int len_aligned = ALIGN(u_tmp->len, ARCH_KMALLOC_MINALIGN);
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -8,31 +8,80 @@
+ 
+ #include <trace/events/erofs.h>
+ 
+-/* no locking */
+-static int erofs_read_inode(struct inode *inode, void *data)
++/*
++ * if inode is successfully read, return its inode page (or sometimes
++ * the inode payload page if it's an extended inode) in order to fill
++ * inline data if possible.
++ */
++static struct page *erofs_read_inode(struct inode *inode,
++				     unsigned int *ofs)
+ {
++	struct super_block *sb = inode->i_sb;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	struct erofs_inode *vi = EROFS_I(inode);
+-	struct erofs_inode_compact *dic = data;
+-	struct erofs_inode_extended *die;
++	const erofs_off_t inode_loc = iloc(sbi, vi->nid);
+ 
+-	const unsigned int ifmt = le16_to_cpu(dic->i_format);
+-	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+-	erofs_blk_t nblks = 0;
++	erofs_blk_t blkaddr, nblks = 0;
++	struct page *page;
++	struct erofs_inode_compact *dic;
++	struct erofs_inode_extended *die, *copied = NULL;
++	unsigned int ifmt;
++	int err;
+ 
+-	vi->datalayout = erofs_inode_datalayout(ifmt);
++	blkaddr = erofs_blknr(inode_loc);
++	*ofs = erofs_blkoff(inode_loc);
+ 
++	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
++		  __func__, vi->nid, *ofs, blkaddr);
 +
- 		k_tmp->len = u_tmp->len;
- 
- 		total += k_tmp->len;
-@@ -239,17 +244,17 @@ static int spidev_message(struct spidev_
- 
- 		if (u_tmp->rx_buf) {
- 			/* this transfer needs space in RX bounce buffer */
--			rx_total += k_tmp->len;
-+			rx_total += len_aligned;
- 			if (rx_total > bufsiz) {
- 				status = -EMSGSIZE;
- 				goto done;
- 			}
- 			k_tmp->rx_buf = rx_buf;
--			rx_buf += k_tmp->len;
-+			rx_buf += len_aligned;
- 		}
- 		if (u_tmp->tx_buf) {
- 			/* this transfer needs space in TX bounce buffer */
--			tx_total += k_tmp->len;
-+			tx_total += len_aligned;
- 			if (tx_total > bufsiz) {
- 				status = -EMSGSIZE;
- 				goto done;
-@@ -259,7 +264,7 @@ static int spidev_message(struct spidev_
- 						(uintptr_t) u_tmp->tx_buf,
- 					u_tmp->len))
- 				goto done;
--			tx_buf += k_tmp->len;
-+			tx_buf += len_aligned;
- 		}
- 
- 		k_tmp->cs_change = !!u_tmp->cs_change;
-@@ -293,16 +298,16 @@ static int spidev_message(struct spidev_
- 		goto done;
- 
- 	/* copy any rx data out of bounce buffer */
--	rx_buf = spidev->rx_buffer;
--	for (n = n_xfers, u_tmp = u_xfers; n; n--, u_tmp++) {
-+	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
-+			n;
-+			n--, k_tmp++, u_tmp++) {
- 		if (u_tmp->rx_buf) {
- 			if (copy_to_user((u8 __user *)
--					(uintptr_t) u_tmp->rx_buf, rx_buf,
-+					(uintptr_t) u_tmp->rx_buf, k_tmp->rx_buf,
- 					u_tmp->len)) {
- 				status = -EFAULT;
- 				goto done;
- 			}
--			rx_buf += u_tmp->len;
- 		}
++	page = erofs_get_meta_page(sb, blkaddr);
++	if (IS_ERR(page)) {
++		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
++			  vi->nid, PTR_ERR(page));
++		return page;
++	}
++
++	dic = page_address(page) + *ofs;
++	ifmt = le16_to_cpu(dic->i_format);
++
++	vi->datalayout = erofs_inode_datalayout(ifmt);
+ 	if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
+ 		erofs_err(inode->i_sb, "unsupported datalayout %u of nid %llu",
+ 			  vi->datalayout, vi->nid);
+-		DBG_BUGON(1);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto err_out;
  	}
- 	status = total;
+ 
+ 	switch (erofs_inode_version(ifmt)) {
+ 	case EROFS_INODE_LAYOUT_EXTENDED:
+-		die = data;
+-
+ 		vi->inode_isize = sizeof(struct erofs_inode_extended);
++		/* check if the inode acrosses page boundary */
++		if (*ofs + vi->inode_isize <= PAGE_SIZE) {
++			*ofs += vi->inode_isize;
++			die = (struct erofs_inode_extended *)dic;
++		} else {
++			const unsigned int gotten = PAGE_SIZE - *ofs;
++
++			copied = kmalloc(vi->inode_isize, GFP_NOFS);
++			if (!copied) {
++				err = -ENOMEM;
++				goto err_out;
++			}
++			memcpy(copied, dic, gotten);
++			unlock_page(page);
++			put_page(page);
++
++			page = erofs_get_meta_page(sb, blkaddr + 1);
++			if (IS_ERR(page)) {
++				erofs_err(sb, "failed to get inode payload page (nid: %llu), err %ld",
++					  vi->nid, PTR_ERR(page));
++				kfree(copied);
++				return page;
++			}
++			*ofs = vi->inode_isize - gotten;
++			memcpy((u8 *)copied + gotten, page_address(page), *ofs);
++			die = copied;
++		}
+ 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(die->i_mode);
+@@ -69,9 +118,12 @@ static int erofs_read_inode(struct inode
+ 		/* total blocks for compressed files */
+ 		if (erofs_inode_is_data_compressed(vi->datalayout))
+ 			nblks = le32_to_cpu(die->i_u.compressed_blocks);
++
++		kfree(copied);
+ 		break;
+ 	case EROFS_INODE_LAYOUT_COMPACT:
+ 		vi->inode_isize = sizeof(struct erofs_inode_compact);
++		*ofs += vi->inode_isize;
+ 		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
+ 
+ 		inode->i_mode = le16_to_cpu(dic->i_mode);
+@@ -111,8 +163,8 @@ static int erofs_read_inode(struct inode
+ 		erofs_err(inode->i_sb,
+ 			  "unsupported on-disk inode version %u of nid %llu",
+ 			  erofs_inode_version(ifmt), vi->nid);
+-		DBG_BUGON(1);
+-		return -EOPNOTSUPP;
++		err = -EOPNOTSUPP;
++		goto err_out;
+ 	}
+ 
+ 	if (!nblks)
+@@ -120,13 +172,18 @@ static int erofs_read_inode(struct inode
+ 		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
+ 	else
+ 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+-	return 0;
++	return page;
+ 
+ bogusimode:
+ 	erofs_err(inode->i_sb, "bogus i_mode (%o) @ nid %llu",
+ 		  inode->i_mode, vi->nid);
++	err = -EFSCORRUPTED;
++err_out:
+ 	DBG_BUGON(1);
+-	return -EFSCORRUPTED;
++	kfree(copied);
++	unlock_page(page);
++	put_page(page);
++	return ERR_PTR(err);
+ }
+ 
+ static int erofs_fill_symlink(struct inode *inode, void *data,
+@@ -146,7 +203,7 @@ static int erofs_fill_symlink(struct ino
+ 	if (!lnk)
+ 		return -ENOMEM;
+ 
+-	m_pofs += vi->inode_isize + vi->xattr_isize;
++	m_pofs += vi->xattr_isize;
+ 	/* inline symlink data shouldn't cross page boundary as well */
+ 	if (m_pofs + inode->i_size > PAGE_SIZE) {
+ 		kfree(lnk);
+@@ -167,37 +224,17 @@ static int erofs_fill_symlink(struct ino
+ 
+ static int erofs_fill_inode(struct inode *inode, int isdir)
+ {
+-	struct super_block *sb = inode->i_sb;
+ 	struct erofs_inode *vi = EROFS_I(inode);
+ 	struct page *page;
+-	void *data;
+-	int err;
+-	erofs_blk_t blkaddr;
+ 	unsigned int ofs;
+-	erofs_off_t inode_loc;
++	int err = 0;
+ 
+ 	trace_erofs_fill_inode(inode, isdir);
+-	inode_loc = iloc(EROFS_SB(sb), vi->nid);
+-	blkaddr = erofs_blknr(inode_loc);
+-	ofs = erofs_blkoff(inode_loc);
+-
+-	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
+-		  __func__, vi->nid, ofs, blkaddr);
+ 
+-	page = erofs_get_meta_page(sb, blkaddr);
+-
+-	if (IS_ERR(page)) {
+-		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+-			  vi->nid, PTR_ERR(page));
++	/* read inode base data from disk */
++	page = erofs_read_inode(inode, &ofs);
++	if (IS_ERR(page))
+ 		return PTR_ERR(page);
+-	}
+-
+-	DBG_BUGON(!PageUptodate(page));
+-	data = page_address(page);
+-
+-	err = erofs_read_inode(inode, data + ofs);
+-	if (err)
+-		goto out_unlock;
+ 
+ 	/* setup the new inode */
+ 	switch (inode->i_mode & S_IFMT) {
+@@ -210,7 +247,7 @@ static int erofs_fill_inode(struct inode
+ 		inode->i_fop = &erofs_dir_fops;
+ 		break;
+ 	case S_IFLNK:
+-		err = erofs_fill_symlink(inode, data, ofs);
++		err = erofs_fill_symlink(inode, page_address(page), ofs);
+ 		if (err)
+ 			goto out_unlock;
+ 		inode_nohighmem(inode);
 
 
