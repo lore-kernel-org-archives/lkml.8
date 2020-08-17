@@ -2,240 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595FE2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gYRDJiXQ"
+	by mail.kernel.org (Postfix) with ESMTP id DCD7A2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597691450;
+	bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=il5gu02VPoE58ChhMVoepngsyDbpqG1oU/KYfbZW4GBQd1JTTj7PTS4ZhYyUztRlm
+	 6JXR8TaA1/RUb0kxFol+X4VXoaQZ5ljvQX/4tqw40xLMY7cIKVtQPQxbOkmPXi592B
+	 qL0j3A7bi06sCKzYMwUC7S0wV/O4wE/7LPk2X9iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404042AbgHQTKl (ORCPT
+        id S2404069AbgHQTKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:10:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61019 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 15:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730751AbgHQPlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:41:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597678897; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=VYK3lYSXyLSuNZtDJEqONO4W2R+VnVrEGPnXZiROXgU=; b=gYRDJiXQ2Qf0KWpMjLodtEh7kVPAu632MKBT6STNaOphxtEVyv4q+Y8G539H2gW+KjfnU5t4
- llDmLmkF4LQH5hrjsuIWJZ/dGU5QKFjo+SEILJIqcOiIOo/hOP50BT+isyAPOI5u2ZXsm/F1
- DwNAsUOp+G9MCiP5OpT9jgZuJxI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f3aa50b61f1d41834b5419d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 15:40:59
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AE41FC433B2; Mon, 17 Aug 2020 15:40:58 +0000 (UTC)
-Received: from [192.168.1.7] (unknown [117.217.239.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730753AbgHQPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:41:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE34C43391;
-        Mon, 17 Aug 2020 15:40:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE34C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [PATCH 16/19] drm/msm/a6xx: Add support for per-instance
- pagetables
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Eric Anholt <eric@anholt.net>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-17-robdclark@gmail.com>
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-Message-ID: <7c130df7-c7f4-8694-c7be-ce3debe01662@codeaurora.org>
-Date:   Mon, 17 Aug 2020 21:10:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C382075B;
+        Mon, 17 Aug 2020 15:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678895;
+        bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fcoACj3KE218q7U1qc7Kf26gmoJsv+5oGQWbNxbQLR9EagWGfGhbuErCLwvUPJwxZ
+         EwZWCXk4BTC64o7cRJTIiRNvzJM223DA+p2SrT0eUvyTKjk9H+4iT/1xVrjB0ZgQYM
+         yU87yxjEiysgRvLrammdIX91H33AYA+wBILqGi+U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 008/393] x86, sched: Bail out of frequency invariance if turbo frequency is unknown
+Date:   Mon, 17 Aug 2020 17:10:58 +0200
+Message-Id: <20200817143819.989905377@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200814024114.1177553-17-robdclark@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/2020 8:11 AM, Rob Clark wrote:
-> From: Jordan Crouse <jcrouse@codeaurora.org>
-> 
-> Add support for using per-instance pagetables if all the dependencies are
-> available.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->   drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 70 +++++++++++++++++++++++++++
->   drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
->   drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
->   3 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index 5eabb0109577..9653ac9b3cb8 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -81,6 +81,56 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
->   	OUT_RING(ring, upper_32_bits(iova));
->   }
->   
-> +static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
-> +		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
-> +{
-> +	phys_addr_t ttbr;
-> +	u32 asid;
-> +	u64 memptr = rbmemptr(ring, ttbr0);
-> +
-> +	if (ctx == a6xx_gpu->cur_ctx)
-> +		return;
-> +
-> +	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-> +		return;
-> +
-> +	/* Execute the table update */
-> +	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
-> +
-> +	/*
-> +	 * For now ignore the asid since the smmu driver uses a TLBIASID to
-> +	 * flush the TLB when we use iommu_flush_tlb_all() and the smmu driver
-> +	 * isn't aware that the asid changed.  Instead, keep the default asid
-> +	 * (0, same as the context bank) to make sure the TLB is properly
-> +	 * flushed.
-> +	 */
-> +	OUT_RING(ring,
-> +		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
-> +		CP_SMMU_TABLE_UPDATE_1_ASID(0));
-> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
-> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
-> +
-> +	/*
-> +	 * Write the new TTBR0 to the memstore. This is good for debugging.
-> +	 */
-> +	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-> +	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
-> +	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
-> +	OUT_RING(ring, lower_32_bits(ttbr));
-> +	OUT_RING(ring, (0 << 16) | upper_32_bits(ttbr));
-why (0 << 16) is required here?
-> +
-> +	/*
-> +	 * And finally, trigger a uche flush to be sure there isn't anything
-> +	 * lingering in that part of the GPU
-> +	 */
-> +
-> +	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-> +	OUT_RING(ring, 0x31);
-This may be unnecessary, but no harm in keeping it. SMMU_TABLE_UPDATE is 
-supposed to do a UCHE flush.
+From: Giovanni Gherdovich <ggherdovich@suse.cz>
 
--Akhil
-> +
-> +	a6xx_gpu->cur_ctx = ctx;
-> +}
-> +
->   static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
->   {
->   	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
-> @@ -90,6 +140,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
->   	struct msm_ringbuffer *ring = submit->ring;
->   	unsigned int i;
->   
-> +	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
-> +
->   	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
->   		rbmemptr_stats(ring, index, cpcycles_start));
->   
-> @@ -696,6 +748,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->   	/* Always come up on rb 0 */
->   	a6xx_gpu->cur_ring = gpu->rb[0];
->   
-> +	a6xx_gpu->cur_ctx = NULL;
-> +
->   	/* Enable the SQE_to start the CP engine */
->   	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
->   
-> @@ -1008,6 +1062,21 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
->   	return (unsigned long)busy_time;
->   }
->   
-> +static struct msm_gem_address_space *
-> +a6xx_create_private_address_space(struct msm_gpu *gpu)
-> +{
-> +	struct msm_gem_address_space *aspace = NULL;
-> +	struct msm_mmu *mmu;
-> +
-> +	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-> +
-> +	if (!IS_ERR(mmu))
-> +		aspace = msm_gem_address_space_create(mmu,
-> +			"gpu", 0x100000000ULL, 0x1ffffffffULL);
-> +
-> +	return aspace;
-> +}
-> +
->   static const struct adreno_gpu_funcs funcs = {
->   	.base = {
->   		.get_param = adreno_get_param,
-> @@ -1031,6 +1100,7 @@ static const struct adreno_gpu_funcs funcs = {
->   		.gpu_state_put = a6xx_gpu_state_put,
->   #endif
->   		.create_address_space = adreno_iommu_create_address_space,
-> +		.create_private_address_space = a6xx_create_private_address_space,
->   	},
->   	.get_timestamp = a6xx_get_timestamp,
->   };
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-> index 03ba60d5b07f..da22d7549d9b 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-> @@ -19,6 +19,7 @@ struct a6xx_gpu {
->   	uint64_t sqe_iova;
->   
->   	struct msm_ringbuffer *cur_ring;
-> +	struct msm_file_private *cur_ctx;
->   
->   	struct a6xx_gmu gmu;
->   };
-> diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> index 7764373d0ed2..0987d6bf848c 100644
-> --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-> +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
->   	volatile uint32_t fence;
->   
->   	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-> +	volatile u64 ttbr0;
->   };
->   
->   struct msm_ringbuffer {
-> 
+[ Upstream commit 51beea8862a3095559862df39554f05042e1195b ]
+
+There may be CPUs that support turbo boost but don't declare any turbo
+ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
+scale-invariant calculations can't be performed.
+
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-3-ggherdovich@suse.cz
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/smpboot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 2f24c334a938b..3917a2de1580c 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1999,9 +1999,11 @@ static bool intel_set_max_freq_ratio(void)
+ 	/*
+ 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
+ 	 * but then fill all MSR's with zeroes.
++	 * Some CPUs have turbo boost but don't declare any turbo ratio
++	 * in MSR_TURBO_RATIO_LIMIT.
+ 	 */
+-	if (!base_freq) {
+-		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
++	if (!base_freq || !turbo_freq) {
++		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
+ 		return false;
+ 	}
+ 
+-- 
+2.25.1
+
+
 
