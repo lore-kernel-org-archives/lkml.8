@@ -2,142 +2,106 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C793BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95107C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB162063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ITRrUO21"
+	by mail.kernel.org (Postfix) with ESMTP id 70CF120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685419;
+	bh=NPfbp15bh9CH0gddA0aWvMO12NsbtK0Qat2afiSpc6w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HbcYwY7Pr9QrJYhLttBuJaAJkAvBTwStxnVebSf4pUu/7sdHCD0P2hI56aS5dRKv4
+	 HgHoKVs/2OgphniykhpZdLwnsFycYxCQ+7adL2J5vY/OCY0m6vsWDTdZutDriO3oFk
+	 JwYxM5dqUrunRLjbNzqofWPVG39EyriPfF+PBZ68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389897AbgHQR3x (ORCPT
+        id S1729920AbgHQRB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388446AbgHQRFm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:05:42 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DAD9C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:05:41 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f18so13604276wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ch+bM0/nUYIOT7cRcwubqqUU36WUEhTLPi7zotN6dio=;
-        b=ITRrUO21ngebvWm9j+03QV3n0tPRcS57uZLesFg4Fh73jpL38IRqaUiFq1ht2His/g
-         kwv8RvVgsdoEOzEV0e3sf6Fon8eelIScjRJWN6ShAhQcqGU1azZ9eiAZQNtOB9BxIswP
-         o9PsFIooXcNuqKqc110bJg8pddoTCQT+iUOu2nJOA54wkClOHHdURoLj6FPntf0ZR4X/
-         OB4lxJCMFv15zZ4MLzOc5jbQqqxU0XoHhO7mJLyiJBwTOu4zjU1JJHVBhK9qvV7sX1NY
-         w6jDFZq0L8f5Xwwev6/20uZQT9/OJZsERAmwn9ehlKmuWVBNvDYgXdVoZLToQw7TbpLy
-         D4iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ch+bM0/nUYIOT7cRcwubqqUU36WUEhTLPi7zotN6dio=;
-        b=mQKC/hJFX/RCKZZmEk06eiY5QBeazUNUdBIXdGTlLHz/Os+AXWKXWJDkasmCQ3jAu9
-         l+4pgWbwAiS9MMZhpLMXgzlhAayGK5Ya9wqcZFHS58/M3eTXJBmTZryX+pUaIh9iLIrT
-         1OvtMmrFTb27KHEDaBZov2ODpR4bMcUZwDYmCmlBa5GhdyEzzgDVW7ykSN75xGIIJxcB
-         nBhVMQbB6wHlSsnoE7ooioKvnIBZP9/kYnQmZe2qkggTj8xQ1kOgMQyf/NnaqOg/tg3j
-         MNa3XhYwS3C8e8eg735buWQ5Qm6ZyPYXQwWTfc3Zl8gTmQzP9KmW5ULgctFRBWSg2zlx
-         g18Q==
-X-Gm-Message-State: AOAM531GsXhWvQPVz3ScOHcn6dVCDE+PEHtBPMv9kSV2Ov3SXsqfe1Zf
-        T8SmR913qlQJDIPy050M8CZMGw==
-X-Google-Smtp-Source: ABdhPJy54z0Stss+3IUESXNQ+OZuPidLgQs6L/EOj7nJxU8HbSFzXIkZDadL+9l32ahhBkJk1YCBsw==
-X-Received: by 2002:a7b:c242:: with SMTP id b2mr16109424wmj.90.1597683939473;
-        Mon, 17 Aug 2020 10:05:39 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id k184sm29747177wme.1.2020.08.17.10.05.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 10:05:38 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 0/3] devres: provide and use devm_krealloc()
-Date:   Mon, 17 Aug 2020 19:05:32 +0200
-Message-Id: <20200817170535.17041-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Mon, 17 Aug 2020 13:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731064AbgHQQG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE3220882;
+        Mon, 17 Aug 2020 16:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680414;
+        bh=NPfbp15bh9CH0gddA0aWvMO12NsbtK0Qat2afiSpc6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YwSjpynZ8019AkuaSHO14GEMZcS97JQvjBWbdfJJTa+EI+QfFUtf4FN9l5mlPgZ7h
+         NU381rvDnxIk+pOT4V7VHSLfn0hy6MkXu/vYNjJRMNEtnzpMmMl05mQSnMEPxGV4Qp
+         lOts2l/nx4cx6+/9ZDPKVR5/ARH9WYZcXpBn3DDo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 160/270] mt76: mt7615: fix potential memory leak in mcu message handler
+Date:   Mon, 17 Aug 2020 17:16:01 +0200
+Message-Id: <20200817143803.808649374@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Hi Greg, Andy,
+[ Upstream commit 9248c08c3fc4ef816c82aa49d01123f4746d349f ]
 
-this is another reworked version of devm_krealloc(). This time without the risk
-of sleeping with spinlock taken but still with enough protection for the devres
-list. We're using slab's ksize() to determine whether the new size is larger
-than the current real size of the chunk and then either return the same pointer
-or manually alloc a new, larger chunk outside of the spinlock.
+Fix potential memory leak in mcu message handler on error condition.
 
-===
+Fixes: 0e6a29e477f3 ("mt76: mt7615: add support to read temperature from mcu")
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Regular krealloc() obviously can't work with managed memory. This series
-implements devm_krealloc() and adds two first users with hope that this
-helper will be adopted by other drivers currently using non-managed
-krealloc().
-
-v1 -> v2:
-- remove leftover call to hwmon_device_unregister() from pmbus_core.c
-- add a patch extending devm_kmalloc() to handle zero size case
-- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
-  a pointer to non-managed memory
-- correctly handle the case when devm_krealloc() is passed a pointer to
-  memory in .rodata (potentially returned by devm_kstrdup_const())
-- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
-
-v2 -> v3:
-- drop already applied patches
-- collect Acks
-- add an additional user in iio
-
-v3 -> v4:
-- add the kerneldoc for devm_krealloc()
-- WARN() outside of spinlock
-- rename local variable
-
-v4 -> v5:
-- tweak the kerneldoc
-
-v5 -> v6:
-- tweak the devres_lock handling in devm_krealloc()
-
-v6 -> v7:
-- rework devm_krealloc() to avoid calling krealloc() with spinlock taken
-
-Bartosz Golaszewski (3):
-  devres: provide devm_krealloc()
-  hwmon: pmbus: use more devres helpers
-  iio: adc: xilinx-xadc: use devm_krealloc()
-
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/base/devres.c                         | 93 +++++++++++++++++++
- drivers/hwmon/pmbus/pmbus_core.c              | 28 ++----
- drivers/iio/adc/xilinx-xadc-core.c            | 16 ++--
- include/linux/device.h                        |  2 +
- 5 files changed, 113 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 842cd81704db6..b6867d93c0e34 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -119,8 +119,10 @@ mt7615_mcu_parse_response(struct mt7615_dev *dev, int cmd,
+ 	struct mt7615_mcu_rxd *rxd = (struct mt7615_mcu_rxd *)skb->data;
+ 	int ret = 0;
+ 
+-	if (seq != rxd->seq)
+-		return -EAGAIN;
++	if (seq != rxd->seq) {
++		ret = -EAGAIN;
++		goto out;
++	}
+ 
+ 	switch (cmd) {
+ 	case -MCU_CMD_PATCH_SEM_CONTROL:
+@@ -134,6 +136,7 @@ mt7615_mcu_parse_response(struct mt7615_dev *dev, int cmd,
+ 	default:
+ 		break;
+ 	}
++out:
+ 	dev_kfree_skb(skb);
+ 
+ 	return ret;
 -- 
-2.26.1
+2.25.1
+
+
 
