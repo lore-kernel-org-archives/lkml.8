@@ -2,103 +2,96 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4095C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DE520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A5B20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692949;
-	bh=/KvwqAUSHWzgBWBZkg0o5e4o2nzy6/qz61tCsI3y8dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=evqw4Jpo96uhle4751j9SI3/E2ecIUsb0NpfgGYwvmic8zEoq4oIgG4zKafScwAEu
-	 Mn/k5QSnfQPW6reZXiFRuXX73EWOucSQC/ZGWeN0F9T1JuqBwWTOTzaCljPmW+rLin
-	 BOM8qCzebsKCEq/wFQbGFyVBZiXiptUaVLByUbNc=
+	s=default; t=1597692955;
+	bh=BXqg6wkzqyR/Y63P+K0fbD/on/ZEu4WGrjQVB5n/Qtk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WHGgkPFg4aP5S7ejYHuRwDXI7qOvxkWv7gOj2Yayjw7SIvDDjHm+PZhC5pxSxeGYE
+	 XmfvFfWXaWncpY3zN313yp3XaqZsdgKj0RksAEp258In1vQJG4YrXx5Z1f8kI6rG2g
+	 w7UsJlHKSRYp35b0xoLtIZTz09gE3jUdWISeKqDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390528AbgHQTfr (ORCPT
+        id S1730071AbgHQP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:35:47 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37259 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730068AbgHQTfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:35:39 -0400
-Received: by mail-il1-f194.google.com with SMTP id p13so15570268ilh.4;
-        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iAgp3OtOJ2V/PDJ3pq372B1DRl70fIx00JIpk/BWygU=;
-        b=WD83jij1Rbas2aoH26bst4Wd2IAZsamOy69COePEP242UJVeliasG91aV7xS3fMGP7
-         zo0EoAACW4gJMuGLQzG8bVBwVR75yBOePYP0SdltQxjm0HZkGHZR8aOSkPGvxKNa47Ov
-         67WYEd3wShUexT/2jx7D0To8LCDs2sv6/L36akxJOoPvrKhGD258NT9JrZt539EEvH8c
-         F4V/SNEdalpsxdxOU9aJFXJN6IuS9lE4g91WF7jYaKUWy4eXK0xZqs5EALbR8Li1TPMj
-         VuEkuMB3qYv/moOZrGCJKKnlGpZQ/4/zcBSl97xhiHoBFpoDEX349nnSYl9XZYGaegQk
-         z12g==
-X-Gm-Message-State: AOAM530uBiw0LBvTLOCtcWudQw+5XmKkSmjJA6DAU44h66T4K+AAA6Hl
-        n9rK+N2iCKHFwhrM9tbbfw==
-X-Google-Smtp-Source: ABdhPJwXOJDDDq8HeKQf/PZk3gaBEkSGQVXO8CPg+FvLgAC1GUzXTU3b3o6z9o/yPeoBt4dX6qCiJw==
-X-Received: by 2002:a92:d4cc:: with SMTP id o12mr14429800ilm.90.1597692938320;
-        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id f132sm9555787ioa.45.2020.08.17.12.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:35:37 -0700 (PDT)
-Received: (nullmailer pid 1415017 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:35:35 -0000
-Date:   Mon, 17 Aug 2020 13:35:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3] dt-bindings: at25: convert the binding document to
- yaml
-Message-ID: <20200817193535.GA1414886@bogus>
-References: <20200812200602.GA2612803@bogus>
- <20200813085959.15946-1-ceggers@arri.de>
+        Mon, 17 Aug 2020 11:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729822AbgHQP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713E123444;
+        Mon, 17 Aug 2020 15:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678012;
+        bh=BXqg6wkzqyR/Y63P+K0fbD/on/ZEu4WGrjQVB5n/Qtk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PT3/Vrz21KJSoeKZI2u8qypnV++1CUsFCLDXFCtZ6BdDmVfHIx7QGKnHTYrnb9Kr7
+         4g6YP2uZF2nKU52qV7VzLCJWJdQahkYRSuVl03MGAMlhxHhLwufu/Ak3CPYm4nnw7s
+         +XqYgkt7Hbw6u7mvqojcejyDgbx47tw5p5qFu/QI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 158/464] Bluetooth: hci_qca: Increase SoC idle timeout to 200ms
+Date:   Mon, 17 Aug 2020 17:11:51 +0200
+Message-Id: <20200817143841.376165824@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813085959.15946-1-ceggers@arri.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 10:59:59 +0200, Christian Eggers wrote:
-> Convert the binding document for at25 EEPROMs from txt to yaml.
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> ---
-> On Wednesday, 12 August 2020, 22:06:02 CEST, Rob Herring wrote:
-> > > +This file has been moved to at25.yaml.
-> >
-> > We only do this to save updating a bunch of references and there aren't
-> > any, so just remove the file.
-> file removed.
-> 
-> > I'd just fix it up, but this wouldn't apply for me on Linus' current
-> > master. Please rebase and resend (You can want til rc1 if you want
-> > because that's what I'll ultimately apply it too).
-> This was my fault. I forgot to revert my previous patch ("dt-bindings: at25: fix
-> syntax error in example code"). So v2 was created from a wrong base.
-> 
-> I'll be unavailable until August, 23.
-> 
-> regards
-> Christian
-> 
->  .../devicetree/bindings/eeprom/at25.txt       |  45 ------
->  .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
->  2 files changed, 129 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/eeprom/at25.txt
->  create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
-> 
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-Applied, thanks!
+[ Upstream commit 2d68476cfc2afa1a1a2d9007a23264ffc6308e77 ]
+
+In some version of WCN399x, SoC idle timeout is configured
+as 80ms instead of 20ms or 40ms. To honor all the SoC's
+supported in the driver increasing SoC idle timeout to 200ms.
+
+Fixes: 41d5b25fed0a0 ("Bluetooth: hci_qca: add PM support")
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/bluetooth/hci_qca.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 74245f20a309e..483766b745178 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -46,7 +46,7 @@
+ #define HCI_MAX_IBS_SIZE	10
+ 
+ #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+-#define IBS_BTSOC_TX_IDLE_TIMEOUT_MS	40
++#define IBS_BTSOC_TX_IDLE_TIMEOUT_MS	200
+ #define IBS_HOST_TX_IDLE_TIMEOUT_MS	2000
+ #define CMD_TRANS_TIMEOUT_MS		100
+ #define MEMDUMP_TIMEOUT_MS		8000
+-- 
+2.25.1
+
+
+
