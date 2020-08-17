@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441B820674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5460020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693375;
-	bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
+	s=default; t=1597693391;
+	bh=WjVelzmhMMwyehM7ehdWPo305YSvnE48zEuooK9dnmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2k2NFSMjCKYLoSLf/xV8r3d4fvtBjvl1vyc5pb0WyzvuuNQZzZdaTbdqz65WzYzj
-	 Ko8VwMggDY4BloJklwRuYn6vskS4HlVKHRC0fyeRrX+iLw2ZSk14tgmMpV8FaWHrQp
-	 zY3Gqh3Gb4Idjn/wdlVk/RJL2cR63pdgZTTq6D8s=
+	b=wb6O+KdClCW1cyrIMJBVfTipMeczxEznboixp7tEHzndbA8XUX2Dd7+AjxjR4Qugv
+	 55GVhBHjZeshM1m7NfyIGqFjIN8pio92TqZXs8uzHzFtgxAXkJ+R64/gDrjcis5dzv
+	 KhdjboOJj+J63Cc4YKRvZsqtgLkJVMX7u6EQ0UV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404343AbgHQTmx (ORCPT
+        id S2404345AbgHQTnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgHQPYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:01 -0400
+        id S1729593AbgHQPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C805620825;
-        Mon, 17 Aug 2020 15:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D0A620885;
+        Mon, 17 Aug 2020 15:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677841;
-        bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
+        s=default; t=1597677838;
+        bh=WjVelzmhMMwyehM7ehdWPo305YSvnE48zEuooK9dnmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qfOCr27f3UMatbgw03JKjM9YjI7noc6u+pRyLe1PT7XEW9ACRPgSvMVlYi8WG0LRc
-         vRl58h56BcqWrkkCrXTeptMpywNrV3WeL4tM5Ym3QUbN49y4EoXrJR6vNn6ILcjl2G
-         1MDRBN0jeV2YOfMCylldQVKiBLIh9cp2pso+thL4=
+        b=1d7v3G+sJ+XVAnDV/RWXUmAW0USlJcAgbrhFzAr1HU6BZ36ZfhnKztGa7ja2Umpji
+         LlYrFksq1eVR6+HdWJc++s7idFZwT3CzC31azU87u0ZvS4kqFd5q2lcPN5hGxJS0eD
+         OsfpArBtxnvHi5kXAb02/AtnKq3rpEBOof3LDLG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 128/464] usb: gadget: net2280: fix memory leak on probe error handling paths
-Date:   Mon, 17 Aug 2020 17:11:21 +0200
-Message-Id: <20200817143839.943085106@linuxfoundation.org>
+Subject: [PATCH 5.8 119/464] brcmfmac: To fix Bss Info flag definition Bug
+Date:   Mon, 17 Aug 2020 17:11:12 +0200
+Message-Id: <20200817143839.509744304@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,40 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
 
-[ Upstream commit 2468c877da428ebfd701142c4cdfefcfb7d4c00e ]
+[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
 
-Driver does not release memory for device on error handling paths in
-net2280_probe() when gadget_release() is not registered yet.
+Bss info flag definition need to be fixed from 0x2 to 0x4
+This flag is for rssi info received on channel.
+All Firmware branches defined as 0x4 and this is bug in brcmfmac.
 
-The patch fixes the bug like in other similar drivers.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 5eff85eeaa5a0..7530bd9a08c43 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -3781,8 +3781,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index de0ef1b545c4f..2e31cc10c1954 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -19,7 +19,7 @@
+ #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
  
- done:
--	if (dev)
-+	if (dev) {
- 		net2280_remove(pdev);
-+		kfree(dev);
-+	}
- 	return retval;
- }
+ #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
+-#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
++#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
  
+ #define BRCMF_STA_BRCM			0x00000001	/* Running a Broadcom driver */
+ #define BRCMF_STA_WME			0x00000002	/* WMM association */
 -- 
 2.25.1
 
