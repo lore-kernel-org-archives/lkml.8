@@ -2,77 +2,159 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81642C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60082205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BEA205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SaDmWaWt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7uU1Z6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgHQOKg (ORCPT
+        id S1728951AbgHQOKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:10:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49558 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728958AbgHQOKU (ORCPT
+        Mon, 17 Aug 2020 10:10:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57311 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728968AbgHQOKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:10:20 -0400
+        Mon, 17 Aug 2020 10:10:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597673420;
+        s=mimecast20190719; t=1597673415;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k4SVy3Q7kvs9PtLL75xW8B+I2m2NEtNuQTvJNDb9D5o=;
-        b=SaDmWaWtIhrYzg2Fxx7gPYdHFvq566gdNC7gqGkIIIDodH3H8MtGHPBptC6R/Cr9tZxIiN
-        ayBIfg7gUqCiag5reeRjiucBLdn/QAKiwjfmg6ATPwF4Q/r3HUCWiPHrAzzhZFVzOMTf6z
-        pIPbFzQ7gBUVtix2OF9HKOqxJoVfH78=
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=YtkHP8yUHAR+QqSRHcyYDisXPjLvOXyhm/pXyropj8M=;
+        b=O7uU1Z6OaQgh61MW7eDV5DQO2mDdcjfMYMEtnjjkXoNgk6b60dwqx78SBDKixZEZfk2f63
+        A33YGfpVy47URP3sbJ7+BUHw/k7tdN1tXtSbO8w38CRI1LvtGG69b0+t2Pt9nnc3JBcL5C
+        ZxE8V+LwMGBHHI6mWhCDQxqhopu7r5o=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-XR16wYhrOq-qf-SCmeZS5A-1; Mon, 17 Aug 2020 10:10:17 -0400
-X-MC-Unique: XR16wYhrOq-qf-SCmeZS5A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-265-bMwIf74GM1KLBLKidSrXBg-1; Mon, 17 Aug 2020 10:10:11 -0400
+X-MC-Unique: bMwIf74GM1KLBLKidSrXBg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2835425CF;
-        Mon, 17 Aug 2020 14:10:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.59])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 69BA5795AE;
-        Mon, 17 Aug 2020 14:10:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 17 Aug 2020 16:10:15 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 16:10:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 1/2] kernel/sys: only take tasklist_lock for
- get/setpriority(PRIO_PGRP)
-Message-ID: <20200817141012.GE29865@redhat.com>
-References: <20200817003148.23691-1-dave@stgolabs.net>
- <20200817003148.23691-2-dave@stgolabs.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817003148.23691-2-dave@stgolabs.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B49C0425D3;
+        Mon, 17 Aug 2020 14:10:09 +0000 (UTC)
+Received: from llong.com (ovpn-118-35.rdu2.redhat.com [10.10.118.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E9B1921E8F;
+        Mon, 17 Aug 2020 14:09:59 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, Waiman Long <longman@redhat.com>
+Subject: [RFC PATCH 7/8] memcg: Enable logging of memory control mitigation action
+Date:   Mon, 17 Aug 2020 10:08:30 -0400
+Message-Id: <20200817140831.30260-8-longman@redhat.com>
+In-Reply-To: <20200817140831.30260-1-longman@redhat.com>
+References: <20200817140831.30260-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/16, Davidlohr Bueso wrote:
->
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  kernel/sys.c | 16 ++++++++--------
+Some of the migitation actions of PR_SET_MEMCONTROL give no visible
+signal that some actions are being done inside the kernel. To make it
+more visble, a new PR_MEMFLAG_LOG flag is added to enable the logging
+of the migitation action done in the kernel ring buffer.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+The logging is done once when the mitigation action starts through the
+setting of an internal PR_MEMFLAG_LOGGED flag. This flag will be cleared
+when it is detected that the memory limit no longer exceeds memory.high.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/uapi/linux/prctl.h |  1 +
+ mm/memcontrol.c            | 34 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 7ba40e10737d..faa7a51fc52a 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -266,6 +266,7 @@ struct prctl_mm_map {
+ /* Flags for PR_SET_MEMCONTROL */
+ # define PR_MEMFLAG_SIGCONT		(1UL <<  0) /* Continuous signal delivery */
+ # define PR_MEMFLAG_DIRECT		(1UL <<  1) /* Direct memory limit */
++# define PR_MEMFLAG_LOG			(1UL <<  2) /* Log action done */
+ # define PR_MEMFLAG_RSS_ANON		(1UL <<  8) /* Check anonymous pages */
+ # define PR_MEMFLAG_RSS_FILE		(1UL <<  9) /* Check file pages */
+ # define PR_MEMFLAG_RSS_SHMEM		(1UL << 10) /* Check shmem pages */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index bddf3e659469..5bda2dd755fc 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2640,6 +2640,7 @@ get_rss_counter(struct mm_struct *mm, int mm_bit, u16 flags, int rss_bit)
+  * Return true if an action has been taken or further check is not needed,
+  * false otherwise.
+  */
++#define PR_MEMFLAG_LOGGED	(1UL << 7)	/* A log message printed */
+ static bool __mem_cgroup_over_high_action(struct mem_cgroup *memcg, u8 action,
+ 					  u16 flags)
+ {
+@@ -2714,6 +2715,32 @@ static bool __mem_cgroup_over_high_action(struct mem_cgroup *memcg, u8 action,
+ 		break;
+ 	}
+ 
++	if ((flags & (PR_MEMFLAG_LOG|PR_MEMFLAG_LOGGED)) == PR_MEMFLAG_LOG) {
++		char name[80];
++		static const char * const acts[] = {
++			[PR_MEMACT_ENOMEM]   = "Action: return ENOMEM on some syscalls",
++			[PR_MEMACT_SLOWDOWN] = "Action: slow down process",
++			[PR_MEMACT_SIGNAL]   = "Action: send signal",
++			[PR_MEMACT_KILL]     = "Action: kill the process",
++		};
++
++		name[0] = '\0';
++		if (memcg)
++			cgroup_name(memcg->css.cgroup, name, sizeof(name));
++		else
++			strcpy(name, "N/A");
++
++		/*
++		 * Use printk_deferred() to minimize delay in the memory
++		 * allocation path.
++		 */
++		printk_deferred(KERN_INFO
++			"Cgroup: %s, Comm: %s, Pid: %d, Mem: %ld pages, %s\n",
++			name, current->comm, current->pid, mem, acts[action]);
++		WRITE_ONCE(current->memcg_over_high_flags,
++			   flags | PR_MEMFLAG_LOGGED);
++	}
++
+ out:
+ 	mmput(mm);
+ 	/*
+@@ -2740,8 +2767,13 @@ static inline bool mem_cgroup_over_high_action(struct mem_cgroup *memcg,
+ 
+ 	if (flags & PR_MEMFLAG_DIRECT)
+ 		memcg = NULL;	/* Direct per-task memory limit checking */
+-	else if (!mem_high)
++	else if (!mem_high) {
++		/* Clear the PR_MEMFLAG_LOGGED flag, if set */
++		if (flags & PR_MEMFLAG_LOGGED)
++			WRITE_ONCE(current->memcg_over_high_flags,
++				   flags & ~PR_MEMFLAG_LOGGED);
+ 		return false;
++	}
+ 
+ 	return __mem_cgroup_over_high_action(memcg, action, flags);
+ }
+-- 
+2.18.1
 
