@@ -7,33 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFD8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478A1207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D982067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgHQLbx (ORCPT
+        id S1728552AbgHQLby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:31:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:53558 "EHLO foss.arm.com"
+        Mon, 17 Aug 2020 07:31:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:53544 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgHQLaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:30:30 -0400
+        id S1728267AbgHQLa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:30:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A2D031B;
-        Mon, 17 Aug 2020 04:30:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E42D21045;
+        Mon, 17 Aug 2020 04:30:27 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 25CE73F66B;
-        Mon, 17 Aug 2020 04:30:28 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AECD43F66B;
+        Mon, 17 Aug 2020 04:30:26 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        Quentin Perret <qperret@google.com>
-Subject: [PATCH v6 11/17] sched/topology: Mark SD_PREFER_SIBLING as SDF_NEEDS_GROUPS
-Date:   Mon, 17 Aug 2020 12:29:57 +0100
-Message-Id: <20200817113003.20802-12-valentin.schneider@arm.com>
+Cc:     Quentin Perret <qperret@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com
+Subject: [PATCH v6 10/17] sched/topology: Propagate SD_ASYM_CPUCAPACITY upwards
+Date:   Mon, 17 Aug 2020 12:29:56 +0100
+Message-Id: <20200817113003.20802-11-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200817113003.20802-1-valentin.schneider@arm.com>
 References: <20200817113003.20802-1-valentin.schneider@arm.com>
@@ -44,46 +45,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD_PREFER_SIBLING is currently considered in sd_parent_degenerate() but not
-in sd_degenerate(). It too hinges on load balancing, and thus won't have
-any effect when set on a domain with a single group. Add it to
-SD_DEGENERATE_GROUPS_MASK.
+We currently set this flag *only* on domains whose topology level exactly
+match the level where we detect asymmetry (as returned by
+asym_cpu_capacity_level()). This is rather problematic.
 
+Say there are two clusters in the system, one with a lone big CPU and the
+other with a mix of big and LITTLE CPUs (as is allowed by DynamIQ):
+
+DIE [                ]
+MC  [             ][ ]
+     0   1   2   3  4
+     L   L   B   B  B
+
+asym_cpu_capacity_level() will figure out that the MC level is the one
+where all CPUs can see a CPU of max capacity, and we will thus set
+SD_ASYM_CPUCAPACITY at MC level for all CPUs.
+
+That lone big CPU will degenerate its MC domain, since it would be alone in
+there, and will end up with just a DIE domain. Since the flag was only set
+at MC, this CPU ends up not seeing any SD with the flag set, which is
+broken.
+
+Rather than clearing dflags at every topology level, clear it before
+entering the topology level loop. This will properly propagate upwards
+flags that are set starting from a certain level.
+
+Reviewed-by: Quentin Perret <qperret@google.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
  include/linux/sched/sd_flags.h | 4 +++-
- kernel/sched/topology.c        | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ kernel/sched/topology.c        | 3 +--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index 4f07b405564e..75c9749a6e2d 100644
+index 21a43ad6f26a..4f07b405564e 100644
 --- a/include/linux/sched/sd_flags.h
 +++ b/include/linux/sched/sd_flags.h
-@@ -131,8 +131,10 @@ SD_FLAG(SD_ASYM_PACKING, SDF_SHARED_CHILD)
+@@ -83,9 +83,11 @@ SD_FLAG(SD_WAKE_AFFINE, SDF_SHARED_CHILD)
+ /*
+  * Domain members have different CPU capacities
   *
-  * Set up until domains start spanning NUMA nodes. Close to being a SHARED_CHILD
-  * flag, but cleared below domains with SD_ASYM_CPUCAPACITY.
-+ *
-+ * NEEDS_GROUPS: Load balancing flag.
++ * SHARED_PARENT: Set from the topmost domain down to the first domain where
++ *                asymmetry is detected.
+  * NEEDS_GROUPS: Per-CPU capacity is asymmetric between groups.
   */
--SD_FLAG(SD_PREFER_SIBLING, 0)
-+SD_FLAG(SD_PREFER_SIBLING, SDF_NEEDS_GROUPS)
+-SD_FLAG(SD_ASYM_CPUCAPACITY, SDF_NEEDS_GROUPS)
++SD_FLAG(SD_ASYM_CPUCAPACITY, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
  
  /*
-  * sched_groups of this level overlap
+  * Domain members share CPU capacity (i.e. SMT)
 diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 02fd8db747b2..8064f495641b 100644
+index 00ad7cef2ec1..02fd8db747b2 100644
 --- a/kernel/sched/topology.c
 +++ b/kernel/sched/topology.c
-@@ -184,7 +184,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+@@ -1988,11 +1988,10 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	/* Set up domains for CPUs specified by the cpu_map: */
+ 	for_each_cpu(i, cpu_map) {
+ 		struct sched_domain_topology_level *tl;
++		int dflags = 0;
  
- 	/* Flags needing groups don't count if only 1 group in parent */
- 	if (parent->groups == parent->groups->next)
--		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
-+		pflags &= ~SD_DEGENERATE_GROUPS_MASK;
- 
- 	if (~cflags & pflags)
- 		return 0;
+ 		sd = NULL;
+ 		for_each_sd_topology(tl) {
+-			int dflags = 0;
+-
+ 			if (tl == tl_asym) {
+ 				dflags |= SD_ASYM_CPUCAPACITY;
+ 				has_asym = true;
 -- 
 2.27.0
 
