@@ -2,121 +2,138 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8417EC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF00C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643B62072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0jcnI9S"
+	by mail.kernel.org (Postfix) with ESMTP id 29486207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597656453;
+	bh=J/kOpSEU8RbORM5aCdkVXUkRjQk8bFOWgJybhAWbpJU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VX1Rp+xKAAlxb5n3z5Xn1HORgDR6YNuS50a8zp5HnVXxq7nRduRBWWjYndT44S8ky
+	 h3aw/v3TCYpO5FzL4wohsX1Q4Mx2VuCoJnxhyKI2e4Zyoh/4rngcUkaTBWKGgsH4la
+	 SbZoVbJNZ/rEKFx7S0laIgBW7TBMLQF4GrNYU3FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgHQJ1D (ORCPT
+        id S1728391AbgHQJ1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgHQJ1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:27:02 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4B9C061389;
-        Mon, 17 Aug 2020 02:27:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so7414925pjb.1;
-        Mon, 17 Aug 2020 02:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rj6QAfp7fK0l7e7qFTK0S101pCtERJaPK3wMNiuezuY=;
-        b=U0jcnI9S/jFzGDnvfm0t7CpqXvnyBzY4klINeV9Qgxl6g7KRhDVeAgua2xpHY3b8Lw
-         XZXsUdrM5cQhpLB75CHifTZ9IHODvopA22F4njsuxi/eVy78Cv0TPbyLfJVAZGomuxGo
-         eLqCJlNMwP7zjCwLGNJ15rwNg8uo05wxki0/A6ySGyeX+jwzOYZi/Klh9oarQu95UW3J
-         QcOizn8dPSbPaGrvX5Ip+z2dO9mZg2ernZBrwfbj+o8kPeePADEUJ4Ys63aQltpk3eCS
-         lUlCgurWWMAc3rXbwLrohpq4cqzxyrASROHsbjnAOJHVWMCkSYB5atU7zN0EbC5uPGGG
-         AzYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rj6QAfp7fK0l7e7qFTK0S101pCtERJaPK3wMNiuezuY=;
-        b=fncFLbuzmusDFaZrz4EX2qZmuiBY/ry88/DGbHLUVkK82hpjgQt6rDFTg451lgERzM
-         IdpwB69OgZIex39g1lXMgmKhv/JVOcUn1h6kDBOn3Qmxbgp0f41u3Xy1gY4T2X0/AV4I
-         QB2OpsPx9q+l6bjCUp92x8nN9MJj/gIZibWnoomoT3I6oTN6HdVNfHpOHpXiaYXChHmc
-         vUFBTyZoSXmJpmAPQG0Y2dX0X5tWOBqIePA7zG7e6fkBMjeMO68hoKonObLiWsR3OWnS
-         sv+ZkDFnbdqespOVGV41bsxI5JN5HlRwhsfC/BPPT/5bn8ZR0Q8vnu2CJKUsuT5D6QJ0
-         t07Q==
-X-Gm-Message-State: AOAM530XeB3WqCUkB7w98yrpYdY2MNuAxhLNg0j6+0HA4N8zGsc3jOM/
-        o6qOx/stt4ZCQVsRkuGD7us=
-X-Google-Smtp-Source: ABdhPJz6lYnPyu0mQrpiz1HjSnbolwJUpaJy7iVIhiwHyzlwegTyNekAgYgri6gIqN+wwTIAdHUnAw==
-X-Received: by 2002:a17:90a:230d:: with SMTP id f13mr11126659pje.116.1597656420344;
-        Mon, 17 Aug 2020 02:27:00 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id e4sm18904633pfd.204.2020.08.17.02.26.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 02:26:59 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 14:55:11 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Javier Martinez Canillas <javier@osg.samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v3] ata: use generic power management
-Message-ID: <20200817092511.GA10566@gmail.com>
-References: <20200817092245.10478-1-vaibhavgupta40@gmail.com>
+        Mon, 17 Aug 2020 05:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbgHQJ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 05:27:31 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E6CF2072D;
+        Mon, 17 Aug 2020 09:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597656451;
+        bh=J/kOpSEU8RbORM5aCdkVXUkRjQk8bFOWgJybhAWbpJU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vqk5sYZZ5vFZvh+OqPDYux84g9ZoKEUfl5z4tXlktjbc5mbcZQo9e27w5hlB9T2ZO
+         hUtwy0hXhHzgSFFRkZjOfcnrDWyr8IUSf4FplhzqtGDtOHOLFXvmhtO/K4kBNzavLa
+         F3lePsGgArFX+LDzGfPRsQr7vKYAV3zzh8B8ZqAs=
+Date:   Mon, 17 Aug 2020 11:27:25 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org,
+        Chenfeng <puck.chen@hisilicon.com>, devel@driverdev.osuosl.org,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+Message-ID: <20200817112725.26f1b7d6@coco.lan>
+In-Reply-To: <20200817082106.GA16296@infradead.org>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+        <20200817082106.GA16296@infradead.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817092245.10478-1-vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Christoph,
 
-I am working to upgrade power management framework support for PCI drivers, as
-my project under the Linux Kernel Mentorship Program.
+Em Mon, 17 Aug 2020 09:21:06 +0100
+Christoph Hellwig <hch@infradead.org> escreveu:
 
-The ultimate goal is to completely remove the legacy framework. And for this we
-need to remove ".suspend" and ".resume" pointers from "struct pci_driver".
+> On Mon, Aug 17, 2020 at 09:49:59AM +0200, Mauro Carvalho Chehab wrote:
+> > Add a driver for the Kirin 960/970 iommu.
+> > 
+> > As on the past series, this starts from the original 4.9 driver from
+> > the 96boards tree:
+> > 
+> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > 
+> > The remaining patches add SPDX headers and make it build and run with
+> > the upstream Kernel.  
+> 
+> Please don't add iommu drivers to staging, and just work with the
+> maintainers to properly clean it up.
 
-The patch is doing the change for the same. The actual suspend() and
-resume() callbacks are defined in drivers/ata/libata-core.c and are exported.
-Which are then used by other files.
+I need to start from the original patch in order to preserve its
+authorship.
 
-Thus removing those pointers, included 54 files in this patch. Although, the
-actual changes are done in few files only. The changes should work fine as I
-have done similar changes for other drivers too which made their way into the
-kernel. Still, tests on few ata devices are necessary.
+My plan is to work with the iommu subsystem maintainers after
+have this (and another pending patch series for DRM) merged.
 
-I tried but unfortunately, I couldn't find or arrange devices to test upon. I
-have added the authors of the previous commit(s) for respective drivers as
-recipients. It would be very helpful if someone can test it on a device.
+> I also don't think adding a totally out of date not compiling version
+> is a good idea.  Please do a proper rollup, and if required (probably
+> not in this case), split it into useful chunks.
 
-Thanks
-Vaibhav Gupta
+This series make this driver working as expected.
+
+I mean, while patch 01/16 is against Kernel 4.9, the other patches
+on this series ports it to upstream, cleans up the driver and
+address several issues on it.
+
+This specific IOMMU seems to be an specific part of the SoC dedicated for 
+the display engine and by the encoding/decoding images via the ISP. 
+With this series, this driver builds and runs as expected, providing
+IOMMU support needed by the upcoming KMS/DRM driver.
+
+The only issue on it (as far as I can tell) is that the DT bindings
+require some work, as, instead of using dma-ranges, the DRM driver binds
+into it with:
+
+	smmu_lpae {
+                 compatible = "hisilicon,smmu-lpae";
+         };
+
+         dpe: dpe@e8600000 {
+                 compatible = "hisilicon,kirin970-dpe";
+...
+                 iommu_info {
+                         start-addr = <0x8000>;
+                         size = <0xbfff8000>;
+                 };
+         };
+
+In order to properly address it, the best would be to also have the
+DRM driver merged upstream, as it relies on it. So, a change in DT will 
+also mean a change at the way the DRM uses it.
+
+The DRM itself should go via staging, as it has some bugs that I'd
+like to fix before moving it to drivers/gpu/drm. Those are more
+tricky to solve, as they seem to require using different settings for 
+some hardware registers, and the downstream driver also have the same 
+issues. Fixing them will likely require some time.
+
+Thanks,
+Mauro
