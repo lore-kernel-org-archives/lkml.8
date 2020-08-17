@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D60C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15847205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF092083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681794;
-	bh=5uDo564OW44HvyNxYlsZc/u02fwF7XtOjL5ThZ8US6E=;
+	s=default; t=1597681795;
+	bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2DZ/SIvLAKkgeQIUJ1nmm5xCNInGlmSbkqp5gDmgRDjUf4BS0kBzgfzt+e64XcI23
-	 7DIc05EtcIBkaqCtWkOBUseuqy5USdcHmrfNYJ7ulOgNWKRS4c41f/EkXJpvdYw5+g
-	 Tl0R/MWM1v6gTPkTaD0TT5sfoWsNWv6cxd5v7D6w=
+	b=ThrP1/YTq7kMq4mVlwVVGCunzAnFYiOGJDbaiT0vijxs6STn6n1lHJAt+Ht/XW4kH
+	 t6b2CopzSxDqTNFwmjzeLcd2+r/kFHumMNY2bDdEJ4QfMM2Xh/Zn6h8d3If+TI4P5D
+	 PWaxvGM0epErfuVyp7btL0RiyZ3+JmCNDZT4YhX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388833AbgHQQ3v (ORCPT
+        id S1731226AbgHQQ2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387929AbgHQPxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:53:39 -0400
+        id S2387861AbgHQPwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D842063A;
-        Mon, 17 Aug 2020 15:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2976820885;
+        Mon, 17 Aug 2020 15:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679618;
-        bh=5uDo564OW44HvyNxYlsZc/u02fwF7XtOjL5ThZ8US6E=;
+        s=default; t=1597679562;
+        bh=/1ramI7N/PC/FCx1+3BMK/mKLPfXJVkRCE13JhUik0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bThJa26z7wVDQMV4tOD2N7TXwXZUYtPt6h7UMHJa4X9eMJ9cw4L/zJ9JytLNFgkFc
-         Tv58Dk4WMEZhr05lgVF/aOk4XQS+8eNq5G6i1uXctS9C6eEv+7mYLGCGmETnZ7Uhpc
-         GANPiN3uoZoS7pLMAks6BLhMOGpY3tVETC/qXRGY=
+        b=16Ti1SJ0k3hTx5St89zqILwMb/ZSkZDDKHViWgRSpj4xOx5gv1ROKsVCf//LLGD2t
+         ugf2iFMu5ndFfO2jy3jSDi6BlQyYqwxAnAG6MdVLPj8jc446vrLV0bpAmBoBiiUArB
+         OaJSydNhoEmZDzhOlHSDl3h7D83wbVyY20U8hMbo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Kars Mulder <kerneldev@karsmulder.nl>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 276/393] ASoC: meson: axg-tdmin: fix g12a skew
-Date:   Mon, 17 Aug 2020 17:15:26 +0200
-Message-Id: <20200817143833.007828101@linuxfoundation.org>
+Subject: [PATCH 5.7 226/393] usb: core: fix quirks_param_set() writing to a const pointer
+Date:   Mon, 17 Aug 2020 17:14:36 +0200
+Message-Id: <20200817143830.587028784@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,54 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Kars Mulder <kerneldev@karsmulder.nl>
 
-[ Upstream commit 80a254394fcfe55450b0351da298ca7231889219 ]
+[ Upstream commit b1b6bed3b5036509b449b5965285d5057ba42527 ]
 
-After carefully checking the result provided by the TDMIN on the g12a and
-sm1 SoC families, the TDMIN skew offset appears to be 3 instead of 2 on the
-axg.
+The function quirks_param_set() takes as argument a const char* pointer
+to the new value of the usbcore.quirks parameter. It then casts this
+pointer to a non-const char* pointer and passes it to the strsep()
+function, which overwrites the value.
 
-Fixes: f01bc67f58fd ("ASoC: meson: axg-tdm-formatter: rework quirks settings")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200729154456.1983396-3-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by creating a copy of the value using kstrdup() and letting
+that copy be written to by strsep().
+
+Fixes: 027bd6cafd9a ("usb: core: Add "quirks" parameter for usbcore")
+Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
+
+Link: https://lore.kernel.org/r/5ee2-5f048a00-21-618c5c00@230659773
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdmin.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/core/quirks.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index 973d4c02ef8db..3d002b4eb939e 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -233,10 +233,26 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
- 	},
- };
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index e0b77674869ce..c96c50faccf72 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -25,17 +25,23 @@ static unsigned int quirk_count;
  
-+static const struct axg_tdm_formatter_driver g12a_tdmin_drv = {
-+	.component_drv	= &axg_tdmin_component_drv,
-+	.regmap_cfg	= &axg_tdmin_regmap_cfg,
-+	.ops		= &axg_tdmin_ops,
-+	.quirks		= &(const struct axg_tdm_formatter_hw) {
-+		.invert_sclk	= false,
-+		.skew_offset	= 3,
-+	},
-+};
+ static char quirks_param[128];
+ 
+-static int quirks_param_set(const char *val, const struct kernel_param *kp)
++static int quirks_param_set(const char *value, const struct kernel_param *kp)
+ {
+-	char *p, *field;
++	char *val, *p, *field;
+ 	u16 vid, pid;
+ 	u32 flags;
+ 	size_t i;
+ 	int err;
+ 
++	val = kstrdup(value, GFP_KERNEL);
++	if (!val)
++		return -ENOMEM;
 +
- static const struct of_device_id axg_tdmin_of_match[] = {
- 	{
- 		.compatible = "amlogic,axg-tdmin",
- 		.data = &axg_tdmin_drv,
-+	}, {
-+		.compatible = "amlogic,g12a-tdmin",
-+		.data = &g12a_tdmin_drv,
-+	}, {
-+		.compatible = "amlogic,sm1-tdmin",
-+		.data = &g12a_tdmin_drv,
- 	}, {}
- };
- MODULE_DEVICE_TABLE(of, axg_tdmin_of_match);
+ 	err = param_set_copystring(val, kp);
+-	if (err)
++	if (err) {
++		kfree(val);
+ 		return err;
++	}
+ 
+ 	mutex_lock(&quirk_mutex);
+ 
+@@ -60,10 +66,11 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 	if (!quirk_list) {
+ 		quirk_count = 0;
+ 		mutex_unlock(&quirk_mutex);
++		kfree(val);
+ 		return -ENOMEM;
+ 	}
+ 
+-	for (i = 0, p = (char *)val; p && *p;) {
++	for (i = 0, p = val; p && *p;) {
+ 		/* Each entry consists of VID:PID:flags */
+ 		field = strsep(&p, ":");
+ 		if (!field)
+@@ -144,6 +151,7 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
+ 
+ unlock:
+ 	mutex_unlock(&quirk_mutex);
++	kfree(val);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
