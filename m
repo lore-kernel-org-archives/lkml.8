@@ -2,92 +2,83 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FF9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 772D02072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597647708;
-	bh=g3IVMF+ZVvdBPOEwT/MiWL1aWCkOV5IH14nThQgHDgA=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSvZC/Cz3FOHbBADKgXcr2Sg0+YQezVSAizksqOv1h9RLab2ReiNR85qfEtdG6iBt
-	 +7DRx3raGDryqGfrz1DN/zL9+B+g7NJ9RuZoB7rukQXKOlRhcQlH/D48LiW+KgAyJC
-	 /xFLkvHOWMlAyC4ydGSfoOTqB5LVpg8PaWYmcVZA=
+	by mail.kernel.org (Postfix) with ESMTP id DF8D82072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHQHBq (ORCPT
+        id S1726834AbgHQHBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42014 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:01:51 -0400
+Received: from ms-10.1blu.de ([178.254.4.101]:40302 "EHLO ms-10.1blu.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgHQHAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:00:42 -0400
-Received: from localhost.localdomain (unknown [194.230.155.242])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FB020758;
-        Mon, 17 Aug 2020 07:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597647642;
-        bh=g3IVMF+ZVvdBPOEwT/MiWL1aWCkOV5IH14nThQgHDgA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=UaO20VuITytOXCKqv7NKyiuFnOrG4/IND4PAavj1RfcaO5ChQUBjXRkcekkQR2LW/
-         s1nXg0rjVPYux+0fsZ2MWCJbvJN3MOZWhXHrP7Z5XpG0uzft2ozjPh7k9d3EGVE6aX
-         yLWq07GWHJJgCIkb30T58+Td+Jm8TN2Fw34756JQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 12/13] extcon: ptn5150: Convert to .probe_new
-Date:   Mon, 17 Aug 2020 09:00:08 +0200
-Message-Id: <20200817070009.4631-13-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
-References: <20200817070009.4631-1-krzk@kernel.org>
+        id S1726613AbgHQHAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:00:47 -0400
+Received: from [78.43.71.214] (helo=marius.fritz.box)
+        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <mail@mariuszachmann.de>)
+        id 1k7Z8N-00009O-MZ; Mon, 17 Aug 2020 09:00:43 +0200
+From:   Marius Zachmann <mail@mariuszachmann.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Marius Zachmann <mail@mariuszachmann.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] hwmon: corsair-cpro: fix ccp_probe, add delay
+Date:   Mon, 17 Aug 2020 09:00:40 +0200
+Message-Id: <20200817070040.7952-1-mail@mariuszachmann.de>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Con-Id: 241080
+X-Con-U: 0-mail
+X-Originating-IP: 78.43.71.214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'struct i2c_device_id' argument of probe function is not used, so
-convert the driver to simpler 'probe_new' interface.
+Possibly because of the changes in usbhid/hid-core.c the first
+raw input report is not received during ccp_probe function and it will
+timeout. I am not sure, whether this behaviour is expected after
+hid_device_io_start or if I am missing something.
+As a solution this adds msleep(50) to ccp_probe so that all initial
+input reports can be received.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
 ---
- drivers/extcon/extcon-ptn5150.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+v2:
+- fix accidentally deleted comment
 
-diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 690d878c65f1..8ba706fad887 100644
---- a/drivers/extcon/extcon-ptn5150.c
-+++ b/drivers/extcon/extcon-ptn5150.c
-@@ -218,8 +218,7 @@ static int ptn5150_init_dev_type(struct ptn5150_info *info)
- 	return 0;
- }
- 
--static int ptn5150_i2c_probe(struct i2c_client *i2c,
--				 const struct i2c_device_id *id)
-+static int ptn5150_i2c_probe(struct i2c_client *i2c)
- {
- 	struct device *dev = &i2c->dev;
- 	struct device_node *np = i2c->dev.of_node;
-@@ -334,7 +333,7 @@ static struct i2c_driver ptn5150_i2c_driver = {
- 		.name	= "ptn5150",
- 		.of_match_table = ptn5150_dt_match,
- 	},
--	.probe	= ptn5150_i2c_probe,
-+	.probe_new	= ptn5150_i2c_probe,
- 	.id_table = ptn5150_i2c_id,
- };
- module_i2c_driver(ptn5150_i2c_driver);
--- 
-2.17.1
+---
+ drivers/hwmon/corsair-cpro.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+index 591929ec217a..c04fac1d820f 100644
+--- a/drivers/hwmon/corsair-cpro.c
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -10,6 +10,7 @@
+
+ #include <linux/bitops.h>
+ #include <linux/completion.h>
++#include <linux/delay.h>
+ #include <linux/hid.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+@@ -513,6 +514,7 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	init_completion(&ccp->wait_input_report);
+
+ 	hid_device_io_start(hdev);
++	msleep(50); /* wait before events can be received */
+
+ 	/* temp and fan connection status only updates when device is powered on */
+ 	ret = get_temp_cnct(ccp);
+--
+2.28.0
