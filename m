@@ -2,78 +2,141 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D091C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D68CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38C02076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597666129;
-	bh=TocOjnaqa2TbaSJHcqyENljI//WPudw/4XS9bdbhXC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YwulxS0DZYa6076BLo8PzuOJfHhU5ib3S2CIBq10Bz4dTXY0fNxhT3SlPPvP+1jc2
-	 oLHoZq4NuUo9L4rxU3MZILX5FH87Q5Xy20bqgLdI1hU7/qQO4hmt4elR/kljRhA0bv
-	 f1O1H6uV+PPl6epMkoR+7kakOwQW3Mvrj2wpICOU=
+	by mail.kernel.org (Postfix) with ESMTP id 7CC312072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgHQMIs (ORCPT
+        id S1728095AbgHQMKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgHQMIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:08:47 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2C82072E;
-        Mon, 17 Aug 2020 12:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597666127;
-        bh=TocOjnaqa2TbaSJHcqyENljI//WPudw/4XS9bdbhXC8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=11Bg5V99Vtxexq4TbAPee6betJmt3dUihsnlpEPZWErE3yPfSe3yGZqWvSVgWPGIJ
-         4TMH6JKh/WLd5m8rC7cAn/fBI29MvVvTXOAWFbcc/9x9vaeyvum5afv2Bqb/vn/3qX
-         ygVSINDm/pHUL9wky5E4FTf5wYDXof94yS6PfSi8=
-Date:   Mon, 17 Aug 2020 17:38:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 00/13] soundwire: intel: add power management support
-Message-ID: <20200817120841.GQ2639@vkoul-mobl>
-References: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+        Mon, 17 Aug 2020 08:10:06 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:48839 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbgHQMKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:10:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U62Iq6A_1597666202;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U62Iq6A_1597666202)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 17 Aug 2020 20:10:02 +0800
+Date:   Mon, 17 Aug 2020 20:10:02 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 3/5] block: Add a new helper to attempt to merge a
+ bio
+Message-ID: <20200817121002.GB79836@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
+ <5b932aa51fc2b46c381d7b83d591a6ddbf05b199.1597637287.git.baolin.wang@linux.alibaba.com>
+ <20200817062634.GC12248@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20200817062634.GC12248@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-07-20, 04:37, Bard Liao wrote:
-> This series adds power management support for Intel soundwire links.
+On Mon, Aug 17, 2020 at 08:26:34AM +0200, Christoph Hellwig wrote:
+> On Mon, Aug 17, 2020 at 12:09:17PM +0800, Baolin Wang wrote:
+> > There are lots of duplicated code when trying to merge a bio from
+> > plug list and sw queue, we can introduce a new helper to attempt
+> > to merge a bio, which can simplify the blk_mq_bio_list_merge()
+> > and blk_attempt_plug_merge().
+> 
+> Looks sensible, but two comments:
+> 
+> > +enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
+> > +					    struct request *rq,
+> > +					    struct bio *bio,
+> > +					    unsigned int nr_segs)
+> > +{
+> > +	bool merged = false;
+> > +
+> > +	if (!blk_rq_merge_ok(rq, bio))
+> > +		return BIO_MERGE_NONE;
+> > +
+> > +	switch (blk_try_merge(rq, bio)) {
+> > +	case ELEVATOR_BACK_MERGE:
+> > +		merged = bio_attempt_back_merge(rq, bio, nr_segs);
+> > +		break;
+> > +	case ELEVATOR_FRONT_MERGE:
+> > +		merged = bio_attempt_front_merge(rq, bio, nr_segs);
+> > +		break;
+> > +	case ELEVATOR_DISCARD_MERGE:
+> > +		merged = bio_attempt_discard_merge(q, rq, bio);
+> > +		break;
+> 
+> Can't we also switch the bio_attempt_*merge helpers to return
+> enum bio_merge_status to simplify this a bit?
 
-I had applied except 3 & 9 (few skipped in middle due to conflict while
-applying), BUT I get a build failure on patch 2 onwards :(
+Yes, will do.
 
-drivers/soundwire/intel_init.c: In function ‘sdw_intel_cleanup’:
-drivers/soundwire/intel_init.c:72:4: error: implicit declaration of function ‘pm_runtime_disable’ [-Werror=implicit-function-declaration]
-   72 |    pm_runtime_disable(&link->pdev->dev);
+> 
+> Also I think these helpers can be marked static now, although I didn't
+> actually apply your series, so I might have missed something.
 
-I suspect due to missing header? I was on x64 build with allmodconfig
+Cause this function will be used by blk_mq_bio_list_merge() in
+blk-mq-sched.c, it should be exported.
 
-So only patch 1 is applied and pushed now
+> 
+> > +++ b/block/blk-mq-sched.c
+> > @@ -391,31 +391,17 @@ bool blk_mq_bio_list_merge(struct request_queue *q, struct list_head *list,
+> >  {
+> >  	struct request *rq;
+> >  	int checked = 8;
+> > +	enum bio_merge_status merge;
+> >  
+> >  	list_for_each_entry_reverse(rq, list, queuelist) {
+> > -		bool merged = false;
+> > -
+> >  		if (!checked--)
+> >  			break;
+> >  
+> > +		merge = blk_attempt_bio_merge(q, rq, bio, nr_segs);
+> > +		if (merge == BIO_MERGE_NONE)
+> >  			continue;
+> >  
+> > +		return merge == BIO_MERGE_OK ? true: false;
+> 
+> Maybe write this a little more explicit:
+> 
+> 		switch (blk_attempt_bio_merge(q, rq, bio, nr_segs)) {
+> 		case BIO_MERGE_NONE:
+> 			continue:
+> 		case BIO_MERGE_OK:
+> 			return true;
+> 		case BIO_MERGE_FAILED:
+> 			return false;
+> 		}
 
--- 
-~Vinod
+Sure.
+
+> 
+> >  enum elv_merge blk_try_merge(struct request *rq, struct bio *bio);
+> >  
+> > +enum bio_merge_status {
+> > +	BIO_MERGE_OK,
+> > +	BIO_MERGE_NONE,
+> > +	BIO_MERGE_FAILED,
+> > +};
+> > +
+> > +enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
+> > +		struct request *rq, struct bio *bio, unsigned int nr_segs);
+> > +
+> >  int blk_dev_init(void);
+> >  
+> >  /*
+> > -- 
+> > 1.8.3.1
+> ---end quoted text---
