@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A13520758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278B720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691386;
-	bh=46yjb/k7TSnzZl7IjWeJ7jhtvXAOuNZPB8pbLl///So=;
+	s=default; t=1597691399;
+	bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ae2OlimuQHGOjRzwZHTu8Accc4HYGX9hMr/vpwIlE/wadnK8vXw0//oqmZuCdjsxV
-	 UURpOSAWTkwdYI0EOknrH390s7VR+41P6Gh4VgTnQBmdkJYfCnq43Gn6g7x1v2dg4C
-	 tf09xR56wbSqBGOf/hWW7y23SvF5ZJKijlWRkCwM=
+	b=ovLXcmOWRjxtgIxkyu9kOCbuDLBBjHPobEeWdFRu8b+GXKUx0gIt2RQ818ANumysY
+	 PP6+AGXT5NZUNprfJpiDk68MFkqNjPOShNGGK9t5s9GCYCVOxKWoqWssSOiPsg+muz
+	 7Osbjfu4A69VReTY9n9klE+L34p1YFXjt33XEBo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392069AbgHQTJk (ORCPT
+        id S2387482AbgHQTJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387482AbgHQPmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:20 -0400
+        id S2387497AbgHQPmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EEF520760;
-        Mon, 17 Aug 2020 15:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1275420825;
+        Mon, 17 Aug 2020 15:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678939;
-        bh=46yjb/k7TSnzZl7IjWeJ7jhtvXAOuNZPB8pbLl///So=;
+        s=default; t=1597678927;
+        bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcwpF5WMMpwSN4OXuRffSzSMMnNyFfeM4Z22rkaODLYxWSd8tFypOVSuituybowxy
-         IPcQAaRtgYzkCnU0jLApEYmqNX4SW1iz6AeqQQlJKMjCSUumou0WY+4r5EEXZG5sj3
-         bFOq4Ht3GH9azQrN5znx6n2u4JpnxiKIlgj5u/3s=
+        b=XgJqVUs2ssWPu6VIgXUTMPfGJ8n1/QZwtYOowzX/E7+aTB4z5I+iC4JjxjdIG09M3
+         xAbqrqhKCnnFc7LMKs0XoSQRC+lvbc4H+mYwqO4iENF7g0E2u/GnOnN7py7DsywwAT
+         BiZ9n4Lu4TrszG6HcPbSG+k2iOhJdx1c6gdFecxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 041/393] spi: lantiq: fix: Rx overflow error in full duplex mode
-Date:   Mon, 17 Aug 2020 17:11:31 +0200
-Message-Id: <20200817143821.592853292@linuxfoundation.org>
+Subject: [PATCH 5.7 038/393] reset: intel: fix a compile warning about REG_OFFSET redefined
+Date:   Mon, 17 Aug 2020 17:11:28 +0200
+Message-Id: <20200817143821.454930538@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,64 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dilip Kota <eswara.kota@linux.intel.com>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 661ccf2b3f1360be50242726f7c26ced6a9e7d52 ]
+[ Upstream commit 308646785e51976dea7e20d29a1842d14bf0b9bd ]
 
-In full duplex mode, rx overflow error is observed. To overcome the error,
-wait until the complete data got received and proceed further.
+kernel test robot reports a compile warning about REG_OFFSET redefined
+in the reset-intel-gw.c after merging commit e44ab4e14d6f4 ("regmap:
+Simplify implementation of the regmap_read_poll_timeout() macro"). the
+warning is like that:
 
-Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Link: https://lore.kernel.org/r/efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/reset/reset-intel-gw.c:18:0: warning: "REG_OFFSET" redefined
+ #define REG_OFFSET GENMASK(31, 16)
+
+In file included from ./arch/arm/mach-ixp4xx/include/mach/hardware.h:30:0,
+                 from ./arch/arm/mach-ixp4xx/include/mach/io.h:15,
+                 from ./arch/arm/include/asm/io.h:198,
+                 from ./include/linux/io.h:13,
+                 from ./include/linux/iopoll.h:14,
+                 from ./include/linux/regmap.h:20,
+                 from drivers/reset/reset-intel-gw.c:12:
+./arch/arm/mach-ixp4xx/include/mach/platform.h:25:0: note: this is the location of the previous definition
+ #define REG_OFFSET 3
+
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: c9aef213e38cde ("reset: intel: Add system reset controller driver")
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-lantiq-ssc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/reset/reset-intel-gw.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
-index 1fd7ee53d4510..44600fb71c484 100644
---- a/drivers/spi/spi-lantiq-ssc.c
-+++ b/drivers/spi/spi-lantiq-ssc.c
-@@ -184,6 +184,7 @@ struct lantiq_ssc_spi {
- 	unsigned int			tx_fifo_size;
- 	unsigned int			rx_fifo_size;
- 	unsigned int			base_cs;
-+	unsigned int			fdx_tx_level;
- };
+diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
+index 854238444616b..effc177db80af 100644
+--- a/drivers/reset/reset-intel-gw.c
++++ b/drivers/reset/reset-intel-gw.c
+@@ -15,9 +15,9 @@
+ #define RCU_RST_STAT	0x0024
+ #define RCU_RST_REQ	0x0048
  
- static u32 lantiq_ssc_readl(const struct lantiq_ssc_spi *spi, u32 reg)
-@@ -481,6 +482,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
- 	u32 data;
- 	unsigned int tx_free = tx_fifo_free(spi);
+-#define REG_OFFSET	GENMASK(31, 16)
+-#define BIT_OFFSET	GENMASK(15, 8)
+-#define STAT_BIT_OFFSET	GENMASK(7, 0)
++#define REG_OFFSET_MASK	GENMASK(31, 16)
++#define BIT_OFFSET_MASK	GENMASK(15, 8)
++#define STAT_BIT_OFFSET_MASK	GENMASK(7, 0)
  
-+	spi->fdx_tx_level = 0;
- 	while (spi->tx_todo && tx_free) {
- 		switch (spi->bits_per_word) {
- 		case 2 ... 8:
-@@ -509,6 +511,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ #define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
  
- 		lantiq_ssc_writel(spi, data, LTQ_SPI_TB);
- 		tx_free--;
-+		spi->fdx_tx_level++;
+@@ -51,11 +51,11 @@ static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
+ 				     unsigned long id, u32 *rst_req,
+ 				     u32 *req_bit, u32 *stat_bit)
+ {
+-	*rst_req = FIELD_GET(REG_OFFSET, id);
+-	*req_bit = FIELD_GET(BIT_OFFSET, id);
++	*rst_req = FIELD_GET(REG_OFFSET_MASK, id);
++	*req_bit = FIELD_GET(BIT_OFFSET_MASK, id);
+ 
+ 	if (data->soc_data->legacy)
+-		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
++		*stat_bit = FIELD_GET(STAT_BIT_OFFSET_MASK, id);
+ 	else
+ 		*stat_bit = *req_bit;
+ 
+@@ -141,14 +141,14 @@ static int intel_reset_xlate(struct reset_controller_dev *rcdev,
+ 	if (spec->args[1] > 31)
+ 		return -EINVAL;
+ 
+-	id = FIELD_PREP(REG_OFFSET, spec->args[0]);
+-	id |= FIELD_PREP(BIT_OFFSET, spec->args[1]);
++	id = FIELD_PREP(REG_OFFSET_MASK, spec->args[0]);
++	id |= FIELD_PREP(BIT_OFFSET_MASK, spec->args[1]);
+ 
+ 	if (data->soc_data->legacy) {
+ 		if (spec->args[2] > 31)
+ 			return -EINVAL;
+ 
+-		id |= FIELD_PREP(STAT_BIT_OFFSET, spec->args[2]);
++		id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, spec->args[2]);
  	}
- }
  
-@@ -520,6 +523,13 @@ static void rx_fifo_read_full_duplex(struct lantiq_ssc_spi *spi)
- 	u32 data;
- 	unsigned int rx_fill = rx_fifo_level(spi);
+ 	return id;
+@@ -210,11 +210,11 @@ static int intel_reset_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-+	/*
-+	 * Wait until all expected data to be shifted in.
-+	 * Otherwise, rx overrun may occur.
-+	 */
-+	while (rx_fill != spi->fdx_tx_level)
-+		rx_fill = rx_fifo_level(spi);
-+
- 	while (rx_fill) {
- 		data = lantiq_ssc_readl(spi, LTQ_SPI_RB);
+-	data->reboot_id = FIELD_PREP(REG_OFFSET, rb_id[0]);
+-	data->reboot_id |= FIELD_PREP(BIT_OFFSET, rb_id[1]);
++	data->reboot_id = FIELD_PREP(REG_OFFSET_MASK, rb_id[0]);
++	data->reboot_id |= FIELD_PREP(BIT_OFFSET_MASK, rb_id[1]);
  
+ 	if (data->soc_data->legacy)
+-		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET, rb_id[2]);
++		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, rb_id[2]);
+ 
+ 	data->restart_nb.notifier_call =	intel_reset_restart_handler;
+ 	data->restart_nb.priority =		128;
 -- 
 2.25.1
 
