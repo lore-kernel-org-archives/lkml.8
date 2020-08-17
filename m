@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD464C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA03DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 793B922E02
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99883208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678605;
-	bh=fJL/l3YfGc/gPwQbdodajskzq+mBQmY7RH0VafRmsnA=;
+	s=default; t=1597678612;
+	bh=FxuRQYNDNmFiRNu306TerMqt9Xc35aX8v98qTFSR68s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obS3ezzJY6ujcKoJ2jtdkG6CdkLDd3Iy1IggT3GLQYxP8JwLHcdwZrsJ/tSiOThQS
-	 QYhgH3dnPP3d9QWK3LtEcwq6ISe6U6ZoLsGIAt/ihxPcnd2zOPF52m7aBWB8GHNH2h
-	 rM4KW/gBVYWLufSpnbyEXct4TkRbyPm/in7vwhfc=
+	b=XbWDGkGt2YRzeNWnkmRRfp8ZR+cGM4syyma7KkcbtFNFPY4kGhht9MasAI+wpsUaq
+	 TNOv+VEuy3r4g12sy5y+pvchGx4hBbMg75dba0gQ6HHbUiv1pjuLNCrXHt62V7GOC5
+	 mCmASlxv5kLebuc1mngj5XtXqbEqhCOuXpuAItdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgHQPgj (ORCPT
+        id S1730518AbgHQPgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52802 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbgHQPam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:30:42 -0400
+        id S1730241AbgHQPay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:30:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6334C2245C;
-        Mon, 17 Aug 2020 15:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CD3423B41;
+        Mon, 17 Aug 2020 15:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678241;
-        bh=fJL/l3YfGc/gPwQbdodajskzq+mBQmY7RH0VafRmsnA=;
+        s=default; t=1597678254;
+        bh=FxuRQYNDNmFiRNu306TerMqt9Xc35aX8v98qTFSR68s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANpKm++Iq3jV8cJQMThpquo5oL/H8pzYGI3gntTlRuLLbUQRMkPv+5ck0I19HtE5E
-         ZmrvLZHtq3tO4Ae4y8lr/iKB+/Zm5odt26/z9XxxL2WQC6FvAFWrkFdAWSxgcreas2
-         sjusnYyZ0cuWCd77G5hzDYDu5HF627i0KXa+5qQQ=
+        b=mpFDB9a0oj60uqWgeP84Du+3Leg2tBntm8Zke5FKWz/Vz3+2t8GhAE7+PZfG0W/ZB
+         IIBSk7RwD+eGd7yseorXOH5L3zyDIxwp6zYKQ/q/gK4yFLiopEhdopl+m4Ew07vOh0
+         mzAWt/OXhzHtBlPv0XJWuLI3fbGs+w3z53ySW9MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 267/464] mt76: mt7663u: fix memory leak in set key
-Date:   Mon, 17 Aug 2020 17:13:40 +0200
-Message-Id: <20200817143846.576307361@linuxfoundation.org>
+Subject: [PATCH 5.8 270/464] mt76: mt7915: potential array overflow in mt7915_mcu_tx_rate_report()
+Date:   Mon, 17 Aug 2020 17:13:43 +0200
+Message-Id: <20200817143846.713668196@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,72 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4a850f8dc68b8c4a20333521b31600c9d31ccb5d ]
+[ Upstream commit eb744e5df86cf7e377d0acc4e686101b0fd9663a ]
 
-Fix memory leak in set key.
+Smatch complains that "wcidx" value comes from the network and thus
+cannot be trusted.  In this case, it actually seems to come from the
+firmware.  If your wireless firmware is malicious then probably no
+amount of carefulness can protect you.
 
-Fixes: eb99cc95c3b6 ("mt76: mt7615: introduce mt7663u support")
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+On the other hand, these days we still try to check the firmware as much
+as possible.  Verifying that the index is within bounds will silence a
+static checker warning.  And it's harmless and a good exercise in kernel
+hardening.  So I suggest that we do add a bounds check.
+
+Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based chipsets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7615/usb.c   | 21 ++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ .../net/wireless/mediatek/mt76/mt7915/mcu.c   | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/usb.c b/drivers/net/wireless/mediatek/mt76/mt7615/usb.c
-index 5be6704770ad0..7906e6a71c5b9 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/usb.c
-@@ -166,12 +166,16 @@ __mt7663u_mac_set_key(struct mt7615_dev *dev,
- 
- 	lockdep_assert_held(&dev->mt76.mutex);
- 
--	if (!sta)
--		return -EINVAL;
-+	if (!sta) {
-+		err = -EINVAL;
-+		goto out;
-+	}
- 
- 	cipher = mt7615_mac_get_cipher(key->cipher);
--	if (cipher == MT_CIPHER_NONE)
--		return -EOPNOTSUPP;
-+	if (cipher == MT_CIPHER_NONE) {
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
- 
- 	wcid = &wd->sta->wcid;
- 
-@@ -179,19 +183,22 @@ __mt7663u_mac_set_key(struct mt7615_dev *dev,
- 	err = mt7615_mac_wtbl_update_key(dev, wcid, key->key, key->keylen,
- 					 cipher, key->cmd);
- 	if (err < 0)
--		return err;
-+		goto out;
- 
- 	err = mt7615_mac_wtbl_update_pk(dev, wcid, cipher, key->keyidx,
- 					key->cmd);
- 	if (err < 0)
--		return err;
-+		goto out;
- 
- 	if (key->cmd == SET_KEY)
- 		wcid->cipher |= BIT(cipher);
- 	else
- 		wcid->cipher &= ~BIT(cipher);
- 
--	return 0;
-+out:
-+	kfree(key->key);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+index c8c12c740c1a0..8fb8255650a7e 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+@@ -505,15 +505,22 @@ static void
+ mt7915_mcu_tx_rate_report(struct mt7915_dev *dev, struct sk_buff *skb)
+ {
+ 	struct mt7915_mcu_ra_info *ra = (struct mt7915_mcu_ra_info *)skb->data;
+-	u16 wcidx = le16_to_cpu(ra->wlan_idx);
+-	struct mt76_wcid *wcid = rcu_dereference(dev->mt76.wcid[wcidx]);
+-	struct mt7915_sta *msta = container_of(wcid, struct mt7915_sta, wcid);
+-	struct mt7915_sta_stats *stats = &msta->stats;
+-	struct mt76_phy *mphy = &dev->mphy;
+ 	struct rate_info rate = {}, prob_rate = {};
++	u16 probe = le16_to_cpu(ra->prob_up_rate);
+ 	u16 attempts = le16_to_cpu(ra->attempts);
+ 	u16 curr = le16_to_cpu(ra->curr_rate);
+-	u16 probe = le16_to_cpu(ra->prob_up_rate);
++	u16 wcidx = le16_to_cpu(ra->wlan_idx);
++	struct mt76_phy *mphy = &dev->mphy;
++	struct mt7915_sta_stats *stats;
++	struct mt7915_sta *msta;
++	struct mt76_wcid *wcid;
 +
-+	return err;
- }
++	if (wcidx >= MT76_N_WCIDS)
++		return;
++
++	wcid = rcu_dereference(dev->mt76.wcid[wcidx]);
++	msta = container_of(wcid, struct mt7915_sta, wcid);
++	stats = &msta->stats;
  
- void mt7663u_wtbl_work(struct work_struct *work)
+ 	if (msta->wcid.ext_phy && dev->mt76.phy2)
+ 		mphy = dev->mt76.phy2;
 -- 
 2.25.1
 
