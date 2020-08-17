@@ -2,89 +2,150 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7947C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B04C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC91820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYkok7Lc"
+	by mail.kernel.org (Postfix) with ESMTP id 4191A20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390941AbgHQSYO (ORCPT
+        id S2390461AbgHQSY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390639AbgHQSXW (ORCPT
+        Mon, 17 Aug 2020 14:24:26 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:49379 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390940AbgHQSYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:23:22 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0CEC061343;
-        Mon, 17 Aug 2020 11:23:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id i10so2959575pgk.1;
-        Mon, 17 Aug 2020 11:23:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ArklK3xLKYl0ozsXmN0TZa3LItt/yQRXbXI18xhBRkY=;
-        b=KYkok7Lc9wMrqXITauWU1t0NEZU5oDWsKvsZmdrPTIMV4tnbFYq1MLfK8etF6o8j42
-         Us8Pze5iaq7q0QFQvKYC5CG749siGYLQpC7w8Lsp8EgxZnN1cMttsNsfxhLLGylxJqRO
-         h5Xt4MLf/YOjhDZ/3WBeG01Sr8lc0ag9hxEeUDBKz4dSKLps9yXmTROd2NBnKvCQLpN/
-         +gLdr5dJ5z6Lo0ebICaXsd+xuP1rnuIz9OMcGT2eWDNMiuBjqcOg7kF7zW6Rpja5WgE1
-         hhq0C1sduCMvWaD6BSppNfXY+L7G489qJaw465Qo7QQLjcSedkgvZ6kO3+g1EZqHBvHY
-         Vupg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ArklK3xLKYl0ozsXmN0TZa3LItt/yQRXbXI18xhBRkY=;
-        b=jQUVFGHv9EugzmLLuVc1mDZcqH9itF5tocUvgplZHwxqD4NndrbGaC0eG4eYHAv8nP
-         9gAmzFTfC8e+Q+KWZd5Cgdw9AHxJxILui1YNT4tLmrnqdjghYHmLSHyICCvfv7QzpN5Q
-         OXbJAMCQOb+31avFAxxVeIaKinq+BNtYHY+zC56QMfdovf7mF7ZVoJFFf53v3mZ1YcRu
-         fQ8BO2VGhhM2hJU7T8rZ9M+VAHXOFovKOnorf+++7K2GWJ+1yZiAJSZN4o0ypCiAZ8I7
-         fQD+ShpWFEkB6pLSsvtXAwDxwITokxIvIHqkMjRrE9S0k0XFD6EG+X36Gv3EzUQfJdMC
-         A9aA==
-X-Gm-Message-State: AOAM531ZXFX0rTRsRH0FWNVWayEaWKrHI14ypa4n+uEVFjRGLtaCI515
-        NSin0yVfYq/5MAHj3cI4pBeFl14hm6Y=
-X-Google-Smtp-Source: ABdhPJzs5PpPwLX4Lms8EiHz/B3vX66hHPiWWrc1sSTOfZ+Rq2Tb8XiLZLpsLuXic1SOW2APxkAbtA==
-X-Received: by 2002:a63:dc11:: with SMTP id s17mr10602970pgg.254.1597688599235;
-        Mon, 17 Aug 2020 11:23:19 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id c10sm20543527pfc.62.2020.08.17.11.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 11:23:18 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 11:23:16 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     min.li.xe@renesas.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] ptp: ptp_clockmatrix: use i2c_master_send for i2c
- write
-Message-ID: <20200817182316.GB4286@hoboy>
-References: <1597678655-842-1-git-send-email-min.li.xe@renesas.com>
+        Mon, 17 Aug 2020 14:24:09 -0400
+IronPort-SDR: G2ANti31s1ZU3FYJ6sf/ZgXAJVGXwuVQq/vPABPgKPkYKWMFO/PQtujA7EAjUglvGAOrG3jXth
+ AkBPbSgyOZ5Wx7TN5U5THEZDhb6Suv0H1d/jPWAAw1J4JAoh+UvIUteRHAWziV4JtrtezVPiov
+ 7ExiGnxoohP5ayNiZ7MrTGPUBe/8cDwB7uCJfPYlSfpqBQE4WvUBFX4qc3iGVuHRqvEYv3A5X4
+ iOGL8mwKmYhtoy39DmnbH99sAfGfqZqPAVxsF3XCNYxvprhzDEdVAictGRUPVIm8eI/F46wPAI
+ uGw=
+X-IronPort-AV: E=Sophos;i="5.76,324,1592899200"; 
+   d="scan'208";a="52111682"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 17 Aug 2020 10:24:07 -0800
+IronPort-SDR: ToVR6YUYiFLED4f7TyLPCb76YYE4RyQYIkb/RVKa+y2NJZJJc9Br2Nbxt7IxP04SB4VuZZ8qYz
+ qFUWSxePybGpHXN0v3Z0GlxrAt+S8x2hyXQKXX+sZPnaV9MOcCl6NB9op+D/hXRv/9zl65mk82
+ 95NsJRREfN0cr3z+uR4c2PY4WxBaf8jPFTwGNuCRjSKgEJb76NRmDcMluBPDOJNW5i4p2oA+jM
+ ofaL9IHmaArtglsagpqQ+h3gx84cktLw5RmkkZ1B55lDuo8P2eGY4DpZ9Sq8dLmJPlIl8ato+Y
+ s7U=
+Subject: Re: PROBLEM: Long Workqueue delays.
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-usb@vger.kernel.org>,
+        "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
+        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+References: <71aafe68-7fe0-6b77-ea8e-83edd3f16c8d@mentor.com>
+ <20200817115744.GA3985908@kroah.com>
+From:   Jim Baxter <jim_baxter@mentor.com>
+Message-ID: <57a7841d-86e3-b6df-1488-a252a68a9ee0@mentor.com>
+Date:   Mon, 17 Aug 2020 19:24:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597678655-842-1-git-send-email-min.li.xe@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200817115744.GA3985908@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
+ SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:37:35AM -0400, min.li.xe@renesas.com wrote:
-> From: Min Li <min.li.xe@renesas.com>
+On 17/08/2020 12:57, Greg KH wrote:
+> On Mon, Aug 17, 2020 at 12:40:03PM +0100, Jim Baxter wrote:
+>> We have issues with the workqueue of the kernel overloading the CPU 0 
+>> when we we disconnect a USB stick.
+>>
+>> This results in other items on the shared workqueue being delayed by
+>> around 6.5 seconds with a default kernel configuration and 2.3 seconds
+>> on a config tailored for our RCar embedded platform.
+>>
 > 
-> The old code for i2c write would break on some controllers, which fails
-> at handling Repeated Start Condition. So we will just use i2c_master_send
-> to handle write in one transanction.
+> Is this data really flushed out to the device?
 > 
-> Signed-off-by: Min Li <min.li.xe@renesas.com>
+I am unsure if the delay is due to a single system or a combination of memory,
+usb or filesystem operations, the delay also occurs if the device is mounted
+as ro and using the sync option.
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Using umount stops the issue occurring but is unfortunately not guaranteed in
+our particular system.
+
+>> - Disconnect the USB stick:
+>> [ 1551.796792] usb 2-1: USB disconnect, device number 2
+>> [ 1558.625517] DELAY: 6782
+>>
+>>
+>> The Delay output 6782 is in milliseconds.
+> 
+> What USB workqueue is taking so long?> 
+> The one trying to deal with the filesystem flushing out the data that it
+> can't do now that the device is removed?  :)
+> 
+From my analysis it is the hub_event workqueue shown to be using most of the CPU,
+the kworker/0:1+usb thread uses around 98% of the CPU.
+
+I have traced the workqueue:workqueue_queue_work function while unplugging the USB
+but not found a particular workqueue function being called a lot.
+
+Using perf Iidentified the hub_events workqueue was spending a lot of time in
+invalidate_partition(), I have included a cut down the captured data from perf in
+[2] which shows the additional functions where the kworker spends most of its time.
+
+
+I realise that not unmounting the USB stick is not ideal, though I wonder what 
+additional work is done when unplugging the USB stick compared to unmounting it.
+I guess it may be waiting for a time-out during the operation without the unmount.
+
+
+Thanks,
+Jim Baxter
+
+> thanks,
+> 
+> greg k-h
+> 
+
+[2] perf trace:
+    95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
+    |
+    ---ret_from_fork
+       kthread
+       worker_thread
+       |          
+        --95.15%--process_one_work
+		  |          
+		   --94.99%--hub_event
+			 |          
+			  --94.99%--usb_disconnect
+			  <snip>
+				|  
+				--94.90%--invalidate_partition
+				   __invalidate_device
+				   |          
+				   |--64.55%--invalidate_bdev
+				   |  |          
+				   |   --64.13%--invalidate_mapping_pages
+				   |     |          
+				   |     |--24.09%--invalidate_inode_page
+				   |     |   |          
+				   |     |   --23.44%--remove_mapping
+				   |     |     |          
+				   |     |      --23.20%--__remove_mapping
+				   |     |        |          
+				   |     |         --21.90%--arch_local_irq_restore
+				   |     |          
+				   |     |--22.44%--arch_local_irq_enable
+				   |          
+					--30.35%--shrink_dcache_sb 
+					<snip>
+					  |      
+					  --30.17%--truncate_inode_pages_range
