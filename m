@@ -2,128 +2,244 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC3720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1026220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kBnXVdzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389787AbgHQRZL (ORCPT
+        id S2390013AbgHQRZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:25:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38452 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389524AbgHQRNq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:13:46 -0400
-Received: from mail-ej1-f71.google.com ([209.85.218.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1k7ihb-0005cu-US
-        for linux-kernel@vger.kernel.org; Mon, 17 Aug 2020 17:13:44 +0000
-Received: by mail-ej1-f71.google.com with SMTP id a19so5771672ejs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ortJXZij7qhe0ZAYBzpiXihdZh9t9k9y3DWPAjhxY9E=;
-        b=TGUNUZ2YyRYLK99T6y+w7F4B4muIdM+JL4qQOxcrTdp0uclMcTjjBksaJ89BWYO1Wh
-         0Fc7A0IqvFH8UHdgBL8uuX78UhITvKUCeWMhwmoR38TwQEAn0SdmC8viQryuz8gMJMSY
-         x8QpinbWA1+gvXtxbg1+p6ij1dh6RW33kOW97u2sFhQDneV7qzGwejqgXZp7wEeiNahU
-         yF13Oly0Hy1ZKbJnCRAPIUIbpiBkCIlJd6HJjhgLFLse/NOkgzrRsCAQfCdQ/8687lrq
-         fZu8jERY65AHi6lXZte/RfvYEFMAc+HQX8YCgTObV4ueiqdfjxRX4VDzBVwyOAcKcJbu
-         bSLA==
-X-Gm-Message-State: AOAM533qEh0IliYlCweSPcPG6sb9SlQD428ESwmC8V0EP9idbdUtwNrp
-        KTmqp5gLHjaJu6dvFTAzcXH8ZK9wYw3ouvkoXSIyP6hDWARiXwQ8zJY1DSEYfPk2gxyuYbGXnxe
-        tSJIwvTVXfuPM7SY0NCw/PNspJz31ifgZx4qNOKefQuMfuV7u/oTsY+Xd3Q==
-X-Received: by 2002:a17:907:11dd:: with SMTP id va29mr16717388ejb.470.1597684423591;
-        Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy+P7qcj2FO8zBWQkQhYdBN5ckyKddUU2gVpQAdmLowvJ1iTcyzeQlevRPzJ0r4zj5MZRKPlm7o/RxnXFvwmbo=
-X-Received: by 2002:a17:907:11dd:: with SMTP id va29mr16717379ejb.470.1597684423396;
- Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
+        Mon, 17 Aug 2020 13:25:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:41042 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389515AbgHQROo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:14:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597684482; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=SwKYrRggeH5jHtgd4TNoplzKAYDNI0Gdz3xVzc6qu6k=; b=kBnXVdzAuogMJGzaDXtsF4iQw0AnDGoa6ZTZqt/zHexC2osWPZSiFQSZ4EgC3Hs4l4NI2E7V
+ 6Cb9dqrCuVTQ8vR74E8oCMyujKUewKhIVw+D7ZU1ZzkDiUSC3BVIHndEVSQTLTQrYpLINA1f
+ QOdx/AMWThbJ1HUrC3igIIFvvYI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f3abae01e4d3989d4acce8d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 17:14:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1077AC433AD; Mon, 17 Aug 2020 17:14:07 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8A427C433CB;
+        Mon, 17 Aug 2020 17:14:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A427C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 17 Aug 2020 11:14:01 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [Freedreno] [PATCH 19/19] drm/msm: show process names in
+ gem_describe
+Message-ID: <20200817171401.GB7438@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>, Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, freedreno@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-20-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
- <20200817162156.GA715236@kroah.com> <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
- <20200817164924.GA721399@kroah.com> <14968c46-ad8f-fbdf-88d6-0ded954534c9@canonical.com>
- <20200817170522.GA795695@kroah.com>
-In-Reply-To: <20200817170522.GA795695@kroah.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 17 Aug 2020 14:13:07 -0300
-Message-ID: <CAHD1Q_zsu=M9TZpNFwEni3zW4HQ0eCvmqPBtJt_oJi+3YNOCvQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
- spurious entry again
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, jan.kiszka@siemens.com,
-        jbeulich@suse.com, LKML <linux-kernel@vger.kernel.org>,
-        marc.zyngier@arm.com, stable@vger.kernel.org,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Pedro Principeza <pedro.principeza@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814024114.1177553-20-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 2:05 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Aug 17, 2020 at 01:59:00PM -0300, Guilherme G. Piccoli wrote:
-> > On 17/08/2020 13:49, Greg KH wrote:
-> > > [...]
-> > >> I'm sorry, I hoped the subject + thread would suffice heh
-> > >
-> > > There is no thread here :(
-> > >
-> >
-> > Wow, that's odd. I've sent with In-Reply-To, I'd expect it'd get
-> > threaded with the original message. Looking in lore archive [1], it
-> > seems my first message wasn't threaded but the others were...apologies
-> > for that, not sure what happened...
->
-> reply to is fine, but how do you know what my email client has (hint,
-> not a copy of 1.5 years of history sitting around in it at the
-> moment...)  So there is no "thread" here as far as it is concerned...
->
-> Anyway, not a big deal, just properly quote emails in the future, that's
-> good to get used to no matter what :)
->
-Sure, will do - specially for super old threads like this.
+On Thu, Aug 13, 2020 at 07:41:14PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> In $debugfs/gem we already show any vma(s) associated with an object.
+> Also show process names if the vma's address space is a per-process
+> address space.
 
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-> > >> So, the mainline commit is: f8a8fe61fec8 ("x86/irq: Seperate unused
-> > >> system vectors from spurious entry again") [0]. The backport to 4.19
-> > >> stable tree has the following id: fc6975ee932b .
-> > >
-> > > Wow, over 1 1/2 years old, can you remember individual patches that long
-> > > ago?
-> > >
-> > > Anyway, did you try to backport the patch to older kernels to see if it
-> > > was possible and could work?
-> > >
-> > > If so, great, please feel free to submit it to the
-> > > stable@vger.kernel.org list and I will be glad to pick it up.
-> > >
-> >
-> > I'm working on it, it is feasible. But I'm seeking here, in this
-> > message, what is the reason it wasn't backported for pre-4.19
->
-> Try reading the stable mailing list archives, again, you are asking
-> about a patch 1.5 years ago.  I can't remember information about patches
-> sent _yesterday_ given the quantity we go through...
->
-> thanks,
->
-> greg k-h
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c     |  2 +-
+>  drivers/gpu/drm/msm/msm_gem.c     | 25 +++++++++++++++++++++----
+>  drivers/gpu/drm/msm/msm_gem.h     |  5 +++++
+>  drivers/gpu/drm/msm/msm_gem_vma.c |  1 +
+>  drivers/gpu/drm/msm/msm_gpu.c     |  8 +++++---
+>  drivers/gpu/drm/msm/msm_gpu.h     |  2 +-
+>  6 files changed, 34 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 8e70d220bba8..8d5c4f98c332 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+>  	kref_init(&ctx->ref);
+>  	msm_submitqueue_init(dev, ctx);
+>  
+> -	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+> +	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu, current);
+>  	file->driver_priv = ctx;
+>  
+>  	return 0;
+> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+> index 3cb7aeb93fd3..76a6c5271e57 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.c
+> +++ b/drivers/gpu/drm/msm/msm_gem.c
+> @@ -842,11 +842,28 @@ void msm_gem_describe(struct drm_gem_object *obj, struct seq_file *m)
+>  
+>  		seq_puts(m, "      vmas:");
+>  
+> -		list_for_each_entry(vma, &msm_obj->vmas, list)
+> -			seq_printf(m, " [%s: %08llx,%s,inuse=%d]",
+> -				vma->aspace != NULL ? vma->aspace->name : NULL,
+> -				vma->iova, vma->mapped ? "mapped" : "unmapped",
+> +		list_for_each_entry(vma, &msm_obj->vmas, list) {
+> +			const char *name, *comm;
+> +			if (vma->aspace) {
+> +				struct msm_gem_address_space *aspace = vma->aspace;
+> +				struct task_struct *task =
+> +					get_pid_task(aspace->pid, PIDTYPE_PID);
+> +				if (task) {
+> +					comm = kstrdup(task->comm, GFP_KERNEL);
+> +				} else {
+> +					comm = NULL;
+> +				}
+> +				name = aspace->name;
+> +			} else {
+> +				name = comm = NULL;
+> +			}
+> +			seq_printf(m, " [%s%s%s: aspace=%p, %08llx,%s,inuse=%d]",
+> +				name, comm ? ":" : "", comm ? comm : "",
+> +				vma->aspace, vma->iova,
+> +				vma->mapped ? "mapped" : "unmapped",
+>  				vma->inuse);
+> +			kfree(comm);
+> +		}
+>  
+>  		seq_puts(m, "\n");
+>  	}
+> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+> index 9c573c4269cb..7b1c7a5f8eef 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.h
+> +++ b/drivers/gpu/drm/msm/msm_gem.h
+> @@ -24,6 +24,11 @@ struct msm_gem_address_space {
+>  	spinlock_t lock; /* Protects drm_mm node allocation/removal */
+>  	struct msm_mmu *mmu;
+>  	struct kref kref;
+> +
+> +	/* For address spaces associated with a specific process, this
+> +	 * will be non-NULL:
+> +	 */
+> +	struct pid *pid;
+>  };
+>  
+>  struct msm_gem_vma {
+> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+> index 29cc1305cf37..80a8a266d68f 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+> @@ -17,6 +17,7 @@ msm_gem_address_space_destroy(struct kref *kref)
+>  	drm_mm_takedown(&aspace->mm);
+>  	if (aspace->mmu)
+>  		aspace->mmu->funcs->destroy(aspace->mmu);
+> +	put_pid(aspace->pid);
+>  	kfree(aspace);
+>  }
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index 951850804d77..ac8961187a73 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -825,10 +825,9 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+>  
+>  /* Return a new address space for a msm_drm_private instance */
+>  struct msm_gem_address_space *
+> -msm_gpu_create_private_address_space(struct msm_gpu *gpu)
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task)
+>  {
+>  	struct msm_gem_address_space *aspace = NULL;
+> -
+>  	if (!gpu)
+>  		return NULL;
+>  
+> @@ -836,8 +835,11 @@ msm_gpu_create_private_address_space(struct msm_gpu *gpu)
+>  	 * If the target doesn't support private address spaces then return
+>  	 * the global one
+>  	 */
+> -	if (gpu->funcs->create_private_address_space)
+> +	if (gpu->funcs->create_private_address_space) {
+>  		aspace = gpu->funcs->create_private_address_space(gpu);
+> +		if (!IS_ERR(aspace))
+> +			aspace->pid = get_pid(task_pid(task));
+> +	}
+>  
+>  	if (IS_ERR_OR_NULL(aspace))
+>  		aspace = msm_gem_address_space_get(gpu->aspace);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index 4052a18e18c2..59f26bd0fe42 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -298,7 +298,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		const char *name, struct msm_gpu_config *config);
+>  
+>  struct msm_gem_address_space *
+> -msm_gpu_create_private_address_space(struct msm_gpu *gpu);
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task);
+>  
+>  void msm_gpu_cleanup(struct msm_gpu *gpu);
+>  
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
-OK, thanks Greg. If Thomas or anybody involved here knows a reason to
-not backport it to older kernels, please let me know - I'd really
-appreciate that.
-Cheers,
-
-
-Guilherme
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
