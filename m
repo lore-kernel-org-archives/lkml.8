@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70403C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F6320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB0B20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680660;
-	bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
+	s=default; t=1597680669;
+	bh=5nvVShMLBwuUp6LU+hHsIvdvQMl7FDGzUFNL3/E2l6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=To5oIcVXJHUT10Ayq2SwBx9JDdGomGT6dlJkJLujlmx/kc05cQP8FeZyNqpE1ePj2
-	 RsxMOSmqp9ft1OA4cSqAg9WHdlfPN30Hfylg5f1JHWSNFLgndzEjIb2lp337CKa9xd
-	 VO9+ECFPDV55duTOj+CjkAZlfuNzn8fdZL9pwj4E=
+	b=F3VVvq72iF4O4+lIOKpNMQY0+mWDduxL9P23RVr/yVdzxzWtp4EnvyCYQIWaum9R2
+	 ViykD20ACVqJ7wCJwKwWPpeD1X5uXHzSe+Rl0eKYW5BAwMfMjY+Plyk53p3TewOEKi
+	 XqZgrgr+zM88Za8iZZBBgeIipcRbJtAxLM/3xxe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388581AbgHQQK6 (ORCPT
+        id S2388595AbgHQQLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58008 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbgHQPqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:19 -0400
+        id S1730801AbgHQPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C71C2067C;
-        Mon, 17 Aug 2020 15:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8F72067C;
+        Mon, 17 Aug 2020 15:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679178;
-        bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
+        s=default; t=1597679186;
+        bh=5nvVShMLBwuUp6LU+hHsIvdvQMl7FDGzUFNL3/E2l6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ebj5RNMCv+urWPCBrEc6Z9F1qFnDSp6GIh2YADwk7VCIomkXPBT0od2PZFzHgnvhf
-         /E0fyNTBHSoKaYdgJnxvWDItywFtVDz7fOtZKhQCP1n30dXKR1+eO3zBc3CWEI1sdP
-         6qFBUH+EKNJ52UzpNtm1Qins4eyxnZpLDiKTC54w=
+        b=oVcMbVvlVy3W4vHeWpx3Wp0gwpncIuwOjS10Dxo5OKdQ8t/pCuLypGyKrGMmmDR1F
+         LtCd57qi3y7dEHx1tZJmBktRUdAv1d79I8USzKW4+bTL1ohzKPsMfQLrUhBc5imD24
+         c5BezZjuRbZP3cxp1kScuMlZ31fI9YT1IJd7ioEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 092/393] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
-Date:   Mon, 17 Aug 2020 17:12:22 +0200
-Message-Id: <20200817143824.089670846@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 095/393] drm/amdgpu/display bail early in dm_pp_get_static_clocks
+Date:   Mon, 17 Aug 2020 17:12:25 +0200
+Message-Id: <20200817143824.235333380@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,94 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
+[ Upstream commit 376814f5fcf1aadda501d1413d56e8af85d19a97 ]
 
-This driver may take a regular spinlock when a raw spinlock
-(irq_desc->lock) is already taken which results in the following
-lockdep splat:
+If there are no supported callbacks.  We'll fall back to the
+nominal clocks.
 
-=============================
-[ BUG: Invalid wait context ]
-5.7.0-rc7 #1 Not tainted
------------------------------
-swapper/0/0 is trying to lock:
-ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
-other info that might help us debug this:
-context-{5:5}
-2 locks held by swapper/0/0:
- #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
- #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
-Hardware name: Pumpkin MT8516 (DT)
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x20
- dump_stack+0xd0/0x118
- __lock_acquire+0x8c8/0x2270
- lock_acquire+0xf8/0x470
- _raw_spin_lock_irqsave+0x50/0x78
- mtk_sysirq_set_type+0x48/0xc0
- __irq_set_trigger+0x58/0x170
- __setup_irq+0x420/0x8a0
- request_threaded_irq+0xd8/0x190
- timer_of_init+0x1e8/0x2c4
- mtk_gpt_init+0x5c/0x1dc
- timer_probe+0x74/0xf4
- time_init+0x14/0x44
- start_kernel+0x394/0x4f0
-
-Replace the spinlock_t with raw_spinlock_t to avoid this warning.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 73eae5966a403..6ff98b87e5c04 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -15,7 +15,7 @@
- #include <linux/spinlock.h>
- 
- struct mtk_sysirq_chip_data {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	u32 nr_intpol_bases;
- 	void __iomem **intpol_bases;
- 	u32 *intpol_words;
-@@ -37,7 +37,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	reg_index = chip_data->which_word[hwirq];
- 	offset = hwirq & 0x1f;
- 
--	spin_lock_irqsave(&chip_data->lock, flags);
-+	raw_spin_lock_irqsave(&chip_data->lock, flags);
- 	value = readl_relaxed(base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
-@@ -53,7 +53,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
--	spin_unlock_irqrestore(&chip_data->lock, flags);
-+	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
- 	return ret;
- }
- 
-@@ -212,7 +212,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		ret = -ENOMEM;
- 		goto out_free_which_word;
- 	}
--	spin_lock_init(&chip_data->lock);
-+	raw_spin_lock_init(&chip_data->lock);
- 
- 	return 0;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+index a2e1a73f66b81..7cee8070cb113 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+@@ -530,6 +530,8 @@ bool dm_pp_get_static_clocks(
+ 			&pp_clk_info);
+ 	else if (adev->smu.ppt_funcs)
+ 		ret = smu_get_current_clocks(&adev->smu, &pp_clk_info);
++	else
++		return false;
+ 	if (ret)
+ 		return false;
  
 -- 
 2.25.1
