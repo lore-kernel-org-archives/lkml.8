@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED92EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB85C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCFC720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D51620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693068;
-	bh=y++K4L8lsUhHLOP4E6b9FyypC8XKvr/3Uarqcsdcx08=;
+	s=default; t=1597693073;
+	bh=xPQ55l8TgbrNEJVWJSK3Tk8/hsvVC1iKAIUrDRUITfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qp9W9Q9hClKXacc43i62FROt3fJ4d9fGxh/8OkDhcGeqbtCxdLfno2kXEczefqtFZ
-	 OtiDjX8mfFUcj9YmBgKomE1uZaVQ52CqaynD9xvBTCoNVI5hrXXLt7l3+PdbUX4ReZ
-	 AoPwNDbE1KH7ddEHDBK4wxux/HKQ2su9teR8gXaQ=
+	b=ExntgFS/xkjMlm3+oHWKhDnILzh9z6TKNtfN6kdpRb9jWJPTUQgeyG9jGMWpSZgAC
+	 AZ026YefodgrUWJ68B5IIIYnYlgHg1YuQNHZ30Ub/VDSZqrMq1kmOPJfwIsh4eihyE
+	 FhV/x81+OXZ76SdMbLD0zrM+CAc9UjtEpIA+PoF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgHQP1c (ORCPT
+        id S1729875AbgHQP1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729456AbgHQPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:33 -0400
+        id S1729438AbgHQPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECF02053B;
-        Mon, 17 Aug 2020 15:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7BF23110;
+        Mon, 17 Aug 2020 15:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677933;
-        bh=y++K4L8lsUhHLOP4E6b9FyypC8XKvr/3Uarqcsdcx08=;
+        s=default; t=1597677929;
+        bh=xPQ55l8TgbrNEJVWJSK3Tk8/hsvVC1iKAIUrDRUITfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIYvhsl+Glyybt0XvyYB/UhljBb92K8OG7r8OOa/2wFPj8m74PYp7fCAt8GwyIIQx
-         XyCIbR1wtHhKxc3k9kNrzqIjA+F/7VGjkLSl88RL0PM4WV3vuAQOZOaIbayWkdkKXQ
-         hpjuZGjiEioyFgNzkVsF0J+A2HviCE74WAnKmuyg=
+        b=xkeEoLC98/PnLMGfWuddQHllXAWfWux2IhjCdv4LtFIOkO49Ln8t5GtwAzFrzISPL
+         uJmdr+/F1sP0Ki6rHsGueo14YS4+k84/qZYbbfIwoRQ+CbXOGhENyFZcB5Th0oBEqu
+         9G+ZXfTMx0A+pnRkWCNNpKxiaP7xnNg/+gQtyMtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 161/464] scsi: ufs: Fix imprecise load calculation in devfreq window
-Date:   Mon, 17 Aug 2020 17:11:54 +0200
-Message-Id: <20200817143841.521215260@linuxfoundation.org>
+Subject: [PATCH 5.8 152/464] Bluetooth: hci_qca: Fix an error pointer dereference
+Date:   Mon, 17 Aug 2020 17:11:45 +0200
+Message-Id: <20200817143841.092975291@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,122 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b1bf66d1d5a8fcb54f0e584db5d196ef015b5172 ]
+[ Upstream commit 4c07a5d7aeb39f559b29aa58ec9a8a5ab4282cb0 ]
 
-The UFS load calculation is based on "total_time" and "busy_time" in a
-devfreq window.  However, the source of time is different for both
-parameters: "busy_time" is assigned from "jiffies" thus has different
-accuracy from "total_time" which is assigned from ktime_get().
+When a function like devm_clk_get_optional() function returns both error
+pointers on error and NULL then the NULL return means that the optional
+feature is deliberately disabled.  It is a special sort of success and
+should not trigger an error message.  The surrounding code should be
+written to check for NULL and not crash.
 
-In addition, the time of window boundary is not exactly the same as the
-starting busy time in this window if UFS is actually busy in the beginning
-of the window. A similar accuracy error may also happen for the end of busy
-time in current window.
+On the other hand, if we encounter an error, then the probe from should
+clean up and return a failure.
 
-To guarantee the precision of load calculation, we need to
+In this code, if devm_clk_get_optional() returns an error pointer then
+the kernel will crash inside the call to:
 
-1. Align time accuracy of both devfreq_dev_status.total_time and
-   devfreq_dev_status.busy_time. For example, use "ktime_get()" directly.
+	clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
 
-2. Align the following timelines:
-   - The beginning time of devfreq windows
-   - The beginning of busy time in a new window
-   - The end of busy time in the current window
+The error handling must be updated to prevent that.
 
-Link: https://lore.kernel.org/r/20200611101043.6379-1-stanley.chu@mediatek.com
-Fixes: a3cd5ec55f6c ("scsi: ufs: add load based scaling of UFS gear")
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 77131dfec6af ("Bluetooth: hci_qca: Replace devm_gpiod_get() with devm_gpiod_get_optional()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 18 ++++++++++--------
- drivers/scsi/ufs/ufshcd.h |  2 +-
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/bluetooth/hci_qca.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index a483c0720a0c1..ec93bec8e78d8 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1314,6 +1314,7 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
- 	unsigned long flags;
- 	struct list_head *clk_list = &hba->clk_list_head;
- 	struct ufs_clk_info *clki;
-+	ktime_t curr_t;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 3788ec7a4ad6b..25659b8b0c0c8 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1994,17 +1994,17 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		}
  
- 	if (!ufshcd_is_clkscaling_supported(hba))
- 		return -EINVAL;
-@@ -1321,6 +1322,7 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
- 	memset(stat, 0, sizeof(*stat));
+ 		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
+-		if (!qcadev->susclk) {
++		if (IS_ERR(qcadev->susclk)) {
+ 			dev_warn(&serdev->dev, "failed to acquire clk\n");
+-		} else {
+-			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
+-			if (err)
+-				return err;
+-
+-			err = clk_prepare_enable(qcadev->susclk);
+-			if (err)
+-				return err;
++			return PTR_ERR(qcadev->susclk);
+ 		}
++		err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
++		if (err)
++			return err;
++
++		err = clk_prepare_enable(qcadev->susclk);
++		if (err)
++			return err;
  
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	curr_t = ktime_get();
- 	if (!scaling->window_start_t)
- 		goto start_window;
- 
-@@ -1332,18 +1334,17 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
- 	 */
- 	stat->current_frequency = clki->curr_freq;
- 	if (scaling->is_busy_started)
--		scaling->tot_busy_t += ktime_to_us(ktime_sub(ktime_get(),
--					scaling->busy_start_t));
-+		scaling->tot_busy_t += ktime_us_delta(curr_t,
-+				scaling->busy_start_t);
- 
--	stat->total_time = jiffies_to_usecs((long)jiffies -
--				(long)scaling->window_start_t);
-+	stat->total_time = ktime_us_delta(curr_t, scaling->window_start_t);
- 	stat->busy_time = scaling->tot_busy_t;
- start_window:
--	scaling->window_start_t = jiffies;
-+	scaling->window_start_t = curr_t;
- 	scaling->tot_busy_t = 0;
- 
- 	if (hba->outstanding_reqs) {
--		scaling->busy_start_t = ktime_get();
-+		scaling->busy_start_t = curr_t;
- 		scaling->is_busy_started = true;
- 	} else {
- 		scaling->busy_start_t = 0;
-@@ -1877,6 +1878,7 @@ static void ufshcd_exit_clk_gating(struct ufs_hba *hba)
- static void ufshcd_clk_scaling_start_busy(struct ufs_hba *hba)
- {
- 	bool queue_resume_work = false;
-+	ktime_t curr_t = ktime_get();
- 
- 	if (!ufshcd_is_clkscaling_supported(hba))
- 		return;
-@@ -1892,13 +1894,13 @@ static void ufshcd_clk_scaling_start_busy(struct ufs_hba *hba)
- 			   &hba->clk_scaling.resume_work);
- 
- 	if (!hba->clk_scaling.window_start_t) {
--		hba->clk_scaling.window_start_t = jiffies;
-+		hba->clk_scaling.window_start_t = curr_t;
- 		hba->clk_scaling.tot_busy_t = 0;
- 		hba->clk_scaling.is_busy_started = false;
- 	}
- 
- 	if (!hba->clk_scaling.is_busy_started) {
--		hba->clk_scaling.busy_start_t = ktime_get();
-+		hba->clk_scaling.busy_start_t = curr_t;
- 		hba->clk_scaling.is_busy_started = true;
- 	}
- }
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index bf97d616e597c..16187be98a94c 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -411,7 +411,7 @@ struct ufs_saved_pwr_info {
- struct ufs_clk_scaling {
- 	int active_reqs;
- 	unsigned long tot_busy_t;
--	unsigned long window_start_t;
-+	ktime_t window_start_t;
- 	ktime_t busy_start_t;
- 	struct device_attribute enable_attr;
- 	struct ufs_saved_pwr_info saved_pwr_info;
+ 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
+ 		if (err) {
 -- 
 2.25.1
 
