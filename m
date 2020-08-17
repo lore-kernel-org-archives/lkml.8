@@ -2,83 +2,91 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A721C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC7A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597699052;
-	bh=ylz94253FKM9pnR0PBH3XjaCJqXUhcQCH1kU1ujoGP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xolh4F7ZHtQexffQk/KLs86CHQNw4Lr+6rQCtbQomEG/C0Umu/4vIgSN7uiofvNub
-	 oeS0uvd4jJSB9VNAzKmUMLj6cT8PeJ799GqyRJHHGKFbou2maJaWHFK2TsPsFPEfUc
-	 8yehk0IrHS7dazxS7TIr/HPe7wPllzhno35UWUik=
+	by mail.kernel.org (Postfix) with ESMTP id 0BC3020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Smc4nIbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHQVRb (ORCPT
+        id S1728063AbgHQVRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:17:31 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38999 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgHQVRa (ORCPT
+        Mon, 17 Aug 2020 17:17:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54042 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgHQVRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:17:30 -0400
-Received: by mail-il1-f193.google.com with SMTP id f12so8217079ils.6;
-        Mon, 17 Aug 2020 14:17:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fEJijV8ieRhM9pU0b66oFoC8+BxQVxgYtUFe2JVtLRU=;
-        b=CTf/tcODswCqSLG6GjgmEp2sbGLssI3uOSSuRaojrDkDMzDInG6PYCZ6JYFczIYxRy
-         FKRfvzPqGqobq/L3CHRb48ejnVyd7iMpMhw7agZdu5kse7GeIv3v5+Lao5WkIRIc8tiW
-         LYT6pe7Lz6rhgCZMi3lgyp1I69eKCfl2toMIo7Ry5DLqUUpfpDVJHh7K+XVTwlYCBmAF
-         +NjXywHORVevdtQE+4MJQj4EKJI/c5FzkzMo8nNEyIiWE2058FV4wa1QZ5pGm+FzTqtl
-         Pv+jJpaa5B0Zvg76o+4nAK5GBDDk8nb4OBjyKiNAFV6k0nFY45S2brHyq7HLBdCpd+lq
-         6yWw==
-X-Gm-Message-State: AOAM530OovrOatYF0g9HfjsFugcggL9YoPwOLPbncqZZ9uStguSlYpSb
-        /vDC5EvmHyR7TIjWbmeb4Q==
-X-Google-Smtp-Source: ABdhPJwVXeCNY/DOviWn1/mTBa45rCMz6NgTmoKRifw6gM2z4bS2UuDgsKsYwaUFwiOQGRYCgy9uWw==
-X-Received: by 2002:a92:5ad8:: with SMTP id b85mr14803799ilg.304.1597699049780;
-        Mon, 17 Aug 2020 14:17:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id v84sm6494214ilk.4.2020.08.17.14.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 14:17:29 -0700 (PDT)
-Received: (nullmailer pid 1578739 invoked by uid 1000);
-        Mon, 17 Aug 2020 21:17:27 -0000
-Date:   Mon, 17 Aug 2020 15:17:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mmc: sdhci-am654: Document bindings for the
- host controllers on TI's J7200 devices
-Message-ID: <20200817211727.GA1578682@bogus>
-References: <20200802070114.9624-1-faiz_abbas@ti.com>
+        Mon, 17 Aug 2020 17:17:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07HLHeKI110454;
+        Mon, 17 Aug 2020 16:17:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597699060;
+        bh=+fXjcHIFUBdPO3vLDBX1iXC1f4KJLhxR5aQPbt/Q/H4=;
+        h=From:To:Subject:Date;
+        b=Smc4nIbrDQt1jB/Ahsjmk6SMwKtckWIcSbIb68fk3pXiajzJNu0CINzcBptu/Itmi
+         e8IA8HqZYRs4cQhl9S/zVtNbSeycLdsfEYpH+wY17BnjchaGQgq4RVJBHrq7xZL4mu
+         N0eeI7Y9vJNFEJnlYIurflcSc9LLQ32zvYZPEwZ8=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07HLHemw082996
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Aug 2020 16:17:40 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 17
+ Aug 2020 16:17:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 17 Aug 2020 16:17:40 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HLHb8R073931;
+        Mon, 17 Aug 2020 16:17:38 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <vinicius.gomes@intel.com>,
+        <stephen@networkplumber.org>
+Subject: [PATCH iproute2 v5 0/2] iplink: hsr: add support for creating PRP device
+Date:   Mon, 17 Aug 2020 17:17:35 -0400
+Message-ID: <20200817211737.576-1-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802070114.9624-1-faiz_abbas@ti.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 02 Aug 2020 12:31:14 +0530, Faiz Abbas wrote:
-> Add binding documentation for mmc host controllers present on
-> TI's J7200 SOC
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-am654.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
+This series enhances the iproute2 iplink module to add support
+for creating PRP device similar to HSR. The kernel part of this
+is already merged to v5.9 master
 
-Acked-by: Rob Herring <robh@kernel.org>
+v4 - addressed comment from Stephen Hemminger
+   - Sending this with a iproute2 prefix so that this can
+     be merged to v5.9 iprout2 if possible.
+v3 of the series is rebased to iproute2-next/master at
+git://git.kernel.org/pub/scm/network/iproute2/iproute2-next
+and send as v4.
+
+Please apply this if looks good.
+
+
+Murali Karicheri (2):
+  iplink: hsr: add support for creating PRP device similar to HSR
+  ip: iplink: prp: update man page for new parameter
+
+ ip/iplink_hsr.c       | 17 +++++++++++++++--
+ man/man8/ip-link.8.in |  9 ++++++++-
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
