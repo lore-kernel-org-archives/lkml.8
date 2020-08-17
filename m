@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0332AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6224BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6EA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F688204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690083;
-	bh=ZkvhjEpLjZDAUPwP/fqvLyrB7NvvNosKcWE5g02QpBk=;
+	s=default; t=1597690093;
+	bh=lcURmuB0sanhhJVraJDp8d0WGsWJPNVtwW8HalFB16c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E1SKv5oNqk9zzPNUQxnqWjd320waZ8eizVGXnK+fYgUSYV7X/mpkh/yEIfZxM6RMS
-	 HY1UxfXZun+kSxyHSmbiyhIUWTquJSXDzJmOQln3Fm6R8asNcDjbAiOXty1MqML1L8
-	 f3gOy1yI3H2NwJKQRtbUjaJgWAmIEqYOEfVOGTEI=
+	b=InE3uZ7E0G3+y2gjCtj9t5tqV62Be+WA98/VD4mBJwhQJ6tJjXTD1VvzLhoTlSgPL
+	 9uuv0+3QVKzuzWCHktqR0Jjz28afVMOGr6TEf9IJLVJWdt9Jau4g5EPKXQxP13OAUo
+	 YZyktTxyHb6UcJdjWIzYBkzmshM8xZrDWZyO1Ozk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403835AbgHQSsB (ORCPT
+        id S2391649AbgHQSsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:48:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:48:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388015AbgHQPzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:55:32 -0400
+        id S2388019AbgHQPz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA4220888;
-        Mon, 17 Aug 2020 15:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99077208B3;
+        Mon, 17 Aug 2020 15:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679710;
-        bh=ZkvhjEpLjZDAUPwP/fqvLyrB7NvvNosKcWE5g02QpBk=;
+        s=default; t=1597679718;
+        bh=lcURmuB0sanhhJVraJDp8d0WGsWJPNVtwW8HalFB16c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWYkAxEDMeYm7ULlphWn8UpH96WWA7OUXevh0YYPQRhI08xS7k5sIZUSJOx32+2AW
-         83nAEhM1g1RCq17Mt2gKKTquy+f8bkRglkRR8ChytT2xVyb3dOZ1Z0KYYwhXZx0K6l
-         oCWuObNXIqkZz3xNsCfW/FxxpbYvyh+WDBXOXRTw=
+        b=Ug7RWLFASXd1JA5odfFCGYzXW+LdtAp2VrI87865/mK3BIhL2tBPdDIMXmasc6IKr
+         PSA8Y6vDduZUksOkIdm2dE0HEUK8kOrl/svX81oYDD8kK0J/F99gX3o3HlzYIJPDKa
+         1l6ee1IaZzFoN86bAOiBP/4eTUuNx72Is1sTemiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 307/393] media: mtk-mdp: Fix a refcounting bug on error in init
-Date:   Mon, 17 Aug 2020 17:15:57 +0200
-Message-Id: <20200817143834.504591582@linuxfoundation.org>
+Subject: [PATCH 5.7 310/393] pinctrl-single: fix pcs_parse_pinconf() return value
+Date:   Mon, 17 Aug 2020 17:16:00 +0200
+Message-Id: <20200817143834.648898215@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,75 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Drew Fustini <drew@beagleboard.org>
 
-[ Upstream commit dd4eddc4ba31fbf4554fc5fa12d3a553b50e1469 ]
+[ Upstream commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f ]
 
-We need to call of_node_put(comp->dev_node); on the error paths in this
-function.
+This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+pinctrl_map is added.  The current behavior is to return 0 when
+!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+incorrectly assumes that a map was added and sets num_maps = 2.
 
-Fixes: c8eb2d7e8202 ("[media] media: Add Mediatek MDP Driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Analysis:
+=========
+The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+returns 0 to indicate there was no error and num_maps is then set to 2:
+
+ 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 981                                                 struct device_node *np,
+ 982                                                 struct pinctrl_map **map,
+ 983                                                 unsigned *num_maps,
+ 984                                                 const char **pgnames)
+ 985 {
+<snip>
+1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+1054         (*map)->data.mux.group = np->name;
+1055         (*map)->data.mux.function = np->name;
+1056
+1057         if (PCS_HAS_PINCONF && function) {
+1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+1059                 if (res)
+1060                         goto free_pingroups;
+1061                 *num_maps = 2;
+1062         } else {
+1063                 *num_maps = 1;
+1064         }
+
+However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+!nconfs.  I believe these conditions should indicate that no map was
+added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+will set num_maps = 2 even though no maps were successfully added, as
+it does not reach "m++" on line 940:
+
+ 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 896                              struct pcs_function *func,
+ 897                              struct pinctrl_map **map)
+ 898
+ 899 {
+ 900         struct pinctrl_map *m = *map;
+<snip>
+ 917         /* If pinconf isn't supported, don't parse properties in below. */
+ 918         if (!PCS_HAS_PINCONF)
+ 919                 return 0;
+ 920
+ 921         /* cacluate how much properties are supported in current node */
+ 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+ 923                 if (of_find_property(np, prop2[i].name, NULL))
+ 924                         nconfs++;
+ 925         }
+ 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+ 927                 if (of_find_property(np, prop4[i].name, NULL))
+ 928                         nconfs++;
+ 929         }
+ 930         if (!nconfs)
+ 919                 return 0;
+ 932
+ 933         func->conf = devm_kcalloc(pcs->dev,
+ 934                                   nconfs, sizeof(struct pcs_conf_vals),
+ 935                                   GFP_KERNEL);
+ 936         if (!func->conf)
+ 937                 return -ENOMEM;
+ 938         func->nconfs = nconfs;
+ 939         conf = &(func->conf[0]);
+ 940         m++;
+
+This situtation will cause a boot failure [0] on the BeagleBone Black
+(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+has compatible = "pinconf-single" instead of "pinctrl-single".
+
+The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+map was added.
+
+Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+is set to 1 as it is valid for pinconf to be enabled and a given pin
+group to not any pinconf properties.
+
+[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+
+Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Link: https://lore.kernel.org/r/20200608125143.GA2789203@x1
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/pinctrl/pinctrl-single.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-index 14991685adb78..9b375d3677536 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-@@ -96,6 +96,7 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
- {
- 	struct device_node *larb_node;
- 	struct platform_device *larb_pdev;
-+	int ret;
- 	int i;
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 1e0614daee9bf..a9d511982780c 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
  
- 	if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
-@@ -113,8 +114,8 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
- 		if (IS_ERR(comp->clk[i])) {
- 			if (PTR_ERR(comp->clk[i]) != -EPROBE_DEFER)
- 				dev_err(dev, "Failed to get clock\n");
--
--			return PTR_ERR(comp->clk[i]);
-+			ret = PTR_ERR(comp->clk[i]);
-+			goto put_dev;
- 		}
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+ 	if (!PCS_HAS_PINCONF)
+-		return 0;
++		return -ENOTSUPP;
  
- 		/* Only RDMA needs two clocks */
-@@ -133,20 +134,27 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
- 	if (!larb_node) {
- 		dev_err(dev,
- 			"Missing mediadek,larb phandle in %pOF node\n", node);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto put_dev;
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+@@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 			nconfs++;
  	}
+ 	if (!nconfs)
+-		return 0;
++		return -ENOTSUPP;
  
- 	larb_pdev = of_find_device_by_node(larb_node);
- 	if (!larb_pdev) {
- 		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
- 		of_node_put(larb_node);
--		return -EPROBE_DEFER;
-+		ret = -EPROBE_DEFER;
-+		goto put_dev;
+ 	func->conf = devm_kcalloc(pcs->dev,
+ 				  nconfs, sizeof(struct pcs_conf_vals),
+@@ -1056,9 +1056,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 
+ 	if (PCS_HAS_PINCONF && function) {
+ 		res = pcs_parse_pinconf(pcs, np, function, map);
+-		if (res)
++		if (res == 0)
++			*num_maps = 2;
++		else if (res == -ENOTSUPP)
++			*num_maps = 1;
++		else
+ 			goto free_pingroups;
+-		*num_maps = 2;
+ 	} else {
+ 		*num_maps = 1;
  	}
- 	of_node_put(larb_node);
- 
- 	comp->larb_dev = &larb_pdev->dev;
- 
- 	return 0;
-+
-+put_dev:
-+	of_node_put(comp->dev_node);
-+
-+	return ret;
- }
- 
- void mtk_mdp_comp_deinit(struct device *dev, struct mtk_mdp_comp *comp)
 -- 
 2.25.1
 
