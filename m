@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C91C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AB920748
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2448D207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680106;
-	bh=/UEqwzic9EGyYzOQJVauOsfUX8Ho4axU58aHeAfs0dI=;
+	s=default; t=1597680117;
+	bh=yIxbhgabo7mdCS7x+F+liubHbDxp3iWHeZ2h1v7TaMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3WxLzxGGPRyWcIMUQ5z1NE90m1TkN04KacceRLFAcH+vMem+IVSOR1Lwot0EXGjQ
-	 NHldScmKuczRv1vIIDkmERV0KhW5YSb4E+5uV9A3qen4itz1cHoRMRnIUzTGY72g9o
-	 9sD4D3EgJ7fy6YCpn3pki4YJ9ELWy5WCQYnrCK0s=
+	b=AMszpZlvczrpihMnjLagUqkEjgvHTae3gkLOVPXYQIzZPh/gWJ9L29v2l+i0Qsv2G
+	 FMgv/51txyK6w8zRNBtDIijq6HOjR9gM/qWblyb994h69EXjY1WO5bLPV9dCc/kMpm
+	 bR/5VpyWl0gBPj9zmq9RyT6fm2mrBd7Bi8IF32fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388145AbgHQQBW (ORCPT
+        id S1730333AbgHQQBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbgHQPm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:58 -0400
+        id S2387618AbgHQPnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:43:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C111222CAE;
-        Mon, 17 Aug 2020 15:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14FA22CAE;
+        Mon, 17 Aug 2020 15:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678977;
-        bh=/UEqwzic9EGyYzOQJVauOsfUX8Ho4axU58aHeAfs0dI=;
+        s=default; t=1597678983;
+        bh=yIxbhgabo7mdCS7x+F+liubHbDxp3iWHeZ2h1v7TaMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozm2lDhXV+BPgSXe5g4ZKJMORqcnBUFqF5LPRdNuPGU5eXkZRzy2F/UuQTHi+DgPf
-         NoP3HJwPo++G4ZZJs4vbyDfD+IAOCW2IwMfClSAROuR5Kgf8RYOuYaF48eTlzeZ1Xo
-         atY/Sg6NEuep0ZnGALGFabAxg7pWoKXyYa40qTN4=
+        b=JC0FQFIWqb9/fFx5umaYxzZljQ/Fz2Rc7p10GfpYoqsSgQXmOvpcaKkdC330v+VhC
+         yypiSOfX4LChsP8AU63VtD4xKsuC23itXIHy+b1WnXuHdVmbuTJBRcbKo5ULwMy2ny
+         W/d1zMFZD1PGLhZmOCe0kwwW6SOg4qXN6IRycaiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 053/393] seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
-Date:   Mon, 17 Aug 2020 17:11:43 +0200
-Message-Id: <20200817143822.186829226@linuxfoundation.org>
+Subject: [PATCH 5.7 026/393] sched/uclamp: Fix initialization of struct uclamp_rq
+Date:   Mon, 17 Aug 2020 17:11:16 +0200
+Message-Id: <20200817143820.877691888@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,77 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit 47e33c05f9f07cac3de833e531bcac9ae052c7ca ]
+[ Upstream commit d81ae8aac85ca2e307d273f6dc7863a721bf054e ]
 
-When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced it had the wrong
-direction flag set. While this isn't a big deal as nothing currently
-enforces these bits in the kernel, it should be defined correctly. Fix
-the define and provide support for the old command until it is no longer
-needed for backward compatibility.
+struct uclamp_rq was zeroed out entirely in assumption that in the first
+call to uclamp_rq_inc() they'd be initialized correctly in accordance to
+default settings.
 
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+But when next patch introduces a static key to skip
+uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
+will fail to perform any frequency changes because the
+rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
+means all rqs are capped to 0 by default.
+
+Fix it by making sure we do proper initialization at init without
+relying on uclamp_rq_inc() doing it later.
+
+Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+Link: https://lkml.kernel.org/r/20200630112123.12076-2-qais.yousef@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/seccomp.h                  | 3 ++-
- kernel/seccomp.c                              | 9 +++++++++
- tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index c1735455bc536..965290f7dcc28 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -123,5 +123,6 @@ struct seccomp_notif_resp {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
-+
- #endif /* _UAPI_LINUX_SECCOMP_H */
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 55a6184f59903..63e283c4c58eb 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -42,6 +42,14 @@
- #include <linux/uaccess.h>
- #include <linux/anon_inodes.h>
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a7ef76a62699a..1bae86fc128b2 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1237,6 +1237,20 @@ static void uclamp_fork(struct task_struct *p)
+ 	}
+ }
  
-+/*
-+ * When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced, it had the
-+ * wrong direction flag in the ioctl number. This is the broken one,
-+ * which the kernel needs to keep supporting until all userspaces stop
-+ * using the wrong command number.
-+ */
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR	SECCOMP_IOR(2, __u64)
++static void __init init_uclamp_rq(struct rq *rq)
++{
++	enum uclamp_id clamp_id;
++	struct uclamp_rq *uc_rq = rq->uclamp;
 +
- enum notify_state {
- 	SECCOMP_NOTIFY_INIT,
- 	SECCOMP_NOTIFY_SENT,
-@@ -1186,6 +1194,7 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
- 		return seccomp_notify_recv(filter, buf);
- 	case SECCOMP_IOCTL_NOTIF_SEND:
- 		return seccomp_notify_send(filter, buf);
-+	case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
- 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
- 		return seccomp_notify_id_valid(filter, buf);
- 	default:
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index c0aa46ce14f6c..c84c7b50331c6 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -180,7 +180,7 @@ struct seccomp_metadata {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
++	for_each_clamp_id(clamp_id) {
++		uc_rq[clamp_id] = (struct uclamp_rq) {
++			.value = uclamp_none(clamp_id)
++		};
++	}
++
++	rq->uclamp_flags = 0;
++}
++
+ static void __init init_uclamp(void)
+ {
+ 	struct uclamp_se uc_max = {};
+@@ -1245,11 +1259,8 @@ static void __init init_uclamp(void)
  
- struct seccomp_notif {
- 	__u64 id;
+ 	mutex_init(&uclamp_mutex);
+ 
+-	for_each_possible_cpu(cpu) {
+-		memset(&cpu_rq(cpu)->uclamp, 0,
+-				sizeof(struct uclamp_rq)*UCLAMP_CNT);
+-		cpu_rq(cpu)->uclamp_flags = 0;
+-	}
++	for_each_possible_cpu(cpu)
++		init_uclamp_rq(cpu_rq(cpu));
+ 
+ 	for_each_clamp_id(clamp_id) {
+ 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
 -- 
 2.25.1
 
