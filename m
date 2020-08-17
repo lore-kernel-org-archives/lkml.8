@@ -2,70 +2,160 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8659C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE312C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BEF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DFA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689803;
-	bh=AyJyeBUIrLG0r7Q9Vo+RWqzElD6xhH3UK5WZ5y9uLyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z50xL4w6lDgiocpo+eA51PSooxrrwO3BHAgCveBLsehBelzobOK3i7I6+7TH//Nrm
-	 DpgUkcUzvWcDLXraVFVloAo1Q9jRwHPsPtfG9zDscaMYfvwmMngK/TVa7RXnX36bDX
-	 X3eChIrUOEZa3kZxr6iNpM4RIOF2jmu/0JJcyu+U=
+	s=default; t=1597689804;
+	bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=naEEsoOgaVTt+gtkvGsYZ1vYreQi/6qV1l6kj+cQA709BWukCh0a+QnHH0ZBYDaKz
+	 yW4bOyILoLtrTOPn9B3m3mNf1bCMsWHPPft8OONLYAJr/WLilztLnFLZppxo+QgCTf
+	 3VLp165rQKmzm6BajEsIQWOnH8e/EVMUqRDGd+zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391485AbgHQSnW (ORCPT
+        id S2391479AbgHQSnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388096AbgHQP5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:09 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        id S2388094AbgHQP47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C3C320825;
-        Mon, 17 Aug 2020 15:57:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2906320882;
+        Mon, 17 Aug 2020 15:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679820;
-        bh=AyJyeBUIrLG0r7Q9Vo+RWqzElD6xhH3UK5WZ5y9uLyY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C4tMPTONxbWjnDm8fnGLSy4ebkMPC5O4CJq4RTVft4DO2Kq1WKNzKCLZstZ7SjSBr
-         6njgN4kXVE++dvsTW6NwqrNf7YSg4H36M6M0I8Fg3IBfFt3xqcXrxGZq3VeC7+gF2U
-         tzb6b8QyDc3CMzj2cmF96YWyMm0xK+pjwvz5Gtxs=
-Date:   Mon, 17 Aug 2020 08:56:58 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: v5.9-rc1 commit reliably breaks pci nvme detection
-Message-ID: <20200817155658.GB1221871@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200817135011.GA2072@lx-t490>
+        s=default; t=1597679818;
+        bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XtmrHlOIvKkSAqi36P4na6Zp+0hPEvKAIFkzvDtp1j6KVh5aJU3BW72uG1S92iLiG
+         so5ZK8JR+w6PCF117RkZR62SiyFTwRnfulWcGLkQx9SF8GZ6sFkwX+RJbc6SHyVGk6
+         MWomtfmGg5L5DK9ElJ+RiV2X1Ls1hpCUGwVewuVQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 344/393] crypto: cpt - dont sleep of CRYPTO_TFM_REQ_MAY_SLEEP was not specified
+Date:   Mon, 17 Aug 2020 17:16:34 +0200
+Message-Id: <20200817143836.286203305@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817135011.GA2072@lx-t490>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 03:50:11PM +0200, Ahmed S. Darwish wrote:
-> Hello,
-> 
-> Below v5.9-rc1 commit reliably breaks my boot on a Thinkpad e480
-> laptop. PCI nvme detection fails, and the kernel becomes not able
-> anymore to find the rootfs / parse "root=".
-> 
-> Bisecting v5.8=>v5.9-rc1 blames that commit. Reverting it *reliably*
-> fixes the problem and makes me able to boot v5.9-rc1.
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-The fix is staged in the nvme tree here:
+commit 9e27c99104707f083dccd3b4d79762859b5a0614 upstream.
 
-  http://git.infradead.org/nvme.git/commit/286155561ecd13b6c85a78eaf2880d3baea03b9e
+There is this call chain:
+cvm_encrypt -> cvm_enc_dec -> cptvf_do_request -> process_request -> kzalloc
+where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
+was not specified.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org	# v4.11+
+Fixes: c694b233295b ("crypto: cavium - Add the Virtual Function driver for CPT")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/cavium/cpt/cptvf_algs.c       |    1 +
+ drivers/crypto/cavium/cpt/cptvf_reqmanager.c |   12 ++++++------
+ drivers/crypto/cavium/cpt/request_manager.h  |    2 ++
+ 3 files changed, 9 insertions(+), 6 deletions(-)
+
+--- a/drivers/crypto/cavium/cpt/cptvf_algs.c
++++ b/drivers/crypto/cavium/cpt/cptvf_algs.c
+@@ -200,6 +200,7 @@ static inline int cvm_enc_dec(struct skc
+ 	int status;
+ 
+ 	memset(req_info, 0, sizeof(struct cpt_request_info));
++	req_info->may_sleep = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) != 0;
+ 	memset(fctx, 0, sizeof(struct fc_context));
+ 	create_input_list(req, enc, enc_iv_len);
+ 	create_output_list(req, enc_iv_len);
+--- a/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
++++ b/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
+@@ -133,7 +133,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup gather (input) components */
+ 	g_sz_bytes = ((req->incnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->gather_components = kzalloc(g_sz_bytes, GFP_KERNEL);
++	info->gather_components = kzalloc(g_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->gather_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -150,7 +150,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup scatter (output) components */
+ 	s_sz_bytes = ((req->outcnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->scatter_components = kzalloc(s_sz_bytes, GFP_KERNEL);
++	info->scatter_components = kzalloc(s_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->scatter_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -167,7 +167,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Create and initialize DPTR */
+ 	info->dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
+-	info->in_buffer = kzalloc(info->dlen, GFP_KERNEL);
++	info->in_buffer = kzalloc(info->dlen, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->in_buffer) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -195,7 +195,7 @@ static inline int setup_sgio_list(struct
+ 	}
+ 
+ 	/* Create and initialize RPTR */
+-	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, GFP_KERNEL);
++	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->out_buffer) {
+ 		ret = -ENOMEM;
+ 		goto scatter_gather_clean;
+@@ -421,7 +421,7 @@ int process_request(struct cpt_vf *cptvf
+ 	struct cpt_vq_command vq_cmd;
+ 	union cpt_inst_s cptinst;
+ 
+-	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	info = kzalloc(sizeof(*info), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for info_buffer\n");
+ 		return -ENOMEM;
+@@ -443,7 +443,7 @@ int process_request(struct cpt_vf *cptvf
+ 	 * Get buffer for union cpt_res_s response
+ 	 * structure and its physical address
+ 	 */
+-	info->completion_addr = kzalloc(sizeof(union cpt_res_s), GFP_KERNEL);
++	info->completion_addr = kzalloc(sizeof(union cpt_res_s), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info->completion_addr)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for completion_addr\n");
+ 		ret = -ENOMEM;
+--- a/drivers/crypto/cavium/cpt/request_manager.h
++++ b/drivers/crypto/cavium/cpt/request_manager.h
+@@ -62,6 +62,8 @@ struct cpt_request_info {
+ 	union ctrl_info ctrl; /* User control information */
+ 	struct cptvf_request req; /* Request Information (Core specific) */
+ 
++	bool may_sleep;
++
+ 	struct buf_ptr in[MAX_BUF_CNT];
+ 	struct buf_ptr out[MAX_BUF_CNT];
+ 
+
+
