@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF45C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9A920758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C30A20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYVreFLa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B23vGSGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHQIDC (ORCPT
+        id S1726836AbgHQIDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
+        Mon, 17 Aug 2020 04:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHQIC5 (ORCPT
+        with ESMTP id S1726089AbgHQIDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:02:57 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4EAC061388;
-        Mon, 17 Aug 2020 01:02:56 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id cq28so11540857edb.10;
-        Mon, 17 Aug 2020 01:02:56 -0700 (PDT)
+        Mon, 17 Aug 2020 04:03:49 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5468C061388;
+        Mon, 17 Aug 2020 01:03:48 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id c16so16629070ejx.12;
+        Mon, 17 Aug 2020 01:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HtIGKJyafh0KqYvWaN0N70g2C6u2mDYlrTBjQ0qqhk8=;
-        b=PYVreFLa0BUrCJDR5kYGmojmlz9nq/Or2c/2yNio3HCIUUpyTr6XZWEHZhREJnKZ8b
-         0eKR+SCWXgEiU1esKAyllTQp6df9jVpXS9Kdf42hpXGCf2T6F2IjljQ3weorOXaZSJys
-         QntouI11/51OtMQJxHQQAqDlHxy+iu+k4G6BKSk78iWPuE41H1GUjqPCcA9x+bhvhp1L
-         NYEDx34mUF+FHc7wXzaPnS9xjABy6By+n/wC4ypU3J/hq55m4SzltnbIAkMT3jkEbH2N
-         Un+GEkgTPrNwnLZar6Xm77JM9OdU02jUI9FBHQrH0LB0Kg+E6UVQCbIvjiZZOoJOvlsW
-         c/6g==
+        bh=H8lJJFkNRM2mQ3INesc1kxCJDj6B3uCKl4u2j50ADQI=;
+        b=B23vGSGevzfNv6EF5eGEsL3A07/GM4LHEFYJBmoc/pci4MN7xgXY7FhFpWDvIcyVMg
+         Z4Y4G33DK2CpADFyUcwWKvJuqIZoEWIBVv4OqsbxDYwcpGqC+ShrfYwaZv0wfjUwRcyu
+         zJJVlotVPXyhs+sbkvZzo9M/wC/GnRRf5/fIgzwgw4ZO9GVpezuV+1sDOvYUJQsRlWdP
+         Vf+cI+xzg2TGV/0I7w44NF9jMpSOj9sB/ImotFy0etwmA/nCMBxX0a5giVSC7mbZduk0
+         NWQY488zfXCVOSnoGaL2dyOY9FtaTgEjDmpj8LI4HvWucUQMYKRdtpiGazC0+yblHHAK
+         WWEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HtIGKJyafh0KqYvWaN0N70g2C6u2mDYlrTBjQ0qqhk8=;
-        b=l94si/YrSYUG7AOsfG57I75vPBs+a7obYkWOtiZr2h9yHomroEHuf/Nt+4n3TtJwVP
-         I3EMHRz59sz/rMB5AYOxNOIWMoBxXnoEqMvMmQOFaYUwG7y4jFkaEx8CTROVctif/4j3
-         1hecbFxzxPBfj/eSgTz+QcnzpIogLUDMPep8j8msqWeSVKStR3cVidkfjwo8LbEj8VN+
-         vRbJTtBho5j6C9xtmefxMrutjDk13aIx9QSwdHM7nXOPri3DJ3j9F6XQTzFr5E+4pFL7
-         +IjjbeuzufLhzwXTJBSzYiy4QqduTIVhwSnsbl2VLfI6NQfzhqdklNHMfPV+Sg7ItnkO
-         1OfA==
-X-Gm-Message-State: AOAM531DpMq8kJYMfZvQ/ZoSitMcECOwtnb32v3yXzpzI8eV2I4U3yQW
-        dslhV4ujmj8eSUz19L81GS6OpNAX4AGCqpagjwo=
-X-Google-Smtp-Source: ABdhPJz/ETQXjPQ3lM4w9XVSHIN886q8jOOzC2UsVk4A9gloEQmp+JIJvo8O+X0uendOw7yD2F1dGvih02MLLBgudhM=
-X-Received: by 2002:aa7:d983:: with SMTP id u3mr14266898eds.366.1597651375434;
- Mon, 17 Aug 2020 01:02:55 -0700 (PDT)
+        bh=H8lJJFkNRM2mQ3INesc1kxCJDj6B3uCKl4u2j50ADQI=;
+        b=szUTx3W1FKTBw/5vlIl4YTD4Wgf4KHBlrqXm2BSN3SIzzGEnZfgufzlmIQ6rikQELX
+         rtd4c8g/RDl2d4x5wtpecfNlq8VSp218yHa4uJvqs3eSsZDf2+7t6SWKnV1OxW/EdQIY
+         9Fz32FIWk4AyWilKRi0t0bynSZfEJLNJH1+sgoUXv+YNH97uclleAa96O+xGNci7mpKg
+         Z3eMDs9NvLNFEBBQAHV7mmh1awVi/tDijqw31IZJ/Mmf3iJFxRzG2La+cRHHfsA5pHx2
+         omnfelxbRLFgRUgm8/WLeXs5+NBJtBX31tzjG1WnfDbtBYfOMLQC+Ma20uvHyeHaCvcm
+         86Ng==
+X-Gm-Message-State: AOAM533GOqhnJmcngkHOTKXw8Nje0+JvklUig9eLACnnDx+UEnu57jCv
+        V5q/lWb4eAWJaJApNW0eXKnZUkkNHAzjcV/pdnw=
+X-Google-Smtp-Source: ABdhPJw1PoPe50YgkrFDTydqp+gNYUWa8xEe+OyOLnYkr36LYEcsyxYKHbDSId6sHC89UXnZQsn9ev13HE+oTuTieu0=
+X-Received: by 2002:a17:906:c18d:: with SMTP id g13mr13687290ejz.239.1597651427657;
+ Mon, 17 Aug 2020 01:03:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-8-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1597406966-13740-8-git-send-email-abel.vesa@nxp.com>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-9-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1597406966-13740-9-git-send-email-abel.vesa@nxp.com>
 From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Mon, 17 Aug 2020 15:47:49 +0800
-Message-ID: <CAA+hA=TKkdYvC8X5pwGjGGY8jGXpvv2C1nP+tsRckhUGObSLqg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/17] dt-bindings: reset: imx8mp: Add hdmi blk_ctrl
- reset IDs
+Date:   Mon, 17 Aug 2020 15:48:42 +0800
+Message-ID: <CAA+hA=R2YOncsOPXMaQ8TkJJLRQXf2TJyozdAMUF6U3Bnhsj3A@mail.gmail.com>
+Subject: Re: [PATCH v2 08/17] clk: imx8mp: Add audio shared gate
 To:     Abel Vesa <abel.vesa@nxp.com>
 Cc:     Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -86,12 +85,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 8:13 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+On Fri, Aug 14, 2020 at 8:12 PM Abel Vesa <abel.vesa@nxp.com> wrote:
 >
-> These will be used imx8mp for blk-ctrl driver.
+> According to the RM, the CCGR101 is shared for the following root clocks:
+> - AUDIO_AHB_CLK_ROOT
+> - AUDIO_AXI_CLK_ROOT
+> - SAI2_CLK_ROOT
+> - SAI3_CLK_ROOT
+> - SAI5_CLK_ROOT
+> - SAI6_CLK_ROOT
+> - SAI7_CLK_ROOT
+> - PDM_CLK_ROOT
 >
 > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Acked-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
