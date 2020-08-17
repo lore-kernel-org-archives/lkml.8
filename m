@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93483C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC70C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2F6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDAE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690458;
-	bh=QZcpCo9ScGW3+oAFSbob6JjjsEdCo+0uTrz+AhIOvko=;
+	s=default; t=1597690465;
+	bh=37MMSSoL6oqEcfaGDD2YYEbR6qmbWEcwABOL7QfqCbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/8iXcIY39DenAfdW1NgBdhgRKA1lCQ0RCdjlQIpFLbVXTTw77E7QpvNmlSxS62u0
-	 wznjKPu43Stx6AhuAQSgVhiUnWhKnZjFZ4qDLiwolqp22LoiCUGCE90ZE0lcAtWT6y
-	 mTBMi6FpIhCbhzl41tqczRu2oMQTPRQCvLOsOjNk=
+	b=ox4PktdV9wnJYj2AP4+L7VZHga0/CyU91EQWNKJ6UlVy+08huJpqyiS5Iq7SHWucB
+	 LJbXQktHw7q3xlF+xWgUEb5PqTBOlSstM9wdM2ZtrGtY7euV2LqZVJ4l16ZamdpYjv
+	 q/NUW+PoGjUv5XyHmsjlVd0mPQuCN2MArbGBaBWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387981AbgHQSyN (ORCPT
+        id S2388569AbgHQSyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387684AbgHQPvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:38 -0400
+        id S1730925AbgHQPv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A6920888;
-        Mon, 17 Aug 2020 15:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B05320885;
+        Mon, 17 Aug 2020 15:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679497;
-        bh=QZcpCo9ScGW3+oAFSbob6JjjsEdCo+0uTrz+AhIOvko=;
+        s=default; t=1597679488;
+        bh=37MMSSoL6oqEcfaGDD2YYEbR6qmbWEcwABOL7QfqCbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kl95fow5pkoF2LhltzsXO71uoUMUxtgkQPMgrLxyHSUAXrOi6QLhE/+qZRYoRFD+O
-         4pHm2jIi0nxCJMcyYnMorwsQd1QyAyfdVBjin6weR/6srkYXmqllCv0OTFLIz3EBEg
-         KF071q4wt32IbiI1CerwZPTfx1/hfc1l4OFducyE=
+        b=KFbGYKWKilbnfKeGi4YQq6uFzK2QaQ1dFvnPn2Q8c7Ed8OtxwgL5vyFEgQRkvZs0Z
+         +mSaktioSzkjcll6L7UJVDiQOLiWTebIKcimbJgECyHH8wdF78kJYXvRKjJnTu4DTE
+         tGyMrS5KRsaHTLtq+4oYuDCEgvfDaxxFeLOZokzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 233/393] mt76: mt7615: fix potential memory leak in mcu message handler
-Date:   Mon, 17 Aug 2020 17:14:43 +0200
-Message-Id: <20200817143830.924540128@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 230/393] coresight: tmc: Fix TMC mode read in tmc_read_unprepare_etb()
+Date:   Mon, 17 Aug 2020 17:14:40 +0200
+Message-Id: <20200817143830.781857086@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,46 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 9248c08c3fc4ef816c82aa49d01123f4746d349f ]
+[ Upstream commit d021f5c5ff679432c5e9faee0fd7350db2efb97c ]
 
-Fix potential memory leak in mcu message handler on error condition.
+Reading TMC mode register without proper coresight power
+management can lead to exceptions like the one in the call
+trace below in tmc_read_unprepare_etb() when the trace data
+is read after the sink is disabled. So fix this by having
+a check for coresight sysfs mode before reading TMC mode
+management register in tmc_read_unprepare_etb() similar to
+tmc_read_prepare_etb().
 
-Fixes: 0e6a29e477f3 ("mt76: mt7615: add support to read temperature from mcu")
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  SError Interrupt on CPU6, code 0xbe000411 -- SError
+  pstate: 80400089 (Nzcv daIf +PAN -UAO)
+  pc : tmc_read_unprepare_etb+0x74/0x108
+  lr : tmc_read_unprepare_etb+0x54/0x108
+  sp : ffffff80d9507c30
+  x29: ffffff80d9507c30 x28: ffffff80b3569a0c
+  x27: 0000000000000000 x26: 00000000000a0001
+  x25: ffffff80cbae9550 x24: 0000000000000010
+  x23: ffffffd07296b0f0 x22: ffffffd0109ee028
+  x21: 0000000000000000 x20: ffffff80d19e70e0
+  x19: ffffff80d19e7080 x18: 0000000000000000
+  x17: 0000000000000000 x16: 0000000000000000
+  x15: 0000000000000000 x14: 0000000000000000
+  x13: 0000000000000000 x12: 0000000000000000
+  x11: 0000000000000000 x10: dfffffd000000001
+  x9 : 0000000000000000 x8 : 0000000000000002
+  x7 : ffffffd071d0fe78 x6 : 0000000000000000
+  x5 : 0000000000000080 x4 : 0000000000000001
+  x3 : ffffffd071d0fe98 x2 : 0000000000000000
+  x1 : 0000000000000004 x0 : 0000000000000001
+  Kernel panic - not syncing: Asynchronous SError Interrupt
+
+Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
+Reported-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200716175746.3338735-14-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index 29a7aaabb6da1..9c55424962522 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -167,8 +167,10 @@ mt7615_mcu_parse_response(struct mt7615_dev *dev, int cmd,
- 	struct mt7615_mcu_rxd *rxd = (struct mt7615_mcu_rxd *)skb->data;
- 	int ret = 0;
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 36cce2bfb7449..6375504ba8b00 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -639,15 +639,14 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
  
--	if (seq != rxd->seq)
--		return -EAGAIN;
-+	if (seq != rxd->seq) {
-+		ret = -EAGAIN;
-+		goto out;
-+	}
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
  
- 	switch (cmd) {
- 	case MCU_CMD_PATCH_SEM_CONTROL:
-@@ -182,6 +184,7 @@ mt7615_mcu_parse_response(struct mt7615_dev *dev, int cmd,
- 	default:
- 		break;
- 	}
-+out:
- 	dev_kfree_skb(skb);
- 
- 	return ret;
+-	/* There is no point in reading a TMC in HW FIFO mode */
+-	mode = readl_relaxed(drvdata->base + TMC_MODE);
+-	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return -EINVAL;
+-	}
+-
+ 	/* Re-enable the TMC if need be */
+ 	if (drvdata->mode == CS_MODE_SYSFS) {
++		/* There is no point in reading a TMC in HW FIFO mode */
++		mode = readl_relaxed(drvdata->base + TMC_MODE);
++		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
++			spin_unlock_irqrestore(&drvdata->spinlock, flags);
++			return -EINVAL;
++		}
+ 		/*
+ 		 * The trace run will continue with the same allocated trace
+ 		 * buffer. As such zero-out the buffer so that we don't end
 -- 
 2.25.1
 
