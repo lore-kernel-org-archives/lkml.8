@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F62C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F40C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152B020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4EA20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693161;
-	bh=UZUBwEF4e/RfXG5mcWp5oc22U3LXwLC+GXqXMZIrbZY=;
+	s=default; t=1597693170;
+	bh=XQvguJYpqzHHuNq99nf21rgDry64Bxh3rtWSa+3nf7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tG5FTslmD3VuF6LPa4kvNS+Jn9JEzYFpJIxGLx0MdraiaGHnF3IAUoH4qYsziCRXK
-	 lJKS5m5/Jk9lOGWgPjsAfspJ/aAa2TWqw2izbVTiT/06fNU+2AK9w0maXl1JQB+HVs
-	 H+fGxlD2WLqeBJY+uQjborTieR8TaZlZgddZKaqc=
+	b=yQLbxhMZIXL61G2yyuyPvpsQ4jlOuVI3SAN5TpKn0+71FJR2Vzo+g74kYTS2Cvz/0
+	 cOXzb2ze85V4D8StYOXhjz8h25GgFkFPNhGIFvXHGOwbgAlorK9sd25aZFVfUmEXHq
+	 GrgQRKtXqLBLaDRVQRsHu8l69JmIevUPX+6LN+HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732504AbgHQTjT (ORCPT
+        id S1732517AbgHQTj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:39:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:39:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729547AbgHQP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:38 -0400
+        id S1729809AbgHQP0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1273923A9A;
-        Mon, 17 Aug 2020 15:26:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2C18205CB;
+        Mon, 17 Aug 2020 15:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677997;
-        bh=UZUBwEF4e/RfXG5mcWp5oc22U3LXwLC+GXqXMZIrbZY=;
+        s=default; t=1597677980;
+        bh=XQvguJYpqzHHuNq99nf21rgDry64Bxh3rtWSa+3nf7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MB03q+OSxKLUuDqCjf7g1kaYbmQvpg+ZUPEs+Jo62TOL9oluR3QPv91TWA7NpcVTZ
-         tFnnPXXqgxXmO/mG4Renhm1tEbgrQvaFQE+ACJpifuJq6Xelg24jazOGjzPdwpGDYL
-         O+zqutCLqPpfYgARLKUMpwgz/8zyjnSfsZtRgc6A=
+        b=w/wzl4ErdxV3EIiqtU8EUtq/CSKk1/q8CrqDKWNGa6nBqpE8GVkBXZQmcVti5dWWh
+         3jCgWX+TCPEra8XB4yM8cK6nfOlCmuuo6ATytzgqVeO6ErSxVHZC2tVd0AUPgquy1v
+         qWmb7bIL+vTxseaLUXTGVZVjufBLgoI/MzmYkJEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 182/464] net: atlantic: MACSec offload statistics checkpatch fix
-Date:   Mon, 17 Aug 2020 17:12:15 +0200
-Message-Id: <20200817143842.535570375@linuxfoundation.org>
+Subject: [PATCH 5.8 177/464] ASoC: SOF: nocodec: add missing .owner field
+Date:   Mon, 17 Aug 2020 17:12:10 +0200
+Message-Id: <20200817143842.297630354@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,51 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Starovoytov <mstarovoitov@marvell.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 3a8b44546979cf682324bd2fd61e539f428911b4 ]
+[ Upstream commit 8753889e2720c1ef7ebf03370e384f5bf5ff4fab ]
 
-This patch fixes a checkpatch warning.
+This field is required for ASoC cards. Not setting it will result in a
+module->name pointer being NULL and generate problems such as
 
-Fixes: aec0f1aac58e ("net: atlantic: MACSec offload statistics implementation")
+cat /proc/asound/modules
+ 0 (efault)
 
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8017b8fd37bf ('ASoC: SOF: Add Nocodec machine driver support')
+Reported-by: Jaroslav Kysela <perex@perex.cz>
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200625191308.3322-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/sof/nocodec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-index 743d3b13b39d7..bb1fc6052bcf1 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-@@ -123,21 +123,21 @@ static const char aq_macsec_stat_names[][ETH_GSTRING_LEN] = {
- 	"MACSec OutUnctrlHitDropRedir",
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index d03b5be31255b..9e922df6a7101 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -14,6 +14,7 @@
+ 
+ static struct snd_soc_card sof_nocodec_card = {
+ 	.name = "nocodec", /* the sof- prefix is added by the core */
++	.owner = THIS_MODULE
  };
  
--static const char *aq_macsec_txsc_stat_names[] = {
-+static const char * const aq_macsec_txsc_stat_names[] = {
- 	"MACSecTXSC%d ProtectedPkts",
- 	"MACSecTXSC%d EncryptedPkts",
- 	"MACSecTXSC%d ProtectedOctets",
- 	"MACSecTXSC%d EncryptedOctets",
- };
- 
--static const char *aq_macsec_txsa_stat_names[] = {
-+static const char * const aq_macsec_txsa_stat_names[] = {
- 	"MACSecTXSC%dSA%d HitDropRedirect",
- 	"MACSecTXSC%dSA%d Protected2Pkts",
- 	"MACSecTXSC%dSA%d ProtectedPkts",
- 	"MACSecTXSC%dSA%d EncryptedPkts",
- };
- 
--static const char *aq_macsec_rxsa_stat_names[] = {
-+static const char * const aq_macsec_rxsa_stat_names[] = {
- 	"MACSecRXSC%dSA%d UntaggedHitPkts",
- 	"MACSecRXSC%dSA%d CtrlHitDrpRedir",
- 	"MACSecRXSC%dSA%d NotUsingSa",
+ static int sof_nocodec_bes_setup(struct device *dev,
 -- 
 2.25.1
 
