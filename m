@@ -2,103 +2,151 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E93CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D394FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433DF2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50DA2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597664859;
+	bh=PWU1FA67zQAasUqd3BPumylawraXXdrgHP9MCo9WyJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bTFuH9eJsdScihs+mxnPydGseh4CQ1rGuv+TntKkJd7desI/tvqfQhpCCc/LLyfio
+	 cU1SQYFUj68b5tymJdS+rvLSnfyMYGyWE50WfTHDiWmlkByFPe45bims5sWTmtqLcI
+	 ao39GXxYBopIcDgBtGReA5i3CjAQu/Xt/FCTBOxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgHQLou (ORCPT
+        id S1726898AbgHQLri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:44:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33588 "EHLO mga12.intel.com"
+        Mon, 17 Aug 2020 07:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgHQLos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:44:48 -0400
-IronPort-SDR: F5tImus1N4GBNkLglbn4Ctg0jpjMPxiUOoorL/f6LNyq2DNoR0/i2HMYRMSEPhTsMtRCemkfNo
- 8f8eXV9S2lfA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134199126"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="134199126"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 04:44:44 -0700
-IronPort-SDR: bHApQlytgHJ6jq4V5bD6qw1c6k+ZY506s+KQj12iysHBxz7oQMzh1q8f6HPp17WTGF6XLOWLww
- Z9NOH4giSXgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="326385168"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 04:44:42 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k7dZB-009IwK-Gv; Mon, 17 Aug 2020 14:44:41 +0300
-Date:   Mon, 17 Aug 2020 14:44:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [RFC PATCH] vsprintf: Add %pv extension replacement for
- print_vma_addr
-Message-ID: <20200817114441.GK1891694@smile.fi.intel.com>
-References: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
+        id S1726161AbgHQLre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:47:34 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07AE20674;
+        Mon, 17 Aug 2020 11:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597664853;
+        bh=PWU1FA67zQAasUqd3BPumylawraXXdrgHP9MCo9WyJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2Bb0s9c1fXzrj0yzxKH6TCjhWGcINNywtn7fDxCldvxcXqhjpd+ietw8xoQr1LBU4
+         +tId8AB1jrQEbVZDeJb458pPtVyNcCho0J3XN5oui0KxZzSSAUpgVTgwSfGcxehI18
+         juHydM2Zsdmrr3Rko36cqSQH8+J5gro0pUpgtS08=
+Date:   Mon, 17 Aug 2020 17:17:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 09/13] soundwire: intel: add CLK_STOP_BUS_RESET support
+Message-ID: <20200817114729.GP2639@vkoul-mobl>
+References: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+ <20200721203723.18305-10-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200721203723.18305-10-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:53:03AM -0700, Joe Perches wrote:
-> There is a print_vma_addr function used several places
-> that requires KERN_CONT use.
+On 22-07-20, 04:37, Bard Liao wrote:
+> From: Rander Wang <rander.wang@intel.com>
 > 
-> Add a %pv mechanism to avoid the need for KERN_CONT.
-
-I like the idea, but I would accent the selling point to make code
-(in the user call sites) nicer.
-
-> An example conversion is arch/x86/kernel/signal.c
+> Move existing pm_runtime suspend under the CLK_STOP_TEARDOWN case.
 > 
-> from:
-> 	if (show_unhandled_signals && printk_ratelimit()) {
-> 		printk("%s"
-> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx",
-> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-> 		       me->comm, me->pid, where, frame,
-> 		       regs->ip, regs->sp, regs->orig_ax);
-> 		print_vma_addr(KERN_CONT " in ", regs->ip);
-> 		pr_cont("\n");
-> to:
-> 		printk("%s"
-> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx in %pv\n",
-> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
-> 		       me->comm, me->pid, where, frame,
-> 		       regs->ip, regs->sp, regs->orig_ax, (void *)regs->ip);
+> In this mode the Master IP will lose all context but in-band wakes are
+> supported.
+> 
+> On pm_runtime resume a complete re-enumeration will be performed after
+> a bus reset.
+> 
+> Signed-off-by: Rander Wang <rander.wang@intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 44 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 1954eb48b86c..744fc0a4816a 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -1576,6 +1576,26 @@ static int intel_suspend_runtime(struct device *dev)
+>  
+>  		intel_shim_wake(sdw, false);
+>  
+> +	} else if (clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) {
+> +		ret = sdw_cdns_clock_stop(cdns, true);
+> +		if (ret < 0) {
+> +			dev_err(dev, "cannot enable clock stop on suspend\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = sdw_cdns_enable_interrupt(cdns, false);
+> +		if (ret < 0) {
+> +			dev_err(dev, "cannot disable interrupts on suspend\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = intel_link_power_down(sdw);
+> +		if (ret) {
+> +			dev_err(dev, "Link power down failed: %d", ret);
+> +			return ret;
+> +		}
 
-...
+no cleanup on all the error cases here?
 
-> +#else
-> +	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
-> +#endif
-
-Can we avoid this spammy message? Really it's quite long and fills valuable
-space in kernel buffer. I would rather print the hashed pointer as it's done
-for the rest of %pXXX.
+> +
+> +		intel_shim_wake(sdw, true);
+>  	} else {
+>  		dev_err(dev, "%s clock_stop_quirks %x unsupported\n",
+>  			__func__, clock_stop_quirks);
+> @@ -1694,6 +1714,30 @@ static int intel_resume_runtime(struct device *dev)
+>  			dev_err(dev, "unable to exit bus reset sequence during resume\n");
+>  			return ret;
+>  		}
+> +	} else if (clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) {
+> +		ret = intel_init(sdw);
+> +		if (ret) {
+> +			dev_err(dev, "%s failed: %d", __func__, ret);
+> +			return ret;
+> +		}
+> +
+> +		/*
+> +		 * make sure all Slaves are tagged as UNATTACHED and
+> +		 * provide reason for reinitialization
+> +		 */
+> +		sdw_clear_slave_status(bus, SDW_UNATTACH_REQUEST_MASTER_RESET);
+> +
+> +		ret = sdw_cdns_enable_interrupt(cdns, true);
+> +		if (ret < 0) {
+> +			dev_err(dev, "cannot enable interrupts during resume\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = sdw_cdns_clock_restart(cdns, true);
+> +		if (ret < 0) {
+> +			dev_err(dev, "unable to restart clock during resume\n");
+> +			return ret;
+> +		}
+>  	} else {
+>  		dev_err(dev, "%s clock_stop_quirks %x unsupported\n",
+>  			__func__, clock_stop_quirks);
+> -- 
+> 2.17.1
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+~Vinod
