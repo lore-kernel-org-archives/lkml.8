@@ -2,52 +2,55 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27775C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0E6206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04176206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683868;
-	bh=p6srLh1mO7qTqUiHJN5XSOb7Rqkscs42yAAUQYlVUcw=;
+	s=default; t=1597683876;
+	bh=fW0PLUaemraPxR56ZlLLDoiTZLlCiLqb4+qpdqoPWUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kDhNgJfhDrhrSW4XDmO8Ij48ZxcoVGQfVN9lVDDdTLaQotMScFdJJvDA0gOe1z9e4
-	 sSwCdrO7jOqPJvb1/rzFpO32qMrbkHd2RBdlf6qQGTamAwRDaPxo1mnJTXCjJEY/R3
-	 9MqLyqxWMK+845HLfFiGY5E1MAwC0x6Mx0fcIgCc=
+	b=NFdohHar4NM/fayYZ/RSede6wSHuExeeLbhyU6UmY+R4OOYE5nLeV+syovIMLC36Y
+	 /hgjTIoCEAoIfEMf/BypNuMlVI5pGJHgrIzdbNUlJLqCSidk6nuCQOezRUDPvOW/1Y
+	 ai4Byw8Giq+7/d9mfRJ5sizAW6TEpfneK2O1O/J8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgHQRES (ORCPT
+        id S1731082AbgHQREd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59220 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388485AbgHQQI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:56 -0400
+        id S2388501AbgHQQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:09:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EBDA22CAE;
-        Mon, 17 Aug 2020 16:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43C220658;
+        Mon, 17 Aug 2020 16:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680535;
-        bh=p6srLh1mO7qTqUiHJN5XSOb7Rqkscs42yAAUQYlVUcw=;
+        s=default; t=1597680558;
+        bh=fW0PLUaemraPxR56ZlLLDoiTZLlCiLqb4+qpdqoPWUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=leH3YKXJwE4BzZkmuL56Re8kgWaFT289355CLHTQj2XyRtBPIoQU5J7wXxXxBJM5V
-         LrL4tMte1qOVlfjjcTfd5o13v+Aub2M4O3zMXzjJ1zgLR0dKmSvYufljEaGVjHHAZW
-         0EDA5gmqztJlnfREu797aUwvCKK3D0uKOrIbO00U=
+        b=quAarE4ORPWpKpjdlyBZB6/4bsxmFfCatHgSAKiQGi6bwZnaNR+PSaajVB+5xSOwp
+         oy8Erj+IeQNiu8TyEQZSQFsuGI05zEg4ig/IkeIOCDvOsnukhsdg19WoJ5CnKpU2dA
+         lHOWYu28h0WNIkzpR4SS2bwMFhDitUthh/grKHq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 195/270] rtw88: coex: only skip coex triggered by BT info
-Date:   Mon, 17 Aug 2020 17:16:36 +0200
-Message-Id: <20200817143805.505591723@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 235/270] media: media-request: Fix crash if memory allocation fails
+Date:   Mon, 17 Aug 2020 17:17:16 +0200
+Message-Id: <20200817143807.509404066@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,50 +63,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 3f194bd4ca1cd9b8eef34d37d562279dbeb80319 ]
+commit e30cc79cc80fd919b697a15c5000d9f57487de8e upstream.
 
-The coex mechanism used to skip upon the freeze flag is raised.
-That will cause the coex mechanism being skipped unexpectedly.
-Coex only wanted to keep the TDMA table from being changed by
-BT side.
+Syzbot reports a NULL-ptr deref in the kref_put() call:
 
-So, check the freeze and reason, if the coex reason is coming
-from BT info, skip it, to make sure the coex triggered by Wifi
-itself can work.
+BUG: KASAN: null-ptr-deref in media_request_put drivers/media/mc/mc-request.c:81 [inline]
+ kref_put include/linux/kref.h:64 [inline]
+ media_request_put drivers/media/mc/mc-request.c:81 [inline]
+ media_request_close+0x4d/0x170 drivers/media/mc/mc-request.c:89
+ __fput+0x2ed/0x750 fs/file_table.c:281
+ task_work_run+0x147/0x1d0 kernel/task_work.c:123
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:165 [inline]
+ prepare_exit_to_usermode+0x48e/0x600 arch/x86/entry/common.c:196
 
-This is required for the AP mode, while the control flow is
-different with STA mode. When starting an AP mode, the AP mode
-needs to start working immedaitely after leaving IPS, and the
-freeze flag could be raised. If the coex info is skipped, then
-the AP mode will not set the antenna owner, leads to TX stuck.
+What led to this crash was an injected memory allocation failure in
+media_request_alloc():
 
-Fixes: 4136214f7c46 ("rtw88: add BT co-existence support")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200717064937.27966-5-yhchuang@realtek.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+FAULT_INJECTION: forcing a failure.
+name failslab, interval 1, probability 0, space 0, times 0
+ should_failslab+0x5/0x20
+ kmem_cache_alloc_trace+0x57/0x300
+ ? anon_inode_getfile+0xe5/0x170
+ media_request_alloc+0x339/0x440
+ media_device_request_alloc+0x94/0xc0
+ media_device_ioctl+0x1fb/0x330
+ ? do_vfs_ioctl+0x6ea/0x1a00
+ ? media_ioctl+0x101/0x120
+ ? __media_device_usb_init+0x430/0x430
+ ? media_poll+0x110/0x110
+ __se_sys_ioctl+0xf9/0x160
+ do_syscall_64+0xf3/0x1b0
+
+When that allocation fails, filp->private_data is left uninitialized
+which media_request_close() does not expect and crashes.
+
+To avoid this, reorder media_request_alloc() such that
+allocating the struct file happens as the last step thus
+media_request_close() will no longer get called for a partially created
+media request.
+
+Reported-by: syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Fixes: 10905d70d788 ("media: media-request: implement media requests")
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/realtek/rtw88/coex.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/mc/mc-request.c |   31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wireless/realtek/rtw88/coex.c
-index 3e95ad1989123..853ac1c2ed73c 100644
---- a/drivers/net/wireless/realtek/rtw88/coex.c
-+++ b/drivers/net/wireless/realtek/rtw88/coex.c
-@@ -1923,7 +1923,8 @@ static void rtw_coex_run_coex(struct rtw_dev *rtwdev, u8 reason)
- 	if (coex_stat->wl_under_ips)
- 		return;
+--- a/drivers/media/mc/mc-request.c
++++ b/drivers/media/mc/mc-request.c
+@@ -296,9 +296,18 @@ int media_request_alloc(struct media_dev
+ 	if (WARN_ON(!mdev->ops->req_alloc ^ !mdev->ops->req_free))
+ 		return -ENOMEM;
  
--	if (coex->freeze && !coex_stat->bt_setup_link)
-+	if (coex->freeze && coex_dm->reason == COEX_RSN_BTINFO &&
-+	    !coex_stat->bt_setup_link)
- 		return;
++	if (mdev->ops->req_alloc)
++		req = mdev->ops->req_alloc(mdev);
++	else
++		req = kzalloc(sizeof(*req), GFP_KERNEL);
++	if (!req)
++		return -ENOMEM;
++
+ 	fd = get_unused_fd_flags(O_CLOEXEC);
+-	if (fd < 0)
+-		return fd;
++	if (fd < 0) {
++		ret = fd;
++		goto err_free_req;
++	}
  
- 	coex_stat->cnt_wl[COEX_CNT_WL_COEXRUN]++;
--- 
-2.25.1
-
+ 	filp = anon_inode_getfile("request", &request_fops, NULL, O_CLOEXEC);
+ 	if (IS_ERR(filp)) {
+@@ -306,15 +315,6 @@ int media_request_alloc(struct media_dev
+ 		goto err_put_fd;
+ 	}
+ 
+-	if (mdev->ops->req_alloc)
+-		req = mdev->ops->req_alloc(mdev);
+-	else
+-		req = kzalloc(sizeof(*req), GFP_KERNEL);
+-	if (!req) {
+-		ret = -ENOMEM;
+-		goto err_fput;
+-	}
+-
+ 	filp->private_data = req;
+ 	req->mdev = mdev;
+ 	req->state = MEDIA_REQUEST_STATE_IDLE;
+@@ -336,12 +336,15 @@ int media_request_alloc(struct media_dev
+ 
+ 	return 0;
+ 
+-err_fput:
+-	fput(filp);
+-
+ err_put_fd:
+ 	put_unused_fd(fd);
+ 
++err_free_req:
++	if (mdev->ops->req_free)
++		mdev->ops->req_free(req);
++	else
++		kfree(req);
++
+ 	return ret;
+ }
+ 
 
 
