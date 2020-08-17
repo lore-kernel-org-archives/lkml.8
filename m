@@ -2,110 +2,150 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3405C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2ADC2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSek12SA"
+	by mail.kernel.org (Postfix) with ESMTP id E77082087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHQDEW (ORCPT
+        id S1726888AbgHQDEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgHQDES (ORCPT
+        Sun, 16 Aug 2020 23:04:33 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:50029 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726424AbgHQDE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:04:18 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005FFC061385;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s14so824292plp.4;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
-        b=mSek12SAv1BJ6ldCV8GbAcqWxHtmYqybitk2vnr8tEQJDg9njV0L2OK9MMFHwSVXB6
-         YnxwwLHYPWeXDaBxfiLBMJNil43M/nUv16OYieMI149G/rP1GXkdtR4wuNL8KZQK1V2h
-         72RLjJvdNFsND45+Dqdz59o/YGYH6O8TF7G1tsVJQrFcuVYfFm81Eughm0igkP+dKzc+
-         cwA9gKOIg45WjWBt8+BUkjutzNI6OoMVRcQgJd8iDr2OjsA6xlyj5Bn/JvToxwFtAjke
-         E6+ncpe2QToaQBOZ/pD5FoGq/pkTAwoXDkhjCfoQfizb44tH/JRrefhlaplYFbfTIMS2
-         pvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
-        b=gmZ88t34LBisXCXakfD980N43vwkXMoxJ/XEnhMKXCXSCUuCFkD7X78pQNXlHYWmEO
-         VoMoowSiacjQxzjWGPW4UOtaXk6836vZtB8Pg/DxWDRPhH70KIgymSRzxodMk0YyAnrO
-         IhGTsIL3nabIJuys/o0LjVCDHzY/S0TlCNTdK30TOz0c5m9LW/ZRbusgY47ZfyDvR/dX
-         aa+zFM97tIW6FLkVdAZjUV22RbEIbvgPM2fsXvtxuSWbKDnjBbv37zuo/7fBwAFOItOP
-         JHItk2xHlmgj0gS7F5hV9x6k6unQQXLp0NWk28hQZ1mdoiZo4pIqCAhwDYUl4/kQ5eo2
-         kvag==
-X-Gm-Message-State: AOAM533SbKS+sPWP3nwzNYeKTpquim//SP31deq43QOCbwfhnajD7KQ/
-        L2jQ4BuuzfL5ngCq9sqRE2M=
-X-Google-Smtp-Source: ABdhPJwcOR2+1quyxWqjQQMMyinCGbyTuuXsCkvKpAd0p7fdGw5BaRkRa1UqMLxTq/Loy1rvyTeCgw==
-X-Received: by 2002:a17:90a:2081:: with SMTP id f1mr11353865pjg.174.1597633457296;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
-        by smtp.gmail.com with ESMTPSA id n22sm14869939pjq.25.2020.08.16.20.04.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 20:04:16 -0700 (PDT)
-From:   Chris Healy <cphealy@gmail.com>
-X-Google-Original-From: Chris Healy <cphealy@gmail.com
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux@rempel-privat.de, davem@davemloft.net,
-        philippe.schenker@toradex.com, andrew@lunn.ch,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sun, 16 Aug 2020 23:04:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5wd.eG_1597633465;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U5wd.eG_1597633465)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 17 Aug 2020 11:04:26 +0800
+Date:   Mon, 17 Aug 2020 11:04:25 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>
-Subject: [PATCH] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for ksz9031 phy
-Date:   Sun, 16 Aug 2020 20:04:01 -0700
-Message-Id: <20200817030401.3124855-1-cphealy@gmail.com>
-X-Mailer: git-send-email 2.26.2
+Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
+ to workaround the nasty free_huge_page
+Message-ID: <20200817030425.GA25240@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+ <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
+ <20200810021737.GV14854@MiWiFi-R3L-srv>
+ <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
+ <20200811015148.GA10792@MiWiFi-R3L-srv>
+ <20200811065406.GC4793@dhcp22.suse.cz>
+ <eb9d1e13-7455-0c4e-1f94-0c859c36c0bb@oracle.com>
+ <20200813114638.GJ9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813114638.GJ9477@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Healy <cphealy@gmail.com>
+On Thu, Aug 13, 2020 at 01:46:38PM +0200, Michal Hocko wrote:
+>On Tue 11-08-20 14:43:28, Mike Kravetz wrote:
+>> On 8/10/20 11:54 PM, Michal Hocko wrote:
+>> > 
+>> > I have managed to forgot all the juicy details since I have made that
+>> > change. All that remains is that the surplus pages accounting was quite
+>> > tricky and back then I didn't figure out a simpler method that would
+>> > achieve the consistent look at those counters. As mentioned above I
+>> > suspect this could lead to pre-mature allocation failures while the
+>> > migration is ongoing.
+>> 
+>> It is likely lost in the e-mail thread, but the suggested change was to
+>> alloc_surplus_huge_page().  The code which allocates the migration target
+>> (alloc_migrate_huge_page) will not be changed.  So, this should not be
+>> an issue.
+>
+>OK, I've missed that obviously.
+>
+>> >                       Sure quite unlikely to happen and the race window
+>> > is likely very small. Maybe this is even acceptable but I would strongly
+>> > recommend to have all this thinking documented in the changelog.
+>> 
+>> I wrote down a description of what happens in the two different approaches
+>> "temporary page" vs "surplus page".  It is at the very end of this e-mail.
+>> When looking at the details, I came up with what may be an even better
+>> approach.  Why not just call the low level routine to free the page instead
+>> of going through put_page/free_huge_page?  At the very least, it saves a
+>> lock roundtrip and there is no need to worry about the counters/accounting.
+>> 
+>> Here is a patch to do that.  However, we are optimizing a return path in
+>> a race condition that we are unlikely to ever hit.  I 'tested' it by allocating
+>> an 'extra' page and freeing it via this method in alloc_surplus_huge_page.
+>> 
+>> >From 864c5f8ef4900c95ca3f6f2363a85f3cb25e793e Mon Sep 17 00:00:00 2001
+>> From: Mike Kravetz <mike.kravetz@oracle.com>
+>> Date: Tue, 11 Aug 2020 12:45:41 -0700
+>> Subject: [PATCH] hugetlb: optimize race error return in
+>>  alloc_surplus_huge_page
+>> 
+>> The routine alloc_surplus_huge_page() could race with with a pool
+>> size change.  If this happens, the allocated page may not be needed.
+>> To free the page, the current code will 'Abuse temporary page to
+>> workaround the nasty free_huge_page codeflow'.  Instead, directly
+>> call the low level routine that free_huge_page uses.  This works
+>> out well because the page is new, we hold the only reference and
+>> already hold the hugetlb_lock.
+>> 
+>> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+>> ---
+>>  mm/hugetlb.c | 13 ++++++++-----
+>>  1 file changed, 8 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>> index 590111ea6975..ac89b91fba86 100644
+>> --- a/mm/hugetlb.c
+>> +++ b/mm/hugetlb.c
+>> @@ -1923,14 +1923,17 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+>>  	/*
+>>  	 * We could have raced with the pool size change.
+>>  	 * Double check that and simply deallocate the new page
+>> -	 * if we would end up overcommiting the surpluses. Abuse
+>> -	 * temporary page to workaround the nasty free_huge_page
+>> -	 * codeflow
+>> +	 * if we would end up overcommiting the surpluses.
+>>  	 */
+>>  	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+>> -		SetPageHugeTemporary(page);
+>> +		/*
+>> +		 * Since this page is new, we hold the only reference, and
+>> +		 * we already hold the hugetlb_lock call the low level free
+>> +		 * page routine.  This saves at least a lock roundtrip.
+>> +		 */
+>> +		(void)put_page_testzero(page); /* don't call destructor */
+>> +		update_and_free_page(h, page);
+>>  		spin_unlock(&hugetlb_lock);
+>> -		put_page(page);
+>>  		return NULL;
+>>  	} else {
+>>  		h->surplus_huge_pages++;
+>
+>Yes this makes sense. I would have to think about this more to be
+>confident and give Acked-by but this looks sensible from a quick glance.
+>
 
-Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
-KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
+If it is ok, I would like to send v2 without this one to give more time
+for a discussion?
 
-Fix it by switching to phy-mode = "rgmii-id".
+>Thanks!
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
- arch/arm/boot/dts/imx7d-zii-rmu2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-index e5e20b07f184..7cb6153fc650 100644
---- a/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-+++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-@@ -58,7 +58,7 @@ &fec1 {
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&fec1_phy>;
- 	status = "okay";
- 
 -- 
-2.26.2
-
+Wei Yang
+Help you, Help me
