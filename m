@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B75AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB97EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14929207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856F42078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCHZCy3p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRgt5XvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgHQILJ (ORCPT
+        id S1727892AbgHQILU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
+        Mon, 17 Aug 2020 04:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbgHQILA (ORCPT
+        with ESMTP id S1727824AbgHQILF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:11:00 -0400
+        Mon, 17 Aug 2020 04:11:05 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 634B1C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:11:00 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c6so7443285pje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:11:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A95C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:11:04 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kr4so7441574pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UiTTtY4um+8cmYBKgcrZZYgd8CdoEU+ARxIZdRX9Hl4=;
-        b=lCHZCy3pNI0pZrwfcPNazSDtJnQIEjsNJln05t6INik82IzhLcow4WN5JuRRzBEhA8
-         YGwXaK8fgpT/G5By171ao66YPo2MgKLkXIFSfl9+DDdLatYNmq9QUaBsSZDFiSFCnXBO
-         h1PFiJwVPDIJqYeEmoE4IiHXKJ9F/Lc6mQ4o5hhJdjxM1YEDJoq8+UVgKvbCHh3XCf2M
-         4UwWOdm1OH4+TcG6HaB9yOwqe1aNeUGzNBpmLgZNFRIxmOBqFUrKXw2hWL4MIxDXYJm7
-         9UrmnGTGigzKdDSZRmSUB5ka9AutzOl2Yks+Z/DEtQVWrTyPsyn8Ygyr1rbjvyFrBIj/
-         9QEA==
+        bh=QaP8DINxDsuq2i3hJ8sJPBp0gJbGxyzKBcVj40ZfIHk=;
+        b=bRgt5XvQ3AUktQa2vCokcQj+MeQZPYkIk6vnFPw6IBG+xcRxtqne9ZNSgBv9LDra+p
+         7NfbPuWxZCqrbXVZeEcef6x/YdwYhClCbJeJtvk7Suw0KyDoZNAqJv3Fs5x3Ug4kk9oQ
+         eisa0G+cHHV5rnB6t55SztjvZq57qsh5wgujX77NsrE2ylqkiBB3qtQhttoqg/ubjuTR
+         uTtCl9eBBFQiN74Tv9V2IQPD9Zv+OeHMNonaPYbfTKsVwkjDfpU+6iU/tZjETQGvOVIh
+         SzewaHsipx7KzhS7KVefaNhX5A94UAkH2ObH+6CkFOyc3U/eDyULBxyYU40ZmHhEgwAe
+         1owA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UiTTtY4um+8cmYBKgcrZZYgd8CdoEU+ARxIZdRX9Hl4=;
-        b=MIqC5DnEVCzSOJyzAcZsmDntMIC5GoMUn8qXDBCQteqQ71OkX6HDgJwo+8RSO9QCVH
-         QLVBbRd2cEqryEzDsEQN3jM1xX1pAWz+eQTB3J2LLc56Rzi//b0B2zbeh4mtVXiDL3pI
-         cUiHb3PtfKVxLmQkrgQhIuh2lr3RkCIvR45J7m/vc7SvLcbP2WdqeZukb5mnO04ebmR2
-         KRyCqACUjVAnyrnuihTdHDYqPThomLnTHsXhanIzO3qRsFf9RgQqziqDG23cIFZNOnZL
-         BRQyNa0sBpMPH+2rf4KekvglEuH/1Xq8V35jw07GsTAx1C3L0pI7SUMuXw0/XFHDQrPX
-         4dnw==
-X-Gm-Message-State: AOAM533g8jJSNFhjFrTia3U0LggNVsuqNqHw/j9UzGqQuVlyy+vhvREB
-        BOlGH6U4ZKuZ50PoVIp8tvs=
-X-Google-Smtp-Source: ABdhPJzIlpoIQTSdahVGMk8x5siqZ5Y3mjG1CPosG5SauNGyLp+frSB0ojX4DsaYxwOAzse/edpt+w==
-X-Received: by 2002:a17:90b:684:: with SMTP id m4mr11607612pjz.4.1597651859925;
-        Mon, 17 Aug 2020 01:10:59 -0700 (PDT)
+        bh=QaP8DINxDsuq2i3hJ8sJPBp0gJbGxyzKBcVj40ZfIHk=;
+        b=DXANzwOfcbsVYqUieaSHENKiBPoPlMd8Nq4LGPcuszZRT4E/7JippLsQrJ1ZItx6Fc
+         6zr1gcyDa4Zq81yYahTduBTnNAQufdOLb75FSzJ+VH1hWglSKaEBVzTQ4/k+7BPEsirI
+         BJfqBdu6XE5tDFpUvxk4eHVLY4d3AqXQYRAbzstJpMh8dtYfkbJ1t1Gh/CtuYSGR3C5l
+         YjWMackMEDL+JVQYCnVabZuJ9oE3Vd2Rla4mQOUWUOSr4xcQ9iso5vTlb1fwpeHgHD9f
+         K29GYFqklzaAUYYlV3z0YbH1n+GzHsLWGYV2cZq87clIrxEc01gYfcMuFqDYJ8hBnywj
+         B0Dg==
+X-Gm-Message-State: AOAM532Y9pWDAw4LyuV2/S5dZnP0AkCtBW8ZX+jMMv6k+IGNrtCKG2eK
+        T7zl7qmmWJEJfUKJCjU7v8g=
+X-Google-Smtp-Source: ABdhPJwWx9U4dwEOuvx8zZZhWSxZrW/QTfZvVwvzjU7vTTOa870r6Mdybq2AgvVeVI1eNan7GZHkLw==
+X-Received: by 2002:a17:90a:ec0c:: with SMTP id l12mr11456530pjy.90.1597651863782;
+        Mon, 17 Aug 2020 01:11:03 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id 77sm18499751pfx.85.2020.08.17.01.10.54
+        by smtp.gmail.com with ESMTPSA id 77sm18499751pfx.85.2020.08.17.01.11.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:10:59 -0700 (PDT)
+        Mon, 17 Aug 2020 01:11:03 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
         ludovic.desroches@microchip.com, heiko@sntech.de,
@@ -69,9 +69,9 @@ Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
         inux-mediatek@lists.infradead.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 12/19] crypto: omap: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:39:34 +0530
-Message-Id: <20200817080941.19227-13-allen.lkml@gmail.com>
+Subject: [PATCH 13/19] crypto: picoxcell: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:39:35 +0530
+Message-Id: <20200817080941.19227-14-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817080941.19227-1-allen.lkml@gmail.com>
 References: <20200817080941.19227-1-allen.lkml@gmail.com>
@@ -88,86 +88,35 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/crypto/omap-aes.c  | 6 +++---
- drivers/crypto/omap-des.c  | 6 +++---
- drivers/crypto/omap-sham.c | 6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/crypto/picoxcell_crypto.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/omap-aes.c b/drivers/crypto/omap-aes.c
-index 4fd14d90cc40..4eae24167a5d 100644
---- a/drivers/crypto/omap-aes.c
-+++ b/drivers/crypto/omap-aes.c
-@@ -502,9 +502,9 @@ static void omap_aes_copy_ivout(struct omap_aes_dev *dd, u8 *ivbuf)
- 		((u32 *)ivbuf)[i] = omap_aes_read(dd, AES_REG_IV(dd, i));
+diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
+index dac6eb37fff9..a394d51f8d44 100644
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1136,9 +1136,9 @@ static int spacc_req_submit(struct spacc_req *req)
+ 		return spacc_ablk_submit(req);
  }
  
--static void omap_aes_done_task(unsigned long data)
-+static void omap_aes_done_task(struct tasklet_struct *t)
+-static void spacc_spacc_complete(unsigned long data)
++static void spacc_spacc_complete(struct tasklet_struct *t)
  {
--	struct omap_aes_dev *dd = (struct omap_aes_dev *)data;
-+	struct omap_aes_dev *dd = from_tasklet(dd, t, done_task);
+-	struct spacc_engine *engine = (struct spacc_engine *)data;
++	struct spacc_engine *engine = from_tasklet(engine, t, complete);
+ 	struct spacc_req *req, *tmp;
+ 	unsigned long flags;
+ 	LIST_HEAD(completed);
+@@ -1648,8 +1648,7 @@ static int spacc_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
  
- 	pr_debug("enter done_task\n");
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
++	tasklet_setup(&engine->complete, spacc_spacc_complete);
  
-@@ -1150,7 +1150,7 @@ static int omap_aes_probe(struct platform_device *pdev)
- 		 (reg & dd->pdata->major_mask) >> dd->pdata->major_shift,
- 		 (reg & dd->pdata->minor_mask) >> dd->pdata->minor_shift);
- 
--	tasklet_init(&dd->done_task, omap_aes_done_task, (unsigned long)dd);
-+	tasklet_setup(&dd->done_task, omap_aes_done_task);
- 
- 	err = omap_aes_dma_init(dd);
- 	if (err == -EPROBE_DEFER) {
-diff --git a/drivers/crypto/omap-des.c b/drivers/crypto/omap-des.c
-index c9d38bcfd1c7..fddcfc3ba57b 100644
---- a/drivers/crypto/omap-des.c
-+++ b/drivers/crypto/omap-des.c
-@@ -594,9 +594,9 @@ static int omap_des_crypt_req(struct crypto_engine *engine,
- 	return omap_des_crypt_dma_start(dd);
- }
- 
--static void omap_des_done_task(unsigned long data)
-+static void omap_des_done_task(struct tasklet_struct *t)
- {
--	struct omap_des_dev *dd = (struct omap_des_dev *)data;
-+	struct omap_des_dev *dd = from_tasklet(dd, t, done_task);
- 	int i;
- 
- 	pr_debug("enter done_task\n");
-@@ -1011,7 +1011,7 @@ static int omap_des_probe(struct platform_device *pdev)
- 		 (reg & dd->pdata->major_mask) >> dd->pdata->major_shift,
- 		 (reg & dd->pdata->minor_mask) >> dd->pdata->minor_shift);
- 
--	tasklet_init(&dd->done_task, omap_des_done_task, (unsigned long)dd);
-+	tasklet_setup(&dd->done_task, omap_des_done_task);
- 
- 	err = omap_des_dma_init(dd);
- 	if (err == -EPROBE_DEFER) {
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index 954d703f2981..3c03ee164039 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -1750,9 +1750,9 @@ static struct ahash_alg algs_sha384_sha512[] = {
- },
- };
- 
--static void omap_sham_done_task(unsigned long data)
-+static void omap_sham_done_task(struct tasklet_struct *t)
- {
--	struct omap_sham_dev *dd = (struct omap_sham_dev *)data;
-+	struct omap_sham_dev *dd = from_tasklet(dd, t, done_task);
- 	int err = 0;
- 
- 	dev_dbg(dd->dev, "%s: flags=%lx\n", __func__, dd->flags);
-@@ -2126,7 +2126,7 @@ static int omap_sham_probe(struct platform_device *pdev)
- 
- 	INIT_LIST_HEAD(&dd->list);
- 	spin_lock_init(&dd->lock);
--	tasklet_init(&dd->done_task, omap_sham_done_task, (unsigned long)dd);
-+	tasklet_setup(&dd->done_task, omap_sham_done_task);
- 	crypto_init_queue(&dd->queue, OMAP_SHAM_QUEUE_LENGTH);
- 
- 	err = (dev->of_node) ? omap_sham_get_res_of(dd, dev, &res) :
+ 	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
+ 			      &engine->complete);
 -- 
 2.17.1
 
