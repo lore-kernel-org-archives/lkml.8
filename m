@@ -2,127 +2,162 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D774AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCA920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L2NQEIbv"
+	by mail.kernel.org (Postfix) with ESMTP id A01AC2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685251;
+	bh=qOV3t9+zB8ini6+LfMQiGm2gCnd8AWc3bav+nW7FjXw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XxK/Crs7+8ZopLRlkshOz63cI6l59IuG4KT8t2t25t81mhjjtPbsD5isqsXz2UqnN
+	 P9MwCQ0rLFIIKxriiZN7m35WJkLFgc+KPg6GRBw1IWN/Ky90IXp1jAUrSsDAsGUdWc
+	 666O7kaTBP3EtPdi19lkYO08JtpfLfTKQyDsm9FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbgHQRWA (ORCPT
+        id S2389600AbgHQRVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38825 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388646AbgHQQ0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:26:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597681584; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=3AJR1rabANV+5oYOKdD6QLeJhKliqDUS2dV6N7xL9LU=; b=L2NQEIbvimy8hZs6KUTHyT2QCOWrMbyc/hrTQZ3LuC0TheiGQwMn/POpWl7Eui2q5SrKRRcI
- 8gyMchodfrN+SGPsiURj1HPvC8p2nMsJl3VNaiRk2XkGXRdoPIsllXWI7UXXJX3xJBgtpnoN
- lMIJGHuPkQ7IvEdbgJ0gwJm8Ed4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f3aaf9cba4c2cd367bbae48 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:26:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9543FC43387; Mon, 17 Aug 2020 16:26:03 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 17 Aug 2020 13:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731140AbgHQQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:18:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3201BC433C6;
-        Mon, 17 Aug 2020 16:26:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3201BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 17 Aug 2020 10:25:57 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/adreno: fix updating ring fence
-Message-ID: <20200817162556.GD3221@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>, Takashi Iwai <tiwai@suse.de>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200813000311.708728-1-robdclark@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5E920855;
+        Mon, 17 Aug 2020 16:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597681077;
+        bh=qOV3t9+zB8ini6+LfMQiGm2gCnd8AWc3bav+nW7FjXw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1AzM6XO/zB2HXimuoSt8qyrXQZoVF070zavpxVZnelsiTmLVOVJC5ok9kDyBPnRri
+         vWw/fe4tRHwWFJ+qFGt15IM/aa4QGslw0r6i1aSNegnwXVRyOZbw0QpeelZasN1OBr
+         qqjH33kMT221LE2ETSOLfYPhsj69Gn8+K/zfRu6Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.19 165/168] irqdomain/treewide: Free firmware node after domain removal
+Date:   Mon, 17 Aug 2020 17:18:16 +0200
+Message-Id: <20200817143741.905303900@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
+References: <20200817143733.692105228@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813000311.708728-1-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 05:03:09PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> We need to set it to the most recent completed fence, not the most
-> recent submitted.  Otherwise we have races where we think we can retire
-> submits that the GPU is not finished with, if the GPU doesn't manage to
-> overwrite the seqno before we look at it.
-> 
-> This can show up with hang recovery if one of the submits after the
-> crashing submit also hangs after it is replayed.
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+commit ec0160891e387f4771f953b888b1fe951398e5d9 upstream.
 
-> Fixes: f97decac5f4c ("drm/msm: Support multiple ringbuffers")
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index f9e3badf2fca..34e6242c1767 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -405,7 +405,7 @@ int adreno_hw_init(struct msm_gpu *gpu)
->  		ring->next = ring->start;
->  
->  		/* reset completed fence seqno: */
-> -		ring->memptrs->fence = ring->seqno;
-> +		ring->memptrs->fence = ring->fctx->completed_fence;
->  		ring->memptrs->rptr = 0;
->  	}
->  
-> -- 
-> 2.26.2
-> 
+Commit 711419e504eb ("irqdomain: Add the missing assignment of
+domain->fwnode for named fwnode") unintentionally caused a dangling pointer
+page fault issue on firmware nodes that were freed after IRQ domain
+allocation. Commit e3beca48a45b fixed that dangling pointer issue by only
+freeing the firmware node after an IRQ domain allocation failure. That fix
+no longer frees the firmware node immediately, but leaves the firmware node
+allocated after the domain is removed.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+The firmware node must be kept around through irq_domain_remove, but should be
+freed it afterwards.
+
+Add the missing free operations after domain removal where where appropriate.
+
+Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1595363169-7157-1-git-send-email-jonathan.derrick@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/apic/io_apic.c      |    5 +++++
+ drivers/iommu/intel_irq_remapping.c |    8 ++++++++
+ drivers/pci/controller/vmd.c        |    3 +++
+ 3 files changed, 16 insertions(+)
+
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2342,8 +2342,13 @@ static int mp_irqdomain_create(int ioapi
+ 
+ static void ioapic_destroy_irqdomain(int idx)
+ {
++	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
++	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
++
+ 	if (ioapics[idx].irqdomain) {
+ 		irq_domain_remove(ioapics[idx].irqdomain);
++		if (!cfg->dev)
++			irq_domain_free_fwnode(fn);
+ 		ioapics[idx].irqdomain = NULL;
+ 	}
+ }
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -601,13 +601,21 @@ out_free_table:
+ 
+ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
+ {
++	struct fwnode_handle *fn;
++
+ 	if (iommu && iommu->ir_table) {
+ 		if (iommu->ir_msi_domain) {
++			fn = iommu->ir_msi_domain->fwnode;
++
+ 			irq_domain_remove(iommu->ir_msi_domain);
++			irq_domain_free_fwnode(fn);
+ 			iommu->ir_msi_domain = NULL;
+ 		}
+ 		if (iommu->ir_domain) {
++			fn = iommu->ir_domain->fwnode;
++
+ 			irq_domain_remove(iommu->ir_domain);
++			irq_domain_free_fwnode(fn);
+ 			iommu->ir_domain = NULL;
+ 		}
+ 		free_pages((unsigned long)iommu->ir_table->base,
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -718,6 +718,7 @@ static int vmd_enable_domain(struct vmd_
+ 	if (!vmd->bus) {
+ 		pci_free_resource_list(&resources);
+ 		irq_domain_remove(vmd->irq_domain);
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -820,6 +821,7 @@ static void vmd_cleanup_srcu(struct vmd_
+ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
++	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+ 
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+@@ -828,6 +830,7 @@ static void vmd_remove(struct pci_dev *d
+ 	vmd_teardown_dma_ops(vmd);
+ 	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
++	irq_domain_free_fwnode(fn);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+
+
