@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4FD2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103EA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688792;
-	bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
+	s=default; t=1597688795;
+	bh=8i3CtQAPuU1twb1leZ/bbgci4RstGW3qJZBvatEKWmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbGb5bvyQxUxBsIVYfi4zOzNXVVsA8fMa/j2VnQQFrqNYvD1JKHpu0+W9Nmpl/XVv
-	 JsXCyttbI/8YP8vVzJ9987YfW56/Bd2jwYZvWrzVIdw+pxX2yaAKAkyosFlM8KPYKE
-	 J31O98EYgxNCu89g0tmcsrIOTSKNGF0iS9+RgoQc=
+	b=x1/Mowd82UH7WoDdpUW+Hq1bMHSdfS2DQIZv6oCcoGQr/VH/GMQQjNGTe2F5euQfP
+	 g6TVDLZdkWaGtpPFhfCguhTTXauYPvpWxiF3PBh/oRPLUYDgauLmhOnLCjdYh1xtGq
+	 AFm8x7r0yvPAjTKdqWncNtV471QB3qpqT+m/OltY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390950AbgHQS0W (ORCPT
+        id S2390610AbgHQS0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388193AbgHQQCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:24 -0400
+        id S2388182AbgHQQCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636DD206FA;
-        Mon, 17 Aug 2020 16:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F8320748;
+        Mon, 17 Aug 2020 16:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680143;
-        bh=7wBE4qxQd8JzuuczTOr2/54TrG7cCXcr/aXR5tTrfzA=;
+        s=default; t=1597680134;
+        bh=8i3CtQAPuU1twb1leZ/bbgci4RstGW3qJZBvatEKWmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DLQJnoWNSzjblVqD7YqtsDOtZYazkRx6eeUQEp6QDtZOfXsiKn5xSGmzngUT0nmvb
-         jgq+WPixhqIpIW2hqtGf0T3EktDUAUQacOG/1dmdv70ecMBpUFp7TEo0lk/MNQdQmF
-         xIEfG05JQhHYm4ZQfuI9uZWI/jKh6aNTrkSIYY3M=
+        b=P8r1C2e1J/LurayPt3ZR/zG6xC9uDHYQ/JNzHMRRFJqhixYoUNfKYcQTBAkv6g5jB
+         ZYTfeZMWIiuftfbX4Qz5Mjx5kQOOuI/TKU2KBboEP0ssv5VZDNnRUAva/nqVXzE713
+         DX7oDcCG7a92F0m1jXSgbnfVEIcbOngjMf79UgLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/270] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
-Date:   Mon, 17 Aug 2020 17:14:31 +0200
-Message-Id: <20200817143759.240118697@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Hristo Venev <hristo@venev.name>, io-uring@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 035/270] io_uring: fix sq array offset calculation
+Date:   Mon, 17 Aug 2020 17:13:56 +0200
+Message-Id: <20200817143757.543949030@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,94 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Dmitry Vyukov <dvyukov@google.com>
 
-[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
+[ Upstream commit b36200f543ff07a1cb346aa582349141df2c8068 ]
 
-This driver may take a regular spinlock when a raw spinlock
-(irq_desc->lock) is already taken which results in the following
-lockdep splat:
+rings_size() sets sq_offset to the total size of the rings (the returned
+value which is used for memory allocation). This is wrong: sq array should
+be located within the rings, not after them. Set sq_offset to where it
+should be.
 
-=============================
-[ BUG: Invalid wait context ]
-5.7.0-rc7 #1 Not tainted
------------------------------
-swapper/0/0 is trying to lock:
-ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
-other info that might help us debug this:
-context-{5:5}
-2 locks held by swapper/0/0:
- #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
- #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
-Hardware name: Pumpkin MT8516 (DT)
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x20
- dump_stack+0xd0/0x118
- __lock_acquire+0x8c8/0x2270
- lock_acquire+0xf8/0x470
- _raw_spin_lock_irqsave+0x50/0x78
- mtk_sysirq_set_type+0x48/0xc0
- __irq_set_trigger+0x58/0x170
- __setup_irq+0x420/0x8a0
- request_threaded_irq+0xd8/0x190
- timer_of_init+0x1e8/0x2c4
- mtk_gpt_init+0x5c/0x1dc
- timer_probe+0x74/0xf4
- time_init+0x14/0x44
- start_kernel+0x394/0x4f0
-
-Replace the spinlock_t with raw_spinlock_t to avoid this warning.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
+Fixes: 75b28affdd6a ("io_uring: allocate the two rings together")
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Hristo Venev <hristo@venev.name>
+Cc: io-uring@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/io_uring.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 73eae5966a403..6ff98b87e5c04 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -15,7 +15,7 @@
- #include <linux/spinlock.h>
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c1aaee061dae5..0460420250255 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3391,6 +3391,9 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
+ 		return SIZE_MAX;
+ #endif
  
- struct mtk_sysirq_chip_data {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	u32 nr_intpol_bases;
- 	void __iomem **intpol_bases;
- 	u32 *intpol_words;
-@@ -37,7 +37,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	reg_index = chip_data->which_word[hwirq];
- 	offset = hwirq & 0x1f;
++	if (sq_offset)
++		*sq_offset = off;
++
+ 	sq_array_size = array_size(sizeof(u32), sq_entries);
+ 	if (sq_array_size == SIZE_MAX)
+ 		return SIZE_MAX;
+@@ -3398,9 +3401,6 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
+ 	if (check_add_overflow(off, sq_array_size, &off))
+ 		return SIZE_MAX;
  
--	spin_lock_irqsave(&chip_data->lock, flags);
-+	raw_spin_lock_irqsave(&chip_data->lock, flags);
- 	value = readl_relaxed(base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
-@@ -53,7 +53,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
--	spin_unlock_irqrestore(&chip_data->lock, flags);
-+	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
- 	return ret;
+-	if (sq_offset)
+-		*sq_offset = off;
+-
+ 	return off;
  }
- 
-@@ -212,7 +212,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		ret = -ENOMEM;
- 		goto out_free_which_word;
- 	}
--	spin_lock_init(&chip_data->lock);
-+	raw_spin_lock_init(&chip_data->lock);
- 
- 	return 0;
  
 -- 
 2.25.1
