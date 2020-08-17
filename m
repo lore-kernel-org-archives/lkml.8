@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB31C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3049C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 820852072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E812072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690900;
-	bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
+	s=default; t=1597690917;
+	bh=TMQK9uOZoj6tbB77XQ2uVp/0+/Y91TXINTGPzdp7Gp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1FPH4CPEIaQcDb+Wv/2Yf+zEJV5V+nKsZEGOQveAXtIJEvPatGqfhV4SqYK08FFc/
-	 5wzIucgycvs3o//YeftuUlpDMHulMHkG3oyA/bj00Gx1k1eBJ7bnGE72F5rMWv3gTn
-	 FTvN/gep1SH0BmR0v/CCfzOKOS5p7bV42aNEy0MA=
+	b=wZZ57mku0pHHgokAXU3M/dt0KjmDWlXN43+lwRddNYPe04lIzjp1jv7pkpR+fH8Qr
+	 ioyMmzf8TiRYPPirEfTR3Jybk9mC1NRqwy5Jr7q9zEqMDLg1PZlh06oVseGr+6+s5O
+	 Q51Z2xK1WF0cmBnM6ZIEQSXp4/TF4GYYJ0AzxOzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404026AbgHQTBi (ORCPT
+        id S2404028AbgHQTBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59716 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:01:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbgHQPri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:38 -0400
+        id S1730824AbgHQPrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEFE2075B;
-        Mon, 17 Aug 2020 15:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549D72065D;
+        Mon, 17 Aug 2020 15:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679257;
-        bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
+        s=default; t=1597679254;
+        bh=TMQK9uOZoj6tbB77XQ2uVp/0+/Y91TXINTGPzdp7Gp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tq/bEPg6X9S19ckrTFjl298NX5fqwv+0u9aPtOKZs4OAnuG0Kl/pAREE/kFkqUEnW
-         pS1ORR3Cy29y72pogZkTTw6HpefyYUG7IjbSsiqSrxiPrchFCOpRNLhkMIhSpxYAeO
-         V93m7HDl9mxNBpBIHo1bpZSBQ/9jt+/2GQl+4TfE=
+        b=OLY+0QpuX9s2Vh4NBiFh4rkc1EiAerv1cxS3DYaiFsMsToJK75SF9ODIxf7gVG4+U
+         gV7VLcKVZxd7zt1CsAy0rh+VSJXZzG45Npa8fCt95++sW9/7UmO9BC+GJYxcqDDYr5
+         CMPJAPS5bHd43rKfjENHHW7W8eBn57owgUiJM3Zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 149/393] leds: lm355x: avoid enum conversion warning
-Date:   Mon, 17 Aug 2020 17:13:19 +0200
-Message-Id: <20200817143826.841853150@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 148/393] powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k
+Date:   Mon, 17 Aug 2020 17:13:18 +0200
+Message-Id: <20200817143826.792021886@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,58 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+[ Upstream commit 03fd42d458fb9cb69e712600bd69ff77ff3a45a8 ]
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+FIX_EARLY_DEBUG_BASE reserves a 128k area for debuging.
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+When page size is 256k, the calculation results in a 0 number of
+pages, leading to the following failure:
 
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
+  CC      arch/powerpc/kernel/asm-offsets.s
+In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:77:0,
+                 from ./arch/powerpc/include/asm/nohash/pgtable.h:8,
+                 from ./arch/powerpc/include/asm/pgtable.h:20,
+                 from ./include/linux/pgtable.h:6,
+                 from ./arch/powerpc/include/asm/kup.h:42,
+                 from ./arch/powerpc/include/asm/uaccess.h:9,
+                 from ./include/linux/uaccess.h:11,
+                 from ./include/linux/crypto.h:21,
+                 from ./include/crypto/hash.h:11,
+                 from ./include/linux/uio.h:10,
+                 from ./include/linux/socket.h:8,
+                 from ./include/linux/compat.h:15,
+                 from arch/powerpc/kernel/asm-offsets.c:14:
+./arch/powerpc/include/asm/fixmap.h:75:2: error: overflow in enumeration values
+  __end_of_permanent_fixed_addresses,
+  ^
+make[2]: *** [arch/powerpc/kernel/asm-offsets.s] Error 1
 
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Ensure the debug area is at least one page.
+
+Fixes: b8e8efaa8639 ("powerpc: reserve fixmap entries for early debug")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/ca8c9f8249f523b1fab873e67b81b11989d46553.1592207216.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/fixmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index a5abb499574b8..129f475aebf29 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -165,18 +165,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
- 
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
+diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+index 2ef155a3c8214..77ab25a199740 100644
+--- a/arch/powerpc/include/asm/fixmap.h
++++ b/arch/powerpc/include/asm/fixmap.h
+@@ -52,7 +52,7 @@ enum fixed_addresses {
+ 	FIX_HOLE,
+ 	/* reserve the top 128K for early debugging purposes */
+ 	FIX_EARLY_DEBUG_TOP = FIX_HOLE,
+-	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+((128*1024)/PAGE_SIZE)-1,
++	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128, PAGE_SIZE)/PAGE_SIZE)-1,
+ #ifdef CONFIG_HIGHMEM
+ 	FIX_KMAP_BEGIN,	/* reserved pte's for temporary kernel mappings */
+ 	FIX_KMAP_END = FIX_KMAP_BEGIN+(KM_TYPE_NR*NR_CPUS)-1,
 -- 
 2.25.1
 
