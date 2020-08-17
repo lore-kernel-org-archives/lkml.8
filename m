@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0169C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4130204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77B8204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692007;
-	bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
+	s=default; t=1597692011;
+	bh=aD0VJ2hek/6giczS2XRZSjOIniMLgWhsJr0SHpGkQQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EV252/g80f/cE+OHQiuFrnueNohg9pp2Ce/Wbx+ObU691NKVGkiu6J7cakwGuZ4Ke
-	 0UPeCNil1uIRbq7B4tlDAmWLZAUJzOp4Dff7wrLqaavOpm08MxaeHv96EXOYRwBHdr
-	 b4VfQZ/mm2j+ZDf7hHIMZceB/ypEgpSn8sdGZ0H8=
+	b=GO/cnkfZLpiGJdblb4tTYLzEfUuneM9TcIRZISkvc2XazYlzPHXlCl/pZUicmgCQ6
+	 wBd6KcJuAfR6KzGwt19NU8M7hDKWfZ3IATAReC/RECG7P02JfdMKOqm1p31bnv5s5b
+	 qU29LL3KzridlcVFvoI/RlEtHCt3BMxSH6PJVgq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgHQTUG (ORCPT
+        id S1731932AbgHQTUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:20:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbgHQPhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:01 -0400
+        id S1730523AbgHQPgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:36:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B691022C9F;
-        Mon, 17 Aug 2020 15:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94AF2208E4;
+        Mon, 17 Aug 2020 15:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678621;
-        bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
+        s=default; t=1597678615;
+        bh=aD0VJ2hek/6giczS2XRZSjOIniMLgWhsJr0SHpGkQQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKm1zAuDSHC5mZKsVLfttotiENKM9CwgONQUg940s8DYPbAa1uM0+J+udfiwp8oi9
-         Dp8slGbntPp0vttCpJ6HbYHMcwKuYpF6Zfi6QowLZFvvmo1wjYo4LvU8b2xuKL5Ol6
-         g8tfC+jKKg169oTrPprW8+AK84jKgy3cuBMJwekM=
+        b=0/5BiirO6zMWe78iLENdq/nQw2uYmYra21yFCf15GnUgWuPk09903KnJR+v1zUzdH
+         FWLY6xGnF5Qj8cwiJHV5Bf0hfWlrwctsmlb2EiEtVfNyjl5yCkQ3xhDA7NgU1Nmtvi
+         0SV+l2M8oRjp7deACn4bA1m8/FYxFcQSOrk9INu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
-        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.8 398/464] USB: serial: cp210x: enable usb generic throttle/unthrottle
-Date:   Mon, 17 Aug 2020 17:15:51 +0200
-Message-Id: <20200817143852.844653645@linuxfoundation.org>
+        stable@vger.kernel.org, EJ Hsu <ejh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 396/464] r8152: Use MAC address from correct device tree node
+Date:   Mon, 17 Aug 2020 17:15:49 +0200
+Message-Id: <20200817143852.747892430@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brant Merryman <brant.merryman@silabs.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit 4387b3dbb079d482d3c2b43a703ceed4dd27ed28 upstream.
+[ Upstream commit b9b40ee4db6cb186341b97bca4f0d7aa2a042a66 ]
 
-Assign the .throttle and .unthrottle functions to be generic function
-in the driver structure to prevent data loss that can otherwise occur
-if the host does not enable USB throttling.
+Query the USB device's device tree node when looking for a MAC address.
+The struct device embedded into the struct net_device does not have a
+device tree node attached at all.
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-Co-developed-by: Phu Luu <phu.luu@silabs.com>
-Signed-off-by: Phu Luu <phu.luu@silabs.com>
-Link: https://lore.kernel.org/r/57401AF3-9961-461F-95E1-F8AFC2105F5E@silabs.com
-[ johan: fix up tags ]
-Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
-Cc: stable <stable@vger.kernel.org>     # 2.6.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
+The reason why this went unnoticed is because the system where this was
+tested was one of the few development units that had its OTP programmed,
+as opposed to production systems where the MAC address is stored in a
+separate EEPROM and is passed via device tree by the firmware.
+
+Reported-by: EJ Hsu <ejh@nvidia.com>
+Fixes: acb6d3771a03 ("r8152: Use MAC address from device tree if available")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: EJ Hsu <ejh@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/cp210x.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/r8152.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_d
- 	.break_ctl		= cp210x_break_ctl,
- 	.set_termios		= cp210x_set_termios,
- 	.tx_empty		= cp210x_tx_empty,
-+	.throttle		= usb_serial_generic_throttle,
-+	.unthrottle		= usb_serial_generic_unthrottle,
- 	.tiocmget		= cp210x_tiocmget,
- 	.tiocmset		= cp210x_tiocmset,
- 	.attach			= cp210x_attach,
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -1504,7 +1504,7 @@ static int determine_ethernet_addr(struc
+ 
+ 	sa->sa_family = dev->type;
+ 
+-	ret = eth_platform_get_mac_address(&dev->dev, sa->sa_data);
++	ret = eth_platform_get_mac_address(&tp->udev->dev, sa->sa_data);
+ 	if (ret < 0) {
+ 		if (tp->version == RTL_VER_01) {
+ 			ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
 
 
