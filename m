@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D09C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68A912072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25FB2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687482;
-	bh=6NFGYLMdZuxHBt92Wm+Tz5Tb7Ixt9sANVZ1x7+ZPyb8=;
+	s=default; t=1597687499;
+	bh=sOLvYu9ayPOYRlmi4Mna/3oKgrT4g2RpifvvT/N1fGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYgLv2+eTFWmRov638RTHsVsV0/cA5t3CjUerDQgpUgT91iGH/igvfC/3iZDpiFDv
-	 1k/tby2MS04kHkkCdiaoLSbN58LupP9/XTn1rZN20q5bkK1vrnljKs8FcN1XBhCoxU
-	 2OrHXzagq1IjQ8CHdCbRZjwtdr8Kee5PzV8Lq4MQ=
+	b=Pbeuk5bu3vFsHpSZlzpcIAvACFKBvyJRpeW9jIK3CqnVahcs35up10WBjq96ESAHI
+	 tLrENBUwiMKgqgm6A9HIl9Pseg/aHLye3gdwVWsUhM6QKkvn2UiwRJPBu/o2empXlr
+	 dLAt5lTZpgq1/j0dns+3O67qnAtzVXWRbhyQQYDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388631AbgHQSEk (ORCPT
+        id S2390115AbgHQSE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33696 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388518AbgHQQJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:09:44 -0400
+        id S2388516AbgHQQJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:09:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E78D20B1F;
-        Mon, 17 Aug 2020 16:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9238720729;
+        Mon, 17 Aug 2020 16:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680582;
-        bh=6NFGYLMdZuxHBt92Wm+Tz5Tb7Ixt9sANVZ1x7+ZPyb8=;
+        s=default; t=1597680580;
+        bh=sOLvYu9ayPOYRlmi4Mna/3oKgrT4g2RpifvvT/N1fGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ogleyW9Im+AmBX4NMYyuDuBQp+ww+ZM8TOvKTTXUgT3M41RF6XgG440Qo9nG7xfBO
-         hjqhYMQNj4Y+9JZhU/uuoH2kjeFsEd2vZ0TRuL/Vty4UToC+tl/NuTgQN72xj1ldRp
-         w/4hZgUUhL7E30e67y7eO2w5Dh9l8fDXWQW6r9mc=
+        b=pVLsQSwWOsQvgRLEU6DH2lWyebi6HvCqGU8I4n/tD/KLp6K2CmQEufBEXmegI4qUY
+         WHxw2RfXRiKD3E5u6V38aMCgci8rmzOs4t93pZz4ZxB1c8fqIzIDAH9sjzif/CPL7w
+         d6dhysTqRSF//WOG467Ve2cQAQ7f1DnPJbipLI3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 244/270] mtd: rawnand: qcom: avoid write to unavailable register
-Date:   Mon, 17 Aug 2020 17:17:25 +0200
-Message-Id: <20200817143807.971655202@linuxfoundation.org>
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 226/270] net: refactor bind_bucket fastreuse into helper
+Date:   Mon, 17 Aug 2020 17:17:07 +0200
+Message-Id: <20200817143807.031294396@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,68 +61,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-commit 443440cc4a901af462239d286cd10721aa1c7dfc upstream.
+[ Upstream commit 62ffc589abb176821662efc4525ee4ac0b9c3894 ]
 
-SFLASHC_BURST_CFG is only available on older ipq NAND platforms, this
-register has been removed when the NAND controller got implemented in
-the qpic controller.
+Refactor the fastreuse update code in inet_csk_get_port into a small
+helper function that can be called from other places.
 
-Avoid writing this register on devices which are based on qpic NAND
-controller.
-
-Fixes: dce84760b09f ("mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1591948696-16015-2-git-send-email-sivaprak@codeaurora.org
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mtd/nand/raw/qcom_nandc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/net/inet_connection_sock.h |    4 +
+ net/ipv4/inet_connection_sock.c    |   97 ++++++++++++++++++++-----------------
+ 2 files changed, 57 insertions(+), 44 deletions(-)
 
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -459,11 +459,13 @@ struct qcom_nand_host {
-  * among different NAND controllers.
-  * @ecc_modes - ecc mode for NAND
-  * @is_bam - whether NAND controller is using BAM
-+ * @is_qpic - whether NAND CTRL is part of qpic IP
-  * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
-  */
- struct qcom_nandc_props {
- 	u32 ecc_modes;
- 	bool is_bam;
-+	bool is_qpic;
- 	u32 dev_cmd_reg_start;
- };
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -309,6 +309,10 @@ int inet_csk_compat_getsockopt(struct so
+ int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
+ 			       char __user *optval, unsigned int optlen);
  
-@@ -2751,7 +2753,8 @@ static int qcom_nandc_setup(struct qcom_
- 	u32 nand_ctrl;
++/* update the fast reuse flag when adding a socket */
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk);
++
+ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
  
- 	/* kill onenand */
--	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-+	if (!nandc->props->is_qpic)
-+		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
- 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
- 		    NAND_DEV_CMD_VLD_VAL);
+ #define TCP_PINGPONG_THRESH	3
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -284,6 +284,57 @@ static inline int sk_reuseport_match(str
+ 				    ipv6_only_sock(sk), true, false);
+ }
  
-@@ -3007,12 +3010,14 @@ static const struct qcom_nandc_props ipq
- static const struct qcom_nandc_props ipq4019_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x0,
- };
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk)
++{
++	kuid_t uid = sock_i_uid(sk);
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
++
++	if (hlist_empty(&tb->owners)) {
++		tb->fastreuse = reuse;
++		if (sk->sk_reuseport) {
++			tb->fastreuseport = FASTREUSEPORT_ANY;
++			tb->fastuid = uid;
++			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++			tb->fast_ipv6_only = ipv6_only_sock(sk);
++			tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++		} else {
++			tb->fastreuseport = 0;
++		}
++	} else {
++		if (!reuse)
++			tb->fastreuse = 0;
++		if (sk->sk_reuseport) {
++			/* We didn't match or we don't have fastreuseport set on
++			 * the tb, but we have sk_reuseport set on this socket
++			 * and we know that there are no bind conflicts with
++			 * this socket in this tb, so reset our tb's reuseport
++			 * settings so that any subsequent sockets that match
++			 * our current socket will be put on the fast path.
++			 *
++			 * If we reset we need to set FASTREUSEPORT_STRICT so we
++			 * do extra checking for all subsequent sk_reuseport
++			 * socks.
++			 */
++			if (!sk_reuseport_match(tb, sk)) {
++				tb->fastreuseport = FASTREUSEPORT_STRICT;
++				tb->fastuid = uid;
++				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++				tb->fast_ipv6_only = ipv6_only_sock(sk);
++				tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++			}
++		} else {
++			tb->fastreuseport = 0;
++		}
++	}
++}
++
+ /* Obtain a reference to a local port for the given sock,
+  * if snum is zero it means select any available local port.
+  * We try to allocate an odd port (and leave even ports for connect())
+@@ -296,7 +347,6 @@ int inet_csk_get_port(struct sock *sk, u
+ 	struct inet_bind_hashbucket *head;
+ 	struct net *net = sock_net(sk);
+ 	struct inet_bind_bucket *tb = NULL;
+-	kuid_t uid = sock_i_uid(sk);
+ 	int l3mdev;
  
- static const struct qcom_nandc_props ipq8074_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x7000,
- };
- 
+ 	l3mdev = inet_sk_bound_l3mdev(sk);
+@@ -333,49 +383,8 @@ tb_found:
+ 			goto fail_unlock;
+ 	}
+ success:
+-	if (hlist_empty(&tb->owners)) {
+-		tb->fastreuse = reuse;
+-		if (sk->sk_reuseport) {
+-			tb->fastreuseport = FASTREUSEPORT_ANY;
+-			tb->fastuid = uid;
+-			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-			tb->fast_ipv6_only = ipv6_only_sock(sk);
+-			tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	} else {
+-		if (!reuse)
+-			tb->fastreuse = 0;
+-		if (sk->sk_reuseport) {
+-			/* We didn't match or we don't have fastreuseport set on
+-			 * the tb, but we have sk_reuseport set on this socket
+-			 * and we know that there are no bind conflicts with
+-			 * this socket in this tb, so reset our tb's reuseport
+-			 * settings so that any subsequent sockets that match
+-			 * our current socket will be put on the fast path.
+-			 *
+-			 * If we reset we need to set FASTREUSEPORT_STRICT so we
+-			 * do extra checking for all subsequent sk_reuseport
+-			 * socks.
+-			 */
+-			if (!sk_reuseport_match(tb, sk)) {
+-				tb->fastreuseport = FASTREUSEPORT_STRICT;
+-				tb->fastuid = uid;
+-				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-				tb->fast_ipv6_only = ipv6_only_sock(sk);
+-				tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-			}
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	}
++	inet_csk_update_fastreuse(tb, sk);
++
+ 	if (!inet_csk(sk)->icsk_bind_hash)
+ 		inet_bind_hash(sk, tb, port);
+ 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
 
 
