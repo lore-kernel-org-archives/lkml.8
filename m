@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED937C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B702C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C503D20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6B720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691362;
-	bh=FF9yg5Lc3uJgdvr2qf/PcEfwb6Gc7NL6cBLxzjc8CS8=;
+	s=default; t=1597691371;
+	bh=YDax2OX2p4v22GlvBNRFuW6w724dSBt5Jqzdo602esg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cR7CHbP9I+viuwuJAfSPgYjG7trcUgGoOkKON1JLtA3sh8X1YgrSZcBhfsvIHyxuk
-	 Dj8fY5Ab0H3UhLmwJrhUdB5c+69KOKFLWN6K5c49EDrYz890XWZhNwrKl3D7nTU5sh
-	 hn+kVhuZSuR/6YIpZ3vJBx6byLk+0QBeNp041940=
+	b=cFHtesO6Yg1P9tlu1CVLblWSKZpm31xaumgGpnDZD/kXaEMf9wtz8JD6MhJdhoVBQ
+	 mLCIsy8aU17jkuOf1BzhC2LV1vspTrqyaXNrCnCLB77bTNI58BCbC7skYN6nHSbtUm
+	 fYWdP2yzwko5MlDtvByOj4ilxl4QlvzhNBQ8J7zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392059AbgHQTJV (ORCPT
+        id S2392067AbgHQTJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52698 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387552AbgHQPmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:33 -0400
+        id S2387530AbgHQPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B746320760;
-        Mon, 17 Aug 2020 15:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5B522D01;
+        Mon, 17 Aug 2020 15:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678951;
-        bh=FF9yg5Lc3uJgdvr2qf/PcEfwb6Gc7NL6cBLxzjc8CS8=;
+        s=default; t=1597678942;
+        bh=YDax2OX2p4v22GlvBNRFuW6w724dSBt5Jqzdo602esg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2gkoS6wIXckcogzlS5Sy1DmJGwqLJ95lpaipXMZU4Wg2o4KWC9hNe5uf0SDwNOFd
-         2pAEpQSLAw749w4fj4PeR0WH1sMJy4YmyeIIV43a41J4WujAAnMqeHUKSMIbR5xoQE
-         vGF8aTHv+dPSEMMMXYiyt0aczs7zli4YmoXttL8Q=
+        b=V0WngQBEphhB0+3uk0rVxHVexKnL/Qtxq9q9ktz/pyFZGxpPAQU3xl6pGVdp6uE7q
+         EFFXFuNUOEo3j/NXdhmQr/Z5vdSNXtHjG8RMlzFzwE/An8iGSaRtfK0BS+UT1d+JB8
+         YVHe8agVd7V8d7PS1UVQg3feRQuxvf/SeHx2AEF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Hristo Venev <hristo@venev.name>, io-uring@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 045/393] io_uring: fix sq array offset calculation
-Date:   Mon, 17 Aug 2020 17:11:35 +0200
-Message-Id: <20200817143821.785749994@linuxfoundation.org>
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 042/393] tpm: Require that all digests are present in TCG_PCR_EVENT2 structures
+Date:   Mon, 17 Aug 2020 17:11:32 +0200
+Message-Id: <20200817143821.643020135@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,49 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit b36200f543ff07a1cb346aa582349141df2c8068 ]
+[ Upstream commit 7f3d176f5f7e3f0477bf82df0f600fcddcdcc4e4 ]
 
-rings_size() sets sq_offset to the total size of the rings (the returned
-value which is used for memory allocation). This is wrong: sq array should
-be located within the rings, not after them. Set sq_offset to where it
-should be.
+Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+TCG_PCClientPCREvent event log header. Also require that
+TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
 
-Fixes: 75b28affdd6a ("io_uring: allocate the two rings together")
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Hristo Venev <hristo@venev.name>
-Cc: io-uring@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The TCG PC Client Platform Firmware Profile Specification section 9.1
+(Family "2.0", Level 00 Revision 1.04) states:
+
+ For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+ there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+ Note: This includes EV_NO_ACTION events which do not extend the PCR.
+
+Section 9.4.5.1 provides this description of
+TCG_EfiSpecIdEvent.numberOfAlgorithms:
+
+ The number of Hash algorithms in the digestSizes field. This field MUST
+ be set to a value of 0x01 or greater.
+
+Enforce these restrictions, as required by the above specification, in
+order to better identify and ignore invalid sequences of bytes at the
+end of an otherwise valid TPM2 event log. Firmware doesn't always have
+the means necessary to inform the kernel of the actual event log size so
+the kernel's event log parsing code should be stringent when parsing the
+event log for resiliency against firmware bugs. This is true, for
+example, when firmware passes the event log to the kernel via a reserved
+memory region described in device tree.
+
+POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
+device tree properties to describe the memory region used to pass the
+event log from firmware to the kernel. Unfortunately, the
+"linux,sml-size" property describes the size of the entire reserved
+memory region rather than the size of the event long within the memory
+region and the event log format does not include information describing
+the size of the event log.
+
+tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
+"linux,sml-size" property is used. At the end of that function,
+log->bios_event_log_end is pointing at the end of the reserved memory
+region. That's typically 0x10000 bytes offset from "linux,sml-base",
+depending on what's defined in the device tree source.
+
+The firmware event log only fills a portion of those 0x10000 bytes and
+the rest of the memory region should be zeroed out by firmware. Even in
+the case of a properly zeroed bytes in the remainder of the memory
+region, the only thing allowing the kernel's event log parser to detect
+the end of the event log is the following conditional in
+__calc_tpm2_event_size():
+
+        if (event_type == 0 && event_field->event_size == 0)
+                size = 0;
+
+If that wasn't there, __calc_tpm2_event_size() would think that a 16
+byte sequence of zeroes, following an otherwise valid event log, was
+a valid event.
+
+However, problems can occur if a single bit is set in the offset
+corresponding to either the TCG_PCR_EVENT2.eventType or
+TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
+This could confuse the parser into thinking that an additional entry is
+present in the event log and exposing this invalid entry to userspace in
+the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
+problems have been seen if firmware does not fully zero the memory
+region upon a warm reboot.
+
+This patch significantly raises the bar on how difficult it is for
+stale/invalid memory to confuse the kernel's event log parser but
+there's still, ultimately, a reliance on firmware to properly initialize
+the remainder of the memory region reserved for the event log as the
+parser cannot be expected to detect a stale but otherwise properly
+formatted firmware event log entry.
+
+Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/tpm_eventlog.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5405362ae35f1..04694f6c30a04 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7139,6 +7139,9 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
- 		return SIZE_MAX;
- #endif
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index 96d36b7a13440..6f1d1b7f8b429 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
  
-+	if (sq_offset)
-+		*sq_offset = off;
-+
- 	sq_array_size = array_size(sizeof(u32), sq_entries);
- 	if (sq_array_size == SIZE_MAX)
- 		return SIZE_MAX;
-@@ -7146,9 +7149,6 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
- 	if (check_add_overflow(off, sq_array_size, &off))
- 		return SIZE_MAX;
+ 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
  
--	if (sq_offset)
--		*sq_offset = off;
--
- 	return off;
- }
- 
+-	/* Check if event is malformed. */
++	/*
++	 * Perform validation of the event in order to identify malformed
++	 * events. This function may be asked to parse arbitrary byte sequences
++	 * immediately following a valid event log. The caller expects this
++	 * function to recognize that the byte sequence is not a valid event
++	 * and to return an event size of 0.
++	 */
+ 	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
+-		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
++		   sizeof(TCG_SPECID_SIG)) ||
++	    !efispecid->num_algs || count != efispecid->num_algs) {
+ 		size = 0;
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
