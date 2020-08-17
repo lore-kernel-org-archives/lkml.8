@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B62E20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93E72063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685728;
-	bh=JwBFHVM3zClCcFsLQOBYkaN/QxPl8gqzR3imMdH576I=;
+	s=default; t=1597685746;
+	bh=nxbijIe3mjlBYbtASARKH08UZo8+8GTitovu0fEMvmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0MDuuMgxeZM3O4kNa0yfJL3DmUWwLJPK3DMLiTRgnfOwZ49RrkSw23iM6wWlwy6z
-	 QP3N4Ze7KR+vL5WR60VQNBRrWVMIFwq+APodgGzx4rbH8rymY7tBtMmHnfrYZoAX28
-	 fONkd5YxfjAJx9LfPfNzm519kUrGeWj5lvSNiiSI=
+	b=K+0x7oPFLiwnGSpRT1LZAYD0voCsL5zXDsjWLKUK+Xh2Nw2gEbDNSDECbOU/vp3Sd
+	 XQ+iTZGqtjoi66hi26U/TbZAPFPldgi59MKj0LZ2PvLwJ70UzdIs34aLqFhr4hEAqB
+	 WZJ4nBDbl90eQUTMZmul5CtYreQNtpBF1DBJH9xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbgHQRfY (ORCPT
+        id S1729448AbgHQRfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730054AbgHQQRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730062AbgHQQRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:17:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7483C2075B;
-        Mon, 17 Aug 2020 16:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88582065C;
+        Mon, 17 Aug 2020 16:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681060;
-        bh=JwBFHVM3zClCcFsLQOBYkaN/QxPl8gqzR3imMdH576I=;
+        s=default; t=1597681058;
+        bh=nxbijIe3mjlBYbtASARKH08UZo8+8GTitovu0fEMvmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjYnskCgbbSFLWvINDUAGhwzSibQKjhjCWrwhy6mCTo01TT0udAVje8zZhhkf5WaW
-         m+q5X1GOoyQv/Fs7V1+rijPhvtIr/OyeDmsaWOJU8eHxEXGmj0Cxdmbq2TNtMTk7xO
-         Kyih1e9alVjnZ71ZtuZQIhI3hA67RFh4jCV/0MTY=
+        b=dZrKhEs50G4i60vSw/3+IaMqo3WBFGz7Bwyv4ixUq5qkE4pkHnqJ7hyleV4xCz2La
+         lEUosh4CaRY9eq3acCqf6QxKBbZilbIeYdgr0wZ0vPtr3fLfzhzwVVjA1awVBQJJ8g
+         prJe3XCtu7MdDgqdw0NOANcw+UK1s/hfv2GGVHaQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 135/168] net/tls: Fix kmap usage
-Date:   Mon, 17 Aug 2020 17:17:46 +0200
-Message-Id: <20200817143740.446300902@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.19 163/168] parisc: mask out enable and reserved bits from sba imask
+Date:   Mon, 17 Aug 2020 17:18:14 +0200
+Message-Id: <20200817143741.804331328@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,43 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Sven Schnelle <svens@stackframe.org>
 
-[ Upstream commit b06c19d9f827f6743122795570bfc0c72db482b0 ]
+commit 5b24993c21cbf2de11aff077a48c5cb0505a0450 upstream.
 
-When MSG_OOB is specified to tls_device_sendpage() the mapped page is
-never unmapped.
+When using kexec the SBA IOMMU IBASE might still have the RE
+bit set. This triggers a WARN_ON when trying to write back the
+IBASE register later, and it also makes some mask calculations fail.
 
-Hold off mapping the page until after the flags are checked and the page
-is actually needed.
-
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tls/tls_device.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -476,7 +476,7 @@ int tls_device_sendpage(struct sock *sk,
- 			int offset, size_t size, int flags)
- {
- 	struct iov_iter	msg_iter;
--	char *kaddr = kmap(page);
-+	char *kaddr;
- 	struct kvec iov;
- 	int rc;
+---
+ drivers/parisc/sba_iommu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -1291,7 +1291,7 @@ sba_ioc_init_pluto(struct parisc_device
+ 	** (one that doesn't overlap memory or LMMIO space) in the
+ 	** IBASE and IMASK registers.
+ 	*/
+-	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE);
++	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE) & ~0x1fffffULL;
+ 	iova_space_size = ~(READ_REG(ioc->ioc_hpa + IOC_IMASK) & 0xFFFFFFFFUL) + 1;
  
-@@ -490,6 +490,7 @@ int tls_device_sendpage(struct sock *sk,
- 		goto out;
- 	}
- 
-+	kaddr = kmap(page);
- 	iov.iov_base = kaddr + offset;
- 	iov.iov_len = size;
- 	iov_iter_kvec(&msg_iter, WRITE | ITER_KVEC, &iov, 1, size);
+ 	if ((ioc->ibase < 0xfed00000UL) && ((ioc->ibase + iova_space_size) > 0xfee00000UL)) {
 
 
