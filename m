@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACB8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6028CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574F42072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F75D20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687800;
-	bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
+	s=default; t=1597687802;
+	bh=is69ImNRcNiBKuUbEI854UhHxLPj5gMAjcNEEvXt4g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AX8kU4zRWpxga7mGSbtgY09I/qdsbYFIXF6BchrlTUG3e4rt6V5qPfpT75uFZY1Xd
-	 pV/Qg2eFKwWC+N/0TJwpTdjXbxo3Y/755cEn58761NSHC1rBp1uW6hF5xEpocD+3SU
-	 9aPrXI+20jvoon+29ng9HfxrWFEUAUHA5w4mcDDA=
+	b=FU8IcrG3Ekl45snE1WrppyE4eICjopEwI9nGheSWFswBDIgG8avIR9Xfl3fIP98Rt
+	 gOF7wbQ5eizoyQwYe1r9aUZCTpi1BighhMqH417xFMQeoklBegM7XzbzKZTv3nsTyi
+	 rCrEEYM7zJeWxvWGQerJQ9/fQW0Y69ok4Waeadmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgHQSJ4 (ORCPT
+        id S2390370AbgHQSJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388428AbgHQQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:07:56 -0400
+        id S2388430AbgHQQII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D19A20885;
-        Mon, 17 Aug 2020 16:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 031F822C9E;
+        Mon, 17 Aug 2020 16:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680475;
-        bh=Npu3UeR3EM6VyxZdke2f0joPg//KAUdcSv7WEvWzGj0=;
+        s=default; t=1597680483;
+        bh=is69ImNRcNiBKuUbEI854UhHxLPj5gMAjcNEEvXt4g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vje9qwakZ3nYkMe2DqonBzTfr4L9WQCIWMQF86GKKKxQDAvMQ6pT6Q68Hs4UIwF9M
-         I6tnDJUwtS3DFyAYo7xJSJ8BbXe1gwYR+BC6D/I3CHEokTPBrcJRUFDwlaw2S/alJW
-         fUdsz44iHh7tbWmDV5/ucUWvB/Sh3NocVoVvtQ4A=
+        b=Eb2LyjU7cJ/kbec9OHHVq0DU5uORkKpp1URvDOZ0O6nzl8teVNu/8C6iklUyilTdI
+         YBkY4qACEUxzXTD661GpK/r8t6fUSJ8LZ98YladYWWbgQvDKFbvZiCqhR1JAYh2Pg6
+         n4HQj+b7ysV2s5qgEI9v0cub+GM5om7D/xZgo2YU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rick Farrington <ricardo.farrington@cavium.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Florinel Iordache <florinel.iordache@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 202/270] liquidio: Fix wrong return value in cn23xx_get_pf_num()
-Date:   Mon, 17 Aug 2020 17:16:43 +0200
-Message-Id: <20200817143805.842036556@linuxfoundation.org>
+Subject: [PATCH 5.4 205/270] fsl/fman: fix dereference null return value
+Date:   Mon, 17 Aug 2020 17:16:46 +0200
+Message-Id: <20200817143805.998038494@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,35 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit aa027850a292ea65524b8fab83eb91a124ad362c ]
+[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+Check before using returned value to avoid dereferencing null pointer.
 
-Fixes: 0c45d7fe12c7e ("liquidio: fix use of pf in pass-through mode in a virtual machine")
-Cc: Rick Farrington <ricardo.farrington@cavium.com>
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
+Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-index 43d11c38b38a9..4cddd628d41b2 100644
---- a/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-+++ b/drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c
-@@ -1167,7 +1167,7 @@ static int cn23xx_get_pf_num(struct octeon_device *oct)
- 		oct->pf_num = ((fdl_bit >> CN23XX_PCIE_SRIOV_FDL_BIT_POS) &
- 			       CN23XX_PCIE_SRIOV_FDL_MASK);
- 	} else {
--		ret = EINVAL;
-+		ret = -EINVAL;
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index ee82ee1384eb3..47f6fee1f3964 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1756,6 +1756,7 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 	struct fman_port *port;
+ 	struct fman *fman;
+ 	struct device_node *fm_node, *port_node;
++	struct platform_device *fm_pdev;
+ 	struct resource res;
+ 	struct resource *dev_res;
+ 	u32 val;
+@@ -1780,8 +1781,14 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 		goto return_err;
+ 	}
  
- 		/* Under some virtual environments, extended PCI regs are
- 		 * inaccessible, in which case the above read will have failed.
+-	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
++	fm_pdev = of_find_device_by_node(fm_node);
+ 	of_node_put(fm_node);
++	if (!fm_pdev) {
++		err = -EINVAL;
++		goto return_err;
++	}
++
++	fman = dev_get_drvdata(&fm_pdev->dev);
+ 	if (!fman) {
+ 		err = -EINVAL;
+ 		goto return_err;
 -- 
 2.25.1
 
