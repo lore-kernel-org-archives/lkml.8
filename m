@@ -2,152 +2,144 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0262C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F788C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB2A20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688701;
-	bh=GojjC6uCeUIFjllzkZFs+d8HgBoSm/cfabwAnhoPo0Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Upq75K3psIebR45hkxoYg67ovmZcR0J+fD6IBFGIeCOjLsrT8CUa6DyWksr4icBry
-	 +Bj1GQvpN8k+Ko0tBJewKE/51c6aJmltgXRF6819DgOAt38OAJl6VLYJfx1IoyhKJa
-	 /cHq7HQ01Ud0i+YihapF2VnU5SFJpTlfEyUmXid0=
+	by mail.kernel.org (Postfix) with ESMTP id EA80D20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o41v9UEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbgHQSY7 (ORCPT
+        id S1731333AbgHQSZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731034AbgHQQDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ADDD2053B;
-        Mon, 17 Aug 2020 16:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680183;
-        bh=GojjC6uCeUIFjllzkZFs+d8HgBoSm/cfabwAnhoPo0Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ecn8pi/aczY6ed2Bh9E39sgfxk276N0cuono7t85YA7nyps/LevI8LsDlndzGuZY0
-         T/N3VmWbPOaCRdczr6gQggfB3bThWplTtTrzImQ6joPud7La65wejbeKMkgBDkJUiW
-         svCBtxLpZrKI+hjcYBAhFMGumkD/o1KqBF2N3Dvk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/270] bdc: Fix bug causing crash after multiple disconnects
-Date:   Mon, 17 Aug 2020 17:14:45 +0200
-Message-Id: <20200817143759.955667926@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730916AbgHQQCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6395DC061389;
+        Mon, 17 Aug 2020 09:02:52 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z18so15511803wrm.12;
+        Mon, 17 Aug 2020 09:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5R//1gwPJaBVDKsBVQVRahfvA2gtmZIIH1L6eLKkANU=;
+        b=o41v9UEH+JDITigfYWJeIZL2eVuQVurgNOlECENTyDbbewhZB8lLdvjxwSeK7ASXPJ
+         CHFxToOJ9jMMfJVBGB6TYXApk7MXSISCrk160b4PdKpflDHxR0v6dQNbCloh6BBIpxqf
+         8tj2PRg88vJXiPm0PyhxIIYVmKZhacn4ceeLP7byqGB2KJXTR6QQlLCTEbVF+ZeMAPgg
+         kC8fzEc9D2PNMJ5R/XgTA5mLov7B7XNP0WHtvHC872ydWbNsBzHNWTjA6yRMXN/99xyu
+         iPuPpEpHN4sMJBjgZxjHl+h6sXYLpvLT5yEDx+MQwLzfmHfiAV30hau4MXe9k92n3W1P
+         5MCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5R//1gwPJaBVDKsBVQVRahfvA2gtmZIIH1L6eLKkANU=;
+        b=jGkitg2x4TzgKaO/C3eStmtQlI0RTaRvwvoSWE6NwkHPcOrG3/J/dckyHo8mG89ePg
+         UnfVQlBqc61/3fRJk27vDj9TmP3fq8k7pwWcCJ1bCKWwfwuIZAG+jFhRl/QLux38MQEx
+         Gk6h7DDGUtYogQzO6qSaSeaZQDAXI513FzbKnRlFiJAKGcPAqUIjdGtJp2lrINd/IHk5
+         gRgRUiwg9XqWcJfTeEO+DWVlUM2HTksQm/RWINBAddVkWSkl4KY75koQWddFRqBdo10+
+         +VYF8o6L7pmJrTy5jV9gHwNKFUZ9twXM41aBzU6OF3N9Jm5Bhkjc9E1Jra8rbO8Yv3Th
+         MgjQ==
+X-Gm-Message-State: AOAM532j14Ivm40uHsfmw5TuU/Ut9KthRS/2alulQ1zx9WkEDj/CZJ95
+        ZszYboGHaQYAHCljdtZqEeZpyqvgIPqkxOEe
+X-Google-Smtp-Source: ABdhPJxraiu4iLzWphUoT4hkaCNbj4d+jonExhITTrdP2QjcZwER1s4bzDz3fqMZPEaSnApfua4Kcw==
+X-Received: by 2002:adf:e290:: with SMTP id v16mr15876943wri.259.1597680171465;
+        Mon, 17 Aug 2020 09:02:51 -0700 (PDT)
+Received: from syz-necip.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id b2sm28270724wmj.47.2020.08.17.09.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 09:02:50 -0700 (PDT)
+From:   Necip Fazil Yildiran <fazilyildiran@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     bjorn.andersson@linaro.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dvyukov@google.com, elver@google.com,
+        andreyknvl@google.com, glider@google.com, necip@google.com,
+        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Subject: [PATCH v3] net: qrtr: fix usage of idr in port assignment to socket
+Date:   Mon, 17 Aug 2020 15:54:48 +0000
+Message-Id: <20200817155447.3158787-1-fazilyildiran@gmail.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+From: Necip Fazil Yildiran <necip@google.com>
 
-[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
+Passing large uint32 sockaddr_qrtr.port numbers for port allocation
+triggers a warning within idr_alloc() since the port number is cast
+to int, and thus interpreted as a negative number. This leads to
+the rejection of such valid port numbers in qrtr_port_assign() as
+idr_alloc() fails.
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+To avoid the problem, switch to idr_alloc_u32() instead.
 
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Signed-off-by: Necip Fazil Yildiran <necip@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+v2->v3:
+* Use 12-digits long fixes tag instead of 10
+v1->v2:
+* Use reverse christmas tree ordering for local variables
+* Add reviewed-by tag
+---
+ net/qrtr/qrtr.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index cc4a16e253ac5..174555e94a6c0 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index b4c0db0b7d31..90c558f89d46 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -692,23 +692,25 @@ static void qrtr_port_remove(struct qrtr_sock *ipc)
+  */
+ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ {
++	u32 min_port;
+ 	int rc;
+ 
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+-		rc = idr_alloc(&qrtr_ports, ipc,
+-			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+-			       GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = QRTR_MIN_EPH_SOCKET;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+ 		rc = -EACCES;
+ 	} else if (*port == QRTR_PORT_CTRL) {
+-		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
++		min_port = 0;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
  	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index d49c6dc1082dc..9ddc0b4e92c9c 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
+-		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = *port;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
  	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
+ 	mutex_unlock(&qrtr_port_lock);
  
-@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
 -- 
-2.25.1
-
-
+2.28.0.220.ged08abb693-goog
 
