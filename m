@@ -2,178 +2,106 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02351C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D697920758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597652181;
-	bh=REU3lKNM+epiJ6ZpgKTv0/LLGWDdzPEKrZr2K4sNVMk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b0c2LZ08MeTEIV/jyKeuOKhXTCAKvkK7LdSy9XVoEUjnklyQi5CXc+zvGsp2jUEvk
-	 JQo4XrUiiow0sVh4hLz/ozoAjAmdKe91R4jJiQO9UsoYPEM7sqK+kVTICw/3QIOg0Q
-	 mAjlq0tJUw/wvubz9Q6m548aNH+c0tHpFEtaEWhI=
+	by mail.kernel.org (Postfix) with ESMTP id 1521720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U1X/n6Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgHQIQU (ORCPT
+        id S1726308AbgHQIQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgHQIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:16:20 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4394720758;
-        Mon, 17 Aug 2020 08:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597652179;
-        bh=REU3lKNM+epiJ6ZpgKTv0/LLGWDdzPEKrZr2K4sNVMk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=REAqyC6iAVEsUXag770uIcewmuII3cBhCCYrwSe0y9RvpiATOl5bGzaFWh+F5UvDH
-         8j+Gkku5TWwcgTegc02ZFEb/AdmLYVKQpbHO5xJumjKQvQxt0Q80ynPRv+ZcIHnlaL
-         MGkB9W4SwFMrlPZWLNJJhZbGzJkPzR1nXICqBrw0=
-Received: by mail-oi1-f172.google.com with SMTP id z22so14120972oid.1;
-        Mon, 17 Aug 2020 01:16:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532XSe4LeLrqG770LmlQQkocu5Nc6gVyP8C6HfZrGPFZy7Cso8xy
-        dI7g0Uj0hzIMIzP7ycZAvNZF2v6R+lcbwSUagHI=
-X-Google-Smtp-Source: ABdhPJxGqt74QmpoPJrLwN/NcdAB/mHbqYjY+F7QjwsUheKXe0RJtP0HPm6m8FJYHB/IkR5JEaFL7Wwu+US/MH2y9KM=
-X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr9137631oij.174.1597652178567;
- Mon, 17 Aug 2020 01:16:18 -0700 (PDT)
+        Mon, 17 Aug 2020 04:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgHQIQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:16:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F275C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:16:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so14004600wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=v0v5oAhK9ZVu7ovOwqOvE+wqvWkBm0oVu1Bsq+aOlJ8=;
+        b=U1X/n6Y2nOB/AkHYnuRono0OIPa1lG/Ad9wHL9UMl7ZDeL7MlXjj0WQupSbF4F1Orr
+         9KBe0QHHmSQKzSWv4rczHjO+sx+LUBChDEI00ECHcWZU99YOh25Uww+6sbhCw6gkv6pS
+         HV/nSbSLOCEcuhojJ63oc3/H3cKQVBBC+VKsL5SkIEkusvRZ7C+V46DNqAzmUbaDIPYg
+         a0Kq4xxPlX0ChcJ8w3voY6XCREmJUDZTyxZKS6f6wAdw7P9edycL4GBIBTodJiJPt0ZG
+         /3QO2ipKPvvcnu1Twa6wtlu8PkCLb/RqVdylG3qmE065qvyqmKMnN/QzKkkgCSwpAwdy
+         AOLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=v0v5oAhK9ZVu7ovOwqOvE+wqvWkBm0oVu1Bsq+aOlJ8=;
+        b=NDwWxCtaCadc09k6g0RMKn6S/8f2vCUK1Jr78qPnnpggHr2fuRqDpPn1wAs20DbQaj
+         gMPHnZzyolKLtze8L+xMY8F5Hqg01kjXfNmk8VvWOS2V56BsmsIBbl1hK0IWw6nqFg9M
+         Kibyitt2IcjRXBKG1L+bYooOxqLxBz6x9Rrp5Pmdgj9GGRzcI53gZsJOAC9/mC6mkBmx
+         HHJZaWCYK60nZFrRIW0Oz0i/T3QRnEorVnPESQDOlHejAGWJNewy8Z6MtzWJvIb2Ftu3
+         ZgQEG1b5BICO2bLkKy8K04NUcmREmYHUcX9qLzYzocmk22H49IyVB6g3X82IjcVFan73
+         BWeA==
+X-Gm-Message-State: AOAM533BrzP6+q7hegVE3MESyGs19m10Hii/AjsZTmUm0HEIPACSZS3e
+        v4lSoSJ9O76le8PQo+3e16XeUw==
+X-Google-Smtp-Source: ABdhPJy/BLnuS3vaKXKzvZ3zU4W6SNGjZlok/pABOU9qDhMciYnLzr/yhSQSUi1OrOkOtS/Ig/+orw==
+X-Received: by 2002:adf:e8ca:: with SMTP id k10mr13989325wrn.110.1597652193175;
+        Mon, 17 Aug 2020 01:16:33 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id p25sm28081510wma.39.2020.08.17.01.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:16:32 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 09:16:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH 00/30] Rid W=1 warnings in Networking
+Message-ID: <20200817081630.GR4354@dell>
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+ <87eeo88pdr.fsf@tynnyri.adurom.net>
 MIME-Version: 1.0
-References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
-In-Reply-To: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 17 Aug 2020 10:16:07 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEQ2mpmcNke0K2MZPAAo9wGZ4h3pCmMg9Hm7CPXOCV7fQ@mail.gmail.com>
-Message-ID: <CAMj1kXEQ2mpmcNke0K2MZPAAo9wGZ4h3pCmMg9Hm7CPXOCV7fQ@mail.gmail.com>
-Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
-To:     =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, norbert.kaminski@3mdeb.com,
-        xen-devel@lists.xenproject.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87eeo88pdr.fsf@tynnyri.adurom.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+On Sat, 15 Aug 2020, Kalle Valo wrote:
 
-On Sun, 16 Aug 2020 at 02:20, Marek Marczykowski-G=C3=B3recki
-<marmarek@invisiblethingslab.com> wrote:
->
-> In case of Xen PV dom0, Xen passes along info about system tables (see
-> arch/x86/xen/efi.c), but not the memory map from EFI. This makes sense
-> as it is Xen responsible for managing physical memory address space.
-> In this case, it doesn't make sense to condition using ESRT table on
-> availability of EFI memory map, as it isn't Linux kernel responsible for
-> it. Skip this part on Xen PV (let Xen do the right thing if it deems
-> necessary) and use ESRT table normally.
->
-> This is a requirement for using fwupd in PV dom0 to update UEFI using
-> capsules.
->
-> Signed-off-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingsl=
-ab.com>
-> ---
->  drivers/firmware/efi/esrt.c | 47 ++++++++++++++++++++-----------------
->  1 file changed, 25 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-> index d5915272141f..5c49f2aaa4b1 100644
-> --- a/drivers/firmware/efi/esrt.c
-> +++ b/drivers/firmware/efi/esrt.c
-> @@ -245,36 +245,38 @@ void __init efi_esrt_init(void)
->         int rc;
->         phys_addr_t end;
->
-> -       if (!efi_enabled(EFI_MEMMAP))
-> +       if (!efi_enabled(EFI_MEMMAP) && !efi_enabled(EFI_PARAVIRT))
->                 return;
->
->         pr_debug("esrt-init: loading.\n");
->         if (!esrt_table_exists())
->                 return;
->
-> -       rc =3D efi_mem_desc_lookup(efi.esrt, &md);
-> -       if (rc < 0 ||
-> -           (!(md.attribute & EFI_MEMORY_RUNTIME) &&
-> -            md.type !=3D EFI_BOOT_SERVICES_DATA &&
-> -            md.type !=3D EFI_RUNTIME_SERVICES_DATA)) {
-> -               pr_warn("ESRT header is not in the memory map.\n");
-> -               return;
-> -       }
-> +       if (efi_enabled(EFI_MEMMAP)) {
-> +               rc =3D efi_mem_desc_lookup(efi.esrt, &md);
-> +               if (rc < 0 ||
-> +                   (!(md.attribute & EFI_MEMORY_RUNTIME) &&
-> +                    md.type !=3D EFI_BOOT_SERVICES_DATA &&
-> +                    md.type !=3D EFI_RUNTIME_SERVICES_DATA)) {
-> +                       pr_warn("ESRT header is not in the memory map.\n"=
-);
-> +                       return;
-> +               }
->
-> -       max =3D efi_mem_desc_end(&md);
-> -       if (max < efi.esrt) {
-> -               pr_err("EFI memory descriptor is invalid. (esrt: %p max: =
-%p)\n",
-> -                      (void *)efi.esrt, (void *)max);
-> -               return;
-> -       }
-> +               max =3D efi_mem_desc_end(&md);
-> +               if (max < efi.esrt) {
-> +                       pr_err("EFI memory descriptor is invalid. (esrt: =
-%p max: %p)\n",
-> +                              (void *)efi.esrt, (void *)max);
-> +                       return;
-> +               }
->
-> -       size =3D sizeof(*esrt);
-> -       max -=3D efi.esrt;
-> +               size =3D sizeof(*esrt);
-> +               max -=3D efi.esrt;
->
-> -       if (max < size) {
-> -               pr_err("ESRT header doesn't fit on single memory map entr=
-y. (size: %zu max: %zu)\n",
-> -                      size, max);
-> -               return;
-> +               if (max < size) {
-> +                       pr_err("ESRT header doesn't fit on single memory =
-map entry. (size: %zu max: %zu)\n",
-> +                              size, max);
-> +                       return;
-> +               }
->         }
->
->         va =3D early_memremap(efi.esrt, size);
-> @@ -331,7 +333,8 @@ void __init efi_esrt_init(void)
->
->         end =3D esrt_data + size;
->         pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &e=
-nd);
-> -       if (md.type =3D=3D EFI_BOOT_SERVICES_DATA)
-> +
-> +       if (efi_enabled(EFI_MEMMAP) && md.type =3D=3D EFI_BOOT_SERVICES_D=
-ATA)
->                 efi_mem_reserve(esrt_data, esrt_data_size);
->
+> + linux-wireless
+> 
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > This set is part of a larger effort attempting to clean-up W=1
+> > kernel builds, which are currently overwhelmingly riddled with
+> > niggly little warnings.
+> >
+> > There are quite a few W=1 warnings in the Networking code.  My
+> > plan is to work through all of them over the next few weeks.
+> > Hopefully it won't be too long before drivers/net builds clean
+> > with W=1 enabled.
+> 
+> In the future please send wireless patches in a separate patchset and cc
+> linux-wireless. That way it's easier for me and Dave.
 
-This does not look correct to me. Why doesn't the region need to be
-reserved on a Xen boot? The OS may overwrite it otherwise.
+Oh, I see.  I didn't realise it was maintained as it's own entity.
 
+Will keep the separate in the future, thanks.
 
->         pr_debug("esrt-init: loaded.\n");
-> --
-> 2.25.4
->
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
