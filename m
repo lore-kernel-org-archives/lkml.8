@@ -2,146 +2,147 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0380C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC532072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX05aoU4"
+	by mail.kernel.org (Postfix) with ESMTP id 964362072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgHQJYJ (ORCPT
+        id S1728343AbgHQJYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgHQJYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:24:08 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB52C061389;
-        Mon, 17 Aug 2020 02:24:08 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g14so17016680iom.0;
-        Mon, 17 Aug 2020 02:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pzS+9+lr2xk/rP+YjZ4CjcDZPGT5BpmB3I8mWcl+aVY=;
-        b=LX05aoU4ZVoS9xaRC8X67z1mTc/+5idee9umeA30L1hzpVy+ZSCFEQz+eTK7+pEQgK
-         eecOTM44AXzxjFkPqTtFBBpBf8R4NxoR7i3hpXKd8PTKtR93o+HZByEZHzgTvNpb4R1j
-         V7Z6/oZ5xDa550yylWG6lLV57SfGssiexFU98JGm4viuN5+0/KnunlKsDr3ZjoSqxfgx
-         CJ4PgFiF1TilwDvtgoiCAlPLgkbuv4dmh2AUvvn0UjAHlb88CrBRzfs0FMmKXvheGozS
-         lfBhHO277RftiovjJQ82OGT8nTjFn9asbMIE4i4XteBqo9nS0FbHp4N02ynaTzojEuUr
-         3pvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pzS+9+lr2xk/rP+YjZ4CjcDZPGT5BpmB3I8mWcl+aVY=;
-        b=kU7oAovsfNlznW428rT9Bu4x791PNCCVc09TSsR4bdyAsNZ0rSVBaIjaN5XX0+/qMc
-         vdq8sOy/2God1nx4UbS4+6Xu76hIOS9ZSqHCEF3o2v1vlo9HVtUd0ef9LqPNmBTebBDv
-         LU+PeaJ6BEUB9Cg7FG7xrp02J2wUmciaIz/Y8UNOGd0RxTPFKWK9woiqsiJZBmman0cg
-         7tzLEuwUTgPfhsatP+hZbg6A+O0MOwpvIRvW+gn//+0ywqAIPtUPq+vLCyp9ePwOAqsk
-         ctzQvfTDsSzMCG720xpYShdT6fQbTrdRK2CetbpL5QnozFCDWQ3NFd5bB0s5AooGhHaL
-         kUhA==
-X-Gm-Message-State: AOAM530mcX9wukGtIzTZ0qvIn+SCWxg8lI1bKquqBclWp8/NSF2RgHgH
-        CEE7gtjIZMpgBIocsvW7DreJn8aIa5I7RarHsWlRYR/0EfA=
-X-Google-Smtp-Source: ABdhPJxFJXneRWWi/rpBakz3RagKmL2mkuCH1mPE+9wwmmShGsnLNvVVEtlROdtWS9xT1gEqtFNo5W/7fEMyoDcR73s=
-X-Received: by 2002:a6b:bb43:: with SMTP id l64mr11709080iof.191.1597656247336;
- Mon, 17 Aug 2020 02:24:07 -0700 (PDT)
+        Mon, 17 Aug 2020 05:24:36 -0400
+Received: from muru.com ([72.249.23.125]:40478 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgHQJYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 05:24:35 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 57A5680A3;
+        Mon, 17 Aug 2020 09:24:34 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] clocksource/drivers/timer-ti-dm: Do reset before enable
+Date:   Mon, 17 Aug 2020 12:24:28 +0300
+Message-Id: <20200817092428.6176-1-tony@atomide.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <cover.1597626802.git.joe@perches.com> <fe4e9e2a544af4d00aa5c97d9288d9b4d67db1ed.1597626802.git.joe@perches.com>
-In-Reply-To: <fe4e9e2a544af4d00aa5c97d9288d9b4d67db1ed.1597626802.git.joe@perches.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Mon, 17 Aug 2020 11:24:14 +0200
-Message-ID: <CAOi1vP8rL6R8LqFnz10O=N4gfC2zYiZdfZbg3NkcePRvOKu7xA@mail.gmail.com>
-Subject: Re: [PATCH V2 6/6] ceph_debug: Remove now unused dout macro definitions
-To:     Joe Perches <joe@perches.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 3:34 AM Joe Perches <joe@perches.com> wrote:
->
-> All the uses have be converted to pr_debug, so remove these.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  include/linux/ceph/ceph_debug.h | 30 ------------------------------
->  1 file changed, 30 deletions(-)
->
-> diff --git a/include/linux/ceph/ceph_debug.h b/include/linux/ceph/ceph_debug.h
-> index d5a5da838caf..81c0d7195f1e 100644
-> --- a/include/linux/ceph/ceph_debug.h
-> +++ b/include/linux/ceph/ceph_debug.h
-> @@ -6,34 +6,4 @@
->
->  #include <linux/string.h>
->
-> -#ifdef CONFIG_CEPH_LIB_PRETTYDEBUG
-> -
-> -/*
-> - * wrap pr_debug to include a filename:lineno prefix on each line.
-> - * this incurs some overhead (kernel size and execution time) due to
-> - * the extra function call at each call site.
-> - */
-> -
-> -# if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
-> -#  define dout(fmt, ...)                                               \
-> -       pr_debug("%.*s %12.12s:%-4d : " fmt,                            \
-> -                8 - (int)sizeof(KBUILD_MODNAME), "    ",               \
-> -                kbasename(__FILE__), __LINE__, ##__VA_ARGS__)
-> -# else
-> -/* faux printk call just to see any compiler warnings. */
-> -#  define dout(fmt, ...)       do {                            \
-> -               if (0)                                          \
-> -                       printk(KERN_DEBUG fmt, ##__VA_ARGS__);  \
-> -       } while (0)
-> -# endif
-> -
-> -#else
-> -
-> -/*
-> - * or, just wrap pr_debug
-> - */
-> -# define dout(fmt, ...)        pr_debug(" " fmt, ##__VA_ARGS__)
-> -
-> -#endif
-> -
->  #endif
-> --
-> 2.26.0
->
+Commit 6cfcd5563b4f ("clocksource/drivers/timer-ti-dm: Fix suspend and
+resume for am3 and am4") exposed a new issue for type2 dual mode timers
+on at least omap5 where the clockevent will stop when the SoC starts
+entering idle states during the boot.
 
-Hi Joe,
+Turns out we are wrongly first enabling the system timer and then
+resetting it, while we must also re-enable it after reset. The current
+sequence leaves the timer module in a partially initialized state. This
+issue went unnoticed earlier with ti-sysc driver reconfiguring the timer
+module until we fixed the issue of ti-sysc reconfiguring system timers.
 
-Yeah, roughly the same thing can be achieved with +flmp instead
-of just +p with PRETTYDEBUG, but PRETTYDEBUG formatting actually
-predates those flags and some of us still use bash scripts from
-back then.  We also have a few guides and blog entries with just
-+p, but that's not a big deal.
+Let's fix the issue by calling dmtimer_systimer_enable() from reset for
+both type1 and type2 timers, and switch the order of reset and enable in
+dmtimer_systimer_setup(). Let's also move dmtimer_systimer_enable() and
+dmtimer_systimer_disable() to do this without adding forward declarations.
 
-I'd be fine with removing CONFIG_CEPH_LIB_PRETTYDEBUG since it's
-disabled by default and in all major distributions, but I'm not a
-fan of a wide-sweeping dout -> pr_debug change.  We do extensive
-backporting to older kernels and these kind of changes are rather
-annoying.  dout is shorter to type too ;)
+Fixes: 6cfcd5563b4f ("clocksource/drivers/timer-ti-dm: Fix suspend and resume for am3 and am4")
+Reported-by: H. Nikolaus Schaller" <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/clocksource/timer-ti-dm-systimer.c | 44 +++++++++++-----------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
 
-I know that in some cases the function names are outdated or
-duplicated, but I prefer fixing them gradually, along with actual
-code changes in the area (i.e. similar to whitespace).
-
-Thanks,
-
-                Ilya
+diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
+--- a/drivers/clocksource/timer-ti-dm-systimer.c
++++ b/drivers/clocksource/timer-ti-dm-systimer.c
+@@ -69,12 +69,33 @@ static bool dmtimer_systimer_revision1(struct dmtimer_systimer *t)
+ 	return !(tidr >> 16);
+ }
+ 
++static void dmtimer_systimer_enable(struct dmtimer_systimer *t)
++{
++	u32 val;
++
++	if (dmtimer_systimer_revision1(t))
++		val = DMTIMER_TYPE1_ENABLE;
++	else
++		val = DMTIMER_TYPE2_ENABLE;
++
++	writel_relaxed(val, t->base + t->sysc);
++}
++
++static void dmtimer_systimer_disable(struct dmtimer_systimer *t)
++{
++	if (!dmtimer_systimer_revision1(t))
++		return;
++
++	writel_relaxed(DMTIMER_TYPE1_DISABLE, t->base + t->sysc);
++}
++
+ static int __init dmtimer_systimer_type1_reset(struct dmtimer_systimer *t)
+ {
+ 	void __iomem *syss = t->base + OMAP_TIMER_V1_SYS_STAT_OFFSET;
+ 	int ret;
+ 	u32 l;
+ 
++	dmtimer_systimer_enable(t);
+ 	writel_relaxed(BIT(1) | BIT(2), t->base + t->ifctrl);
+ 	ret = readl_poll_timeout_atomic(syss, l, l & BIT(0), 100,
+ 					DMTIMER_RESET_WAIT);
+@@ -88,6 +109,7 @@ static int __init dmtimer_systimer_type2_reset(struct dmtimer_systimer *t)
+ 	void __iomem *sysc = t->base + t->sysc;
+ 	u32 l;
+ 
++	dmtimer_systimer_enable(t);
+ 	l = readl_relaxed(sysc);
+ 	l |= BIT(0);
+ 	writel_relaxed(l, sysc);
+@@ -336,26 +358,6 @@ static int __init dmtimer_systimer_init_clock(struct dmtimer_systimer *t,
+ 	return 0;
+ }
+ 
+-static void dmtimer_systimer_enable(struct dmtimer_systimer *t)
+-{
+-	u32 val;
+-
+-	if (dmtimer_systimer_revision1(t))
+-		val = DMTIMER_TYPE1_ENABLE;
+-	else
+-		val = DMTIMER_TYPE2_ENABLE;
+-
+-	writel_relaxed(val, t->base + t->sysc);
+-}
+-
+-static void dmtimer_systimer_disable(struct dmtimer_systimer *t)
+-{
+-	if (!dmtimer_systimer_revision1(t))
+-		return;
+-
+-	writel_relaxed(DMTIMER_TYPE1_DISABLE, t->base + t->sysc);
+-}
+-
+ static int __init dmtimer_systimer_setup(struct device_node *np,
+ 					 struct dmtimer_systimer *t)
+ {
+@@ -409,8 +411,8 @@ static int __init dmtimer_systimer_setup(struct device_node *np,
+ 	t->wakeup = regbase + _OMAP_TIMER_WAKEUP_EN_OFFSET;
+ 	t->ifctrl = regbase + _OMAP_TIMER_IF_CTRL_OFFSET;
+ 
+-	dmtimer_systimer_enable(t);
+ 	dmtimer_systimer_reset(t);
++	dmtimer_systimer_enable(t);
+ 	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(t->base),
+ 		 readl_relaxed(t->base + t->sysc));
+ 
+-- 
+2.28.0
