@@ -2,183 +2,295 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE45C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897CF2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323432075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="s3Rpnuwz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoZof5JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHQCYe (ORCPT
+        id S1726903AbgHQC04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 22:24:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26007 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgHQCYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 22:24:32 -0400
-IronPort-SDR: Afu1rlUpY99etL0/MuOVl9GWxzsHd4k7cPE/Veii2km91fQeU4SqHaZAJypA3VYdGcKo5Co85v
- tyGfXIhijZyw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="153876489"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="153876489"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 19:24:31 -0700
-IronPort-SDR: 2ZM+ec8OF35mYLPByaotEQdRGWCV+gohOMq3p30JorY9pdU2qO4rK+nCJduwYQOlNZC+azjnAM
- WSWo40l62oQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="309959101"
-Received: from unknown (HELO fmsmsx606.amr.corp.intel.com) ([10.18.84.216])
-  by orsmga002.jf.intel.com with ESMTP; 16 Aug 2020 19:24:31 -0700
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 16 Aug 2020 19:24:30 -0700
-Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Sun, 16 Aug 2020 19:24:30 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx122.amr.corp.intel.com (10.18.125.37) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 16 Aug 2020 19:24:30 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Sun, 16 Aug 2020 19:24:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d+TOk+weUYPhja2mMK1seMPDcb+W8ppkj/6tiqCTMMZ4cv9f4tW+KWVCWuK+kBR0NyCmTGQqDMEoUmirAhkldV+zQ3Sq+cM3qFtRP/t0/j8YLn15X/aQg8wHPAWu4ryboluPk9RXfyY+rGVQHJRCSxj5Z23/ZDctegS7sJ1k7iCZv3Z+0jRhAAZl4jOrwZ4P300Dg0GHqUY98gQpW/6Lca6J/gXrC6bu/tstcfnE4zR8Edy1bmQ8KtdtJFMjsbtNx6xsOT4WGjXgOLViabKPYrmXsG/cXcWSoPCxhWhDfF3G5hC4+cq2/DcPQRLSwY/QRLltAY08htjzN1oKYVBUEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oj0UVxCWsDji6NxQs4koyOLFyXPWPCpQqbVATheON0Y=;
- b=AP1+l8Hyr7hCuiT3XoswFpfbuARqppK8x3X4euRLMMU4fUtJ3YzDBipLHt4pLQxZE3lFF7qZr4jw2aB+AiSUbjTdgdnmUAjGd/bRJM9JTFgC/r/k9qIzcPSGb/rFoPKr1fkjpW9fup2+6gmp2B43eN/6ldFjuU7xqR1WtMF1RzIg+eYXG4V2A9/X+9NRhjXmutd8evNHirY8t36xV2fQ0b4GThKWMNTOGeHQ0GJDuMkgP9ezd3SwdbQVFQqmzVFZ/8B+U1asdbq8xl750s7TBIX/26ldEIQIqathpemRTUSnNOvydrfKvLkLDhteqxOHzx488A3pKcmWthHOusWwWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oj0UVxCWsDji6NxQs4koyOLFyXPWPCpQqbVATheON0Y=;
- b=s3RpnuwzTMTSnuVg0JdXxoZkkwy01pToSon2J2CnTKPzPzhIa0oAUA/GBsOjn2SchuZt6/V2UHuECA0QJdmBM6/yCK5LJ/DnwXskznuK6jQLPCfS1FFcuwRy5Rusmj94htzFN1n2wHS1NQLKvmJwMFUhkQ+uDtWSEnxONJMBOEs=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR11MB1392.namprd11.prod.outlook.com (2603:10b6:300:24::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Mon, 17 Aug
- 2020 02:24:29 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
- 02:24:28 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>, Jason Wang <jasowang@redhat.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-Thread-Topic: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Thread-Index: AQHWX3hut2htBlMVB0qfW0Pa+gZbC6kSPbuAgABwW8CAAzMrAIAUgAoAgAJJ4oCABDO9YIADE1sAgAACHkCAAaKQAIAACXXAgAAPKACAAg3MAIAD/AHg
-Date:   Mon, 17 Aug 2020 02:24:28 +0000
-Message-ID: <MWHPR11MB1645EF668732BFA7A1219CC58C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
- <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
- <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
- <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
- <MWHPR11MB1645F911EFB993C9067B58DD8C430@MWHPR11MB1645.namprd11.prod.outlook.com>
- <e3f45862-c3a5-8bac-e04d-7be0e76908a9@redhat.com>
- <20200814132352.GD1152540@nvidia.com>
-In-Reply-To: <20200814132352.GD1152540@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c05c217-c36a-402a-350f-08d84254ab2e
-x-ms-traffictypediagnostic: MWHPR11MB1392:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1392DFC6BB5A4411941D04168C5F0@MWHPR11MB1392.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Tsuzdat/YNUhBorwXeUkBGJDFiD5iIjl7P3btPQWsLJt9gkSmaEW725n9Vo3IZhalgWgzEgv+xA6/4ZyoNP7AgjWS5H/DXl/298ZOn0svaR/+6x6h3S6flhFJnyTWKsSdKP9kByEoiguZYv0vQsSD1HmamvGyB5J7f9VYJUej0GOhz0cVlG5qYv/f/YQ8uYbJhlqvq8QObJdEbbW6E+CKtPIV5Fq4QQ8uxV48kqjgiBmI4aAK1BA8X9Zbzas3XD5rvZ6SUje6rww4xPrE6dhJABMUUorGVFD5pBhLgLRM0hRGpKcYDNkiR08IfegZGALTFYCOWnUwi2wX1wrSMR/kw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(66446008)(64756008)(55016002)(26005)(66556008)(8936002)(4744005)(4326008)(66476007)(478600001)(7696005)(86362001)(9686003)(7416002)(76116006)(5660300002)(316002)(110136005)(54906003)(66946007)(33656002)(186003)(2906002)(8676002)(71200400001)(6506007)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: L9CTMIRLPXqIUJMIIi9t0l+v640egj4pFh+5w5lcnAgBoalBVV/i5gFNHmc6MV/2o2ldgNV2xuvsGMZrKMl3gKjg6YHJNS0XDtTCrl75CM8RzGDoDDAkuTIO+92C8OU/h3yZkUiEjdZ5TI3Gb4xvb3V8qJVLr8ex9sY0KmfhQXkK6bHUXiM5r61hxOeN9KeEDZv17MsCr04HCn2iCHZUDljWfYMo60Lmog8fNOdIug+tHyZGY3tVDuVPBHLmfehg+J8IQFIMtg40UaYqEvYvCfghYmljSLqb1w2duKUG116+RJt5U6XhxXo0vf0B2wOStw76huC0K29MSIMcCjd+AFdD6YueERjbobWRl4CXphJD3SX6y78pMYxm5LquO40HFPsMB2htMC43ng2fOPe8GFs2RwmMlgrg93LMjuZ5DSAf316CpXlQec8hM8f5Zl0UbHNOLGYt8ALzgM8mCc7RkcOEH6m/Qa/tmSjxfaDb4wkxGMjWN4PDBRRP7s+p3qhiiL1kjJ1FfJod1juWGjT6aIePt84rV+XpKVUai4/oGSUQRfCM+hE4AiuKXXmtyC//qoeA9cpUZ9Q80zuhOtWIfG+F9JrMgx5zZ/Voz+PgzephUplHxVtORstrTCBDE3eOtVU5/TI5hvHAX4sF7PcsBg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 16 Aug 2020 22:26:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgHQC0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 22:26:54 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A78C061786;
+        Sun, 16 Aug 2020 19:26:54 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id f193so7477422pfa.12;
+        Sun, 16 Aug 2020 19:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZznCvyGhUF+61fpI9y48CtXOLW3RDcPiiNlfWV71bHI=;
+        b=JoZof5JQbJCKM1bZpgwZ4H25oU6TqDa9tMDt7apXlqVZvJt7CnIX3xBtXHfuZtmFNV
+         vRDJnk9Bqk826AuDyBnZjV7/5oDJNEVR4+pvloE8mtqkoHdzVJRwcArw8M38LcNpOGoY
+         U1eKSESm/4uerS7d/g7zYbzyS276YnIpJv/XFas1q8v6JiLg0AF4cp8McoxSi18Gia9Q
+         Uig4BqYjxs0tx5HcRO6a48XYE8ijfiv4ohkPu8kKXp3RK72DkhI+f9hl5Nubsi9G150w
+         8wGfr8CvRjrxoEn/D/xNMtK/TBHbilcf39PJyVY8QC8RrZ9gv1Wm2dj8FLyaTvNIHeQt
+         Ni5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZznCvyGhUF+61fpI9y48CtXOLW3RDcPiiNlfWV71bHI=;
+        b=S1bCKbcos7PO3H9eZKOcalsq9DqKDj5waKMXj3wrQ8L7KIPLVcrH/1ppn8YNV8phkq
+         xlX6x+15w12t/IIm6QXbon76cLw8nPeGzN1bCEufxEf56MwKwt3nHjQ53wpwmnxT2gb2
+         ju4TmQUmmnDCCAz++ugrmqLPDh81ByyQofwltPD9d0DYABe+WwJBb6VOdzr04ITrBIq1
+         QWRPE2MIk9R21Byzb63RS9/DYi9OB8MSP7HXiFZwPYfrOcCgQfX35/Av+wEvFb1i9KMi
+         NU/jg0jId08ELXVDHfYRe5WPOISF7IhdOCDAVt5dB3vr0wbi+HhbFwYOW9Qlv1JIXRLE
+         egUg==
+X-Gm-Message-State: AOAM530bTFUP2mIRzhpU6DKpNczozIEpqE5Gn0AfefJgoSxtbleapswr
+        nUQAnTxvhdrwY+KoLY7p2DI=
+X-Google-Smtp-Source: ABdhPJwdCnCR3CFmrXUMFk7+1vUc3WQ7Cmx9J7WhEfCaizkna2UWM/oq+Fq5Y4n05DWhadZN9FUj/w==
+X-Received: by 2002:a65:5849:: with SMTP id s9mr8915114pgr.145.1597631213440;
+        Sun, 16 Aug 2020 19:26:53 -0700 (PDT)
+Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id z29sm17290017pfj.182.2020.08.16.19.26.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 19:26:52 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCHv2] serial: 8250: change lock order in serial8250_do_startup()
+Date:   Mon, 17 Aug 2020 11:26:46 +0900
+Message-Id: <20200817022646.1484638-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c05c217-c36a-402a-350f-08d84254ab2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 02:24:28.7444
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WzZrlkcny0EtTPXFXAhunR3GiF1n5kgG7ERm9KHTdu83SHscdnLzddwp49QglqqqiS0GtwEVy5dgnweRlZ53fQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1392
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBKYXNvbiBHdW50aG9ycGUgPGpnZ0BudmlkaWEuY29tPg0KPiBTZW50OiBGcmlkYXks
-IEF1Z3VzdCAxNCwgMjAyMCA5OjI0IFBNDQo+IA0KPiBUaGUgc2FtZSBiYXNpYyBhcmd1bWVudCBn
-b2VzIGZvciBhbGwgdGhlIHBvaW50cyAtIHRoZSBpc3N1ZSBpcyByZWFsbHkNCj4gdGhlIG9ubHkg
-dUFQSSB3ZSBoYXZlIGZvciB0aGlzIHN0dWZmIGlzIHVuZGVyIFZGSU8sIGFuZCB0aGUgYmV0dGVy
-DQo+IHNvbHV0aW9uIGlzIHRvIGRpc2FncmVnYXRlIHRoYXQgdUFQSSwgbm90IHRvIHRyeSBhbmQg
-bWFrZSBldmVyeXRoaW5nDQo+IHByZXRlbmQgdG8gYmUgYSBWRklPIGRldmljZS4NCj4gDQoNCk5v
-Ym9keSBpcyBwcm9wb3NpbmcgdG8gbWFrZSBldmVyeXRoaW5nIFZGSU8uIHRoZXJlIG11c3QgYmUg
-c29tZQ0KY3JpdGVyaWEgd2hpY2ggY2FuIGJlIGJyYWluc3Rvcm1lZCBpbiBMUEMuIEJ1dCB0aGUg
-b3Bwb3NpdGUgYWxzbyBob2xkcyAtIA0KdGhlIGZhY3QgdGhhdCB3ZSBzaG91bGQgbm90IG1ha2Ug
-ZXZlcnl0aGluZyBWRklPIGRvZXNuJ3QgaW1wbHkNCnByb2hpYml0aW9uIG9uIGFueW9uZSBmcm9t
-IHVzaW5nIGl0LiBUaGVyZSBpcyBhIGNsZWFyIGRpZmZlcmVuY2UgYmV0d2VlbiANCnBhc3N0aHJv
-dWdoIGFuZCB1c2Vyc3BhY2UgRE1BIHJlcXVpcmVtZW50cyBpbiBpZHhkIGNvbnRleHQsIGFuZCB3
-ZQ0Kc2VlIGdvb2QgcmVhc29ucyB0byB1c2UgVkZJTyBmb3Igb3VyIHBhc3N0aHJvdWdoIHJlcXVp
-cmVtZW50cy4NCg0KDQpUaGFua3MNCktldmluDQo=
+We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
+lockdep reports coming from 8250 driver; this causes a bit of trouble
+to people, so let's fix it.
+
+The problem is reverse lock order in two different call paths:
+
+chain #1:
+
+ serial8250_do_startup()
+  spin_lock_irqsave(&port->lock);
+   disable_irq_nosync(port->irq);
+    raw_spin_lock_irqsave(&desc->lock)
+
+chain #2:
+
+  __report_bad_irq()
+   raw_spin_lock_irqsave(&desc->lock)
+    for_each_action_of_desc()
+     printk()
+      spin_lock_irqsave(&port->lock);
+
+Fix this by changing the order of locks in serial8250_do_startup():
+ do disable_irq_nosync() first, which grabs desc->lock, and grab
+ uart->port after that, so that chain #1 and chain #2 have same lock
+ order.
+
+Full lockdep splat:
+
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 5.4.39 #55 Not tainted
+ ======================================================
+
+ swapper/0/0 is trying to acquire lock:
+ ffffffffab65b6c0 (console_owner){-...}, at: console_lock_spinning_enable+0x31/0x57
+
+ but task is already holding lock:
+ ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+
+ which lock already depends on the new lock.
+
+ the existing dependency chain (in reverse order) is:
+
+ -> #2 (&irq_desc_lock_class){-.-.}:
+        _raw_spin_lock_irqsave+0x61/0x8d
+        __irq_get_desc_lock+0x65/0x89
+        __disable_irq_nosync+0x3b/0x93
+        serial8250_do_startup+0x451/0x75c
+        uart_startup+0x1b4/0x2ff
+        uart_port_activate+0x73/0xa0
+        tty_port_open+0xae/0x10a
+        uart_open+0x1b/0x26
+        tty_open+0x24d/0x3a0
+        chrdev_open+0xd5/0x1cc
+        do_dentry_open+0x299/0x3c8
+        path_openat+0x434/0x1100
+        do_filp_open+0x9b/0x10a
+        do_sys_open+0x15f/0x3d7
+        kernel_init_freeable+0x157/0x1dd
+        kernel_init+0xe/0x105
+        ret_from_fork+0x27/0x50
+
+ -> #1 (&port_lock_key){-.-.}:
+        _raw_spin_lock_irqsave+0x61/0x8d
+        serial8250_console_write+0xa7/0x2a0
+        console_unlock+0x3b7/0x528
+        vprintk_emit+0x111/0x17f
+        printk+0x59/0x73
+        register_console+0x336/0x3a4
+        uart_add_one_port+0x51b/0x5be
+        serial8250_register_8250_port+0x454/0x55e
+        dw8250_probe+0x4dc/0x5b9
+        platform_drv_probe+0x67/0x8b
+        really_probe+0x14a/0x422
+        driver_probe_device+0x66/0x130
+        device_driver_attach+0x42/0x5b
+        __driver_attach+0xca/0x139
+        bus_for_each_dev+0x97/0xc9
+        bus_add_driver+0x12b/0x228
+        driver_register+0x64/0xed
+        do_one_initcall+0x20c/0x4a6
+        do_initcall_level+0xb5/0xc5
+        do_basic_setup+0x4c/0x58
+        kernel_init_freeable+0x13f/0x1dd
+        kernel_init+0xe/0x105
+        ret_from_fork+0x27/0x50
+
+ -> #0 (console_owner){-...}:
+        __lock_acquire+0x118d/0x2714
+        lock_acquire+0x203/0x258
+        console_lock_spinning_enable+0x51/0x57
+        console_unlock+0x25d/0x528
+        vprintk_emit+0x111/0x17f
+        printk+0x59/0x73
+        __report_bad_irq+0xa3/0xba
+        note_interrupt+0x19a/0x1d6
+        handle_irq_event_percpu+0x57/0x79
+        handle_irq_event+0x36/0x55
+        handle_fasteoi_irq+0xc2/0x18a
+        do_IRQ+0xb3/0x157
+        ret_from_intr+0x0/0x1d
+        cpuidle_enter_state+0x12f/0x1fd
+        cpuidle_enter+0x2e/0x3d
+        do_idle+0x1ce/0x2ce
+        cpu_startup_entry+0x1d/0x1f
+        start_kernel+0x406/0x46a
+        secondary_startup_64+0xa4/0xb0
+
+ other info that might help us debug this:
+
+ Chain exists of:
+   console_owner --> &port_lock_key --> &irq_desc_lock_class
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&irq_desc_lock_class);
+                                lock(&port_lock_key);
+                                lock(&irq_desc_lock_class);
+   lock(console_owner);
+
+  *** DEADLOCK ***
+
+ 2 locks held by swapper/0/0:
+  #0: ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+  #1: ffffffffab65b5c0 (console_lock){+.+.}, at: console_trylock_spinning+0x20/0x181
+
+ stack backtrace:
+ CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.39 #55
+ Hardware name: XXXXXX
+ Call Trace:
+  <IRQ>
+  dump_stack+0xbf/0x133
+  ? print_circular_bug+0xd6/0xe9
+  check_noncircular+0x1b9/0x1c3
+  __lock_acquire+0x118d/0x2714
+  lock_acquire+0x203/0x258
+  ? console_lock_spinning_enable+0x31/0x57
+  console_lock_spinning_enable+0x51/0x57
+  ? console_lock_spinning_enable+0x31/0x57
+  console_unlock+0x25d/0x528
+  ? console_trylock+0x18/0x4e
+  vprintk_emit+0x111/0x17f
+  ? lock_acquire+0x203/0x258
+  printk+0x59/0x73
+  __report_bad_irq+0xa3/0xba
+  note_interrupt+0x19a/0x1d6
+  handle_irq_event_percpu+0x57/0x79
+  handle_irq_event+0x36/0x55
+  handle_fasteoi_irq+0xc2/0x18a
+  do_IRQ+0xb3/0x157
+  common_interrupt+0xf/0xf
+  </IRQ>
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: Raul Rangel <rrangel@google.com>
+BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
+Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+---
+
+v2: nitpicks and style cleanups (Andy)
+
+ drivers/tty/serial/8250/8250_port.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 09475695effd..e7882611da0e 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2275,6 +2275,10 @@ int serial8250_do_startup(struct uart_port *port)
+ 
+ 	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+ 		unsigned char iir1;
++
++		if (port->irqflags & IRQF_SHARED)
++			disable_irq_nosync(port->irq);
++
+ 		/*
+ 		 * Test for UARTs that do not reassert THRE when the
+ 		 * transmitter is idle and the interrupt has already
+@@ -2284,8 +2288,6 @@ int serial8250_do_startup(struct uart_port *port)
+ 		 * allow register changes to become visible.
+ 		 */
+ 		spin_lock_irqsave(&port->lock, flags);
+-		if (up->port.irqflags & IRQF_SHARED)
+-			disable_irq_nosync(port->irq);
+ 
+ 		wait_for_xmitr(up, UART_LSR_THRE);
+ 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+@@ -2297,9 +2299,10 @@ int serial8250_do_startup(struct uart_port *port)
+ 		iir = serial_port_in(port, UART_IIR);
+ 		serial_port_out(port, UART_IER, 0);
+ 
++		spin_unlock_irqrestore(&port->lock, flags);
++
+ 		if (port->irqflags & IRQF_SHARED)
+ 			enable_irq(port->irq);
+-		spin_unlock_irqrestore(&port->lock, flags);
+ 
+ 		/*
+ 		 * If the interrupt is not reasserted, or we otherwise
+-- 
+2.28.0
+
