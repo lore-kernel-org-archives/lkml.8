@@ -2,132 +2,94 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28C5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38FFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A65220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8744720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:42:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J9cbbCuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHQGlj (ORCPT
+        id S1726729AbgHQGmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 02:41:39 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:31915 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHQGli (ORCPT
+        Mon, 17 Aug 2020 02:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgHQGmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 02:41:38 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 16 Aug 2020 23:41:38 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 Aug 2020 23:41:36 -0700
-Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Aug 2020 12:11:12 +0530
-Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
-        id 435CC40A2; Mon, 17 Aug 2020 12:11:11 +0530 (IST)
-From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        rnayak@codeaurora.org, Pradeep P V K <ppvk@codeaurora.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Subject: [PATCH V3] arm64: dts: qcom: sc7180: Add bandwidth votes for eMMC and SDcard
-Date:   Mon, 17 Aug 2020 12:11:04 +0530
-Message-Id: <1597646464-1863-1-git-send-email-sbhanu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Aug 2020 02:42:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40CBDC061388;
+        Sun, 16 Aug 2020 23:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Zmke6G8N+PgZRa2aKdFidNd4uB0Pqzf1DiitvFCvCuU=; b=J9cbbCufoVG7GnQlnTllpVYRFS
+        xnmN/E/lQoGNfjD9gxwvGVqpakG0w5kIL4+L7m9ciriu4JH8W1ZxNu8ORCPASxnqWk/X1CMn2BvZ/
+        pWpASZXz2WRary7g+yGl0QziI8zpe11PoX/bMVoDZMd9VQosHhqr+Ntm/JT4hP7gueBY4LV+eVWD/
+        1kXjUoRxjnnEkt4zXiIJM+LW2KL+/0QknKChKKctHpzbYVKw5qygt2HLMKm993b6GOSEtmNV7c3Hm
+        arGX4g2yT+FKMZyCeBTGlIV0bRl/zfE2XDkY0H3DrQnj10BoNeL7nCQHgK6OZEz7H3SDC3Gfpvix7
+        DOc366mQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7Yqq-00061Q-I1; Mon, 17 Aug 2020 06:42:36 +0000
+Date:   Mon, 17 Aug 2020 07:42:36 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Xianting Tian <xianting_tian@126.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH] block: don't read block device if it's invalid
+Message-ID: <20200817064236.GA22917@infradead.org>
+References: <1597153386-87954-1-git-send-email-xianting_tian@126.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597153386-87954-1-git-send-email-xianting_tian@126.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep P V K <ppvk@codeaurora.org>
+On Tue, Aug 11, 2020 at 09:43:06AM -0400, Xianting Tian wrote:
+> We found several processes in 'D' state after nvme device hot-removed,
+> The call trace as below, we can see process 848 got lock 'bdev->bd_mutex'
+> in blkdev_reread_part(), but scheduled out due to wait for IO done. But
+> the IO won't be completed as the device is hot-removed. Then it caused
+> the lock 'bdev->bd_mutex' can't be unlocked. As a result, it caused
+> other processes, which need to get the same lock 'bdev->bd_mutex',
+> blocked on this lock.
+> 
+> When nvme device hot-removed, kernel will start a thread to handle the
+> task of nvme device removing, as the call trace of process 1111504 shows
+> below. I listed the call trace of nvme_kill_queues() in detail as below,
+> we can see 'NVME_NS_DEAD' is set, then when executing
+> nvme_revalidate_disk(), it found 'NVME_NS_DEAD' is set and
+> 'set_capacity(disk, 0)' will be called to set disk capacity to 0.
+>     nvme_kill_queues()
+>         if (test_and_set_bit(NVME_NS_DEAD, &ns->flags)) return;
+>             revalidate_disk(disk)
+>                 disk->fops->revalidate_disk(disk) <=for nvme device, revalidate_disk=nvme_revalidate_disk()
+>                      mutex_lock(&bdev->bd_mutex)
+> 
+> This patch is to reduce the probability of such problem. Before getting
+> the lock of 'bdev->bd_mutex' in blkdev_reread_part(), add the code to
+> check if the capacity of the disk is 0, just return. Then we can avoid
+> the happen of the issue:
+> nvme device is hot-removed, and its capacity is alreday set to 0; then
+> if there is process like 848 want to read the device, it will return
+> directly in blkdev_reread_part(), then it will not get the lock
+> "bdev->bd_mutex", which can't be unlocked by the process itself as IO
+> can't be completed.
 
-Add the bandwidth domain supporting performance state and
-the corresponding OPP tables for the sdhc device on sc7180.
+We need to fix this for real, as you stated at best this reduces the
+window that the race can happen.
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
----
-
-This change is depends on the below patch series:
-https://lore.kernel.org/patchwork/patch/1278294/
-
-Change since V2:
-	- Included tag in the of innerconnect-cells for sdhc nodes in-tune with
-	  https://lore.kernel.org/patchwork/patch/1278294/
-
-Changes since V1:
-	- Included Pradeep Pragalapati signoff.
-	- Removed dependency patch list as those patches already merged
-	  on linux-next.
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 68f9894..e5a7d88 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -684,6 +684,9 @@
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
- 					<&gcc GCC_SDCC1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			interconnects = <&aggre1_noc MASTER_EMMC 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_EMMC_CFG 0>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc1_opp_table>;
- 
-@@ -704,11 +707,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <100000 100000>;
-+					opp-avg-kBps = <100000 50000>;
- 				};
- 
- 				opp-384000000 {
- 					opp-hz = /bits/ 64 <384000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <600000 900000>;
-+					opp-avg-kBps = <261438 300000>;
- 				};
- 			};
- 		};
-@@ -2476,6 +2483,10 @@
- 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
- 					<&gcc GCC_SDCC2_AHB_CLK>;
- 			clock-names = "core", "iface";
-+
-+			interconnects = <&aggre1_noc MASTER_SDCC_2 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_SDCC_2 0>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc2_opp_table>;
- 
-@@ -2489,11 +2500,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <160000 100000>;
-+					opp-avg-kBps = <80000 50000>;
- 				};
- 
- 				opp-202000000 {
- 					opp-hz = /bits/ 64 <202000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <200000	120000>;
-+					opp-avg-kBps = <100000 60000>;
- 				};
- 			};
- 		};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+I think our main problem is that due to bd_mutex we can't update the
+block device size from arbitrary context.  If we instead add an irqsave
+spinlock just for the size we'd get rid of the limitation and can stop
+papering over the problem.  Give m a little time to try to do that.
