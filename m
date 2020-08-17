@@ -2,55 +2,55 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1B4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F1320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D7020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691067;
-	bh=CE3hmPQYW0l3ANYv2jGW9/YMIFgDzNIcy9a0f1LHZ90=;
+	s=default; t=1597691069;
+	bh=32lIzJAnUv4Rf9+Zm6bqbTnb8HSvaEfJkalMsbS//Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctbsS3enUuO3DFw3jBeyOuI8gLPKDfTQEm92YrYYTrYDhmzvkxx7kCLptyZePFm9I
-	 OFLHSKHVEKp2fz4wY0X34BLYiQoeUm0NAg8Q8eoMDyRuMH1VFf9nGxt+OolRT3oLP4
-	 MK19A/CGkx17ubhpLI8UfKjUNx1T+oS6ISs87bo8=
+	b=RsM+w3P25ha0k1WL6OAGOiyCSwSAuM0fzDYjDQOVUhwr/rKICq56USWCQHliLOpUA
+	 JdeuPtI/hYWQinxIGJ5kQfhqmuFQui3Z3u5F2SOdzOt80WkRnqkRiGLrlTWh5zeOkW
+	 x0gJ8n7ri0HAY6hcHsvYkU/LoA1yFn1i9mUwiDwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgHQTE0 (ORCPT
+        id S1730682AbgHQPpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57428 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgHQPpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:55 -0400
+        id S1730588AbgHQPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B13122053B;
-        Mon, 17 Aug 2020 15:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2FCF22C9F;
+        Mon, 17 Aug 2020 15:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679154;
-        bh=CE3hmPQYW0l3ANYv2jGW9/YMIFgDzNIcy9a0f1LHZ90=;
+        s=default; t=1597678698;
+        bh=32lIzJAnUv4Rf9+Zm6bqbTnb8HSvaEfJkalMsbS//Z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhu7/Fl7qC+EdyDpuWGvyOWySkwkVKAReSHDXL/vhfeyHkNDBB6yVujdWl3DlRQzX
-         ChNoBQgyDH0bHKsZPUio2XKjVDE2LGkZAopHivj9sr5BmnCl6/gpy01Ak4bMnaxige
-         GPA8Gvc8NUPfLcshSOVFcu2106yl16VwBNVJzJfo=
+        b=GhY8NaD83Shv4SdeqOkyQbIIbah4IlNA43MPb98Zp3y56gZAqHI6tYNfYLOwR4XmM
+         pdQAZ4jOBGObvCxE7NF5GwTYb1NJdyvRK3pdHP5tcJpzseO3Cut/vSZMceM1ilDIOY
+         R0slVDjgdQkGFstAQZuWCZLVPvjq2kErO0mwFI3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 114/393] bcache: fix super block seq numbers comparision in register_cache_set()
-Date:   Mon, 17 Aug 2020 17:12:44 +0200
-Message-Id: <20200817143825.145604816@linuxfoundation.org>
+        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
+        kernel test robot <lkp@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 383/464] af_packet: TPACKET_V3: fix fill status rwlock imbalance
+Date:   Mon, 17 Aug 2020 17:15:36 +0200
+Message-Id: <20200817143852.123370743@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,78 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 117f636ea695270fe492d0c0c9dfadc7a662af47 ]
+[ Upstream commit 88fd1cb80daa20af063bce81e1fad14e945a8dc4 ]
 
-In register_cache_set(), c is pointer to struct cache_set, and ca is
-pointer to struct cache, if ca->sb.seq > c->sb.seq, it means this
-registering cache has up to date version and other members, the in-
-memory version and other members should be updated to the newer value.
+After @blk_fill_in_prog_lock is acquired there is an early out vnet
+situation that can occur. In that case, the rwlock needs to be
+released.
 
-But current implementation makes a cache set only has a single cache
-device, so the above assumption works well except for a special case.
-The execption is when a cache device new created and both ca->sb.seq and
-c->sb.seq are 0, because the super block is never flushed out yet. In
-the location for the following if() check,
-2156         if (ca->sb.seq > c->sb.seq) {
-2157                 c->sb.version           = ca->sb.version;
-2158                 memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
-2159                 c->sb.flags             = ca->sb.flags;
-2160                 c->sb.seq               = ca->sb.seq;
-2161                 pr_debug("set version = %llu\n", c->sb.version);
-2162         }
-c->sb.version is not initialized yet and valued 0. When ca->sb.seq is 0,
-the if() check will fail (because both values are 0), and the cache set
-version, set_uuid, flags and seq won't be updated.
+Also, since @blk_fill_in_prog_lock is only acquired when @tp_version
+is exactly TPACKET_V3, only release it on that exact condition as
+well.
 
-The above problem is hiden for current code, because the bucket size is
-compatible among different super block version. And the next time when
-running cache set again, ca->sb.seq will be larger than 0 and cache set
-super block version will be updated properly.
+And finally, add sparse annotation so that it is clearer that
+prb_fill_curr_block() and prb_clear_blk_fill_status() are acquiring
+and releasing @blk_fill_in_prog_lock, respectively. sparse is still
+unable to understand the balance, but the warnings are now on a
+higher level that make more sense.
 
-But if the large bucket feature is enabled,  sb->bucket_size is the low
-16bits of the bucket size. For a power of 2 value, when the actual
-bucket size exceeds 16bit width, sb->bucket_size will always be 0. Then
-read_super_common() will fail because the if() check to
-is_power_of_2(sb->bucket_size) is false. This is how the long time
-hidden bug is triggered.
-
-This patch modifies the if() check to the following way,
-2156         if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
-Then cache set's version, set_uuid, flags and seq will always be updated
-corectly including for a new created cache device.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 632ca50f2cbd ("af_packet: TPACKET_V3: replace busy-wait loop")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/super.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/packet/af_packet.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index a2e5a0fcd7d5c..7048370331c38 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2099,7 +2099,14 @@ static const char *register_cache_set(struct cache *ca)
- 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
- 		goto err;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -942,6 +942,7 @@ static int prb_queue_frozen(struct tpack
+ }
  
--	if (ca->sb.seq > c->sb.seq) {
-+	/*
-+	 * A special case is both ca->sb.seq and c->sb.seq are 0,
-+	 * such condition happens on a new created cache device whose
-+	 * super block is never flushed yet. In this case c->sb.version
-+	 * and other members should be updated too, otherwise we will
-+	 * have a mistaken super block version in cache set.
-+	 */
-+	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
- 		c->sb.version		= ca->sb.version;
- 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
- 		c->sb.flags             = ca->sb.flags;
--- 
-2.25.1
-
+ static void prb_clear_blk_fill_status(struct packet_ring_buffer *rb)
++	__releases(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket_kbdq_core *pkc  = GET_PBDQC_FROM_RB(rb);
+ 	atomic_dec(&pkc->blk_fill_in_prog);
+@@ -989,6 +990,7 @@ static void prb_fill_curr_block(char *cu
+ 				struct tpacket_kbdq_core *pkc,
+ 				struct tpacket_block_desc *pbd,
+ 				unsigned int len)
++	__acquires(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket3_hdr *ppd;
+ 
+@@ -2286,8 +2288,11 @@ static int tpacket_rcv(struct sk_buff *s
+ 	if (do_vnet &&
+ 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
+ 				    sizeof(struct virtio_net_hdr),
+-				    vio_le(), true, 0))
++				    vio_le(), true, 0)) {
++		if (po->tp_version == TPACKET_V3)
++			prb_clear_blk_fill_status(&po->rx_ring);
+ 		goto drop_n_account;
++	}
+ 
+ 	if (po->tp_version <= TPACKET_V2) {
+ 		packet_increment_rx_head(po, &po->rx_ring);
+@@ -2393,7 +2398,7 @@ static int tpacket_rcv(struct sk_buff *s
+ 		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
+ 		spin_unlock(&sk->sk_receive_queue.lock);
+ 		sk->sk_data_ready(sk);
+-	} else {
++	} else if (po->tp_version == TPACKET_V3) {
+ 		prb_clear_blk_fill_status(&po->rx_ring);
+ 	}
+ 
 
 
