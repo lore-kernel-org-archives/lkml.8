@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB23C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5219B208B3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AAC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681205;
-	bh=/0WF2HzaJkRlHABOF4pK8/hY3Inw71GYs2pC0/o9Qqs=;
+	s=default; t=1597681281;
+	bh=eJzhV828l0lyuFGWUIxUci3R86wS4vKN6IOxaozEuQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0CgNhAOEVCMPYWnLp4+hiEB/UG2dH+1wqFXRhmn1+bcbgyGwOKKIonLiY+8y6Xvp
-	 9HHAN2SPpFrA5qX9lwFpI0oUtA4rjT120DVa2wziNLfp8uQ7npA58VyqoC1K3XsmQj
-	 sm8Fc/u9t4HS5X/ufozOIuKTq0H0l/LhvBpkQvz4=
+	b=t8SRCXZmVLmWiYQGlc37hY7yv1StZwNUVG30N3AJ6NVe2qaeH7AuebZT2up1rh+4I
+	 1qn55LJXQia+qYCfx8x95goTfHllgnrOgL5cXvUm+KdJ1ozpv8+yCmPQTS0UurKztx
+	 iG9cTguajy2No6arX4pYyUuNxsqHvXuzReAEo2ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgHQQUA (ORCPT
+        id S1731058AbgHQQVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387770AbgHQPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:49:12 -0400
+        id S2387715AbgHQPtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1265F20789;
-        Mon, 17 Aug 2020 15:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66F12065D;
+        Mon, 17 Aug 2020 15:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679351;
-        bh=/0WF2HzaJkRlHABOF4pK8/hY3Inw71GYs2pC0/o9Qqs=;
+        s=default; t=1597679354;
+        bh=eJzhV828l0lyuFGWUIxUci3R86wS4vKN6IOxaozEuQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2L8YY1Gn1aXbzHVARK+KAIDmjtRSHjmI5sVpj5Ljp+ilV/UJUOoTRE7kj9H3Spkz
-         +C1QP3o+uwLrP1J84li+WbDH2a0N2RL+k+hMUpGy9lyFrlQJy6YRZyC9WyqqixaedH
-         +YeY8T9YfDLJWbM4q1JW9ZLJuRb14m9m0RmPt354=
+        b=xc26ZgkxA0vaswpJwBTG14R+fn1LwTeEMz+ma44rGEku/VAN9RvuL6SfhaIYs9Y3c
+         LWs2r9On6HQArNOOSuOaMK62ql/6RAKAnWSiLroC68cvSavmhijjGuOu8sdDDfRWtS
+         FTmnLa2ua2mkYKyWTvdrd58Fgju5JrTI6F37HTRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
+        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
         Tomasz Figa <tfiga@chromium.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 181/393] media: staging: rkisp1: rsz: supported formats are the isps src formats, not sink formats
-Date:   Mon, 17 Aug 2020 17:13:51 +0200
-Message-Id: <20200817143828.399477326@linuxfoundation.org>
+Subject: [PATCH 5.7 182/393] media: staging: rkisp1: rsz: fix resolution limitation on sink pad
+Date:   Mon, 17 Aug 2020 17:13:52 +0200
+Message-Id: <20200817143828.450039805@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -64,40 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Helen Koike <helen.koike@collabora.com>
 
-[ Upstream commit 7b8ce1f2763b9351a4cb04b802835470e76770a5 ]
+[ Upstream commit 906dceb48dfa1e7c99c32e6b25878d47023e916b ]
 
-The rkisp1_resizer's enum callback 'rkisp1_rsz_enum_mbus_code'
-calls the enum callback of the 'rkisp1_isp' on it's video sink pad.
-This is a bug, the resizer should support the same formats
-supported by the 'rkisp1_isp' on the source pad (not the sink pad).
+Resizer sink pad is limited by what the ISP can generate.
+The configurations describes what the resizer can produce.
 
-Fixes: 56e3b29f9f6b "media: staging: rkisp1: add streaming paths"
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Acked-by: Helen Koike <helen.koike@collabora.com>
+This was tested on a Scarlet device with ChromiumOs, where the selfpath
+receives 2592x1944 and produces 1600x1200 (which isn't possible without
+this fix).
+
+Fixes: 56e3b29f9f6b2 ("media: staging: rkisp1: add streaming paths")
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rkisp1/rkisp1-resizer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/media/rkisp1/rkisp1-resizer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-index 87799fbf0363e..8b1c0cc5ea3f1 100644
+index 8b1c0cc5ea3f1..26d785d985257 100644
 --- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
 +++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-@@ -427,8 +427,8 @@ static int rkisp1_rsz_enum_mbus_code(struct v4l2_subdev *sd,
- 	u32 pad = code->pad;
- 	int ret;
+@@ -543,11 +543,11 @@ static void rkisp1_rsz_set_sink_fmt(struct rkisp1_resizer *rsz,
+ 	src_fmt->code = sink_fmt->code;
  
--	/* supported mbus codes are the same in isp sink pad */
--	code->pad = RKISP1_ISP_PAD_SINK_VIDEO;
-+	/* supported mbus codes are the same in isp video src pad */
-+	code->pad = RKISP1_ISP_PAD_SOURCE_VIDEO;
- 	ret = v4l2_subdev_call(&rsz->rkisp1->isp.sd, pad, enum_mbus_code,
- 			       &dummy_cfg, code);
+ 	sink_fmt->width = clamp_t(u32, format->width,
+-				  rsz->config->min_rsz_width,
+-				  rsz->config->max_rsz_width);
++				  RKISP1_ISP_MIN_WIDTH,
++				  RKISP1_ISP_MAX_WIDTH);
+ 	sink_fmt->height = clamp_t(u32, format->height,
+-				   rsz->config->min_rsz_height,
+-				   rsz->config->max_rsz_height);
++				  RKISP1_ISP_MIN_HEIGHT,
++				  RKISP1_ISP_MAX_HEIGHT);
+ 
+ 	*format = *sink_fmt;
  
 -- 
 2.25.1
