@@ -2,121 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D459BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54952C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD1062063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSp/51Vb"
+	by mail.kernel.org (Postfix) with ESMTP id 2EBC22063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgHQI2t (ORCPT
+        id S1728531AbgHQI2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbgHQIZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:25:48 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC144C061388;
-        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y10so5574649plr.11;
-        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=D/Mkx0k3buW6nMMz3cj3YWbXhyfw6abwbH3pFqES0j8=;
-        b=tSp/51VbeSEu3dHGWXjYT/NQzG6Ptsjimy1nJUoATyHiHCcmg9eo9jc9IaiQERQ5Nb
-         iJAIIF6kNiA5Kd5aBC89NdU0cLtr7LWwAU+vRwMSSvoATCgF7tWwsvtG0wOy0xB8tR9/
-         uOAPcGvqdMIfqbFOiERkTgq5S7X+z4sS3ug7MnwdPATua5rWEURHlk4bziUaJs2Yjlsb
-         vWNz9vVRd5LVHKlFP5bfXX+bJKOEIpgIa0s/1Mg//6L3c221wwHGJElufgvzxMAdDM+e
-         EvVviBBP45IMyXnW+2hgOqqTLP6sEvrQhnYgq1S+mB1staPKH7MXoRECZYP4+f3temKw
-         OJDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=D/Mkx0k3buW6nMMz3cj3YWbXhyfw6abwbH3pFqES0j8=;
-        b=IHwXcZEKTJ8xD21/nljgfBwe/ZWO3WKfVx2p0GU5fe4afsoOm2xlfLfOHBzVIMBlpK
-         wBbTHrfGfFrpiXR4gBQ6+5+H6W6MDMI4FHvhvJtU06gi7uAY1iOchyLBhumtyjwkp/6W
-         k94q0EjfyB58WAMvl5vSxNFG2xCdIGS7DydY/ry5ZN68VKAZKwwbi8DLo+lJvoNlfUCB
-         vVlcCxfJ8p/dmsVRuyPmmXSqPIJYY53GwQCr7pAgILEIA+JzDLUtyB+mFpv/PY803nSY
-         BETUol654Qi2v6yJUkZL/WE3/04hO20w09YI9WzALGcqBsAOY2dHrVPe2LXgB4Yk7XN5
-         6c7w==
-X-Gm-Message-State: AOAM5337sh8b2Kv94GLH+gDPp6K9XeEkust3/EsQ3Q/GIZzzo9tI4bng
-        IIZcoGJsTPJ0HSSHezHjQEE=
-X-Google-Smtp-Source: ABdhPJzYryo5CXUtCOTUoLLG1O0Nlya6EIJjoKSX670WNzdCiD+322/w/djTW43/04u8aHuCOv3Ndg==
-X-Received: by 2002:a17:90b:3197:: with SMTP id hc23mr11406806pjb.110.1597652747547;
-        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
-        kda@linux-powerpc.org, dougmill@linux.ibm.com,
-        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com
-Cc:     keescook@chromium.org, linux-acenic@sunsite.dk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 09/20] ethernet: ehea: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:54:23 +0530
-Message-Id: <20200817082434.21176-11-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817082434.21176-1-allen.lkml@gmail.com>
-References: <20200817082434.21176-1-allen.lkml@gmail.com>
+        Mon, 17 Aug 2020 04:28:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50480 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728104AbgHQI2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:28:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B44B9AC1C;
+        Mon, 17 Aug 2020 08:29:15 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 10:28:49 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200817082849.GA28270@dhcp22.suse.cz>
+References: <875z9m3xo7.fsf@nanos.tec.linutronix.de>
+ <20200814083037.GD3982@worktop.programming.kicks-ass.net>
+ <20200814141425.GM4295@paulmck-ThinkPad-P72>
+ <20200814161106.GA13853@paulmck-ThinkPad-P72>
+ <20200814174924.GI3982@worktop.programming.kicks-ass.net>
+ <20200814180224.GQ4295@paulmck-ThinkPad-P72>
+ <875z9lkoo4.fsf@nanos.tec.linutronix.de>
+ <20200814204140.GT4295@paulmck-ThinkPad-P72>
+ <20200814215206.GL3982@worktop.programming.kicks-ass.net>
+ <20200816225655.GA17869@pc636>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200816225655.GA17869@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+On Mon 17-08-20 00:56:55, Uladzislau Rezki wrote:
+[...]
+> Michal asked to provide some data regarding how many pages we need and how
+> "lockless allocation" behaves when it comes to success vs failed scenarios.
+> 
+> Please see below some results. The test case is a tight loop of 1 000 000 allocations
+> doing kmalloc() and kfree_rcu():
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+It would be nice to cover some more realistic workloads as well.
 
-diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-index 0273fb7a9d01..f3d104fec7e9 100644
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -1212,9 +1212,9 @@ static void ehea_parse_eqe(struct ehea_adapter *adapter, u64 eqe)
- 	}
- }
- 
--static void ehea_neq_tasklet(unsigned long data)
-+static void ehea_neq_tasklet(struct tasklet_struct *t)
- {
--	struct ehea_adapter *adapter = (struct ehea_adapter *)data;
-+	struct ehea_adapter *adapter = from_tasklet(adapter, t, neq_tasklet);
- 	struct ehea_eqe *eqe;
- 	u64 event_mask;
- 
-@@ -3417,8 +3417,7 @@ static int ehea_probe_adapter(struct platform_device *dev)
- 		goto out_free_ad;
- 	}
- 
--	tasklet_init(&adapter->neq_tasklet, ehea_neq_tasklet,
--		     (unsigned long)adapter);
-+	tasklet_setup(&adapter->neq_tasklet, ehea_neq_tasklet);
- 
- 	ret = ehea_create_device_sysfs(dev);
- 	if (ret)
+> sudo ./test_vmalloc.sh run_test_mask=2048 single_cpu_test=1
+> 
+> <snip>
+>  for (i = 0; i < 1 000 000; i++) {
+>   p = kmalloc(sizeof(*p), GFP_KERNEL);
+>   if (!p)
+>    return -1;
+> 
+>   p->array[0] = 'a';
+>   kvfree_rcu(p, rcu);
+>  }
+> <snip>
+> 
+> wget ftp://vps418301.ovh.net/incoming/1000000_kmalloc_kfree_rcu_proc_percpu_pagelist_fractio_is_0.png
+
+If I understand this correctly then this means that failures happen very
+often because pcp pages are not recycled quicklly enough.
+
+> wget ftp://vps418301.ovh.net/incoming/1000000_kmalloc_kfree_rcu_proc_percpu_pagelist_fractio_is_8.png
+
+1/8 of the memory in pcp lists is quite large and likely not something
+used very often.
+
+Both these numbers just make me think that a dedicated pool of page
+pre-allocated for RCU specifically might be a better solution. I still
+haven't read through that branch of the email thread though so there
+might be some pretty convincing argments to not do that.
+
+> Also i would like to underline, that kfree_rcu() reclaim logic can be improved further,
+> making the drain logic more efficient when it comes to time, thus to reduce a footprint
+> as a result number of required pages.
+> 
+> --
+> Vlad Rezki
+
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
