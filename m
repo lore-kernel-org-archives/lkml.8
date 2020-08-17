@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4AA6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E30204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690547;
-	bh=TPvivIz/oPvaS6bc4/Rp6tbbh1/uQX/iceHJri6MASg=;
+	s=default; t=1597690551;
+	bh=PoeSaULEMpilwDNuRE2KyLF/mMUHOxM2Tnd+WvhzUtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiH9p6ZOWp8tC7n8d1539NBRPwUaDY2QhJBHu7Zcl5bdt/q9oasCluMvMKEh5Ja5x
-	 uT8buSn8w0iqzlAOyBdyBzC6+TCB5hK8sE6cHqwuTZD6Zy9m0yYSGd+0lPSB5BBhZn
-	 CVdxekT/gVCdOagRtsz7zUrZkbHdHCLBb5G3C7yI=
+	b=OtsolagJCqf9wGfWLZgK/Vc/8Re9kesjRJ2IyzUsR1nu5OsMT9pCMC3mr7NogFO7x
+	 MywwVkmlXZMUN1qsb9MR48s28sSBdNrmIZyzdBxD/+vfOv3QNFQMm4UOj60AZXEMNn
+	 75aeoWmNaIkjasA/WhuGJXwdqJALhCgkcyFTcdDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403949AbgHQSzp (ORCPT
+        id S2403956AbgHQSzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35094 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbgHQPue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:34 -0400
+        id S1730877AbgHQPu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7FFA20657;
-        Mon, 17 Aug 2020 15:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59EAB2054F;
+        Mon, 17 Aug 2020 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679433;
-        bh=TPvivIz/oPvaS6bc4/Rp6tbbh1/uQX/iceHJri6MASg=;
+        s=default; t=1597679428;
+        bh=PoeSaULEMpilwDNuRE2KyLF/mMUHOxM2Tnd+WvhzUtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mbkwt5l1IOGYP2js48ONys6eIKjJdshIqMrT22j50/IbK2azbAXwa6ObTDpy1fYvh
-         fUR1z9Nl3bf+GY04oZMQGw5A6MucU7DSkHNKQ0gsP5YZcF3FIEpxm20wu8dA6diNS9
-         MZhdKMJzouGuzHQNzJv2o3iBghcq/qiQyBW62cT8=
+        b=cURM9yZHITegj3DzrY9SOa7iS8JSpXQz/mHG2COD2mm81GfmKcr7df8MYXFxZMkHy
+         4m4p3MqsR5LenhiRjtUPwFm726hkyQpM407qrHv09iL6+d1wsQUlDANFtPe4ln+ckA
+         +ZLc3Q6CAkpoFQL0iz7y5tWN66/DKCZrvfGD6V30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 209/393] ima: Free the entire rule if it fails to parse
-Date:   Mon, 17 Aug 2020 17:14:19 +0200
-Message-Id: <20200817143829.762976195@linuxfoundation.org>
+Subject: [PATCH 5.7 207/393] ima: Have the LSM free its audit rule
+Date:   Mon, 17 Aug 2020 17:14:17 +0200
+Message-Id: <20200817143829.664825610@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,66 +64,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit 2bdd737c5687d6dec30e205953146ede8a87dbdd ]
+[ Upstream commit 9ff8a616dfab96a4fa0ddd36190907dc68886d9b ]
 
-Use ima_free_rule() to fix memory leaks of allocated ima_rule_entry
-members, such as .fsname and .keyrings, when an error is encountered
-during rule parsing.
+Ask the LSM to free its audit rule rather than directly calling kfree().
+Both AppArmor and SELinux do additional work in their audit_rule_free()
+hooks. Fix memory leaks by allowing the LSMs to perform necessary work.
 
-Set the args_p pointer to NULL after freeing it in the error path of
-ima_lsm_rule_init() so that it isn't freed twice.
-
-This fixes a memory leak seen when loading an rule that contains an
-additional piece of allocated memory, such as an fsname, followed by an
-invalid conditional:
-
- # echo "measure fsname=tmpfs bad=cond" > /sys/kernel/security/ima/policy
- -bash: echo: write error: Invalid argument
- # echo scan > /sys/kernel/debug/kmemleak
- # cat /sys/kernel/debug/kmemleak
- unreferenced object 0xffff98e7e4ece6c0 (size 8):
-   comm "bash", pid 672, jiffies 4294791843 (age 21.855s)
-   hex dump (first 8 bytes):
-     74 6d 70 66 73 00 6b a5                          tmpfs.k.
-   backtrace:
-     [<00000000abab7413>] kstrdup+0x2e/0x60
-     [<00000000f11ede32>] ima_parse_add_rule+0x7d4/0x1020
-     [<00000000f883dd7a>] ima_write_policy+0xab/0x1d0
-     [<00000000b17cf753>] vfs_write+0xde/0x1d0
-     [<00000000b8ddfdea>] ksys_write+0x68/0xe0
-     [<00000000b8e21e87>] do_syscall_64+0x56/0xa0
-     [<0000000089ea7b98>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: f1b08bbcbdaf ("ima: define a new policy condition based on the filesystem name")
-Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+Fixes: b16942455193 ("ima: use the lsm policy update notifier")
 Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc: Janne Karhunen <janne.karhunen@gmail.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ security/integrity/ima/ima.h        | 5 +++++
+ security/integrity/ima/ima_policy.c | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 495e28bd488e6..04c246b2b767f 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -400,6 +400,7 @@ static inline void ima_free_modsig(struct modsig *modsig)
+ #ifdef CONFIG_IMA_LSM_RULES
+ 
+ #define security_filter_rule_init security_audit_rule_init
++#define security_filter_rule_free security_audit_rule_free
+ #define security_filter_rule_match security_audit_rule_match
+ 
+ #else
+@@ -410,6 +411,10 @@ static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
+ 	return -EINVAL;
+ }
+ 
++static inline void security_filter_rule_free(void *lsmrule)
++{
++}
++
+ static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
+ 					     void *lsmrule)
+ {
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 641582230861c..18271920d315d 100644
+index e493063a3c344..236a731492d1e 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -913,6 +913,7 @@ static int ima_lsm_rule_init(struct ima_rule_entry *entry,
+@@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
+ 	int i;
  
- 		if (ima_rules == &ima_default_rules) {
- 			kfree(entry->lsm[lsm_rule].args_p);
-+			entry->lsm[lsm_rule].args_p = NULL;
- 			result = -EINVAL;
- 		} else
- 			result = 0;
-@@ -1404,7 +1405,7 @@ ssize_t ima_parse_add_rule(char *rule)
- 
- 	result = ima_parse_rule(p, entry);
- 	if (result) {
--		kfree(entry);
-+		ima_free_rule(entry);
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL,
- 				    NULL, op, "invalid-policy", result,
- 				    audit_info);
+ 	for (i = 0; i < MAX_LSM_RULES; i++) {
+-		kfree(entry->lsm[i].rule);
++		security_filter_rule_free(entry->lsm[i].rule);
+ 		kfree(entry->lsm[i].args_p);
+ 	}
+ 	kfree(entry);
 -- 
 2.25.1
 
