@@ -2,209 +2,114 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734D820729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2VC/nDU"
+	by mail.kernel.org (Postfix) with ESMTP id D0C0520748
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597674898;
+	bh=n1qEufkaaNH5gRa86sxZmBIuLKRnhY7SbGMD+qgPCOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hwWOyYQzgYnRQGhGPqjreI8PTCyZ1wAPgkvl9rhttKN0j6eQqcRGSg4jKNIg5+hoO
+	 xbCyh3oIYdfeynIkhYdJcuUhXbu4y91+0tT/mzYRLVVn87IOt6lDCByIJV6HP6VivM
+	 MnQVZH2r+gXXhUczs74gmqu3WcV/URbG3nF/dFoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgHQOca (ORCPT
+        id S1729003AbgHQOe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728791AbgHQOc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:32:27 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FCFC061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:32:26 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a5so15238551wrm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4xCxql3rFXOrYwsJnruwiMml2YFmKU3isYfeanIkWcA=;
-        b=e2VC/nDUrcTrPiLe8Rsn9RLZlW4rcYA2Jl5mIjWssD4VC0ZsKSwazLp8W5LLAaUaQj
-         phEwXCaxN15zdXIHVkVdQueXA7BSoUMC0zP4wxhkF81Dtcv5KDknoOUQjRfneCH/dG8i
-         A0xmmSzTjChp0DTHg0RH9HZcD65eQFAjQE1SPdMLbebUyYnIzJbKT2cH4SwFYFHq9W9C
-         QPdKnQp7eFbhQ0pEWFwCu033czTsTfQikLNWQ+0wf9674ynxvj/JUV+8zh1UaU4OLTO3
-         w2ZoiM/l+X1VgEo0AWO+IdM8fY/IvnQpjF22RYs8pd/4Y5fUgXJaPyurEa7kKxZpGK5+
-         R9Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4xCxql3rFXOrYwsJnruwiMml2YFmKU3isYfeanIkWcA=;
-        b=gPzL+kRdpPYH1JttqhN/1x0sViThmMF1BivrNd8d8cVTV37ph3kpQTPhf7MZBhybQx
-         2v4q4t4PpgP7v0MD+WNtM75ad2vFJ301JiyGbAe7SFl99M0SG4VU9/mceK/d1bKzulMQ
-         txBEIkg2b5f2h0Z1nNInB26MCfi+voZ083TBGfV4hEc1+wx5l5+Es+6GalD22W0lSK7n
-         aIkaIjjSgu8pRu5cc9EMwt+WnlSUpAolCiGjDaLPKuIzGteB4fw4C6UvIJTKmqMbRJt4
-         j83PQ9mx4KBKeN+rOG7ReP8zdvu4f/egIeGhCsidBQqVYsQlZMr7sGXkbAx6o2YsVtVC
-         rf2g==
-X-Gm-Message-State: AOAM53058JxVVrqx4QmQH7fsuMwG3nkAr9FqYW27E9s7iBAUjDkHOfoo
-        h8VnJ+Aj/na4/P7Sp1ZBOzq3ZQ==
-X-Google-Smtp-Source: ABdhPJwcWtkOmSHjWMaBZRj99E/tmhBdkQKcx9/iCQNmdDknYb0vfHpbcTwe6vVmWZ3/tTu3rSxwpQ==
-X-Received: by 2002:adf:f48d:: with SMTP id l13mr15343611wro.43.1597674745210;
-        Mon, 17 Aug 2020 07:32:25 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id d23sm30698956wmd.27.2020.08.17.07.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 07:32:24 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 15:32:22 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC 2/5] serial: core: Add framework to allow NMI aware serial
- drivers
-Message-ID: <20200817143222.x524v6xqw5hvzvjs@holly.lan>
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
- <1595333413-30052-3-git-send-email-sumit.garg@linaro.org>
- <CAD=FV=XUNqun3d+C_7GpgntGWRXwLSLnXKStLUz8iqZoGKu8zg@mail.gmail.com>
- <CAFA6WYNq-Z5WD=AqJn2_DEg0F6G1CYte2y5Snc964vsgCnr0Bw@mail.gmail.com>
- <CAD=FV=Vu3PGSUzargD-6e2XOw=Eh7CZaQ_+a09dr8SR1T8eE2g@mail.gmail.com>
- <CAFA6WYPJ_w+R15NRKK5BzZtTxKq8Gh_mGswuYbW0cYZoBYLhxw@mail.gmail.com>
- <20200814141322.lffebtamfjt2qrym@holly.lan>
- <CAFA6WYNAdELYCoOVQokgLNKhOYF9QK85UidgvyFfo4wsSNwKXw@mail.gmail.com>
- <CAD=FV=WiZi18zBwx9J0sKLdCqMCvxuQ=U0m21yNqhtaBfZEqzA@mail.gmail.com>
- <CAFA6WYOww8T7fmP-LtzS-EXG0iBbKEUOS5KrUU_7i+yqd_rFfQ@mail.gmail.com>
+        Mon, 17 Aug 2020 10:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728666AbgHQOez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 10:34:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AC4A20729;
+        Mon, 17 Aug 2020 14:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597674894;
+        bh=n1qEufkaaNH5gRa86sxZmBIuLKRnhY7SbGMD+qgPCOc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hXzQchgmkBujAvOd81ZbHdkcOCbWMEHnTGrGVuYF4Pbu+ZpM6oRVMveP+99IlVa6x
+         YthiOV3wcI6wclNe3p5Y/kOhvZT5YAoeWiZnIIWgHHApFdeYhmoYLuHUp3sGeceP8G
+         x/WAeZm9rA1/Stb9G1ES9xp+ItNRBSSw27o/fGas=
+Date:   Mon, 17 Aug 2020 16:35:13 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Roosen Henri <Henri.Roosen@ginzinger.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>,
+        "y2038@lists.linaro.org" <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: y2038 backport to v5.4
+Message-ID: <20200817143513.GA539521@kroah.com>
+References: <d159c66c6e67480ab48ac44716443358@ginzinger.com>
+ <CAK8P3a2icd72R+4Z5dLPvGuofsq3VOBYBdCnC4806V5znqrytg@mail.gmail.com>
+ <6c77e2a615ca01e753735e21752fe5e1b3fb636f.camel@ginzinger.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFA6WYOww8T7fmP-LtzS-EXG0iBbKEUOS5KrUU_7i+yqd_rFfQ@mail.gmail.com>
+In-Reply-To: <6c77e2a615ca01e753735e21752fe5e1b3fb636f.camel@ginzinger.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 07:53:55PM +0530, Sumit Garg wrote:
-> On Mon, 17 Aug 2020 at 19:27, Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Aug 17, 2020 at 5:27 AM Sumit Garg <sumit.garg@linaro.org> wrote:
-> > >
-> > > Thanks for your suggestion, irq_work_schedule() looked even better
-> > > without any overhead, see below:
-> > >
-> > > diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-> > > index 3082378..1eade89 100644
-> > > --- a/include/linux/irq_work.h
-> > > +++ b/include/linux/irq_work.h
-> > > @@ -3,6 +3,7 @@
-> > >  #define _LINUX_IRQ_WORK_H
-> > >
-> > >  #include <linux/smp_types.h>
-> > > +#include <linux/workqueue.h>
-> > >
-> > >  /*
-> > >   * An entry can be in one of four states:
-> > > @@ -24,6 +25,11 @@ struct irq_work {
-> > >         void (*func)(struct irq_work *);
-> > >  };
-> > >
-> > > +struct irq_work_schedule {
-> > > +       struct irq_work work;
-> > > +       struct work_struct *sched_work;
-> > > +};
-> > > +
-> > >  static inline
-> > >  void init_irq_work(struct irq_work *work, void (*func)(struct irq_work *))
-> > >  {
-> > >  {
-> > > @@ -39,6 +45,7 @@ void init_irq_work(struct irq_work *work, void
-> > > (*func)(struct irq_work *))
-> > >
-> > >  bool irq_work_queue(struct irq_work *work);
-> > >  bool irq_work_queue_on(struct irq_work *work, int cpu);
-> > > +bool irq_work_schedule(struct work_struct *sched_work);
-> > >
-> > >  void irq_work_tick(void);
-> > >  void irq_work_sync(struct irq_work *work);
-> > > diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-> > > index eca8396..3880316 100644
-> > > --- a/kernel/irq_work.c
-> > > +++ b/kernel/irq_work.c
-> > > @@ -24,6 +24,8 @@
-> > >  static DEFINE_PER_CPU(struct llist_head, raised_list);
-> > >  static DEFINE_PER_CPU(struct llist_head, lazy_list);
-> > >
-> > > +static struct irq_work_schedule irq_work_sched;
-> > > +
-> > >  /*
-> > >   * Claim the entry so that no one else will poke at it.
-> > >   */
-> > > @@ -79,6 +81,25 @@ bool irq_work_queue(struct irq_work *work)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(irq_work_queue);
-> > >
-> > > +static void irq_work_schedule_fn(struct irq_work *work)
-> > > +{
-> > > +       struct irq_work_schedule *irq_work_sched =
-> > > +               container_of(work, struct irq_work_schedule, work);
-> > > +
-> > > +       if (irq_work_sched->sched_work)
-> > > +               schedule_work(irq_work_sched->sched_work);
-> > > +}
-> > > +
-> > > +/* Schedule work via irq work queue */
-> > > +bool irq_work_schedule(struct work_struct *sched_work)
-> > > +{
-> > > +       init_irq_work(&irq_work_sched.work, irq_work_schedule_fn);
-> > > +       irq_work_sched.sched_work = sched_work;
-> > > +
-> > > +       return irq_work_queue(&irq_work_sched.work);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(irq_work_schedule);
-> >
-> > Wait, howzat work?  There's a single global variable that you stash
-> > the "sched_work" into with no locking?  What if two people schedule
-> > work at the same time?
+On Mon, Aug 17, 2020 at 02:15:16PM +0000, Roosen Henri wrote:
+> On Tue, 2020-06-09 at 16:18 +0200, Arnd Bergmann wrote:
+> > On Tue, Jun 9, 2020 at 2:36 PM Roosen Henri <
+> > Henri.Roosen@ginzinger.com> wrote:
+> > > Hi Arnd,
+> > > 
+> > > I hope you are well and could answer me a quick question.
+> > > 
+> > > I've read on the kernel mailing-list that initially there was an
+> > > intention to backport the final y2038 patches to v5.4. We're
+> > > currently targeting to use the v5.4 LTS kernel for a project which
+> > > should be y2038 compliant.
+> > > 
+> > > I couldn't find all of the y2038-endgame patches in the current
+> > > v5.4-stable branch. Are there any patches still required to be
+> > > backported in order for v5.4 to be y2038 compliant, or can the
+> > > remaining patches be ignored (because of only cleanup?)? Else, is
+> > > there still an intention to get the v5.4 LTS kernel y2038
+> > > compliant?
+> > 
+> > I don't think there are currently any plans to merge my y2038-endgame 
+> > branch
+> > into the official linux-5.4 lts kernel, but you should be able to
+> > just pull from
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=y2038-endgame
+> > 
+> > and get the same results. If you see any problems with that, please
+> > report
+> > that to me with Cc to the mailing list and perhaps gregkh, so I can
+> > see if
+> > I can resolve it by rebasing my patches, or if he would like to merge
+> > the
+> > patches.
 > 
-> This API is intended to be invoked from NMI context only, so I think
-> there will be a single user at a time.
-
-How can you possibly know that?
-
-This is library code, not a helper in a driver.
-
-
-Daniel.
-
-
-> And we can make that explicit
-> as well:
+> Pulling the y2038-endgame branch does lead to some conflicts, which are
+> currently still kinda staightforward to solve.
 > 
-> +/* Schedule work via irq work queue */
-> +bool irq_work_schedule(struct work_struct *sched_work)
-> +{
-> +       if (in_nmi()) {
-> +               init_irq_work(&irq_work_sched.work, irq_work_schedule_fn);
-> +               irq_work_sched.sched_work = sched_work;
-> +
-> +               return irq_work_queue(&irq_work_sched.work);
-> +       }
-> +
-> +       return false;
-> +}
-> +EXPORT_SYMBOL_GPL(irq_work_schedule);
+> However I'd be very interested in getting this branch merged to v5.4,
+> so we don't run into more difficult merge conflicts the coming years
+> where the v5.4-LTS still gets stable updates (Dec, 2025) and possibly
+> to get any related fixes from upstream.
 > 
-> -Sumit
-> 
-> >
-> > -Doug
+> @Greg: any chance to get the y2038-endgame merged into v5.4.y?
+
+I have no idea what this really means, and what it entails, but odds
+are, no :)
+
+Why not just use a newer kernel?  Why are you stuck using a 5.4 kernel
+for a device that has to live in 2038?  That feels very foolish to me...
+
+thanks,
+
+greg k-h
