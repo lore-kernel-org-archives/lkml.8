@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F04A20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273A0206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683430;
-	bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
+	s=default; t=1597683445;
+	bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNB0WjwjlyWM2dMDBDHf2p5+YdoOsdautC4unZGa6PUUsbd1SJAjJofWGrJe57u3l
-	 ji89ROrjTB301p8GpRsy/b24ZUHGtzoDehAdOfrhmhdMOS37BuY3iHOxlrC+LzFmA/
-	 8zDdJQWn5+bqZaLluf2Sm4iSyJ0ggpbSe/HyENMc=
+	b=1QOV0lB3ZUDkVEd+nGACwjuYC39w2pV8iqRy6vb0XRoPs6zxvrgw8alcNa73ysdod
+	 uAxkTeqnuI97Bdk73MuHXaYTCQH9R/9+xKGq+8TDEltcEKtanYAkSJyd7a0tX5bdHx
+	 mmXsY1m5F/eZVT7OlKns+Yz25g7Fu7+KRXwIw5a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389243AbgHQQ5G (ORCPT
+        id S2389251AbgHQQ5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388344AbgHQQEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:47 -0400
+        id S2388340AbgHQQEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3330D2053B;
-        Mon, 17 Aug 2020 16:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE15B206FA;
+        Mon, 17 Aug 2020 16:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680286;
-        bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
+        s=default; t=1597680284;
+        bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GX1UF2+cFvGCXJvFMPDQWzNONSnsADiErQDOcB4/tm4px7pQPQflFRQBit8MqlOSi
-         9NPZuPjxqWknhkW3sr6hSBFKe8hza1vR5UT6NEekPT8wR0qKki30q/s4MkqPuQIcg8
-         wJd8RXbLbcOWpf+y/SBdZk7SwJxwlVnKMgfNItfw=
+        b=hQ9d7g59mbqZ2dl9ymC4S4lM9IAruMQVLVGdPD+yGj+J1Tgu4L1kChWIkp/wjewsB
+         BAkcOl/G3AgfDlf0p796IBxb4UnEw/nE9U2hUb3BbkR9L1jpJHUHNJIDbsdatiTOta
+         C8EczJsbIpZ/PDjfefWHFpZsAhmsLyyZo8T0x4BQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/270] btmrvl: Fix firmware filename for sd8997 chipset
-Date:   Mon, 17 Aug 2020 17:14:57 +0200
-Message-Id: <20200817143800.559669207@linuxfoundation.org>
+Subject: [PATCH 5.4 124/270] media: firewire: Using uninitialized values in node_probe()
+Date:   Mon, 17 Aug 2020 17:15:25 +0200
+Message-Id: <20200817143801.952102926@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,43 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 00eb0cb36fad53315047af12e83c643d3a2c2e49 ]
+[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
 
-Firmware for sd8997 chipset is distributed by Marvell package and also as
-part of the linux-firmware repository in filename sdsd8997_combo_v4.bin.
+If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
+then the "strlen(model_names[i]) <= name_len" is true because strlen()
+is unsigned and -ENOENT is type promoted to a very high positive value.
+Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
+data because "name" is uninitialized.
 
-This patch fixes mwifiex driver to load correct firmware file for sd8997.
-
-Fixes: f0ef67485f591 ("Bluetooth: btmrvl: add sd8997 chipset support")
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmrvl_sdio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/firewire/firedtv-fw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
-index 7aa2c94720bc5..4c7978cb1786f 100644
---- a/drivers/bluetooth/btmrvl_sdio.c
-+++ b/drivers/bluetooth/btmrvl_sdio.c
-@@ -346,7 +346,7 @@ static const struct btmrvl_sdio_device btmrvl_sdio_sd8987 = {
+diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
+index 97144734eb052..3f1ca40b9b987 100644
+--- a/drivers/media/firewire/firedtv-fw.c
++++ b/drivers/media/firewire/firedtv-fw.c
+@@ -272,6 +272,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
  
- static const struct btmrvl_sdio_device btmrvl_sdio_sd8997 = {
- 	.helper         = NULL,
--	.firmware       = "mrvl/sd8997_uapsta.bin",
-+	.firmware       = "mrvl/sdsd8997_combo_v4.bin",
- 	.reg            = &btmrvl_reg_8997,
- 	.support_pscan_win_report = true,
- 	.sd_blksz_fw_dl = 256,
-@@ -1833,4 +1833,4 @@ MODULE_FIRMWARE("mrvl/sd8887_uapsta.bin");
- MODULE_FIRMWARE("mrvl/sd8897_uapsta.bin");
- MODULE_FIRMWARE("mrvl/sdsd8977_combo_v2.bin");
- MODULE_FIRMWARE("mrvl/sd8987_uapsta.bin");
--MODULE_FIRMWARE("mrvl/sd8997_uapsta.bin");
-+MODULE_FIRMWARE("mrvl/sdsd8997_combo_v4.bin");
+ 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
+ 				 name, sizeof(name));
++	if (name_len < 0)
++		return name_len;
+ 	for (i = ARRAY_SIZE(model_names); --i; )
+ 		if (strlen(model_names[i]) <= name_len &&
+ 		    strncmp(name, model_names[i], name_len) == 0)
 -- 
 2.25.1
 
