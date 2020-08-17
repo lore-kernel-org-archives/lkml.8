@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E025C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87357C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C134922BEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F9623102
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678241;
-	bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+	s=default; t=1597678250;
+	bh=pHYlclpSKjbiZNMgPJarljjkUereLNLSMpnfdT7p3Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mO6lN3lebgNOk6LzGMfW+sfg/2p58mV54XUdOAjEnb1BJw5pt68qVg1tpsWzdZneK
-	 142FPZVWNGUtlDtGNCEa/pD3lNX52zfBypMJwhmaBT522/awZLD5VHDEd9QIdSM69J
-	 1Pbb0OjnwK4kG4wFALmeDPYqe7LK7k9UoYnj4pf4=
+	b=xlT5pwYRPv7AcE3FtliDe4e6z+XcnkaKHb0jtbzUQ/vbPgu/5MbzVm24FXejKadMi
+	 RfbcwxW9JqBE5B3/NGAeJ0BR8G2qmZVGwAO0bKJMw7IqNyviFNv24F4bUlqpM6zzix
+	 S4kWmZ11PkkoblW14AViwWVaKIyPwtNv2uv9cHd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbgHQPak (ORCPT
+        id S1730226AbgHQPar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42294 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbgHQP2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:15 -0400
+        id S1730016AbgHQP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F96923B84;
-        Mon, 17 Aug 2020 15:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE7923BDB;
+        Mon, 17 Aug 2020 15:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678094;
-        bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+        s=default; t=1597678109;
+        bh=pHYlclpSKjbiZNMgPJarljjkUereLNLSMpnfdT7p3Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEEnzWvbFhlQKSllOVE6mMo4Pnq3ovHy1z1YawBOXzY5ueodHSV8s3NUIdvI19a4s
-         eoGRv7MVspvYVxVb2k2AdtzR0ya9VQCMAd8JrSqw7hhzbWOGBzOIhES9ZrfVk+M6qn
-         hE3U2SKad1TD1PLrfrzjPvIA3H8a1tjSoR3hPFjw=
+        b=LUD/XY0/MBiralYET8YUBUsO3PY9+eWkSSvAOxNtEmMdmH0iLTQyzwjJkdRXuQCuI
+         +ijFHEhFLMJXPmUa3zR76Yb3JhO9ovVItlGVWejxT63ScC4l4xJBXjv4oFaSNJuOhv
+         pwrhgeoHSn88P+wSG9ePxwJWpIbRmI8lM5cwoJEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 215/464] RDMA/rxe: Skip dgid check in loopback mode
-Date:   Mon, 17 Aug 2020 17:12:48 +0200
-Message-Id: <20200817143844.108261185@linuxfoundation.org>
+Subject: [PATCH 5.8 191/464] tracing: Move pipe reference to trace array instead of current_tracer
+Date:   Mon, 17 Aug 2020 17:12:24 +0200
+Message-Id: <20200817143842.971050640@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,70 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 5c99274be8864519328aa74bc550ba410095bc1c ]
+[ Upstream commit 7ef282e05132d56b6f6b71e3873f317664bea78b ]
 
-In the loopback tests, the following call trace occurs.
+If a process has the trace_pipe open on a trace_array, the current tracer
+for that trace array should not be changed. This was original enforced by a
+global lock, but when instances were introduced, it was moved to the
+current_trace. But this structure is shared by all instances, and a
+trace_pipe is for a single instance. There's no reason that a process that
+has trace_pipe open on one instance should prevent another instance from
+changing its current tracer. Move the reference counter to the trace_array
+instead.
 
- Call Trace:
-  __rxe_do_task+0x1a/0x30 [rdma_rxe]
-  rxe_qp_destroy+0x61/0xa0 [rdma_rxe]
-  rxe_destroy_qp+0x20/0x60 [rdma_rxe]
-  ib_destroy_qp_user+0xcc/0x220 [ib_core]
-  uverbs_free_qp+0x3c/0xc0 [ib_uverbs]
-  destroy_hw_idr_uobject+0x24/0x70 [ib_uverbs]
-  uverbs_destroy_uobject+0x43/0x1b0 [ib_uverbs]
-  uobj_destroy+0x41/0x70 [ib_uverbs]
-  __uobj_get_destroy+0x39/0x70 [ib_uverbs]
-  ib_uverbs_destroy_qp+0x88/0xc0 [ib_uverbs]
-  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb9/0xf0 [ib_uverbs]
-  ib_uverbs_cmd_verbs+0xb16/0xc30 [ib_uverbs]
+This is marked as "Fixes" but is more of a clean up than a true fix.
+Backport if you want, but its not critical.
 
-The root cause is that the actual RDMA connection is not created in the
-loopback tests and the rxe_match_dgid will fail randomly.
-
-To fix this call trace which appear in the loopback tests, skip check of
-the dgid.
-
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200630123605.446959-1-leon@kernel.org
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: cf6ab6d9143b1 ("tracing: Add ref count to tracer for when they are being read by pipe")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c | 12 ++++++------
+ kernel/trace/trace.h |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index 831ad578a7b29..46e111c218fd4 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -330,10 +330,14 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
- 
- static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
- {
-+	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
- 	const struct ib_gid_attr *gid_attr;
- 	union ib_gid dgid;
- 	union ib_gid *pdgid;
- 
-+	if (pkt->mask & RXE_LOOPBACK_MASK)
-+		return 0;
-+
- 	if (skb->protocol == htons(ETH_P_IP)) {
- 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
- 				       (struct in6_addr *)&dgid);
-@@ -366,7 +370,7 @@ void rxe_rcv(struct sk_buff *skb)
- 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
- 		goto drop;
- 
--	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
-+	if (rxe_match_dgid(rxe, skb) < 0) {
- 		pr_warn_ratelimited("failed matching dgid\n");
- 		goto drop;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index bb62269724d5f..6fc6da55b94e2 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5887,7 +5887,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
  	}
+ 
+ 	/* If trace pipe files are being read, we can't change the tracer */
+-	if (tr->current_trace->ref) {
++	if (tr->trace_ref) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+@@ -6103,7 +6103,7 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+ 
+ 	nonseekable_open(inode, filp);
+ 
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ out:
+ 	mutex_unlock(&trace_types_lock);
+ 	return ret;
+@@ -6122,7 +6122,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	tr->current_trace->ref--;
++	tr->trace_ref--;
+ 
+ 	if (iter->trace->pipe_close)
+ 		iter->trace->pipe_close(iter);
+@@ -7424,7 +7424,7 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
+ 
+ 	filp->private_data = info;
+ 
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ 
+ 	mutex_unlock(&trace_types_lock);
+ 
+@@ -7525,7 +7525,7 @@ static int tracing_buffers_release(struct inode *inode, struct file *file)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	iter->tr->current_trace->ref--;
++	iter->tr->trace_ref--;
+ 
+ 	__trace_array_put(iter->tr);
+ 
+@@ -8733,7 +8733,7 @@ static int __remove_instance(struct trace_array *tr)
+ 	int i;
+ 
+ 	/* Reference counter for a newly created trace array = 1. */
+-	if (tr->ref > 1 || (tr->current_trace && tr->current_trace->ref))
++	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
+ 		return -EBUSY;
+ 
+ 	list_del(&tr->list);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 13db4000af3fe..f21607f871891 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -356,6 +356,7 @@ struct trace_array {
+ 	struct trace_event_file *trace_marker_file;
+ 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
+ 	int			ref;
++	int			trace_ref;
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	struct ftrace_ops	*ops;
+ 	struct trace_pid_list	__rcu *function_pids;
+@@ -547,7 +548,6 @@ struct tracer {
+ 	struct tracer		*next;
+ 	struct tracer_flags	*flags;
+ 	int			enabled;
+-	int			ref;
+ 	bool			print_max;
+ 	bool			allow_instances;
+ #ifdef CONFIG_TRACER_MAX_TRACE
 -- 
 2.25.1
 
