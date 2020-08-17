@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC328C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B46C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D12207DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1474B207DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680768;
-	bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+	s=default; t=1597680781;
+	bh=U7cUe149+oKVFDMQFypevGk4UfBFfRVuFM0ffKU6T4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BuGuy2DCDYyEiwYb3qJuvOCi5QESzbF0lSfc6xT2/flzNC9A3TH/a8c+s4O8+OPPN
-	 0mXF7SQnVyzacaell7Q+tlc0KiOwoOkCoZLq9VBVmT2+n1PAILc0qkxuBbV32QhGXQ
-	 45DEyx83cJcpFBt3hBflGg3yFz271vlEw8BDWsV0=
+	b=cnMktoAmok4l2m8I93027dlXT7fNwJYNSBCjMpceVN2U8u73URUKHtghEvfYSYmaM
+	 PCoMAWZJ50Pn6+tngnwIsoR8sOSa4iMO7lvm3Ta/YU4n9wpcMMQSw6p717o3Ve85xh
+	 46HUZXG9wC3VVAZWDFLYdQ0XEC8DEgNHr+kEk/JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388715AbgHQQMo (ORCPT
+        id S2388731AbgHQQM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730813AbgHQPrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:11 -0400
+        id S1730819AbgHQPr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 469682065D;
-        Mon, 17 Aug 2020 15:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AD5F20789;
+        Mon, 17 Aug 2020 15:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679230;
-        bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+        s=default; t=1597679249;
+        bh=U7cUe149+oKVFDMQFypevGk4UfBFfRVuFM0ffKU6T4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKr2urQxIE2lX81V/w/CZTVRLx3PTSGkMKkpdcxy5lwzEcBLyVcz6yaA96nOCUYom
-         JLFRqEJnIMZ5a+R9El516lAtRyGEWcEJxhgscsZwquIsbr2aQGSc6rwG822F6LMTGT
-         D4BjmdYcjxa9+knhSGx09+VL9gDVojOXaC6wLOVA=
+        b=tymwMylayecBxHxyI43lLabaoEEsXA7/YpFrRxFMcaiauN/OzMFUow6eDpVdoonOH
+         AQr0pX4AIkkmOoDkl9tvy4Ibd+TCo9MH01Ban9UJEejtFY/2L9hUATqqbG3ZN6mzyC
+         WVzPeKuk7RvSdzJYgGZIvFSAxqzZxTju9Qjd1/Cg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 140/393] iio: improve IIO_CONCENTRATION channel type description
-Date:   Mon, 17 Aug 2020 17:13:10 +0200
-Message-Id: <20200817143826.402675819@linuxfoundation.org>
+Subject: [PATCH 5.7 146/393] clk: bcm63xx-gate: fix last clock availability
+Date:   Mon, 17 Aug 2020 17:13:16 +0200
+Message-Id: <20200817143826.694768838@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,41 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
+[ Upstream commit cf8030d7035bd3e89c9e66f7193a7fc8057a9b9a ]
 
-IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
-raw concentrations of pollutants. Raw value should be meaningless
-before being properly scaled. Because of that description shouldn't
-mention raw value unit whatsoever.
+In order to make the last clock available, maxbit has to be set to the
+highest bit value plus 1.
 
-Fix this by rephrasing existing description so it follows conventions
-used throughout IIO ABI docs.
-
-Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 1c099779c1e2 ("clk: add BCM63XX gated clock controller driver")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Link: https://lore.kernel.org/r/20200609110846.4029620-1-noltari@gmail.com
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/bcm/clk-bcm63xx-gate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index d3e53a6d8331b..5c62bfb0f3f57 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1569,7 +1569,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
- KernelVersion:	4.3
- Contact:	linux-iio@vger.kernel.org
- Description:
--		Raw (unscaled no offset etc.) percentage reading of a substance.
-+		Raw (unscaled no offset etc.) reading of a substance. Units
-+		after application of scale and offset are percents.
+diff --git a/drivers/clk/bcm/clk-bcm63xx-gate.c b/drivers/clk/bcm/clk-bcm63xx-gate.c
+index 98e884957db87..911a29bd744ef 100644
+--- a/drivers/clk/bcm/clk-bcm63xx-gate.c
++++ b/drivers/clk/bcm/clk-bcm63xx-gate.c
+@@ -155,6 +155,7 @@ static int clk_bcm63xx_probe(struct platform_device *pdev)
  
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+ 	for (entry = table; entry->name; entry++)
+ 		maxbit = max_t(u8, maxbit, entry->bit);
++	maxbit++;
+ 
+ 	hw = devm_kzalloc(&pdev->dev, struct_size(hw, data.hws, maxbit),
+ 			  GFP_KERNEL);
 -- 
 2.25.1
 
