@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71599C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7C920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF8520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693631;
-	bh=UCGiZ204cxB9dbRnXHlFZB9TQWCCrxb35jvAi/jUETw=;
+	s=default; t=1597693634;
+	bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdKmXxWcouVojWJelfphbrWlzTqCi+vWngdph6Bg8bZaFT8bzNLhCpr0ChcXeS/0D
-	 /vHNkQeHOXJMC7w4J8ZehjEqCfni52+c4OJ1+9YUwzbTPWisw8GmaTgrABIUU2u/mt
-	 7/lGXuREI4p2MxonCZhUnxxzVId3FXR1RD9bmK9g=
+	b=crFTEu+ROJghkSsJ+x3tHozOaXYYqagZgbOHYb/AAUXYyY4XadPbfy3wLxsY6GfPC
+	 xMeZAMKfNNGuolYTi3guTLLtiQO3BBWrN0uKWGaks7BIbbyxMA05fbLSbWYMqVmJRU
+	 PcW5ygzEaLaMRgu6dPKNxZzVUQ9jKXdshW/nA8es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbgHQTrK (ORCPT
+        id S1732662AbgHQTrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729303AbgHQPUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:55 -0400
+        id S1729209AbgHQPUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EAA92072E;
-        Mon, 17 Aug 2020 15:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E23207DE;
+        Mon, 17 Aug 2020 15:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677655;
-        bh=UCGiZ204cxB9dbRnXHlFZB9TQWCCrxb35jvAi/jUETw=;
+        s=default; t=1597677649;
+        bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ul/fgkuWfAM1hYjHWWpPJV/LEg+8NaIc5n1fGJgkfaaGy3J9nCLoNzx7wlgR/0ljc
-         7F01Ld4+BNorfwRDOWjGOuyzaOMPxyoIxv2cO8qunHphuFx5+LWj94T+Aw82zBjNAI
-         jOSX3kyrnh09ooePSAMgqxO3NFqH6foqtT4xpr/E=
+        b=QPo0jNw3k7/IEj7D9VAbPu2bV/6HqJfGq1vTMNzIx6nI/DBTMKl1O48OraEYS5glM
+         oVTu67Q5QaV88/gXKnV29P8d8DIIV+Qo7PEKjCYydz6OeOZE6AEbZ2kk0D6UQjyOD7
+         t4qn6ir/BKqz3WRn9Hgy2ROP4gGSyFuNUguIxt98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 061/464] seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
-Date:   Mon, 17 Aug 2020 17:10:14 +0200
-Message-Id: <20200817143836.685803210@linuxfoundation.org>
+Subject: [PATCH 5.8 018/464] crc-t10dif: Fix potential crypto notify dead-lock
+Date:   Mon, 17 Aug 2020 17:09:31 +0200
+Message-Id: <20200817143834.630795761@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,77 +61,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 47e33c05f9f07cac3de833e531bcac9ae052c7ca ]
+[ Upstream commit 3906f640224dbe7714b52b66d7d68c0812808e19 ]
 
-When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced it had the wrong
-direction flag set. While this isn't a big deal as nothing currently
-enforces these bits in the kernel, it should be defined correctly. Fix
-the define and provide support for the old command until it is no longer
-needed for backward compatibility.
+The crypto notify call occurs with a read mutex held so you must
+not do any substantial work directly.  In particular, you cannot
+call crypto_alloc_* as they may trigger further notifications
+which may dead-lock in the presence of another writer.
 
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+This patch fixes this by postponing the work into a work queue and
+taking the same lock in the module init function.
+
+While we're at it this patch also ensures that all RCU accesses are
+marked appropriately (tested with sparse).
+
+Finally this also reveals a race condition in module param show
+function as it may be called prior to the module init function.
+It's fixed by testing whether crct10dif_tfm is NULL (this is true
+iff the init function has not completed assuming fallback is false).
+
+Fixes: 11dcb1037f40 ("crc-t10dif: Allow current transform to be...")
+Fixes: b76377543b73 ("crc-t10dif: Pick better transform if one...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/seccomp.h                  | 3 ++-
- kernel/seccomp.c                              | 9 +++++++++
- tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ lib/crc-t10dif.c | 54 +++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 42 insertions(+), 12 deletions(-)
 
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index c1735455bc536..965290f7dcc28 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -123,5 +123,6 @@ struct seccomp_notif_resp {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
-+
- #endif /* _UAPI_LINUX_SECCOMP_H */
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index d653d8426de90..c461ba9925136 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -42,6 +42,14 @@
- #include <linux/uaccess.h>
- #include <linux/anon_inodes.h>
+diff --git a/lib/crc-t10dif.c b/lib/crc-t10dif.c
+index 8cc01a6034165..c9acf1c12cfcb 100644
+--- a/lib/crc-t10dif.c
++++ b/lib/crc-t10dif.c
+@@ -19,39 +19,46 @@
+ static struct crypto_shash __rcu *crct10dif_tfm;
+ static struct static_key crct10dif_fallback __read_mostly;
+ static DEFINE_MUTEX(crc_t10dif_mutex);
++static struct work_struct crct10dif_rehash_work;
  
-+/*
-+ * When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced, it had the
-+ * wrong direction flag in the ioctl number. This is the broken one,
-+ * which the kernel needs to keep supporting until all userspaces stop
-+ * using the wrong command number.
-+ */
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR	SECCOMP_IOR(2, __u64)
-+
- enum notify_state {
- 	SECCOMP_NOTIFY_INIT,
- 	SECCOMP_NOTIFY_SENT,
-@@ -1186,6 +1194,7 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
- 		return seccomp_notify_recv(filter, buf);
- 	case SECCOMP_IOCTL_NOTIF_SEND:
- 		return seccomp_notify_send(filter, buf);
-+	case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
- 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
- 		return seccomp_notify_id_valid(filter, buf);
- 	default:
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 252140a525531..ccf276e138829 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -180,7 +180,7 @@ struct seccomp_metadata {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
+-static int crc_t10dif_rehash(struct notifier_block *self, unsigned long val, void *data)
++static int crc_t10dif_notify(struct notifier_block *self, unsigned long val, void *data)
+ {
+ 	struct crypto_alg *alg = data;
+-	struct crypto_shash *new, *old;
  
- struct seccomp_notif {
- 	__u64 id;
+ 	if (val != CRYPTO_MSG_ALG_LOADED ||
+ 	    static_key_false(&crct10dif_fallback) ||
+ 	    strncmp(alg->cra_name, CRC_T10DIF_STRING, strlen(CRC_T10DIF_STRING)))
+ 		return 0;
+ 
++	schedule_work(&crct10dif_rehash_work);
++	return 0;
++}
++
++static void crc_t10dif_rehash(struct work_struct *work)
++{
++	struct crypto_shash *new, *old;
++
+ 	mutex_lock(&crc_t10dif_mutex);
+ 	old = rcu_dereference_protected(crct10dif_tfm,
+ 					lockdep_is_held(&crc_t10dif_mutex));
+ 	if (!old) {
+ 		mutex_unlock(&crc_t10dif_mutex);
+-		return 0;
++		return;
+ 	}
+ 	new = crypto_alloc_shash("crct10dif", 0, 0);
+ 	if (IS_ERR(new)) {
+ 		mutex_unlock(&crc_t10dif_mutex);
+-		return 0;
++		return;
+ 	}
+ 	rcu_assign_pointer(crct10dif_tfm, new);
+ 	mutex_unlock(&crc_t10dif_mutex);
+ 
+ 	synchronize_rcu();
+ 	crypto_free_shash(old);
+-	return 0;
+ }
+ 
+ static struct notifier_block crc_t10dif_nb = {
+-	.notifier_call = crc_t10dif_rehash,
++	.notifier_call = crc_t10dif_notify,
+ };
+ 
+ __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
+@@ -86,19 +93,26 @@ EXPORT_SYMBOL(crc_t10dif);
+ 
+ static int __init crc_t10dif_mod_init(void)
+ {
++	struct crypto_shash *tfm;
++
++	INIT_WORK(&crct10dif_rehash_work, crc_t10dif_rehash);
+ 	crypto_register_notifier(&crc_t10dif_nb);
+-	crct10dif_tfm = crypto_alloc_shash("crct10dif", 0, 0);
+-	if (IS_ERR(crct10dif_tfm)) {
++	mutex_lock(&crc_t10dif_mutex);
++	tfm = crypto_alloc_shash("crct10dif", 0, 0);
++	if (IS_ERR(tfm)) {
+ 		static_key_slow_inc(&crct10dif_fallback);
+-		crct10dif_tfm = NULL;
++		tfm = NULL;
+ 	}
++	RCU_INIT_POINTER(crct10dif_tfm, tfm);
++	mutex_unlock(&crc_t10dif_mutex);
+ 	return 0;
+ }
+ 
+ static void __exit crc_t10dif_mod_fini(void)
+ {
+ 	crypto_unregister_notifier(&crc_t10dif_nb);
+-	crypto_free_shash(crct10dif_tfm);
++	cancel_work_sync(&crct10dif_rehash_work);
++	crypto_free_shash(rcu_dereference_protected(crct10dif_tfm, 1));
+ }
+ 
+ module_init(crc_t10dif_mod_init);
+@@ -106,11 +120,27 @@ module_exit(crc_t10dif_mod_fini);
+ 
+ static int crc_t10dif_transform_show(char *buffer, const struct kernel_param *kp)
+ {
++	struct crypto_shash *tfm;
++	const char *name;
++	int len;
++
+ 	if (static_key_false(&crct10dif_fallback))
+ 		return sprintf(buffer, "fallback\n");
+ 
+-	return sprintf(buffer, "%s\n",
+-		crypto_tfm_alg_driver_name(crypto_shash_tfm(crct10dif_tfm)));
++	rcu_read_lock();
++	tfm = rcu_dereference(crct10dif_tfm);
++	if (!tfm) {
++		len = sprintf(buffer, "init\n");
++		goto unlock;
++	}
++
++	name = crypto_tfm_alg_driver_name(crypto_shash_tfm(tfm));
++	len = sprintf(buffer, "%s\n", name);
++
++unlock:
++	rcu_read_unlock();
++
++	return len;
+ }
+ 
+ module_param_call(transform, NULL, crc_t10dif_transform_show, NULL, 0644);
 -- 
 2.25.1
 
