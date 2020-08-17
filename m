@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2964EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A7AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41872075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6A12075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dcXJeEcD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VZfQ6ERB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgHQNL1 (ORCPT
+        id S1728801AbgHQNMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:11:27 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:2951 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbgHQNLF (ORCPT
+        Mon, 17 Aug 2020 09:12:55 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:65021 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728754AbgHQNMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:11:05 -0400
+        Mon, 17 Aug 2020 09:12:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597669865; x=1629205865;
+  t=1597669937; x=1629205937;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SSjoEx4aq3Y+wGoy2lmYb2bQTRfjpqw19Jhz5UE5Mww=;
-  b=dcXJeEcD0pMvtCR6t7wOrdHKmWkk+tj69vfOTgKPub9p2A9IZBqIaR91
-   3nawEzgTW9k1H2CbTKsgOvCwC1WKQ9yIbZFMdQj5xiD0atAK4BpVowV54
-   bJuLWoU2KUqj2tIBEsphdAGudV+OrwsTdPwzksocCnb3lRIeBV/os8Myu
-   g=;
+  bh=mkjRxk67Xed1bREx79cKuk9N9az12ZgV4xqFXLkvzrQ=;
+  b=VZfQ6ERBaX8LSLWaT15vJJrrm79HzNzU22yzDyx+XW1xPOs3+jDckoVj
+   eOqfcW9NDPjvZUB1bl/Yh264deYTD8jKgXiC8mkpCHi1kn5YS9w8Ik3SI
+   hEJZAcNUSf6rE58gcJxG8IpibigmNjkiRcrOAl326QrOZMmZ7DawHZysn
+   A=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48302409"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 17 Aug 2020 13:11:03 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 2DD38A1856;
-        Mon, 17 Aug 2020 13:11:01 +0000 (UTC)
+   d="scan'208";a="68512919"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Aug 2020 13:12:16 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 809D9A25C5;
+        Mon, 17 Aug 2020 13:12:14 +0000 (UTC)
 Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:11:00 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:13 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.228) by
  EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:10:51 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 13:12:04 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -70,15 +70,15 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v7 04/18] nitro_enclaves: Init PCI device driver
-Date:   Mon, 17 Aug 2020 16:09:49 +0300
-Message-ID: <20200817131003.56650-5-andraprs@amazon.com>
+Subject: [PATCH v7 11/18] nitro_enclaves: Add logic for setting an enclave memory region
+Date:   Mon, 17 Aug 2020 16:09:56 +0300
+Message-ID: <20200817131003.56650-12-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200817131003.56650-1-andraprs@amazon.com>
 References: <20200817131003.56650-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D16UWC003.ant.amazon.com (10.43.162.15) To
+X-Originating-IP: [10.43.162.228]
+X-ClientProxiedBy: EX13D34UWC004.ant.amazon.com (10.43.162.155) To
  EX13D16EUB001.ant.amazon.com (10.43.166.28)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -87,14 +87,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Nitro Enclaves PCI device is used by the kernel driver as a means of
-communication with the hypervisor on the host where the primary VM and
-the enclaves run. It handles requests with regard to enclave lifetime.
+Another resource that is being set for an enclave is memory. User space
+memory regions, that need to be backed by contiguous memory regions,
+are associated with the enclave.
 
-Setup the PCI device driver and add support for MSI-X interrupts.
+One solution for allocating / reserving contiguous memory regions, that
+is used for integration, is hugetlbfs. The user space process that is
+associated with the enclave passes to the driver these memory regions.
 
-Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
-Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
+The enclave memory regions need to be from the same NUMA node as the
+enclave CPUs.
+
+Add ioctl command logic for setting user space memory region for an
+enclave.
+
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
@@ -102,323 +109,360 @@ Changelog
 
 v6 -> v7
 
-* No changes.
+* Update check for duplicate user space memory regions to cover
+  additional possible scenarios.
 
 v5 -> v6
 
+* Check for max number of pages allocated for the internal data
+  structure for pages.
+* Check for invalid memory region flags.
+* Check for aligned physical memory regions.
 * Update documentation to kernel-doc format.
+* Check for duplicate user space memory regions.
+* Use directly put_page() instead of unpin_user_pages(), to match the
+  get_user_pages() calls.
 
 v4 -> v5
 
-* Remove sanity checks for situations that shouldn't happen, only if
-  buggy system or broken logic at all.
+* Add early exit on set memory region ioctl function call error.
+* Remove log on copy_from_user() failure.
+* Exit without unpinning the pages on NE PCI dev request failure as
+  memory regions from the user space range may have already been added.
+* Add check for the memory region user space address to be 2 MiB
+  aligned.
+* Update logic to not have a hardcoded check for 2 MiB memory regions.
 
 v3 -> v4
 
+* Check enclave memory regions are from the same NUMA node as the
+  enclave CPUs.
 * Use dev_err instead of custom NE log pattern.
-* Update NE PCI driver name to "nitro_enclaves".
+* Update the NE ioctl call to match the decoupling from the KVM API.
 
 v2 -> v3
 
-* Remove the GPL additional wording as SPDX-License-Identifier is
-  already in place.
 * Remove the WARN_ON calls.
-* Remove linux/bug include that is not needed.
 * Update static calls sanity checks.
-* Remove "ratelimited" from the logs that are not in the ioctl call
-  paths.
 * Update kzfree() calls to kfree().
 
 v1 -> v2
 
 * Add log pattern for NE.
-* Update PCI device setup functions to receive PCI device data structure and
-  then get private data from it inside the functions logic.
-* Remove the BUG_ON calls.
-* Add teardown function for MSI-X setup.
 * Update goto labels to match their purpose.
-* Implement TODO for NE PCI device disable state check.
-* Update function name for NE PCI device probe / remove.
+* Remove the BUG_ON calls.
+* Check if enclave max memory regions is reached when setting an enclave
+  memory region.
+* Check if enclave state is init when setting an enclave memory region.
 ---
- drivers/virt/nitro_enclaves/ne_pci_dev.c | 269 +++++++++++++++++++++++
- 1 file changed, 269 insertions(+)
- create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
+ drivers/virt/nitro_enclaves/ne_misc_dev.c | 287 ++++++++++++++++++++++
+ 1 file changed, 287 insertions(+)
 
-diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-new file mode 100644
-index 000000000000..31650dcd592e
---- /dev/null
-+++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
+diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+index 810c4bba424f..3d8a771bde1d 100644
+--- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
++++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+@@ -703,6 +703,260 @@ static int ne_add_vcpu_ioctl(struct ne_enclave *ne_enclave, u32 vcpu_id)
+ 	return 0;
+ }
+ 
 +/**
-+ * DOC: Nitro Enclaves (NE) PCI device driver.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/nitro_enclaves.h>
-+#include <linux/pci.h>
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+
-+#include "ne_misc_dev.h"
-+#include "ne_pci_dev.h"
-+
-+/**
-+ * NE_DEFAULT_TIMEOUT_MSECS - Default timeout to wait for a reply from
-+ *			      the NE PCI device.
-+ */
-+#define NE_DEFAULT_TIMEOUT_MSECS	(120000) /* 120 sec */
-+
-+static const struct pci_device_id ne_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMAZON, PCI_DEVICE_ID_NE) },
-+	{ 0, }
-+};
-+
-+MODULE_DEVICE_TABLE(pci, ne_pci_ids);
-+
-+/**
-+ * ne_setup_msix() - Setup MSI-X vectors for the PCI device.
-+ * @pdev:	PCI device to setup the MSI-X for.
++ * ne_sanity_check_user_mem_region() - Sanity check the user space memory
++ *				       region received during the set user
++ *				       memory region ioctl call.
++ * @ne_enclave :	Private data associated with the current enclave.
++ * @mem_region :	User space memory region to be sanity checked.
 + *
-+ * Context: Process context.
++ * Context: Process context. This function is called with the ne_enclave mutex held.
 + * Return:
 + * * 0 on success.
 + * * Negative return value on failure.
 + */
-+static int ne_setup_msix(struct pci_dev *pdev)
++static int ne_sanity_check_user_mem_region(struct ne_enclave *ne_enclave,
++	struct ne_user_memory_region mem_region)
 +{
-+	int nr_vecs = 0;
-+	int rc = -EINVAL;
++	struct ne_mem_region *ne_mem_region = NULL;
 +
-+	nr_vecs = pci_msix_vec_count(pdev);
-+	if (nr_vecs < 0) {
-+		rc = nr_vecs;
++	if (ne_enclave->mm != current->mm)
++		return -EIO;
 +
-+		dev_err(&pdev->dev, "Error in getting vec count [rc=%d]\n", rc);
++	if (mem_region.memory_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "User space memory size is not multiple of 2 MiB\n");
 +
-+		return rc;
++		return -NE_ERR_INVALID_MEM_REGION_SIZE;
 +	}
 +
-+	rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in alloc MSI-X vecs [rc=%d]\n", rc);
++	if (!IS_ALIGNED(mem_region.userspace_addr, NE_MIN_MEM_REGION_SIZE)) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "User space address is not 2 MiB aligned\n");
 +
-+		return rc;
++		return -NE_ERR_UNALIGNED_MEM_REGION_ADDR;
++	}
++
++	if ((mem_region.userspace_addr & (NE_MIN_MEM_REGION_SIZE - 1)) ||
++	    !access_ok((void __user *)(unsigned long)mem_region.userspace_addr,
++		       mem_region.memory_size)) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Invalid user space address range\n");
++
++		return -NE_ERR_INVALID_MEM_REGION_ADDR;
++	}
++
++	list_for_each_entry(ne_mem_region, &ne_enclave->mem_regions_list,
++			    mem_region_list_entry) {
++		u64 memory_size = ne_mem_region->memory_size;
++		u64 userspace_addr = ne_mem_region->userspace_addr;
++
++		if ((userspace_addr <= mem_region.userspace_addr &&
++		    mem_region.userspace_addr < (userspace_addr + memory_size)) ||
++		    (mem_region.userspace_addr <= userspace_addr &&
++		    (mem_region.userspace_addr + mem_region.memory_size) > userspace_addr)) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "User space memory region already used\n");
++
++			return -NE_ERR_MEM_REGION_ALREADY_USED;
++		}
 +	}
 +
 +	return 0;
 +}
 +
 +/**
-+ * ne_teardown_msix() - Teardown MSI-X vectors for the PCI device.
-+ * @pdev:	PCI device to teardown the MSI-X for.
++ * ne_set_user_memory_region_ioctl() - Add user space memory region to the slot
++ *				       associated with the current enclave.
++ * @ne_enclave :	Private data associated with the current enclave.
++ * @mem_region :	User space memory region to be associated with the given slot.
 + *
-+ * Context: Process context.
-+ */
-+static void ne_teardown_msix(struct pci_dev *pdev)
-+{
-+	pci_free_irq_vectors(pdev);
-+}
-+
-+/**
-+ * ne_pci_dev_enable() - Select the PCI device version and enable it.
-+ * @pdev:	PCI device to select version for and then enable.
-+ *
-+ * Context: Process context.
++ * Context: Process context. This function is called with the ne_enclave mutex held.
 + * Return:
 + * * 0 on success.
 + * * Negative return value on failure.
 + */
-+static int ne_pci_dev_enable(struct pci_dev *pdev)
++static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
++	struct ne_user_memory_region mem_region)
 +{
-+	u8 dev_enable_reply = 0;
-+	u16 dev_version_reply = 0;
-+	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
-+
-+	iowrite16(NE_VERSION_MAX, ne_pci_dev->iomem_base + NE_VERSION);
-+
-+	dev_version_reply = ioread16(ne_pci_dev->iomem_base + NE_VERSION);
-+	if (dev_version_reply != NE_VERSION_MAX) {
-+		dev_err(&pdev->dev, "Error in pci dev version cmd\n");
-+
-+		return -EIO;
-+	}
-+
-+	iowrite8(NE_ENABLE_ON, ne_pci_dev->iomem_base + NE_ENABLE);
-+
-+	dev_enable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
-+	if (dev_enable_reply != NE_ENABLE_ON) {
-+		dev_err(&pdev->dev, "Error in pci dev enable cmd\n");
-+
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_pci_dev_disable() - Disable the PCI device.
-+ * @pdev:	PCI device to disable.
-+ *
-+ * Context: Process context.
-+ */
-+static void ne_pci_dev_disable(struct pci_dev *pdev)
-+{
-+	u8 dev_disable_reply = 0;
-+	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
-+	const unsigned int sleep_time = 10; /* 10 ms */
-+	unsigned int sleep_time_count = 0;
-+
-+	iowrite8(NE_ENABLE_OFF, ne_pci_dev->iomem_base + NE_ENABLE);
-+
-+	/*
-+	 * Check for NE_ENABLE_OFF in a loop, to handle cases when the device
-+	 * state is not immediately set to disabled and going through a
-+	 * transitory state of disabling.
-+	 */
-+	while (sleep_time_count < NE_DEFAULT_TIMEOUT_MSECS) {
-+		dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
-+		if (dev_disable_reply == NE_ENABLE_OFF)
-+			return;
-+
-+		msleep_interruptible(sleep_time);
-+		sleep_time_count += sleep_time;
-+	}
-+
-+	dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
-+	if (dev_disable_reply != NE_ENABLE_OFF)
-+		dev_err(&pdev->dev, "Error in pci dev disable cmd\n");
-+}
-+
-+/**
-+ * ne_pci_probe() - Probe function for the NE PCI device.
-+ * @pdev:	PCI device to match with the NE PCI driver.
-+ * @id :	PCI device id table associated with the NE PCI driver.
-+ *
-+ * Context: Process context.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct ne_pci_dev *ne_pci_dev = NULL;
++	long gup_rc = 0;
++	unsigned long i = 0;
++	unsigned long max_nr_pages = 0;
++	unsigned long memory_size = 0;
++	struct ne_mem_region *ne_mem_region = NULL;
++	unsigned long nr_phys_contig_mem_regions = 0;
++	struct page **phys_contig_mem_regions = NULL;
 +	int rc = -EINVAL;
 +
-+	ne_pci_dev = kzalloc(sizeof(*ne_pci_dev), GFP_KERNEL);
-+	if (!ne_pci_dev)
++	rc = ne_sanity_check_user_mem_region(ne_enclave, mem_region);
++	if (rc < 0)
++		return rc;
++
++	ne_mem_region = kzalloc(sizeof(*ne_mem_region), GFP_KERNEL);
++	if (!ne_mem_region)
 +		return -ENOMEM;
 +
-+	rc = pci_enable_device(pdev);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in pci dev enable [rc=%d]\n", rc);
++	max_nr_pages = mem_region.memory_size / NE_MIN_MEM_REGION_SIZE;
 +
-+		goto free_ne_pci_dev;
-+	}
-+
-+	rc = pci_request_regions_exclusive(pdev, "nitro_enclaves");
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in pci request regions [rc=%d]\n", rc);
-+
-+		goto disable_pci_dev;
-+	}
-+
-+	ne_pci_dev->iomem_base = pci_iomap(pdev, PCI_BAR_NE, 0);
-+	if (!ne_pci_dev->iomem_base) {
++	ne_mem_region->pages = kcalloc(max_nr_pages, sizeof(*ne_mem_region->pages),
++				       GFP_KERNEL);
++	if (!ne_mem_region->pages) {
 +		rc = -ENOMEM;
 +
-+		dev_err(&pdev->dev, "Error in pci iomap [rc=%d]\n", rc);
-+
-+		goto release_pci_regions;
++		goto free_mem_region;
 +	}
 +
-+	pci_set_drvdata(pdev, ne_pci_dev);
++	phys_contig_mem_regions = kcalloc(max_nr_pages, sizeof(*phys_contig_mem_regions),
++					  GFP_KERNEL);
++	if (!phys_contig_mem_regions) {
++		rc = -ENOMEM;
 +
-+	rc = ne_setup_msix(pdev);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in pci dev msix setup [rc=%d]\n", rc);
-+
-+		goto iounmap_pci_bar;
++		goto free_mem_region;
 +	}
 +
-+	ne_pci_dev_disable(pdev);
++	do {
++		i = ne_mem_region->nr_pages;
 +
-+	rc = ne_pci_dev_enable(pdev);
-+	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in ne_pci_dev enable [rc=%d]\n", rc);
++		if (i == max_nr_pages) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Reached max nr of pages in the pages data struct\n");
 +
-+		goto teardown_msix;
++			rc = -ENOMEM;
++
++			goto put_pages;
++		}
++
++		gup_rc = get_user_pages(mem_region.userspace_addr + memory_size, 1, FOLL_GET,
++					ne_mem_region->pages + i, NULL);
++		if (gup_rc < 0) {
++			rc = gup_rc;
++
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Error in get user pages [rc=%d]\n", rc);
++
++			goto put_pages;
++		}
++
++		if (!PageHuge(ne_mem_region->pages[i])) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Not a hugetlbfs page\n");
++
++			rc = -NE_ERR_MEM_NOT_HUGE_PAGE;
++
++			goto put_pages;
++		}
++
++		if (ne_enclave->numa_node != page_to_nid(ne_mem_region->pages[i])) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Page is not from NUMA node %d\n",
++					    ne_enclave->numa_node);
++
++			rc = -NE_ERR_MEM_DIFFERENT_NUMA_NODE;
++
++			goto put_pages;
++		}
++
++		/*
++		 * TODO: Update once handled non-contiguous memory regions
++		 * received from user space or contiguous physical memory regions
++		 * larger than 2 MiB e.g. 8 MiB.
++		 */
++		phys_contig_mem_regions[i] = ne_mem_region->pages[i];
++
++		memory_size += page_size(ne_mem_region->pages[i]);
++
++		ne_mem_region->nr_pages++;
++	} while (memory_size < mem_region.memory_size);
++
++	/*
++	 * TODO: Update once handled non-contiguous memory regions received
++	 * from user space or contiguous physical memory regions larger than
++	 * 2 MiB e.g. 8 MiB.
++	 */
++	nr_phys_contig_mem_regions = ne_mem_region->nr_pages;
++
++	if ((ne_enclave->nr_mem_regions + nr_phys_contig_mem_regions) >
++	    ne_enclave->max_mem_regions) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Reached max memory regions %lld\n",
++				    ne_enclave->max_mem_regions);
++
++		rc = -NE_ERR_MEM_MAX_REGIONS;
++
++		goto put_pages;
 +	}
 +
-+	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
-+	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
-+	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
-+	mutex_init(&ne_pci_dev->enclaves_list_mutex);
-+	mutex_init(&ne_pci_dev->pci_dev_mutex);
-+	ne_pci_dev->pdev = pdev;
++	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
++		u64 phys_region_addr = page_to_phys(phys_contig_mem_regions[i]);
++		u64 phys_region_size = page_size(phys_contig_mem_regions[i]);
++
++		if (phys_region_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Physical mem region size is not multiple of 2 MiB\n");
++
++			rc = -EINVAL;
++
++			goto put_pages;
++		}
++
++		if (!IS_ALIGNED(phys_region_addr, NE_MIN_MEM_REGION_SIZE)) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Physical mem region address is not 2 MiB aligned\n");
++
++			rc = -EINVAL;
++
++			goto put_pages;
++		}
++	}
++
++	ne_mem_region->memory_size = mem_region.memory_size;
++	ne_mem_region->userspace_addr = mem_region.userspace_addr;
++
++	list_add(&ne_mem_region->mem_region_list_entry, &ne_enclave->mem_regions_list);
++
++	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
++		struct ne_pci_dev_cmd_reply cmd_reply = {};
++		struct slot_add_mem_req slot_add_mem_req = {};
++
++		slot_add_mem_req.slot_uid = ne_enclave->slot_uid;
++		slot_add_mem_req.paddr = page_to_phys(phys_contig_mem_regions[i]);
++		slot_add_mem_req.size = page_size(phys_contig_mem_regions[i]);
++
++		rc = ne_do_request(ne_enclave->pdev, SLOT_ADD_MEM,
++				   &slot_add_mem_req, sizeof(slot_add_mem_req),
++				   &cmd_reply, sizeof(cmd_reply));
++		if (rc < 0) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Error in slot add mem [rc=%d]\n", rc);
++
++			kfree(phys_contig_mem_regions);
++
++			/*
++			 * Exit here without put pages as memory regions may
++			 * already been added.
++			 */
++			return rc;
++		}
++
++		ne_enclave->mem_size += slot_add_mem_req.size;
++		ne_enclave->nr_mem_regions++;
++	}
++
++	kfree(phys_contig_mem_regions);
 +
 +	return 0;
 +
-+teardown_msix:
-+	ne_teardown_msix(pdev);
-+iounmap_pci_bar:
-+	pci_set_drvdata(pdev, NULL);
-+	pci_iounmap(pdev, ne_pci_dev->iomem_base);
-+release_pci_regions:
-+	pci_release_regions(pdev);
-+disable_pci_dev:
-+	pci_disable_device(pdev);
-+free_ne_pci_dev:
-+	kfree(ne_pci_dev);
++put_pages:
++	for (i = 0; i < ne_mem_region->nr_pages; i++)
++		put_page(ne_mem_region->pages[i]);
++free_mem_region:
++	kfree(phys_contig_mem_regions);
++	kfree(ne_mem_region->pages);
++	kfree(ne_mem_region);
 +
 +	return rc;
 +}
 +
-+/**
-+ * ne_pci_remove() - Remove function for the NE PCI device.
-+ * @pdev:	PCI device associated with the NE PCI driver.
-+ *
-+ * Context: Process context.
-+ */
-+static void ne_pci_remove(struct pci_dev *pdev)
-+{
-+	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
+ /**
+  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
+  * @file:	File associated with this ioctl function.
+@@ -818,6 +1072,39 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 		return 0;
+ 	}
+ 
++	case NE_SET_USER_MEMORY_REGION: {
++		struct ne_user_memory_region mem_region = {};
++		int rc = -EINVAL;
 +
-+	ne_pci_dev_disable(pdev);
++		if (copy_from_user(&mem_region, (void __user *)arg, sizeof(mem_region)))
++			return -EFAULT;
 +
-+	ne_teardown_msix(pdev);
++		if (mem_region.flags >= NE_MEMORY_REGION_MAX_FLAG_VAL)
++			return -EINVAL;
 +
-+	pci_set_drvdata(pdev, NULL);
++		mutex_lock(&ne_enclave->enclave_info_mutex);
 +
-+	pci_iounmap(pdev, ne_pci_dev->iomem_base);
++		if (ne_enclave->state != NE_STATE_INIT) {
++			dev_err_ratelimited(ne_misc_dev.this_device,
++					    "Enclave is not in init state\n");
 +
-+	pci_release_regions(pdev);
++			mutex_unlock(&ne_enclave->enclave_info_mutex);
 +
-+	pci_disable_device(pdev);
++			return -NE_ERR_NOT_IN_INIT_STATE;
++		}
 +
-+	kfree(ne_pci_dev);
-+}
++		rc = ne_set_user_memory_region_ioctl(ne_enclave, mem_region);
++		if (rc < 0) {
++			mutex_unlock(&ne_enclave->enclave_info_mutex);
 +
-+/*
-+ * TODO: Add suspend / resume functions for power management w/ CONFIG_PM, if
-+ * needed.
-+ */
-+/* NE PCI device driver. */
-+struct pci_driver ne_pci_driver = {
-+	.name		= "nitro_enclaves",
-+	.id_table	= ne_pci_ids,
-+	.probe		= ne_pci_probe,
-+	.remove		= ne_pci_remove,
-+};
++			return rc;
++		}
++
++		mutex_unlock(&ne_enclave->enclave_info_mutex);
++
++		return 0;
++	}
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
 -- 
 2.20.1 (Apple Git-117)
 
