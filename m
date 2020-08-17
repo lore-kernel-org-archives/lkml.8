@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B985AC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD76CC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A17CD2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D19C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgHQWKZ (ORCPT
+        id S1730167AbgHQWKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:10:25 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:60230 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730157AbgHQWKG (ORCPT
+        Mon, 17 Aug 2020 18:10:11 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:32968 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730094AbgHQWJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:10:06 -0400
+        Mon, 17 Aug 2020 18:09:57 -0400
 Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        by out03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <ebiederm@xmission.com>)
-        id 1k7nKO-001qoV-OX; Mon, 17 Aug 2020 16:10:04 -0600
+        id 1k7nKF-001Gya-MY; Mon, 17 Aug 2020 16:09:55 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.int.ebiederm.org)
         by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1k7nKN-0004PB-S0; Mon, 17 Aug 2020 16:10:04 -0600
+        id 1k7nKE-0004PB-TN; Mon, 17 Aug 2020 16:09:55 -0600
 From:   "Eric W. Biederman" <ebiederm@xmission.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, criu@openvz.org,
@@ -57,18 +57,18 @@ Cc:     linux-fsdevel@vger.kernel.org, criu@openvz.org,
         John Fastabend <john.fastabend@gmail.com>,
         KP Singh <kpsingh@chromium.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>
-Date:   Mon, 17 Aug 2020 17:04:16 -0500
-Message-Id: <20200817220425.9389-8-ebiederm@xmission.com>
+Date:   Mon, 17 Aug 2020 17:04:14 -0500
+Message-Id: <20200817220425.9389-6-ebiederm@xmission.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
 References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1k7nKN-0004PB-S0;;;mid=<20200817220425.9389-8-ebiederm@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+MSKEEDBeBw7dsl4MHrKCmLyi274gTksY=
+X-XM-SPF: eid=1k7nKE-0004PB-TN;;;mid=<20200817220425.9389-6-ebiederm@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18+FAvHqoU00EuPv+eIsuw9qOJOke3CL9M=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 08/17] proc/fd: In proc_fd_link use fcheck_task
+Subject: [PATCH 06/17] file: Implement fcheck_task
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,63 +76,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When discussing[1] exec and posix file locks it was realized that none
-of the callers of get_files_struct fundamentally needed to call
-get_files_struct, and that by switching them to helper functions
-instead it will both simplify their code and remove unnecessary
-increments of files_struct.count.  Those unnecessary increments can
-result in exec unnecessarily unsharing files_struct which breaking
-posix locks, and it can result in fget_light having to fallback to
-fget reducing system performance.
+As a companion to fget_task implement fcheck_task for use for querying
+a process about a specific file.
 
-Using fcheck_task instead of get_files_struct simplifies proc_fd_link by
-removing unnecessary locking, and reference counting.
-
-[1] https://lkml.kernel.org/r/20180915160423.GA31461@redhat.com
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/proc/fd.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ fs/file.c               | 13 +++++++++++++
+ include/linux/fdtable.h |  1 +
+ 2 files changed, 14 insertions(+)
 
-diff --git a/fs/proc/fd.c b/fs/proc/fd.c
-index 4048a87c51ee..abfdcb21cc79 100644
---- a/fs/proc/fd.c
-+++ b/fs/proc/fd.c
-@@ -141,29 +141,23 @@ static const struct dentry_operations tid_fd_dentry_operations = {
+diff --git a/fs/file.c b/fs/file.c
+index c585dbaf31a3..8d4b385055e9 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -863,6 +863,19 @@ struct file *fget_task(struct task_struct *task, unsigned int fd)
+ 	return file;
+ }
  
- static int proc_fd_link(struct dentry *dentry, struct path *path)
- {
--	struct files_struct *files = NULL;
- 	struct task_struct *task;
- 	int ret = -ENOENT;
++struct file *fcheck_task(struct task_struct *task, unsigned int fd)
++{
++	/* Must be called with rcu_read_lock held */
++	struct file *file = NULL;
++
++	task_lock(task);
++	if (task->files)
++		file = fcheck_files(task->files, fd);
++	task_unlock(task);
++
++	return file;
++}
++
+ /*
+  * Lightweight file lookup - no refcnt increment if fd table isn't shared.
+  *
+diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
+index 7cc9885044d9..def9debd2ce2 100644
+--- a/include/linux/fdtable.h
++++ b/include/linux/fdtable.h
+@@ -103,6 +103,7 @@ static inline struct file *fcheck_files(struct files_struct *files, unsigned int
+  * Check whether the specified fd has an open file.
+  */
+ #define fcheck(fd)	fcheck_files(current->files, fd)
++struct file *fcheck_task(struct task_struct *task, unsigned int fd);
  
- 	task = get_proc_task(d_inode(dentry));
- 	if (task) {
--		files = get_files_struct(task);
--		put_task_struct(task);
--	}
--
--	if (files) {
- 		unsigned int fd = proc_fd(d_inode(dentry));
- 		struct file *fd_file;
+ struct task_struct;
  
--		spin_lock(&files->file_lock);
--		fd_file = fcheck_files(files, fd);
-+		rcu_read_lock();
-+		fd_file = fcheck_task(task, fd);
- 		if (fd_file) {
- 			*path = fd_file->f_path;
- 			path_get(&fd_file->f_path);
- 			ret = 0;
- 		}
--		spin_unlock(&files->file_lock);
--		put_files_struct(files);
-+		rcu_read_unlock();
-+		put_task_struct(task);
- 	}
- 
- 	return ret;
 -- 
 2.25.0
 
