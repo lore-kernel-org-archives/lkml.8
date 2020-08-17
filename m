@@ -7,177 +7,209 @@ X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE61C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B69BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7273620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DF92063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TpnKhhXz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bth56Yix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388955AbgHQRdB (ORCPT
+        id S2389266AbgHQRdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:33:01 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:39644 "EHLO
+        Mon, 17 Aug 2020 13:33:31 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48097 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388979AbgHQQz4 (ORCPT
+        by vger.kernel.org with ESMTP id S2389019AbgHQQxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:55:56 -0400
+        Mon, 17 Aug 2020 12:53:54 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597683355; h=In-Reply-To: Content-Type: MIME-Version:
+ s=smtp; t=1597683233; h=In-Reply-To: Content-Type: MIME-Version:
  References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=opili1/+0dW4EUDDFvf9qZg/sEOsjBH8GyzqwpumoDE=; b=TpnKhhXzVqzxEcxMh2Jre9Ovk5LLw2t9ggRUhLcPYa6fXkZbDojJyt1gBtj+9zWyOiuhBj+g
- zrpzZzQyyx0mKbBjTtGWI1L3CCUXBWAVBVA5YGL03WdAJpZCV60Ng621K8ufEC3ZbZ5htHL1
- e5Xh7MM2HeGkW+GESELXBEjBFyE=
+ bh=CWGALEqQ4ZA1LCRWwGY3ghzqLDTb2GiGuUvIFbf/Xdo=; b=bth56YixzpRLq21Y6l56M4ZqBILP4d8/9e1w2K6QCObATm5FFQVdYVwHAN6TxljJx0AWanjI
+ NwPNKGcjd37y+bU75IfECM01dpO/dM34uzxouedAo1d8jwzx2QhfNIpQE77YOPYxtBxuGqoD
+ +kSVT7GjMHfXSW/ardaNIS0GhSM=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
  smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f3ab685440a07969a534475 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:55:33
+ 5f3ab61df2b697637a973602 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:53:49
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 549FFC433A1; Mon, 17 Aug 2020 16:55:31 +0000 (UTC)
+        id 6E212C433B6; Mon, 17 Aug 2020 16:53:47 +0000 (UTC)
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BA23C433CB;
-        Mon, 17 Aug 2020 16:55:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1BA23C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D110DC433C6;
+        Mon, 17 Aug 2020 16:53:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D110DC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 17 Aug 2020 10:55:25 -0600
+Date:   Mon, 17 Aug 2020 10:53:41 -0600
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     Rob Clark <robdclark@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         Jonathan Marek <jonathan@marek.ca>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/19] drm/msm: set adreno_smmu as gpu's drvdata
-Message-ID: <20200817165524.GJ3221@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sean Paul <sean@poorly.run>,
         Sibi Sankar <sibis@codeaurora.org>,
         Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
         Shawn Guo <shawn.guo@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno@lists.freedesktop.org,
         Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [Freedreno] [PATCH 06/19] drm/msm/gpu: add dev_to_gpu() helper
+Message-ID: <20200817165341.GI3221@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Jonathan Marek <jonathan@marek.ca>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
+        Sean Paul <sean@poorly.run>, Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, freedreno@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-8-robdclark@gmail.com>
+ <20200814024114.1177553-7-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200814024114.1177553-8-robdclark@gmail.com>
+In-Reply-To: <20200814024114.1177553-7-robdclark@gmail.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 07:41:02PM -0700, Rob Clark wrote:
+On Thu, Aug 13, 2020 at 07:41:01PM -0700, Rob Clark wrote:
 > From: Rob Clark <robdclark@chromium.org>
 > 
-> This will be populated by adreno-smmu, to provide a way for coordinating
-> enabling/disabling TTBR0 translation.
+> In a later patch, the drvdata will not directly be 'struct msm_gpu *',
+> so add a helper to reduce the churn.
 > 
-
 Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
 > Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 2 --
->  drivers/gpu/drm/msm/msm_gpu.c              | 2 +-
->  drivers/gpu/drm/msm/msm_gpu.h              | 6 +++++-
->  3 files changed, 6 insertions(+), 4 deletions(-)
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 10 ++++------
+>  drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
+>  drivers/gpu/drm/msm/msm_gpu.h              |  5 +++++
+>  3 files changed, 12 insertions(+), 9 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> index 26664e1b30c0..58e03b20e1c7 100644
+> index 9eeb46bf2a5d..26664e1b30c0 100644
 > --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
 > +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -417,8 +417,6 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
->  		return PTR_ERR(gpu);
->  	}
+> @@ -282,7 +282,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
+>  	int ret;
 >  
-> -	dev_set_drvdata(dev, gpu);
-> -
->  	return 0;
+>  	if (pdev)
+> -		gpu = platform_get_drvdata(pdev);
+> +		gpu = dev_to_gpu(&pdev->dev);
+>  
+>  	if (!gpu) {
+>  		dev_err_once(dev->dev, "no GPU device was found\n");
+> @@ -425,7 +425,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
+>  static void adreno_unbind(struct device *dev, struct device *master,
+>  		void *data)
+>  {
+> -	struct msm_gpu *gpu = dev_get_drvdata(dev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	pm_runtime_force_suspend(dev);
+>  	gpu->funcs->destroy(gpu);
+> @@ -490,16 +490,14 @@ static const struct of_device_id dt_match[] = {
+>  #ifdef CONFIG_PM
+>  static int adreno_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	return gpu->funcs->pm_resume(gpu);
 >  }
 >  
+>  static int adreno_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	return gpu->funcs->pm_suspend(gpu);
+>  }
 > diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index 6aa9e04e52e7..806eb0957280 100644
+> index d5645472b25d..6aa9e04e52e7 100644
 > --- a/drivers/gpu/drm/msm/msm_gpu.c
 > +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -892,7 +892,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		gpu->gpu_cx = NULL;
+> @@ -24,7 +24,7 @@
+>  static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+>  		u32 flags)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  	struct dev_pm_opp *opp;
 >  
->  	gpu->pdev = pdev;
-> -	platform_set_drvdata(pdev, gpu);
-> +	platform_set_drvdata(pdev, &gpu->adreno_smmu);
+>  	opp = devfreq_recommended_opp(dev, freq, flags);
+> @@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+>  static int msm_devfreq_get_dev_status(struct device *dev,
+>  		struct devfreq_dev_status *status)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  	ktime_t time;
 >  
->  	msm_devfreq_init(gpu);
+>  	if (gpu->funcs->gpu_get_freq)
+> @@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
 >  
+>  static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	if (gpu->funcs->gpu_get_freq)
+>  		*freq = gpu->funcs->gpu_get_freq(gpu);
 > diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index 8bda7beaed4b..f91b141add75 100644
+> index 0db117a7339b..8bda7beaed4b 100644
 > --- a/drivers/gpu/drm/msm/msm_gpu.h
 > +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -7,6 +7,7 @@
->  #ifndef __MSM_GPU_H__
->  #define __MSM_GPU_H__
+> @@ -141,6 +141,11 @@ struct msm_gpu {
+>  	struct msm_gpu_state *crashstate;
+>  };
 >  
-> +#include <linux/adreno-smmu-priv.h>
->  #include <linux/clk.h>
->  #include <linux/interconnect.h>
->  #include <linux/pm_opp.h>
-> @@ -73,6 +74,8 @@ struct msm_gpu {
->  	struct platform_device *pdev;
->  	const struct msm_gpu_funcs *funcs;
->  
-> +	struct adreno_smmu_priv adreno_smmu;
+> +static inline struct msm_gpu *dev_to_gpu(struct device *dev)
+> +{
+> +	return dev_get_drvdata(dev);
+> +}
 > +
->  	/* performance counters (hw & sw): */
->  	spinlock_t perf_lock;
->  	bool perfcntr_active;
-> @@ -143,7 +146,8 @@ struct msm_gpu {
->  
->  static inline struct msm_gpu *dev_to_gpu(struct device *dev)
->  {
-> -	return dev_get_drvdata(dev);
-> +	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(dev);
-> +	return container_of(adreno_smmu, struct msm_gpu, adreno_smmu);
->  }
->  
 >  /* It turns out that all targets use the same ringbuffer size */
+>  #define MSM_GPU_RINGBUFFER_SZ SZ_32K
+>  #define MSM_GPU_RINGBUFFER_BLKSIZE 32
 > -- 
 > 2.26.2
 > 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
