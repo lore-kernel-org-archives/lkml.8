@@ -2,66 +2,157 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D03CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C060C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E6F2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA342075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597666052;
+	bh=L4eK5HbrWup0Q37ypBWCL6kdUenfd/bZN4xfGnNyoVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OJeesc7ck45fHBkgSTC7lEEmcOFb+hC1xD+luHEbjaCtVDcg6XDNVcbPCUx6wy3ea
+	 hkXU2iKGUjr31vsP4ojyqBFwUMZVQEGNYSnb/EmXWnTxcvkU1wFbT/ZMSRCU4GEdOd
+	 LCpZ0fXJSUhpEVhYqhCVpnjnnVE8FxR9SZWBtxWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgHQMG6 (ORCPT
+        id S1728246AbgHQMHc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:06:58 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:48752 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727895AbgHQMG5 (ORCPT
+        Mon, 17 Aug 2020 08:07:32 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:43383 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHQMH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:06:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U60TDk9_1597666014;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U60TDk9_1597666014)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 17 Aug 2020 20:06:55 +0800
-Date:   Mon, 17 Aug 2020 20:06:54 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/5] block: Remove redundant
- blk_mq_sched_allow_merge() validation
-Message-ID: <20200817120654.GA79836@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
- <b9d51f4bc9f0ff4ec3b8fb7fa6dc366afd69290e.1597637287.git.baolin.wang@linux.alibaba.com>
- <20200817062224.GB12248@lst.de>
+        Mon, 17 Aug 2020 08:07:29 -0400
+Received: by mail-ej1-f66.google.com with SMTP id m22so17390729eje.10;
+        Mon, 17 Aug 2020 05:07:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XIuQOuUaLCyIWHshWktb4nYi9hWRbsGYibRpCmgF41g=;
+        b=mBE5zgHpSE1ZLEVdCf8iLSCVvcrWSTMpZYPtt2LkF1pvX6hqiOxSbURSN/zdsc/mDm
+         ZYFJIm4Fb5pVKwJigTfYy832/4O1EdQQ8EFy66WO9ASCuWeccRT8TOfSiV/Id5clQymn
+         y2y5Laxr+TBNyrWS8hwCD+X++j+NoEpovWHn3wd66E+0jhPnUCB0IMRQ8bFP919bUoew
+         Z7cOJ1fRgyraOOadDgXXPFyjcBgg8WfsnseGqzf566iYXZvUysSZdCqC/QbgkO54b+L/
+         HFWbjFs1d5yMBl79v9WMM8I7EMXSM6ZWkmrjgbEer5IIPBsnBlEIb55bWdBZtWgliy5t
+         gmbQ==
+X-Gm-Message-State: AOAM533ycfO9H7M7+yf46a0Q/lfDTyEI3hdFZCnkfuCacyC1OrBc/KNp
+        L7swj+xnreCVg+UjllCeeBE=
+X-Google-Smtp-Source: ABdhPJz7HdyH9hH9sLE1i/WqKVViT+08Fne7n9TmxR2ujamxyK3OlQ1uIBv+agqYmfW/N1N5m3WT1w==
+X-Received: by 2002:a17:906:7f0b:: with SMTP id d11mr15808343ejr.116.1597666047383;
+        Mon, 17 Aug 2020 05:07:27 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.242])
+        by smtp.googlemail.com with ESMTPSA id eb11sm7997597edb.76.2020.08.17.05.07.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Aug 2020 05:07:26 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 14:07:24 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] memory: samsung: exynos5422-dmc: propagate error from
+ exynos5_counters_get()
+Message-ID: <20200817120724.GC2346@kozik-lap>
+References: <CGME20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d@eucas1p2.samsung.com>
+ <20200804061210.5415-1-m.szyprowski@samsung.com>
+ <24675559-b807-5b80-1318-805c1530ffb3@arm.com>
+ <78c95f58-8142-7607-6d74-5cfa6a7ffb77@samsung.com>
+ <f3f416ac-0d63-b4e5-676f-8801b4166c11@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200817062224.GB12248@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <f3f416ac-0d63-b4e5-676f-8801b4166c11@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 08:22:24AM +0200, Christoph Hellwig wrote:
-> On Mon, Aug 17, 2020 at 12:09:16PM +0800, Baolin Wang wrote:
-> > Only software queue and kyber IO scheduler will call blk_mq_bio_list_merge()
-> > to merge a bio, and kyber IO scheduler did not implement the ops->allow_merge().
+On Tue, Aug 04, 2020 at 01:38:11PM +0100, Lukasz Luba wrote:
 > 
-> Please line wrap your changelogs after 73 characters.
-
-Sure.
-
 > 
-> > Thus we can remove the redundant blk_mq_sched_allow_merge() in
-> > blk_mq_bio_list_merge() function.
+> On 8/4/20 1:19 PM, Marek Szyprowski wrote:
+> > Hi Lukasz,
+> > 
+> > On 04.08.2020 11:11, Lukasz Luba wrote:
+> > > Hi Marek,
+> > > 
+> > > On 8/4/20 7:12 AM, Marek Szyprowski wrote:
+> > > > exynos5_counters_get() might fail with -EPROBE_DEFER if the driver for
+> > > > devfreq event counter is not yet probed. Propagate that error value to
+> > > > the caller to ensure that the exynos5422-dmc driver will be probed again
+> > > > when devfreq event contuner is available.
+> > > > 
+> > > > This fixes boot hang if both exynos5422-dmc and exynos-ppmu drivers are
+> > > > compiled as modules.
+> > > > 
+> > > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > ---
+> > > >    drivers/memory/samsung/exynos5422-dmc.c | 2 +-
+> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/memory/samsung/exynos5422-dmc.c
+> > > > b/drivers/memory/samsung/exynos5422-dmc.c
+> > > > index b9c7956e5031..639811a3eecb 100644
+> > > > --- a/drivers/memory/samsung/exynos5422-dmc.c
+> > > > +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> > > > @@ -914,7 +914,7 @@ static int exynos5_dmc_get_status(struct device
+> > > > *dev,
+> > > >        } else {
+> > > >            ret = exynos5_counters_get(dmc, &load, &total);
+> > > >            if (ret < 0)
+> > > > -            return -EINVAL;
+> > > > +            return ret;
+> > > >              /* To protect from overflow, divide by 1024 */
+> > > >            stat->busy_time = load >> 10;
+> > > > 
+> > > 
+> > > Thank you for the patch, LGTM.
+> > > Some questions are still there, though. The function
+> > > exynos5_performance_counters_init() should capture that the counters
+> > > couldn't be enabled or set. So the functions:
+> > > exynos5_counters_enable_edev() and exynos5_counters_set_event()
+> > > must pass gently because devfreq device is registered.
+> > > Then devfreq checks device status, and reaches the state when
+> > > counters 'get' function returns that they are not ready...
+> > > 
+> > > If that is a kind of 2-stage initialization, maybe we should add
+> > > another 'check' in the exynos5_performance_counters_init() and call
+> > > the devfreq_event_get_event() to make sure that we are ready to go,
+> > > otherwise return ret from that function (which is probably EPROBE_DEFER)
+> > > and not register the devfreq device.
+> > 
+> > I've finally investigated this further and it turned out that the issue
+> > is elsewhere. The $subject patch can be discarded, as it doesn't fix
+> > anything. The -EPROBE_DEFER is properly returned by
+> > exynos5_performance_counters_init(), which redirects exynos5_dmc_probe()
+> > to remove_clocks label. This causes disabling mout_bpll/fout_bpll clocks
+> > what in turn *sometimes* causes boot hang. This random behavior mislead
+> > me that the $subject patch fixes the issue, but then longer tests
+> > revealed that it didn't change anything.
 > 
-> This seems potentially dangerous, and I don't think it really buys
-> us much.
+> Really good investigation, great work Marek!
+> 
+> > 
+> > It looks that the proper fix would be to keep fout_bpll enabled all the
+> > time.
+> 
+> Yes, I agree. I am looking for your next patch to test it then.
 
-OK. I can remove this in next version.
+Hi all,
+
+Is the patch still useful then? Shall I apply it?
+
+Best regards,
+Krzysztof
 
