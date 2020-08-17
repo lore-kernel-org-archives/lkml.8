@@ -2,90 +2,153 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9AC20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:25:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uUG6bDW/"
+	by mail.kernel.org (Postfix) with ESMTP id C904620738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgHQKZz (ORCPT
+        id S1726889AbgHQK14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:25:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11620 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 06:27:56 -0400
+Received: from muru.com ([72.249.23.125]:40488 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726888AbgHQKZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:25:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597659953; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=afrx+GYTeGfAA0L5NcErG+Sw5Rx8q7wQPJGJJR8T2QM=;
- b=uUG6bDW/axBdRDbj3/OKYfAdmAg4mgop5cs/w7rm5IfpluxDZt3q8+bDVSX/e56TRBkUIJ+h
- /QLfkIdg6JgAfeED5IaoFp9DC260dGk3Uw/81mC6nYBb48lmX3GLSUwp4bhlfXc6Xr+xLxiG
- yaOqiryPySIl5Sc8VApMhT8ud9I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f3a5b2385672017516cb4a2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 10:25:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2742C433C6; Mon, 17 Aug 2020 10:25:38 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04D70C433CA;
-        Mon, 17 Aug 2020 10:25:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04D70C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1726275AbgHQK1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:27:55 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 1D2D280A3;
+        Mon, 17 Aug 2020 10:27:53 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 13:28:21 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: drivers/net/wireless/ti/wlcore/main.c:700:9: sparse: sparse:
+ context imbalance in 'wlcore_irq' - different lock contexts for basic block
+Message-ID: <20200817102821.GE2994@atomide.com>
+References: <202008111908.j7IQlv5Q%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Fix the size used in a 'dma_free_coherent()' call
- in
- an error handling path
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200802122227.678637-1-christophe.jaillet@wanadoo.fr>
-References: <20200802122227.678637-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, kuba@kernel.org, pillair@codeaurora.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200817102538.B2742C433C6@smtp.codeaurora.org>
-Date:   Mon, 17 Aug 2020 10:25:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008111908.j7IQlv5Q%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+Hi,
 
-> Update the size used in 'dma_free_coherent()' in order to match the one
-> used in the corresponding 'dma_alloc_coherent()'.
+* kernel test robot <lkp@intel.com> [200811 11:55]:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   00e4db51259a5f936fec1424b884f029479d3981
+> commit: 35fba0f0fd762a8b87d403ae3c723e0061c4aa25 wlcore: Use spin_trylock in wlcore_irq() to see if we need to queue tx
+> date:   4 weeks ago
+> config: mips-randconfig-s032-20200811 (attached as .config)
+> compiler: mips64-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-168-g9554805c-dirty
+>         git checkout 35fba0f0fd762a8b87d403ae3c723e0061c4aa25
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=mips 
 > 
-> Fixes: 1863008369ae ("ath10k: fix shadow register implementation for WCN3990")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    drivers/net/wireless/ti/wlcore/main.c:643:34: sparse: sparse: context imbalance in 'wlcore_irq_locked' - different lock contexts for basic block
+> >> drivers/net/wireless/ti/wlcore/main.c:700:9: sparse: sparse: context imbalance in 'wlcore_irq' - different lock contexts for basic block
 
-Patch applied to ath-next branch of ath.git, thanks.
+I tried to reproduce this with cross compiling for ARM using sparse-0.6.2,
+but don't see any similar warnings.
 
-454530a9950b ath10k: Fix the size used in a 'dma_free_coherent()' call in an error handling path
+Is this only happening on mips for some reason?
 
--- 
-https://patchwork.kernel.org/patch/11696383/
+Regards,
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Tony
+
+
+> vim +/wlcore_irq +700 drivers/net/wireless/ti/wlcore/main.c
+> 
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  649  
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  650  static irqreturn_t wlcore_irq(int irq, void *cookie)
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  651  {
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  652  	int ret;
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  653  	unsigned long flags;
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  654  	struct wl1271 *wl = cookie;
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  655  	bool queue_tx_work = true;
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  656  
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  657  	set_bit(WL1271_FLAG_IRQ_RUNNING, &wl->flags);
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  658  
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  659  	/* complete the ELP completion */
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  660  	if (test_bit(WL1271_FLAG_IN_ELP, &wl->flags)) {
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  661  		spin_lock_irqsave(&wl->wl_lock, flags);
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  662  		if (wl->elp_compl)
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  663  			complete(wl->elp_compl);
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  664  		spin_unlock_irqrestore(&wl->wl_lock, flags);
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  665  	}
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  666  
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  667  	if (test_bit(WL1271_FLAG_SUSPENDED, &wl->flags)) {
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  668  		/* don't enqueue a work right now. mark it as pending */
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  669  		set_bit(WL1271_FLAG_PENDING_WORK, &wl->flags);
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  670  		wl1271_debug(DEBUG_IRQ, "should not enqueue work");
+> eb215c33f308ce drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  671  		spin_lock_irqsave(&wl->wl_lock, flags);
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  672  		disable_irq_nosync(wl->irq);
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  673  		pm_wakeup_event(wl->dev, 0);
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  674  		spin_unlock_irqrestore(&wl->wl_lock, flags);
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  675  		goto out_handled;
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  676  	}
+> 97236a0656034e drivers/net/wireless/ti/wlcore/main.c     Luciano Coelho 2013-03-08  677  
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  678  	/* TX might be handled here, avoid redundant work */
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  679  	set_bit(WL1271_FLAG_TX_PENDING, &wl->flags);
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  680  	cancel_work_sync(&wl->tx_work);
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  681  
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  682  	mutex_lock(&wl->mutex);
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  683  
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  684  	ret = wlcore_irq_locked(wl);
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  685  	if (ret)
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  686  		wl12xx_queue_recovery_work(wl);
+> b5b45b3cbd5616 drivers/net/wireless/ti/wlcore/main.c     Arik Nemtsov   2012-06-21  687  
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  688  	/* In case TX was not handled in wlcore_irq_locked(), queue TX work */
+> b07d4037051318 drivers/net/wireless/wl12xx/main.c        Ido Yariv      2011-03-01  689  	clear_bit(WL1271_FLAG_TX_PENDING, &wl->flags);
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  690  	if (!test_bit(WL1271_FLAG_FW_TX_BUSY, &wl->flags)) {
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  691  		if (spin_trylock_irqsave(&wl->wl_lock, flags)) {
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  692  			if (!wl1271_tx_total_queue_count(wl))
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  693  				queue_tx_work = false;
+> b07d4037051318 drivers/net/wireless/wl12xx/main.c        Ido Yariv      2011-03-01  694  			spin_unlock_irqrestore(&wl->wl_lock, flags);
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  695  		}
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  696  		if (queue_tx_work)
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  697  			ieee80211_queue_work(wl->hw, &wl->tx_work);
+> 35fba0f0fd762a drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2020-07-02  698  	}
+> b07d4037051318 drivers/net/wireless/wl12xx/main.c        Ido Yariv      2011-03-01  699  
+> f5fc0f86b02afe drivers/net/wireless/wl12xx/wl1271_main.c Luciano Coelho 2009-08-06 @700  	mutex_unlock(&wl->mutex);
+> a620865edf62ea drivers/net/wireless/wl12xx/main.c        Ido Yariv      2011-03-01  701  
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  702  out_handled:
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  703  	spin_lock_irqsave(&wl->wl_lock, flags);
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  704  	clear_bit(WL1271_FLAG_IRQ_RUNNING, &wl->flags);
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  705  	spin_unlock_irqrestore(&wl->wl_lock, flags);
+> 4633d30b61ac14 drivers/net/wireless/ti/wlcore/main.c     Tony Lindgren  2019-10-09  706  
+> a620865edf62ea drivers/net/wireless/wl12xx/main.c        Ido Yariv      2011-03-01  707  	return IRQ_HANDLED;
+> f5fc0f86b02afe drivers/net/wireless/wl12xx/wl1271_main.c Luciano Coelho 2009-08-06  708  }
+> f5fc0f86b02afe drivers/net/wireless/wl12xx/wl1271_main.c Luciano Coelho 2009-08-06  709  
+> 
+> :::::: The code at line 700 was first introduced by commit
+> :::::: f5fc0f86b02afef1119b523623b4cde41475bc8c wl1271: add wl1271 driver files
+> 
+> :::::: TO: Luciano Coelho <luciano.coelho@nokia.com>
+> :::::: CC: John W. Linville <linville@tuxdriver.com>
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
 
