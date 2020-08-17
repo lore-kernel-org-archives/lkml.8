@@ -2,92 +2,119 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7721C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B30CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF0C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692668;
-	bh=CA4+33mvAi9bCJK9mJMkAaOtaidy2/wJ9bGF+iDFvhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lJ1QGLSIRfpJLCWE/l8PEpaU8m5sP8Ab9uoP/+wm9/XU8aLuHc2j0UIJrvCrIEDB+
-	 41yddvAWHPlD2GnvHXm6KiRZ0J9AYHS4Z7eA5VSqkxtBB5S3WeQ8OZf+pB519+hb9M
-	 3ZXwgBQlgj0luVfqQymqHFP/C6K6IOu9EI9aMY38=
+	by mail.kernel.org (Postfix) with ESMTP id 154372065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Il4/WYWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbgHQTbH (ORCPT
+        id S2390230AbgHQTbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:31:07 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:32911 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390306AbgHQTaO (ORCPT
+        Mon, 17 Aug 2020 15:31:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730596AbgHQT3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:30:14 -0400
-Received: by mail-io1-f42.google.com with SMTP id g14so18889223iom.0;
-        Mon, 17 Aug 2020 12:30:13 -0700 (PDT)
+        Mon, 17 Aug 2020 15:29:49 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4F2C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so8587508pgl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IQEFM5eDrlk4uN0cUulgaoouXT3z+FbkNrUscxGEwfY=;
+        b=Il4/WYWWqFE/qAzOwm9kfMC9NOlA004aXkbH1fIy/V7R5qAIiigoyGwSXJeap5fGzZ
+         IAtDk7ThFw+I+uoN3iEBR0k7l7V4G8iWozOPbWwoF8xpj+feXJjxWDmDJxCbi3yVIIz4
+         DcKKycHMZ5M8iGH9xX6OxumCJ3bPk/sESXWCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=e1YBnijyooiMmGUl6bQPbkF8jV9bZqxe6/wwsQeLU4Y=;
-        b=duOIGl3tJUPi0LSFzYrw4l6mxc5YGmtukkRRKLvPfmulJfmrv6a/vRtmLQhKmQf9gi
-         90YrKliXC+s0dOGkUqLcdNPvckE8U+DWh3lwH0pZueM/C5zmUbLmHQeoh9F3hdIGjaKY
-         xm4lVVsBoCAlSsBPNeo9i79jjmE8atJyEIbRXKNsPZw6nnBegOLmzrUBeahIm0mNlvgP
-         VHsD+54lhcvhQJI9XvtHHafSoUrkCD4NJSJQ8nULXcB1YaDQdG4BnfgGXI8ZeRDkA4aQ
-         KKqDkAZDpdwze0xLhMPlAMp6MBJeqCo5zWKqYcH37aUwUyunW0AGJ26kOiNLHS9nRhgJ
-         MWvA==
-X-Gm-Message-State: AOAM530QmIReZW4sv9J1BlnnbwTBx5blQyEFaafjVnZl0CJNt8ESLrWh
-        jVtxgl3NzKzrM1ihQVCDbHhLRfp4lw==
-X-Google-Smtp-Source: ABdhPJxdApwU9BTSt+xJsE5ExVFYthMwi7bNqm69vB6HcGf0tBcnBuOqHr+cHTH//FmicQwXhwGSPw==
-X-Received: by 2002:a6b:3f85:: with SMTP id m127mr13653516ioa.108.1597692613398;
-        Mon, 17 Aug 2020 12:30:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id 187sm10347174ile.52.2020.08.17.12.30.12
+        bh=IQEFM5eDrlk4uN0cUulgaoouXT3z+FbkNrUscxGEwfY=;
+        b=mXred5VSDZeLml2eQbfhkA5NgLQ2tHuHXUZ+LH9IKg++NMrkAWPczkDhDJeZ8iwJNy
+         T7JMmrDpUDT5D8ufYw69UbRdrznWXMNLxxmqRkoqdlYM3qODmNduNfc1rlcJQe3TLm0U
+         Fc6CoQNSm4ydWuXAdNwFSw7sRBxnObI0SeWfDdXCIjT9neN7tRyGUQNeWa6LMfRtrNum
+         KeDZH0+0KV1Bqxl6Nea1bZUGxcVlRltBzyRweI35hlI3o/XV0bp8wMwJOda+Ddtv84qw
+         qxams+QbzT+DWGNuN2qvvspym9hMMC0YKM6JEBp3UkW5vWLzPJ0jF2SPsGRsxXXiTPil
+         6egw==
+X-Gm-Message-State: AOAM532tpRqGveHZipxOeL1CmTUaysDMPOoLnCDcRdwD3kCjnHTXD9P8
+        QURv/twnzDzoYBj1rH71hKSwiQ==
+X-Google-Smtp-Source: ABdhPJxcba+zdwEuQprcShXltivd2diUYpTiu6P3/hYoUspmLcf/BB1Tt2/E3lFjFEP7byFNgsURlA==
+X-Received: by 2002:a63:2e87:: with SMTP id u129mr11009060pgu.347.1597692589083;
+        Mon, 17 Aug 2020 12:29:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h19sm18737765pjv.41.2020.08.17.12.29.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:30:12 -0700 (PDT)
-Received: (nullmailer pid 1405902 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:30:12 -0000
-Date:   Mon, 17 Aug 2020 13:30:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][V3] of/address: check for invalid range.cpu_addr
-Message-ID: <20200817193012.GA1405869@bogus>
-References: <20200817113208.523805-1-colin.king@canonical.com>
+        Mon, 17 Aug 2020 12:29:47 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 12:29:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
+        sre@kernel.org, James.Bottomley@HansenPartnership.com,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        ulf.hansson@linaro.org, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, broonie@kernel.org, martyn@welchs.me.uk,
+        manohar.vanga@gmail.com, mitch@sfgoth.com, davem@davemloft.net,
+        kuba@kernel.org, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+Message-ID: <202008171228.29E6B3BB@keescook>
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com>
+ <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817113208.523805-1-colin.king@canonical.com>
+In-Reply-To: <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 12:32:08 +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
+> On 8/17/20 2:15 AM, Allen Pais wrote:
+> > From: Allen Pais <allen.lkml@gmail.com>
+> > 
+> > In preparation for unconditionally passing the
+> > struct tasklet_struct pointer to all tasklet
+> > callbacks, switch to using the new tasklet_setup()
+> > and from_tasklet() to pass the tasklet pointer explicitly.
 > 
-> Currently invalid CPU addresses are not being sanity checked resulting in
-> SATA setup failure on a SynQuacer SC2A11 development machine. The original
-> check was removed by and earlier commit, so add a sanity check back in
-> to avoid this regression.
+> Who came up with the idea to add a macro 'from_tasklet' that is just
+> container_of? container_of in the code would be _much_ more readable,
+> and not leave anyone guessing wtf from_tasklet is doing.
 > 
-> Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> 
-> V2: print message using pr_err and don't print range.cpu_addr as it's always
->     going to be OF_BAD_ADDR so the information is pointless.
-> V3: print the bus address to help diagnose issues
-> 
-> ---
->  drivers/of/address.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+> I'd fix that up now before everything else goes in...
 
-Applied, thanks!
+As I mentioned in the other thread, I think this makes things much more
+readable. It's the same thing that the timer_struct conversion did
+(added a container_of wrapper) to avoid the ever-repeating use of
+typeof(), long lines, etc.
+
+-- 
+Kees Cook
