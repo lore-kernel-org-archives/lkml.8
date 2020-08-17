@@ -2,540 +2,120 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1186DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7AE420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEDC207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3DiPkhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHQIpI (ORCPT
+        id S1728109AbgHQIpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:45:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43542 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbgHQIpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:45:06 -0400
-IronPort-SDR: YHwVld6o8lpyN+BzVQnb98VS52t8VZuae89rtwGOXkduNItW+b/6uJB5X5QjADZka6uHAdxUdA
- MrI8IKi1uWRQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="216182437"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="216182437"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:45:04 -0700
-IronPort-SDR: sebvESai7gu39EaK5sSoaq9xCwACiyWtcY5xgbh3cHQIEyUhQarZ7FuDqecScsYH1meWtEeOae
- MjIfxn9khIdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="471350711"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga005.jf.intel.com with ESMTP; 17 Aug 2020 01:44:59 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH v6 2/3] fpga: dfl: create a dfl bus type to support DFL devices
-Date:   Mon, 17 Aug 2020 16:40:11 +0800
-Message-Id: <1597653612-5064-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597653612-5064-1-git-send-email-yilun.xu@intel.com>
-References: <1597653612-5064-1-git-send-email-yilun.xu@intel.com>
+        Mon, 17 Aug 2020 04:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgHQIpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:45:12 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E15BC061388;
+        Mon, 17 Aug 2020 01:45:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 3so13215560wmi.1;
+        Mon, 17 Aug 2020 01:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Gy5UHS1fMumIwQbUn2ngdWfpQe9mWv4iZvUxVAFlM0Y=;
+        b=I3DiPkhV7gQOS3DppleGZtO3ailEghtHTzQgocm9hG7okEnXITNLsPnq4jMwoFt5sB
+         +npvCjxLR1ntsR+wBM3uGqRGX/59E9Z/qfWQyNkaLDdSsw8iK0JddxuifDiPb8vW3R86
+         PYWegUNzv7mXAjI6gs8Wekos5jvxOmgbkDD1UpbdUOlmbgCiWCuiYpNtyWPXDfFbSMRa
+         p/vQOgHz37il38Fe1JLFazzlvCuqGrEddFsPrO3UaN4Lbn1k/93gpDRXDw2agxVV2a38
+         8bKqzlMQfLI/xcR6sSAJ0GXyRGphkBXQOJmMPhC32WgJJK2+r7FFbf8+7mUC9BuR21WF
+         ybTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Gy5UHS1fMumIwQbUn2ngdWfpQe9mWv4iZvUxVAFlM0Y=;
+        b=XvY+5PIdlxRNIKsD6whvxcJAZuTXKGa3GfrbcbEwPgDYN64OlulZY2o4P36BaZYRLN
+         aQrShe8cZkZmLPmS8qzFF99l415O38TBIKiBsjEX55YaIjfVtzIzOgkaXQdrbRM+gnn2
+         XUgzLkqNEsv/fdZ1ECpkHMMid3Te9TGx9UhTYHgONuPm77P7cyFDwu72WBrRhkMJow5Q
+         EMUIEXAlz75KdoY+/pdaz+XGTr4e6aBzydq5JNg8l568Kg3lgNOllU9lbcJkEmsLsfIX
+         /3xXY7LBH4XTF3Rq9rVCvBJJoS3AnmdxgV9Y/FUYaKI8eAsFgXfRoohK0F6eQ25Qi6Za
+         dTmA==
+X-Gm-Message-State: AOAM531bppidA2OQ0/0Y8w7w7NZaz/98aUwx2WsbWGiD5WD9TTJ6PBWG
+        GYU/5qCvHiy/Ig9c8UgDipQ6ggE891M=
+X-Google-Smtp-Source: ABdhPJx5KkuyBA4y+6nDyD95M440Ad/ITmWsDgtXh7Kr+7+a3azL6Z2IoPexVJszFj30q9T0GMs/cQ==
+X-Received: by 2002:a1c:998c:: with SMTP id b134mr13441758wme.59.1597653911208;
+        Mon, 17 Aug 2020 01:45:11 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id g3sm32750455wrb.59.2020.08.17.01.45.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:45:10 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 10:45:08 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/hwmon/adm1029.c: use simple i2c probe
+Message-ID: <20200817084508.GA15571@Red>
+References: <20200813161129.1507599-1-steve@sk2.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813161129.1507599-1-steve@sk2.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new bus type "dfl" is introduced for private features which are not
-initialized by DFL feature drivers (dfl-fme & dfl-afu drivers). So these
-private features could be handled by separate driver modules.
+On Thu, Aug 13, 2020 at 06:11:29PM +0200, Stephen Kitt wrote:
+> This driver doesn't use the id information provided by the old i2c
+> probe function, so it can trivially be converted to the simple
+> ("probe_new") form.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+>  drivers/hwmon/adm1029.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/adm1029.c b/drivers/hwmon/adm1029.c
+> index f7752a5bef31..50b1df7b008c 100644
+> --- a/drivers/hwmon/adm1029.c
+> +++ b/drivers/hwmon/adm1029.c
+> @@ -352,8 +352,7 @@ static int adm1029_init_client(struct i2c_client *client)
+>  	return 1;
+>  }
+>  
+> -static int adm1029_probe(struct i2c_client *client,
+> -			 const struct i2c_device_id *id)
+> +static int adm1029_probe(struct i2c_client *client)
+>  {
+>  	struct device *dev = &client->dev;
+>  	struct adm1029_data *data;
+> @@ -390,7 +389,7 @@ static struct i2c_driver adm1029_driver = {
+>  	.driver = {
+>  		.name = "adm1029",
+>  	},
+> -	.probe		= adm1029_probe,
+> +	.probe_new	= adm1029_probe,
+>  	.id_table	= adm1029_id,
+>  	.detect		= adm1029_detect,
+>  	.address_list	= normal_i2c,
+> -- 
+> 2.25.4
+> 
 
-DFL feature drivers (dfl-fme, dfl-port) will create DFL devices on
-enumeration. DFL drivers could be registered on this bus to match these
-DFL devices. They are matched by dfl type & feature_id.
+Hello
 
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-Reviewed-by: Tom Rix <trix@redhat.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
----
-v2: change the bus uevent format.
-    change the dfl device's sysfs name format.
-    refactor dfl_dev_add().
-    minor fixes for comments from Hao and Tom.
-v3: no change.
-v4: improve the uevent format, 4 bits for type & 12 bits for id.
-    change dfl_device->type to u8.
-    A dedicate field in struct dfl_feature for dfl device instance.
-    error out if dfl_device already exist on dfl_devs_init().
-v5: minor fixes for Hao's comments
-v6: the input param of dfl_devs_add() changes to struct
-    dfl_feature_platform_data.
-    improve the comments.
----
- Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
- drivers/fpga/dfl.c                      | 262 +++++++++++++++++++++++++++++++-
- drivers/fpga/dfl.h                      |  86 +++++++++++
- 3 files changed, 355 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-dfl b/Documentation/ABI/testing/sysfs-bus-dfl
-new file mode 100644
-index 0000000..23543be
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-dfl
-@@ -0,0 +1,15 @@
-+What:		/sys/bus/dfl/devices/dfl_dev.X/type
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns type of DFL FIU of the device. Now DFL
-+		supports 2 FIU types, 0 for FME, 1 for PORT.
-+		Format: 0x%x
-+
-+What:		/sys/bus/dfl/devices/dfl_dev.X/feature_id
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns feature identifier local to its DFL FIU
-+		type.
-+		Format: 0x%x
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 52cafa2..c5ba4ac9 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -30,12 +30,6 @@ static DEFINE_MUTEX(dfl_id_mutex);
-  * index to dfl_chardevs table. If no chardev support just set devt_type
-  * as one invalid index (DFL_FPGA_DEVT_MAX).
-  */
--enum dfl_id_type {
--	FME_ID,		/* fme id allocation and mapping */
--	PORT_ID,	/* port id allocation and mapping */
--	DFL_ID_MAX,
--};
--
- enum dfl_fpga_devt_type {
- 	DFL_FPGA_DEVT_FME,
- 	DFL_FPGA_DEVT_PORT,
-@@ -250,6 +244,244 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
- 
-+static DEFINE_IDA(dfl_device_ida);
-+
-+static const struct dfl_device_id *
-+dfl_match_one_device(const struct dfl_device_id *id, struct dfl_device *ddev)
-+{
-+	if (id->type == ddev->type && id->feature_id == ddev->feature_id)
-+		return id;
-+
-+	return NULL;
-+}
-+
-+static int dfl_bus_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(drv);
-+	const struct dfl_device_id *id_entry = ddrv->id_table;
-+
-+	if (id_entry) {
-+		while (id_entry->feature_id) {
-+			if (dfl_match_one_device(id_entry, ddev)) {
-+				ddev->id_entry = id_entry;
-+				return 1;
-+			}
-+			id_entry++;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_probe(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+
-+	return ddrv->probe(ddev);
-+}
-+
-+static int dfl_bus_remove(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+
-+	if (ddrv->remove)
-+		ddrv->remove(ddev);
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	/* The type has 4 valid bits and feature_id has 12 valid bits */
-+	return add_uevent_var(env, "MODALIAS=dfl:t%01Xf%03X",
-+			      ddev->type, ddev->feature_id);
-+}
-+
-+/* show dfl info fields */
-+#define dfl_info_attr(field, format_string)				\
-+static ssize_t								\
-+field##_show(struct device *dev, struct device_attribute *attr,		\
-+	     char *buf)							\
-+{									\
-+	struct dfl_device *ddev = to_dfl_dev(dev);			\
-+									\
-+	return sprintf(buf, format_string, ddev->field);		\
-+}									\
-+static DEVICE_ATTR_RO(field)
-+
-+dfl_info_attr(type, "0x%x\n");
-+dfl_info_attr(feature_id, "0x%x\n");
-+
-+static struct attribute *dfl_dev_attrs[] = {
-+	&dev_attr_type.attr,
-+	&dev_attr_feature_id.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(dfl_dev);
-+
-+static struct bus_type dfl_bus_type = {
-+	.name		= "dfl",
-+	.match		= dfl_bus_match,
-+	.probe		= dfl_bus_probe,
-+	.remove		= dfl_bus_remove,
-+	.uevent		= dfl_bus_uevent,
-+	.dev_groups	= dfl_dev_groups,
-+};
-+
-+static void release_dfl_dev(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	if (ddev->mmio_res.parent)
-+		release_resource(&ddev->mmio_res);
-+
-+	ida_simple_remove(&dfl_device_ida, ddev->id);
-+	kfree(ddev->irqs);
-+	kfree(ddev);
-+}
-+
-+static struct dfl_device *
-+dfl_dev_add(struct dfl_feature_platform_data *pdata,
-+	    struct dfl_feature *feature)
-+{
-+	struct platform_device *pdev = pdata->dev;
-+	struct resource *parent_res;
-+	struct dfl_device *ddev;
-+	int id, i, ret;
-+
-+	ddev = kzalloc(sizeof(*ddev), GFP_KERNEL);
-+	if (!ddev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	id = ida_simple_get(&dfl_device_ida, 0, 0, GFP_KERNEL);
-+	if (id < 0) {
-+		dev_err(&pdev->dev, "unable to get id\n");
-+		kfree(ddev);
-+		return ERR_PTR(id);
-+	}
-+
-+	/* freeing resources by put_device() after device_initialize() */
-+	device_initialize(&ddev->dev);
-+	ddev->dev.parent = &pdev->dev;
-+	ddev->dev.bus = &dfl_bus_type;
-+	ddev->dev.release = release_dfl_dev;
-+	ddev->id = id;
-+	ret = dev_set_name(&ddev->dev, "dfl_dev.%d", id);
-+	if (ret)
-+		goto put_dev;
-+
-+	ddev->type = feature_dev_id_type(pdev);
-+	ddev->feature_id = feature->id;
-+	ddev->cdev = pdata->dfl_cdev;
-+
-+	/* add mmio resource */
-+	parent_res = &pdev->resource[feature->resource_index];
-+	ddev->mmio_res.flags = IORESOURCE_MEM;
-+	ddev->mmio_res.start = parent_res->start;
-+	ddev->mmio_res.end = parent_res->end;
-+	ddev->mmio_res.name = dev_name(&ddev->dev);
-+	ret = insert_resource(parent_res, &ddev->mmio_res);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s failed to claim resource: %pR\n",
-+			dev_name(&ddev->dev), &ddev->mmio_res);
-+		goto put_dev;
-+	}
-+
-+	/* then add irq resource */
-+	if (feature->nr_irqs) {
-+		ddev->irqs = kcalloc(feature->nr_irqs,
-+				     sizeof(*ddev->irqs), GFP_KERNEL);
-+		if (!ddev->irqs) {
-+			ret = -ENOMEM;
-+			goto put_dev;
-+		}
-+
-+		for (i = 0; i < feature->nr_irqs; i++)
-+			ddev->irqs[i] = feature->irq_ctx[i].irq;
-+
-+		ddev->num_irqs = feature->nr_irqs;
-+	}
-+
-+	ret = device_add(&ddev->dev);
-+	if (ret)
-+		goto put_dev;
-+
-+	dev_info(&pdev->dev, "add dfl_dev: %s\n", dev_name(&ddev->dev));
-+	return ddev;
-+
-+put_dev:
-+	/* calls release_dfl_dev() which does the clean up  */
-+	put_device(&ddev->dev);
-+	return ERR_PTR(ret);
-+}
-+
-+static void dfl_devs_remove(struct dfl_feature_platform_data *pdata)
-+{
-+	struct dfl_feature *feature;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ddev) {
-+			device_unregister(&feature->ddev->dev);
-+			feature->ddev = NULL;
-+		}
-+	}
-+}
-+
-+static int dfl_devs_add(struct dfl_feature_platform_data *pdata)
-+{
-+	struct dfl_feature *feature;
-+	struct dfl_device *ddev;
-+	int ret;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ioaddr)
-+			continue;
-+
-+		if (feature->ddev) {
-+			ret = -EEXIST;
-+			goto err;
-+		}
-+
-+		ddev = dfl_dev_add(pdata, feature);
-+		if (IS_ERR(ddev)) {
-+			ret = PTR_ERR(ddev);
-+			goto err;
-+		}
-+
-+		feature->ddev = ddev;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dfl_devs_remove(pdata);
-+	return ret;
-+}
-+
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner)
-+{
-+	if (!dfl_drv || !dfl_drv->probe || !dfl_drv->id_table)
-+		return -EINVAL;
-+
-+	dfl_drv->drv.owner = owner;
-+	dfl_drv->drv.bus = &dfl_bus_type;
-+
-+	return driver_register(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(__dfl_driver_register);
-+
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv)
-+{
-+	driver_unregister(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(dfl_driver_unregister);
-+
- #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
- 
- /**
-@@ -261,12 +493,15 @@ void dfl_fpga_dev_feature_uinit(struct platform_device *pdev)
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct dfl_feature *feature;
- 
--	dfl_fpga_dev_for_each_feature(pdata, feature)
-+	dfl_devs_remove(pdata);
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
- 		if (feature->ops) {
- 			if (feature->ops->uinit)
- 				feature->ops->uinit(pdev, feature);
- 			feature->ops = NULL;
- 		}
-+	}
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_dev_feature_uinit);
- 
-@@ -347,6 +582,10 @@ int dfl_fpga_dev_feature_init(struct platform_device *pdev,
- 		drv++;
- 	}
- 
-+	ret = dfl_devs_add(pdata);
-+	if (ret)
-+		goto exit;
-+
- 	return 0;
- exit:
- 	dfl_fpga_dev_feature_uinit(pdev);
-@@ -1284,11 +1523,17 @@ static int __init dfl_fpga_init(void)
- {
- 	int ret;
- 
-+	ret = bus_register(&dfl_bus_type);
-+	if (ret)
-+		return ret;
-+
- 	dfl_ids_init();
- 
- 	ret = dfl_chardev_init();
--	if (ret)
-+	if (ret) {
- 		dfl_ids_destroy();
-+		bus_unregister(&dfl_bus_type);
-+	}
- 
- 	return ret;
- }
-@@ -1626,6 +1871,7 @@ static void __exit dfl_fpga_exit(void)
- {
- 	dfl_chardev_uinit();
- 	dfl_ids_destroy();
-+	bus_unregister(&dfl_bus_type);
- }
- 
- module_init(dfl_fpga_init);
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 5973769..5dc758f 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -236,6 +236,7 @@ struct dfl_feature_irq_ctx {
-  * @irq_ctx: interrupt context list.
-  * @nr_irqs: number of interrupt contexts.
-  * @ops: ops of this sub feature.
-+ * @ddev: ptr to the dfl device of this sub feature.
-  * @priv: priv data of this feature.
-  */
- struct dfl_feature {
-@@ -246,6 +247,7 @@ struct dfl_feature {
- 	struct dfl_feature_irq_ctx *irq_ctx;
- 	unsigned int nr_irqs;
- 	const struct dfl_feature_ops *ops;
-+	struct dfl_device *ddev;
- 	void *priv;
- };
- 
-@@ -514,4 +516,88 @@ long dfl_feature_ioctl_set_irq(struct platform_device *pdev,
- 			       struct dfl_feature *feature,
- 			       unsigned long arg);
- 
-+/**
-+ * enum dfl_id_type - define the DFL FIU types
-+ */
-+enum dfl_id_type {
-+	FME_ID,
-+	PORT_ID,
-+	DFL_ID_MAX,
-+};
-+
-+/**
-+ * struct dfl_device_id -  dfl device identifier
-+ * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-+ * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-+ * @driver_data: driver specific data.
-+ */
-+struct dfl_device_id {
-+	u8 type;
-+	u16 feature_id;
-+	unsigned long driver_data;
-+};
-+
-+/**
-+ * struct dfl_device - represent an dfl device on dfl bus
-+ *
-+ * @dev: generic device interface.
-+ * @id: id of the dfl device.
-+ * @type: type of DFL FIU of the device. See enum dfl_id_type.
-+ * @feature_id: 16 bits feature identifier local to its DFL FIU type.
-+ * @mmio_res: mmio resource of this dfl device.
-+ * @irqs: list of Linux IRQ numbers of this dfl device.
-+ * @num_irqs: number of IRQs supported by this dfl device.
-+ * @cdev: pointer to DFL FPGA container device this dfl device belongs to.
-+ * @id_entry: matched id entry in dfl driver's id table.
-+ */
-+struct dfl_device {
-+	struct device dev;
-+	int id;
-+	u8 type;
-+	u16 feature_id;
-+	struct resource mmio_res;
-+	int *irqs;
-+	unsigned int num_irqs;
-+	struct dfl_fpga_cdev *cdev;
-+	const struct dfl_device_id *id_entry;
-+};
-+
-+/**
-+ * struct dfl_driver - represent an dfl device driver
-+ *
-+ * @drv: driver model structure.
-+ * @id_table: pointer to table of device IDs the driver is interested in.
-+ *	      { } member terminated.
-+ * @probe: mandatory callback for device binding.
-+ * @remove: callback for device unbinding.
-+ */
-+struct dfl_driver {
-+	struct device_driver drv;
-+	const struct dfl_device_id *id_table;
-+
-+	int (*probe)(struct dfl_device *dfl_dev);
-+	void (*remove)(struct dfl_device *dfl_dev);
-+};
-+
-+#define to_dfl_dev(d) container_of(d, struct dfl_device, dev)
-+#define to_dfl_drv(d) container_of(d, struct dfl_driver, drv)
-+
-+/*
-+ * use a macro to avoid include chaining to get THIS_MODULE.
-+ */
-+#define dfl_driver_register(drv) \
-+	__dfl_driver_register(drv, THIS_MODULE)
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner);
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv);
-+
-+/*
-+ * module_dfl_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit().
-+ */
-+#define module_dfl_driver(__dfl_driver) \
-+	module_driver(__dfl_driver, dfl_driver_register, \
-+		      dfl_driver_unregister)
-+
- #endif /* __FPGA_DFL_H */
--- 
-2.7.4
-
+Thanks
