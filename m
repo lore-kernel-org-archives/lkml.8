@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2874CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C533204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEBF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689667;
-	bh=b7Yu3sQYWoqbtcJgs4FPhBXye/HKQxUh/xoeKTgJoD0=;
+	s=default; t=1597689673;
+	bh=NNCYzidsjdf+nbCsewRlM6IY45iqvtamfHAd/qrjUyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i47gtdJht+EpGWjAhLkpmHvgPflwYQtW3dbPNZVLPb/hZI+uA62noxcH5I26YeGEO
-	 YI2uRso0Sv29K3g8+4uLRISEO42Lpe89PU1dh5mQN2dKbB5QqgXXH7KRffUYds4haP
-	 /Otlxi8+8zLUwr8JDU2piEUOwKl3MV131N5ZhRCk=
+	b=ay0q/xwLoWEJm8KL8jRL1BgZAIe2YRDyS0IVP/UzvJC1g57CErbLo2Es+h/uvnGP0
+	 0OhZ8zrySREgHFbi87w8x8Gdf3ap72OSFEg3GwbWL33/ff4eZdGwW+EmynB/CQtz/T
+	 XSLR5V4CHR4qEhvfywbQCgdWfAJW/2eGY+960bUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgHQSlD (ORCPT
+        id S1730440AbgHQSlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45126 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:41:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbgHQP5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:37 -0400
+        id S1730739AbgHQP5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 152C0214F1;
-        Mon, 17 Aug 2020 15:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C63207FF;
+        Mon, 17 Aug 2020 15:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679856;
-        bh=b7Yu3sQYWoqbtcJgs4FPhBXye/HKQxUh/xoeKTgJoD0=;
+        s=default; t=1597679847;
+        bh=NNCYzidsjdf+nbCsewRlM6IY45iqvtamfHAd/qrjUyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gWbAfltgpmTpDMOpopLM1UqxESultuFCpjD5Frwgrpo3GFatRQmZP6l9bdh7fyQc
-         5fzVrGGL45xIH60alu1AaP3ij+q4Lw06jSI6n1ybNpLza9iQgS77Z2ou7eCpbo8q3O
-         WZgtPAq853W3QAL0+jYUookp5YIb5XBSKMyYe8s8=
+        b=XuXrIwMYeIZSVJXreBI11MyD/f7KtKXOkIqRk1Th4IEvV9JsRqjAmOh2nni1/AOU9
+         +30BOOdqN6GhhGDUobTh8RQ6tYVvQuoL/MM6wFP7dIl+rfs8tEmgMu5IIL6glo9aMO
+         FZAxhbQsEf7lVkXVpipDo2POLrKphxOQrEXIFz8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 327/393] net: initialize fastreuse on inet_inherit_port
-Date:   Mon, 17 Aug 2020 17:16:17 +0200
-Message-Id: <20200817143835.458507117@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 5.7 324/393] tcp: correct read of TFO keys on big endian systems
+Date:   Mon, 17 Aug 2020 17:16:14 +0200
+Message-Id: <20200817143835.313044096@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,60 +62,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit d76f3351cea2d927fdf70dd7c06898235035e84e ]
+[ Upstream commit f19008e676366c44e9241af57f331b6c6edf9552 ]
 
-In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
-SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
-behaviour or in the incorrect reuse of a bind.
+When TFO keys are read back on big endian systems either via the global
+sysctl interface or via getsockopt() using TCP_FASTOPEN_KEY, the values
+don't match what was written.
 
-the kernel keeps track for each bind_bucket if all sockets in the
-bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
-These flags allow skipping the costly bind_conflict check when possible
-(meaning when all sockets have the proper SO_REUSE option).
+For example, on s390x:
 
-For every socket added to a bind_bucket, these flags need to be updated.
-As soon as a socket that does not support reuse is added, the flag is
-set to false and will never go back to true, unless the bind_bucket is
-deleted.
+# echo "1-2-3-4" > /proc/sys/net/ipv4/tcp_fastopen_key
+# cat /proc/sys/net/ipv4/tcp_fastopen_key
+02000000-01000000-04000000-03000000
 
-Note that there is no mechanism to re-evaluate these flags when a socket
-is removed (this might make sense when removing a socket that would not
-allow reuse; this leaves room for a future patch).
+Instead of:
 
-For this optimization to work, it is mandatory that these flags are
-properly initialized and updated.
+# cat /proc/sys/net/ipv4/tcp_fastopen_key
+00000001-00000002-00000003-00000004
 
-When a child socket is created from a listen socket in
-__inet_inherit_port, the TPROXY case could create a new bind bucket
-without properly initializing these flags, thus preventing the
-optimization to work. Alternatively, a socket not allowing reuse could
-be added to an existing bind bucket without updating the flags, causing
-bind_conflict to never be called as it should.
+Fix this by converting to the correct endianness on read. This was
+reported by Colin Ian King when running the 'tcp_fastopen_backup_key' net
+selftest on s390x, which depends on the read value matching what was
+written. I've confirmed that the test now passes on big and little endian
+systems.
 
-Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
-a new bind_bucket or use a different bind_bucket than the one of the
-listen socket.
-
-Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Fixes: 438ac88009bc ("net: fastopen: robustness and endianness fixes for SipHash")
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Reported-and-tested-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/inet_hashtables.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/tcp.h          |    2 ++
+ net/ipv4/sysctl_net_ipv4.c |   16 ++++------------
+ net/ipv4/tcp.c             |   16 ++++------------
+ net/ipv4/tcp_fastopen.c    |   23 +++++++++++++++++++++++
+ 4 files changed, 33 insertions(+), 24 deletions(-)
 
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -163,6 +163,7 @@ int __inet_inherit_port(const struct soc
- 				return -ENOMEM;
- 			}
- 		}
-+		inet_csk_update_fastreuse(tb, child);
- 	}
- 	inet_bind_hash(child, tb, port);
- 	spin_unlock(&head->lock);
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1669,6 +1669,8 @@ void tcp_fastopen_destroy_cipher(struct
+ void tcp_fastopen_ctx_destroy(struct net *net);
+ int tcp_fastopen_reset_cipher(struct net *net, struct sock *sk,
+ 			      void *primary_key, void *backup_key);
++int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *icsk,
++			    u64 *key);
+ void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb);
+ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+ 			      struct request_sock *req,
+--- a/net/ipv4/sysctl_net_ipv4.c
++++ b/net/ipv4/sysctl_net_ipv4.c
+@@ -307,24 +307,16 @@ static int proc_tcp_fastopen_key(struct
+ 	struct ctl_table tbl = { .maxlen = ((TCP_FASTOPEN_KEY_LENGTH *
+ 					    2 * TCP_FASTOPEN_KEY_MAX) +
+ 					    (TCP_FASTOPEN_KEY_MAX * 5)) };
+-	struct tcp_fastopen_context *ctx;
+-	u32 user_key[TCP_FASTOPEN_KEY_MAX * 4];
+-	__le32 key[TCP_FASTOPEN_KEY_MAX * 4];
++	u32 user_key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u32)];
++	__le32 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(__le32)];
+ 	char *backup_data;
+-	int ret, i = 0, off = 0, n_keys = 0;
++	int ret, i = 0, off = 0, n_keys;
+ 
+ 	tbl.data = kmalloc(tbl.maxlen, GFP_KERNEL);
+ 	if (!tbl.data)
+ 		return -ENOMEM;
+ 
+-	rcu_read_lock();
+-	ctx = rcu_dereference(net->ipv4.tcp_fastopen_ctx);
+-	if (ctx) {
+-		n_keys = tcp_fastopen_context_len(ctx);
+-		memcpy(&key[0], &ctx->key[0], TCP_FASTOPEN_KEY_LENGTH * n_keys);
+-	}
+-	rcu_read_unlock();
+-
++	n_keys = tcp_fastopen_get_cipher(net, NULL, (u64 *)key);
+ 	if (!n_keys) {
+ 		memset(&key[0], 0, TCP_FASTOPEN_KEY_LENGTH);
+ 		n_keys = 1;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3538,22 +3538,14 @@ static int do_tcp_getsockopt(struct sock
+ 		return 0;
+ 
+ 	case TCP_FASTOPEN_KEY: {
+-		__u8 key[TCP_FASTOPEN_KEY_BUF_LENGTH];
+-		struct tcp_fastopen_context *ctx;
+-		unsigned int key_len = 0;
++		u64 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u64)];
++		unsigned int key_len;
+ 
+ 		if (get_user(len, optlen))
+ 			return -EFAULT;
+ 
+-		rcu_read_lock();
+-		ctx = rcu_dereference(icsk->icsk_accept_queue.fastopenq.ctx);
+-		if (ctx) {
+-			key_len = tcp_fastopen_context_len(ctx) *
+-					TCP_FASTOPEN_KEY_LENGTH;
+-			memcpy(&key[0], &ctx->key[0], key_len);
+-		}
+-		rcu_read_unlock();
+-
++		key_len = tcp_fastopen_get_cipher(net, icsk, key) *
++				TCP_FASTOPEN_KEY_LENGTH;
+ 		len = min_t(unsigned int, len, key_len);
+ 		if (put_user(len, optlen))
+ 			return -EFAULT;
+--- a/net/ipv4/tcp_fastopen.c
++++ b/net/ipv4/tcp_fastopen.c
+@@ -108,6 +108,29 @@ out:
+ 	return err;
+ }
+ 
++int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *icsk,
++			    u64 *key)
++{
++	struct tcp_fastopen_context *ctx;
++	int n_keys = 0, i;
++
++	rcu_read_lock();
++	if (icsk)
++		ctx = rcu_dereference(icsk->icsk_accept_queue.fastopenq.ctx);
++	else
++		ctx = rcu_dereference(net->ipv4.tcp_fastopen_ctx);
++	if (ctx) {
++		n_keys = tcp_fastopen_context_len(ctx);
++		for (i = 0; i < n_keys; i++) {
++			put_unaligned_le64(ctx->key[i].key[0], key + (i * 2));
++			put_unaligned_le64(ctx->key[i].key[1], key + (i * 2) + 1);
++		}
++	}
++	rcu_read_unlock();
++
++	return n_keys;
++}
++
+ static bool __tcp_fastopen_cookie_gen_cipher(struct request_sock *req,
+ 					     struct sk_buff *syn,
+ 					     const siphash_key_t *key,
 
 
