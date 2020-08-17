@@ -2,124 +2,146 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0168C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688955;
-	bh=L6SlWHQmOlG7InphGxh1u2m96mugPu3A3OzyT6FCBJI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FeCksCn9NcNlNUH0ikyznzMRCqHp+9HC+gKGr997xCckFySv9NWhPVG11zErBxpYR
-	 N9Ltm4b74UbmD5u7usJ1wiVKbM78OoMOI7dBFc6GOoyPpQ30oANdNh/uTvjNwNg/sk
-	 i2t2Y65MDxCfm9nyz5suL3qihbfUpvyhUC5ntbwM=
+	by mail.kernel.org (Postfix) with ESMTP id 7103320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+axQxni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390956AbgHQS1Q (ORCPT
+        id S2391007AbgHQS3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388174AbgHQQCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B211207FF;
-        Mon, 17 Aug 2020 16:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680123;
-        bh=L6SlWHQmOlG7InphGxh1u2m96mugPu3A3OzyT6FCBJI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y68EuzNFUHgzBht8BwzD2BN2Cr7rGFmyyso1yIb/I72k1ScN/2Tjbrdaszqk5xRlz
-         KB297OXARxYVz3AtkZCbF3Od4ip/mnoKag8re8zyTgQ/80URnD8AU6K6Wwz53wgNgp
-         zjKdr5wDJtUXYYMB8fxSvf3cIq/LU98a/WWg2eIM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/270] spi: lantiq: fix: Rx overflow error in full duplex mode
-Date:   Mon, 17 Aug 2020 17:13:52 +0200
-Message-Id: <20200817143757.346687525@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:29:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390778AbgHQS2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:28:50 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141E6C061389;
+        Mon, 17 Aug 2020 11:28:50 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id o21so15612660oie.12;
+        Mon, 17 Aug 2020 11:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6X353itaXkDHqSu22DPUW9j+w4AM7wyuUFGnVJQkvAg=;
+        b=k+axQxniUoUpFPhsKqdJdzpEsffqb1QGFrUCpyDdCwhH88nu9mlsHCZCYYE0np5mJ1
+         dbQfAQOv0N8ewztEhdItGY/P5gewbqdoON3Q10CgE1iHacG6Zv5nhtgcDlFNyUtAuw9y
+         pFsARcBVw3aFJcKyR4GGr9NtzC+3TI+QD1QaRvHR31wSd140Br6Lwq2PjkqZ/H6qqlR+
+         4IAUrCjJKYl9dWdPc7TPB+KGnbtm15EZRCD6gzWjwt3PAtCWiKdbet4jaKFsvhTi85zY
+         5/62RbvsqZD27qs3mFUq9fv4Cp9hVp/CR57l1IxobdWPa7uBMXo4O7WXlwi2fVd8GPmM
+         xP4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=6X353itaXkDHqSu22DPUW9j+w4AM7wyuUFGnVJQkvAg=;
+        b=bDMxlMENimA6mAykrx+zhxgj0CAO6U8pII6YfJfLiUNELN3cEhQ8brdjslOCSwKd8G
+         Qf+vySil1yWe8nUc0+ogSsBTPvQO22Xp4+EoF5sIU0h5F3SqxN+t7yBgS5Bh/yvT/ngD
+         gOdiJH40dDeul35OpDq6HEyVc2OpUKIiRQIg7qOg9FZUj4RTIl3nD49epC7lhVr/3uW+
+         PKIFYlqB9R3X416hwJ3q+Uo4n3ffMPuAH6ty7ybuigcc+wQRM9Okq/oh9pYSrbcOneOs
+         uWcOortnQmIlnRYOVxmZsN5xM9OydQ9/DKv5TgBBlwJw1z4C6FMghRpwwZbkz7b0Uy+Z
+         tt7A==
+X-Gm-Message-State: AOAM531V2HaAA/eayjywoLShzHqCCJKvuo+M6cAJuSiqehBWmTtrZmvu
+        AucjRFRvfBUi+dIBxiJcKZU1iwCEOHCt
+X-Google-Smtp-Source: ABdhPJx8V3+mgbwyP0s7nmLtLka6xMXS+0k2A0rB405LRR1V/jD5ENfDHllxosLiWTOfKm9xaxUbPw==
+X-Received: by 2002:aca:b286:: with SMTP id b128mr10608019oif.89.1597688928014;
+        Mon, 17 Aug 2020 11:28:48 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.146.204])
+        by smtp.gmail.com with ESMTPSA id l17sm3547047otn.2.2020.08.17.11.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 11:28:46 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 8C4C9180043;
+        Mon, 17 Aug 2020 18:28:45 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 13:28:44 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Oops on current Raspian when closing an SCTP connection
+Message-ID: <20200817182844.GZ2842@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200816230624.GB2865@minyard.net>
+ <20200817134457.GG3399@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817134457.GG3399@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dilip Kota <eswara.kota@linux.intel.com>
+On Mon, Aug 17, 2020 at 10:44:57AM -0300, Marcelo Ricardo Leitner wrote:
+> On Sun, Aug 16, 2020 at 06:06:24PM -0500, Corey Minyard wrote:
+> > I'm seeing the following when an SCTP connection terminates.  This is on
+> > Raspian on a Raspberry Pi, version is Linux version 5.4.51-v7+.  That's
+> > 32-bit ARM.
+> > 
+> > I haven't looked into it yet, I thought I would report before trying to
+> > chase anything down.  I'm not seeing it on 5.4 x86_64 systems.
+> > 
+> > Aug 16 17:59:01 access kernel: [510640.438008] Hardware name: BCM2835
+> > Aug 16 17:59:01 access kernel: [510640.443823] PC is at sctp_ulpevent_free+0x38/0xa0 [sctp]
+> > Aug 16 17:59:01 access kernel: [510640.451498] LR is at sctp_queue_purge_ulpevents+0x34/0x50 [sctp]
+> 
+> Not ringing a bell here. Can you pinpoint on which line this crash
+> was? It seems, by the 0x8 offset and these function offsets, that this
+> could be when it was trying to access event->rmem_len, but if event
+> was NULL then it should have crashed earlier.
+> 
+>   Marcelo
 
-[ Upstream commit 661ccf2b3f1360be50242726f7c26ced6a9e7d52 ]
+I think so:
 
-In full duplex mode, rx overflow error is observed. To overcome the error,
-wait until the complete data got received and proceed further.
+00015e38 <sctp_ulpevent_free>:
+   15e38:       e1a0c00d        mov     ip, sp
+   15e3c:       e92dd878        push    {r3, r4, r5, r6, fp, ip, lr, pc}
+   15e40:       e24cb004        sub     fp, ip, #4
+   15e44:       e52de004        push    {lr}            ; (str lr, [sp, #-4]!)
+   15e48:       ebfffffe        bl      0 <__gnu_mcount_nc>
 
-Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Link: https://lore.kernel.org/r/efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-lantiq-ssc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ulpevent.c:1102		if (sctp_ulpevent_is_notification(event))
+   15e4c:       e1d032f0        ldrsh   r3, [r0, #32]
+   15e50:       e1a05000        mov     r5, r0
+   15e54:       e3530000        cmp     r3, #0
+   15e58:       ba000011        blt     15ea4 <sctp_ulpevent_free+0x6c>
 
-diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
-index 9dfe8b04e6880..55394bdbc5a30 100644
---- a/drivers/spi/spi-lantiq-ssc.c
-+++ b/drivers/spi/spi-lantiq-ssc.c
-@@ -184,6 +184,7 @@ struct lantiq_ssc_spi {
- 	unsigned int			tx_fifo_size;
- 	unsigned int			rx_fifo_size;
- 	unsigned int			base_cs;
-+	unsigned int			fdx_tx_level;
- };
- 
- static u32 lantiq_ssc_readl(const struct lantiq_ssc_spi *spi, u32 reg)
-@@ -481,6 +482,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
- 	u32 data;
- 	unsigned int tx_free = tx_fifo_free(spi);
- 
-+	spi->fdx_tx_level = 0;
- 	while (spi->tx_todo && tx_free) {
- 		switch (spi->bits_per_word) {
- 		case 2 ... 8:
-@@ -509,6 +511,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
- 
- 		lantiq_ssc_writel(spi, data, LTQ_SPI_TB);
- 		tx_free--;
-+		spi->fdx_tx_level++;
- 	}
- }
- 
-@@ -520,6 +523,13 @@ static void rx_fifo_read_full_duplex(struct lantiq_ssc_spi *spi)
- 	u32 data;
- 	unsigned int rx_fill = rx_fifo_level(spi);
- 
-+	/*
-+	 * Wait until all expected data to be shifted in.
-+	 * Otherwise, rx overrun may occur.
-+	 */
-+	while (rx_fill != spi->fdx_tx_level)
-+		rx_fill = rx_fifo_level(spi);
-+
- 	while (rx_fill) {
- 		data = lantiq_ssc_readl(spi, LTQ_SPI_RB);
- 
--- 
-2.25.1
+This is the false branch from the above (high bit isn't set).
+
+ulpevent.c:1061		if (!skb->data_len) (just the fetch part)
+   15e5c:       e5903040        ldr     r3, [r0, #64]   ; 0x40
+
+ulpevent.c:1059		len = skb->len;
+   15e60:       e590603c        ldr     r6, [r0, #60]   ; 0x3c
+
+ulpevent.c:1061         if (!skb->data_len) (the compare part)
+   15e64:       e3530000        cmp     r3, #0
+   15e68:       0a000008        beq     15e90 <sctp_ulpevent_free+0x58>
 
 
+ulpevent.c:1065		skb_walk_frags(skb, frag) {
+skbuff.h:1395		return skb->end; (inside skb_shinfo())
+   15e6c:       e5903084        ldr     r3, [r0, #132]  ; 0x84
 
+skbuff.h:3461		iter = skb_shinfo(skb)->frag_list
+   15e70:       e5934008        ldr     r4, [r3, #8] <-- Crash occurs here
+
+   15e74:       e3540000        cmp     r4, #0
+   15e78:       0a000004        beq     15e90 <sctp_ulpevent_free+0x58>
+   15e7c:       e2840018        add     r0, r4, #24
+   15e80:       ebfffa34        bl      14758 <sctp_ulpevent_release_frag_data>
+
+
+So it appears that skb->end is NULL.
+
+-corey
