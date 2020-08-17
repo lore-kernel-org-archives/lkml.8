@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4233C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA76C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C783B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D15820748
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677683;
-	bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
+	s=default; t=1597677689;
+	bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRpQtTNs8D4M46ePz0ssDYkkiZtTU/RGZS5GetLId6zyXkvRZHc+6i5aIEAc4atLD
-	 OHNxl87dFnkd9efWMnXr9Ozd+L43Y787dyhRs4UJv6D+ozWjWC9jKFUek4mSWlhaTE
-	 o7KGrrKvqDcMZ56js09K/Sm0FaSDCPc6A0ykmA7U=
+	b=lrxjjbIDHjxiKAPqO0hkFVRT5aBKMiD3f3ct054kzgNrKrE8JmXAK0LYMLG4WrqC+
+	 TlVyq8IGp6oMim/gcFGIweFo1/YX3G8WjWtYP2YssqpzuK99KiPjKNjXVrBVsTflLw
+	 MM7mVHM85L0hon80t6h3Ux3U7lC5dgWpK35IFrcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgHQPVU (ORCPT
+        id S1729351AbgHQPVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbgHQPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:19:56 -0400
+        id S1729238AbgHQPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C53E20885;
-        Mon, 17 Aug 2020 15:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4751420786;
+        Mon, 17 Aug 2020 15:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677595;
-        bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
+        s=default; t=1597677592;
+        bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stu+0uZFqjsZIs3mfczLq4hmkqGHaDw5cP34FaAwA0Z8WIemqrj2+XsusfWQVr5l2
-         PkCSn6JoG5JjjoAayMyclY+oFiwcRLKdCxP4RdPoviMvzsV2RRIWtPpB0vFg0DQ339
-         dCYKS8a4otTweB9B0huAFpx5k0SgwzqP3LTynLls=
+        b=i+/pWSf33n4AVvmZYS/pOcAM2bRfOQBLDb36gM5Z7F4hv2vbpL2FNL/Hfcsyal0Hm
+         4XwKAGvHIy7+aJfYI4WGD2t6UFX/DldgviQ8hozxe8idAy/LtBfBCzQPz56AwSwOAE
+         7zeM7khfhJ6eNrIuahBIoe18tHHUVvwc5p1G7Awk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 038/464] ARM: dts: gose: Fix ports node name for adv7612
-Date:   Mon, 17 Aug 2020 17:09:51 +0200
-Message-Id: <20200817143835.579438187@linuxfoundation.org>
+Subject: [PATCH 5.8 020/464] memory: tegra: Fix an error handling path in tegra186_emc_probe()
+Date:   Mon, 17 Aug 2020 17:09:33 +0200
+Message-Id: <20200817143834.725434432@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,35 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 59692ac5a7bb8c97ff440fc8917828083fbc38d6 ]
+[ Upstream commit c3d4eb3bf6ad32466555b31094f33a299444f795 ]
 
-When adding the adv7612 device node the ports node was misspelled as
-port, fix this.
+The call to tegra_bpmp_get() must be balanced by a call to
+tegra_bpmp_put() in case of error, as already done in the remove
+function.
 
-Fixes: bc63cd87f3ce924f ("ARM: dts: gose: add HDMI input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200713111016.523189-1-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Add an error handling path and corresponding goto.
+
+Fixes: 52d15dd23f0b ("memory: tegra: Support DVFS on Tegra186 and later")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/memory/tegra/tegra186-emc.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index a378b54867bb4..10c3536b8e3d9 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -394,7 +394,7 @@ hdmi-in@4c {
- 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 			default-input = <0>;
+diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
+index 97f26bc77ad41..c900948881d5b 100644
+--- a/drivers/memory/tegra/tegra186-emc.c
++++ b/drivers/memory/tegra/tegra186-emc.c
+@@ -185,7 +185,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(emc->clk)) {
+ 		err = PTR_ERR(emc->clk);
+ 		dev_err(&pdev->dev, "failed to get EMC clock: %d\n", err);
+-		return err;
++		goto put_bpmp;
+ 	}
  
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+ 	platform_set_drvdata(pdev, emc);
+@@ -201,7 +201,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 	err = tegra_bpmp_transfer(emc->bpmp, &msg);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to EMC DVFS pairs: %d\n", err);
+-		return err;
++		goto put_bpmp;
+ 	}
  
+ 	emc->debugfs.min_rate = ULONG_MAX;
+@@ -211,8 +211,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 
+ 	emc->dvfs = devm_kmalloc_array(&pdev->dev, emc->num_dvfs,
+ 				       sizeof(*emc->dvfs), GFP_KERNEL);
+-	if (!emc->dvfs)
+-		return -ENOMEM;
++	if (!emc->dvfs) {
++		err = -ENOMEM;
++		goto put_bpmp;
++	}
+ 
+ 	dev_dbg(&pdev->dev, "%u DVFS pairs:\n", emc->num_dvfs);
+ 
+@@ -237,7 +239,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 			"failed to set rate range [%lu-%lu] for %pC\n",
+ 			emc->debugfs.min_rate, emc->debugfs.max_rate,
+ 			emc->clk);
+-		return err;
++		goto put_bpmp;
+ 	}
+ 
+ 	emc->debugfs.root = debugfs_create_dir("emc", NULL);
+@@ -254,6 +256,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 			    emc, &tegra186_emc_debug_max_rate_fops);
+ 
+ 	return 0;
++
++put_bpmp:
++	tegra_bpmp_put(emc->bpmp);
++	return err;
+ }
+ 
+ static int tegra186_emc_remove(struct platform_device *pdev)
 -- 
 2.25.1
 
