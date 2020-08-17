@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2133C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A91AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868E320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4412520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688441;
-	bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
+	s=default; t=1597688448;
+	bh=RRLC9Yh8n99NVnPYn6CiVl3hrQBqRwfzwDN7vcnfiD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZ0JPh3ZMb7dpoe5/P1hCOPyVi0jCtUOvF0R3rYDeUrlTYWBnWguaYK/AqPc9CtUH
-	 Sd2XjoQv+xIgvM70W3fGdF1uro66r/0jdrPfB3jCt2jbMXPn1oGMa8E28Ga7BKR7gh
-	 +wrHfmpbwLSg4I5MDsWodm7/DDBtThRrgyuA53Bg=
+	b=qH+2L/Dex2tWpnoE4PKcsGTcgyL+rsOa/SarOKq5C55sako5zVbzykl9mYy3+dg/k
+	 3Es5Eok+7bP+SZtT6rhlEexXVVxIW5Em1tdI5tcZQWF+NCa5mjEt+rwPAy+h2OlmUf
+	 cGBPY/B8gdtlqeIs4TpDb789Xor1gBALee5UaMek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388313AbgHQQEb (ORCPT
+        id S2390837AbgHQSUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55572 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387698AbgHQPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:41 -0400
+        id S2388307AbgHQQEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6303A20760;
-        Mon, 17 Aug 2020 15:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7293B207FB;
+        Mon, 17 Aug 2020 16:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679081;
-        bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
+        s=default; t=1597680269;
+        bh=RRLC9Yh8n99NVnPYn6CiVl3hrQBqRwfzwDN7vcnfiD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t1BNfWkaKGckK9yfyqwoQxqxR8f2FIJhomQUqlv5yMYoI7BbKeXM3d/WPMDLrJI/Y
-         K//eZD3HRewsC2aZqkzvgNqRlpMB0bWHUwtPh70OwI3D5NV+i02WTyMx6cVDaVgv3Z
-         Lcl+fZYSjgy3o7AYwhGjjvIibUT+Gup86cYnC+dw=
+        b=GSEjWNIb/UneIi1bqv/99QYm/TnrbQ7Kicci+mRKphQdlsXieptLM6q6pDilxb3Lt
+         7rX2rtuRF7plp+N/oyceB1q4kVpa0y4wbuXblbYs1FS5AV8uay7pFIXdAhOA9h5BLK
+         Z1guFf5QdzHLyNlIxxKi7CgoxsOfzQZ13Ow6NSqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 059/393] nvme-rdma: fix controller reset hang during traffic
-Date:   Mon, 17 Aug 2020 17:11:49 +0200
-Message-Id: <20200817143822.485415520@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 119/270] iavf: Fix updating statistics
+Date:   Mon, 17 Aug 2020 17:15:20 +0200
+Message-Id: <20200817143801.690088709@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,69 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
 
-[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
+[ Upstream commit 9358076642f14cec8c414850d5a909cafca3a9d6 ]
 
-commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-exposed an issue where we may hang trying to wait for queue freeze
-during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
-queue maps (which we have now for default/read/poll) is attempting to
-freeze the queue. However we never started queue freeze when starting the
-reset, which means that we have inflight pending requests that entered the
-queue that we will not complete once the queue is quiesced.
+Commit bac8486116b0 ("iavf: Refactor the watchdog state machine") inverted
+the logic for when to update statistics. Statistics should be updated when
+no other commands are pending, instead they were only requested when a
+command was processed. iavf_request_stats() would see a pending request
+and not request statistics to be updated. This caused statistics to never
+be updated; fix the logic.
 
-So start a freeze before we quiesce the queue, and unfreeze the queue
-after we successfully connected the I/O queues (and make sure to call
-blk_mq_update_nr_hw_queues only after we are sure that the queue was
-already frozen).
-
-This follows to how the pci driver handles resets.
-
-Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: bac8486116b0 ("iavf: Refactor the watchdog state machine")
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/iavf/iavf_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 1f9a45145d0d3..19c94080512cf 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -882,15 +882,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
- 			ret = PTR_ERR(ctrl->ctrl.connect_q);
- 			goto out_free_tag_set;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+index 905fc45b4a58f..34124c213d27c 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_main.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+@@ -1948,7 +1948,10 @@ static void iavf_watchdog_task(struct work_struct *work)
+ 				iavf_send_api_ver(adapter);
+ 			}
+ 		} else {
+-			if (!iavf_process_aq_command(adapter) &&
++			/* An error will be returned if no commands were
++			 * processed; use this opportunity to update stats
++			 */
++			if (iavf_process_aq_command(adapter) &&
+ 			    adapter->state == __IAVF_RUNNING)
+ 				iavf_request_stats(adapter);
  		}
--	} else {
--		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
--			ctrl->ctrl.queue_count - 1);
- 	}
- 
- 	ret = nvme_rdma_start_io_queues(ctrl);
- 	if (ret)
- 		goto out_cleanup_connect_q;
- 
-+	if (!new) {
-+		nvme_start_queues(&ctrl->ctrl);
-+		nvme_wait_freeze(&ctrl->ctrl);
-+		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
-+			ctrl->ctrl.queue_count - 1);
-+		nvme_unfreeze(&ctrl->ctrl);
-+	}
-+
- 	return 0;
- 
- out_cleanup_connect_q:
-@@ -923,6 +928,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
- 		bool remove)
- {
- 	if (ctrl->ctrl.queue_count > 1) {
-+		nvme_start_freeze(&ctrl->ctrl);
- 		nvme_stop_queues(&ctrl->ctrl);
- 		nvme_rdma_stop_io_queues(ctrl);
- 		if (ctrl->ctrl.tagset) {
 -- 
 2.25.1
 
