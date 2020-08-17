@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA6820658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47AB20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693779;
-	bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
+	s=default; t=1597693786;
+	bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdDFdlIJMVIGlZUNsCjD+UZaC0GA9VlFVvfpoD6kn0dS76mjMvlM8YSkKdnKL7j3G
-	 icGLULJw9U6An8KWxZ9f77v7agHV8SN94Il2NqTcT5ebqNHhp6AmAi0qvh61sgnmgd
-	 A1yul5B/WcbgKBqE1HqrT6ckrhgWyAUvDtoFXvW0=
+	b=kCXDsxksUKDD2X2YCVYeNEYkCtZpSxjXwjlLNGzkcukfr9ymHdXjJaO7vs+xSSx6+
+	 JurtQiWgAQg+G24p3MBPEpKJouARjrvaRXPxE8XBfzEA4styKtr5TLldRZXTvP9n6H
+	 t9xL+Yo+R0zAQFJ2aZfpK0fZuJnKbH1t1FL3jmYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732780AbgHQTti (ORCPT
+        id S1732794AbgHQTtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41072 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729243AbgHQPUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:04 -0400
+        id S1729239AbgHQPT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CCB2065C;
-        Mon, 17 Aug 2020 15:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9CF22078B;
+        Mon, 17 Aug 2020 15:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677603;
-        bh=Qu/3foyaXERMqY1vv8CRgOXlPV4nyRt88WLVppSA5wU=;
+        s=default; t=1597677598;
+        bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bBvXbgcMmVnjM5hwC2FVtSFlIX/lAlVDsrTrBxDTSIfY3PrStbmBKHKigiO5+JPQ4
-         x8Q+cBo1fQ5gsxNpLL9L9GNWkRGlx1Sq0MrFGiTZWIdEB+w9oVOPQFmrCFInxeSdLp
-         Jgf3wPnSP8M1AeTjZenPwezLQDhLj7Gc8oSDabGE=
+        b=aohtdjzu32HJid4luP4JwcHjvB/zYOGhMv6M+5aWTEjX4ILVvhq+JweLXj7uHa+Tk
+         X6yTh90qXX9GJIckcJ3DolNsyRjtT/EUMciW1VKcswm7FNFnahrHDPqC1P47liVUQN
+         5wncje5zDhTqG0hGhyFNUcnT0XZIqpfk4YRynY6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 041/464] reset: intel: fix a compile warning about REG_OFFSET redefined
-Date:   Mon, 17 Aug 2020 17:09:54 +0200
-Message-Id: <20200817143835.722203155@linuxfoundation.org>
+Subject: [PATCH 5.8 039/464] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
+Date:   Mon, 17 Aug 2020 17:09:52 +0200
+Message-Id: <20200817143835.627454908@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,103 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 308646785e51976dea7e20d29a1842d14bf0b9bd ]
+[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
 
-kernel test robot reports a compile warning about REG_OFFSET redefined
-in the reset-intel-gw.c after merging commit e44ab4e14d6f4 ("regmap:
-Simplify implementation of the regmap_read_poll_timeout() macro"). the
-warning is like that:
+if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
+a corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-drivers/reset/reset-intel-gw.c:18:0: warning: "REG_OFFSET" redefined
- #define REG_OFFSET GENMASK(31, 16)
-
-In file included from ./arch/arm/mach-ixp4xx/include/mach/hardware.h:30:0,
-                 from ./arch/arm/mach-ixp4xx/include/mach/io.h:15,
-                 from ./arch/arm/include/asm/io.h:198,
-                 from ./include/linux/io.h:13,
-                 from ./include/linux/iopoll.h:14,
-                 from ./include/linux/regmap.h:20,
-                 from drivers/reset/reset-intel-gw.c:12:
-./arch/arm/mach-ixp4xx/include/mach/platform.h:25:0: note: this is the location of the previous definition
- #define REG_OFFSET 3
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: c9aef213e38cde ("reset: intel: Add system reset controller driver")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-intel-gw.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/arm/mach-at91/pm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
-index 854238444616b..effc177db80af 100644
---- a/drivers/reset/reset-intel-gw.c
-+++ b/drivers/reset/reset-intel-gw.c
-@@ -15,9 +15,9 @@
- #define RCU_RST_STAT	0x0024
- #define RCU_RST_REQ	0x0048
- 
--#define REG_OFFSET	GENMASK(31, 16)
--#define BIT_OFFSET	GENMASK(15, 8)
--#define STAT_BIT_OFFSET	GENMASK(7, 0)
-+#define REG_OFFSET_MASK	GENMASK(31, 16)
-+#define BIT_OFFSET_MASK	GENMASK(15, 8)
-+#define STAT_BIT_OFFSET_MASK	GENMASK(7, 0)
- 
- #define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
- 
-@@ -51,11 +51,11 @@ static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
- 				     unsigned long id, u32 *rst_req,
- 				     u32 *req_bit, u32 *stat_bit)
- {
--	*rst_req = FIELD_GET(REG_OFFSET, id);
--	*req_bit = FIELD_GET(BIT_OFFSET, id);
-+	*rst_req = FIELD_GET(REG_OFFSET_MASK, id);
-+	*req_bit = FIELD_GET(BIT_OFFSET_MASK, id);
- 
- 	if (data->soc_data->legacy)
--		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
-+		*stat_bit = FIELD_GET(STAT_BIT_OFFSET_MASK, id);
- 	else
- 		*stat_bit = *req_bit;
- 
-@@ -141,14 +141,14 @@ static int intel_reset_xlate(struct reset_controller_dev *rcdev,
- 	if (spec->args[1] > 31)
- 		return -EINVAL;
- 
--	id = FIELD_PREP(REG_OFFSET, spec->args[0]);
--	id |= FIELD_PREP(BIT_OFFSET, spec->args[1]);
-+	id = FIELD_PREP(REG_OFFSET_MASK, spec->args[0]);
-+	id |= FIELD_PREP(BIT_OFFSET_MASK, spec->args[1]);
- 
- 	if (data->soc_data->legacy) {
- 		if (spec->args[2] > 31)
- 			return -EINVAL;
- 
--		id |= FIELD_PREP(STAT_BIT_OFFSET, spec->args[2]);
-+		id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, spec->args[2]);
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 074bde64064e4..2aab043441e8f 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
+ 	sram_pool = gen_pool_get(&pdev->dev, NULL);
+ 	if (!sram_pool) {
+ 		pr_warn("%s: sram pool unavailable!\n", __func__);
+-		return;
++		goto out_put_device;
  	}
  
- 	return id;
-@@ -210,11 +210,11 @@ static int intel_reset_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+ 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
+ 	if (!sram_base) {
+ 		pr_warn("%s: unable to alloc sram!\n", __func__);
+-		return;
++		goto out_put_device;
+ 	}
  
--	data->reboot_id = FIELD_PREP(REG_OFFSET, rb_id[0]);
--	data->reboot_id |= FIELD_PREP(BIT_OFFSET, rb_id[1]);
-+	data->reboot_id = FIELD_PREP(REG_OFFSET_MASK, rb_id[0]);
-+	data->reboot_id |= FIELD_PREP(BIT_OFFSET_MASK, rb_id[1]);
+ 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
+@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
+ 					at91_pm_suspend_in_sram_sz, false);
+ 	if (!at91_suspend_sram_fn) {
+ 		pr_warn("SRAM: Could not map\n");
+-		return;
++		goto out_put_device;
+ 	}
  
- 	if (data->soc_data->legacy)
--		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET, rb_id[2]);
-+		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET_MASK, rb_id[2]);
+ 	/* Copy the pm suspend handler to SRAM */
+ 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
+ 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
++	return;
++
++out_put_device:
++	put_device(&pdev->dev);
++	return;
+ }
  
- 	data->restart_nb.notifier_call =	intel_reset_restart_handler;
- 	data->restart_nb.priority =		128;
+ static bool __init at91_is_pm_mode_active(int pm_mode)
 -- 
 2.25.1
 
