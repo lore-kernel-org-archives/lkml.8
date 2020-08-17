@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A63FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E11C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6039922D00
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39DA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679098;
-	bh=XrGXVfkZGJOfgdQoFkJoVMpIOpg0//YVEswx0Gn5SG4=;
+	s=default; t=1597679154;
+	bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oE2ko3kltXvzZB28gHv0Jn4OeLdExJs7ccY/Rov8JsyNav8v6uB7+7vLmNYRfSoqB
-	 JHPf0SLFRvJzoGVN5FKqZeDekUx9e5ijxFEPa2Rl/4qWHnl46ueRdcYXfUQFFh3dzu
-	 Wfid6W/415NweMj+Fjbdl2mS3t/HzmSCu8mI0Slc=
+	b=wyDCzIieRFHqiVPiSo/YCqso+ZrIuEt+tSPZuxXD0Q0zYgdGho5SqDsGj8cP+cx2X
+	 7zap7yFmiaDon4Njt56IicijHRm1XWyWAik+CcDy+VdM4EP62BWSRLIluzJhOnYLS8
+	 qO+Nqs3g93uC0h3S3jZVRv6TVu1M9Y8Jap+pabFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387721AbgHQPoz (ORCPT
+        id S2387733AbgHQPpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:44:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730578AbgHQPiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:13 -0400
+        id S1730590AbgHQPiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A03E4208E4;
-        Mon, 17 Aug 2020 15:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A22D208E4;
+        Mon, 17 Aug 2020 15:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678692;
-        bh=XrGXVfkZGJOfgdQoFkJoVMpIOpg0//YVEswx0Gn5SG4=;
+        s=default; t=1597678701;
+        bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gi44MkZ6lHNiiWVh3ZnhNGIF2oBWzWX43zHIpjjnJYthmbFNOHDtI/lhkCZQHRUNm
-         Q+OSLQM1AwXOGEnLLSPXcI6Vx7BYBeTLXUagSwSxcQ67YugAlZYe8d6uMxJFgbxizy
-         YdPa7PWPVWzy70R03jcBHaI2rK+yNd22yL7XimWM=
+        b=cjrqfWEZLe/yk0+QgipK6FrIy2tax7WY4Qut3UzPyGLwVVfjwng1bphuncp0RZBvB
+         IO3GabpgiaQb6Umohe1w7/BrhH2z6oXS8c6SkI0aKgizJ/qq8JPxqF50wteS23U0EG
+         WyajWUAF+P7/mWNnd3DYYKQsyJMRPPnujWpFSR58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronak Doshi <doshir@vmware.com>,
-        Guolin Yang <gyang@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 391/464] vmxnet3: use correct tcp hdr length when packet is encapsulated
-Date:   Mon, 17 Aug 2020 17:15:44 +0200
-Message-Id: <20200817143852.508586799@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
+        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 417/464] fs/minix: dont allow getting deleted inodes
+Date:   Mon, 17 Aug 2020 17:16:10 +0200
+Message-Id: <20200817143853.753734174@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,38 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronak Doshi <doshir@vmware.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 8a7f280f29a80f6e0798f5d6e07c5dd8726620fe ]
+commit facb03dddec04e4aac1bb2139accdceb04deb1f3 upstream.
 
-Commit dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload
-support") added support for encapsulation offload. However, while
-calculating tcp hdr length, it does not take into account if the
-packet is encapsulated or not.
+If an inode has no links, we need to mark it bad rather than allowing it
+to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink() when
+doing directory operations on a fuzzed filesystem.
 
-This patch fixes this issue by using correct reference for inner
-tcp header.
-
-Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
-Signed-off-by: Ronak Doshi <doshir@vmware.com>
-Acked-by: Guolin Yang <gyang@vmware.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-3-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vmxnet3/vmxnet3_drv.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -886,7 +886,8 @@ vmxnet3_parse_hdr(struct sk_buff *skb, s
- 
- 			switch (protocol) {
- 			case IPPROTO_TCP:
--				ctx->l4_hdr_size = tcp_hdrlen(skb);
-+				ctx->l4_hdr_size = skb->encapsulation ? inner_tcp_hdrlen(skb) :
-+						   tcp_hdrlen(skb);
- 				break;
- 			case IPPROTO_UDP:
- 				ctx->l4_hdr_size = sizeof(struct udphdr);
+---
+ fs/minix/inode.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -468,6 +468,13 @@ static struct inode *V1_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -501,6 +508,13 @@ static struct inode *V2_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
 
 
