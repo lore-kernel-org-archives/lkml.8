@@ -2,94 +2,89 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B753AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7947C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC7D20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688645;
-	bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNKHm9u0j/UnEgMZPrp8Zd0GS8ZWaL8e53rBDGBCSRCFosWh+xLbHPFB2k1MsFxAp
-	 u/1juV44/Sp7HJct6Mx/uUwtqr2lSxuYthtIJAJuTT1LT0tn7Rf5DdiGpgVnn3iaHx
-	 mdiGoxByij5+NsHfjSphlR+4w07RABcEsijXLijM=
+	by mail.kernel.org (Postfix) with ESMTP id CC91820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYkok7Lc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390936AbgHQSYE (ORCPT
+        id S2390941AbgHQSYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388235AbgHQQDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5FA2053B;
-        Mon, 17 Aug 2020 16:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680198;
-        bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uCl1Zl8+ZPSnX2nZOjOkbtGCuJQNVfMxIeh/ksjMTczI4cU8l2vixNmmk/FTtrO/Q
-         guhNTax9eliv0yPQn6/9JGzyZ5X3c2EPkjt/lsM1x3TEMllXt0q3TNAn+Eqnwm6AB+
-         xHSTvHPUX9y0EybVpJTTXCrKZ2O+kYkcXk0JkHck=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/270] drm/msm: ratelimit crtc event overflow error
-Date:   Mon, 17 Aug 2020 17:14:50 +0200
-Message-Id: <20200817143800.194189346@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390639AbgHQSXW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:23:22 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0CEC061343;
+        Mon, 17 Aug 2020 11:23:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id i10so2959575pgk.1;
+        Mon, 17 Aug 2020 11:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ArklK3xLKYl0ozsXmN0TZa3LItt/yQRXbXI18xhBRkY=;
+        b=KYkok7Lc9wMrqXITauWU1t0NEZU5oDWsKvsZmdrPTIMV4tnbFYq1MLfK8etF6o8j42
+         Us8Pze5iaq7q0QFQvKYC5CG749siGYLQpC7w8Lsp8EgxZnN1cMttsNsfxhLLGylxJqRO
+         h5Xt4MLf/YOjhDZ/3WBeG01Sr8lc0ag9hxEeUDBKz4dSKLps9yXmTROd2NBnKvCQLpN/
+         +gLdr5dJ5z6Lo0ebICaXsd+xuP1rnuIz9OMcGT2eWDNMiuBjqcOg7kF7zW6Rpja5WgE1
+         hhq0C1sduCMvWaD6BSppNfXY+L7G489qJaw465Qo7QQLjcSedkgvZ6kO3+g1EZqHBvHY
+         Vupg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ArklK3xLKYl0ozsXmN0TZa3LItt/yQRXbXI18xhBRkY=;
+        b=jQUVFGHv9EugzmLLuVc1mDZcqH9itF5tocUvgplZHwxqD4NndrbGaC0eG4eYHAv8nP
+         9gAmzFTfC8e+Q+KWZd5Cgdw9AHxJxILui1YNT4tLmrnqdjghYHmLSHyICCvfv7QzpN5Q
+         OXbJAMCQOb+31avFAxxVeIaKinq+BNtYHY+zC56QMfdovf7mF7ZVoJFFf53v3mZ1YcRu
+         fQ8BO2VGhhM2hJU7T8rZ9M+VAHXOFovKOnorf+++7K2GWJ+1yZiAJSZN4o0ypCiAZ8I7
+         fQD+ShpWFEkB6pLSsvtXAwDxwITokxIvIHqkMjRrE9S0k0XFD6EG+X36Gv3EzUQfJdMC
+         A9aA==
+X-Gm-Message-State: AOAM531ZXFX0rTRsRH0FWNVWayEaWKrHI14ypa4n+uEVFjRGLtaCI515
+        NSin0yVfYq/5MAHj3cI4pBeFl14hm6Y=
+X-Google-Smtp-Source: ABdhPJzs5PpPwLX4Lms8EiHz/B3vX66hHPiWWrc1sSTOfZ+Rq2Tb8XiLZLpsLuXic1SOW2APxkAbtA==
+X-Received: by 2002:a63:dc11:: with SMTP id s17mr10602970pgg.254.1597688599235;
+        Mon, 17 Aug 2020 11:23:19 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id c10sm20543527pfc.62.2020.08.17.11.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 11:23:18 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 11:23:16 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     min.li.xe@renesas.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] ptp: ptp_clockmatrix: use i2c_master_send for i2c
+ write
+Message-ID: <20200817182316.GB4286@hoboy>
+References: <1597678655-842-1-git-send-email-min.li.xe@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597678655-842-1-git-send-email-min.li.xe@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Mon, Aug 17, 2020 at 11:37:35AM -0400, min.li.xe@renesas.com wrote:
+> From: Min Li <min.li.xe@renesas.com>
+> 
+> The old code for i2c write would break on some controllers, which fails
+> at handling Repeated Start Condition. So we will just use i2c_master_send
+> to handle write in one transanction.
+> 
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
 
-[ Upstream commit 5e16372b5940b1fecc3cc887fc02a50ba148d373 ]
-
-This can happen a lot when things go pear shaped.  Lets not flood dmesg
-when this happens.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index ce59adff06aa1..36c85c05b7cf7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -381,7 +381,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 event)
- 	spin_unlock_irqrestore(&dpu_crtc->spin_lock, flags);
- 
- 	if (!fevent) {
--		DRM_ERROR("crtc%d event %d overflow\n", crtc->base.id, event);
-+		DRM_ERROR_RATELIMITED("crtc%d event %d overflow\n", crtc->base.id, event);
- 		return;
- 	}
- 
--- 
-2.25.1
-
-
-
+Acked-by: Richard Cochran <richardcochran@gmail.com>
