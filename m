@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF93C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3746E206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B2920716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684745;
-	bh=Asd07owELHLcVJSCB7XcF6eSEPdZsLwxYMqKCmtZ44g=;
+	s=default; t=1597684754;
+	bh=llLkvDqYEfaN2UZk4oLC7bdfdl2nKg7ycxqYpWH0NvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qH+m9loTIJaQQ1k/ul8gNrJw2AOBwylgWIktFIXCkRYsKPDw5RzxMLFNTbcFpYq1O
-	 K5P4xLiBqr9Mz/J9l2KQZYHlJJ2Y0bZjhXuQSiSCNDj2QSjPiRfOdKliA4cK0N05F9
-	 HwxhSM1jopdXXB3bk5SMqZuHWgETekP3a34uRhOs=
+	b=oDXTj6I3Ewe9tjQQd397ql+hOPTlyFtjSTg49qlexUXOuBNE9+6rHBiNcpXnX7Wy8
+	 Dt/fZ+l81h7XDgfjRUW2NVll0guLdUBqtgSOpL0Jdt1YEB5uXCNKCuGYt+ks/AqrhC
+	 PX8CqHoMRSBSM8yy20ut781OXP/DMTLEGmUKF7Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389717AbgHQRTC (ORCPT
+        id S2389722AbgHQRTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbgHQQP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:27 -0400
+        id S1731069AbgHQQPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:15:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8A722B4E;
-        Mon, 17 Aug 2020 16:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B13208B3;
+        Mon, 17 Aug 2020 16:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680924;
-        bh=Asd07owELHLcVJSCB7XcF6eSEPdZsLwxYMqKCmtZ44g=;
+        s=default; t=1597680934;
+        bh=llLkvDqYEfaN2UZk4oLC7bdfdl2nKg7ycxqYpWH0NvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxJWSdIbSn4dFB3DhbffFGHH01IvneyhwU6RWZ3y7/DncC53/Q0cdssDAgKajzKuC
-         5o3Eku0X+W7csKLhamYg6YKSOqNxCkiR8YjP7S58DjliVjU3mzFCvvTopnecV0VteF
-         xzX1imtwx1gsjw1MGafLRX4n4WmlXZAl2mcLIHJE=
+        b=P9Lc4wF8lRgVuPUHdVdjQkzv2Y0LfzezEbqBzRE9Un+ei8nkS6H1RjppeKMyy13gs
+         ay6ex64NRkI3rOEis7khhMiP3wlP9ba3//NOC+vmYS8HonewG0NjSuf5MaIWzFEXZG
+         3ked/VifS6C0r2Pl4d2zvKImoYJ7inlGxVkKilQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, David VomLehn <vomlehn@texas.net>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/168] ASoC: meson: axg-tdm-interface: fix link fmt setup
-Date:   Mon, 17 Aug 2020 17:17:24 +0200
-Message-Id: <20200817143739.332370053@linuxfoundation.org>
+Subject: [PATCH 4.19 117/168] net: ethernet: aquantia: Fix wrong return value
+Date:   Mon, 17 Aug 2020 17:17:28 +0200
+Message-Id: <20200817143739.528063264@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,73 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-[ Upstream commit 6878ba91ce84f7a07887a0615af70f969508839f ]
+[ Upstream commit 0470a48880f8bc42ce26962b79c7b802c5a695ec ]
 
-The .set_fmt() callback of the axg tdm interface incorrectly
-test the content of SND_SOC_DAIFMT_MASTER_MASK as if it was a
-bitfield, which it is not.
+In function hw_atl_a0_hw_multicast_list_set(), when an invalid
+request is encountered, a negative error code should be returned.
 
-Implement the test correctly.
-
-Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200729154456.1983396-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions")
+Cc: David VomLehn <vomlehn@texas.net>
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm-interface.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
-index 7b8baf46d9689..5c055d8de8c7d 100644
---- a/sound/soc/meson/axg-tdm-interface.c
-+++ b/sound/soc/meson/axg-tdm-interface.c
-@@ -111,18 +111,25 @@ static int axg_tdm_iface_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- {
- 	struct axg_tdm_iface *iface = snd_soc_dai_get_drvdata(dai);
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+index dab5891b97145..d48595470ec82 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+@@ -774,7 +774,7 @@ static int hw_atl_a0_hw_multicast_list_set(struct aq_hw_s *self,
+ 	int err = 0;
  
--	/* These modes are not supported */
--	if (fmt & (SND_SOC_DAIFMT_CBS_CFM | SND_SOC_DAIFMT_CBM_CFS)) {
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		if (!iface->mclk) {
-+			dev_err(dai->dev, "cpu clock master: mclk missing\n");
-+			return -ENODEV;
-+		}
-+		break;
-+
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		break;
-+
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+	case SND_SOC_DAIFMT_CBM_CFS:
- 		dev_err(dai->dev, "only CBS_CFS and CBM_CFM are supported\n");
-+		/* Fall-through */
-+	default:
- 		return -EINVAL;
+ 	if (count > (HW_ATL_A0_MAC_MAX - HW_ATL_A0_MAC_MIN)) {
+-		err = EBADRQC;
++		err = -EBADRQC;
+ 		goto err_exit;
  	}
- 
--	/* If the TDM interface is the clock master, it requires mclk */
--	if (!iface->mclk && (fmt & SND_SOC_DAIFMT_CBS_CFS)) {
--		dev_err(dai->dev, "cpu clock master: mclk missing\n");
--		return -ENODEV;
--	}
--
- 	iface->fmt = fmt;
- 	return 0;
- }
-@@ -311,7 +318,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
- 	if (ret)
- 		return ret;
- 
--	if (iface->fmt & SND_SOC_DAIFMT_CBS_CFS) {
-+	if ((iface->fmt & SND_SOC_DAIFMT_MASTER_MASK) ==
-+	    SND_SOC_DAIFMT_CBS_CFS) {
- 		ret = axg_tdm_iface_set_sclk(dai, params);
- 		if (ret)
- 			return ret;
+ 	for (self->aq_nic_cfg->mc_list_count = 0U;
 -- 
 2.25.1
 
