@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB7D2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63502072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687665;
-	bh=VB67BcQRe1DuAd65X3jiZpXUTQ0j7BJtEfXDpKVmN48=;
+	s=default; t=1597687678;
+	bh=shT0TsfYxiP/hnTvhFCHDh5rpK6WtRm4y7EfStqYOc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JUBoMuDjYCRvb/WCMgD751hv7LkvMzbk3qRQKdvj05ilFZumuKj2erGII0AaaNepg
-	 /1dztBkIKQkZXdEOqMDjw6Ic4Iy3DzIQFElfv2tiy3VXdehaLyS1ZgNzO9xGViugNj
-	 hF/G1t4wmsi9Ebp91ayTCQlnAwJ3Triim2R/v3nQ=
+	b=uYnkd9DAXR1EUJxX4DQ1d1IwNd8jyHwZAKarauVQIWV7h2DoL/NIiHrV+AWHxBoPq
+	 GSqnTfQR0ttkXmjN4V0H6aYDafDqJKFuizzOaHxUPCwzu11+60bTnoGxXsqOW/m72p
+	 b2xBAUl72Apta8ji0F+oM4QfpjhPrX7yVOMIQ4D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388891AbgHQSHn (ORCPT
+        id S2390335AbgHQSH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388477AbgHQQIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:51 -0400
+        id S2388463AbgHQQIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E13207FB;
-        Mon, 17 Aug 2020 16:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629E522B49;
+        Mon, 17 Aug 2020 16:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680530;
-        bh=VB67BcQRe1DuAd65X3jiZpXUTQ0j7BJtEfXDpKVmN48=;
+        s=default; t=1597680515;
+        bh=shT0TsfYxiP/hnTvhFCHDh5rpK6WtRm4y7EfStqYOc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3XHwei/NAVYOzRFid1iDfuZ0bHjUY48ODlmc1d9C6XYB9w+KyaB2Urfsnvv7dpJu
-         SdeDruzihW8mbABMfdzPfmsR8j48YAKMMixs6aVPtYN2FGtdmU5gToSYyc/G3Q52Ny
-         AD1qkpz4mFdxB3CnLA/PS0BDS+831zQxQe1eI9Rw=
+        b=fFs6GVF9a5F/MY49bKvO+r0hew8zzigPOHnIdWeurD3dPTZDRomwV3iQWcDwBA6rA
+         zuJXvT4QSPBhMDQOg9uXswnjqksDDbQBBMaCb3HdgLUJiNzM5G/0qx+zjaAVl89R6X
+         kN3TBElGPGDSHNhqXcknWBlClABcRTVuCQA6zlvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
+        kernel test robot <lkp@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 222/270] net: Set fput_needed iff FDPUT_FPUT is set
-Date:   Mon, 17 Aug 2020 17:17:03 +0200
-Message-Id: <20200817143806.828898347@linuxfoundation.org>
+Subject: [PATCH 5.4 217/270] af_packet: TPACKET_V3: fix fill status rwlock imbalance
+Date:   Mon, 17 Aug 2020 17:16:58 +0200
+Message-Id: <20200817143806.598095707@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,31 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
+[ Upstream commit 88fd1cb80daa20af063bce81e1fad14e945a8dc4 ]
 
-We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
-accordingly.
+After @blk_fill_in_prog_lock is acquired there is an early out vnet
+situation that can occur. In that case, the rwlock needs to be
+released.
 
-Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Also, since @blk_fill_in_prog_lock is only acquired when @tp_version
+is exactly TPACKET_V3, only release it on that exact condition as
+well.
+
+And finally, add sparse annotation so that it is clearer that
+prb_fill_curr_block() and prb_clear_blk_fill_status() are acquiring
+and releasing @blk_fill_in_prog_lock, respectively. sparse is still
+unable to understand the balance, but the warnings are now on a
+higher level that make more sense.
+
+Fixes: 632ca50f2cbd ("af_packet: TPACKET_V3: replace busy-wait loop")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/socket.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -485,7 +485,7 @@ static struct socket *sockfd_lookup_ligh
- 	if (f.file) {
- 		sock = sock_from_file(f.file, err);
- 		if (likely(sock)) {
--			*fput_needed = f.flags;
-+			*fput_needed = f.flags & FDPUT_FPUT;
- 			return sock;
- 		}
- 		fdput(f);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -941,6 +941,7 @@ static int prb_queue_frozen(struct tpack
+ }
+ 
+ static void prb_clear_blk_fill_status(struct packet_ring_buffer *rb)
++	__releases(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket_kbdq_core *pkc  = GET_PBDQC_FROM_RB(rb);
+ 	atomic_dec(&pkc->blk_fill_in_prog);
+@@ -988,6 +989,7 @@ static void prb_fill_curr_block(char *cu
+ 				struct tpacket_kbdq_core *pkc,
+ 				struct tpacket_block_desc *pbd,
+ 				unsigned int len)
++	__acquires(&pkc->blk_fill_in_prog_lock)
+ {
+ 	struct tpacket3_hdr *ppd;
+ 
+@@ -2285,8 +2287,11 @@ static int tpacket_rcv(struct sk_buff *s
+ 	if (do_vnet &&
+ 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
+ 				    sizeof(struct virtio_net_hdr),
+-				    vio_le(), true, 0))
++				    vio_le(), true, 0)) {
++		if (po->tp_version == TPACKET_V3)
++			prb_clear_blk_fill_status(&po->rx_ring);
+ 		goto drop_n_account;
++	}
+ 
+ 	if (po->tp_version <= TPACKET_V2) {
+ 		packet_increment_rx_head(po, &po->rx_ring);
+@@ -2392,7 +2397,7 @@ static int tpacket_rcv(struct sk_buff *s
+ 		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
+ 		spin_unlock(&sk->sk_receive_queue.lock);
+ 		sk->sk_data_ready(sk);
+-	} else {
++	} else if (po->tp_version == TPACKET_V3) {
+ 		prb_clear_blk_fill_status(&po->rx_ring);
+ 	}
+ 
 
 
