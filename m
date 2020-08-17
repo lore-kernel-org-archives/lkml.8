@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC40C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FAD20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8C32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693191;
-	bh=FuDqbqHNGOJ1FAQuHX3T3LekdytDLHEkuF0/xXfCRJQ=;
+	s=default; t=1597693195;
+	bh=ZYPj2n3jUoY+wTP3dDHarfWLSbwuShn8ynurOvqVWv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWhj/nzu4hM+nLmTDMKb+jtEuvOMi8F5Ueg1AL/fNu+iN7DN2I6XS7sh1Yd8nSjHU
-	 ArvfVLfyvAAJjj6i4bbOFlBGGxcoAEinJbQy2C9Ux539QRzAGD7c60J5Eosu3HO/Af
-	 6RvFdZxiA3YG4dnRXURg6ZxwH2AZVDUQe19OLBAw=
+	b=1UrFtq9+sn41n39ul/v3srX1/1JIQbjBtg+vTGvOdzN9W7Rsjqf3X4/xw9nEzhHDQ
+	 45p32V+C/76o9vhbGj0BRmjYlM0Om82wZFPZYcxMWtKSheDUyeCNbtAZQNPUNajK+t
+	 zcLndMOUWSjI914jaVGrbTznopxMBFOIMOfijfyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404230AbgHQTjp (ORCPT
+        id S1732321AbgHQTjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:39:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbgHQP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:09 -0400
+        id S1729757AbgHQP0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48EEA23109;
-        Mon, 17 Aug 2020 15:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B481E23A69;
+        Mon, 17 Aug 2020 15:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677968;
-        bh=FuDqbqHNGOJ1FAQuHX3T3LekdytDLHEkuF0/xXfCRJQ=;
+        s=default; t=1597677966;
+        bh=ZYPj2n3jUoY+wTP3dDHarfWLSbwuShn8ynurOvqVWv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZulRd2PZlhQCb1pT25AFILfnZJ5hQlfZXqw02JI0EkGjPnFUTQ2g+KJlM67FxoWFb
-         KWzo3DYp1HShNHZJvnLxnnU5b+12QqDx0tiK9dcQY69c21EVmaYQU+Nmj2rxkT2awE
-         kSdWrZJ7iH4QzfS9f6/VOsbT4Q7i9kYSsPeYvrBg=
+        b=syh2bieLBy6o38vHlAXzmDDHRwVV1nG2npqNnzJ+cdEwu0pSi3Nknc0tR4G3HxAYz
+         FRF5PtXbGyuE7JkRmIQbejWvwanDo4rRpFFw8bNnJq15oK34COsnYab1xH7Cfm2Apa
+         I8/MCDu1PBnTgMGgELdWIhHZ9jxhjk8Q2/W/jbAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 173/464] media: marvell-ccic: Add missed v4l2_async_notifier_cleanup()
-Date:   Mon, 17 Aug 2020 17:12:06 +0200
-Message-Id: <20200817143842.103261255@linuxfoundation.org>
+Subject: [PATCH 5.8 172/464] media: cxusb-analog: fix V4L2 dependency
+Date:   Mon, 17 Aug 2020 17:12:05 +0200
+Message-Id: <20200817143842.057548641@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 4603a5b4a87ccd6fb90cbfa10195291cfcf6ba34 ]
+[ Upstream commit 1a55caf010c46d4f2073f9e92e97ef65358c16bf ]
 
-mccic_register() forgets to cleanup the notifier in its error handler.
-mccic_shutdown() also misses calling v4l2_async_notifier_cleanup().
-Add the missed calls to fix them.
+CONFIG_DVB_USB_CXUSB_ANALOG is a 'bool' symbol with a dependency on the
+tristate CONFIG_VIDEO_V4L2, which means it can be enabled as =y even
+when its dependency is =m. This leads to a link failure:
 
-Fixes: 3eefe36cc00c ("media: marvell-ccic: use async notifier to get the sensor")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_analog_init':
+cxusb-analog.c:(.text+0x92): undefined reference to `v4l2_subdev_call_wrappers'
+drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_register_analog':
+cxusb-analog.c:(.text+0x466): undefined reference to `v4l2_device_register'
+cxusb-analog.c:(.text+0x4c3): undefined reference to `v4l2_i2c_new_subdev'
+cxusb-analog.c:(.text+0x4fb): undefined reference to `v4l2_subdev_call_wrappers'
+...
+
+Change the dependency only disallow the analog portion of the driver
+in that configuration.
+
+Fixes: e478d4054054 ("media: cxusb: add analog mode support for Medion MD95700")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/dvb-usb/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index 09775b6624c6b..326e79b8531c5 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -1940,6 +1940,7 @@ int mccic_register(struct mcam_camera *cam)
- out:
- 	v4l2_async_notifier_unregister(&cam->notifier);
- 	v4l2_device_unregister(&cam->v4l2_dev);
-+	v4l2_async_notifier_cleanup(&cam->notifier);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(mccic_register);
-@@ -1961,6 +1962,7 @@ void mccic_shutdown(struct mcam_camera *cam)
- 	v4l2_ctrl_handler_free(&cam->ctrl_handler);
- 	v4l2_async_notifier_unregister(&cam->notifier);
- 	v4l2_device_unregister(&cam->v4l2_dev);
-+	v4l2_async_notifier_cleanup(&cam->notifier);
- }
- EXPORT_SYMBOL_GPL(mccic_shutdown);
- 
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index 15d29c91662f3..25ba03edcb5c6 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -151,6 +151,7 @@ config DVB_USB_CXUSB
+ config DVB_USB_CXUSB_ANALOG
+ 	bool "Analog support for the Conexant USB2.0 hybrid reference design"
+ 	depends on DVB_USB_CXUSB && VIDEO_V4L2
++	depends on VIDEO_V4L2=y || VIDEO_V4L2=DVB_USB_CXUSB
+ 	select VIDEO_CX25840
+ 	select VIDEOBUF2_VMALLOC
+ 	help
 -- 
 2.25.1
 
