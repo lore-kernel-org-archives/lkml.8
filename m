@@ -2,202 +2,116 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4ED920758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5CE20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kA+rtbfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgHQIFL (ORCPT
+        id S1726640AbgHQIGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:05:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:55984 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbgHQIFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:05:09 -0400
-IronPort-SDR: H9A560u1K9Pa474bB3FAZE4+jADHUAXx/U8wFQjYjQWHIk1Q6i2FFQQMBkYL5M7b0YLtuDCkhL
- oCRCo5JuGayg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="153905736"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="153905736"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:05:09 -0700
-IronPort-SDR: 64K6dnPNVKR9qvBU/y1LfCdzlj1GACHiyNuFquKD/3+mhTQV9q7pEe+eB1Xczq56HcUTpADT68
- Xcdds2NWTNDA==
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="279060308"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:05:06 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: [PATCH v2] soundwire: SDCA: detect sdca_cascade interrupt
-Date:   Mon, 17 Aug 2020 04:11:22 +0800
-Message-Id: <20200816201122.9744-1-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Aug 2020 04:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgHQIGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:06:20 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE39C061388;
+        Mon, 17 Aug 2020 01:06:20 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o23so16693974ejr.1;
+        Mon, 17 Aug 2020 01:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4jd4U95N0spA17gLKz16+RNY1f59D3zn4QBsLmBOxbI=;
+        b=kA+rtbfNYTfUJw0d3VKSh93oTBtpGl8D95gctkvMY3/cGWhCUwHboWGCFmds3M522A
+         DcL1j3jUNzSiEiLtvcsMlOMGr+9CEW+d8SS6C4+xyf+XOfYXU7GWaplukaleL0MN83M1
+         aK4/5PS3AAkOc8nTmYLDK7W0rbQ0zMw6yekrDzupe+IEQnCVX+qNOUczQeJULJqZzFOD
+         49FQEmuiGsfygn4XW7EFy+G3osKAhAcIzexibTNyGsXjM93kt4B/H3JzcsAAhdjZu+4j
+         Elgvt8nnnUCQSrv2TrjT/rG+0Gxk1Tw0RgoErRqqoy9gnOFD8/gnbKtzU6YHg+RsQFjl
+         QZfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4jd4U95N0spA17gLKz16+RNY1f59D3zn4QBsLmBOxbI=;
+        b=QfJms6zr5y0+wFCpTHbOiqxDaAsU4ZN0PZVu1I6Ny2QBJYA+vCvl6syw3zn4+HsWow
+         e7130d7VZ3z0REFCRXAb1gVUUplLJTvrMTNRYWQHzQcRHks6yX/dN41dL1MHhzCtkV4k
+         sYlHl/YyRnoy4cevT15wyXk0kHccYZm0RM/9vnJBWWkPvN1l5FPaAwTYMleCA/dapbeq
+         1FdYrR2gCxLwDGexR3tNiZrn7PIKlKXvY9AiTkbCJzHBol/TjsjizFmq4kyBwu19Dzi2
+         xnv4uAH5mtxo8YN6gfY8mFPXoMIOxuhFVcn0QPQBniuIuaXLj6CtRP8XXu/hcT+fX1Gy
+         INVA==
+X-Gm-Message-State: AOAM532SIFmONZw1VfzxE6KS2aw+AUcgUH8fqGg8GGs4QsfUf6tAe3fr
+        cWuYeedBMt7wGEX9Lfh2lnGC6+0uTQyfCWpECPXG/IlZXl8=
+X-Google-Smtp-Source: ABdhPJyjbcn7MdQVsJVZWW0c81jKqfgcPjbzkmU20uXsFTmU0xJ1Q06liCbg/C9H/KmlHwl8o4KUkGJn6zE6x9RzmIo=
+X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr14632375eje.440.1597651578806;
+ Mon, 17 Aug 2020 01:06:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-10-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1597406966-13740-10-git-send-email-abel.vesa@nxp.com>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Mon, 17 Aug 2020 15:51:13 +0800
+Message-ID: <CAA+hA=R+zVeVEX_DcsTWD0FtaEHdeyapa4gR-_8Y=yzZD3ku1w@mail.gmail.com>
+Subject: Re: [PATCH v2 09/17] arm64: dts: Remove imx-hdmimix-reset header file
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On Fri, Aug 14, 2020 at 8:13 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> The hdmi BLK_CTRL ids have been moved to imx8mp-reset.h
+>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 
-The SoundWire 1.2 specification defines an "SDCA cascade" bit which
-handles a logical OR of all SDCA interrupt sources (up to 30 defined).
+The change seems do not comply with the patch title?
 
-Due to limitations of the addressing space, this bit is located in the
-SDW_DP0_INT register when DP0 is used, or alternatively in the
-DP0_SDCA_Support_INTSTAT register when DP0 is not used.
+Regards
+Aisheng
 
-To allow for both cases to be handled, this bit will be checked in the
-main device-level interrupt handling code. This will result in the
-register being read twice if DP0 is enabled, but it's not clear how to
-optimize this case. It's also more logical to deal with this interrupt
-at the device than the port level, this bit is really not DP0 specific
-and its location in the DP0_INTSTAT bit is only due to the lack of
-free space in SCP_INTSTAT_1.
-
-The SDCA_Cascade bit cannot be masked or cleared, so the interrupt
-handling only forwards the detection to the Slave driver, which will
-deal with reading the relevant SDCA status bits and clearing them. The
-bus driver only signals the detection.
-
-The communication with the Slave driver is based on the same interrupt
-callback, with only an extension to provide the status of the
-sdca_cascade bit.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
-
-Changelog:
-
-v2:
- - Re-read SDW_DP0_INT while reading status again. 
-
----
- drivers/soundwire/bus.c       | 28 +++++++++++++++++++++++++++-
- include/linux/soundwire/sdw.h |  4 ++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index e6e0fb9a81b4..d254c23201b9 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -1361,6 +1361,7 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- 	int port_num, stat, ret, count = 0;
- 	unsigned long port;
- 	bool slave_notify = false;
-+	u8 sdca_cascade = 0;
- 	u8 buf, buf2[2], _buf, _buf2[2];
- 
- 	sdw_modify_slave_status(slave, SDW_SLAVE_ALERT);
-@@ -1388,6 +1389,16 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- 		goto io_err;
- 	}
- 
-+	if (slave->prop.is_sdca) {
-+		ret = sdw_read(slave, SDW_DP0_INT);
-+		if (ret < 0) {
-+			dev_err(slave->bus->dev,
-+				"SDW_DP0_INT read failed:%d\n", ret);
-+			goto io_err;
-+		}
-+		sdca_cascade = ret & SDW_DP0_SDCA_CASCADE;
-+	}
-+
- 	do {
- 		/*
- 		 * Check parity, bus clash and Slave (impl defined)
-@@ -1416,6 +1427,10 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- 			slave_notify = true;
- 		}
- 
-+		/* the SDCA interrupts are cleared in the codec driver .interrupt_callback() */
-+		if (sdca_cascade)
-+			slave_notify = true;
-+
- 		/* Check port 0 - 3 interrupts */
- 		port = buf & SDW_SCP_INT1_PORT0_3;
- 
-@@ -1453,6 +1468,7 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- 		/* Update the Slave driver */
- 		if (slave_notify && slave->ops &&
- 		    slave->ops->interrupt_callback) {
-+			slave_intr.sdca_cascade = sdca_cascade;
- 			slave_intr.control_port = clear;
- 			memcpy(slave_intr.port, &port_status,
- 			       sizeof(slave_intr.port));
-@@ -1487,11 +1503,21 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
- 			goto io_err;
- 		}
- 
-+		if (slave->prop.is_sdca) {
-+			ret = sdw_read(slave, SDW_DP0_INT);
-+			if (ret < 0) {
-+				dev_err(slave->bus->dev,
-+					"SDW_DP0_INT read failed:%d\n", ret);
-+				goto io_err;
-+			}
-+			sdca_cascade = ret & SDW_DP0_SDCA_CASCADE;
-+		}
-+
- 		/* Make sure no interrupts are pending */
- 		buf &= _buf;
- 		buf2[0] &= _buf2[0];
- 		buf2[1] &= _buf2[1];
--		stat = buf || buf2[0] || buf2[1];
-+		stat = buf || buf2[0] || buf2[1] || sdca_cascade;
- 
- 		/*
- 		 * Exit loop if Slave is continuously in ALERT state even
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 76052f12c9f7..a51494646a2c 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -355,6 +355,7 @@ struct sdw_dpn_prop {
-  * @dp0_prop: Data Port 0 properties
-  * @src_dpn_prop: Source Data Port N properties
-  * @sink_dpn_prop: Sink Data Port N properties
-+ * @is_sdca: the Slave supports the SDCA specification
-  */
- struct sdw_slave_prop {
- 	u32 mipi_revision;
-@@ -376,6 +377,7 @@ struct sdw_slave_prop {
- 	struct sdw_dp0_prop *dp0_prop;
- 	struct sdw_dpn_prop *src_dpn_prop;
- 	struct sdw_dpn_prop *sink_dpn_prop;
-+	bool is_sdca;
- };
- 
- /**
-@@ -465,10 +467,12 @@ struct sdw_slave_id {
- 
- /**
-  * struct sdw_slave_intr_status - Slave interrupt status
-+ * @sdca_cascade: set if the Slave device reports an SDCA interrupt
-  * @control_port: control port status
-  * @port: data port status
-  */
- struct sdw_slave_intr_status {
-+	bool sdca_cascade;
- 	u8 control_port;
- 	u8 port[15];
- };
--- 
-2.17.1
-
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 9de2aa1..daa1769 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -4,6 +4,7 @@
+>   */
+>
+>  #include <dt-bindings/clock/imx8mp-clock.h>
+> +#include <dt-bindings/reset/imx8mp-reset.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> --
+> 2.7.4
+>
