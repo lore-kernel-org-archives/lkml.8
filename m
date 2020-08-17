@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4452220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EFE20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688103;
-	bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+	s=default; t=1597688119;
+	bh=fdxp09zgqQqA8BlemkbFg7J+9Sh+Rmm7GyIlGeQcGyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDegFU/Zvhc8YGC5WL8EIyZ0NNgnbIQvqRBemC1JJ0Uxo576m6KPOMs+7sM2dI7xi
-	 c7MrZutNZmGjlBlzj/a43negJsXvpjKyeKMLCKF4k6ZUNGFXSoMH4EB21ZawY6Pe6m
-	 PsSRc04A34ZPoSS8dMC9YhSJuU7tQP2NG+siuwR8=
+	b=2A1EyLQG/yZJcso9xczIZoru8T5L2OSQVHBfdjUdwxLEiTgtwraMYnjvcUL0FZ+ml
+	 ZSR5niMKjsWNVPgup3ksiVDbz8z23eRkc7VNca7pMPc0VW5K6cer+HtauV6Nq9LFxU
+	 bEffTB58K7kLH2Bx62zzFss8eg0ImI3q19JGjtuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390654AbgHQSPA (ORCPT
+        id S2390656AbgHQSPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:15:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731052AbgHQQGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:06:24 -0400
+        id S1731050AbgHQQGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D8A2063A;
-        Mon, 17 Aug 2020 16:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27DA02173E;
+        Mon, 17 Aug 2020 16:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680371;
-        bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
+        s=default; t=1597680368;
+        bh=fdxp09zgqQqA8BlemkbFg7J+9Sh+Rmm7GyIlGeQcGyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrelS+3IGmFZm/PLrTsQm7IVasR+9s8ig51bfFJgf3OyLMsePTCuMy0Mq+P5z+bo0
-         lrhVHb+H7+s3z0vj/t3PMkQyLbNbBLUajG4V3n8lcygogjDMQC2lsUDYXmAFo4xi4R
-         EwC+gVC7j7ryMGpfLlImk4lZw6L7YTtZFgITdfTk=
+        b=yaGutq8VxqECrlLEc1vLUCkkppa3ry1W1PNlAjdTY/HTLVtDiafCfgtKYKswZ9ca9
+         PVy3KR8pv1KLs6M2RmI5etUdIRzPJeXvg9ooIXCndWqMNSO6YiPdN5YvM5cyR8voV2
+         zpQ0djSLcV1wLD7f+r1lTVBk/gwIXvrgK9M+Ic8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 130/270] RDMA/rxe: Skip dgid check in loopback mode
-Date:   Mon, 17 Aug 2020 17:15:31 +0200
-Message-Id: <20200817143802.262314210@linuxfoundation.org>
+Subject: [PATCH 5.4 129/270] iomap: Make sure iomap_end is called after iomap_begin
+Date:   Mon, 17 Aug 2020 17:15:30 +0200
+Message-Id: <20200817143802.211923175@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,70 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 5c99274be8864519328aa74bc550ba410095bc1c ]
+[ Upstream commit 856473cd5d17dbbf3055710857c67a4af6d9fcc0 ]
 
-In the loopback tests, the following call trace occurs.
+Make sure iomap_end is always called when iomap_begin succeeds.
 
- Call Trace:
-  __rxe_do_task+0x1a/0x30 [rdma_rxe]
-  rxe_qp_destroy+0x61/0xa0 [rdma_rxe]
-  rxe_destroy_qp+0x20/0x60 [rdma_rxe]
-  ib_destroy_qp_user+0xcc/0x220 [ib_core]
-  uverbs_free_qp+0x3c/0xc0 [ib_uverbs]
-  destroy_hw_idr_uobject+0x24/0x70 [ib_uverbs]
-  uverbs_destroy_uobject+0x43/0x1b0 [ib_uverbs]
-  uobj_destroy+0x41/0x70 [ib_uverbs]
-  __uobj_get_destroy+0x39/0x70 [ib_uverbs]
-  ib_uverbs_destroy_qp+0x88/0xc0 [ib_uverbs]
-  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb9/0xf0 [ib_uverbs]
-  ib_uverbs_cmd_verbs+0xb16/0xc30 [ib_uverbs]
+Without this fix, iomap_end won't be called when a filesystem's
+iomap_begin operation returns an invalid mapping, bypassing any
+unlocking done in iomap_end.  With this fix, the unlocking will still
+happen.
 
-The root cause is that the actual RDMA connection is not created in the
-loopback tests and the rxe_match_dgid will fail randomly.
+This bug was found by Bob Peterson during code review.  It's unlikely
+that such iomap_begin bugs will survive to affect users, so backporting
+this fix seems unnecessary.
 
-To fix this call trace which appear in the loopback tests, skip check of
-the dgid.
-
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200630123605.446959-1-leon@kernel.org
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: ae259a9c8593 ("fs: introduce iomap infrastructure")
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/iomap/apply.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index 831ad578a7b29..46e111c218fd4 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -330,10 +330,14 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
+diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
+index 54c02aecf3cd8..c2281a6a7f320 100644
+--- a/fs/iomap/apply.c
++++ b/fs/iomap/apply.c
+@@ -41,10 +41,14 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+ 	ret = ops->iomap_begin(inode, pos, length, flags, &iomap);
+ 	if (ret)
+ 		return ret;
+-	if (WARN_ON(iomap.offset > pos))
+-		return -EIO;
+-	if (WARN_ON(iomap.length == 0))
+-		return -EIO;
++	if (WARN_ON(iomap.offset > pos)) {
++		written = -EIO;
++		goto out;
++	}
++	if (WARN_ON(iomap.length == 0)) {
++		written = -EIO;
++		goto out;
++	}
  
- static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
- {
-+	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
- 	const struct ib_gid_attr *gid_attr;
- 	union ib_gid dgid;
- 	union ib_gid *pdgid;
+ 	/*
+ 	 * Cut down the length to the one actually provided by the filesystem,
+@@ -60,6 +64,7 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+ 	 */
+ 	written = actor(inode, pos, length, data, &iomap);
  
-+	if (pkt->mask & RXE_LOOPBACK_MASK)
-+		return 0;
-+
- 	if (skb->protocol == htons(ETH_P_IP)) {
- 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
- 				       (struct in6_addr *)&dgid);
-@@ -366,7 +370,7 @@ void rxe_rcv(struct sk_buff *skb)
- 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
- 		goto drop;
- 
--	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
-+	if (rxe_match_dgid(rxe, skb) < 0) {
- 		pr_warn_ratelimited("failed matching dgid\n");
- 		goto drop;
- 	}
++out:
+ 	/*
+ 	 * Now the data has been copied, commit the range we've copied.  This
+ 	 * should not fail unless the filesystem has had a fatal error.
 -- 
 2.25.1
 
