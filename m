@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E195FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C034D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269D720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684563;
-	bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
+	s=default; t=1597684585;
+	bh=yzqgOeGUuulbsB4LN8mlMYgkUV39h4cYOiRjSlgDeqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uf2eJ8z/qhUhqXVZM7HMcn2QjdaNVQnuovSpCVb9A+M/BQuem+q0iofvYGZJubtwX
-	 motpetQp4+49FECsy4rUcRQN0qeXthxKZWXDEiazlTqGu2QdC+S26DFU/g0YCBlqvU
-	 Xj9tzS4tcEmtunbLHZchOa6ggZa1SftpvgyVe9p8=
+	b=cGPEgcjWQY1/wRbFI6t/yRz1IKGtNCms8umZKR0NWSoucBP4naZBvEqXcNSfHiqJk
+	 IvY4fwytqSiYXlm8h8mZkO1n58zY6/3NHBB9/WUqVpft8zRx0bGjpzw9QYBlAyNlO8
+	 T62DS2g154TQU/5lIcLZ+MwP3DW6fiOgs4R6my/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389580AbgHQRPx (ORCPT
+        id S2389593AbgHQRQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:16:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388743AbgHQQNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:06 -0400
+        id S2388756AbgHQQNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D166A22CAD;
-        Mon, 17 Aug 2020 16:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189A820578;
+        Mon, 17 Aug 2020 16:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680786;
-        bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
+        s=default; t=1597680818;
+        bh=yzqgOeGUuulbsB4LN8mlMYgkUV39h4cYOiRjSlgDeqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQ3M8ENCRXT6E6smqUWlLOVGdat/b3Kl1gR5oOcDsfSQufg4FZ+NS7HWs/J4XUuTy
-         wBKCVdT/2PCPh84APKjj5VP54pqZ/eXksI49+9a+g3w6/fl9HKY5bU1mfwTCqEzeof
-         E2UYjdI4Y1xzN/SSxwS0vJi+snxznmBRtDPaJhoA=
+        b=kdRneImz2oTXvMJHlvMfKpp66MAuYI/dqd0ec4+tqlM5uzvT8lBMROpIQyuaVcniM
+         i0XierI7FelDEvq9fzeDfShWwcKm8hlP/UAhfjY3PhWXb7wTN9uNmzhbn+RWTXGrFx
+         6mXdqdB20BKPfrW0tS7ZxWJLxSaeE/l2M6QCQWiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/168] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
-Date:   Mon, 17 Aug 2020 17:16:27 +0200
-Message-Id: <20200817143736.554430842@linuxfoundation.org>
+Subject: [PATCH 4.19 039/168] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 17 Aug 2020 17:16:10 +0200
+Message-Id: <20200817143735.731694115@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -64,40 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-the sfb->fb->screen_base is not save the value get by iounmap() when
-the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
-is not right.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
+
+v2: use sysfs_streq instead of stripping trailing whitespace
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index f1dcc6766d1ef..1781ca697f66b 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- static void smtc_unmap_smem(struct smtcfb_info *sfb)
- {
- 	if (sfb && sfb->fb->screen_base) {
-+		if (sfb->chip_id == 0x720)
-+			sfb->fb->screen_base -= 0x00200000;
- 		iounmap(sfb->fb->screen_base);
- 		sfb->fb->screen_base = NULL;
- 	}
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 373bd4c2b698b..84b7b22a9590a 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -265,13 +265,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
+ 
+ 	buf[len] = '\0';
+ 
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
