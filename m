@@ -2,108 +2,131 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9589EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF1DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68CE820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GQM5vTa3"
+	by mail.kernel.org (Postfix) with ESMTP id BA9462072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693248;
+	bh=F5BqKmNXCxfnTxyVjEeUfxaFpUE6H7uybZG57KnE4KI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=L/WMO5KqaXom2kEGoS8IgBjd96/Vhmgo9c29FaewTABUPmkKkjeDwujorghmQHJiU
+	 5Dfk4he5xdE2/8GjdipTjRdqAkRH497UFGbafJqwa7TYo5P0VnNHQzLexLhtL0RtF0
+	 fFAjO60nO2MbNVWjkUKt60S7CrnmrSMhygosPpe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbgHQTko (ORCPT
+        id S2404233AbgHQTkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:40:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40396 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbgHQPZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HFBOO6039814;
-        Mon, 17 Aug 2020 15:25:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=cjzdpdXq2OFDNjLcmDZq/8KMYSFbgoAYkIaLS/N63v8=;
- b=GQM5vTa3KX4tNW/94eDAc8RWkTJHAjkLps3epQpWFplyMpUccegmu+Y6TwGgGz7aUlEX
- b8S349zkTNIvIsueSXYeK4TbV6IDqZt4gYL3bQytMpRLGt7WM7AVvuIzhD3rSXzD9jOE
- 2fGAUYfealh2XYUl+m+DIVr3ojg3BUZD5GUuXfgDcNFJfRsKOULaZA4357ufHsYk4pTY
- muKIY0LMCLSAj0FGbFbKyNEoN6vgdIhK+FA1N1d9MOTrQkG5CChucs/wOlw2U9tV6iZG
- N5QHttGne1azWqbxNmQTDCXH96uVXRWjx1NyuZ7qt+GHDl+pbUJXkFiOlv9ws9ozRa6U UQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32x7nm7ghs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Aug 2020 15:25:24 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HFEQJZ133060;
-        Mon, 17 Aug 2020 15:25:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32xsfqp2e0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 15:25:23 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07HFPLAl022596;
-        Mon, 17 Aug 2020 15:25:21 GMT
-Received: from [10.74.111.253] (/10.74.111.253)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Aug 2020 08:25:21 -0700
-Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
-To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-References: <20200702154513.31859-1-tony@atomide.com>
- <20200817065300.GD2994@atomide.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
-Date:   Mon, 17 Aug 2020 08:25:18 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 17 Aug 2020 15:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729599AbgHQPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A6822DBF;
+        Mon, 17 Aug 2020 15:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677939;
+        bh=F5BqKmNXCxfnTxyVjEeUfxaFpUE6H7uybZG57KnE4KI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nHqV4QwZjEdw5xoCg45wmkUWaOn+bHGxHOHKGUJWU1I4qHh03crJWJTqRB+iar4NT
+         eA6KwED2+2r7Q5aMtUHxgDaFSOX1+DKHvp12F3nFLJwWyqbE+nKJXWk3Q0XrdHHYOW
+         weVqawx6ealgpqfh63uS+Tn1UDw+KDD3l+28xLjU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 163/464] drm/panfrost: Fix inbalance of devfreq record_busy/idle()
+Date:   Mon, 17 Aug 2020 17:11:56 +0200
+Message-Id: <20200817143841.619947582@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200817065300.GD2994@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008170117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008170117
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/20 11:53 PM, Tony Lindgren wrote:
-> Hi Santosh,
-> 
-> * Tony Lindgren <tony@atomide.com> [200702 18:46]:
->> Hi all,
->>
->> Here's v4 set of patches to add genpd support to the PRM (Power and Reset
->> Module) driver.
->>
->> Initially we just add one hardware accelerator power domain for sgx,
->> and one interconnect instance for l4_abe. The rest of the SoC specific
->> domain data is probably best added one SoC at a time based on generated
->> data.
-> 
-> Care to ack some of these patches? I'd like to get this into Linux next
-> for v5.10 :)
-> 
-Sure,
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+From: Steven Price <steven.price@arm.com>
+
+[ Upstream commit b99773ef258e628bd53cab22d450a755b73b4d55 ]
+
+The calls to panfrost_devfreq_record_busy() and
+panfrost_devfreq_record_idle() must be balanced to ensure that the
+devfreq utilisation is correctly reported. But there are two cases where
+this doesn't work correctly.
+
+In panfrost_job_hw_submit() if pm_runtime_get_sync() fails or the
+WARN_ON() fires then no call to panfrost_devfreq_record_busy() is made,
+but when the job times out the corresponding _record_idle() call is
+still made in panfrost_job_timedout(). Move the call up to ensure that
+it always happens.
+
+Secondly panfrost_job_timedout() only makes a single call to
+panfrost_devfreq_record_idle() even if it is cleaning up multiple jobs.
+Move the call inside the loop to ensure that the number of
+_record_idle() calls matches the number of _record_busy() calls.
+
+Fixes: 9e62b885f715 ("drm/panfrost: Simplify devfreq utilisation tracking")
+Acked-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200522153653.40754-1-steven.price@arm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/panfrost/panfrost_job.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
+index 7914b15708412..f9519afca29d9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -145,6 +145,8 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
+ 	u64 jc_head = job->jc;
+ 	int ret;
+ 
++	panfrost_devfreq_record_busy(pfdev);
++
+ 	ret = pm_runtime_get_sync(pfdev->dev);
+ 	if (ret < 0)
+ 		return;
+@@ -155,7 +157,6 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
+ 	}
+ 
+ 	cfg = panfrost_mmu_as_get(pfdev, &job->file_priv->mmu);
+-	panfrost_devfreq_record_busy(pfdev);
+ 
+ 	job_write(pfdev, JS_HEAD_NEXT_LO(js), jc_head & 0xFFFFFFFF);
+ 	job_write(pfdev, JS_HEAD_NEXT_HI(js), jc_head >> 32);
+@@ -410,12 +411,12 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+ 		if (pfdev->jobs[i]) {
+ 			pm_runtime_put_noidle(pfdev->dev);
++			panfrost_devfreq_record_idle(pfdev);
+ 			pfdev->jobs[i] = NULL;
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&pfdev->js->job_lock, flags);
+ 
+-	panfrost_devfreq_record_idle(pfdev);
+ 	panfrost_device_reset(pfdev);
+ 
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++)
+-- 
+2.25.1
+
+
+
