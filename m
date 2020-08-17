@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB5CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A06C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F82220758
+	by mail.kernel.org (Postfix) with ESMTP id DCBC420789
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597686285;
-	bh=xjcrObf4mN7gNPTFMw+wXKdHvmzDyVR5jK6iKPHu5FI=;
+	bh=KzTrorgqToKxeGeMpORGOvojfzmMYJVIDA35A+pgvsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njSkgPqWPeeUmuGGGBvT9y+edQc67mbU/1rjnQGh6JdTmMKCFwj5FoGQ5j+9DFv8p
-	 X7HBBBEztlz3Of3yfkf+V1v2hCcnO735TfM9bsYhLkMP1Uugc+ZWKkqtD/MSLJHQW/
-	 3iA8dzAnowG2GHyOr3p+ANAhIBB47ub2yy0rrOKc=
+	b=thVBUmiVxsevZQRRDr/O6q7WIqDGn0xa7MwVw/ecZC6g8mXJOba3cYUtH9kssJgRQ
+	 TTOyVT2BE4kqdwl1lSwdr/P0Fxl/EetrQjwgYgUInwRb5q3GMMfDatH0FIJcf28iLu
+	 k1TBt1mAxoUTvAJj+S6CAJpiXSnFrs8IVzhJ8440=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgHQRol (ORCPT
+        id S1731585AbgHQRoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:44:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731036AbgHQQOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:48 -0400
+        id S1730983AbgHQQOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D81C20888;
-        Mon, 17 Aug 2020 16:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FF1020772;
+        Mon, 17 Aug 2020 16:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680887;
-        bh=xjcrObf4mN7gNPTFMw+wXKdHvmzDyVR5jK6iKPHu5FI=;
+        s=default; t=1597680884;
+        bh=KzTrorgqToKxeGeMpORGOvojfzmMYJVIDA35A+pgvsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XHAY1ufpDDdx4ZF8RD1LNQdrpfM8NN4nMeXoHDsNaVNtX/GwWVDkgPAA8S+vQ6OTZ
-         2XG6AxmzhbjbURKtgmK8YawAy6F0JDDvQ9q0jUF7Kowq2kX2rbEhSnu6/p0exg9hKE
-         /C+aTm8yc1MjOzuhWsT0tIsAc4eVjt2/VZpdLrew=
+        b=fsSJ2z6r22IKvkSHy2cvyYNNmXqiS3zGg5rCOxixdFoBlIwxwQpbNdNYJ8wKbn5cA
+         kThsvCtMB0aX5kV3Mry2qw95doT1BmgofamzzK3Zo13PEjaRMOVl189Mt7gKEEQaxC
+         G0vSN8RkpwPact9Xb4oorieCToZwZoqXEqihcrSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/168] MIPS: OCTEON: add missing put_device() call in dwc3_octeon_device_init()
-Date:   Mon, 17 Aug 2020 17:17:07 +0200
-Message-Id: <20200817143738.518553533@linuxfoundation.org>
+Subject: [PATCH 4.19 095/168] coresight: tmc: Fix TMC mode read in tmc_read_unprepare_etb()
+Date:   Mon, 17 Aug 2020 17:17:06 +0200
+Message-Id: <20200817143738.465909320@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,46 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit e8b9fc10f2615b9a525fce56981e40b489528355 ]
+[ Upstream commit d021f5c5ff679432c5e9faee0fd7350db2efb97c ]
 
-if of_find_device_by_node() succeed, dwc3_octeon_device_init() doesn't have
-a corresponding put_device(). Thus add put_device() to fix the exception
-handling for this function implementation.
+Reading TMC mode register without proper coresight power
+management can lead to exceptions like the one in the call
+trace below in tmc_read_unprepare_etb() when the trace data
+is read after the sink is disabled. So fix this by having
+a check for coresight sysfs mode before reading TMC mode
+management register in tmc_read_unprepare_etb() similar to
+tmc_read_prepare_etb().
 
-Fixes: 93e502b3c2d4 ("MIPS: OCTEON: Platform support for OCTEON III USB controller")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+  SError Interrupt on CPU6, code 0xbe000411 -- SError
+  pstate: 80400089 (Nzcv daIf +PAN -UAO)
+  pc : tmc_read_unprepare_etb+0x74/0x108
+  lr : tmc_read_unprepare_etb+0x54/0x108
+  sp : ffffff80d9507c30
+  x29: ffffff80d9507c30 x28: ffffff80b3569a0c
+  x27: 0000000000000000 x26: 00000000000a0001
+  x25: ffffff80cbae9550 x24: 0000000000000010
+  x23: ffffffd07296b0f0 x22: ffffffd0109ee028
+  x21: 0000000000000000 x20: ffffff80d19e70e0
+  x19: ffffff80d19e7080 x18: 0000000000000000
+  x17: 0000000000000000 x16: 0000000000000000
+  x15: 0000000000000000 x14: 0000000000000000
+  x13: 0000000000000000 x12: 0000000000000000
+  x11: 0000000000000000 x10: dfffffd000000001
+  x9 : 0000000000000000 x8 : 0000000000000002
+  x7 : ffffffd071d0fe78 x6 : 0000000000000000
+  x5 : 0000000000000080 x4 : 0000000000000001
+  x3 : ffffffd071d0fe98 x2 : 0000000000000000
+  x1 : 0000000000000004 x0 : 0000000000000001
+  Kernel panic - not syncing: Asynchronous SError Interrupt
+
+Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
+Reported-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200716175746.3338735-14-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/octeon-usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/mips/cavium-octeon/octeon-usb.c b/arch/mips/cavium-octeon/octeon-usb.c
-index bfdfaf32d2c49..75189ff2f3c78 100644
---- a/arch/mips/cavium-octeon/octeon-usb.c
-+++ b/arch/mips/cavium-octeon/octeon-usb.c
-@@ -517,6 +517,7 @@ static int __init dwc3_octeon_device_init(void)
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index e90af39283b19..29dc2eac5b065 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -583,15 +583,14 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
  
- 			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 			if (res == NULL) {
-+				put_device(&pdev->dev);
- 				dev_err(&pdev->dev, "No memory resources\n");
- 				return -ENXIO;
- 			}
-@@ -528,8 +529,10 @@ static int __init dwc3_octeon_device_init(void)
- 			 * know the difference.
- 			 */
- 			base = devm_ioremap_resource(&pdev->dev, res);
--			if (IS_ERR(base))
-+			if (IS_ERR(base)) {
-+				put_device(&pdev->dev);
- 				return PTR_ERR(base);
-+			}
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
  
- 			mutex_lock(&dwc3_octeon_clocks_mutex);
- 			dwc3_octeon_clocks_start(&pdev->dev, (u64)base);
+-	/* There is no point in reading a TMC in HW FIFO mode */
+-	mode = readl_relaxed(drvdata->base + TMC_MODE);
+-	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return -EINVAL;
+-	}
+-
+ 	/* Re-enable the TMC if need be */
+ 	if (drvdata->mode == CS_MODE_SYSFS) {
++		/* There is no point in reading a TMC in HW FIFO mode */
++		mode = readl_relaxed(drvdata->base + TMC_MODE);
++		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
++			spin_unlock_irqrestore(&drvdata->spinlock, flags);
++			return -EINVAL;
++		}
+ 		/*
+ 		 * The trace run will continue with the same allocated trace
+ 		 * buffer. As such zero-out the buffer so that we don't end
 -- 
 2.25.1
 
