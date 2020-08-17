@@ -2,164 +2,94 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DC4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D41207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E9B207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgHQJjJ (ORCPT
+        id S1727125AbgHQJjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:39:09 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55834 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728399AbgHQJiS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:38:18 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 17 Aug 2020 12:38:11 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07H9cBCQ011403;
-        Mon, 17 Aug 2020 12:38:11 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07H9cBwN003229;
-        Mon, 17 Aug 2020 12:38:11 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07H9cBj6003228;
-        Mon, 17 Aug 2020 12:38:11 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v2 02/13] devlink: Add supported reload actions to dev get
-Date:   Mon, 17 Aug 2020 12:37:41 +0300
-Message-Id: <1597657072-3130-3-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+        Mon, 17 Aug 2020 05:39:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:52092 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728434AbgHQJjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 05:39:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 247BE31B;
+        Mon, 17 Aug 2020 02:39:06 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B62C43F6CF;
+        Mon, 17 Aug 2020 02:39:04 -0700 (PDT)
+Subject: Re: [PATCH 1/3] KVM: arm64: Some fixes of PV-time interface document
+To:     Keqian Zhu <zhukeqian1@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        wanghaibin.wang@huawei.com
+References: <20200817033729.10848-1-zhukeqian1@huawei.com>
+ <20200817033729.10848-2-zhukeqian1@huawei.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <ee7e726a-324f-16d6-7888-508ce7a2e19d@arm.com>
+Date:   Mon, 17 Aug 2020 10:39:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200817033729.10848-2-zhukeqian1@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose devlink reload supported actions to the user through devlink dev
-get command.
+On 17/08/2020 04:37, Keqian Zhu wrote:
+> Rename PV_FEATURES tp PV_TIME_FEATURES
+                      ^^
+Typos are sadly far too easy in documentation...
 
-Examples:
-$ devlink dev show
-pci/0000:82:00.0:
-  supported_reload_actions:
-    fw_live_patch driver_reinit fw_activate
-pci/0000:82:00.1:
-  supported_reload_actions:
-    fw_live_patch driver_reinit fw_activate
+> 
+> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
 
-$ devlink dev show -jp
-{
-    "dev": {
-        "pci/0000:82:00.0": {
-            "supported_reload_actions": [ "fw_live_patch","driver_reinit","fw_activate" ]
-        },
-        "pci/0000:82:00.1": {
-            "supported_reload_actions": [ "fw_live_patch","driver_reinit","fw_activate" ]
-        }
-    }
-}
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
----
-v1 -> v2:
-- Removed DEVLINK_ATTR_RELOAD_DEFAULT_LEVEL
-- Removed DEVLINK_ATTR_RELOAD_LEVELS_INFO
-- Have actions instead of levels
----
- include/uapi/linux/devlink.h |  1 +
- net/core/devlink.c           | 28 +++++++++++++++++++++++-----
- 2 files changed, 24 insertions(+), 5 deletions(-)
-
-diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
-index 6728029d2e1e..803a9717110c 100644
---- a/include/uapi/linux/devlink.h
-+++ b/include/uapi/linux/devlink.h
-@@ -476,6 +476,7 @@ enum devlink_attr {
- 	DEVLINK_ATTR_PORT_SPLITTABLE,			/* u8 */
- 
- 	DEVLINK_ATTR_RELOAD_ACTION,		/* u8 */
-+	DEVLINK_ATTR_RELOAD_SUPPORTED_ACTIONS,	/* nested */
- 
- 	/* add new attributes above here, update the policy in devlink.c */
- 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 88438ffd6015..6bab1b02ca99 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -462,6 +462,11 @@ static int devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
- 	return 0;
- }
- 
-+static bool devlink_reload_supported(struct devlink *devlink)
-+{
-+	return devlink->ops->reload_down && devlink->ops->reload_up;
-+}
-+
- static bool
- devlink_reload_action_is_supported(struct devlink *devlink, enum devlink_reload_action action)
- {
-@@ -472,7 +477,9 @@ static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
- 			   enum devlink_command cmd, u32 portid,
- 			   u32 seq, int flags)
- {
-+	struct nlattr *supported_actions;
- 	void *hdr;
-+	int i;
- 
- 	hdr = genlmsg_put(msg, portid, seq, &devlink_nl_family, flags, cmd);
- 	if (!hdr)
-@@ -483,9 +490,25 @@ static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
- 	if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_FAILED, devlink->reload_failed))
- 		goto nla_put_failure;
- 
-+	if (devlink_reload_supported(devlink)) {
-+		supported_actions = nla_nest_start(msg, DEVLINK_ATTR_RELOAD_SUPPORTED_ACTIONS);
-+		if (!supported_actions)
-+			goto nla_put_failure;
-+
-+		for (i = 0; i <= DEVLINK_RELOAD_ACTION_MAX; i++) {
-+			if (!devlink_reload_action_is_supported(devlink, i))
-+				continue;
-+			if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_ACTION, i))
-+				goto supported_actions_nest_cancel;
-+		}
-+		nla_nest_end(msg, supported_actions);
-+	}
-+
- 	genlmsg_end(msg, hdr);
- 	return 0;
- 
-+supported_actions_nest_cancel:
-+	nla_nest_cancel(msg, supported_actions);
- nla_put_failure:
- 	genlmsg_cancel(msg, hdr);
- 	return -EMSGSIZE;
-@@ -2949,11 +2972,6 @@ static void devlink_reload_netns_change(struct devlink *devlink,
- 				     DEVLINK_CMD_PARAM_NEW);
- }
- 
--static bool devlink_reload_supported(const struct devlink *devlink)
--{
--	return devlink->ops->reload_down && devlink->ops->reload_up;
--}
--
- static void devlink_reload_failed_set(struct devlink *devlink,
- 				      bool reload_failed)
- {
--- 
-2.17.1
+> ---
+>   Documentation/virt/kvm/arm/pvtime.rst | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/arm/pvtime.rst b/Documentation/virt/kvm/arm/pvtime.rst
+> index 687b60d..94bffe2 100644
+> --- a/Documentation/virt/kvm/arm/pvtime.rst
+> +++ b/Documentation/virt/kvm/arm/pvtime.rst
+> @@ -3,7 +3,7 @@
+>   Paravirtualized time support for arm64
+>   ======================================
+>   
+> -Arm specification DEN0057/A defines a standard for paravirtualised time
+> +Arm specification DEN0057/A defines a standard for paravirtualized time
+>   support for AArch64 guests:
+>   
+>   https://developer.arm.com/docs/den0057/a
+> @@ -19,8 +19,8 @@ Two new SMCCC compatible hypercalls are defined:
+>   
+>   These are only available in the SMC64/HVC64 calling convention as
+>   paravirtualized time is not available to 32 bit Arm guests. The existence of
+> -the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+> -mechanism before calling it.
+> +the PV_TIME_FEATURES hypercall should be probed using the SMCCC 1.1
+> +ARCH_FEATURES mechanism before calling it.
+>   
+>   PV_TIME_FEATURES
+>       ============= ========    ==========
+> 
 
