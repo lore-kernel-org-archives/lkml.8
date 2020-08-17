@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8F6205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134AF23444
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678065;
-	bh=1XFPFE0sJKoxL1C0uECPNsIw+Kvaz1aUejOSXQzcn50=;
+	s=default; t=1597678071;
+	bh=uV6qIhz4BQd4/2PvMwxiyKnrpeVYq28NqbseEiesAaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qaGxu3S3gtWoFwFuT7jlg16njFhszTPUSVX9xbVmQJqDG+NbQNRPUEZsz+lun/Dzs
-	 2N2Z6YHzCus7Pwob61Pc1FAj9o0S8yoaiyuoCPvRl0pRLNxEi0Qvhb2kqS3LatGfzm
-	 S3hmAG6/1J4gxfhsOhSaY6sz8AImLj4g/vobvvak=
+	b=UeLCLBP1UfLVb/H6DwZtgunUDYHg0xequg+PFSRVU2O7L446vS2Nwz3H5VYKONyvg
+	 ULW0Jg94g3FgkXMbeILz1Ez2nJaGorZdfRl6L7VWXkCALIblUrOEc3TGAIbDtAf7uB
+	 gR65pbtXWHV5fQvLbwraQTJoW18GQbt6R3Hd6+/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgHQP1m (ORCPT
+        id S1729964AbgHQP1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729751AbgHQPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:48 -0400
+        id S1729776AbgHQPZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036C82333B;
-        Mon, 17 Aug 2020 15:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0FD923442;
+        Mon, 17 Aug 2020 15:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677947;
-        bh=1XFPFE0sJKoxL1C0uECPNsIw+Kvaz1aUejOSXQzcn50=;
+        s=default; t=1597677956;
+        bh=uV6qIhz4BQd4/2PvMwxiyKnrpeVYq28NqbseEiesAaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tHjlpm2MqFMmQWXhryJKkVjCvTZ9hzzLDG93u2QhxYjhY8pA7QJTzoVaAhjWCsZw
-         zYNE9jV0yXumY9RaYTnwg8aydQBfgblJ2zewFJK5GkcISgBQ1vxNai83cnnNYcmp2n
-         yM6RE2Zvwhl6qqet8nu2iYsQuuRD3E16gMEaMbYw=
+        b=r8R77W+8FrvnsvqRTTyyXNpUgZ6usGUSEG+CdRcpM8HHBuIiVeQ5G/o5AYAgZM3x3
+         UhDdUK2Xz6Bi4+8Ogk0qvDtJLVDmdX4qxOO7UcEHsKMcH7jlG8jPB3THBks9K69sYC
+         mVRhTeWb5ljBsw/eDooBT2kaNTnRy7N+oOXKfBTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 166/464] powerpc/mm: Fix typo in IS_ENABLED()
-Date:   Mon, 17 Aug 2020 17:11:59 +0200
-Message-Id: <20200817143841.765738351@linuxfoundation.org>
+Subject: [PATCH 5.8 169/464] ASoC: fsl_easrc: Fix uninitialized scalar variable in fsl_easrc_set_ctx_format
+Date:   Mon, 17 Aug 2020 17:12:02 +0200
+Message-Id: <20200817143841.913407092@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,43 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 55bd9ac468397c4f12a33b7ec714b5d0362c3aa2 ]
+[ Upstream commit 5748f4eb01a4df7a42024fe8bc7855f05febb7c5 ]
 
-IS_ENABLED() matches names exactly, so the missing "CONFIG_" prefix
-means this code would never be built.
+The "ret" in fsl_easrc_set_ctx_format is not initialized, then
+the unknown value maybe returned by this function.
 
-Also fixes a missing newline in pr_warn().
-
-Fixes: 970d54f99cea ("powerpc/book3s64/hash: Disable 16M linear mapping size if not aligned")
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/202006050717.A2F9809E@keescook
+Fixes: 955ac624058f ("ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/1592816611-16297-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ sound/soc/fsl/fsl_easrc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 9b9f92ad0e7ab..3d5c9092feb19 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -663,11 +663,10 @@ static void __init htab_init_page_sizes(void)
- 		 * Pick a size for the linear mapping. Currently, we only
- 		 * support 16M, 1M and 4K which is the default
- 		 */
--		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
-+		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
- 		    (unsigned long)_stext % 0x1000000) {
- 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
--				pr_warn("Kernel not 16M aligned, "
--					"disabling 16M linear map alignment");
-+				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
- 			aligned = false;
- 		}
+diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
+index c6b5eb2d2af79..fff1f02dadfee 100644
+--- a/sound/soc/fsl/fsl_easrc.c
++++ b/sound/soc/fsl/fsl_easrc.c
+@@ -1133,7 +1133,7 @@ int fsl_easrc_set_ctx_format(struct fsl_asrc_pair *ctx,
+ 	struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
+ 	struct fsl_easrc_data_fmt *in_fmt = &ctx_priv->in_params.fmt;
+ 	struct fsl_easrc_data_fmt *out_fmt = &ctx_priv->out_params.fmt;
+-	int ret;
++	int ret = 0;
  
+ 	/* Get the bitfield values for input data format */
+ 	if (in_raw_format && out_raw_format) {
 -- 
 2.25.1
 
