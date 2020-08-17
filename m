@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B157FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AB6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D470F20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691945;
-	bh=3N8MtWemgelhVh//K1SS5aIJzLRX7vaaoNR0NvUqAYY=;
+	s=default; t=1597691961;
+	bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7fYgm0e+HMza2mjTarT5OhKGZ9ZmZMMJ7J1F+uwyfCGn63zUfxamyj23j9GLwwhH
-	 MFnz+cMOEmNIHQ2p6a1cL/tzckJW2mbbeBUerGgXbPZqelrjVtO75MIUHQF1/FVd4x
-	 HN+c9O2NzJO3VXnFh5EGUV23I8Hjuv77DpQgJoE4=
+	b=hVDTEG5WWrd4GUVumbEMHQCrVBhfEO0zjG0RryMGAPbyoQakjghxuDS6kpG4e1biH
+	 J3ggIOhmELXIZqIbiSwElgHna618FgNbRY0mK1otVZcZ+JjjhtYQ9A9X381Qda7E5T
+	 U+oUS5PAxPVo8+WVABtyYjzIsO2tXJGuR5y94cSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392127AbgHQTS5 (ORCPT
+        id S2392291AbgHQTTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbgHQPh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730571AbgHQPh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:37:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DC7322CB3;
-        Mon, 17 Aug 2020 15:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7009C22DD6;
+        Mon, 17 Aug 2020 15:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678668;
-        bh=3N8MtWemgelhVh//K1SS5aIJzLRX7vaaoNR0NvUqAYY=;
+        s=default; t=1597678675;
+        bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHAFdoFX0EcfV+yKz+IbbfTV+hdK1Z1Ob6rlyYrurPdKk7JBS2j1gXzFpfDlsIKes
-         SDNZFA+vgJE3iba4C49o5uej38BB+jCJdceNKaKiOimjZDOdZAk4sGXl1TWlnYvWWE
-         J45Q+2futghbtKl2znH8ahBQRw5L4vczn1EbGjS0=
+        b=NY+5+Cl1MoP/8Sq7HFPh82P3LQH98VpMXfo4mUJvnNYlTWHlNdIg9pvjGJXic9gLx
+         qmzU00TzHq7R/LEPyUeLkqxrYH2DEWyEcCP5JQmT42Gng8r0P2PEMvqNz//kWcW2S9
+         jqTtuGhXf6ydnT7T/jbGmJWjt9mbtccIm/zGBlAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qingyu Li <ieatmuttonchuan@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 386/464] net/nfc/rawsock.c: add CAP_NET_RAW check.
-Date:   Mon, 17 Aug 2020 17:15:39 +0200
-Message-Id: <20200817143852.269851637@linuxfoundation.org>
+        stable@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>,
+        Frederic Weisbecker <frederic@kernel.org>, stable@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.8 414/464] tick/nohz: Narrow down noise while setting current tasks tick dependency
+Date:   Mon, 17 Aug 2020 17:16:07 +0200
+Message-Id: <20200817143853.611231346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,36 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qingyu Li <ieatmuttonchuan@gmail.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-[ Upstream commit 26896f01467a28651f7a536143fe5ac8449d4041 ]
+commit 3c8920e2dbd1a55f72dc14d656df9d0097cf5c72 upstream.
 
-When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked first.
+Setting a tick dependency on any task, including the case where a task
+sets that dependency on itself, triggers an IPI to all CPUs.  That is
+of course suboptimal but it had previously not been an issue because it
+was only used by POSIX CPU timers on nohz_full, which apparently never
+occurs in latency-sensitive workloads in production.  (Or users of such
+systems are suffering in silence on the one hand or venting their ire
+on the wrong people on the other.)
 
-Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+But RCU now sets a task tick dependency on the current task in order
+to fix stall issues that can occur during RCU callback processing.
+Thus, RCU callback processing triggers frequent system-wide IPIs from
+nohz_full CPUs.  This is quite counter-productive, after all, avoiding
+IPIs is what nohz_full is supposed to be all about.
+
+This commit therefore optimizes tasks' self-setting of a task tick
+dependency by using tick_nohz_full_kick() to avoid the system-wide IPI.
+Instead, only the execution of the one task is disturbed, which is
+acceptable given that this disturbance is well down into the noise
+compared to the degree to which the RCU callback processing itself
+disturbs execution.
+
+Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
+Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: stable@kernel.org
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/nfc/rawsock.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/nfc/rawsock.c
-+++ b/net/nfc/rawsock.c
-@@ -332,10 +332,13 @@ static int rawsock_create(struct net *ne
- 	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
- 		return -ESOCKTNOSUPPORT;
+---
+ kernel/time/tick-sched.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, en
+ EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
  
--	if (sock->type == SOCK_RAW)
-+	if (sock->type == SOCK_RAW) {
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		sock->ops = &rawsock_raw_ops;
--	else
-+	} else {
- 		sock->ops = &rawsock_ops;
+ /*
+- * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
+- * per task timers.
++ * Set a per-task tick dependency. RCU need this. Also posix CPU timers
++ * in order to elapse per task timers.
+  */
+ void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
+ {
+-	/*
+-	 * We could optimize this with just kicking the target running the task
+-	 * if that noise matters for nohz full users.
+-	 */
+-	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
++	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
++		if (tsk == current) {
++			preempt_disable();
++			tick_nohz_full_kick();
++			preempt_enable();
++		} else {
++			/*
++			 * Some future tick_nohz_full_kick_task()
++			 * should optimize this.
++			 */
++			tick_nohz_full_kick_all();
++		}
 +	}
+ }
+ EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
  
- 	sk = sk_alloc(net, PF_NFC, GFP_ATOMIC, nfc_proto->proto, kern);
- 	if (!sk)
 
 
