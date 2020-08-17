@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4428C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A405C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F7420885
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5425E22D73
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677717;
-	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+	s=default; t=1597677724;
+	bh=y3ay4eqwenAnrngmgR+QAaAj3ao0sQXVgUW43M+TdYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5c5W3NaZsXaOyEznbULtkehs2m+XZTIZJrkF8dC4Xnz/KWzesIzV6ScAX22fTh8J
-	 N1Py5V6/u2QPhHkpdK8+Q3tV4DBaYoCS4G3c1MqviM6KWkiFdKGobBlrJo1SJKAnpj
-	 4J2VOZgTw/X5LfilqY4+B4i4ISHPjASVnqspAVbQ=
+	b=YxdWTL+ORh2saEjNu37WsqCXutU0ElHs4vr1AAAvJdXjPECSRRVI1FlkdOiprEjey
+	 6Vfr8sn3DVFOZ8kNlf0xyK7170g18ZFj+8Rw7ZL1fG2Z80LDPdR2heHpnzCAAZJvZE
+	 l+cPEcjayYYPDnAlE6fZeNnuzcF7YP2yiuvUefpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgHQPVt (ORCPT
+        id S1729409AbgHQPWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbgHQPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:19 -0400
+        id S1729352AbgHQPVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23553206FA;
-        Mon, 17 Aug 2020 15:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2227022BEB;
+        Mon, 17 Aug 2020 15:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677678;
-        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+        s=default; t=1597677684;
+        bh=y3ay4eqwenAnrngmgR+QAaAj3ao0sQXVgUW43M+TdYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJFBn8izYTxYjk1I+lwF21DzDv9eW3A5h5MBvGLA7XbPE8BJVSX8ZbruFJOLLNc4a
-         RG//lj9ZniANkpwrMZpHpgeONcGi4OGwSKulitEgtPKfCWG3xEzAdGOdyX1c5F9Tee
-         5QPUXw4H4TrwH3e6mXFR9lZyZfZlWZROaIIZL6Xw=
+        b=nL1lJy/wNfPjSdub/o8rnYPkxGZbj/VZZNZoCFw+riqA2nM5oMNrditE169f2wcyH
+         0PgYKdO1e/PNKRTGyaOGFTaVTmaCuX0wjqIvXbsm8WOXzXNxVVkNJNN+2VVoEjTdZi
+         F0MeMPzrohzkZo7ec71paLJF2IXNM3qBdAf4Srg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 069/464] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
-Date:   Mon, 17 Aug 2020 17:10:22 +0200
-Message-Id: <20200817143837.072632766@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 053/464] arm64: dts: meson: misc fixups for w400 dtsi
+Date:   Mon, 17 Aug 2020 17:10:06 +0200
+Message-Id: <20200817143836.299940996@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,51 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
+[ Upstream commit 2fa17dd09533d5d83201be3229a28c1010a8ea3e ]
 
-cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
-UP configuration, the boot CPU is 0.
+Current devices using the W400 dtsi show mmc tuning errors:
 
-Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
+
+Removing "sd-uhs-sdr50" from the SDIO node prevents this. We also add
+keep-power-in-suspend to the SDIO node and fix an indentation.
+
+Fixes: 3cb74db9b256 ("arm64: dts: meson: convert ugoos-am6 to common w400 dtsi")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721013952.11635-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fd7c537fb42ac..4127eeab10af1 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
- 	u32 val;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+index 98b70d216a6f3..2802ddbb83ac7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+@@ -336,9 +336,11 @@ &sd_emmc_a {
  
- 	/* Wakeup interrupt should only come from the boot cpu */
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
  
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
-@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
- 	struct bcm7038_l1_chip *intc;
- 	int boot_cpu, word;
++	/* WiFi firmware requires power to be kept while in suspend */
++	keep-power-in-suspend;
++
+ 	non-removable;
+ 	disable-wp;
  
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
+@@ -398,7 +400,7 @@ bluetooth {
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+ 		max-speed = <2000000>;
+ 		clocks = <&wifi32k>;
+-	clock-names = "lpo";
++		clock-names = "lpo";
+ 	};
+ };
  
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
 -- 
 2.25.1
 
