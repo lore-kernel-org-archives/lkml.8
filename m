@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA48EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3176C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73D720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B197020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdXiaKjL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NaUOnn94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgHQIsO (ORCPT
+        id S1728572AbgHQIsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
+        Mon, 17 Aug 2020 04:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgHQIrA (ORCPT
+        with ESMTP id S1728110AbgHQIqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:47:00 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5733DC061388;
-        Mon, 17 Aug 2020 01:47:00 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q19so7173010pll.0;
-        Mon, 17 Aug 2020 01:47:00 -0700 (PDT)
+        Mon, 17 Aug 2020 04:46:52 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED92C061388;
+        Mon, 17 Aug 2020 01:46:50 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t6so7371004pjr.0;
+        Mon, 17 Aug 2020 01:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4TxG6+J4B/o5uSMqtKNoCn/oi2hrZhvhcZ6aqvQF8Ek=;
-        b=OdXiaKjLj6swXp8EzhhhqBW2gdWFZDSDNffoJWy1fhZn7qDQy6s+zOtPuhe3g1G8jU
-         YGNNUjquAo8NKVx4by3/4Bdv+kjhfXSd2ma46VSnnBlKuCxAd7cOwghp8ffBPq9hErI+
-         gPkuxXhgsIGOFJTAir23hvv2wcwkqQOlnY8N8Qk+/ip35DW5ERH/wBobzvUjJil2GBC7
-         PuqUsdt81xF9JuZjp7mkZ9y/a91CK2ZBlyxFjPas6xj79vSa/RZk+fPvq+kaC5KL6vM4
-         5Zy21BidyF6CxrvxlkTFLWVn0b+gOsrodeFk5FvoKNRrngoWclla85dvNKA2NsexXilU
-         /MdQ==
+        bh=qv4GC02qge+8WBoWhKMhI0GaJq0fE5w5WlMXDX1eMMA=;
+        b=NaUOnn94Oxlt73OY55Dyc1+uEkT/dBQ/+L2CTBGAgVWzTpBdn47zH8qmEudLhmna7X
+         dcwGXsw4paLNVVFrB2ds6Wr0uhNGOP1tdXXuNJkTLur0K+UT6VUI8uInpXogdfY5paXa
+         o9WVwSA5OnVBnn4uRhZmcJAaqtuI++RO/RIR3sEyu1ZIfrV0EyY7prBUAAUtbLqROhwp
+         a5hDiZHHvPN1aXuvbBPUuLA0XjZia/j27ogqc48d6213fwIVhEej4jg6W/uCnt15nvp8
+         8/Fvken5fNMQQ87nWTvrB50ynVIHC68tzXCu5GlpoOpMVaGrpVqetRpCQTaBjyFP86eG
+         Uolw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4TxG6+J4B/o5uSMqtKNoCn/oi2hrZhvhcZ6aqvQF8Ek=;
-        b=t0A6blW4JchfbemmPfpwU8tntT8uiaQoMo3b+8Eg43cU9ooQd3z1yUBedEdGxRNROT
-         IpS/q+9PwsoiVY7eL4chMsh36PqkU3pNJgoxpbt630t+xbkDbhn52Cn5V50KQ1I100Dl
-         RTXGjZk1jkuj3ZLx1NEv8S6Fp/ZDv9mBTChPrugnZHY42Go8b6XzBgvYIqb+55lt4Q5G
-         G07r/Ok7UD4SM8bXAQrrXNDzgnJvq7QgPbcuT1YTL1cQC3YyllcaMSpxs5CzL6sJwPXm
-         GYa5jSv7SO41u1U2ld+zQUsOqg7CbcVeJb4D6u82d9SuHlFWOK6VA6rpcwWjvQFyrM4c
-         1YCg==
-X-Gm-Message-State: AOAM530BlofIitS8HjPugQorCSVdRO1Z8BgMBnECM34bC2O5jJM/Mxau
-        +hxvVmWIkO3IekAVwzN4WjvrQbbGRo4OEA==
-X-Google-Smtp-Source: ABdhPJzEs6e7wO/WADFWSaj9sezCrs7Z0iJjmWIs3AcMsJ/DSkokg382ikDsGXCnOjQv0XnvCsG6Sg==
-X-Received: by 2002:a17:902:9b86:: with SMTP id y6mr10707980plp.127.1597654019873;
-        Mon, 17 Aug 2020 01:46:59 -0700 (PDT)
+        bh=qv4GC02qge+8WBoWhKMhI0GaJq0fE5w5WlMXDX1eMMA=;
+        b=hneO4eX1BJGV1o7KtOVX208rrkrYIhqHLF57Z5gb98uGml606hinRZEqpY6N1JcXfT
+         9y1TneA+1fK6vT7PQFICyZ8Qk6kqATcHEKH6bFDRsiQPeRXNMfvTIMckYDJ4VvJGuON7
+         +pAZx4HBRuvq5VP4ukAEMZzt3Vg5sMq5SgCE+V4/g7Li3uJVSTf5w/wA3n+mYII84eFH
+         Rs/HQe5hE2X87BiOvEdwAY1T5pMPYZEMUZSNf1xr+28afk3v8lL/wcUPVUxvseaas88N
+         PHhwZHvULAyVeaTZM+tA+NCZG8QxO0oa7grlM7CPRajcksW49CiiMsXK4YXG3AVX8vCn
+         XZ9Q==
+X-Gm-Message-State: AOAM531f2DHLUfvoXG6J6ZWy/tpElc4RmW90UUrxTEDMNEaqPkTonl1s
+        n96EZ2KLweUfs6lwUcFI9tU=
+X-Google-Smtp-Source: ABdhPJxe68nIhAqCAGWEtJuWFCHemuIjuNfWIKlLNXf06tV5CCXtH88GTgrO4d7VOTnvNGRe1uWjcg==
+X-Received: by 2002:a17:90a:c781:: with SMTP id gn1mr11460864pjb.151.1597654010425;
+        Mon, 17 Aug 2020 01:46:50 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id ml18sm16418443pjb.43.2020.08.17.01.46.55
+        by smtp.gmail.com with ESMTPSA id ml18sm16418443pjb.43.2020.08.17.01.46.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:46:59 -0700 (PDT)
+        Mon, 17 Aug 2020 01:46:49 -0700 (PDT)
 From:   Allen Pais <allen.cryptic@gmail.com>
 To:     m.grzeschik@pengutronix.de, davem@davemloft.net, paulus@samba.org,
         oliver@neukum.org, woojung.huh@microchip.com, petkan@nucleusys.com
@@ -66,9 +66,9 @@ Cc:     keescook@chromium.org, netdev@vger.kernel.org,
         linux-ppp@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 4/9] net: hso: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:16:09 +0530
-Message-Id: <20200817084614.24263-8-allen.cryptic@gmail.com>
+Subject: [PATCH 2/9] net: ppp: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:16:07 +0530
+Message-Id: <20200817084614.24263-6-allen.cryptic@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817084614.24263-1-allen.cryptic@gmail.com>
 References: <20200817084614.24263-1-allen.cryptic@gmail.com>
@@ -87,38 +87,78 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/net/usb/hso.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ppp/ppp_async.c   | 8 ++++----
+ drivers/net/ppp/ppp_synctty.c | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index 2bb28db89432..56b3b6395831 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1213,9 +1213,10 @@ static void hso_std_serial_read_bulk_callback(struct urb *urb)
-  * This needs to be a tasklet otherwise we will
-  * end up recursively calling this function.
-  */
--static void hso_unthrottle_tasklet(unsigned long data)
-+static void hso_unthrottle_tasklet(struct tasklet_struct *t)
- {
--	struct hso_serial *serial = (struct hso_serial *)data;
-+	struct hso_serial *serial = from_tasklet(serial, t,
-+						 unthrottle_tasklet);
- 	unsigned long flags;
+diff --git a/drivers/net/ppp/ppp_async.c b/drivers/net/ppp/ppp_async.c
+index 29a0917a81e6..2b66cf301b0e 100644
+--- a/drivers/net/ppp/ppp_async.c
++++ b/drivers/net/ppp/ppp_async.c
+@@ -101,7 +101,7 @@ static void ppp_async_input(struct asyncppp *ap, const unsigned char *buf,
+ 			    char *flags, int count);
+ static int ppp_async_ioctl(struct ppp_channel *chan, unsigned int cmd,
+ 			   unsigned long arg);
+-static void ppp_async_process(unsigned long arg);
++static void ppp_async_process(struct tasklet_struct *t);
  
- 	spin_lock_irqsave(&serial->serial_lock, flags);
-@@ -1264,9 +1265,8 @@ static int hso_serial_open(struct tty_struct *tty, struct file *filp)
- 		serial->rx_state = RX_IDLE;
- 		/* Force default termio settings */
- 		_hso_serial_set_termios(tty, NULL);
--		tasklet_init(&serial->unthrottle_tasklet,
--			     hso_unthrottle_tasklet,
--			     (unsigned long)serial);
-+		tasklet_setup(&serial->unthrottle_tasklet,
-+			     hso_unthrottle_tasklet);
- 		result = hso_start_serial_device(serial->parent, GFP_KERNEL);
- 		if (result) {
- 			hso_stop_serial_device(serial->parent);
+ static void async_lcp_peek(struct asyncppp *ap, unsigned char *data,
+ 			   int len, int inbound);
+@@ -179,7 +179,7 @@ ppp_asynctty_open(struct tty_struct *tty)
+ 	ap->lcp_fcs = -1;
+ 
+ 	skb_queue_head_init(&ap->rqueue);
+-	tasklet_init(&ap->tsk, ppp_async_process, (unsigned long) ap);
++	tasklet_setup(&ap->tsk, ppp_async_process);
+ 
+ 	refcount_set(&ap->refcnt, 1);
+ 	init_completion(&ap->dead);
+@@ -488,9 +488,9 @@ ppp_async_ioctl(struct ppp_channel *chan, unsigned int cmd, unsigned long arg)
+  * to the ppp_generic code, and to tell the ppp_generic code
+  * if we can accept more output now.
+  */
+-static void ppp_async_process(unsigned long arg)
++static void ppp_async_process(struct tasklet_struct *t)
+ {
+-	struct asyncppp *ap = (struct asyncppp *) arg;
++	struct asyncppp *ap = from_tasklet(ap, t, tsk);
+ 	struct sk_buff *skb;
+ 
+ 	/* process received packets */
+diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
+index 0f338752c38b..86ee5149f4f2 100644
+--- a/drivers/net/ppp/ppp_synctty.c
++++ b/drivers/net/ppp/ppp_synctty.c
+@@ -90,7 +90,7 @@ static struct sk_buff* ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *);
+ static int ppp_sync_send(struct ppp_channel *chan, struct sk_buff *skb);
+ static int ppp_sync_ioctl(struct ppp_channel *chan, unsigned int cmd,
+ 			  unsigned long arg);
+-static void ppp_sync_process(unsigned long arg);
++static void ppp_sync_process(struct tasklet_struct *t);
+ static int ppp_sync_push(struct syncppp *ap);
+ static void ppp_sync_flush_output(struct syncppp *ap);
+ static void ppp_sync_input(struct syncppp *ap, const unsigned char *buf,
+@@ -177,7 +177,7 @@ ppp_sync_open(struct tty_struct *tty)
+ 	ap->raccm = ~0U;
+ 
+ 	skb_queue_head_init(&ap->rqueue);
+-	tasklet_init(&ap->tsk, ppp_sync_process, (unsigned long) ap);
++	tasklet_setup(&ap->tsk, ppp_sync_process);
+ 
+ 	refcount_set(&ap->refcnt, 1);
+ 	init_completion(&ap->dead_cmp);
+@@ -480,9 +480,9 @@ ppp_sync_ioctl(struct ppp_channel *chan, unsigned int cmd, unsigned long arg)
+  * to the ppp_generic code, and to tell the ppp_generic code
+  * if we can accept more output now.
+  */
+-static void ppp_sync_process(unsigned long arg)
++static void ppp_sync_process(struct tasklet_struct *t)
+ {
+-	struct syncppp *ap = (struct syncppp *) arg;
++	struct syncppp *ap = from_tasklet(ap, t, tsk);
+ 	struct sk_buff *skb;
+ 
+ 	/* process received packets */
 -- 
 2.17.1
 
