@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A6C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9A220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E592520829
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgHQWMC (ORCPT
+        id S1730343AbgHQWMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:12:02 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:47158 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730254AbgHQWLu (ORCPT
+        Mon, 17 Aug 2020 18:12:15 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:33570 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730248AbgHQWLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:11:50 -0400
+        Mon, 17 Aug 2020 18:11:49 -0400
 Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        by out03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <ebiederm@xmission.com>)
-        id 1k7nM5-004wA5-4v; Mon, 17 Aug 2020 16:11:49 -0600
+        id 1k7nM4-001H7q-Gf; Mon, 17 Aug 2020 16:11:48 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.int.ebiederm.org)
         by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1k7nKq-0004PB-Nn; Mon, 17 Aug 2020 16:10:33 -0600
+        id 1k7nKa-0004PB-2m; Mon, 17 Aug 2020 16:10:16 -0600
 From:   "Eric W. Biederman" <ebiederm@xmission.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, criu@openvz.org,
@@ -57,18 +57,18 @@ Cc:     linux-fsdevel@vger.kernel.org, criu@openvz.org,
         John Fastabend <john.fastabend@gmail.com>,
         KP Singh <kpsingh@chromium.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>
-Date:   Mon, 17 Aug 2020 17:04:23 -0500
-Message-Id: <20200817220425.9389-15-ebiederm@xmission.com>
+Date:   Mon, 17 Aug 2020 17:04:19 -0500
+Message-Id: <20200817220425.9389-11-ebiederm@xmission.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
 References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1k7nKq-0004PB-Nn;;;mid=<20200817220425.9389-15-ebiederm@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+4cpNrHwZELt8oSRiOq1yzCRzmHtQx5rY=
+X-XM-SPF: eid=1k7nKa-0004PB-2m;;;mid=<20200817220425.9389-11-ebiederm@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18GsEQJ0oPPoD5n5diUwjvIvO0UyKBadWU=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 15/17] file: In f_dupfd read RLIMIT_NOFILE once.
+Subject: [PATCH 11/17] bpf/task_iter: In task_file_seq_get_next use fnext_task
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,51 +76,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the code, and remove the chance of races by reading
-RLIMIT_NOFILE only once in f_dupfd.
+When discussing[1] exec and posix file locks it was realized that none
+of the callers of get_files_struct fundamentally needed to call
+get_files_struct, and that by switching them to helper functions
+instead it will both simplify their code and remove unnecessary
+increments of files_struct.count.  Those unnecessary increments can
+result in exec unnecessarily unsharing files_struct which breaking
+posix locks, and it can result in fget_light having to fallback to
+fget reducing system performance.
 
-Pass the read value of RLIMIT_NOFILE into alloc_fd which is the other
-location the rlimit was read in f_dupfd.  As f_dupfd is the only
-caller of alloc_fd this changing alloc_fd is trivially safe.
+Using fnext_task simplifies task_file_seq_get_next, by moving the
+checking for the maximum file descritor into the generic code, and by
+remvoing the need for capturing and releasing a reference on
+files_struct.  As the reference count of files_struct no longer needs
+to be maintained bpf_iter_seq_task_file_info can have it's files member
+removed and task_file_seq_get_next no longer it's fstruct argument.
 
-Further this causes alloc_fd to take all of the same arguments as
-__alloc_fd except for the files_struct argument.
+The curr_fd local variable does need to become unsigned to be used
+with fnext_task.  As curr_fd is assigned from and assigned a u32
+making curr_fd an unsigned int won't cause problems and might prevent
+them.
 
+[1] https://lkml.kernel.org/r/20180915160423.GA31461@redhat.com
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/file.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ kernel/bpf/task_iter.c | 43 ++++++++++--------------------------------
+ 1 file changed, 10 insertions(+), 33 deletions(-)
 
-diff --git a/fs/file.c b/fs/file.c
-index 1a755811669d..505b2e81ad3e 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -523,9 +523,9 @@ int __alloc_fd(struct files_struct *files,
- 	return error;
- }
+diff --git a/kernel/bpf/task_iter.c b/kernel/bpf/task_iter.c
+index 232df29793e9..831d42d7543a 100644
+--- a/kernel/bpf/task_iter.c
++++ b/kernel/bpf/task_iter.c
+@@ -122,45 +122,33 @@ struct bpf_iter_seq_task_file_info {
+ 	 */
+ 	struct bpf_iter_seq_task_common common;
+ 	struct task_struct *task;
+-	struct files_struct *files;
+ 	u32 tid;
+ 	u32 fd;
+ };
  
--static int alloc_fd(unsigned start, unsigned flags)
-+static int alloc_fd(unsigned start, unsigned end, unsigned flags)
+ static struct file *
+ task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
+-		       struct task_struct **task, struct files_struct **fstruct)
++		       struct task_struct **task)
  {
--	return __alloc_fd(current->files, start, rlimit(RLIMIT_NOFILE), flags);
-+	return __alloc_fd(current->files, start, end, flags);
- }
+ 	struct pid_namespace *ns = info->common.ns;
+-	u32 curr_tid = info->tid, max_fds;
+-	struct files_struct *curr_files;
++	u32 curr_tid = info->tid;
+ 	struct task_struct *curr_task;
+-	int curr_fd = info->fd;
++	unsigned int curr_fd = info->fd;
  
- int __get_unused_fd_flags(unsigned flags, unsigned long nofile)
-@@ -1158,10 +1158,11 @@ SYSCALL_DEFINE1(dup, unsigned int, fildes)
+ 	/* If this function returns a non-NULL file object,
+-	 * it held a reference to the task/files_struct/file.
++	 * it held a reference to the task/file.
+ 	 * Otherwise, it does not hold any reference.
+ 	 */
+ again:
+ 	if (*task) {
+ 		curr_task = *task;
+-		curr_files = *fstruct;
+ 		curr_fd = info->fd;
+ 	} else {
+ 		curr_task = task_seq_get_next(ns, &curr_tid);
+ 		if (!curr_task)
+ 			return NULL;
  
- int f_dupfd(unsigned int from, struct file *file, unsigned flags)
+-		curr_files = get_files_struct(curr_task);
+-		if (!curr_files) {
+-			put_task_struct(curr_task);
+-			curr_tid = ++(info->tid);
+-			info->fd = 0;
+-			goto again;
+-		}
+-
+-		/* set *fstruct, *task and info->tid */
+-		*fstruct = curr_files;
++		/* set *task and info->tid */
+ 		*task = curr_task;
+ 		if (curr_tid == info->tid) {
+ 			curr_fd = info->fd;
+@@ -171,13 +159,12 @@ task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
+ 	}
+ 
+ 	rcu_read_lock();
+-	max_fds = files_fdtable(curr_files)->max_fds;
+-	for (; curr_fd < max_fds; curr_fd++) {
++	for (;; curr_fd++) {
+ 		struct file *f;
+ 
+-		f = fcheck_files(curr_files, curr_fd);
++		f = fnext_task(curr_task, &curr_fd);
+ 		if (!f)
+-			continue;
++			break;
+ 
+ 		/* set info->fd */
+ 		info->fd = curr_fd;
+@@ -188,10 +175,8 @@ task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
+ 
+ 	/* the current task is done, go to the next task */
+ 	rcu_read_unlock();
+-	put_files_struct(curr_files);
+ 	put_task_struct(curr_task);
+ 	*task = NULL;
+-	*fstruct = NULL;
+ 	info->fd = 0;
+ 	curr_tid = ++(info->tid);
+ 	goto again;
+@@ -200,13 +185,11 @@ task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
+ static void *task_file_seq_start(struct seq_file *seq, loff_t *pos)
  {
-+	unsigned long nofile = rlimit(RLIMIT_NOFILE);
- 	int err;
--	if (from >= rlimit(RLIMIT_NOFILE))
-+	if (from >= nofile)
- 		return -EINVAL;
--	err = alloc_fd(from, flags);
-+	err = alloc_fd(from, nofile, flags);
- 	if (err >= 0) {
- 		get_file(file);
- 		fd_install(err, file);
+ 	struct bpf_iter_seq_task_file_info *info = seq->private;
+-	struct files_struct *files = NULL;
+ 	struct task_struct *task = NULL;
+ 	struct file *file;
+ 
+-	file = task_file_seq_get_next(info, &task, &files);
++	file = task_file_seq_get_next(info, &task);
+ 	if (!file) {
+-		info->files = NULL;
+ 		info->task = NULL;
+ 		return NULL;
+ 	}
+@@ -214,7 +197,6 @@ static void *task_file_seq_start(struct seq_file *seq, loff_t *pos)
+ 	if (*pos == 0)
+ 		++*pos;
+ 	info->task = task;
+-	info->files = files;
+ 
+ 	return file;
+ }
+@@ -222,22 +204,19 @@ static void *task_file_seq_start(struct seq_file *seq, loff_t *pos)
+ static void *task_file_seq_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	struct bpf_iter_seq_task_file_info *info = seq->private;
+-	struct files_struct *files = info->files;
+ 	struct task_struct *task = info->task;
+ 	struct file *file;
+ 
+ 	++*pos;
+ 	++info->fd;
+ 	fput((struct file *)v);
+-	file = task_file_seq_get_next(info, &task, &files);
++	file = task_file_seq_get_next(info, &task);
+ 	if (!file) {
+-		info->files = NULL;
+ 		info->task = NULL;
+ 		return NULL;
+ 	}
+ 
+ 	info->task = task;
+-	info->files = files;
+ 
+ 	return file;
+ }
+@@ -286,9 +265,7 @@ static void task_file_seq_stop(struct seq_file *seq, void *v)
+ 		(void)__task_file_seq_show(seq, v, true);
+ 	} else {
+ 		fput((struct file *)v);
+-		put_files_struct(info->files);
+ 		put_task_struct(info->task);
+-		info->files = NULL;
+ 		info->task = NULL;
+ 	}
+ }
 -- 
 2.25.0
 
