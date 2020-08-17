@@ -5,57 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0591AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1461A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93E32072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690515;
-	bh=G1OvFEXrou1OJyh/zOo3R3BvFhcRVwtwoYVL1FhzfHs=;
+	s=default; t=1597690519;
+	bh=05iKHycDZmcIvSow2mGu/p3lmoFOWIEpyO5G7US79J0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmC/JmCjD6UaE+wAQH9sSPEhUWMK7DOdbfa1A3RXfhGQWD6ycuMIX9xOu+m76j+n8
-	 y1PPIaO+dUaLkyOUKggBoxxjm6UE+nwFa3PxenVT4GRtJ9yn40hyU8Nxrh9mkaNSuT
-	 Un0afMrkXbyHip8BB6zdSO3uBBtYyTSDXXe8IrYs=
+	b=DINNsUbYYqBeTJoveRxeamVGs84tjTVaIjKIlKrLu+iCTPSrJYKT/4NlBv3oqzhSI
+	 aPdI/uGOuAC85727+GLYk1wr8mQNe8C9fQnVkneymZtwBzSy9koMf1h+/24KqbkKR1
+	 CcUEp5dwZk+GNcs/VJ44p/46+8uXdckhTv9B+EF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389567AbgHQSzK (ORCPT
+        id S2391478AbgHQSzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbgHQPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:09 -0400
+        id S1730904AbgHQPu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7400208B3;
-        Mon, 17 Aug 2020 15:51:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B85BF2063A;
+        Mon, 17 Aug 2020 15:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679468;
-        bh=G1OvFEXrou1OJyh/zOo3R3BvFhcRVwtwoYVL1FhzfHs=;
+        s=default; t=1597679457;
+        bh=05iKHycDZmcIvSow2mGu/p3lmoFOWIEpyO5G7US79J0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnX9422z/TZdcNBww480J/8EQgWZ+feQJVs+RTiFrYaLToarJusoeLPH3BzNsFCeX
-         /ehlCdrXvxDBj8w7vQ6xT1xWcJVX32DOv8cJ6CpFHyGLM7cLL7h5foH/YbTz2h4pFp
-         2+y+1EQoWHD5KTa+BwCwbI/yP85ZcTDUFEnL6M9k=
+        b=joUR7m+85KMESNiTFOPk/6ZH5tKd3ZUV1K+HubcqSoXeOmwsq/9zeDvYq7mAFS8Nq
+         aqQBZEziSQteiOKFbFskP5uEmbmcooss2FODCrkomJHFQLPCFiTrzSXyHX6kyNBIGa
+         BgSIvJCqpejfwzoZ/9EJS+rZhywRLjyCbHqoeVO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 192/393] drm/stm: repair runtime power management
-Date:   Mon, 17 Aug 2020 17:14:02 +0200
-Message-Id: <20200817143828.935241948@linuxfoundation.org>
+Subject: [PATCH 5.7 217/393] media: s5p-g2d: Fix a memory leak in an error handling path in g2d_probe()
+Date:   Mon, 17 Aug 2020 17:14:27 +0200
+Message-Id: <20200817143830.152473225@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -68,57 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit ebd267b2e3c25d5f93a08528b47c036569eb8744 ]
+[ Upstream commit 94b9ce6870f9c90ac92505482689818b254312f7 ]
 
-Add missing pm_runtime_get_sync() into ltdc_crtc_atomic_enable() to
-match pm_runtime_put_sync() in ltdc_crtc_atomic_disable(), otherwise
-the LTDC might suspend via runtime PM, disable clock, and then fail
-to resume later on.
+Memory allocated with 'v4l2_m2m_init()' must be freed by a corresponding
+call to 'v4l2_m2m_release()'
 
-The test which triggers it is roughly -- run qt5 application which
-uses eglfs platform and etnaviv, stop the application, sleep for 15
-minutes, run the application again. This leads to a timeout waiting
-for vsync, because the LTDC has suspended, but did not resume.
+Also reorder the code at the end of the probe function so that
+'video_register_device()' is called last.
+Update the error handling path accordingly.
 
-Fixes: 35ab6cfbf211 ("drm/stm: support runtime power management")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Yannick Fertré <yannick.fertre@st.com>
-Cc: Philippe Cornu <philippe.cornu@st.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Vincent Abriou <vincent.abriou@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Yannick Fertre <yannick.fertre@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200229221649.90813-1-marex@denx.de
+Fixes: 5ce60d790a24 ("[media] s5p-g2d: Add DT based discovery support")
+Fixes: 918847341af0 ("[media] v4l: add G2D driver for s5p device family")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: checkpatch: align with parenthesis]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/s5p-g2d/g2d.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index df585fe64f614..60ffe5bbc1294 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -425,9 +425,12 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
- 				    struct drm_crtc_state *old_state)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_device *ddev = crtc->dev;
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
-+	pm_runtime_get_sync(ddev->dev);
+diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
+index 6932fd47071b0..15bcb7f6e113c 100644
+--- a/drivers/media/platform/s5p-g2d/g2d.c
++++ b/drivers/media/platform/s5p-g2d/g2d.c
+@@ -695,21 +695,13 @@ static int g2d_probe(struct platform_device *pdev)
+ 	vfd->lock = &dev->mutex;
+ 	vfd->v4l2_dev = &dev->v4l2_dev;
+ 	vfd->device_caps = V4L2_CAP_VIDEO_M2M | V4L2_CAP_STREAMING;
+-	ret = video_register_device(vfd, VFL_TYPE_VIDEO, 0);
+-	if (ret) {
+-		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
+-		goto rel_vdev;
+-	}
+-	video_set_drvdata(vfd, dev);
+-	dev->vfd = vfd;
+-	v4l2_info(&dev->v4l2_dev, "device registered as /dev/video%d\n",
+-								vfd->num);
 +
- 	/* Sets the background color value */
- 	reg_write(ldev->regs, LTDC_BCCR, BCCR_BCBLACK);
+ 	platform_set_drvdata(pdev, dev);
+ 	dev->m2m_dev = v4l2_m2m_init(&g2d_m2m_ops);
+ 	if (IS_ERR(dev->m2m_dev)) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem device\n");
+ 		ret = PTR_ERR(dev->m2m_dev);
+-		goto unreg_video_dev;
++		goto rel_vdev;
+ 	}
  
+ 	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
+@@ -717,14 +709,24 @@ static int g2d_probe(struct platform_device *pdev)
+ 	of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
+ 	if (!of_id) {
+ 		ret = -ENODEV;
+-		goto unreg_video_dev;
++		goto free_m2m;
+ 	}
+ 	dev->variant = (struct g2d_variant *)of_id->data;
+ 
++	ret = video_register_device(vfd, VFL_TYPE_VIDEO, 0);
++	if (ret) {
++		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
++		goto free_m2m;
++	}
++	video_set_drvdata(vfd, dev);
++	dev->vfd = vfd;
++	v4l2_info(&dev->v4l2_dev, "device registered as /dev/video%d\n",
++		  vfd->num);
++
+ 	return 0;
+ 
+-unreg_video_dev:
+-	video_unregister_device(dev->vfd);
++free_m2m:
++	v4l2_m2m_release(dev->m2m_dev);
+ rel_vdev:
+ 	video_device_release(vfd);
+ unreg_v4l2_dev:
 -- 
 2.25.1
 
