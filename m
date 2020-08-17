@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57B8C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29661C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83AE820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0358020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686046;
-	bh=UY1yj+59MJCA1OWQoLC2vhErSp4gk06eEIlaVsWUiJ4=;
+	s=default; t=1597686051;
+	bh=yFQbJc/EOVgnddYLEayofDZFETxGTAIux4q8PSfvB3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WWVp34SqxWPh0gTuRtIGwozRjbnkpIUXoEzw6bsuCo2/vwKgFdU03UBFt0jTMVBZZ
-	 AFYzrKofIMC/N27UwH+TG2QnH7iDlw7yVUcgEEmWTH/LGc95DaERD7EMGWpKmAIvNt
-	 9c7o04cnlwvRCAup2p/BhA2Fohhk+wlsLaknQNJo=
+	b=ApBD9BWiWMV2n5btbp98YaJ+jiBdd9RdG9KTUAFHfoTqGjkjDnvDsl1/i83VoV5un
+	 zMmcKE4d7eXwoAbst4iBxatMj7Q+JPBJzr35QIdNkjB4yMWFKejkqKA+J6TULIohaq
+	 5yWCPTI8PliT1w9E7ueM+s+cP6N/gvs8/uwy5idI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbgHQRkm (ORCPT
+        id S2388855AbgHQRks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55858 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:40:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731115AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BD620657;
-        Mon, 17 Aug 2020 16:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71E8207DA;
+        Mon, 17 Aug 2020 16:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680961;
-        bh=UY1yj+59MJCA1OWQoLC2vhErSp4gk06eEIlaVsWUiJ4=;
+        s=default; t=1597680978;
+        bh=yFQbJc/EOVgnddYLEayofDZFETxGTAIux4q8PSfvB3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPGds3CHLwnrYA1Hd7pyYt/7gzkEby4EUsvMxlgswGKC+gK+DPqB0/090FtXVV5Pq
-         1e4iAfmNyau91+yj1esvEBfMfAxty75Z4rmS11XycU0ehUUgqj2DmkDXWHfNVT8FRA
-         ryFfT9MoAXNHcocX1bN+I3cL9cD/3sMTcie/lAbs=
+        b=Pn8WXVNNrqycYrhrqLE7vqnbKsqzw/WDPWl+Xt63RJhDZaMEiDk0ZQRWm8iALeuJQ
+         CTIakiBCUt/0H4M+4ciesZPgpgxGoco7ndWBnZUONcTmzo4IH7ve7ubgcl8NBUG+GY
+         l0oEdZ20zFOAWkw3DRgjXTvno0ZSrfb2xHsnUHQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/168] pinctrl-single: fix pcs_parse_pinconf() return value
-Date:   Mon, 17 Aug 2020 17:17:38 +0200
-Message-Id: <20200817143740.032343057@linuxfoundation.org>
+Subject: [PATCH 4.19 104/168] power: supply: check if calc_soc succeeded in pm860x_init_battery
+Date:   Mon, 17 Aug 2020 17:17:15 +0200
+Message-Id: <20200817143738.899213904@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,141 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Drew Fustini <drew@beagleboard.org>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f ]
+[ Upstream commit ccf193dee1f0fff55b556928591f7818bac1b3b1 ]
 
-This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-pinctrl_map is added.  The current behavior is to return 0 when
-!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-incorrectly assumes that a map was added and sets num_maps = 2.
+clang static analysis flags this error
 
-Analysis:
-=========
-The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
-if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
-returns 0 to indicate there was no error and num_maps is then set to 2:
+88pm860x_battery.c:522:19: warning: Assigned value is
+  garbage or undefined [core.uninitialized.Assign]
+                info->start_soc = soc;
+                                ^ ~~~
+soc is set by calling calc_soc.
+But calc_soc can return without setting soc.
 
- 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
- 981                                                 struct device_node *np,
- 982                                                 struct pinctrl_map **map,
- 983                                                 unsigned *num_maps,
- 984                                                 const char **pgnames)
- 985 {
-<snip>
-1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-1054         (*map)->data.mux.group = np->name;
-1055         (*map)->data.mux.function = np->name;
-1056
-1057         if (PCS_HAS_PINCONF && function) {
-1058                 res = pcs_parse_pinconf(pcs, np, function, map);
-1059                 if (res)
-1060                         goto free_pingroups;
-1061                 *num_maps = 2;
-1062         } else {
-1063                 *num_maps = 1;
-1064         }
+So check the return status and bail similarly to other
+checks in pm860x_init_battery and initialize soc to
+silence the warning.
 
-However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
-!nconfs.  I believe these conditions should indicate that no map was
-added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
-will set num_maps = 2 even though no maps were successfully added, as
-it does not reach "m++" on line 940:
+Fixes: a830d28b48bf ("power_supply: Enable battery-charger for 88pm860x")
 
- 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- 896                              struct pcs_function *func,
- 897                              struct pinctrl_map **map)
- 898
- 899 {
- 900         struct pinctrl_map *m = *map;
-<snip>
- 917         /* If pinconf isn't supported, don't parse properties in below. */
- 918         if (!PCS_HAS_PINCONF)
- 919                 return 0;
- 920
- 921         /* cacluate how much properties are supported in current node */
- 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
- 923                 if (of_find_property(np, prop2[i].name, NULL))
- 924                         nconfs++;
- 925         }
- 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
- 927                 if (of_find_property(np, prop4[i].name, NULL))
- 928                         nconfs++;
- 929         }
- 930         if (!nconfs)
- 919                 return 0;
- 932
- 933         func->conf = devm_kcalloc(pcs->dev,
- 934                                   nconfs, sizeof(struct pcs_conf_vals),
- 935                                   GFP_KERNEL);
- 936         if (!func->conf)
- 937                 return -ENOMEM;
- 938         func->nconfs = nconfs;
- 939         conf = &(func->conf[0]);
- 940         m++;
-
-This situtation will cause a boot failure [0] on the BeagleBone Black
-(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
-has compatible = "pinconf-single" instead of "pinctrl-single".
-
-The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
-or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
-map was added.
-
-Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
-between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
-is set to 1 as it is valid for pinconf to be enabled and a given pin
-group to not any pinconf properties.
-
-[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
-
-Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Link: https://lore.kernel.org/r/20200608125143.GA2789203@x1
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-single.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/power/supply/88pm860x_battery.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 7ec72ff2419a0..04a4e761e9a9c 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+diff --git a/drivers/power/supply/88pm860x_battery.c b/drivers/power/supply/88pm860x_battery.c
+index 63c57dc82ac1d..4eda5065b5bbc 100644
+--- a/drivers/power/supply/88pm860x_battery.c
++++ b/drivers/power/supply/88pm860x_battery.c
+@@ -436,7 +436,7 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
+ 	int ret;
+ 	int data;
+ 	int bat_remove;
+-	int soc;
++	int soc = 0;
  
- 	/* If pinconf isn't supported, don't parse properties in below. */
- 	if (!PCS_HAS_PINCONF)
--		return 0;
-+		return -ENOTSUPP;
- 
- 	/* cacluate how much properties are supported in current node */
- 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
-@@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- 			nconfs++;
+ 	/* measure enable on GPADC1 */
+ 	data = MEAS1_GP1;
+@@ -499,7 +499,9 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
  	}
- 	if (!nconfs)
--		return 0;
-+		return -ENOTSUPP;
+ 	mutex_unlock(&info->lock);
  
- 	func->conf = devm_kcalloc(pcs->dev,
- 				  nconfs, sizeof(struct pcs_conf_vals),
-@@ -1056,9 +1056,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+-	calc_soc(info, OCV_MODE_ACTIVE, &soc);
++	ret = calc_soc(info, OCV_MODE_ACTIVE, &soc);
++	if (ret < 0)
++		goto out;
  
- 	if (PCS_HAS_PINCONF && function) {
- 		res = pcs_parse_pinconf(pcs, np, function, map);
--		if (res)
-+		if (res == 0)
-+			*num_maps = 2;
-+		else if (res == -ENOTSUPP)
-+			*num_maps = 1;
-+		else
- 			goto free_pingroups;
--		*num_maps = 2;
- 	} else {
- 		*num_maps = 1;
- 	}
+ 	data = pm860x_reg_read(info->i2c, PM8607_POWER_UP_LOG);
+ 	bat_remove = data & BAT_WU_LOG;
 -- 
 2.25.1
 
