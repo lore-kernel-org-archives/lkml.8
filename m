@@ -2,54 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00534C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573F620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE54320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686197;
-	bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
+	s=default; t=1597686206;
+	bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/XF6PhWK2QB9J+6V0mH/A0NeuCyFvsZsr8d1TNjN9x1ytbrk2k9adMBm4qlh9bOO
-	 1Hvc2rznK+ytZYIPfp5+Sigwl6d/VGtc2yGvrTnCdaYDohxVycVGxiZv1Agx9kBGZ5
-	 2igEKsRT46XgGYQ9zxNY3Ny5lxQdzgoBENYetQTQ=
+	b=xTFhztpJL32dVLSnV+nOOuRgOyQjuI9LwRiV5+GxuqCtMWb+SIXw9P31bK6N7TIox
+	 HRh2/Wu2BCIH1ov17Ht2ngLjMYJwGaHRmomFcn28v7g7yA8/+6MfFVTu0e41z1izwz
+	 0LR8vyCTtxgzYJE+ln7tChIiyFHH33e4WQWoKoDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbgHQRnP (ORCPT
+        id S2388129AbgHQRnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbgHQQQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:38 -0400
+        id S1731100AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD51207DE;
-        Mon, 17 Aug 2020 16:16:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E019B22B49;
+        Mon, 17 Aug 2020 16:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680971;
-        bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
+        s=default; t=1597680954;
+        bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMbEvYG1WyCX8girUAWlaapbkMCdKndvDCvMCgxmCh0qu11sq0KXjLLpRPcZ/jFSR
-         y3MPu9gbCG7yQvgg4qosYTPGZhZZsOl86PbMi8V/Di2zZgobhCvp9grKjPKjoRSdM/
-         WRlFd0jXbsegjvMld3UDWC2XhYG2rfEShB5YK65M=
+        b=StPuCuzWqs8ugYTnmJuMAv6Gyk7gcrInAbrY2jySAosqW610G+dysxjWpq7oZaGXf
+         mWkQ3dZFOvZQjqXg9Lg3TiRZ5fQy2nOvBWXVYsF+5YxQxZ+A4xb+5dm2uFTus0i6Up
+         tBnECWtzLZAwSEMXsSf4hZPMj21OOCtQ+/wK8KnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/168] crypto: aesni - add compatibility with IAS
-Date:   Mon, 17 Aug 2020 17:17:41 +0200
-Message-Id: <20200817143740.186340708@linuxfoundation.org>
+Subject: [PATCH 4.19 124/168] fsl/fman: fix eth hash table allocation
+Date:   Mon, 17 Aug 2020 17:17:35 +0200
+Message-Id: <20200817143739.876093387@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,76 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Cai <caij2003@gmail.com>
+From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit 44069737ac9625a0f02f0f7f5ab96aae4cd819bc ]
+[ Upstream commit 3207f715c34317d08e798e11a10ce816feb53c0f ]
 
-Clang's integrated assembler complains "invalid reassignment of
-non-absolute variable 'var_ddq_add'" while assembling
-arch/x86/crypto/aes_ctrby8_avx-x86_64.S. It was because var_ddq_add was
-reassigned with non-absolute values several times, which IAS did not
-support. We can avoid the reassignment by replacing the uses of
-var_ddq_add with its definitions accordingly to have compatilibility
-with IAS.
+Fix memory allocation for ethernet address hash table.
+The code was wrongly allocating an array for eth hash table which
+is incorrect because this is the main structure for eth hash table
+(struct eth_hash_t) that contains inside a number of elements.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1008
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Fangrui Song <maskray@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot Linux v5.7.5; clang v11.0.0-git
-Signed-off-by: Jian Cai <caij2003@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
+Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_mac.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-index 5f6a5af9c489b..77043a82da510 100644
---- a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-+++ b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-@@ -127,10 +127,6 @@ ddq_add_8:
+diff --git a/drivers/net/ethernet/freescale/fman/fman_mac.h b/drivers/net/ethernet/freescale/fman/fman_mac.h
+index dd6d0526f6c1f..19f327efdaff3 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_mac.h
++++ b/drivers/net/ethernet/freescale/fman/fman_mac.h
+@@ -252,7 +252,7 @@ static inline struct eth_hash_t *alloc_hash_table(u16 size)
+ 	struct eth_hash_t *hash;
  
- /* generate a unique variable for ddq_add_x */
+ 	/* Allocate address hash table */
+-	hash = kmalloc_array(size, sizeof(struct eth_hash_t *), GFP_KERNEL);
++	hash = kmalloc(sizeof(*hash), GFP_KERNEL);
+ 	if (!hash)
+ 		return NULL;
  
--.macro setddq n
--	var_ddq_add = ddq_add_\n
--.endm
--
- /* generate a unique variable for xmm register */
- .macro setxdata n
- 	var_xdata = %xmm\n
-@@ -140,9 +136,7 @@ ddq_add_8:
- 
- .macro club name, id
- .altmacro
--	.if \name == DDQ_DATA
--		setddq %\id
--	.elseif \name == XDATA
-+	.if \name == XDATA
- 		setxdata %\id
- 	.endif
- .noaltmacro
-@@ -165,9 +159,8 @@ ddq_add_8:
- 
- 	.set i, 1
- 	.rept (by - 1)
--		club DDQ_DATA, i
- 		club XDATA, i
--		vpaddq	var_ddq_add(%rip), xcounter, var_xdata
-+		vpaddq	(ddq_add_1 + 16 * (i - 1))(%rip), xcounter, var_xdata
- 		vptest	ddq_low_msk(%rip), var_xdata
- 		jnz 1f
- 		vpaddq	ddq_high_add_1(%rip), var_xdata, var_xdata
-@@ -180,8 +173,7 @@ ddq_add_8:
- 	vmovdqa	1*16(p_keys), xkeyA
- 
- 	vpxor	xkey0, xdata0, xdata0
--	club DDQ_DATA, by
--	vpaddq	var_ddq_add(%rip), xcounter, xcounter
-+	vpaddq	(ddq_add_1 + 16 * (by - 1))(%rip), xcounter, xcounter
- 	vptest	ddq_low_msk(%rip), xcounter
- 	jnz	1f
- 	vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
 -- 
 2.25.1
 
