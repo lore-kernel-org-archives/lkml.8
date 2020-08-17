@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E59C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BFF20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C2020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688389;
-	bh=Z6wxDB/kNNPoBu4IE1f6YOWOpB/XzsTJije4bwfd+5o=;
+	s=default; t=1597688392;
+	bh=pPGflhWf9CToCkrIk7EKW0g3pL6oyUS7nKayUPweHrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAEuTDQ3lSJ+Dh0/9GS6ff1/i0BjTETFRUjDyk+rvj7SfTmfUcpGvc7Q/5v8UQ5xA
-	 AYxrbWZY+A0UEBVITGrq53DWIDJMXBOOhVlWT2qpLKExF87K/2LloUaEXbnccPVN2i
-	 SBEB1VZypvO3OxTSrsno+uXnJFU81CnvEkDAgGjc=
+	b=GXIfHhPE5ztH8b64dn929H3eGYUhrwZCbbvS0DwjMf8pAKhIT1taBV4DaIb2oMem0
+	 Xz4gtEZxbD6p/X/d+G5euw0f5aART7Rez9mK+CTWSRBThz5vwGmBYMUhKkab468ZlE
+	 4XXNzJE/U/r6OX10ZHks8nlJIB79sALLbaX4e7wY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390790AbgHQSTr (ORCPT
+        id S2390798AbgHQSTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387902AbgHQQFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:23 -0400
+        id S2388358AbgHQQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1D6207FF;
-        Mon, 17 Aug 2020 16:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE97D208B3;
+        Mon, 17 Aug 2020 16:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680304;
-        bh=Z6wxDB/kNNPoBu4IE1f6YOWOpB/XzsTJije4bwfd+5o=;
+        s=default; t=1597680312;
+        bh=pPGflhWf9CToCkrIk7EKW0g3pL6oyUS7nKayUPweHrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8NAFZLUIlvZZH/RYSVWsh4Y/1d6+QorEXvC+2KEE2AqXt4UJkV956UNgLM9vaAvn
-         sy2tjoLg0hrEowC2jQImDZqFWhF9AWtsgsAbW23wnI0P+PbpwOnJxsfrYctlIqGKIn
-         2YvysJuYOL3TUDOijrA6ZtiQ6+MuoadCXubhHAPE=
+        b=N9oEYMMPpF/MnQyGOZTgGDZ0J/p4+5hWjZu2PA8jL+zrj6XgjmOCVQVXsO4zsLtwF
+         IlivlZH7pWPYhMVMklgljTObSVyoz1Kr2TBMZeFG1Bp6K4nTy/T2yqeaTHRxjcKBjA
+         PmG4RpcoXCWJpSRldvjOwayD1Bxr+93tGsQF5rxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 126/270] media: cros-ec-cec: do not bail on device_init_wakeup failure
-Date:   Mon, 17 Aug 2020 17:15:27 +0200
-Message-Id: <20200817143802.057347794@linuxfoundation.org>
+Subject: [PATCH 5.4 137/270] drm/bridge: sil_sii8620: initialize return of sii8620_readb
+Date:   Mon, 17 Aug 2020 17:15:38 +0200
+Message-Id: <20200817143802.617348399@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,48 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 6f01dfb760c027d5dd6199d91ee9599f2676b5c6 ]
+[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
 
-Do not fail probing when device_init_wakeup fails.
+clang static analysis flags this error
 
-device_init_wakeup fails when the device is already enabled as wakeup
-device. Hence, the driver fails to probe the device if:
-- The device has already been enabled for wakeup (by e.g. sysfs)
-- The driver has been unloaded and is being loaded again.
+sil-sii8620.c:184:2: warning: Undefined or garbage value
+  returned to caller [core.uninitialized.UndefReturn]
+        return ret;
+        ^~~~~~~~~~
 
-This goal of the patch is to fix the above cases.
+sii8620_readb calls sii8620_read_buf.
+sii8620_read_buf can return without setting its output
+pararmeter 'ret'.
 
-Overwhelming majority of the drivers do not check device_init_wakeup
-return code.
+So initialize ret.
 
-Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/cros-ec-cec/cros-ec-cec.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-index 4a3b3810fd895..31390ce2dbf2d 100644
---- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-+++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-@@ -278,11 +278,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cros_ec_cec);
- 	cros_ec_cec->cros_ec = cros_ec;
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index bd3165ee53541..04431dbac4a4f 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -177,7 +177,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
  
--	ret = device_init_wakeup(&pdev->dev, 1);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to initialize wakeup\n");
--		return ret;
--	}
-+	device_init_wakeup(&pdev->dev, 1);
+ static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
+ {
+-	u8 ret;
++	u8 ret = 0;
  
- 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
- 						 DRV_NAME,
+ 	sii8620_read_buf(ctx, addr, &ret, 1);
+ 	return ret;
 -- 
 2.25.1
 
