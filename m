@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA964C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D03D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9068B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693526;
-	bh=n4+rbEnu5fyOcSLZHKIsQ0tr72OZykSW/pXLx9Eq//Q=;
+	s=default; t=1597693528;
+	bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifUU+Ap15Erw8k8DIrjg+fUDu5Ym8ECSmD6r2UMBxKyxZW/TBms2e+AdKQA35+lBS
-	 3HZs8qtCt0AXQrX8J9eYa/zyUDaTilT4QIbe4BKSKGO5PGWfm70s8n6Ts28tuIE3aP
-	 gI1N7OD72Z2f3f7qlW1AyJfdymZF0zHD9bEwnfj0=
+	b=qiMe6W4heqcZcNdcogeL/5v17hU5abr88iRYkkBBjHVgyjQnEDbL7iN+Chezi0HXH
+	 4i3P2nGQyui44r2VlEXlkOywK5ugVFjJWf+r/lfRnbsrQLO/Jr7dHKV4MnqtCGOkRg
+	 Vtp3dzK715gLuZygvkSwHyzFBqh6cbc+4WnUiY3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgHQPWT (ORCPT
+        id S1729437AbgHQPWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44334 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbgHQPVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:43 -0400
+        id S1726630AbgHQPVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A6CB22B43;
-        Mon, 17 Aug 2020 15:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5580D20709;
+        Mon, 17 Aug 2020 15:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677702;
-        bh=n4+rbEnu5fyOcSLZHKIsQ0tr72OZykSW/pXLx9Eq//Q=;
+        s=default; t=1597677697;
+        bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8zGzL8x9NVpHjQWQNWjqMw65mPFwJmnhcEaqM5qFIMWF9MG3LAoDmuRHOlTx1pX0
-         435ZfnAqrbcCnLBnRAFsfbA8NfQuFFsqN53acp1sy4S5gkPIgMgS7BCBLai4kwZVuB
-         4xBrAS1zjTOnpiEfki9/faT+c+KelAKA0yvKIPE4=
+        b=WpOpBGS3CttHURQmFYvAT7iEKTj8ZFtl/0Q/HYMVxTcim9L2tIIXYt1uA4w9Rx001
+         oh56mqe7Egcoa7Rnxw1XXFzWcFDqkArjQsLCc5DnpWf5jUonJ+GUhMr6Nbvb84M5Ns
+         AfI89bWO3qtqjQxZSBuTqqwtuv6MASyVo/0AU1gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 077/464] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Mon, 17 Aug 2020 17:10:30 +0200
-Message-Id: <20200817143837.463988990@linuxfoundation.org>
+Subject: [PATCH 5.8 075/464] irqchip/loongson-pch-pic: Fix the misused irq flow handler
+Date:   Mon, 17 Aug 2020 17:10:28 +0200
+Message-Id: <20200817143837.367100750@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,49 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit ac62460c24126eb2442e3653a266ebbf05b004d8 ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+Loongson PCH PIC is a standard level triggered PIC, and it need to clear
+interrupt during unmask.
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
-
-Fix these two issues.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Fixes: ef8c01eb64ca6719da449dab0 ("irqchip: Add Loongson PCH PIC controller")
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://lore.kernel.org/r/1596099090-23516-6-git-send-email-chenhc@lemote.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-pch-pic.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 12823d60c4e89..4be53768f0146 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -139,12 +139,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 016f32c4cbe18..9bf6b9a5f7348 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -64,15 +64,6 @@ static void pch_pic_bitclr(struct pch_pic *priv, int offset, int bit)
+ 	raw_spin_unlock(&priv->pic_lock);
+ }
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
+-static void pch_pic_eoi_irq(struct irq_data *d)
+-{
+-	u32 idx = PIC_REG_IDX(d->hwirq);
+-	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
+-
+-	writel(BIT(PIC_REG_BIT(d->hwirq)),
+-			priv->base + PCH_PIC_CLR + idx * 4);
+-}
+-
+ static void pch_pic_mask_irq(struct irq_data *d)
+ {
+ 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
+@@ -85,6 +76,9 @@ static void pch_pic_unmask_irq(struct irq_data *d)
+ {
+ 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
  
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
- 
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
++	writel(BIT(PIC_REG_BIT(d->hwirq)),
++			priv->base + PCH_PIC_CLR + PIC_REG_IDX(d->hwirq) * 4);
 +
- 		drm_display_mode_from_videomode(&vm, mode);
+ 	irq_chip_unmask_parent(d);
+ 	pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
+ }
+@@ -124,7 +118,6 @@ static struct irq_chip pch_pic_irq_chip = {
+ 	.irq_mask		= pch_pic_mask_irq,
+ 	.irq_unmask		= pch_pic_unmask_irq,
+ 	.irq_ack		= irq_chip_ack_parent,
+-	.irq_eoi		= pch_pic_eoi_irq,
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
+ 	.irq_set_type		= pch_pic_set_type,
+ };
+@@ -153,7 +146,7 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
  
- 		mode->type = DRM_MODE_TYPE_DRIVER;
+ 	irq_domain_set_info(domain, virq, hwirq,
+ 			    &pch_pic_irq_chip, priv,
+-			    handle_fasteoi_ack_irq, NULL, NULL);
++			    handle_level_irq, NULL, NULL);
+ 	irq_set_probe(virq);
+ 
+ 	return 0;
 -- 
 2.25.1
 
