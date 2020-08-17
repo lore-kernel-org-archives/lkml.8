@@ -2,204 +2,155 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12715C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8437FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1FF520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685717;
-	bh=+RjtoMXfi5nM0xHjJHVcjEt1tdqpHEiBMxfBhtLK/uk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pvbCCrC7sJRths0cGq8M7jq5bq3vrFK414+VjuteG+L14RyJD7NN7FciBLqGn+2jf
-	 /umiyqIR9mkvTEuTlFhDUh6K+IiVxv8YOqorqQuicIFjaPC9qDH53phQcWzIa73F/I
-	 KY24OjQkABP/ixIjOE5kHdaSn14K/aLMMmu8Yln0=
+	by mail.kernel.org (Postfix) with ESMTP id 5506E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPob0hGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbgHQRfO (ORCPT
+        id S1729799AbgHQRfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730102AbgHQQRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FFEC22BEA;
-        Mon, 17 Aug 2020 16:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681063;
-        bh=+RjtoMXfi5nM0xHjJHVcjEt1tdqpHEiBMxfBhtLK/uk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M53BPLl2wZH+nSBU9WzvJyJR4gc6XHG1emi+IDGBY4+Z9akXq6X5d8UPnSFFuNyzH
-         sOJLMvBVcsP+dov2DvlecDgqE5u82LxsRkotIUh9197QwWDzzwoyzzywem8x1N32Ne
-         w+908E902LSCk7DJ1pn+ZcoZYrPk3z1s4bBHpX5o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 136/168] net: refactor bind_bucket fastreuse into helper
-Date:   Mon, 17 Aug 2020 17:17:47 +0200
-Message-Id: <20200817143740.496196974@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 13:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731273AbgHQQcP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:32:15 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EF6C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:32:14 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j187so15482130qke.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9m4MfDUfrltprFjWsb3k3Kia0mWcTEtj+YWN//2YLSE=;
+        b=jPob0hGf8a2L4JsXcMdzEjwJAr4SK4ZI67Zl6bJCrKDXIFEuivs+1/Tf6V3WLsPcHH
+         HtyGxTc/QvBwerXGUKIpw1BkjLG/NCi95nxF5AJI18Qyg+8Or+PEZarPxnsAM8A/FWEf
+         xSnqRXeG2PuLndwdSbOlZfx8onjfDbigwLH237qO78YbIzfuiovoWXJANyulgpDQbPDu
+         j5tY7czB0BeZJxrBmF2VjVjJdB/QpEoYqL7tQB4TMVqfCWBZgtER6OJuu6+Du1ZZbdDy
+         MaLB8z3ozcD0r0BiKnrdzw4cHaRkWlR6ifUF7BZxzuU+CUhqjKO2cya32IlMbR0w0H6h
+         2tCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9m4MfDUfrltprFjWsb3k3Kia0mWcTEtj+YWN//2YLSE=;
+        b=E2bb70oiz71/t05zmkr0Pytew4+bZ471ft6CAPjX+kJ898iDv3d/7ozVaS4JJfnKyv
+         vNDI8grON/pLx785aSZQ3Z+FUB1E58ks9D2f6rtxHGBra9S87poGmlylNdkCevpUQyL+
+         i8blOfPHD8RdF7L183CQfzaxFTUFpTGn0J7hDDSdQdlRoFClI/5/gu6wxiKChWdnI4td
+         t6QSAy9jRjAgOD32mlXDhE22OpcpmILTuBuZaJ3kIcFfJXt3WywbNnBoXnb/l4SjSfmL
+         +ib+XGzMD+7gdxwQ4IoI42U/63i/6s/t9VDx9r9TWsKGwlzn96nEK2kR/6EdBj82x1Kx
+         vCfQ==
+X-Gm-Message-State: AOAM532lQ/x2N/hQhA4xafMslUUXO5ZjtMj2aL4IDtccE6S+IXL8N4Q1
+        mbh+aSpKpZXL2Mfxbrzdh2g=
+X-Google-Smtp-Source: ABdhPJzPZE5HzRjmtdIRGzVfzwZiibX8QBNrVCGwBKoEgHQZmDiPEvdnBfCVQz/pUpnG4j+W0t/wDQ==
+X-Received: by 2002:a37:8287:: with SMTP id e129mr11743166qkd.132.1597681933893;
+        Mon, 17 Aug 2020 09:32:13 -0700 (PDT)
+Received: from atris.xiphos.ca (198-48-202-89.cpe.pppoe.ca. [198.48.202.89])
+        by smtp.gmail.com with ESMTPSA id j16sm17335953qke.87.2020.08.17.09.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 09:32:13 -0700 (PDT)
+From:   Liam Beguin <liambeguin@gmail.com>
+To:     liambeguin@gmail.com, kishon@ti.com, vkoul@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/1] phy: tusb1210: use bitmasks to set VENDOR_SPECIFIC2
+Date:   Mon, 17 Aug 2020 12:31:52 -0400
+Message-Id: <20200817163152.13468-1-liambeguin@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+From: Liam Beguin <lvb@xiphos.com>
 
-[ Upstream commit 62ffc589abb176821662efc4525ee4ac0b9c3894 ]
+Start by reading the content of the VENDOR_SPECIFIC2 register and update
+each bit field based on device properties when defined.
 
-Refactor the fastreuse update code in inet_csk_get_port into a small
-helper function that can be called from other places.
+The use of bit masks prevents fields from overriding each other and
+enables users to clear bits which are set by default, like datapolarity
+in this instance.
 
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Liam Beguin <lvb@xiphos.com>
 ---
- include/net/inet_connection_sock.h |    4 +
- net/ipv4/inet_connection_sock.c    |   93 ++++++++++++++++++++-----------------
- 2 files changed, 55 insertions(+), 42 deletions(-)
+Changes since v1:
+- use set_mask_bits
 
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -313,5 +313,9 @@ int inet_csk_compat_getsockopt(struct so
- int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
- 			       char __user *optval, unsigned int optlen);
+Changes since v2:
+- fix missing bit shift dropped in v2
+- rebase on 5.9-rc1
+
+ drivers/phy/ti/phy-tusb1210.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
+index d8d0cc11d187..358842b5790f 100644
+--- a/drivers/phy/ti/phy-tusb1210.c
++++ b/drivers/phy/ti/phy-tusb1210.c
+@@ -14,8 +14,11 @@
  
-+/* update the fast reuse flag when adding a socket */
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk);
+ #define TUSB1210_VENDOR_SPECIFIC2		0x80
+ #define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT	0
++#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK	GENMASK(3, 0)
+ #define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT	4
++#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK	GENMASK(5, 4)
+ #define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT	6
++#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK	BIT(6)
+ 
+ struct tusb1210 {
+ 	struct ulpi *ulpi;
+@@ -118,23 +121,27 @@ static int tusb1210_probe(struct ulpi *ulpi)
+ 	 * diagram optimization and DP/DM swap.
+ 	 */
+ 
++	reg = ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
 +
- struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
- #endif /* _INET_CONNECTION_SOCK_H */
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -285,51 +285,12 @@ static inline int sk_reuseport_match(str
- 				    ipv6_only_sock(sk), true, false);
- }
+ 	/* High speed output drive strength configuration */
+-	device_property_read_u8(&ulpi->dev, "ihstx", &val);
+-	reg = val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
++	if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
++		reg = set_mask_bits(&reg, TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK,
++				    val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT);
  
--/* Obtain a reference to a local port for the given sock,
-- * if snum is zero it means select any available local port.
-- * We try to allocate an odd port (and leave even ports for connect())
-- */
--int inet_csk_get_port(struct sock *sk, unsigned short snum)
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk)
- {
--	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
--	struct inet_hashinfo *hinfo = sk->sk_prot->h.hashinfo;
--	int ret = 1, port = snum;
--	struct inet_bind_hashbucket *head;
--	struct net *net = sock_net(sk);
--	struct inet_bind_bucket *tb = NULL;
- 	kuid_t uid = sock_i_uid(sk);
-+	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
+ 	/* High speed output impedance configuration */
+-	device_property_read_u8(&ulpi->dev, "zhsdrv", &val);
+-	reg |= val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT;
++	if (!device_property_read_u8(&ulpi->dev, "zhsdrv", &val))
++		reg = set_mask_bits(&reg, TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK,
++				    val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT);
  
--	if (!port) {
--		head = inet_csk_find_open_port(sk, &tb, &port);
--		if (!head)
--			return ret;
--		if (!tb)
--			goto tb_not_found;
--		goto success;
--	}
--	head = &hinfo->bhash[inet_bhashfn(net, port,
--					  hinfo->bhash_size)];
--	spin_lock_bh(&head->lock);
--	inet_bind_bucket_for_each(tb, &head->chain)
--		if (net_eq(ib_net(tb), net) && tb->port == port)
--			goto tb_found;
--tb_not_found:
--	tb = inet_bind_bucket_create(hinfo->bind_bucket_cachep,
--				     net, head, port);
--	if (!tb)
--		goto fail_unlock;
--tb_found:
--	if (!hlist_empty(&tb->owners)) {
--		if (sk->sk_reuse == SK_FORCE_REUSE)
--			goto success;
+ 	/* DP/DM swap control */
+-	device_property_read_u8(&ulpi->dev, "datapolarity", &val);
+-	reg |= val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT;
 -
--		if ((tb->fastreuse > 0 && reuse) ||
--		    sk_reuseport_match(tb, sk))
--			goto success;
--		if (inet_csk_bind_conflict(sk, tb, true, true))
--			goto fail_unlock;
--	}
--success:
- 	if (hlist_empty(&tb->owners)) {
- 		tb->fastreuse = reuse;
- 		if (sk->sk_reuseport) {
-@@ -373,6 +334,54 @@ success:
- 			tb->fastreuseport = 0;
- 		}
+-	if (reg) {
+-		ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
+-		tusb->vendor_specific2 = reg;
++	if (!device_property_read_u8(&ulpi->dev, "datapolarity", &val)) {
++		reg = set_mask_bits(&reg, TUSB1210_VENDOR_SPECIFIC2_DP_MASK,
++				    val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT);
  	}
-+}
+ 
++	ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
++	tusb->vendor_specific2 = reg;
 +
-+/* Obtain a reference to a local port for the given sock,
-+ * if snum is zero it means select any available local port.
-+ * We try to allocate an odd port (and leave even ports for connect())
-+ */
-+int inet_csk_get_port(struct sock *sk, unsigned short snum)
-+{
-+	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
-+	struct inet_hashinfo *hinfo = sk->sk_prot->h.hashinfo;
-+	int ret = 1, port = snum;
-+	struct inet_bind_hashbucket *head;
-+	struct net *net = sock_net(sk);
-+	struct inet_bind_bucket *tb = NULL;
-+
-+	if (!port) {
-+		head = inet_csk_find_open_port(sk, &tb, &port);
-+		if (!head)
-+			return ret;
-+		if (!tb)
-+			goto tb_not_found;
-+		goto success;
-+	}
-+	head = &hinfo->bhash[inet_bhashfn(net, port,
-+					  hinfo->bhash_size)];
-+	spin_lock_bh(&head->lock);
-+	inet_bind_bucket_for_each(tb, &head->chain)
-+		if (net_eq(ib_net(tb), net) && tb->port == port)
-+			goto tb_found;
-+tb_not_found:
-+	tb = inet_bind_bucket_create(hinfo->bind_bucket_cachep,
-+				     net, head, port);
-+	if (!tb)
-+		goto fail_unlock;
-+tb_found:
-+	if (!hlist_empty(&tb->owners)) {
-+		if (sk->sk_reuse == SK_FORCE_REUSE)
-+			goto success;
-+
-+		if ((tb->fastreuse > 0 && reuse) ||
-+		    sk_reuseport_match(tb, sk))
-+			goto success;
-+		if (inet_csk_bind_conflict(sk, tb, true, true))
-+			goto fail_unlock;
-+	}
-+success:
-+	inet_csk_update_fastreuse(tb, sk);
-+
- 	if (!inet_csk(sk)->icsk_bind_hash)
- 		inet_bind_hash(sk, tb, port);
- 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
+ 	tusb->phy = ulpi_phy_create(ulpi, &phy_ops);
+ 	if (IS_ERR(tusb->phy))
+ 		return PTR_ERR(tusb->phy);
 
+base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+-- 
+2.27.0
 
