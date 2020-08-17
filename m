@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53970C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E29C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37DC020716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E00420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685926;
-	bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
+	s=default; t=1597685942;
+	bh=qrdaKOIVavS/UpsqEh0jTdT1tTtGvj0c6xdHIGU2Kmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUL3u83a25FnlpCDlZZdLu/cPKLOFAYd5OXtPtXMpErxRZFE0bTl3sn7zc8OMj/4Y
-	 +6c3bpqUyfXknjpe+o4KiiYrnPomTSeCCoU4D9V6gEv0HFi+hQmv6elAKONK3q78Da
-	 fUHpwVQexGYaA8GBunLyqZxaM1AOG3Fo9i5CueSk=
+	b=YUyoMJzGSBNae44G0gWfXXxKowSN0i1p0glGsCEsHohP2S2C0tObycjZSGSnjX2jk
+	 gcK2WFCnx0tcFfgky+NIq1PTImypcu3ZsGuQyrykod6mVS5wMHNHR9u7e1PNThYaWG
+	 J9IAqPJWo9jhrQXAoO8BRafJXW4tEeDiHB8VIC5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgHQRio (ORCPT
+        id S1729528AbgHQRjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731134AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B782220B1F;
-        Mon, 17 Aug 2020 16:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0ED7208C7;
+        Mon, 17 Aug 2020 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681006;
-        bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
+        s=default; t=1597681018;
+        bh=qrdaKOIVavS/UpsqEh0jTdT1tTtGvj0c6xdHIGU2Kmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVNFDye3YISeREUYlej9yyPcuEte32hAnyxHqcGykjBW9VHE1GdAMQyhPrKvW3awn
-         ZLmUQ0EUHz35XA3Dy/Drq3ifq03YrtumUtSfajrlsAt6ry8UCMdDyw26T000qJEUwx
-         8KG9z7rvv92BbjEwn4FoXQ5o7Dxl8CR0UKoSJzRo=
+        b=zWYXiRXcd4Nzhjj5cyyct4z8WVQUhTB77rBctMoJXa9/1O027Krdp4UW++Xbq8QK+
+         yq2L9Oag/IQrSULPUESHd77icYbte0C86F/o4YqdcJdFNGvYAyEgP6FRMVx2aeFaHh
+         iunIDXzPuUxd4ZHfyivfn15RHanQXuVAhKDOU028=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 146/168] crypto: qat - fix double free in qat_uclo_create_batch_init_list
-Date:   Mon, 17 Aug 2020 17:17:57 +0200
-Message-Id: <20200817143740.956049346@linuxfoundation.org>
+        stable@vger.kernel.org, Qingyu Li <ieatmuttonchuan@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 133/168] net/nfc/rawsock.c: add CAP_NET_RAW check.
+Date:   Mon, 17 Aug 2020 17:17:44 +0200
+Message-Id: <20200817143740.342175123@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,91 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Qingyu Li <ieatmuttonchuan@gmail.com>
 
-commit c06c76602e03bde24ee69a2022a829127e504202 upstream.
+[ Upstream commit 26896f01467a28651f7a536143fe5ac8449d4041 ]
 
-clang static analysis flags this error
+When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked first.
 
-qat_uclo.c:297:3: warning: Attempt to free released memory
-  [unix.Malloc]
-                kfree(*init_tab_base);
-                ^~~~~~~~~~~~~~~~~~~~~
-
-When input *init_tab_base is null, the function allocates memory for
-the head of the list.  When there is problem allocating other list
-elements the list is unwound and freed.  Then a check is made if the
-list head was allocated and is also freed.
-
-Keeping track of the what may need to be freed is the variable 'tail_old'.
-The unwinding/freeing block is
-
-	while (tail_old) {
-		mem_init = tail_old->next;
-		kfree(tail_old);
-		tail_old = mem_init;
-	}
-
-The problem is that the first element of tail_old is also what was
-allocated for the list head
-
-		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
-		...
-		*init_tab_base = init_header;
-		flag = 1;
-	}
-	tail_old = init_header;
-
-So *init_tab_base/init_header are freed twice.
-
-There is another problem.
-When the input *init_tab_base is non null the tail_old is calculated by
-traveling down the list to first non null entry.
-
-	tail_old = init_header;
-	while (tail_old->next)
-		tail_old = tail_old->next;
-
-When the unwinding free happens, the last entry of the input list will
-be freed.
-
-So the freeing needs a general changed.
-If locally allocated the first element of tail_old is freed, else it
-is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
-as null.
-
-Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/crypto/qat/qat_common/qat_uclo.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/nfc/rawsock.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/qat/qat_common/qat_uclo.c
-+++ b/drivers/crypto/qat/qat_common/qat_uclo.c
-@@ -332,13 +332,18 @@ static int qat_uclo_create_batch_init_li
- 	}
- 	return 0;
- out_err:
-+	/* Do not free the list head unless we allocated it. */
-+	tail_old = tail_old->next;
-+	if (flag) {
-+		kfree(*init_tab_base);
-+		*init_tab_base = NULL;
-+	}
-+
- 	while (tail_old) {
- 		mem_init = tail_old->next;
- 		kfree(tail_old);
- 		tail_old = mem_init;
- 	}
--	if (flag)
--		kfree(*init_tab_base);
- 	return -ENOMEM;
- }
+--- a/net/nfc/rawsock.c
++++ b/net/nfc/rawsock.c
+@@ -344,10 +344,13 @@ static int rawsock_create(struct net *ne
+ 	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
+ 		return -ESOCKTNOSUPPORT;
  
+-	if (sock->type == SOCK_RAW)
++	if (sock->type == SOCK_RAW) {
++		if (!capable(CAP_NET_RAW))
++			return -EPERM;
+ 		sock->ops = &rawsock_raw_ops;
+-	else
++	} else {
+ 		sock->ops = &rawsock_ops;
++	}
+ 
+ 	sk = sk_alloc(net, PF_NFC, GFP_ATOMIC, nfc_proto->proto, kern);
+ 	if (!sk)
 
 
