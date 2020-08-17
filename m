@@ -2,140 +2,127 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D34C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470202063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HklbjWKA"
+	by mail.kernel.org (Postfix) with ESMTP id F0A89206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHQJKA (ORCPT
+        id S1727811AbgHQJKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Aug 2020 05:10:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49688 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728352AbgHQJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 05:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728786AbgHQJHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:07:49 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0CFC061342;
-        Mon, 17 Aug 2020 02:07:48 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id d4so7383714pjx.5;
-        Mon, 17 Aug 2020 02:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=n+X9d5vT8SC5Pz64vMe7g5tLMlNwSaXJUm4aDGP4qA4=;
-        b=HklbjWKAcCZdZeoSN/XgxzMU8/wRR2Auy4T9VjyP8XL3EIQu/B9o+zT6u5qH1TWRTO
-         au79B2xEPMbiU4xrZ7zXzCQg2VLDMdMpeFEnijkByJRFPZk21pfGl8pTIGNrHe4rZ0ni
-         dYqi+t1m58tLfCir+Phy7Nl8KTdaT/s097e8/hTweB1PlagUBuFpF8aWswX9j0LeZKWC
-         SWAUNzK2TtD0qVupQ4jErl5/7mwh5liwf091mhsSzuXH9r+7nJpo8ac6gvpD2+63nUd0
-         leTlsxBQRsRxUbOwtInPSxCIdbsoxDt1COqkjCjyv37RC5EcRiqk8ywMT1xhU2a9+yso
-         deDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=n+X9d5vT8SC5Pz64vMe7g5tLMlNwSaXJUm4aDGP4qA4=;
-        b=YsltANe3mtkQ1ThVLUTf3gt3s8H1WY5KDpftSzSKsY8fVHEac3T+FmGu5+RoNRsTsa
-         o+RYtl2xA1+lFC5SMKu48h2arsXJFR2VO857xYTMANwLMLE/xS/PRuZFeaBQ1IdHoHxO
-         tOi8jVv8DMYRyCqiJMI6E6bmcefC5gyfQU4t99Hxasmaf3C44MZwD0rhacQjB5TubVSt
-         t3xyDdU90WIOlP/gcyLJDJCZGCkZ9qDpid+oER003CZExF478IlKbQByp/OtugHTpY3H
-         XCxdDQHPrAGlfPDK+meZldKWj889VI4VSicHcahpA/+6CzcIIxvhOHwVq9dx/Wo7I9SF
-         1tdw==
-X-Gm-Message-State: AOAM530s5DiV5PxAhNnSmx36E5gLF/jrgUQq/gJOWsc8XIGlatoxr8Pw
-        Jmg1TskVqkdJOAU84c9QOi8=
-X-Google-Smtp-Source: ABdhPJyi1nfjNr696xImaFKXbCsrOUzUKLp19qvJx/y7bR1RGilmldIE98IAYhPWvrOKTAjfe6rlfA==
-X-Received: by 2002:a17:902:7484:: with SMTP id h4mr10089195pll.139.1597655268400;
-        Mon, 17 Aug 2020 02:07:48 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id t14sm16616237pgb.51.2020.08.17.02.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 02:07:47 -0700 (PDT)
-From:   Allen Pais <allen.cryptic@gmail.com>
-To:     kvalo@codeaurora.org, kuba@kernel.org, jirislaby@kernel.org,
-        mickflemm@gmail.com, mcgrof@kernel.org, chunkeey@googlemail.com,
-        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
-        helmut.schaa@googlemail.com, pkshih@realtek.com,
-        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de
-Cc:     keescook@chromium.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 07/16] wireless: brcm80211: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:36:28 +0530
-Message-Id: <20200817090637.26887-8-allen.cryptic@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817090637.26887-1-allen.cryptic@gmail.com>
-References: <20200817090637.26887-1-allen.cryptic@gmail.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C3C82B67A;
+        Mon, 17 Aug 2020 09:10:23 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 82A9BDA6EF; Mon, 17 Aug 2020 11:08:54 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 11:08:54 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v2] overflow: Add __must_check attribute to check_*()
+ helpers
+Message-ID: <20200817090854.GA2026@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <202008151007.EF679DF@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008151007.EF679DF@keescook>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.lkml@gmail.com>
+On Sat, Aug 15, 2020 at 10:09:24AM -0700, Kees Cook wrote:
+> Since the destination variable of the check_*_overflow() helpers will
+> contain a wrapped value on failure, it would be best to make sure callers
+> really did check the return result of the helper. Adjust the macros to use
+> a bool-wrapping static inline that is marked with __must_check. This means
+> the macros can continue to have their type-agnostic behavior while gaining
+> the function attribute (that cannot be applied directly to macros).
+> 
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2:
+> - de-generalized __must_check_overflow() from being named "bool" (willy)
+> - fix comment typos (rasmus)
+> v1: https://lore.kernel.org/lkml/202008121450.405E4A3@keescook
+> ---
+>  include/linux/overflow.h | 39 ++++++++++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 93fcef105061..f1c4e7b56bd9 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -43,6 +43,16 @@
+>  #define is_non_negative(a) ((a) > 0 || (a) == 0)
+>  #define is_negative(a) (!(is_non_negative(a)))
+>  
+> +/*
+> + * Allows for effectively applying __must_check to a macro so we can have
+> + * both the type-agnostic benefits of the macros while also being able to
+> + * enforce that the return value is, in fact, checked.
+> + */
+> +static inline bool __must_check __must_check_overflow(bool overflow)
+> +{
+> +	return unlikely(overflow);
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+How does the 'unlikely' hint propagate through return? It is in a static
+inline so compiler has complete information in order to use it, but I'm
+curious if it actually does.
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c  | 6 +++---
- .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h  | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> +}
+> +
+>  #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
+>  /*
+>   * For simplicity and code hygiene, the fallback code below insists on
+> @@ -52,32 +62,32 @@
+>   * alias for __builtin_add_overflow, but add type checks similar to
+>   * below.
+>   */
+> -#define check_add_overflow(a, b, d) ({		\
+> +#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+>  	typeof(a) __a = (a);			\
+>  	typeof(b) __b = (b);			\
+>  	typeof(d) __d = (d);			\
+>  	(void) (&__a == &__b);			\
+>  	(void) (&__a == __d);			\
+>  	__builtin_add_overflow(__a, __b, __d);	\
+> -})
+> +}))
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-index 648efcbc819f..521abe5ce5b8 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-@@ -982,11 +982,11 @@ static const struct ieee80211_ops brcms_ops = {
- 	.set_tim = brcms_ops_beacon_set_tim,
- };
- 
--void brcms_dpc(unsigned long data)
-+void brcms_dpc(struct tasklet_struct *t)
- {
- 	struct brcms_info *wl;
- 
--	wl = (struct brcms_info *) data;
-+	wl = from_tasklet(wl, t, tasklet);
- 
- 	spin_lock_bh(&wl->lock);
- 
-@@ -1149,7 +1149,7 @@ static struct brcms_info *brcms_attach(struct bcma_device *pdev)
- 	init_waitqueue_head(&wl->tx_flush_wq);
- 
- 	/* setup the bottom half handler */
--	tasklet_init(&wl->tasklet, brcms_dpc, (unsigned long) wl);
-+	tasklet_setup(&wl->tasklet, brcms_dpc);
- 
- 	spin_lock_init(&wl->lock);
- 	spin_lock_init(&wl->isr_lock);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h
-index 198053dfc310..eaf926a96a88 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h
-@@ -106,7 +106,7 @@ struct brcms_timer *brcms_init_timer(struct brcms_info *wl,
- void brcms_free_timer(struct brcms_timer *timer);
- void brcms_add_timer(struct brcms_timer *timer, uint ms, int periodic);
- bool brcms_del_timer(struct brcms_timer *timer);
--void brcms_dpc(unsigned long data);
-+void brcms_dpc(struct tasklet_struct *t);
- void brcms_timer(struct brcms_timer *t);
- void brcms_fatal_error(struct brcms_info *wl);
- 
--- 
-2.17.1
+In case the hint gets dropped, the fix would probably be
 
+#define check_add_overflow(a, b, d) unlikely(__must_check_overflow(({	\
+ 	typeof(a) __a = (a);			\
+ 	typeof(b) __b = (b);			\
+ 	typeof(d) __d = (d);			\
+ 	(void) (&__a == &__b);			\
+ 	(void) (&__a == __d);			\
+ 	__builtin_add_overflow(__a, __b, __d);	\
+})))
