@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8971AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCE720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495D420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693308;
-	bh=u7LJ+6e/2RuN3iPKQN1Z468NNxSIyzVHmukKgUVZ9hg=;
+	s=default; t=1597693312;
+	bh=YlRh3B+yB1gO6DwsQEz0MDfmSprSyUwxCReZ80FBhQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGiuiD9LAzl6Qfv11VwlMqPdRHkvy0cGinDSpiaUrDoK2iqQ5CzWAgT0IhkzIP9p1
-	 KeJBs+7BMFJ0vxvmgmRihYeNvhaQ9EtGyCAlUx2A12awDjoZfszn+xuCIv02GfaTIq
-	 03ncDsHZMZGKm8pLzGvLr6Wz+i5lW5WR0nG7Kh4g=
+	b=xtUUXDhFYaMHdoqSNU9g4fe7CtjzrRc9xJzQaZVCU8PqsFYrahjskMPZWZsokVn95
+	 UzPXx8LxaoNnQbEun6qDb9sUH6PQH/mrzk4uHU5zhflxY8DMixkniEteIZD0PLncTq
+	 U6dnyPkDt8LNmE70spyXcXhxI2y5BN5vHNjQb/xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgHQTlr (ORCPT
+        id S2404320AbgHQTlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgHQPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:01 -0400
+        id S1729700AbgHQPYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABBC22B4B;
-        Mon, 17 Aug 2020 15:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EFD023104;
+        Mon, 17 Aug 2020 15:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677900;
-        bh=u7LJ+6e/2RuN3iPKQN1Z468NNxSIyzVHmukKgUVZ9hg=;
+        s=default; t=1597677892;
+        bh=YlRh3B+yB1gO6DwsQEz0MDfmSprSyUwxCReZ80FBhQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vcHq5W7wPXR54WETEpLzF4lxJVSEl62R6w0k+vAs++RBdDAE4UQYb6pYuJhXn4hJA
-         MFiyEQhGvVxsZzKjLXl2C6uBzaqnPtI5esUHX68anbppQSfEJkGameDwojkvHtVQl0
-         Z0pV4BULj9zH/KxMSkBGin2AptQ/nerzPB+Urh/o=
+        b=nwEEZw/ePNXayjdMN49n2ujnYfeMlZPm1S1wfyqRPOhpAS+wdCYXmRl+bLgsumiE1
+         23oSwSvgT37w2GhVgzxlEgO284tQD3WJgim9QXhi5QpjkbGrwMnaxlekU94gXrD2T4
+         MZOU1ZJWCndoqonP2qJaViT0rxf8ceki23VI7+e0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ganapathi Bhat <ganapathi.bhat@nxp.com>,
         Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 148/464] btmrvl: Fix firmware filename for sd8997 chipset
-Date:   Mon, 17 Aug 2020 17:11:41 +0200
-Message-Id: <20200817143840.899557428@linuxfoundation.org>
+Subject: [PATCH 5.8 146/464] mwifiex: Fix firmware filename for sd8997 chipset
+Date:   Mon, 17 Aug 2020 17:11:39 +0200
+Message-Id: <20200817143840.804900058@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -64,41 +64,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 00eb0cb36fad53315047af12e83c643d3a2c2e49 ]
+[ Upstream commit 2e1fcac52a9ea53e5a13a585d48a29a0fb4a9daf ]
 
 Firmware for sd8997 chipset is distributed by Marvell package and also as
 part of the linux-firmware repository in filename sdsd8997_combo_v4.bin.
 
 This patch fixes mwifiex driver to load correct firmware file for sd8997.
 
-Fixes: f0ef67485f591 ("Bluetooth: btmrvl: add sd8997 chipset support")
+Fixes: 6d85ef00d9dfe ("mwifiex: add support for 8997 chipset")
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmrvl_sdio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/sdio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
-index fa11c3443583a..64ee799c17612 100644
---- a/drivers/bluetooth/btmrvl_sdio.c
-+++ b/drivers/bluetooth/btmrvl_sdio.c
-@@ -346,7 +346,7 @@ static const struct btmrvl_sdio_device btmrvl_sdio_sd8987 = {
+diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.h b/drivers/net/wireless/marvell/mwifiex/sdio.h
+index 0cac2296ed53c..8b476b007c5e2 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sdio.h
++++ b/drivers/net/wireless/marvell/mwifiex/sdio.h
+@@ -38,7 +38,7 @@
+ #define SD8801_DEFAULT_FW_NAME "mrvl/sd8801_uapsta.bin"
+ #define SD8977_DEFAULT_FW_NAME "mrvl/sdsd8977_combo_v2.bin"
+ #define SD8987_DEFAULT_FW_NAME "mrvl/sd8987_uapsta.bin"
+-#define SD8997_DEFAULT_FW_NAME "mrvl/sd8997_uapsta.bin"
++#define SD8997_DEFAULT_FW_NAME "mrvl/sdsd8997_combo_v4.bin"
  
- static const struct btmrvl_sdio_device btmrvl_sdio_sd8997 = {
- 	.helper         = NULL,
--	.firmware       = "mrvl/sd8997_uapsta.bin",
-+	.firmware       = "mrvl/sdsd8997_combo_v4.bin",
- 	.reg            = &btmrvl_reg_8997,
- 	.support_pscan_win_report = true,
- 	.sd_blksz_fw_dl = 256,
-@@ -1833,4 +1833,4 @@ MODULE_FIRMWARE("mrvl/sd8887_uapsta.bin");
- MODULE_FIRMWARE("mrvl/sd8897_uapsta.bin");
- MODULE_FIRMWARE("mrvl/sdsd8977_combo_v2.bin");
- MODULE_FIRMWARE("mrvl/sd8987_uapsta.bin");
--MODULE_FIRMWARE("mrvl/sd8997_uapsta.bin");
-+MODULE_FIRMWARE("mrvl/sdsd8997_combo_v4.bin");
+ #define BLOCK_MODE	1
+ #define BYTE_MODE	0
 -- 
 2.25.1
 
