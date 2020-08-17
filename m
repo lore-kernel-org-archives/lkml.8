@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D982C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B92420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B493120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684690;
-	bh=ivOMTOdFsLN/sz1ORCYQGPOcLijlJUddQvL8fkZTMnE=;
+	s=default; t=1597684708;
+	bh=VaCrLvSekWJClVn1YBP6qZ2kXCHDNEXrVPAJS2fvwRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXZDJcMa+o+Xotv/2pY9fyLSSoUEWifUxj/SDw2D1kihvG3A3Y14DaMraEjFZ/J5H
-	 3YdtUdoIj1hfdL9uyvPZYwNjh/ABm5XJ1nZ+xMjou6Hqjj3xmV2fyAnf+yCu8Geh53
-	 hr7HSQBJw7KBHneOcywldTVlp2p1kb+rDj6xD09o=
+	b=f4zeP7IIbztqY78RpREMt3oWMhnub78fJv71C11EC3Euw6O5XUn+I9Hu8GUhQsrZf
+	 tn9dWUWz/1QKMtjyj3CpYPQfoNbH1N87+TX/aZTPgH46V1TTi4Onr7XS/5TtETl8uH
+	 sLGJXCySx3WLbNYbICB/X2dsHvEuFy9MIgmDMWu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389661AbgHQRSI (ORCPT
+        id S2389492AbgHQRSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:18:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52756 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbgHQQO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:57 -0400
+        id S2388799AbgHQQPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:15:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C47F207DE;
-        Mon, 17 Aug 2020 16:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C2CD20578;
+        Mon, 17 Aug 2020 16:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680897;
-        bh=ivOMTOdFsLN/sz1ORCYQGPOcLijlJUddQvL8fkZTMnE=;
+        s=default; t=1597680910;
+        bh=VaCrLvSekWJClVn1YBP6qZ2kXCHDNEXrVPAJS2fvwRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMhwAW+hsD+tOhtqloFsRI5VkO3CfbHaUZq2uhRdwiEqv792giL5LbHXoF5lfDQHr
-         +RTgbhjWma7tmw7NK5YpfOBVXpI5KLUJ+o/+PewUmMljbFKWCPkovS6h3Zxb+GX2BC
-         7nYrMiFYByob9EqmfNQq9KaNSCDjsQlPpF5b3cZY=
+        b=kv00r9UoCwFy54kY7qY76F04pPW1NVNxrG8ycv/ScXQb3JsmfjvXkL75tJTGpEGgM
+         zJl1x3B5pebUl1+c2TudKETFqSdcL6sO/AnhLSFMuq1182tep5N2vZDbW8G6oHDQIS
+         sPy9Q5vsSHxojZfPGNum0y1PxSBQWzGXOVXYG2DA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/168] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
-Date:   Mon, 17 Aug 2020 17:16:42 +0200
-Message-Id: <20200817143737.261687232@linuxfoundation.org>
+Subject: [PATCH 4.19 099/168] net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
+Date:   Mon, 17 Aug 2020 17:17:10 +0200
+Message-Id: <20200817143738.655691195@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,35 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
+[ Upstream commit 0f3c66a3c7b4e8b9f654b3c998e9674376a51b0f ]
 
-The dev_id used in request_irq() and free_irq() should match. Use 'info' in
-both cases.
+The MV88E6097 chip does not support configuring jumbo frames. Prior to
+commit 5f4366660d65 only the 6352, 6351, 6165 and 6320 chips configured
+jumbo mode. The refactor accidentally added the function for the 6097.
+Remove the erroneous function pointer assignment.
 
-Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 5f4366660d65 ("net: dsa: mv88e6xxx: Refactor setting of jumbo frames")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/eesox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
-index e93e047f43165..65bb34ce93b94 100644
---- a/drivers/scsi/arm/eesox.c
-+++ b/drivers/scsi/arm/eesox.c
-@@ -575,7 +575,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
- 
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
- 
-  out_remove:
- 	fas216_remove(host);
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 43b00e8bcdcd7..6fa8aa69b4180 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -2930,7 +2930,6 @@ static const struct mv88e6xxx_ops mv88e6097_ops = {
+ 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
+ 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
+ 	.port_set_ether_type = mv88e6351_port_set_ether_type,
+-	.port_set_jumbo_size = mv88e6165_port_set_jumbo_size,
+ 	.port_egress_rate_limiting = mv88e6095_port_egress_rate_limiting,
+ 	.port_pause_limit = mv88e6097_port_pause_limit,
+ 	.port_disable_learn_limit = mv88e6xxx_port_disable_learn_limit,
 -- 
 2.25.1
 
