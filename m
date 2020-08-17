@@ -2,122 +2,106 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F17AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45B82063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F2B2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XNx3Kz/k"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WW6BjLlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgHQI1U (ORCPT
+        id S1728073AbgHQI1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        Mon, 17 Aug 2020 04:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgHQI0Z (ORCPT
+        with ESMTP id S1728406AbgHQI0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:26:25 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9861AC061388;
-        Mon, 17 Aug 2020 01:26:25 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t6so7348674pjr.0;
-        Mon, 17 Aug 2020 01:26:25 -0700 (PDT)
+        Mon, 17 Aug 2020 04:26:19 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8943EC06138A
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:26:19 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id i26so11598341edv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Df7yxK//cmVxvAkf6cXduXiAsh32H2X5cVsb6K8GHGM=;
-        b=XNx3Kz/kSLSRc7VTJus4z7RYdORZ86+CFl9HXiWO+FTTDyVpTDjj3setW6Q8pT38mh
-         NmOs1/ct0cRXsbBeRTwvx4W1afRcRX6p+G7YG0U9cG5hRYgnLqPpAHCICNeXp8/3MONy
-         Xb3t+Azgude6qcZ6sxW9JZsKZzsk9pUn+LymdgQuENerjmXXr6xtfYbelZuiw41dEIdz
-         P0wXQ2PtBLxCES+dmV6SBamPReFvL3SyU1HWQp3U4mxHPklRPF+So6pXcy8/wvv8Fb3R
-         /UdfL3Ca2orJ4GrTPiExKanCPWj2W3yP+gt/KsqbHMJLz7Lpae2Pp5SYue11557317bf
-         LDcw==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EB784NjPICkYR6SWnOZXgVJnpSq6x26Bh+bf4QaSgmE=;
+        b=WW6BjLlHMZolL6jV9wGUJ2Nqna4uXwJlebSkTA9urlIi6Sa4Pa/NFLVlhsaFlRrn9E
+         XQngChT6EYMcGX3cA8zMULqnTs8j60bTV+lfjDankwdHtdAkUKN1PbSGAMxLTWewd3c0
+         abf5dN1kL9l6jxvEgxS3raK9zw14TFbm9RQxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Df7yxK//cmVxvAkf6cXduXiAsh32H2X5cVsb6K8GHGM=;
-        b=faxjoWPYRJnQEW9g98fuS9hx49aen021prBJqSg+9Eq/93V1rFw0xg0bRDsrbHPoDE
-         dt2u2T9TYOmkYd7J7Bdg4GeKEiiHXr4UI/jmtZqPzKLucFAEXYUrwPj+LAREWqHgBSaq
-         kvi11bji5LD5HyzGc06BgriiTl8l62lRGykiDmgdP8y2AL4nObVTUk4TJzKoSMroXPYU
-         PLfNwyqo3LeQhtm0XllrLlxCyGQkvTO68x/Co1lhb9GxmdeGYLyVPcPmss67+Iwv69L2
-         lmfLgvffNhLOADkg14adjiJaTrF98VyFp2hjZ0BklXPhY+lD2BdEKiOfpFSg0omM/bas
-         GlGQ==
-X-Gm-Message-State: AOAM532Fa1R2v7yLmI/uSomPL2OeHpS2LYcXNFnovMASPy3yBIlnALHL
-        te9GO2oPmUimVnqQKKQt26g=
-X-Google-Smtp-Source: ABdhPJy25qZkwLdPxae9MaYOKgL9LadrOvMoVqZOA4GCkZihBoxS6mmIhsQz13i9lJFXT11QTvGjjQ==
-X-Received: by 2002:a17:902:264:: with SMTP id 91mr10638591plc.88.1597652785215;
-        Mon, 17 Aug 2020 01:26:25 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.26.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:26:24 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
-        kda@linux-powerpc.org, dougmill@linux.ibm.com,
-        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com
-Cc:     keescook@chromium.org, linux-acenic@sunsite.dk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 15/20] ethernet: natsemi: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:54:29 +0530
-Message-Id: <20200817082434.21176-17-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817082434.21176-1-allen.lkml@gmail.com>
-References: <20200817082434.21176-1-allen.lkml@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EB784NjPICkYR6SWnOZXgVJnpSq6x26Bh+bf4QaSgmE=;
+        b=qPyfn9E1M3kSW6IJgsqg0C0HmP5iYtsC2svwhg25eyCanvYRr4jGI9Xtkjv3rusNYL
+         pajjQXkpCKqIEbzQ1lieMCjuXyhLgkgaiI9Hl5ccNSRYRa2MQfHHfr9proImTBWXCW38
+         jiX/zW0XnubcPupKC+Bz0cgUrgOnaMTHXWJCwO/VEcba18bxkZiK68V2m7U5PTJ3IUUh
+         H+t6T8D9aArgMxMejP/8PTbqfK4g1N6DRD4L5BHCVeOAKg/3VWYW9gkwdEpLzVKaZ4n6
+         zj+5iram3352DtG7PEje+kFlKGhrfgsyRFsg8yDcyNzTobvwdf+2Zju7knohGQNjtSR/
+         G6Uw==
+X-Gm-Message-State: AOAM533hVAYrnvP7DEdqjvyDWEB1hBpnkh87XZ7/FGAf8LGrs9+/AbLI
+        Pi6yByJkvtiQCodf24VsxqYQUQ==
+X-Google-Smtp-Source: ABdhPJxsKL8nm53WAnCAbGQdXqx/yIadsPW7nUTLAsMfgGi8OvTQ7NHOoDONUkkkyNaMHrIoZuYVvQ==
+X-Received: by 2002:a50:c3c4:: with SMTP id i4mr13899573edf.244.1597652778082;
+        Mon, 17 Aug 2020 01:26:18 -0700 (PDT)
+Received: from [172.16.11.132] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id v13sm14170727edl.9.2020.08.17.01.26.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 01:26:17 -0700 (PDT)
+Subject: Re: [PATCH 08/30] net: wireless: ath: carl9170: Mark 'ar9170_qmap' as
+ __maybe_unused
+To:     Christian Lamparter <chunkeey@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+ <20200814113933.1903438-9-lee.jones@linaro.org>
+ <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <9776eb47-6b83-a891-f057-dd34d14ea16e@rasmusvillemoes.dk>
+Date:   Mon, 17 Aug 2020 10:26:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+On 14/08/2020 17.14, Christian Lamparter wrote:
+> On 2020-08-14 13:39, Lee Jones wrote:
+>> 'ar9170_qmap' is used in some source files which include carl9170.h,
+>> but not all of them.  Mark it as __maybe_unused to show that this is
+>> not only okay, it's expected.
+>>
+>> Fixes the following W=1 kernel build warning(s)
+> 
+> Is this W=1 really a "must" requirement? I find it strange having
+> __maybe_unused in header files as this "suggests" that the
+> definition is redundant.
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- drivers/net/ethernet/natsemi/ns83820.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+In this case it seems one could replace the table lookup with a
 
-diff --git a/drivers/net/ethernet/natsemi/ns83820.c b/drivers/net/ethernet/natsemi/ns83820.c
-index 8e24c7acf79b..9157c1bffc79 100644
---- a/drivers/net/ethernet/natsemi/ns83820.c
-+++ b/drivers/net/ethernet/natsemi/ns83820.c
-@@ -923,10 +923,10 @@ static void rx_irq(struct net_device *ndev)
- 	spin_unlock_irqrestore(&info->lock, flags);
- }
- 
--static void rx_action(unsigned long _dev)
-+static void rx_action(struct tasklet_struct *t)
- {
--	struct net_device *ndev = (void *)_dev;
--	struct ns83820 *dev = PRIV(ndev);
-+	struct ns83820 *dev = from_tasklet(dev, t, rx_tasklet);
-+	struct net_device *ndev = dev->ndev;
- 	rx_irq(ndev);
- 	writel(ihr, dev->base + IHR);
- 
-@@ -1927,7 +1927,7 @@ static int ns83820_init_one(struct pci_dev *pci_dev,
- 	SET_NETDEV_DEV(ndev, &pci_dev->dev);
- 
- 	INIT_WORK(&dev->tq_refill, queue_refill);
--	tasklet_init(&dev->rx_tasklet, rx_action, (unsigned long)ndev);
-+	tasklet_setup(&dev->rx_tasklet, rx_action);
- 
- 	err = pci_enable_device(pci_dev);
- 	if (err) {
--- 
-2.17.1
+static inline u8 ar9170_qmap(u8 idx) { return 3 - idx; }
 
+gcc doesn't warn about unused static inline functions (or one would have
+a million warnings to deal with). Just my $0.02.
+
+Rasmus
