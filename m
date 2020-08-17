@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E40C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF79120786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A829207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678317;
-	bh=6Sh+2bqw7lgK2PTohYMXUs4R2NXha6DhzDcM8Up/1F8=;
+	s=default; t=1597678330;
+	bh=QmkkQpVGeiuZWyPA3ADslTWvCLCQsVPReuu+LJoLHP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QoJjHBZuVgZL6ZQoITFCa+XliRhJnS55dDVeG9A8jJFYp4GBpgBnXcZXDIhXqIpGo
-	 16dJAljhkyDTQ70s3f4LIWBbLC/zutwDF0bE9cCTSzILvh/rV/gHwnpkBqMi1nBJuJ
-	 IXvOK5aohaEEuzEPZGMVHCx/TLgdCBe7Guxtir5A=
+	b=QVFBcgBYH33iPsrULnn30ETRHKJUI2nB/dhvjcm2gg+jrY9ZmYCNzN90V1hSqWFHP
+	 6+1+nQgc2xdl6FvYezD3NlDZaRgb+1A+pXkshApGox6XW8683pEtCqbph79spK3Lzc
+	 gsKNb0MKM8Iy4z9CxUEGPRm0CFwWVPIB/U+d8lbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgHQPbs (ORCPT
+        id S1729469AbgHQPcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46386 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbgHQP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:06 -0400
+        id S1730052AbgHQP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E9323B99;
-        Mon, 17 Aug 2020 15:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 622362395B;
+        Mon, 17 Aug 2020 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678145;
-        bh=6Sh+2bqw7lgK2PTohYMXUs4R2NXha6DhzDcM8Up/1F8=;
+        s=default; t=1597678139;
+        bh=QmkkQpVGeiuZWyPA3ADslTWvCLCQsVPReuu+LJoLHP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMrDgvqOAkV8n2DTPaNm9naD/jOIK9/z/5tQE8CKJNAXyThRRAWMQxnd7rJtqaLhV
-         PX/ZRa3nn5h3RGGuuAHgRbBbdVTxQBnOfiaQEIdjTreWCFbkQaD4BHirT0HZF6C41u
-         IummZLWCMguu/FCLHnA3J6XtR8UV6pGtj1gJrwT4=
+        b=Vqze8wDw1iJEHC6WLnQK6pjaDvsM9sZaoQWfPmOV7ljpMvHJ4gQKTrjIo/dBzVVWp
+         ZLahTqIt6/7KqPKvKS70i2ULfRYR/SthoTeySq9HKlOavwBOimfShnisQ2XSvuoT/2
+         BDIhrt6VYBLsT03VLd16l/Q1tzdjyTcy2+s5q6oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Steinhardt <ps@pks.im>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 234/464] Bluetooth: Fix update of connection state in `hci_encrypt_cfm`
-Date:   Mon, 17 Aug 2020 17:13:07 +0200
-Message-Id: <20200817143845.007653636@linuxfoundation.org>
+Subject: [PATCH 5.8 232/464] powerpc/rtas: dont online CPUs for partition suspend
+Date:   Mon, 17 Aug 2020 17:13:05 +0200
+Message-Id: <20200817143844.912413585@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,48 +60,292 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Steinhardt <ps@pks.im>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 339ddaa626995bc6218972ca241471f3717cc5f4 ]
+[ Upstream commit ec2fc2a9e9bbad9023aab65bc472ce7a3ca8608f ]
 
-Starting with the upgrade to v5.8-rc3, I've noticed I wasn't able to
-connect to my Bluetooth headset properly anymore. While connecting to
-the device would eventually succeed, bluetoothd seemed to be confused
-about the current connection state where the state was flapping hence
-and forth. Bisecting this issue led to commit 3ca44c16b0dc (Bluetooth:
-Consolidate encryption handling in hci_encrypt_cfm, 2020-05-19), which
-refactored `hci_encrypt_cfm` to also handle updating the connection
-state.
+Partition suspension, used for hibernation and migration, requires
+that the OS place all but one of the LPAR's processor threads into one
+of two states prior to calling the ibm,suspend-me RTAS function:
 
-The commit in question changed the code to call `hci_connect_cfm` inside
-`hci_encrypt_cfm` and to change the connection state. But with the
-conversion, we now only update the connection state if a status was set
-already. In fact, the reverse should be true: the status should be
-updated if no status is yet set. So let's fix the isuse by reversing the
-condition.
+  * the architected offline state (via RTAS stop-self); or
+  * the H_JOIN hcall, which does not return until the partition
+    resumes execution
 
-Fixes: 3ca44c16b0dc ("Bluetooth: Consolidate encryption handling in hci_encrypt_cfm")
-Signed-off-by: Patrick Steinhardt <ps@pks.im>
-Acked-by:  Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Using H_CEDE as the offline mode, introduced by
+commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU into
+an appropriate offline state"), means that any threads which are
+offline from Linux's point of view must be moved to one of those two
+states before a partition suspension can proceed.
+
+This was eventually addressed in commit 120496ac2d2d ("powerpc: Bring
+all threads online prior to migration/hibernation"), which added code
+to temporarily bring up any offline processor threads so they can call
+H_JOIN. Conceptually this is fine, but the implementation has had
+multiple races with cpu hotplug operations initiated from user
+space[1][2][3], the error handling is fragile, and it generates
+user-visible cpu hotplug events which is a lot of noise for a platform
+feature that's supposed to minimize disruption to workloads.
+
+With commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU
+into an appropriate offline state") reverted, this code becomes
+unnecessary, so remove it. Since any offline CPUs now are truly
+offline from the platform's point of view, it is no longer necessary
+to bring up CPUs only to have them call H_JOIN and then go offline
+again upon resuming. Only active threads are required to call H_JOIN;
+stopped threads can be left alone.
+
+[1] commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+    serialization during LPM")
+[2] commit 9fb603050ffd ("powerpc/rtas: retry when cpu offline races
+    with suspend/migration")
+[3] commit dfd718a2ed1f ("powerpc/rtas: Fix a potential race between
+    CPU-Offline & Migration")
+
+Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200612051238.1007764-3-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci_core.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/rtas.h          |   2 -
+ arch/powerpc/kernel/rtas.c               | 122 +----------------------
+ arch/powerpc/platforms/pseries/suspend.c |  22 +---
+ 3 files changed, 3 insertions(+), 143 deletions(-)
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index cdd4f1db8670e..da3728871e85d 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1387,7 +1387,7 @@ static inline void hci_encrypt_cfm(struct hci_conn *conn, __u8 status)
- 	__u8 encrypt;
+diff --git a/arch/powerpc/include/asm/rtas.h b/arch/powerpc/include/asm/rtas.h
+index 014968f25f7e1..0107d724e9daa 100644
+--- a/arch/powerpc/include/asm/rtas.h
++++ b/arch/powerpc/include/asm/rtas.h
+@@ -253,8 +253,6 @@ extern int rtas_set_indicator_fast(int indicator, int index, int new_value);
+ extern void rtas_progress(char *s, unsigned short hex);
+ extern int rtas_suspend_cpu(struct rtas_suspend_me_data *data);
+ extern int rtas_suspend_last_cpu(struct rtas_suspend_me_data *data);
+-extern int rtas_online_cpus_mask(cpumask_var_t cpus);
+-extern int rtas_offline_cpus_mask(cpumask_var_t cpus);
+ extern int rtas_ibm_suspend_me(u64 handle);
  
- 	if (conn->state == BT_CONFIG) {
--		if (status)
-+		if (!status)
- 			conn->state = BT_CONNECTED;
+ struct rtc_time;
+diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
+index a09eba03f1809..806d554ce3577 100644
+--- a/arch/powerpc/kernel/rtas.c
++++ b/arch/powerpc/kernel/rtas.c
+@@ -843,96 +843,6 @@ static void rtas_percpu_suspend_me(void *info)
+ 	__rtas_suspend_cpu((struct rtas_suspend_me_data *)info, 1);
+ }
  
- 		hci_connect_cfm(conn, status);
+-enum rtas_cpu_state {
+-	DOWN,
+-	UP,
+-};
+-
+-#ifndef CONFIG_SMP
+-static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
+-				cpumask_var_t cpus)
+-{
+-	if (!cpumask_empty(cpus)) {
+-		cpumask_clear(cpus);
+-		return -EINVAL;
+-	} else
+-		return 0;
+-}
+-#else
+-/* On return cpumask will be altered to indicate CPUs changed.
+- * CPUs with states changed will be set in the mask,
+- * CPUs with status unchanged will be unset in the mask. */
+-static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
+-				cpumask_var_t cpus)
+-{
+-	int cpu;
+-	int cpuret = 0;
+-	int ret = 0;
+-
+-	if (cpumask_empty(cpus))
+-		return 0;
+-
+-	for_each_cpu(cpu, cpus) {
+-		struct device *dev = get_cpu_device(cpu);
+-
+-		switch (state) {
+-		case DOWN:
+-			cpuret = device_offline(dev);
+-			break;
+-		case UP:
+-			cpuret = device_online(dev);
+-			break;
+-		}
+-		if (cpuret < 0) {
+-			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
+-					__func__,
+-					((state == UP) ? "up" : "down"),
+-					cpu, cpuret);
+-			if (!ret)
+-				ret = cpuret;
+-			if (state == UP) {
+-				/* clear bits for unchanged cpus, return */
+-				cpumask_shift_right(cpus, cpus, cpu);
+-				cpumask_shift_left(cpus, cpus, cpu);
+-				break;
+-			} else {
+-				/* clear bit for unchanged cpu, continue */
+-				cpumask_clear_cpu(cpu, cpus);
+-			}
+-		}
+-		cond_resched();
+-	}
+-
+-	return ret;
+-}
+-#endif
+-
+-int rtas_online_cpus_mask(cpumask_var_t cpus)
+-{
+-	int ret;
+-
+-	ret = rtas_cpu_state_change_mask(UP, cpus);
+-
+-	if (ret) {
+-		cpumask_var_t tmp_mask;
+-
+-		if (!alloc_cpumask_var(&tmp_mask, GFP_KERNEL))
+-			return ret;
+-
+-		/* Use tmp_mask to preserve cpus mask from first failure */
+-		cpumask_copy(tmp_mask, cpus);
+-		rtas_offline_cpus_mask(tmp_mask);
+-		free_cpumask_var(tmp_mask);
+-	}
+-
+-	return ret;
+-}
+-
+-int rtas_offline_cpus_mask(cpumask_var_t cpus)
+-{
+-	return rtas_cpu_state_change_mask(DOWN, cpus);
+-}
+-
+ int rtas_ibm_suspend_me(u64 handle)
+ {
+ 	long state;
+@@ -940,8 +850,6 @@ int rtas_ibm_suspend_me(u64 handle)
+ 	unsigned long retbuf[PLPAR_HCALL_BUFSIZE];
+ 	struct rtas_suspend_me_data data;
+ 	DECLARE_COMPLETION_ONSTACK(done);
+-	cpumask_var_t offline_mask;
+-	int cpuret;
+ 
+ 	if (!rtas_service_present("ibm,suspend-me"))
+ 		return -ENOSYS;
+@@ -962,9 +870,6 @@ int rtas_ibm_suspend_me(u64 handle)
+ 		return -EIO;
+ 	}
+ 
+-	if (!alloc_cpumask_var(&offline_mask, GFP_KERNEL))
+-		return -ENOMEM;
+-
+ 	atomic_set(&data.working, 0);
+ 	atomic_set(&data.done, 0);
+ 	atomic_set(&data.error, 0);
+@@ -973,24 +878,8 @@ int rtas_ibm_suspend_me(u64 handle)
+ 
+ 	lock_device_hotplug();
+ 
+-	/* All present CPUs must be online */
+-	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
+-	cpuret = rtas_online_cpus_mask(offline_mask);
+-	if (cpuret) {
+-		pr_err("%s: Could not bring present CPUs online.\n", __func__);
+-		atomic_set(&data.error, cpuret);
+-		goto out;
+-	}
+-
+ 	cpu_hotplug_disable();
+ 
+-	/* Check if we raced with a CPU-Offline Operation */
+-	if (!cpumask_equal(cpu_present_mask, cpu_online_mask)) {
+-		pr_info("%s: Raced against a concurrent CPU-Offline\n", __func__);
+-		atomic_set(&data.error, -EAGAIN);
+-		goto out_hotplug_enable;
+-	}
+-
+ 	/* Call function on all CPUs.  One of us will make the
+ 	 * rtas call
+ 	 */
+@@ -1001,18 +890,11 @@ int rtas_ibm_suspend_me(u64 handle)
+ 	if (atomic_read(&data.error) != 0)
+ 		printk(KERN_ERR "Error doing global join\n");
+ 
+-out_hotplug_enable:
+-	cpu_hotplug_enable();
+ 
+-	/* Take down CPUs not online prior to suspend */
+-	cpuret = rtas_offline_cpus_mask(offline_mask);
+-	if (cpuret)
+-		pr_warn("%s: Could not restore CPUs to offline state.\n",
+-				__func__);
++	cpu_hotplug_enable();
+ 
+-out:
+ 	unlock_device_hotplug();
+-	free_cpumask_var(offline_mask);
++
+ 	return atomic_read(&data.error);
+ }
+ 
+diff --git a/arch/powerpc/platforms/pseries/suspend.c b/arch/powerpc/platforms/pseries/suspend.c
+index 0a24a5a185f02..f789693f61f40 100644
+--- a/arch/powerpc/platforms/pseries/suspend.c
++++ b/arch/powerpc/platforms/pseries/suspend.c
+@@ -132,15 +132,11 @@ static ssize_t store_hibernate(struct device *dev,
+ 			       struct device_attribute *attr,
+ 			       const char *buf, size_t count)
+ {
+-	cpumask_var_t offline_mask;
+ 	int rc;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	if (!alloc_cpumask_var(&offline_mask, GFP_KERNEL))
+-		return -ENOMEM;
+-
+ 	stream_id = simple_strtoul(buf, NULL, 16);
+ 
+ 	do {
+@@ -150,32 +146,16 @@ static ssize_t store_hibernate(struct device *dev,
+ 	} while (rc == -EAGAIN);
+ 
+ 	if (!rc) {
+-		/* All present CPUs must be online */
+-		cpumask_andnot(offline_mask, cpu_present_mask,
+-				cpu_online_mask);
+-		rc = rtas_online_cpus_mask(offline_mask);
+-		if (rc) {
+-			pr_err("%s: Could not bring present CPUs online.\n",
+-					__func__);
+-			goto out;
+-		}
+-
+ 		stop_topology_update();
+ 		rc = pm_suspend(PM_SUSPEND_MEM);
+ 		start_topology_update();
+-
+-		/* Take down CPUs not online prior to suspend */
+-		if (!rtas_offline_cpus_mask(offline_mask))
+-			pr_warn("%s: Could not restore CPUs to offline "
+-					"state.\n", __func__);
+ 	}
+ 
+ 	stream_id = 0;
+ 
+ 	if (!rc)
+ 		rc = count;
+-out:
+-	free_cpumask_var(offline_mask);
++
+ 	return rc;
+ }
+ 
 -- 
 2.25.1
 
