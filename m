@@ -2,106 +2,170 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0104EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1521720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF3F20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U1X/n6Y2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onQhzXUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgHQIQg (ORCPT
+        id S1726828AbgHQIRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
+        Mon, 17 Aug 2020 04:17:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgHQIQf (ORCPT
+        with ESMTP id S1726196AbgHQIRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:16:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F275C061388
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:16:34 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a15so14004600wrh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:16:34 -0700 (PDT)
+        Mon, 17 Aug 2020 04:17:48 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043C9C061388;
+        Mon, 17 Aug 2020 01:17:48 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f5so7119656plr.9;
+        Mon, 17 Aug 2020 01:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=v0v5oAhK9ZVu7ovOwqOvE+wqvWkBm0oVu1Bsq+aOlJ8=;
-        b=U1X/n6Y2nOB/AkHYnuRono0OIPa1lG/Ad9wHL9UMl7ZDeL7MlXjj0WQupSbF4F1Orr
-         9KBe0QHHmSQKzSWv4rczHjO+sx+LUBChDEI00ECHcWZU99YOh25Uww+6sbhCw6gkv6pS
-         HV/nSbSLOCEcuhojJ63oc3/H3cKQVBBC+VKsL5SkIEkusvRZ7C+V46DNqAzmUbaDIPYg
-         a0Kq4xxPlX0ChcJ8w3voY6XCREmJUDZTyxZKS6f6wAdw7P9edycL4GBIBTodJiJPt0ZG
-         /3QO2ipKPvvcnu1Twa6wtlu8PkCLb/RqVdylG3qmE065qvyqmKMnN/QzKkkgCSwpAwdy
-         AOLw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dcFVRpNADqEtdLi4FpRtkurfxDiB5cQRK9Dfdg9x+Fk=;
+        b=onQhzXUQgU/a+5iv1eiedq708N2qUvbb9hLqPwbNcMZbrafaVgtTLqod6W5S5EvgwW
+         ia2Ga+2FDUNHJJUlvHy5eBfliIeLogU4Wi1w83nBad7XrSZfGbQDw8JL6oyYw8RaTYtb
+         GOxydtPyCELUViaGBMuJFHCNSjMyLoNfpvRMuQgrxT2UY8A3e6JIUTqyPNMAL7rw2Z/z
+         jRmxaeFeF106x1RJs9MwNGIRcjt7SYVS8LunMdKQB2V5M7ITp8JAW4VZ0O73s28t9dSG
+         M8mTaGTmh1K0jOh4sD2d3fwjxfMBFzh2nP52Yc87N5AUdfK33PUFRxYhs2yKIAgHNHgo
+         Nr0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=v0v5oAhK9ZVu7ovOwqOvE+wqvWkBm0oVu1Bsq+aOlJ8=;
-        b=NDwWxCtaCadc09k6g0RMKn6S/8f2vCUK1Jr78qPnnpggHr2fuRqDpPn1wAs20DbQaj
-         gMPHnZzyolKLtze8L+xMY8F5Hqg01kjXfNmk8VvWOS2V56BsmsIBbl1hK0IWw6nqFg9M
-         Kibyitt2IcjRXBKG1L+bYooOxqLxBz6x9Rrp5Pmdgj9GGRzcI53gZsJOAC9/mC6mkBmx
-         HHJZaWCYK60nZFrRIW0Oz0i/T3QRnEorVnPESQDOlHejAGWJNewy8Z6MtzWJvIb2Ftu3
-         ZgQEG1b5BICO2bLkKy8K04NUcmREmYHUcX9qLzYzocmk22H49IyVB6g3X82IjcVFan73
-         BWeA==
-X-Gm-Message-State: AOAM533BrzP6+q7hegVE3MESyGs19m10Hii/AjsZTmUm0HEIPACSZS3e
-        v4lSoSJ9O76le8PQo+3e16XeUw==
-X-Google-Smtp-Source: ABdhPJy/BLnuS3vaKXKzvZ3zU4W6SNGjZlok/pABOU9qDhMciYnLzr/yhSQSUi1OrOkOtS/Ig/+orw==
-X-Received: by 2002:adf:e8ca:: with SMTP id k10mr13989325wrn.110.1597652193175;
-        Mon, 17 Aug 2020 01:16:33 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id p25sm28081510wma.39.2020.08.17.01.16.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dcFVRpNADqEtdLi4FpRtkurfxDiB5cQRK9Dfdg9x+Fk=;
+        b=he1y93ymJzIHac9nBGCvAf+MmDd3zg3JrjQdD+UUAP9hkdL62S68lFgRVX7fn+luQQ
+         /lXzUUZWxpbL/U2Hh1lUd/SFZX/EC0c3ps3GRghX5wxVNFOq0H3eELvxMwXorPpkooGu
+         zvN5zljIQl2DGmCG7qkmrsTVeZKDe94jd0IfzVfHxUbttfD786nfD69+xQAtlitPlUCe
+         /bI4L81x49hmEgb18Qieq6iV41J5N+K0sT/Czt+L63LbvE8dyPDmLq7vHsZR+X36ZPWC
+         3k+hZPOZliRmRoqmaiH4GXrgOJzpwlwCvnnMEJsjpj2WWkwMrcHsauMRn5NWM0Pz30YK
+         K0Ng==
+X-Gm-Message-State: AOAM533H88ZZiWXke4AHt5nvQIPSKbiYJ5OHCNdk6N3mXvINLfC+TIkL
+        HiLt5o3Ibw0EAmRsMKF1BB8=
+X-Google-Smtp-Source: ABdhPJzb4y/jT+CQHEdRjViuIc33Qdx/u/JnZxpHs/hd00NvayTZxHDE23pPiqS7tepaKyIUna7B1Q==
+X-Received: by 2002:a17:90b:3603:: with SMTP id ml3mr11555104pjb.207.1597652267552;
+        Mon, 17 Aug 2020 01:17:47 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.17.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:16:32 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 09:16:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 00/30] Rid W=1 warnings in Networking
-Message-ID: <20200817081630.GR4354@dell>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <87eeo88pdr.fsf@tynnyri.adurom.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87eeo88pdr.fsf@tynnyri.adurom.net>
+        Mon, 17 Aug 2020 01:17:47 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, baohua@kernel.org, mripard@kernel.org,
+        wens@csie.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        michal.simek@xilinx.com, matthias.bgg@gmail.com
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Allen Pais <allen.lkml@gmail.com>
+Subject: [PATCH 00/35] dma: convert tasklets to use new tasklet_setup()
+Date:   Mon, 17 Aug 2020 13:46:51 +0530
+Message-Id: <20200817081726.20213-1-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 15 Aug 2020, Kalle Valo wrote:
+Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
+introduced a new tasklet initialization API. This series converts 
+all the dma drivers to use the new tasklet_setup() API
 
-> + linux-wireless
-> 
-> Lee Jones <lee.jones@linaro.org> writes:
-> 
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
-> >
-> > There are quite a few W=1 warnings in the Networking code.  My
-> > plan is to work through all of them over the next few weeks.
-> > Hopefully it won't be too long before drivers/net builds clean
-> > with W=1 enabled.
-> 
-> In the future please send wireless patches in a separate patchset and cc
-> linux-wireless. That way it's easier for me and Dave.
 
-Oh, I see.  I didn't realise it was maintained as it's own entity.
+Allen Pais (35):
+  dma: altera-msgdma: convert tasklets to use new tasklet_setup() API
+  dma: at_hdmac: convert tasklets to use new tasklet_setup() API
+  dma: at_xdmac: convert tasklets to use new tasklet_setup() API
+  dma: coh901318: convert tasklets to use new tasklet_setup() API
+  dma: dw: convert tasklets to use new tasklet_setup() API
+  dma: ep93xx: convert tasklets to use new tasklet_setup() API
+  dma: fsl: convert tasklets to use new tasklet_setup() API
+  dma: imx-dma: convert tasklets to use new tasklet_setup() API
+  dma: ioat: convert tasklets to use new tasklet_setup() API
+  dma: iop_adma: convert tasklets to use new tasklet_setup() API
+  dma: ipu: convert tasklets to use new tasklet_setup() API
+  dma: k3dma: convert tasklets to use new tasklet_setup() API
+  dma: mediatek: convert tasklets to use new tasklet_setup() API
+  dma: mmp: convert tasklets to use new tasklet_setup() API
+  dma: mpc512x: convert tasklets to use new tasklet_setup() API
+  dma: mv_xor: convert tasklets to use new tasklet_setup() API
+  dma: mxs-dma: convert tasklets to use new tasklet_setup() API
+  dma: nbpfaxi: convert tasklets to use new tasklet_setup() API
+  dma: pch_dma: convert tasklets to use new tasklet_setup() API
+  dma: pl330: convert tasklets to use new tasklet_setup() API
+  dma: ppc4xx: convert tasklets to use new tasklet_setup() API
+  dma: qcom: convert tasklets to use new tasklet_setup() API
+  dma: sa11x0: convert tasklets to use new tasklet_setup() API
+  dma: sirf-dma: convert tasklets to use new tasklet_setup() API
+  dma: ste_dma40: convert tasklets to use new tasklet_setup() API
+  dma: sun6i: convert tasklets to use new tasklet_setup() API
+  dma: tegra20: convert tasklets to use new tasklet_setup() API
+  dma: timb_dma: convert tasklets to use new tasklet_setup() API
+  dma: txx9dmac: convert tasklets to use new tasklet_setup() API
+  dma: virt-dma: convert tasklets to use new tasklet_setup() API
+  dma: xgene: convert tasklets to use new tasklet_setup() API
+  dma: xilinx: convert tasklets to use new tasklet_setup() API
+  dma: plx_dma: convert tasklets to use new tasklet_setup() API
+  dma: sf-pdma: convert tasklets to use new tasklet_setup() API
+  dma: k3-udma: convert tasklets to use new tasklet_setup() API
 
-Will keep the separate in the future, thanks.
+ drivers/dma/altera-msgdma.c      |  6 +++---
+ drivers/dma/at_hdmac.c           |  7 +++----
+ drivers/dma/at_xdmac.c           |  5 ++---
+ drivers/dma/coh901318.c          |  7 +++----
+ drivers/dma/dw/core.c            |  6 +++---
+ drivers/dma/ep93xx_dma.c         |  7 +++----
+ drivers/dma/fsl_raid.c           |  6 +++---
+ drivers/dma/fsldma.c             |  6 +++---
+ drivers/dma/imx-dma.c            |  7 +++----
+ drivers/dma/ioat/dma.c           |  6 +++---
+ drivers/dma/ioat/dma.h           |  2 +-
+ drivers/dma/ioat/init.c          |  4 +---
+ drivers/dma/iop-adma.c           |  8 ++++----
+ drivers/dma/ipu/ipu_idmac.c      |  6 +++---
+ drivers/dma/k3dma.c              |  6 +++---
+ drivers/dma/mediatek/mtk-cqdma.c |  7 +++----
+ drivers/dma/mmp_pdma.c           |  6 +++---
+ drivers/dma/mmp_tdma.c           |  6 +++---
+ drivers/dma/mpc512x_dma.c        |  6 +++---
+ drivers/dma/mv_xor.c             |  7 +++----
+ drivers/dma/mv_xor_v2.c          |  8 ++++----
+ drivers/dma/mxs-dma.c            |  7 +++----
+ drivers/dma/nbpfaxi.c            |  6 +++---
+ drivers/dma/pch_dma.c            |  7 +++----
+ drivers/dma/pl330.c              | 12 ++++++------
+ drivers/dma/plx_dma.c            |  7 +++----
+ drivers/dma/ppc4xx/adma.c        |  7 +++----
+ drivers/dma/qcom/bam_dma.c       |  6 +++---
+ drivers/dma/qcom/hidma.c         |  6 +++---
+ drivers/dma/qcom/hidma_ll.c      |  6 +++---
+ drivers/dma/sa11x0-dma.c         |  6 +++---
+ drivers/dma/sf-pdma/sf-pdma.c    | 14 ++++++--------
+ drivers/dma/sirf-dma.c           |  6 +++---
+ drivers/dma/ste_dma40.c          |  7 +++----
+ drivers/dma/sun6i-dma.c          |  6 +++---
+ drivers/dma/tegra20-apb-dma.c    |  7 +++----
+ drivers/dma/ti/k3-udma.c         |  7 +++----
+ drivers/dma/timb_dma.c           |  6 +++---
+ drivers/dma/txx9dmac.c           | 14 ++++++--------
+ drivers/dma/virt-dma.c           |  6 +++---
+ drivers/dma/xgene-dma.c          |  7 +++----
+ drivers/dma/xilinx/xilinx_dma.c  |  7 +++----
+ drivers/dma/xilinx/zynqmp_dma.c  |  6 +++---
+ 43 files changed, 135 insertions(+), 157 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
