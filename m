@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF98BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2F220658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E922920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693533;
-	bh=QDAW9zoveqrWFCuC7xBLGn80jtKBU8onUkR3R7/heiM=;
+	s=default; t=1597693538;
+	bh=pheYLl1F1b+RkUaS318nzLCRhq4G0ZZVeOC/26y6vwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piGI0+d5v9jbwcUYqg4DmdTYbqpe7xdV4u2YrKYv/XFBNMOB6BLj3uPDQG1j7uLHV
-	 AQZ3icU7s0aPEGTeVOVWCnFRAbaMKR5+f8woQxQMIa4/i9uWNMTogBalJFZJaSCjnw
-	 2B6LQ1SYO1ucVivTVyWPbQxKt4ZBGYj/T+gQ86Kg=
+	b=cWojZZOo6OOdVPZpd197P9gBUYmO0o+J2v7OSGhgPQ1O7trIpOiJSrwjuk9Q2IRo3
+	 QH7wOG+nRq5wRvPfSAsjo/xioNTDP1QQwYajU4SFBb6wpbgd6ne4tc5NJnG3YgV9B+
+	 XibSv6vedTDv0Fr+eS+biMKkjj/LhQP74QSRkSMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgHQPWN (ORCPT
+        id S2404355AbgHQTpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbgHQPVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:35 -0400
+        id S1729418AbgHQPWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:22:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB25207DE;
-        Mon, 17 Aug 2020 15:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6500422D75;
+        Mon, 17 Aug 2020 15:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677695;
-        bh=QDAW9zoveqrWFCuC7xBLGn80jtKBU8onUkR3R7/heiM=;
+        s=default; t=1597677727;
+        bh=pheYLl1F1b+RkUaS318nzLCRhq4G0ZZVeOC/26y6vwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yzd07W+k6lILrZJomE6sjrzszDs9RhFUbyzqM2DKb/rvX45QRjTdlhVxwUWgDeGIW
-         EUR4o2OJJmAoElxn8P6xRFJxAPTjbeTxi4bgKep6n3217h8NJ556RzcwEUcqWLjkz0
-         Nrpp9jqGnK3kTd2+YFQhISgR16Ir+ITNnCh6P95U=
+        b=t5aaE4TQw1AWDuvBIe8wKdWSu/0O5p8s2iG3QKpRzDAR/lEmVQGlzg1v9eT3fhLqZ
+         M51HHvcybtNFqlgGoVv1VbthDbqvlvko1LLvQb/+dY5a1sgoCQbyVX5ygbNWu3vLZX
+         CDXD31hmBtvMTl03HsBhZtmhhJM0AJN8AGzsMS6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 074/464] nvme-multipath: do not fall back to __nvme_find_path() for non-optimized paths
-Date:   Mon, 17 Aug 2020 17:10:27 +0200
-Message-Id: <20200817143837.319138617@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 055/464] soc: qcom: pdr: Reorder the PD state indication ack
+Date:   Mon, 17 Aug 2020 17:10:08 +0200
+Message-Id: <20200817143836.397478153@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,46 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit fbd6a42d8932e172921c7de10468a2e12c34846b ]
+[ Upstream commit 72fe996f9643043c8f84e32c0610975b01aa555b ]
 
-When nvme_round_robin_path() finds a valid namespace we should be using it;
-falling back to __nvme_find_path() for non-optimized paths will cause the
-result from nvme_round_robin_path() to be ignored for non-optimized paths.
+The Protection Domains (PD) have a mechanism to keep its resources
+enabled until the PD down indication is acked. Reorder the PD state
+indication ack so that clients get to release the relevant resources
+before the PD goes down.
 
-Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200701195954.9007-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/soc/qcom/pdr_interface.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index fe8f7f123fac7..57d51148e71b6 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -272,10 +272,13 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
- 	struct nvme_ns *ns;
+diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+index bdcf16f88a97f..4c9225f15c4e6 100644
+--- a/drivers/soc/qcom/pdr_interface.c
++++ b/drivers/soc/qcom/pdr_interface.c
+@@ -278,13 +278,15 @@ static void pdr_indack_work(struct work_struct *work)
  
- 	ns = srcu_dereference(head->current_path[node], &head->srcu);
--	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR && ns)
--		ns = nvme_round_robin_path(head, node, ns);
--	if (unlikely(!ns || !nvme_path_is_optimized(ns)))
--		ns = __nvme_find_path(head, node);
-+	if (unlikely(!ns))
-+		return __nvme_find_path(head, node);
+ 	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
+ 		pds = ind->pds;
+-		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+ 
+ 		mutex_lock(&pdr->status_lock);
+ 		pds->state = ind->curr_state;
+ 		pdr->status(pds->state, pds->service_path, pdr->priv);
+ 		mutex_unlock(&pdr->status_lock);
+ 
++		/* Ack the indication after clients release the PD resources */
++		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
 +
-+	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
-+		return nvme_round_robin_path(head, node, ns);
-+	if (unlikely(!nvme_path_is_optimized(ns)))
-+		return __nvme_find_path(head, node);
- 	return ns;
- }
- 
+ 		mutex_lock(&pdr->list_lock);
+ 		list_del(&ind->node);
+ 		mutex_unlock(&pdr->list_lock);
 -- 
 2.25.1
 
