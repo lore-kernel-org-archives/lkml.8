@@ -2,56 +2,54 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48765C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D486C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4992072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AC020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648354;
-	bh=tlz2Vi/hvrJbkEIAT7BV1JXhELO0DOuSkSWA04EmHUw=;
+	s=default; t=1597648356;
+	bh=Y7yROnsklvipuA8a2pdI0bW8d3tnRK65tTCSvHytTKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WxBJtPkKHzh+QpFk6+5zovVT3WjLPrn3jtcF+sWfqp9QSPgmkx7XHn4GrNwOlsSf6
-	 sF3G7ZdVdSa8aqY8fFVi7tIB0OJpsBs9edDqfGz7X6IkRAKBZyb/5j7D6ZygOYGc3A
-	 4+sDF+NMXOZ4awbiN65yJJBG3raBAw/SEzRxds00=
+	b=UCDAoupA7YXZVkaEXVTqeGP4tWUrU4tlHuXev+kaO8H/4x3wPyGbdlF0ivgIYyasj
+	 dQo5fmtBEvPLSLR2Q6E11cw4g60Gx+fNDZ3a+TxA/dpG5gdGJU/TOcBZ3aiFG/zgRf
+	 vkYX/dJkNh5TVv2QtnXhJlPAnoLl9mOag7/nvuQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgHQHMc (ORCPT
+        id S1727031AbgHQHMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:12:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgHQHL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726801AbgHQHL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 03:11:28 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD7322CAF;
+        by mail.kernel.org (Postfix) with ESMTPSA id B567922CB3;
         Mon, 17 Aug 2020 07:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597648277;
-        bh=tlz2Vi/hvrJbkEIAT7BV1JXhELO0DOuSkSWA04EmHUw=;
+        bh=Y7yROnsklvipuA8a2pdI0bW8d3tnRK65tTCSvHytTKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dO6Tgd4KPf0VljZicwTL/glLcUoQfLryGBi9WKyz7pK7FkIO2uaXltISh0W8IOIJp
-         1FlEQa7dE3UvHVjKLlxKhZdLNQEzuv7ke0pHTEp730BQ+sBVt05WtAd1Gz+xq5kVwe
-         3Hd7P2AvOKSznlHX5E49d7wdj+TcG4JlzOygvB08=
+        b=abkqOeV0yK4HotvVsDsH/KxSLM4cCA4aAJkLDaQUHz3ToGRC+VMeoW4FmCDpnNbtU
+         d6Wi3oZjn4lfZ0oDYsVj/CslrC6a+/mTb7c9+bISDIzM/wFCtTOe+82SsTWWQLK8Iv
+         iycY7XIbcTYJy2+6bQOWGsF4rIuEZdDCYwvLLK7I=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIZ-00BdkE-Q4; Mon, 17 Aug 2020 09:11:15 +0200
+        id 1k7ZIZ-00BdkK-Tu; Mon, 17 Aug 2020 09:11:15 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Subject: [PATCH v3 22/44] staging: mfd: hi6421-spmi-pmic: cleanup the code
-Date:   Mon, 17 Aug 2020 09:10:41 +0200
-Message-Id: <823792ba2f69e613629ab52a33e5728d54e2288b.1597647359.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH v3 24/44] staging: regulator: hi6421v600-regulator: get rid of unused code
+Date:   Mon, 17 Aug 2020 09:10:43 +0200
+Message-Id: <698b2c7bdc92e336d2559bc65415807499b0e3a8.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
@@ -62,403 +60,308 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several small cleanups that can be done in order to
-make the code more prepared to be upstreamed.
+Get rid of the sysfs code and other parts of the driver
+which aren't needed upstream.
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+If needed later, this patch can be (partially?) reversed.
+
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c | 151 +++++++++-----------
- include/linux/mfd/hi6421-spmi-pmic.h        |  12 +-
- 2 files changed, 74 insertions(+), 89 deletions(-)
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 196 +-----------------
+ 1 file changed, 8 insertions(+), 188 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-index d8b84d64041e..9d73458ca65a 100644
---- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-+++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-@@ -17,26 +17,23 @@
-  *
-  */
- 
--#include <linux/slab.h>
+diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+index 941bfe32bf5b..7bc0ae27b110 100644
+--- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
++++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+@@ -34,19 +34,10 @@
  #include <linux/delay.h>
- #include <linux/device.h>
--#include <linux/module.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/mfd/core.h>
--#include <linux/platform_device.h>
--#include <linux/of.h>
-+#include <linux/mfd/hi6421-spmi-pmic.h>
-+#include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
-+#include <linux/of.h>
- #include <linux/of_irq.h>
--#include <linux/mfd/hi6421-spmi-pmic.h>
--#include <linux/irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
- #include <linux/spmi.h>
--#ifndef NO_IRQ
--#define NO_IRQ       0
+ #include <linux/time.h>
+ #include <linux/version.h>
+-#ifdef CONFIG_HISI_PMIC_DEBUG
+-#include <linux/debugfs.h>
 -#endif
+ #include <linux/seq_file.h>
+ #include <linux/uaccess.h>
+ #include <linux/spmi.h>
  
- /* 8-bit register offset in PMIC */
- #define HISI_MASK_STATE			0xff
-@@ -46,12 +43,11 @@
- #define HISI_IRQ_KEY_DOWN		7
- #define HISI_IRQ_KEY_UP			6
+-#if 1
+-#define BRAND_DEBUG(args...) pr_debug(args);
+-#else
+-#define BRAND_DEBUG(args...)
+-#endif
+-
+ struct hisi_regulator_register_info {
+ 	u32 ctrl_reg;
+ 	u32 enable_mask;
+@@ -110,7 +101,7 @@ static int hisi_regulator_is_enabled(struct regulator_dev *dev)
+ 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
  
--/*#define HISI_NR_IRQ			25*/
--#define HISI_MASK_FIELD		0xFF
-+#define HISI_MASK_FIELD			0xFF
- #define HISI_BITS			8
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.ctrl_reg);
+-	BRAND_DEBUG("<[%s]: ctrl_reg=0x%x,enable_state=%d>\n", __func__, sreg->register_info.ctrl_reg,\
++	pr_debug("<[%s]: ctrl_reg=0x%x,enable_state=%d>\n", __func__, sreg->register_info.ctrl_reg,\
+ 			(reg_val & sreg->register_info.enable_mask));
  
- /*define the first group interrupt register number*/
--#define HISI_PMIC_FIRST_GROUP_INT_NUM        2
-+#define HISI_PMIC_FIRST_GROUP_INT_NUM	2
+ 	return ((reg_val & sreg->register_info.enable_mask) != 0);
+@@ -124,7 +115,7 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
+ 	/* keep a distance of off_on_delay from last time disabled */
+ 	ensured_time_after(sreg->last_off_time, sreg->off_on_delay);
  
- static const struct mfd_cell hi6421v600_devs[] = {
- 	{ .name = "hi6421v600-regulator", },
-@@ -62,58 +58,60 @@ static const struct mfd_cell hi6421v600_devs[] = {
-  * Hisilicon SoC use hardware to map PMIC register into SoC mapping.
-  * At here, we are accessing SoC register with 32-bit.
-  */
--u32 hi6421_spmi_pmic_read(struct hi6421_spmi_pmic *pmic, int reg)
-+int hi6421_spmi_pmic_read(struct hi6421_spmi_pmic *pmic, int reg)
- {
--	u32 ret;
-+	struct spmi_device *pdev;
- 	u8 read_value = 0;
--	struct spmi_device *pdev;
-+	u32 ret;
+-	BRAND_DEBUG("<[%s]: off_on_delay=%dus>\n", __func__, sreg->off_on_delay);
++	pr_debug("<[%s]: off_on_delay=%dus>\n", __func__, sreg->off_on_delay);
  
- 	pdev = to_spmi_device(pmic->dev);
- 	if (!pdev) {
- 		pr_err("%s: pdev get failed!\n", __func__);
--		return 0;
-+		return -ENODEV;
- 	}
+ 	/* cannot enable more than one regulator at one time */
+ 	mutex_lock(&enable_mutex);
+@@ -134,7 +125,7 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
+ 				sreg->register_info.enable_mask,
+ 				sreg->register_info.enable_mask);
+-	BRAND_DEBUG("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n", __func__, sreg->register_info.ctrl_reg,\
++	pr_debug("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n", __func__, sreg->register_info.ctrl_reg,\
+ 			sreg->register_info.enable_mask);
  
--	ret = spmi_ext_register_readl(pdev, reg,
--				      (unsigned char *)&read_value, 1);
-+	ret = spmi_ext_register_readl(pdev, reg, &read_value, 1);
- 	if (ret) {
- 		pr_err("%s: spmi_ext_register_readl failed!\n", __func__);
--		return 0;
-+		return ret;
- 	}
--	return (u32)read_value;
-+	return read_value;
- }
- EXPORT_SYMBOL(hi6421_spmi_pmic_read);
+ 	do_gettimeofday(&last_enabled);
+@@ -165,7 +156,7 @@ static int hisi_regulator_get_voltage(struct regulator_dev *dev)
  
--void hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
-+int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
- {
--	u32 ret;
- 	struct spmi_device *pdev;
-+	u32 ret;
+ 	/* get voltage selector */
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.vset_reg);
+-	BRAND_DEBUG("<[%s]: vset_reg=0x%x>\n", __func__, sreg->register_info.vset_reg);
++	pr_debug("<[%s]: vset_reg=0x%x>\n", __func__, sreg->register_info.vset_reg);
  
- 	pdev = to_spmi_device(pmic->dev);
- 	if (!pdev) {
- 		pr_err("%s: pdev get failed!\n", __func__);
--		return;
-+		return -ENODEV;
- 	}
+ 	selector = (reg_val & sreg->register_info.vset_mask) >>
+ 				(ffs(sreg->register_info.vset_mask) - 1);
+@@ -198,7 +189,7 @@ static int hisi_regulator_set_voltage(struct regulator_dev *dev,
+ 		sreg->register_info.vset_mask,
+ 		vsel << (ffs(sreg->register_info.vset_mask) - 1));
  
- 	ret = spmi_ext_register_writel(pdev, reg, (unsigned char *)&val, 1);
--	if (ret) {
-+	if (ret)
- 		pr_err("%s: spmi_ext_register_writel failed!\n", __func__);
--		return;
--	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL(hi6421_spmi_pmic_write);
+-	BRAND_DEBUG("<[%s]: vset_reg=0x%x, vset_mask=0x%x, value=0x%x>\n", __func__,\
++	pr_debug("<[%s]: vset_reg=0x%x, vset_mask=0x%x, value=0x%x>\n", __func__,\
+ 			sreg->register_info.vset_reg,\
+ 			sreg->register_info.vset_mask,\
+ 			vsel << (ffs(sreg->register_info.vset_mask) - 1)\
+@@ -214,7 +205,7 @@ static unsigned int hisi_regulator_get_mode(struct regulator_dev *dev)
+ 	u32 reg_val;
  
--void hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
--			  u32 mask, u32 bits)
-+int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
-+			 u32 mask, u32 bits)
- {
-+	unsigned long flags;
- 	u32 data;
--	unsigned long flags;
-+	int ret;
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.ctrl_reg);
+-	BRAND_DEBUG("<[%s]: reg_val=%d, ctrl_reg=0x%x, eco_mode_mask=0x%x>\n", __func__, reg_val,\
++	pr_debug("<[%s]: reg_val=%d, ctrl_reg=0x%x, eco_mode_mask=0x%x>\n", __func__, reg_val,\
+ 			sreg->register_info.ctrl_reg,\
+ 			sreg->register_info.eco_mode_mask\
+ 		   );
+@@ -248,7 +239,7 @@ static int hisi_regulator_set_mode(struct regulator_dev *dev,
+ 		sreg->register_info.eco_mode_mask,
+ 		eco_mode << (ffs(sreg->register_info.eco_mode_mask) - 1));
  
- 	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hi6421_spmi_pmic_read(pmic, reg) & ~mask;
- 	data |= mask & bits;
--	hi6421_spmi_pmic_write(pmic, reg, data);
-+	ret = hi6421_spmi_pmic_write(pmic, reg, data);
- 	spin_unlock_irqrestore(&pmic->lock, flags);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(hi6421_spmi_pmic_rmw);
- 
-@@ -124,16 +122,16 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
- 	int i, offset;
- 
- 	for (i = 0; i < pmic->irqarray; i++) {
--		pending = hi6421_spmi_pmic_read(pmic, (i + pmic->irq_addr.start_addr));
-+		pending = hi6421_spmi_pmic_read(pmic, (i + pmic->irq_addr));
- 		pending &= HISI_MASK_FIELD;
- 		if (pending != 0)
- 			pr_debug("pending[%d]=0x%lx\n\r", i, pending);
- 
--		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr.start_addr),
--				       pending);
-+		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
- 
- 		/* solve powerkey order */
--		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
-+		if ((i == HISI_IRQ_KEY_NUM) &&
-+		    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
- 			pending &= (~HISI_IRQ_KEY_VALUE);
-@@ -155,7 +153,7 @@ static void hi6421_spmi_irq_mask(struct irq_data *d)
- 	unsigned long flags;
- 
- 	offset = (irqd_to_hwirq(d) >> 3);
--	offset += pmic->irq_mask_addr.start_addr;
-+	offset += pmic->irq_mask_addr;
- 
- 	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hi6421_spmi_pmic_read(pmic, offset);
-@@ -171,7 +169,7 @@ static void hi6421_spmi_irq_unmask(struct irq_data *d)
- 	unsigned long flags;
- 
- 	offset = (irqd_to_hwirq(d) >> 3);
--	offset += pmic->irq_mask_addr.start_addr;
-+	offset += pmic->irq_mask_addr;
- 
- 	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hi6421_spmi_pmic_read(pmic, offset);
-@@ -211,36 +209,32 @@ static int get_pmic_device_tree_data(struct device_node *np,
- {
- 	int ret = 0;
- 
--	/*get pmic irq num*/
--	ret = of_property_read_u32_array(np, "irq-num",
--					 &pmic->irqnum, 1);
-+	/* IRQ number */
-+	ret = of_property_read_u32(np, "irq-num", &pmic->irqnum);
- 	if (ret) {
- 		pr_err("no irq-num property set\n");
- 		ret = -ENODEV;
- 		return ret;
- 	}
- 
--	/*get pmic irq array number*/
--	ret = of_property_read_u32_array(np, "irq-array",
--					 &pmic->irqarray, 1);
-+	/* Size of IRQ array */
-+	ret = of_property_read_u32(np, "irq-array", &pmic->irqarray);
- 	if (ret) {
- 		pr_err("no irq-array property set\n");
- 		ret = -ENODEV;
- 		return ret;
- 	}
- 
--	/*SOC_PMIC_IRQ_MASK_0_ADDR*/
--	ret = of_property_read_u32_array(np, "irq-mask-addr",
--					 (int *)&pmic->irq_mask_addr, 2);
-+	/* SOC_PMIC_IRQ_MASK_0_ADDR */
-+	ret = of_property_read_u32(np, "irq-mask-addr", &pmic->irq_mask_addr);
- 	if (ret) {
- 		pr_err("no irq-mask-addr property set\n");
- 		ret = -ENODEV;
- 		return ret;
- 	}
- 
--	/*SOC_PMIC_IRQ0_ADDR*/
--	ret = of_property_read_u32_array(np, "irq-addr",
--					 (int *)&pmic->irq_addr, 2);
-+	/* SOC_PMIC_IRQ0_ADDR */
-+	ret = of_property_read_u32(np, "irq-addr", &pmic->irq_addr);
- 	if (ret) {
- 		pr_err("no irq-addr property set\n");
- 		ret = -ENODEV;
-@@ -252,18 +246,18 @@ static int get_pmic_device_tree_data(struct device_node *np,
- 
- static void hi6421_spmi_pmic_irq_prc(struct hi6421_spmi_pmic *pmic)
- {
--	int i;
-+	int i, pending;
- 
--	for (i = 0 ; i < pmic->irq_mask_addr.array; i++)
--		hi6421_spmi_pmic_write(pmic, pmic->irq_mask_addr.start_addr + i,
-+	for (i = 0 ; i < pmic->irqarray; i++)
-+		hi6421_spmi_pmic_write(pmic, pmic->irq_mask_addr + i,
- 				       HISI_MASK_STATE);
- 
--	for (i = 0 ; i < pmic->irq_addr.array; i++) {
--		unsigned int pending = hi6421_spmi_pmic_read(pmic, pmic->irq_addr.start_addr + i);
-+	for (i = 0 ; i < pmic->irqarray; i++) {
-+		pending = hi6421_spmi_pmic_read(pmic, pmic->irq_addr + i);
- 
- 		pr_debug("PMU IRQ address value:irq[0x%x] = 0x%x\n",
--			 pmic->irq_addr.start_addr + i, pending);
--		hi6421_spmi_pmic_write(pmic, pmic->irq_addr.start_addr + i,
-+			 pmic->irq_addr + i, pending);
-+		hi6421_spmi_pmic_write(pmic, pmic->irq_addr + i,
- 				       HISI_MASK_STATE);
- 	}
- }
-@@ -272,36 +266,32 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
--	struct hi6421_spmi_pmic *pmic = NULL;
--	enum of_gpio_flags flags;
--	int ret = 0;
--	int i;
-+	struct hi6421_spmi_pmic *pmic;
- 	unsigned int virq;
-+	int ret, i;
- 
- 	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
- 	if (!pmic)
- 		return -ENOMEM;
- 
--	/*TODO: get pmic dts info*/
- 	ret = get_pmic_device_tree_data(np, pmic);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error reading hisi pmic dts\n");
-+		dev_err(dev, "Error reading hisi pmic dts\n");
- 		return ret;
- 	}
- 
--	/* TODO: get and enable clk request */
- 	spin_lock_init(&pmic->lock);
- 
- 	pmic->dev = dev;
- 
--	pmic->gpio = of_get_gpio_flags(np, 0, &flags);
-+	pmic->gpio = of_get_gpio(np, 0);
- 	if (pmic->gpio < 0)
- 		return pmic->gpio;
- 
- 	if (!gpio_is_valid(pmic->gpio))
- 		return -EINVAL;
- 
--	ret = gpio_request_one(pmic->gpio, GPIOF_IN, "pmic");
-+	ret = devm_gpio_request_one(dev, pmic->gpio, GPIOF_IN, "pmic");
- 	if (ret < 0) {
- 		dev_err(dev, "failed to request gpio%d\n", pmic->gpio);
- 		return ret;
-@@ -309,7 +299,6 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 
- 	pmic->irq = gpio_to_irq(pmic->gpio);
- 
--	/* mask && clear IRQ status */
- 	hi6421_spmi_pmic_irq_prc(pmic);
- 
- 	pmic->irqs = devm_kzalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
-@@ -321,27 +310,27 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 	if (!pmic->domain) {
- 		dev_err(dev, "failed irq domain add simple!\n");
- 		ret = -ENODEV;
--		goto irq_domain;
-+		goto irq_malloc;
- 	}
- 
- 	for (i = 0; i < pmic->irqnum; i++) {
- 		virq = irq_create_mapping(pmic->domain, i);
--		if (virq == NO_IRQ) {
--			pr_debug("Failed mapping hwirq\n");
-+		if (!virq) {
-+			dev_err(dev, "Failed mapping hwirq\n");
- 			ret = -ENOSPC;
--			goto irq_create_mapping;
-+			goto irq_malloc;
- 		}
- 		pmic->irqs[i] = virq;
--		pr_info("[%s]. pmic->irqs[%d] = %d\n", __func__, i, pmic->irqs[i]);
-+		dev_dbg(dev, "%s: pmic->irqs[%d] = %d\n",
-+			__func__, i, pmic->irqs[i]);
- 	}
- 
- 	ret = request_threaded_irq(pmic->irq, hi6421_spmi_irq_handler, NULL,
- 				   IRQF_TRIGGER_LOW | IRQF_SHARED | IRQF_NO_SUSPEND,
- 				   "pmic", pmic);
- 	if (ret < 0) {
--		dev_err(dev, "could not claim pmic %d\n", ret);
--		ret = -ENODEV;
--		goto request_theaded_irq;
-+		dev_err(dev, "could not claim pmic IRQ: error %d\n", ret);
-+		goto irq_malloc;
- 	}
- 
- 	dev_set_drvdata(&pdev->dev, pmic);
-@@ -355,18 +344,14 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 	ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
- 				   hi6421v600_devs, ARRAY_SIZE(hi6421v600_devs),
- 				   NULL, 0, NULL);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to add child devices: %d\n", ret);
--		return ret;
--	}
-+	if (!ret)
-+		return 0;
- 
--	return 0;
-+	dev_err(dev, "Failed to add child devices: %d\n", ret);
- 
--request_theaded_irq:
--irq_create_mapping:
--irq_domain:
- irq_malloc:
--	gpio_free(pmic->gpio);
-+	free_irq(pmic->irq, pmic);
-+
- 	return ret;
- }
- 
-@@ -375,8 +360,6 @@ static void hi6421_spmi_pmic_remove(struct spmi_device *pdev)
- 	struct hi6421_spmi_pmic *pmic = dev_get_drvdata(&pdev->dev);
- 
- 	free_irq(pmic->irq, pmic);
--	gpio_free(pmic->gpio);
--	devm_kfree(&pdev->dev, pmic);
- }
- 
- static const struct of_device_id pmic_spmi_id_table[] = {
-diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
-index 403fd8bb45fa..ff3adfa7b3ec 100644
---- a/include/linux/mfd/hi6421-spmi-pmic.h
-+++ b/include/linux/mfd/hi6421-spmi-pmic.h
-@@ -36,15 +36,17 @@ struct hi6421_spmi_pmic {
- 	int					irq;
- 	int					gpio;
- 	unsigned int				*irqs;
-+
- 	int					irqnum;
- 	int					irqarray;
--	struct hi6421_spmi_irq_mask_info	irq_mask_addr;
--	struct hi6421_spmi_irq_info		irq_addr;
-+	int					irq_mask_addr;
-+	int					irq_addr;
+-	BRAND_DEBUG("<[%s]: ctrl_reg=0x%x, eco_mode_mask=0x%x, value=0x%x>\n", __func__,\
++	pr_debug("<[%s]: ctrl_reg=0x%x, eco_mode_mask=0x%x, value=0x%x>\n", __func__,\
+ 			sreg->register_info.ctrl_reg,\
+ 			sreg->register_info.eco_mode_mask,\
+ 			eco_mode << (ffs(sreg->register_info.eco_mode_mask) - 1)\
+@@ -403,147 +394,6 @@ static struct of_device_id of_hisi_regulator_match_tbl[] = {
+ 	{ /* end */ }
  };
  
--u32 hi6421_spmi_pmic_read(struct hi6421_spmi_pmic *pmic, int reg);
--void hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val);
--void hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg, u32 mask, u32 bits);
-+int hi6421_spmi_pmic_read(struct hi6421_spmi_pmic *pmic, int reg);
-+int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val);
-+int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
-+			 u32 mask, u32 bits);
+-#ifdef CONFIG_HISI_PMIC_DEBUG
+-extern void get_current_regulator_dev(struct seq_file *s);
+-extern void set_regulator_state(char *ldo_name, int value);
+-extern void get_regulator_state(char *ldo_name);
+-extern int set_regulator_voltage(char *ldo_name, unsigned int vol_value);
+-
+-u32 pmu_atoi(char *s)
+-{
+-	char *p = s;
+-	char c;
+-	u64 ret = 0;
+-	if (s == NULL)
+-		return 0;
+-	while ((c = *p++) != '\0') {
+-		if ('0' <= c && c <= '9') {
+-			ret *= 10;
+-			ret += (u64)((unsigned char)c - '0');
+-			if (ret > U32_MAX)
+-				return 0;
+-		} else {
+-			break;
+-		}
+-	}
+-	return (u32)ret;
+-}
+-static int dbg_hisi_regulator_show(struct seq_file *s, void *data)
+-{
+-	seq_printf(s, "\n\r");
+-	seq_printf(s, "%-13s %-15s %-15s %-15s %-15s\n\r",
+-			"LDO_NAME", "ON/OFF", "Use_count", "Open_count", "Always_on");
+-	seq_printf(s, "-----------------------------------------"
+-			"-----------------------------------------------\n\r");
+-	get_current_regulator_dev(s);
+-	return 0;
+-}
+-
+-static int dbg_hisi_regulator_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, dbg_hisi_regulator_show, inode->i_private);
+-}
+-
+-static const struct file_operations debug_regulator_state_fops = {
+-	.open		= dbg_hisi_regulator_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
+-
+-static int dbg_control_regulator_show(struct seq_file *s, void *data)
+-{
+-	printk("                                                                             \n\r \
+-		---------------------------------------------------------------------------------\n\r \
+-		|usage:                                                                         |\n\r \
+-		|	S = state	R = read	V = voltage                                         |\n\r \
+-		|	set ldo state and voltage                                                   |\n\r \
+-		|	get ldo state and current voltage                                           |\n\r \
+-		|example:                                                                       |\n\r \
+-		|	echo S ldo16 0   > control_regulator	:disable ldo16                      |\n\r \
+-		|	echo S ldo16 1   > control_regulator	:enable ldo16                       |\n\r \
+-		|	echo R ldo16     > control_regulator	:get ldo16 state and voltage        |\n\r \
+-		|	echo V ldo16 xxx > control_regulator	:set ldo16 voltage                  |\n\r \
+-		---------------------------------------------------------------------------------\n\r");
+-	return 0;
+-}
+-static ssize_t dbg_control_regulator_set_value(struct file *filp, const char __user *buffer,
+-	size_t count, loff_t *ppos)
+-{
+-	char tmp[128] = {0};
+-	char ptr[128] = {0};
+-	char *vol = NULL;
+-	char num = 0;
+-	unsigned int i;
+-	int next_flag = 1;
+-
+-	if (count >= 128) {
+-		pr_info("error! buffer size big than internal buffer\n");
+-		return -EFAULT;
+-	}
+-
+-	if (copy_from_user(tmp, buffer, count)) {
+-		pr_info("error!\n");
+-		return -EFAULT;
+-	}
+-
+-	if (tmp[0] == 'R' || tmp[0] == 'r') {
+-		for (i = 2; i < (count - 1); i++) {
+-			ptr[i - 2] = tmp[i];
+-		}
+-		ptr[i - 2] = '\0';
+-		get_regulator_state(ptr);
+-	} else if (tmp[0] == 'S' || tmp[0] == 's') {
+-		for (i = 2; i < (count - 1); i++) {
+-			if (tmp[i] == ' ') {
+-				next_flag = 0;
+-				ptr[i - 2] = '\0';
+-				continue;
+-			}
+-			if (next_flag) {
+-				ptr[i - 2] = tmp[i];
+-			} else {
+-				num = tmp[i] - 48;
+-			}
+-		}
+-		set_regulator_state(ptr, num);
+-	} else if (tmp[0] == 'V' || tmp[0] == 'v') {
+-		for (i = 2; i < (count - 1); i++) {
+-			if (tmp[i] == ' ') {
+-				next_flag = 0;
+-				ptr[i - 2] = '\0';
+-				continue;
+-			}
+-			if (next_flag) {
+-				ptr[i - 2] = tmp[i];
+-			} else {
+-				vol = &tmp[i];
+-				break;
+-			}
+-		}
+-		set_regulator_voltage(ptr, pmu_atoi(vol));
+-	}
+-
+-	*ppos += count;
+-
+-	return count;
+-}
+-
+-static int dbg_control_regulator_open(struct inode *inode, struct file *file)
+-{
+-	file->private_data = inode->i_private;
+-	return single_open(file, dbg_control_regulator_show, &inode->i_private);
+-}
+-
+-static const struct file_operations set_control_regulator_fops = {
+-	.open		= dbg_control_regulator_open,
+-	.read		= seq_read,
+-	.write		= dbg_control_regulator_set_value,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
+-#endif
+-
+ static int hisi_regulator_probe(struct spmi_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -556,10 +406,6 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct regulation_constraints *constraint;
+ 	const char *supplyname = NULL;
+-#ifdef CONFIG_HISI_PMIC_DEBUG
+-	struct dentry *d;
+-	static int debugfs_flag;
+-#endif
+ 	unsigned int temp_modes;
  
- enum hi6421_spmi_pmic_irq_list {
- 	OTMP = 0,
+ 	const struct hisi_regulator *template = NULL;
+@@ -572,11 +418,7 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 	}
+ 
+ 	template = match->data;
+-#if (LINUX_VERSION_CODE > KERNEL_VERSION(3, 13, 0))
+ 	initdata = of_get_regulator_init_data(dev, np, NULL);
+-#else
+-	initdata = of_get_regulator_init_data(dev, np);
+-#endif
+ 	if (NULL == initdata) {
+ 		pr_err("get regulator init data error !\n");
+ 		return -EINVAL;
+@@ -636,32 +478,10 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 		goto hisi_probe_end;
+ 	}
+ 
+-	BRAND_DEBUG("[%s]:valid_modes_mask[0x%x], valid_ops_mask[0x%x]\n", rdesc->name,\
++	pr_debug("[%s]:valid_modes_mask[0x%x], valid_ops_mask[0x%x]\n", rdesc->name,\
+ 			constraint->valid_modes_mask, constraint->valid_ops_mask);
+ 
+ 	dev_set_drvdata(dev, rdev);
+-#ifdef CONFIG_HISI_PMIC_DEBUG
+-	if (debugfs_flag == 0) {
+-		d = debugfs_create_dir("hisi_regulator_debugfs", NULL);
+-		if (!d) {
+-			dev_err(dev, "failed to create hisi regulator debugfs dir !\n");
+-			ret = -ENOMEM;
+-			goto hisi_probe_fail;
+-		}
+-		(void) debugfs_create_file("regulator_state", S_IRUSR,
+-						d, NULL, &debug_regulator_state_fops);
+-
+-		(void) debugfs_create_file("control_regulator", S_IRUSR,
+-						d, NULL, &set_control_regulator_fops);
+-		debugfs_flag = 1;
+-	}
+-#endif
+-
+-#ifdef CONFIG_HISI_PMIC_DEBUG
+-hisi_probe_fail:
+-	if (ret)
+-		regulator_unregister(rdev);
+-#endif
+ hisi_probe_end:
+ 	if (ret)
+ 		kfree(sreg);
 -- 
 2.26.2
 
