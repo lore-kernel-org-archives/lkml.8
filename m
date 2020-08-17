@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C11AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4E7620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A435420758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687537;
-	bh=lMGiXrzYGdWXjhjBqQbKNddRV33RGM0bKcrYbvO8UZE=;
+	s=default; t=1597687539;
+	bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=br9XgOmgzDKJtfAxktXo3tuGkFvxYzDDxWeEvZVA9un1jax0e3u2AnB0F0NVO0JSt
-	 mhSehsJw+qgKbCqkBwllmPA2jnh1fLsk/vW+L38zF8YFpeTNQhABgPJDLRm+jyC+Zl
-	 gmUgxLUpS8YJk2fNdyvq1q4smZNO+fxIsJnhoN8Y=
+	b=ol3Ijtqv2Bysz//Toa6kTdHnz6GCrCCfyYbhAZhhLvsm1ug5Fc0cyvIvqKEaHWaNE
+	 h69y8KVGSGHgzpLpndhIYlPjOqgGvHzm36ynbMblyhnUJ+3XTAVdrW40ciVfD16JYY
+	 /q6MrEp3TFgRB0vEhfPUEwXn8E8WQPm3fGXX9mVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390261AbgHQSFf (ORCPT
+        id S2390253AbgHQSFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388498AbgHQQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388499AbgHQQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:09:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECBA122D02;
-        Mon, 17 Aug 2020 16:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C0922DCC;
+        Mon, 17 Aug 2020 16:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680553;
-        bh=lMGiXrzYGdWXjhjBqQbKNddRV33RGM0bKcrYbvO8UZE=;
+        s=default; t=1597680555;
+        bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNFa5F6Kf1cYMIgYRg2wCqfQltkEbLdHXkK/qZwHWOzLXVaWJdxTgaGvpm2fto53f
-         CP0DwmezAkol22JHbGC8mp8wIjIQTo92JAqZcPVr0qZrLq5lDfRCTndN6DgrgBG0xB
-         fvyDGaBtsBqQcdfYOZuuD8lD+blQQhbRlZbm16fo=
+        b=ne/FEwZoAxCSU82P5l8Vtw3honzvBUcn6D8Zl469nk3KGOPYqMu2WrHbHkfFdZbNI
+         GfvQrXtWTsX4MuQ4/LiFIn13zLrrC1F+0RLqZJIXxL+1WOr7GKr0i4fFVR5jLo8bPF
+         jOJLzvBmZMCmBLi4UFsIDpD4hnilff+WzzodX4vM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronak Doshi <doshir@vmware.com>,
-        Guolin Yang <gyang@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 225/270] vmxnet3: use correct tcp hdr length when packet is encapsulated
-Date:   Mon, 17 Aug 2020 17:17:06 +0200
-Message-Id: <20200817143806.984713313@linuxfoundation.org>
+        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 5.4 234/270] 9p: Fix memory leak in v9fs_mount
+Date:   Mon, 17 Aug 2020 17:17:15 +0200
+Message-Id: <20200817143807.456778543@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,38 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronak Doshi <doshir@vmware.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit 8a7f280f29a80f6e0798f5d6e07c5dd8726620fe ]
+commit cb0aae0e31c632c407a2cab4307be85a001d4d98 upstream.
 
-Commit dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload
-support") added support for encapsulation offload. However, while
-calculating tcp hdr length, it does not take into account if the
-packet is encapsulated or not.
+v9fs_mount
+  v9fs_session_init
+    v9fs_cache_session_get_cookie
+      v9fs_random_cachetag                     -->alloc cachetag
+      v9ses->fscache = fscache_acquire_cookie  -->maybe NULL
+  sb = sget                                    -->fail, goto clunk
+clunk_fid:
+  v9fs_session_close
+    if (v9ses->fscache)                        -->NULL
+      kfree(v9ses->cachetag)
 
-This patch fixes this issue by using correct reference for inner
-tcp header.
+Thus memleak happens.
 
-Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
-Signed-off-by: Ronak Doshi <doshir@vmware.com>
-Acked-by: Guolin Yang <gyang@vmware.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20200615012153.89538-1-zhengbin13@huawei.com
+Fixes: 60e78d2c993e ("9p: Add fscache support to 9p")
+Cc: <stable@vger.kernel.org> # v2.6.32+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vmxnet3/vmxnet3_drv.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -861,7 +861,8 @@ vmxnet3_parse_hdr(struct sk_buff *skb, s
+---
+ fs/9p/v9fs.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/fs/9p/v9fs.c
++++ b/fs/9p/v9fs.c
+@@ -500,10 +500,9 @@ void v9fs_session_close(struct v9fs_sess
+ 	}
  
- 			switch (protocol) {
- 			case IPPROTO_TCP:
--				ctx->l4_hdr_size = tcp_hdrlen(skb);
-+				ctx->l4_hdr_size = skb->encapsulation ? inner_tcp_hdrlen(skb) :
-+						   tcp_hdrlen(skb);
- 				break;
- 			case IPPROTO_UDP:
- 				ctx->l4_hdr_size = sizeof(struct udphdr);
+ #ifdef CONFIG_9P_FSCACHE
+-	if (v9ses->fscache) {
++	if (v9ses->fscache)
+ 		v9fs_cache_session_put_cookie(v9ses);
+-		kfree(v9ses->cachetag);
+-	}
++	kfree(v9ses->cachetag);
+ #endif
+ 	kfree(v9ses->uname);
+ 	kfree(v9ses->aname);
 
 
